@@ -1,4 +1,4 @@
-<p-radioButton class="kNoParentOption" [value]="null" [(ngModel)]="_treeSelection"
+<p-radioButton *ngIf="enableNoParentSelection" class="kNoParentOption" [value]="null" [(ngModel)]="_treeSelection"
                [ngModelOptions]="{standalone: true}"
                (click)="_clearSelection()"
                label="{{('applications.content.moveCategory.noParent') | translate}}"></p-radioButton>
@@ -24,4 +24,5 @@
                      (onNodeSelect)="_onTreeNodeSelected($event)"
                      (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
 </div>
-<div class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">{{ _selectionTooltip }}</div>
+<div *ngIf="!enableNoParentSelection && _treeSelection" class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">{{ _selectionTooltip }}</div>
+<div *ngIf="enableNoParentSelection " class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">{{ _selectionTooltip }}</div>

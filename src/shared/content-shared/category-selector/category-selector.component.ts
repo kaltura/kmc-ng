@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -20,18 +21,18 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories-search.service';
 
 @Component({
-  selector: 'kCategoryParentSelector',
-  templateUrl: './category-parent-selector.component.html',
-  styleUrls: ['./category-parent-selector.component.scss']
+  selector: 'kCategorySelector',
+  templateUrl: './category-selector.component.html',
+  styleUrls: ['./category-selector.component.scss']
 })
-export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChecked, OnInit {
+export class CategorySelectorComponent implements OnDestroy, AfterViewChecked, OnInit {
 
   @Output() onCategorySelected = new EventEmitter<CategoryData>();
 
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
-
+  @Input() enableNoParentSelection: boolean = true;
 
   private _emptyTreeSelection = new PrimeTreeNode(null, 'empty', 0, null);
   public _selectionMode: TreeSelectionMode = 'single';

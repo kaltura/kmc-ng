@@ -1364,11 +1364,19 @@
           "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
           "entitlementEnforcementEnabled": "Entitlement enforcement enabled",
           "addEntitlement": {
-              "buttonText" :"Add Entitlement"
+            "buttonText": "Add Entitlement",
+            "title": "Add Entitlement",
+            "explanation": "Select the root category integrated with your application and label it below.",
+            "addPrivacyContextLabel": "Add privacy context label",
+            "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+            "apply": "Apply",
+            "errors": {
+              "requiredPrivacyContextLabel": "You must enter privacy context label"
+            }
           },
           "editEntitlement": {
-            "title" :"Edit Entitlement",
-            "categoryName":"Category Name",
+            "title": "Edit Entitlement",
+            "categoryName": "Category Name",
             "privacyContextLabel": "Privacy context label",
             "confirmationTitle": "Confirm Edit",
             "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
@@ -1379,7 +1387,7 @@
           },
           "deleteEntitlement": {
             "title": "Delete Entitlement",
-"confirmation" : "Entitlement settings will be removed from all sub-categories in an asynchronous process. This operation may take a few minutes. \n\nNote: Any previous privacy settings defined for the {{0}} category (including all sub-categories) will be lost.\n\nAre you sure you want to continue?"
+            "confirmation": "Entitlement settings will be removed from all sub-categories in an asynchronous process. This operation may take a few minutes. \n\nNote: Any previous privacy settings defined for the {{0}} category (including all sub-categories) will be lost.\n\nAre you sure you want to continue?"
           },
           "table": {
             "applicationRootCategory": "Application Root Category",

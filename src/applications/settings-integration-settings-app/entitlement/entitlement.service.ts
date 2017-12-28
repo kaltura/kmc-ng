@@ -7,10 +7,10 @@ import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategor
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
 import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
-import {KalturaPrivacyType} from "kaltura-ngx-client/api/types/KalturaPrivacyType";
-import {KalturaContributionPolicyType} from "kaltura-ngx-client/api/types/KalturaContributionPolicyType";
-import {KalturaAppearInListType} from "kaltura-ngx-client/api/types/KalturaAppearInListType";
-import {CategoryUpdateAction} from "kaltura-ngx-client/api/types/CategoryUpdateAction";
+import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
 
 export interface Entitlement {
   categories: KalturaCategory[];
@@ -19,7 +19,6 @@ export interface Entitlement {
 
 @Injectable()
 export class EntitlementService {
-
 
   constructor(private _kalturaServerClient: KalturaClient) {
   }
@@ -88,6 +87,18 @@ export class EntitlementService {
 
     return this._kalturaServerClient.request(new CategoryUpdateAction({
       id: entitlement.id,
+      category
+    }))
+      .map(_ => (undefined));
+  }
+
+  public addEntitlement(newEntitlementData: { categoryId: number, privacyContextLabel: string }): Observable<void> {
+    const category = new KalturaCategory({
+      privacyContext: newEntitlementData.privacyContextLabel
+    });
+
+    return this._kalturaServerClient.request(new CategoryUpdateAction({
+      id: newEntitlementData.categoryId,
       category
     }))
       .map(_ => (undefined));

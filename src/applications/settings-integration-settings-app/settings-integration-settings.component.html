@@ -1,5 +1,6 @@
 <div class="kContainer kContent">
   <div class="kColumn">
+    <kSticky stickyId="integrationSettings" [scrollOffset]="80" [sticksTo]="'header'" >
     <div class="kAccountInfoContainer">
       <kAccountInfo></kAccountInfo>
     </div>
@@ -7,6 +8,7 @@
       <div class="kTitle">{{'applications.settings.integrationSettings.accountInfo.notifications.title' | translate}}</div>
       <div>{{'applications.settings.integrationSettings.accountInfo.notifications.message' | translate}}</div>
     </div>
+    </kSticky>
   </div>
   <div class="kColumn"><kEntitlement></kEntitlement></div>
 </div>
