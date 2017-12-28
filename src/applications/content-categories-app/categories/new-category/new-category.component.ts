@@ -69,7 +69,7 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
         })
         .cancelOnDestroy(this)
         .tag('block-shell')
-        .subscribe(({category}: {category: KalturaCategory}) => {
+        .subscribe(({category}) => {
             this.onApply.emit({categoryId: category.id});
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();

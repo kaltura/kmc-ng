@@ -91,7 +91,11 @@ export class DynamicMetadataSectionFactory {
                 label: item.key,
                 allowMultiple : item.allowMultiple,
                 key: item.name,
-                description: item.description
+                description: item.description,
+                inputHelperConfig:{
+                    title: item.key,
+                    body: item.description
+                }
             }
         );
     }
@@ -104,7 +108,11 @@ export class DynamicMetadataSectionFactory {
                 allowMultiple : item.allowMultiple,
                 key: item.name,
                 children: this._extractChildren(item.children),
-                description: item.description
+                description: item.description,
+                inputHelperConfig:{
+                    title: item.key,
+                    body: item.description
+                }
             }
         );
     }
@@ -117,7 +125,11 @@ export class DynamicMetadataSectionFactory {
                 allowMultiple : false,
                 label: item.label,
                 key: item.name,
-                description: item.description
+                description: item.description,
+                inputHelperConfig:{
+                    title: item.key,
+                    body: item.description
+                }
             }
         );
     }
@@ -130,7 +142,11 @@ export class DynamicMetadataSectionFactory {
                 allowMultiple : false,
                 label: item.key,
                 key: item.name,
-                description: item.description
+                description: item.description,
+                inputHelperConfig:{
+                    title: item.key,
+                    body: item.description
+                }
             }
         );
     }
@@ -143,7 +159,11 @@ export class DynamicMetadataSectionFactory {
                 allowMultiple : item.allowMultiple,
                 key: item.name,
                 showTime : item.isTimeControl,
-                description: item.description
+                description: item.description,
+                inputHelperConfig:{
+                    title: item.key,
+                    body: item.description
+                }
             }
         );
     }

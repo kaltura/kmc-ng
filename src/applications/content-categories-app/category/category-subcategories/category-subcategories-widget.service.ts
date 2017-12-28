@@ -20,6 +20,7 @@ import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteA
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CategoriesUtilsService} from '../../categories-utils.service';
+import { CategoryService } from '../category.service';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -30,6 +31,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   constructor(private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
               private _categoriesUtilsService: CategoriesUtilsService,
+              private _categoryService: CategoryService,
               private _appLocalization: AppLocalization) {
     super(CategoryWidgetKeys.SubCategories);
   }
@@ -256,5 +258,6 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
   public addSubcategoryToList({category}: {category: KalturaCategory}) {
     this._subcategories.next([...this._subcategories.getValue(), category]);
+    this._categoryService.notifyChangesInCategory();
   }
 }

@@ -1,10 +1,11 @@
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {CategoriesService, SortDirection} from '../categories.service';
+import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
+import {CategoriesFilters, CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {ISubscription} from 'rxjs/Subscription';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
@@ -17,195 +18,231 @@ import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
   styleUrls: ['./categories-list.component.scss']
 })
 
-export class CategoriesListComponent implements OnInit, OnDestroy , AfterViewInit {
-  public _selectedCategoryToMove: KalturaCategory;
+export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  public _linkedEntries: { entryId: string}[] = [];
-  @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
-  @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
-  public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedCategories: KalturaCategory[] = [];
-  public _categories: KalturaCategory[] = [];
-  public _categoriesTotalCount: number;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _selectedCategories: KalturaCategory[] = [];
+    public _categories: KalturaCategory[] = [];
+    public _categoriesTotalCount: number = null;
+    public _selectedCategoryToMove: KalturaCategory;
 
-  public _filter = {
-    pageIndex: 0,
-    freetextSearch: '',
-    pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
-    sortBy: 'createdAt',
-    sortDirection: SortDirection.Desc
-  };
+    public _linkedEntries: { entryId: string }[] = [];
+    @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
+    @ViewChild('addNewCategory') addNewCategory: PopupWidgetComponent;
 
-  constructor(private _categoriesService: CategoriesService,
-              private router: Router,
-              private _browserService: BrowserService,
-              private _appLocalization: AppLocalization,
-              private _categoriesUtilsService: CategoriesUtilsService,
-              private _appEvents: AppEventsService,
-              public _categoryCreationService: CategoryCreationService) {
-  }
+    @ViewChild('tags') private tags: StickyComponent;
 
-  ngOnInit() {
+    public _query = {
+        freetext: '',
+        pageIndex: 0,
+        pageSize: null,
+        sortBy: null,
+        sortDirection: null
+    };
 
-         this._categoriesService.queryData$.cancelOnDestroy(this).subscribe(
-            query => {
-                this._filter.pageSize = query.pageSize;
-                this._filter.pageIndex = query.pageIndex - 1;
-                this._filter.sortBy = query.sortBy;
-                this._filter.sortDirection = query.sortDirection;
-            this._browserService.scrollToTop();});
-
-    this._categoriesService.categories$
-        .cancelOnDestroy(this)
-        .subscribe(
-      (data) => {
-        this._categories = data.items;
-        this._categoriesTotalCount = data.totalCount;
-      }
-    );
-
-    this.addNewCategory.state$
-        .cancelOnDestroy(this)
-      .subscribe(event => {
-        if (event.state === PopupWidgetStates.BeforeClose) {
-          this._linkedEntries = [];
-        }
-      });
-
-  }
-
-  ngAfterViewInit() {
-    const newCategoryData = this._categoryCreationService.popNewCategoryData();
-    if (newCategoryData) {
-      this._linkedEntries = newCategoryData.entries.map(entry => ({entryId: entry.id}));
-      this.addNewCategory.open();
+    constructor(private _categoriesService: CategoriesService,
+                private router: Router,
+                private _browserService: BrowserService,
+                private _appLocalization: AppLocalization,
+                private _categoriesUtilsService: CategoriesUtilsService,
+                private _appEvents: AppEventsService,
+                public _categoryCreationService: CategoryCreationService) {
     }
-  }
 
-  ngOnDestroy() {
-  }
+    ngOnInit() {
+        this._restoreFiltersState();
+        this._registerToFilterStoreDataChanges();
+    }
+
+    ngAfterViewInit() {
+
+        this.addNewCategory.state$
+            .cancelOnDestroy(this)
+            .subscribe(event => {
+                if (event.state === PopupWidgetStates.BeforeClose) {
+                    this._linkedEntries = [];
+                }
+            });
+
+        const newCategoryData = this._categoryCreationService.popNewCategoryData();
+        if (newCategoryData) {
+            this._linkedEntries = newCategoryData.entries.map(entry => ({entryId: entry.id}));
+            this.addNewCategory.open();
+        }
+    }
+
+    private _restoreFiltersState(): void {
+        this._updateComponentState(this._categoriesService.cloneFilters(
+            [
+                'freetext',
+                'pageSize',
+                'pageIndex',
+                'sortBy',
+                'sortDirection'
+            ]
+        ));
+    }
+
+    private _updateComponentState(updates: Partial<CategoriesFilters>): void {
+        if (typeof updates.freetext !== 'undefined') {
+            this._query.freetext = updates.freetext || '';
+        }
+
+        if (typeof updates.pageSize !== 'undefined') {
+            this._query.pageSize = updates.pageSize;
+        }
+
+        if (typeof updates.pageIndex !== 'undefined') {
+            this._query.pageIndex = updates.pageIndex;
+        }
+
+        if (typeof updates.sortBy !== 'undefined') {
+            this._query.sortBy = updates.sortBy;
+        }
+
+        if (typeof updates.sortDirection !== 'undefined') {
+            this._query.sortDirection = updates.sortDirection;
+        }
+    }
+
+    private _registerToFilterStoreDataChanges(): void {
+        this._categoriesService.filtersChange$
+            .cancelOnDestroy(this)
+            .subscribe(({changes}) => {
+                this._updateComponentState(changes);
+                this._clearSelection();
+                this._browserService.scrollToTop();
+            });
+    }
+
+    ngOnDestroy() {
+    }
 
     public _reload() {
         this._clearSelection();
-        this._categoriesService.reload(true);
+        this._categoriesService.reload();
     }
+
     _clearSelection() {
         this._selectedCategories = [];
     }
 
-  _onSortChanged(event): void {
-    this._categoriesService.reload({
-      sortBy: event.field,
-      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
-    });
-  }
-
-  _onPaginationChanged(state: any): void {
-    if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
-
-      this._clearSelection();
-      this._categoriesService.reload({
-        pageIndex: state.page + 1,
-        pageSize: state.rows
-      });
-    }
-  }
-
-  _onActionSelected({action, category}: { action: string, category : KalturaCategory }) {
-
-    switch (action) {
-      case 'edit':
-        // show category edit warning if needed
-        if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
-          this._browserService.confirm(
-            {
-              header: this._appLocalization.get('applications.content.categories.editCategory'),
-              message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
-              accept: () => {
-                this.router.navigate(['/content/categories/category', category.id]);
-              }
-            }
-          );
-        } else {
-          this.router.navigate(['/content/categories/category', category.id]);
-        }
-        break;
-      case 'delete':
-        this.deleteCategory(category);
-        break;
-      case 'moveCategory':
-        // show category edit warning if needed
-        if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
-          this._browserService.confirm(
-            {
-              header: this._appLocalization.get('applications.content.categories.editCategory'),
-              message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
-              accept: () => {
-                this._selectedCategoryToMove = category;
-                this.moveCategoryPopup.open();
-              }
-            }
-          );
-        } else {
-          this._selectedCategoryToMove = category;
-          this.moveCategoryPopup.open();
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-  private deleteCategory(category: KalturaCategory): void {
-    this._categoriesUtilsService.confirmDelete(category)
-      .cancelOnDestroy(this)
-      .subscribe(result => {
-        if (result.confirmed) {
-          this._blockerMessage = null;
-          this._categoriesService.deleteCategory(category.id)
-            .cancelOnDestroy(this)
-            .tag('block-shell')
-            .subscribe(
-            () => {
-              this._browserService.showGrowlMessage({
-                severity: 'success',
-                detail: this._appLocalization.get('applications.content.categories.deleted')
-              });
-              this._categoriesService.reload(true);
-            },
-            error => {
-              this._browserService.alert({
-                header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
-                message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
-              });
-            }
-          );
-        }
-      },
-      error => {
-        this._browserService.alert({
-          header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
-          message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
+    _onSortChanged(event): void {
+        this._categoriesService.filter({
+            sortBy: event.field,
+            sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
         });
-      });
-  }
-
-
-
-  onBulkChange({reload}: {reload: boolean}): void {
-    if (reload === true) {
-      this._reload();
     }
-    this._clearSelection();
-  }
 
-  onCategoryAdded({categoryId}: {categoryId: number}): void {
-    if (!categoryId) {
-      console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters')
-    } else {
-        this._categoriesService.reload(true);
-        // use a flag so the categories will be refreshed upon clicking 'back' from the category page
-        this.router.navigate(['/content/categories/category', categoryId]);
+    _onPaginationChanged(state: any): void {
+        if (state.page !== this._query.pageIndex || state.rows !== this._query.pageSize) {
+            this._categoriesService.filter({
+                pageIndex: state.page,
+                pageSize: state.rows
+            });
+        }
     }
-  }
+
+    _onActionSelected({action, category}: { action: string, category: KalturaCategory }) {
+        switch (action) {
+            case 'edit':
+                // show category edit warning if needed
+                if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
+                    this._browserService.confirm(
+                        {
+                            header: this._appLocalization.get('applications.content.categories.editCategory'),
+                            message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
+                            accept: () => {
+                                this.router.navigate(['/content/categories/category', category.id]);
+                            }
+                        }
+                    );
+                } else {
+                    this.router.navigate(['/content/categories/category', category.id]);
+                }
+                break;
+            case 'delete':
+                this.deleteCategory(category);
+                break;
+            case 'moveCategory':
+                // show category edit warning if needed
+                if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
+                    this._browserService.confirm(
+                        {
+                            header: this._appLocalization.get('applications.content.categories.editCategory'),
+                            message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
+                            accept: () => {
+                                this._selectedCategoryToMove = category;
+                                this.moveCategoryPopup.open();
+                            }
+                        }
+                    );
+                } else {
+                    this._selectedCategoryToMove = category;
+                    this.moveCategoryPopup.open();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private deleteCategory(category: KalturaCategory): void {
+        this._categoriesUtilsService.confirmDelete(category)
+            .cancelOnDestroy(this)
+            .subscribe(result => {
+                    if (result.confirmed) {
+                        this._blockerMessage = null;
+                        this._categoriesService.deleteCategory(category.id)
+                            .cancelOnDestroy(this)
+                            .tag('block-shell')
+                            .subscribe(
+                                () => {
+                                    this._browserService.showGrowlMessage({
+                                        severity: 'success',
+                                        detail: this._appLocalization.get('applications.content.categories.deleted')
+                                    });
+                                    this._categoriesService.reload();
+                                },
+                                error => {
+                                    this._browserService.alert({
+                                        header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
+                                        message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
+                                    });
+                                }
+                            );
+                    }
+                },
+                error => {
+                    this._browserService.alert({
+                        header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
+                        message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
+                    });
+                });
+    }
+
+
+    onBulkChange(event): void {
+        if (event.reload === true) {
+            this._reload();
+        }
+    }
+
+    onFreetextChanged(): void {
+        this._categoriesService.filter({freetext: this._query.freetext});
+    }
+
+    onTagsChange() {
+        this.tags.updateLayout();
+    }
+
+    onCategoryAdded({categoryId}: { categoryId: number }): void {
+        if (!categoryId) {
+            console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters')
+        } else {
+            this._categoriesService.reload();
+            // use a flag so the categories will be refreshed upon clicking 'back' from the category page
+            this.router.navigate(['/content/categories/category', categoryId]);
+        }
+    }
 }
