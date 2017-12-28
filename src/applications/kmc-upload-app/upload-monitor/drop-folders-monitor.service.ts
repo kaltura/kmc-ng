@@ -19,6 +19,7 @@ import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/Kaltur
 import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
 import { DropFoldersRequestFactory } from './drop-folders-request-factory';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 interface DropFoldersUploadFile {
   status: KalturaDropFolderFileStatus;
@@ -58,34 +59,15 @@ export class DropFoldersMonitorService implements OnDestroy {
 
   constructor(private _kalturaClient: KalturaClient,
               private _kmcServerPolls: KmcServerPolls,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
     this._initTracking();
   }
 
-  // TODO [kmcng] replace this function with log library
-  private _log(level: 'silly' | 'verbose' | 'info' | 'warn' | 'error', message: string, context?: string): void {
-    const messageContext = context || 'general';
-    const origin = 'drop folders upload monitor';
-    const formattedMessage = `log: [${level}] [${origin}] ${messageContext}: ${message}`;
-    switch (level) {
-      case 'silly':
-      case 'verbose':
-      case 'info':
-        console.log(formattedMessage);
-        break;
-      case 'warn':
-        console.warn(formattedMessage);
-        break;
-      case 'error':
-        console.error(formattedMessage);
-        break;
-    }
-  }
-
   private _trackNewFile(file: DropFoldersUploadFile) {
-    this._log('verbose', `tracking new file with id: '${file.id}'`);
+    this._logger.debug(`tracking new file with id: '${file.id}'`);
     if (this._dropFolderFiles[file.id]) {
-      this._log('warn', `cannot track new file with id: '${file.id}'. a file with such id already exists`);
+      this._logger.warn(`cannot track new file with id: '${file.id}'. a file with such id already exists`);
     } else {
       this._dropFolderFiles[file.id] = { id: file.id, status: file.status, uploadedOn: file.uploadedOn, allowPurging: false };
     }
@@ -96,7 +78,7 @@ export class DropFoldersMonitorService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this._log('silly', 'ngOnDestroy()');
+    this._logger.debug('ngOnDestroy()');
     this._totals.data.complete();
     this._totals.state.complete();
   }
@@ -189,7 +171,7 @@ export class DropFoldersMonitorService implements OnDestroy {
     this._getTrackedFiles().forEach(file => {
       const trackedUploadIsNotInResponse = uploadIds.indexOf(Number(file.id)) === -1;
       if (file.allowPurging && trackedUploadIsNotInResponse) {
-        this._log('info', `server poll returned without upload with id '${file.id}'. removing file from tracking list`);
+        this._logger.info(`server poll returned without upload with id '${file.id}'. removing file from tracking list`);
         delete this._dropFolderFiles[file.id];
       }
     })
@@ -197,7 +179,7 @@ export class DropFoldersMonitorService implements OnDestroy {
 
   private _initTracking(): void {
     if (this._initializeState === 'failed' || this._initializeState === null) {
-      this._log('info', `getting active uploads status from server`);
+      this._logger.info(`getting active uploads status from server`);
       this._initializeState = 'busy';
       this._totals.state.next({ loading: true, error: false });
 
@@ -239,7 +221,7 @@ export class DropFoldersMonitorService implements OnDestroy {
           }
         );
     } else {
-      this._log('info', `everything is operating normally, no need to re-initialize`);
+      this._logger.info(`everything is operating normally, no need to re-initialize`);
     }
   }
 
@@ -247,7 +229,7 @@ export class DropFoldersMonitorService implements OnDestroy {
     const oldestUploadedOnFile = this._getTrackedFiles().reduce((acc, item) => !acc || item.uploadedOn < acc.uploadedOn ? item : acc, null);
     const uploadedOnFrom = oldestUploadedOnFile ? oldestUploadedOnFile.uploadedOn : this._browserService.sessionStartedAt;
     if (this._dropFolderChangesFactory.uploadedOn !== uploadedOnFrom) {
-      this._log('verbose', `updating poll server query request with uploadedOn from ${uploadedOnFrom && uploadedOnFrom.toString()}`);
+      this._logger.debug(`updating poll server query request with uploadedOn from ${uploadedOnFrom && uploadedOnFrom.toString()}`);
       this._dropFolderChangesFactory.uploadedOn = uploadedOnFrom;
     }
   }
@@ -255,14 +237,14 @@ export class DropFoldersMonitorService implements OnDestroy {
   private _startPolling(): void {
     if (this._poolingState !== 'running') {
       this._poolingState = 'running';
-      this._log('info', `start server polling every 10 seconds to sync drop folders upload status`);
+      this._logger.info(`start server polling every 10 seconds to sync drop folders upload status`);
 
 
       this._kmcServerPolls.register<KalturaDropFolderFileListResponse>(10, this._dropFolderChangesFactory)
         .cancelOnDestroy(this)
         .subscribe((response) => {
           if (response.error) {
-            this._log('warn', `error occurred while trying to sync drop folders upload status from server. server error: ${response.error.message}`);
+            this._logger.warn(`error occurred while trying to sync drop folders upload status from server. server error: ${response.error.message}`);
             this._totals.state.next({ loading: false, error: true, isErrorRecoverable: false });
             return;
           }
@@ -290,7 +272,7 @@ export class DropFoldersMonitorService implements OnDestroy {
 
   private _updateAllowPurgingMode(): void {
     this._getTrackedFiles().filter(item => !item.allowPurging).forEach(file => {
-      this._log('verbose', `update file '${file.id} to allow purging next time syncing from the server`);
+      this._logger.debug(`update file '${file.id} to allow purging next time syncing from the server`);
       file.allowPurging = true;
     });
   }
@@ -302,7 +284,7 @@ export class DropFoldersMonitorService implements OnDestroy {
 
       if (relevantUpload) { // update status for existing upload
         if (relevantUpload.status !== upload.status) {
-          this._log('info', `sync upload file '${upload.id} with status '${upload.status}'`);
+          this._logger.info(`sync upload file '${upload.id} with status '${upload.status}'`);
           relevantUpload.status = upload.status;
         }
       } else if (currentUploadIsActive) { // track new active upload
@@ -317,7 +299,7 @@ export class DropFoldersMonitorService implements OnDestroy {
   }
 
   public retryTracking(): void {
-    this._log('silly', `retryTracking()`);
+    this._logger.debug(`retryTracking()`);
 
     this._initTracking();
   }
