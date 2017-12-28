@@ -9,10 +9,14 @@ import {CategoriesBulkChangeCategoryListing} from './bulk-actions/components/bul
 import {CategoriesBulkChangeContributionPolicy} from './bulk-actions/components/bulk-change-contribution-policy/bulk-change-contribution-policy.component';
 import {CategoriesTableComponent} from './categories-table/categories-table.component';
 import {CategoriesListComponent} from './categories-list/categories-list.component';
+import {CategoriesListTagsComponent} from './categories-list/categories-list-tags.component';
+import {CategoriesRefineFiltersComponent} from './categories-refine-filters/categories-refine-filters.component';
 
 export const CategoriesComponentsList = [
     CategoriesListComponent,
     CategoriesTableComponent,
+    CategoriesListTagsComponent,
+    CategoriesRefineFiltersComponent,
     MaxCategoriesPipe,
     CategoriesBulkActionsComponent,
     PrimeTableSortDirectionPipe,
