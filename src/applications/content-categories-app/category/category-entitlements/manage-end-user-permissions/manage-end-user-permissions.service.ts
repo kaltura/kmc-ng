@@ -198,8 +198,11 @@ export class ManageEndUserPermissionsService implements OnDestroy {
   }
 
   private _getKalturaUsers(categoryUsers: KalturaCategoryUser[], totalCount: number): Observable<Users> {
-    if (!categoryUsers || !categoryUsers.length) {
+    if (!categoryUsers ) {
       return Observable.throw(new Error('ManageEndUserPermissionsService: Category has no end-users'))
+    }
+    if (!categoryUsers.length) {
+      return Observable.of({items:[], totalCount: 0});
     }
     const multiRequest = new KalturaMultiRequest();
     categoryUsers.forEach(user => {

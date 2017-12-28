@@ -1285,6 +1285,7 @@
           },
           "owner": {
             "label": "Owner",
+            "notSpecified": "Not Specified",
             "changeOwner": "Change Owner",
             "changeOwnerLabel": "Set a new owner for this category",
             "changeOwnerPlaceholder": "Enter Username/Id",

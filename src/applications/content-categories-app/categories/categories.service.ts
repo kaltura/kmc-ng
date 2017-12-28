@@ -30,10 +30,9 @@ import {
 import {MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes} from 'app-shared/kmc-shared';
 import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
 import {KalturaMetadataSearchItem} from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
 import {KalturaSearchCondition} from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategoryMoveAction} from 'kaltura-ngx-client/api/types/CategoryMoveAction';
 import {CategoryAddAction} from 'kaltura-ngx-client/api/types/CategoryAddAction';
 import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
@@ -559,28 +558,33 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
      */
     public isParentCategorySelectionValid(moveCategoryData: MoveCategoryData): boolean {
 
-        const isValid = (category) => {
-            // Only siblings are allowed to be moved
-            if (!category || !category.id || !category.fullIds || category.parentId !== moveCategoryData.categories[0].parentId) {
-                console.log('[CategoriesService.isParentCategorySelectionValid] invalid category');
-                return false;
-            }
-            // Check if we put the category as a descendant of itself
-            const selectedCategoryIdSameAsParent = moveCategoryData.categoryParent &&
-                category.id === moveCategoryData.categoryParent.id;
+      if (!moveCategoryData.categoryParent.fullIds) {
+        console.log('[CategoriesService.isParentCategorySelectionValid] invalid selected parent category');
+        return false;
+      }
 
-            // Check that the parent category isn't a descendant of the category
-            const selectedParentIsDescendantOfCategoryToMove =
-                moveCategoryData.categoryParent.fullIds.includes(category.id);
-            return !selectedCategoryIdSameAsParent && !selectedParentIsDescendantOfCategoryToMove;
-        };
-
-
-        if (!moveCategoryData || !moveCategoryData.categories || !moveCategoryData.categories.length) {
-            console.log('[CategoriesService.isParentCategorySelectionValid] invalid categories parameter');
-            return false;
+      const isValid = (category) => {
+        // Only siblings are allowed to be moved
+        if (!category || !category.id || category.parentId !== moveCategoryData.categories[0].parentId) {
+          console.log('[CategoriesService.isParentCategorySelectionValid] invalid category');
+          return false;
         }
+        // Check if we put the category as a descendant of itself
+        const selectedCategoryIdSameAsParent = moveCategoryData.categoryParent &&
+          category.id === moveCategoryData.categoryParent.id;
 
-        return moveCategoryData.categories.every(isValid);
+        // Check that the parent category isn't a descendant of the category
+        const selectedParentIsDescendantOfCategoryToMove =
+          moveCategoryData.categoryParent.fullIds.includes(category.id);
+        return !selectedCategoryIdSameAsParent && !selectedParentIsDescendantOfCategoryToMove;
+      };
+
+
+      if (!moveCategoryData || !moveCategoryData.categories || !moveCategoryData.categories.length) {
+        console.log('[CategoriesService.isParentCategorySelectionValid] invalid categories parameter');
+        return false;
+      }
+
+      return moveCategoryData.categories.every(isValid);
     }
 }

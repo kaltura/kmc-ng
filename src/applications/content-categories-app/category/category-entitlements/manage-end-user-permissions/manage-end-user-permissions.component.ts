@@ -25,6 +25,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   public _users: User[] = [];
   public _usersTotalCount: number = null;
   @Input() category: KalturaCategory = null;
+  @Input() parentCategory: KalturaCategory = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() categoryInheritUserPermissions = false;
   private usersSubscription: ISubscription;

@@ -17,13 +17,16 @@
         [disabled]="categoryInheritUserPermissions">
         </button>
 
-        <span class="kItemsNum" *ngIf="itemsTotalCount" [class.kNoSelected]="!selectedItems.length">
+        <div class="kItemsNum" [class.kSelected]="selectedItems.length">
+          <span  *ngIf="itemsTotalCount">
           {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.usersCount' | translate: {'0':itemsTotalCount} }}
         </span>
+        </div>
+
 
         <div class="kBulkActions" *ngIf="selectedItems.length">
            <span class="kSelectedItems">
-             {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.selectedUsersCount' | translate: {'0':selectedItems.length} }}
+             • {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.selectedUsersCount' | translate: {'0':selectedItems.length} }}
           </span>
           <div class="kBulkDeleteBtnContainer">
             <button pButton class="kButtonDanger kBulkDeleteBtn"

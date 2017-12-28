@@ -15,10 +15,15 @@
       width: 100px;
     }
 
-    .kItemsNum.kNoSelected {
+    .kItemsNum {
       padding-left: 24px;
       display: inline-block;
       width: 387px;
+    }
+
+    .kItemsNum.kSelected {
+      width: auto;
+      padding-left: 0px;
     }
 
     .kBulkActions {

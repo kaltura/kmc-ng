@@ -22,7 +22,9 @@ import {AddUsersService} from './add-users.service';
 export class AddUsersComponent implements OnInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @Input() category: KalturaCategory;
   @Input() parentCategory: KalturaCategory;
+  @Input() categoryInheritUserPermissions = false;
   @Output() usersAdded = new EventEmitter<KalturaUser>();
 
   public _loading = false;
@@ -46,7 +48,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (!this.parentCategory) {
+    if (!this.category) {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization
           .get('applications.content.categoryDetails.entitlements.usersPermissions.errors.loadEndUserPermissions'),
@@ -62,9 +64,9 @@ export class AddUsersComponent implements OnInit, OnDestroy {
         ]
       });
     }
-
-    if (this.parentCategory.id) {
-      this._selectedPermissionSettings = this.parentCategory.membersCount > 0 ? 'setPermissions' : 'inherit';
+    if (this.category.inheritanceType === this._kalturaInheritanceType.manual &&
+      this.parentCategory && this.parentCategory.membersCount > 0) {
+      this._selectedPermissionSettings = 'setPermissions';
     }
 
     this._fillPermissionLevelOptions();
@@ -127,7 +129,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
         .addUsers(
           {
             usersIds: this._users.map(user => user.id),
-            categoryId: this.parentCategory.id,
+            categoryId: this.category.id,
             permissionLevel: this._selectedPermissionLevel,
             updateMethod: this._selectedUpdateMethod
           })
