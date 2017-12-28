@@ -124,7 +124,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
         this._uploads.push({
             id: trackedFile.id,
             entryId: fileData.entryId,
-            fileName: fileData.getFileName(),
+            fileName: (<NewEntryUploadFile>fileData).entryName || fileData.getFileName(),
             fileSize: fileData.getFileSize(),
             mediaType: fileData.mediaType,
             status: trackedFile.status,
