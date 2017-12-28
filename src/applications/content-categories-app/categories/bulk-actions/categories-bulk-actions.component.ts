@@ -164,39 +164,22 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteCategories(): void {
-    let message = '';
-    let deleteMessage = '';
 
-    if (this.hasEditWarnings()) {
-      deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
-    }
-
-    let isSubCategoriesExist = false;
-    this.selectedCategories.forEach(obj => {
-      if (obj.directSubCategoriesCount && obj.directSubCategoriesCount > 0) { isSubCategoriesExist = true; }
-    });
-    if (isSubCategoriesExist) {
-      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
-    } else {
-      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultiple') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteSingle'));
-    }
-
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.content.categories.deleteCategories'),
-        message: message,
-        accept: () => {
+    this._categoriesUtilsService.confirmDeleteMultiple(this.selectedCategories)
+      .cancelOnDestroy(this)
+      .subscribe(result => {
+        if (result.confirmed) {
           setTimeout(() => {
             this.executeService(this._bulkDeleteService, {}, true, false);
             // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
           }, 0);
         }
-      }
-    );
+      }, error => {
+        this._browserService.setAppStatus({
+          errorMessage: this._appLocalization
+            .get('applications.content.categoryDetails.subcategories.errors.categoriesCouldNotBeDeleted')
+        });
+      });
   }
 
   private _moveCategories(): void {

@@ -467,10 +467,16 @@
         "private": "Private",
         "selectedCategory": "Selected: {{0}}",
         "deleteAction" : {
-          "deleteWarningSubcategoriesConfirmation": "This category was created by another application and editing it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
-          "deleteWarningConfirmation": "This category was created by another application and editing it will effect this application or site.\nAre you sure you want to delete this category?",
+          "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
+          "deleteWarningConfirmation": "This category was created by another application and deleting it will effect this application or site.\nAre you sure you want to delete this category?",
           "deleteSubcategoriesConfirmation": "This category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
           "deleteConfirmation": "Are you sure you want to delete this category?"
+        },
+        "deleteActionMultiple" : {
+          "deleteWarningSubcategoriesConfirmation": "Some of the selected categories were created by another application and deleting them will effect this application or site.\nCategories will be deleted with their sub-categories.\nDo you want to continue?",
+          "deleteWarningConfirmation": "Some of the selected categories were created by another application and deleting them will effect this application or site.\nAre you sure you want to delete these categories?",
+          "deleteSubcategoriesConfirmation": "Categories will be deleted with their sub-categories.\nDo you want to continue?",
+          "deleteConfirmation": "Are you sure you want to delete these categories?"
         },
         "errors": {
           "deleteError": {
@@ -1389,12 +1395,6 @@
             "moveUp": "Move Up",
             "moveDown": "Move Down",
             "delete": "Delete"
-          },
-          "deleteAction": {
-            "deleteWarningSubcategoriesConfirmation": "This category was created by another application and editing it will effect this application or site.\nThis category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
-            "deleteWarningConfirmation": "This category was created by another application and editing it will effect this application or site.\nAre you sure you want to delete this category?",
-            "deleteSubcategoriesConfirmation": "This category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
-            "deleteConfirmation": "Are you sure you want to delete this category?"
           },
           "errors": {
             "subcategoriesLoadError": "Error loading sub-categories",
