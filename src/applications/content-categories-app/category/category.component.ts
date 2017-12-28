@@ -159,9 +159,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
   private _updateNavigationState(): void {
     // TODO [kmcng] find a better way that doesn't need access to the category directly
     const categories = this._categoriesStore.categories;
-    if (categories && categories.length && this._currentCategoryId) {
-      const currentCategoryIndex = categories.findIndex(category => category.id === +this._currentCategoryId);
-      this._enableNextButton = currentCategoryIndex >= 0 && (currentCategoryIndex < categories.length - 1);
+    if (categories.data() && categories.data().length && this._currentCategoryId) {
+      const currentCategoryIndex = categories.data().findIndex(category => category.id === +this._currentCategoryId);
+      this._enableNextButton = currentCategoryIndex >= 0 && (currentCategoryIndex < categories.data().length - 1);
       this._enablePrevButton = currentCategoryIndex > 0;
     } else {
       this._enableNextButton = false;
@@ -189,8 +189,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
   public _navigateToCategory(direction: 'next' | 'prev'): void {
     // TODO [kmcng] find a better way that doesn't need access to the category directly
     const categories = this._categoriesStore.categories;
-    if (categories && this._currentCategoryId) {
-      const currentPlaylistIndex = categories.findIndex(category => category.id === +this._currentCategoryId);
+    if (categories.data() && categories.data().length && this._currentCategoryId) {
+      const currentPlaylistIndex = categories.data().findIndex(category => category.id === +this._currentCategoryId);
       let newCategory = null;
       if (direction === 'next' && this._enableNextButton) {
         newCategory = categories[currentPlaylistIndex + 1];

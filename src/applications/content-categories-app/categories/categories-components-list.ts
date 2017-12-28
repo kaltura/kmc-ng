@@ -8,10 +8,14 @@ import {PrimeTableSortDirectionPipe} from './pipes/prime-table-sort-direction.pi
 import {CategoriesBulkChangeContentPrivacy} from './bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component';
 import {CategoriesBulkChangeCategoryListing} from './bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component';
 import {CategoriesBulkChangeContributionPolicy} from './bulk-actions/components/bulk-change-contribution-policy/bulk-change-contribution-policy.component';
+import {CategoriesListTagsComponent} from './categories-list/categories-list-tags.component';
+import {CategoriesRefineFiltersComponent} from './categories-refine-filters/categories-refine-filters.component';
 
 export const CategoriesComponentsList = [
     CategoriesListComponent,
     CategoriesTableComponent,
+    CategoriesListTagsComponent,
+    CategoriesRefineFiltersComponent,
     CategoriesBulkActionsComponent,
     PrimeTableSortDirectionPipe,
     CategoriesBulkAddTags,

@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaEntryModerationStatus } from 'kaltura-ngx-client/api/types/KalturaEntryModerationStatus';
 
-@Pipe({name: 'moderation'})
+@Pipe({name: 'kModerationStatus'})
 export class ModerationPipe implements PipeTransform {
 	constructor(private appLocalization: AppLocalization) {
 	}
@@ -13,7 +13,7 @@ export class ModerationPipe implements PipeTransform {
 			switch (value.toString()) {
 				case KalturaEntryModerationStatus.autoApproved.toString():
 					moderationStatus = this.appLocalization.get("applications.content.entryStatus.autoApprovedStatus");
-					break;
+          break;
 				case KalturaEntryModerationStatus.flaggedForReview.toString():
 					moderationStatus = this.appLocalization.get("applications.content.entryStatus.flaggedStatus");
 					break;
