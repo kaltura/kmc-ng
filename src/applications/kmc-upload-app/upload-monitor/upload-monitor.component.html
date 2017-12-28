@@ -11,7 +11,7 @@
               [showTooltip]="true"
               [appendTo]="appmenu"
               [popupWidth]="553"
-              [popupHeight]="273"
+              [popupHeight]="_popupHeight"
               [closeBtn]="false"
               [targetRef]="openuploadmonitor"
               [targetOffset]="{'x':-109, 'y': 37}"
@@ -35,7 +35,8 @@
                            [errors]="_bulkUpload.errors"
                            [layout]="_bulkUploadLayout"
                            (requestToRecover)="_bulkTryReconnect()"></kUploadMonitorSection>
-    <kUploadMonitorSection type="dropFolder"
+    <kUploadMonitorSection *ngIf="_dropFoldersLayout"
+                           type="dropFolder"
                            detailsLink="/content/drop-folders"
                            [title]="'applications.upload.uploadMonitor.dropFolders' | translate"
                            [uploadMonitorPopup]="uploadmonitor"
@@ -43,6 +44,7 @@
                            [queued]="_dropFolders.queued"
                            [completed]="_dropFolders.completed"
                            [errors]="_dropFolders.errors"
-                           [layout]="_dropFoldersLayout"></kUploadMonitorSection>
+                           [layout]="_dropFoldersLayout"
+                           (requestToRecover)="_dropFoldersTryReconnect()"></kUploadMonitorSection>
   </ng-template>
 </kPopupWidget>

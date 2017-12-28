@@ -38,10 +38,11 @@ export class DropFoldersMonitorService implements OnDestroy {
 
   private _totals = {
     data: new BehaviorSubject<UploadMonitorStatuses>({ uploading: 0, queued: 0, completed: 0, errors: 0 }),
-    state: new BehaviorSubject<{ loading: boolean, error: boolean, isErrorRecoverable?: boolean }>({
+    state: new BehaviorSubject<{ loading: boolean, error: boolean, isErrorRecoverable?: boolean, notPermitted?: boolean }>({
       loading: false,
       error: false,
-      isErrorRecoverable: false
+      isErrorRecoverable: false,
+      notPermitted: false
     })
   };
 
@@ -100,7 +101,6 @@ export class DropFoldersMonitorService implements OnDestroy {
     this._totals.state.complete();
   }
 
-  // TODO [kmcng] verify needed statuses
   private _calculateTotalsFromState(): UploadMonitorStatuses {
 
     if (this._initializeState !== 'succeeded') {
@@ -207,7 +207,7 @@ export class DropFoldersMonitorService implements OnDestroy {
             return dropFoldersList.reduce((ids, kdf) => `${ids}${kdf.id},`, '');
           }
 
-          throw new Error(); // TODO [kmcng] notify user?
+          throw new Error('notPermitted');
         })
         .do(dropFoldersIn => this._dropFolderChangesFactory.dropFolderIdIn = dropFoldersIn)
         .switchMap(dropFoldersIn => this._getActiveUpload(dropFoldersIn))
@@ -226,8 +226,15 @@ export class DropFoldersMonitorService implements OnDestroy {
             this._updateServerQueryUploadedOnFilter();
             this._startPolling();
           },
-          () => {
-            this._totals.state.next({ loading: false, error: true, isErrorRecoverable: true });
+          (error) => {
+            const notPermitted = error && error.message === 'notPermitted';
+            const isErrorRecoverable = !notPermitted;
+            this._totals.state.next({
+              loading: false,
+              error: true,
+              isErrorRecoverable,
+              notPermitted
+            });
             this._initializeState = 'failed';
           }
         );
