@@ -57,35 +57,35 @@ export class CategoriesUtilsService {
     return Observable.create(observer => {
       if (!categoriesToDelete || !categoriesToDelete.length || categories && !categoriesToDelete.every(c => categories.indexOf(c) > -1)) {
         observer.error(new Error('At least one of the categories to delete could not be found in given list'));
-      }
-
-      let message = '';
-      const isSubCategoriesExist = !!categoriesToDelete.find(c => {
-        return (c.directSubCategoriesCount && c.directSubCategoriesCount > 0);
-      });
-
-      if (this.hasEditWarnings(categoriesToDelete)) {
-        message = isSubCategoriesExist ?
-          this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteWarningSubcategoriesConfirmation') :
-          this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteWarningConfirmation');
       } else {
-        message = isSubCategoriesExist ?
-          this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteSubcategoriesConfirmation') :
-          this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteConfirmation');
-      }
+        let message = '';
+        const isSubCategoriesExist = !!categoriesToDelete.find(c => {
+          return (c.directSubCategoriesCount && c.directSubCategoriesCount > 0);
+        });
 
-      this._browserService.confirm(
-        {
-          header: this._appLocalization.get('applications.content.categories.deleteCategories'),
-          message: message,
-          accept: () => {
-            observer.next({confirmed: true});
+        if (this.hasEditWarnings(categoriesToDelete)) {
+          message = isSubCategoriesExist ?
+            this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteWarningSubcategoriesConfirmation') :
+            this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteWarningConfirmation');
+        } else {
+          message = isSubCategoriesExist ?
+            this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteSubcategoriesConfirmation') :
+            this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteConfirmation');
+        }
 
-          }, reject: () => {
+        this._browserService.confirm(
+          {
+            header: this._appLocalization.get('applications.content.categories.deleteCategories'),
+            message: message,
+            accept: () => {
+              observer.next({confirmed: true});
+
+            }, reject: () => {
             observer.next({confirmed: false});
           }
-        }
-      );
+          }
+        );
+      }
     });
   }
 
