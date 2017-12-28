@@ -28,21 +28,15 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
 
-  // Caution: this is extremely dirty hack, don't do something similar to that, damn you IE
+  // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
   onResize() {
-    if (!this._browserService.isIE11()) { // ignore for others
-      return;
-    }
     const areaBlocker = <any>document.querySelector('k-area-blocker');
     const content = this._el.nativeElement.querySelector('.kLoginCenter');
     const windowHeight = window.innerHeight;
+    const height = windowHeight <= content.offsetHeight ? 'auto' : '100%';
 
-    if (windowHeight <= content.offsetHeight) {
-      this._renderer.setStyle(areaBlocker, 'height', 'auto');
-    } else {
-      this._renderer.setStyle(areaBlocker, 'height', '100%');
-    }
+    this._renderer.setStyle(areaBlocker, 'height', height);
   }
 
   constructor(private _appAuthentication: AppAuthentication,
