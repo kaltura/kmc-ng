@@ -238,7 +238,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
           this._categories.state.next({loading: false, errorMessage: null});
 
           this._categories.data.next({
-            items: <KalturaCategory[]>response.objects,
+            items: response.objects,
             totalCount: <number>response.totalCount
           });
         },
@@ -403,7 +403,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       }
 
       // build the request
-      return <any>this._kalturaClient.request(
+      return this._kalturaClient.request(
         new CategoryListAction({
           filter,
           pager: pagination,

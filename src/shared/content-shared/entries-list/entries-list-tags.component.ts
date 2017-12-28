@@ -161,7 +161,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         const currentValue =  <ListType>this._entriesStore.cloneFilter(filterName, []);
 
         if (currentValue instanceof Array) {
-          // Make sure we actually got an array since typescript here cannot help us and we enforced type explicitly
+          // Developer notice: we must make sure the type at runtime is an array. this is a safe check only we don't expect the value to be different
           const tagsFilters = this._filterTags.filter(item => item.type === filterName);
 
           const tagsFiltersMap = this._entriesStore.filtersUtils.toMap(tagsFilters, 'value');
@@ -177,9 +177,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
           diff.added.forEach(item => {
             this._filterTags.push({
               type: filterName,
-              value: (<any>item).value,
-              label: (<any>item).label,
-              tooltip: {token: `applications.content.filters.${filterName}`, args: {'0': (<any>item).label}}
+              value: item.value,
+              label: item.label,
+              tooltip: {token: `applications.content.filters.${filterName}`, args: {'0': item.label}}
             });
           });
         }
