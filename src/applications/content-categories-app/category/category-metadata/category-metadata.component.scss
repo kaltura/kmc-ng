@@ -40,6 +40,20 @@ hr{
 			display: flex;
 			padding-top: 16px;
 
+			.kFormLabelContainer{
+				width:190px;
+				display: flex;
+				justify-content: space-between;
+				.kFormRequiredIndicator{
+					margin-right: 8px;
+				}
+
+				.kLabel {
+					flex: 0 0 auto;
+					word-wrap: break-word;
+					padding-right: 12px;
+				}
+			}
 			.kLabel {
 				width: 160px;
 				flex: 0 0 auto;
