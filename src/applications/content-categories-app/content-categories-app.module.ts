@@ -55,6 +55,7 @@ import {CategoryCanDeactivate} from './category/category-can-deactivate.service'
 import {CategoryParentSelectorComponent} from './categories/category-parent-selector/category-parent-selector.component';
 import {NewCategoryComponent} from './categories/new-category/new-category.component';
 import {MoveCategoryComponent} from './categories/move-category/move-category.component';
+import {CategoriesRefineFiltersService} from './categories/categories-refine-filters/categories-refine-filters.service';
 
 @NgModule({
     imports: [
@@ -113,7 +114,8 @@ import {MoveCategoryComponent} from './categories/move-category/move-category.co
         CategoriesBulkDeleteService,
         CategoriesBulkChangeContentPrivacyService,
         CategoriesBulkChangeContributionPolicyService,
-        CategoriesBulkChangeCategoryListingService]
+        CategoriesBulkChangeCategoryListingService,
+        CategoriesRefineFiltersService]
 })
 export class ContentCategoriesAppModule {
 }
