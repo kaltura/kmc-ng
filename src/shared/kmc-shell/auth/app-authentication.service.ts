@@ -308,7 +308,7 @@ export class AppAuthentication {
 
   // Prevents the browser to verify page exit before reload
   private forceReload() {
-    this._pageExitVerificationService.disable();
+    this._pageExitVerificationService.removeAll();
     this.reload();
   }
 }

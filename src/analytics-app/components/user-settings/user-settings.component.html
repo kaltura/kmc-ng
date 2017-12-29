@@ -1,0 +1,21 @@
+<div class="kUserSettings">
+  <ul>
+    <li class="kMenuItemLabel"><span class="kIcon kIconuser_small"></span>
+      <div class="kMenuItem">
+        <span>{{_userContext.fullName}}</span>
+        <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>
+      </div>
+    </li>
+    <li class="kMenuItemLabel"><span class="kIcon kIconhouse"></span>
+      <div class="kMenuItem">
+        <span>{{_userContext.partnerInfo.name}}</span>
+        <a (click)="changeAccountPopup.open()">{{'app.userSettings.changeAccount' | translate}}</a>
+      </div>
+    </li>
+  </ul>
+</div>
+<kPopupWidget #changeAccountPopup [popupWidth]="500" [popupHeight]="370" [modal]="true">
+  <ng-template>
+    <kChangeAccount></kChangeAccount>
+  </ng-template>
+</kPopupWidget>

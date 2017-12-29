@@ -38,7 +38,6 @@ export class AppBootstrap implements CanActivate {
 
                 private appStorage: AppStorage,
                 @Inject(BootstrapAdapterToken) @Optional() private bootstrapAdapters: BootstrapAdapter[]) {
-        this.initializeApplication();
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -77,43 +76,45 @@ export class AppBootstrap implements CanActivate {
         });
     }
 
-    private initializeApplication(): void {
+    public bootstrap(): void {
 
-        const bootstrapFailure = (error: any) => {
-            console.log("Bootstrap Error::" + error); // TODO [kmc-infra] - move to log
-            this._bootstrapStatusSource.next(BoostrappingStatus.Error);
-        }
-
-
-        this._initialized = true;
-
-        // init localization, wait for localization to load before continuing
-        this.appLocalization.setFilesHash(environment.appVersion);
-        const language = this.getCurrentLanguage();
-        this.appLocalization.load(language,'en').subscribe(
-            () => {
-                // Start authentication process
-                if (!this.executeAdapter(BootstrapAdapterType.preAuth)) {
-                    bootstrapFailure("preAuth adapter execution failure");
-                    return;
-                }
-                this.auth.loginAutomatically().subscribe(
-                    () => {
-                        if (!this.executeAdapter(BootstrapAdapterType.postAuth)) {
-                            bootstrapFailure("postAuth adapter execution failure");
-                            return;
-                        }
-                        this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
-                    },
-                    () => {
-                        bootstrapFailure("Authentication process failed");
-                    }
-                );
-            },
-            (error) => {
-                bootstrapFailure(error);
+        if (!this._initialized) {
+            const bootstrapFailure = (error: any) => {
+                console.log("Bootstrap Error::" + error); // TODO [kmc-infra] - move to log
+                this._bootstrapStatusSource.next(BoostrappingStatus.Error);
             }
-        );
+
+
+            this._initialized = true;
+
+            // init localization, wait for localization to load before continuing
+            this.appLocalization.setFilesHash(environment.appVersion);
+            const language = this.getCurrentLanguage();
+            this.appLocalization.load(language, 'en').subscribe(
+                () => {
+                    // Start authentication process
+                    if (!this.executeAdapter(BootstrapAdapterType.preAuth)) {
+                        bootstrapFailure("preAuth adapter execution failure");
+                        return;
+                    }
+                    this.auth.loginAutomatically().subscribe(
+                        () => {
+                            if (!this.executeAdapter(BootstrapAdapterType.postAuth)) {
+                                bootstrapFailure("postAuth adapter execution failure");
+                                return;
+                            }
+                            this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
+                        },
+                        () => {
+                            bootstrapFailure("Authentication process failed");
+                        }
+                    );
+                },
+                (error) => {
+                    bootstrapFailure(error);
+                }
+            );
+        }
     }
 
 

@@ -74,9 +74,7 @@ import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-ap
 import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
-import { ChangelogComponent } from './components/changelog/changelog.component';
-import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
-import { PlaylistCreationModule, PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
+import { PlaylistCreationModule } from 'app-shared/kmc-shared/playlist-creation';
 import {CategoryCreationModule} from 'app-shared/kmc-shared/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 
@@ -145,9 +143,7 @@ export function clientConfigurationFactory() {
     PasswordExpiredFormComponent,
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
-    ChangeAccountComponent,
-    ChangelogComponent,
-    ChangelogContentComponent
+    ChangeAccountComponent
   ],
   bootstrap: <any>[
     AppComponent
@@ -157,7 +153,7 @@ export function clientConfigurationFactory() {
     ...partnerProviders,
       KalturaLogger,
       {
-          provide: KalturaLoggerName, useValue: 'kmc'
+          provide: KalturaLoggerName, useValue: 'analytics'
       },
     AppMenuService,
     {
