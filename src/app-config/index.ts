@@ -1,10 +1,10 @@
 export const environment = {
     "appVersion": "3.3.0", // will be changed by release script
     "shell": {
-        "defaultRoute": "/content/entries",
-        "loginRoute" : "/login",
-        "errorRoute" : "/error",
         "browser": {
+            "errorRoute": "/error",
+            appRoute: "/content/entries/list",
+            "loginRoute": "/login",
             "storageNamespace": "kmc-ng"
         }
     },

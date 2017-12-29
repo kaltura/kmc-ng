@@ -26,9 +26,8 @@ export class AppComponent implements OnInit {
               private _browserService : BrowserService,
               private _appLocalization: AppLocalization,
               private router: Router,
-              private _oprationsTagManager: OperationTagManagerService,
-              private _uploadPageExitVerificationService: UploadPageExitVerificationService) {
-    this._uploadPageExitVerificationService.init();
+              private _oprationsTagManager: OperationTagManagerService
+              ) {
   }
 
   ngOnInit() {

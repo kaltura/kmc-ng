@@ -58,11 +58,6 @@ export class AppAuthentication {
 
   appEvents$ = this._appAuthStatus.asObservable();
 
-  defaultRoutes = {
-    loginRoute: '',
-    defaultRoute: '',
-    errorRoute: ''
-  };
 
   constructor(private kalturaServerClient: KalturaClient,
               private appStorage: AppStorage,

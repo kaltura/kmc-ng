@@ -64,7 +64,6 @@ export class BulkUploadMenuComponent {
       ));
     } else if (error.code === 'INVALID_KS') {
       this._userAuthentication.logout();
-      this._appNavigator.navigateToLogout();
     } else {
       this._showErrorAlert(error.message);
     }

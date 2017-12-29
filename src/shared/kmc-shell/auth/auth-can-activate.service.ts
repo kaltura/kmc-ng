@@ -24,9 +24,7 @@ export class AuthCanActivate implements CanActivate {
                             observer.next(true);
                         }else{
                             observer.next(false);
-                            if (!!this.appAuthentication.defaultRoutes.loginRoute) {
-                                this.appNavigator.navigateToLogin();
-                            }
+                            this.appNavigator.navigateToLogin();
                         }
                         observer.complete();
                         if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
@@ -35,9 +33,7 @@ export class AuthCanActivate implements CanActivate {
                             observer.next(false);
                             observer.complete();
                             if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
-                            if (!!this.appAuthentication.defaultRoutes.errorRoute) {
-                                this.appNavigator.navigateToError();
-                            }
+                            this.appNavigator.navigateToError();
                         }
                     }
                 },
@@ -46,9 +42,7 @@ export class AuthCanActivate implements CanActivate {
                     observer.next(false);
                     observer.complete();
                     if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
-                    if (!!this.appAuthentication.defaultRoutes.errorRoute) {
-                        this.appNavigator.navigateToError();
-                    }
+                    this.appNavigator.navigateToError();
                 }
             );
         });

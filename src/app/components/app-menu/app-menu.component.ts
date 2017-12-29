@@ -54,7 +54,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     logout() {
         this.userAuthentication.logout();
-        this.appNavigator.navigateToLogout();
     }
 
     ngOnDestroy() {
