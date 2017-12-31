@@ -38,10 +38,10 @@ export class EntriesSelectorComponent {
     this._entriesStore.paginationCacheToken = 'entries-selector';
   }
 
-  public _onActionSelected({ action, entryId }: { action: string, entryId: KalturaMediaEntry }): void {
+  public _onActionSelected({ action, entry }: { action: string, entry: KalturaMediaEntry }): void {
     switch (action) {
       case 'addToBucket':
-        this.selectedEntries.push(entryId);
+        this.selectedEntries.push(entry);
         this.selectedEntriesChange.emit(this.selectedEntries);
         break;
       default:
