@@ -8,7 +8,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 export interface TagItem
 { type: string, value: any, label: string, tooltip: string}
 
-const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions' ];
+const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'categories' ];
 
 @Component({
     selector: 'k-entries-list-tags',

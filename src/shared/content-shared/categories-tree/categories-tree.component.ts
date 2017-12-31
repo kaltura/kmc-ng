@@ -29,6 +29,7 @@ export class CategoriesTreeComponent implements OnInit {
   @Output() selectionChange = new EventEmitter<PrimeTreeNode[] | PrimeTreeNode>();
   @Output() onNodeChildrenLoaded = new EventEmitter<{ node: PrimeTreeNode }>();
   @Output() onNodeSelect: EventEmitter<PrimeTreeNode> = new EventEmitter();
+  @Output() onNodeUnselect: EventEmitter<PrimeTreeNode> = new EventEmitter();
 
   @ViewChild(PrimeTreePropagation) _primeTreeNodesState: PrimeTreePropagation;
 
@@ -41,13 +42,21 @@ export class CategoriesTreeComponent implements OnInit {
     'single': 'single'
   };
 
-  private _onNodeSelect(event : any) {
+  public _onNodeSelect(event: any) {
     if (event.node instanceof PrimeTreeNode) {
       this.onNodeSelect.emit(event.node);
     } else {
       console.log(`[categories-tree.component] invalid type provided. cannot select node `);
     }
   }
+
+    public _onNodeUnselect(event: any) {
+        if (event.node instanceof PrimeTreeNode) {
+            this.onNodeUnselect.emit(event.node);
+        } else {
+            console.log(`[categories-tree.component] invalid type provided. cannot select node `);
+        }
+    }
 
   public _categories: PrimeTreeNode[] = [];
 

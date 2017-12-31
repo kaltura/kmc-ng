@@ -9,8 +9,8 @@
             [value]="_categories"
             [selection]="selection"
             (selectionChange)="_selectionChange($event)"
-            (onNodeSelect)="onNodeSelect.emit($event)"
-            (onNodeUnselect)="onNodeUnselect.emit($event)"
+            (onNodeSelect)="_onNodeSelect($event)"
+            (onNodeUnselect)="_onNodeUnselect($event)"
             (onNodeExpand)="_onNodeExpand($event)">
       <ng-template let-node pTemplate="default">
         <div>
