@@ -13,7 +13,9 @@ const routes: Routes = <Routes>[
     {
         path: '', canActivate: [AppBootstrap],
         children: [
-            {path: 'login', component: LoginComponent},
+            {
+                path: 'login', component: LoginComponent
+            },
             {
                 path: '', redirectTo: '/analytics/live', pathMatch: 'full'
             },
