@@ -56,6 +56,11 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	}
 
 	protected onReset() {
+		this._DVRStatus = "";
+		this._showDVRWindow = false;
+		this._dvrWindowAvailable = false;
+		this._manualStreamsConfiguration = [];
+		this._bitrates = [];
 		this.dirty = false;
 	}
 
