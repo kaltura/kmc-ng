@@ -44,7 +44,7 @@
               (onOpen)="username.className='kUserName open'"
               (onClose)="username.className='kUserName'"
               kSticky [sticksTo]="'header'" [stickyId]="'usersettingsPopup'" [stickyClass]="'kForceFix'">
-    <kKMCUserSettings></kKMCUserSettings>
+    <kKMCUserSettings [parentPopup]="usersettings"></kKMCUserSettings>
 </kPopupWidget>
 
 <kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">

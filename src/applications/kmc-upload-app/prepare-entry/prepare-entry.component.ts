@@ -28,7 +28,7 @@ export class PrepareEntryComponent implements OnInit {
     this._selectedMediaType = kalturaMediaType;
     // TODO [kmcng] If user permissions allows setting transcoding profile - show transcoding profile selector
     // 'transcodingProfileSettingPermission' should contain whether the user has the permission to set the transcoding profile
-    const transcodingProfileSettingPermission = false;
+    const transcodingProfileSettingPermission = true;
     if (transcodingProfileSettingPermission) {
       this.transcodingProfileSelectMenu.open();
     } else {

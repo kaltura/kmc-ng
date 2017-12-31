@@ -1,4 +1,4 @@
-import {Component, Output, ViewChild, EventEmitter} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppAuthentication, AppUser, PartnerPackageTypes, AppNavigator} from 'app-shared/kmc-shell';
 import {environment} from 'app-environment';
@@ -11,7 +11,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettingsComponent {
-  timeoutID: number = null;
+  @Input() parentPopup: PopupWidgetComponent;
   public _userContext: AppUser;
   public _languages = [];
   public _selectedLanguage = 'en';

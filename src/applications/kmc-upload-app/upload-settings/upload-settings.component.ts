@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
@@ -31,6 +31,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
 
+  public _tableScrollableWrapper: Element;
   public _transcodingProfiles: { value: number, label: string }[];
   public _profileForm: FormGroup;
   public _transcodingProfileField: AbstractControl;
@@ -74,6 +75,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this._fileDialog.open();
+
+    this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
   }
 
   ngOnInit() {

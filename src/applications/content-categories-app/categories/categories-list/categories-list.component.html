@@ -1,7 +1,7 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kCategories kOverrideFAIcons">
     <div #categoriesTableHolder class="kCategoriesHolder kContent">
-      <kSticky [stickyClass]="'kStickyClass'" stickyId="categoriesListFilters" [scrollOffset]="80"
+      <kSticky stickyId="categoriesListFilters" [scrollOffset]="80"
                [sticksTo]="'header'">
         <div class="kCategoriesTableFilters kContent">
           <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}"
