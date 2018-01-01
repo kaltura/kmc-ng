@@ -99,7 +99,7 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
                 filter: new KalturaMediaEntryFilter(
                     {
                         rootEntryIdEqual : entry.id,
-	                    tagsMultiLikeOr: 'highlight',
+	                    tagsLike: 'highlights',
                         orderBy : `${this.sortAsc ? '+' : '-'}${this.sortBy}`
                     }
                 ),
@@ -166,6 +166,10 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
     protected onActivate(firstTimeActivating: boolean) {
 	    return this._getEntryHighlights('activation');
     }
+
+	deleteEntry(entry: KalturaMediaEntry): void{
+    	console.log("Delete entry id: +entry.id"); // TODO - implement code
+	}
 
     ngOnDestroy()
     {

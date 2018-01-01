@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-
+import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
 import { EntryHighlightsWidget } from './entry-highlights-widget.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { environment } from 'app-environment';
 
 @Component({
     selector: 'kEntryHighlights',
@@ -12,13 +15,17 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 export class EntryHighlights implements OnInit, OnDestroy {
 
     @ViewChild('highlightsPopup') popup: PopupWidgetComponent;
+    @ViewChild('edit') editPopup: PopupWidgetComponent;
+    @ViewChild('actionsmenu') private actionsMenu: Menu;
 
+    public _actions: MenuItem[] = [];
     public _loading = false;
     public _loadingError = null;
     public _profiles = [{label: "Sports", value: "Sports"}, {label: "Lecture", value: "Lecture"}, {label: "Drama", value: "Drama"}, {label: "Action", value: "Action"}];
     public _selectedProfile = this._profiles[0].value;
+    public _selectedHighlightsEntry: KalturaMediaEntry = null;
 
-    constructor(public _widgetService: EntryHighlightsWidget)
+    constructor(public _widgetService: EntryHighlightsWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService)
     {
     }
 
@@ -47,8 +54,48 @@ export class EntryHighlights implements OnInit, OnDestroy {
         console.log("create new highlights for "+this._selectedProfile); // TODO - implement server call
     }
 
+    openActionsMenu(event: any, file: KalturaMediaEntry): void{
+        this._selectedHighlightsEntry = file;
+        if (this.actionsMenu){
+            this.actionsMenu.toggle(event);
+        }
+    }
+
     ngOnInit() {
         this._widgetService.attachForm();
+
+        this._actions = [
+            {label: this._appLocalization.get('applications.content.entryDetails.related.edit'), command: (event) => {this.actionSelected("edit");}},
+            {label: this._appLocalization.get('applications.content.entryDetails.related.delete'), command: (event) => {this.actionSelected("delete");}},
+            {label: this._appLocalization.get('applications.content.entryDetails.related.preview'), command: (event) => {this.actionSelected("preview");}}
+        ];
+
+    }
+
+    private actionSelected(action: string): void{
+        switch (action){
+            case "edit":
+                this.editPopup.open();
+                break;
+            case "delete":
+                this._browserService.confirm(
+                    {
+                        header: this._appLocalization.get('applications.content.entryDetails.highlights.deleteConfirmHeader'),
+                        message: this._appLocalization.get('applications.content.entryDetails.highlights.deleteConfirm'),
+                        accept: () => {
+                            this._widgetService.deleteEntry(this._selectedHighlightsEntry);
+                        }
+                    }
+                );
+                break;
+            case "preview":
+                this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+this._selectedHighlightsEntry.id);
+                break;
+        }
+    }
+
+    save():void{
+
     }
 
     ngOnDestroy() {

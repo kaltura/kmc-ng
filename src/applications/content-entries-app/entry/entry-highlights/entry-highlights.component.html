@@ -24,7 +24,17 @@
 						<span>{{entry | entryStatus}}</span>
 					</ng-template>
 				</p-column>
+				<p-column [style]="{'width':'80px'}">
+					<ng-template let-col let-file="rowData" pTemplate="body">
+						<div class="kHighlightsTableActions">
+							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, file)"></button>
+						</div>
+					</ng-template>
+				</p-column>
+
 			</p-dataTable>
+			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+
 		</div>
 
 		<p-paginator [rows]="_widgetService.pageSize" (onPageChange)="_onPaginationChanged($event)"
@@ -50,6 +60,18 @@
 
 		<div class="kFooter">
 			<button type="button" class="kButtonBranded" (click)="_createAndClose()" pButton label="{{'applications.content.entryDetails.highlights.create' | translate}}"></button>
+		</div>
+	</div>
+</kPopupWidget>
+
+<kPopupWidget #edit [popupWidth]="995" [slider]="true">
+	<div class="kFloater">
+		<div class="kHeader">
+			<span class="kTitle">Editing in kEdit - {{_selectedHighlightsEntry?.name}}</span>
+			<div class="kButtons">
+				<a class="kCancel" (click)="edit.close()">Cancel</a>
+				<button type="button" class="kButtonBranded" pButton [label]="'Save'" (click)="_save()"></button>
+			</div>
 		</div>
 	</div>
 </kPopupWidget>

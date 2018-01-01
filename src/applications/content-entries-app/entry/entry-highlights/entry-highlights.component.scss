@@ -13,6 +13,17 @@
 	.kTable{
 		margin-top: 24px;
 	}
+	.kHighlightsTableActions {
+		width: 100%;
+		text-align: center;
+		button {
+			color: grey !important;
+			background-color: rgba(0, 0, 0, 0) !important;
+			border: none !important;
+			font-size: 16px !important;
+			outline: 0;
+		}
+	}
 }
 
 .kFloater{
@@ -70,6 +81,43 @@
 	}
 }
 
+.kFloater {
+	display: flex;
+	flex-direction: column;
+
+	.kHeader {
+		height: 78px;
+		width: 100%;
+		padding: 0 24px;
+		box-sizing: border-box;
+		border-bottom: 1px solid $kGrayscale4;
+		flex: 0 0 auto;
+		display: flex;
+		align-items: center;
+
+		.kTitle {
+			color: #333333;
+			font-size: 15px;
+			font-weight: 700;
+		}
+
+		.kButtons {
+			display: flex;
+			margin-left: auto;
+
+			.kCancel {
+				font-size: 15px;
+				color: #333333;
+				align-self: center;
+				margin-right: 24px;
+			}
+
+			.kButtonDefault {
+				font-weight: normal;
+			}
+		}
+	}
+}
 
 :host /deep/ .ui-paginator {
 	padding-right: 12px;

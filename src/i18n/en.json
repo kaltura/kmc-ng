@@ -1152,7 +1152,9 @@
           "add": "Wow Me!",
           "editTitle": "Create New Highlights Entry",
           "title": "Highlights Profile:",
-          "create": "Wow Me!"
+          "create": "Wow Me!",
+          "deleteConfirmHeader": "Delete Highlights Entry",
+          "deleteConfirm": "Are you sure you want to delete selected highlights entry?"
         },
         "users": {
           "users": "Users",
