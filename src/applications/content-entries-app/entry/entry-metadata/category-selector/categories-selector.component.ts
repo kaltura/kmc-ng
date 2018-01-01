@@ -133,7 +133,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
       const selectedNodes: PrimeTreeNode[] = [];
 
       node.children.forEach((attachedCategory) => {
-        if (this._selectedCategories.find(category => category.id === attachedCategory.data)) {
+        if (this._selectedCategories.find(category => String(category.id) === attachedCategory.data)) {
           selectedNodes.push(attachedCategory);
         }
       });

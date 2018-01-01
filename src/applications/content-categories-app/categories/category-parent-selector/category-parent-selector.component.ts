@@ -108,7 +108,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
       let selectedNode: PrimeTreeNode = null;
 
       node.children.forEach((attachedCategory) => {
-        if (this._selectedParentCategory && this._selectedParentCategory.id === attachedCategory.data) {
+        if (this._selectedParentCategory && String(this._selectedParentCategory.id) === attachedCategory.data) {
           selectedNode = attachedCategory;
         }
       });

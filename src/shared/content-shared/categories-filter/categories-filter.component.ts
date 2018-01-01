@@ -73,6 +73,64 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     private _updateComponentState(updates: Partial<EntriesFilters>): void {
+        const filteredItems = updates['categories'];
+
+        const listSelectionsMap = this._entriesStore.filtersUtils.toMap(this._selection, 'data');
+        const listFilterMap = this._entriesStore.filtersUtils.toMap(filteredItems, 'value');
+        const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
+
+        diff.added.forEach(addedItem => {
+            const matchingItem = filteredItems.find(item => item.value === addedItem.value);
+            if (!matchingItem) {
+                console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
+            } else {
+                listData.selections.push(matchingItem);
+            }
+        });
+
+        diff.deleted.forEach(removedItem => {
+
+            if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
+                // ignore root items (they are managed by the component tree)
+                listData.selections.splice(
+                    listData.selections.indexOf(removedItem),
+                    1
+                );
+                updatedPrimeTreeSelections = true;
+            }
+        });
+        const categoriesFilters = this._entriesStore.getFiltersByType(CategoriesFilter);
+
+        if (categoriesFilters && this._selectionMode === TreeSelectionModes.SelfAndChildren) {
+          newFilters.forEach((newFilter: CategoriesFilter) => {
+            // when this component is running with ExactIncludingChildren mode, in lazy mode we need to manually unselect
+            // the first nested child (if any) that currently selected
+            const childToRemove = categoriesFilters.find(filter => {
+              let result = false;
+
+              // check if this item is a parent of another item (don't validate last item which is the node itself)
+              for (let i = 0, length = filter.fullIdPath.length; i < length - 1 && !result; i++) {
+                result = filter.fullIdPath[i] === newFilter.value;
+              }
+
+              return result;
+            });
+
+            if (childToRemove) {
+              removedFilters.push(childToRemove);
+            }
+          });
+        }
+
+        if (newFilters.length > 0) {
+          this._entriesStore.addFilters(...newFilters);
+        }
+
+        if (removedFilters.length > 0) {
+          this._entriesStore.removeFilters(...removedFilters);
+        }
+
+
         // if (typeof updates.createdAt !== 'undefined') {
         //     this._createdAfter = updates.createdAt.fromDate || null;
         //     this._createdBefore = updates.createdAt.toDate || null;
@@ -137,6 +195,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     private _prepare(): void {
 
+        // TODO sakal
+        //const mode = this._selectionMode === TreeSelectionModes.SelfAndChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
+
         // update components when the active filter list is updated
         const savedAutoSelectChildren: TreeSelectionModes = this._browserService
             .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
@@ -164,26 +225,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             });
         }
     }
-
-    private _createFilter(item: CategoryData | PrimeTreeNode): any {
-        // const mode = this._selectionMode === TreeSelectionModes.SelfAndChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
-        //
-        // if (item) {
-        //   if (item instanceof PrimeTreeNode) {
-        //     return new CategoriesFilter(
-        //       item.label,
-        //       <number>item.data,
-        //       mode,
-        //       { token: (item.origin.fullNamePath || []).join(' > ') },
-        //       item.origin.fullIdPath
-        //     );
-        //   } else {
-        //     // create filter directly from auto complete selection (lazy mode)
-        //     return new CategoriesFilter(item.name, item.id, mode, { token: (item.fullNamePath || []).join(' > ') }, item.fullIdPath);
-        //   }
-        // }
-    }
-
 
     public _onFilterAdded(filter: any) {
         // const nodeOfFilter = this._categoriesTree.findNodeByFullIdPath(filter.fullIdPath);
@@ -227,46 +268,14 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         const newFilterItem = this._entriesStore.cloneFilter('categories', []);
         if (!newFilterItem.find(item => item.value === node.data)) {
-            newFilterItem.push({value: node.data + '', label: node.label });
+            newFilterItem.push({value: node.data + '', label: node.label, tooltip: (node.origin.fullNamePath || []).join(' > ') });
             this._entriesStore.filter({'categories': newFilterItem});
         }
     }
 
     private updateFilters(newFilters: any[], removedFilters: any[]): void {
 
-        // removedFilters = removedFilters || [];
-        // newFilters = newFilters || [];
-        //
-        // const categoriesFilters = this._entriesStore.getFiltersByType(CategoriesFilter);
-        //
-        // if (categoriesFilters && this._selectionMode === TreeSelectionModes.SelfAndChildren) {
-        //   newFilters.forEach((newFilter: CategoriesFilter) => {
-        //     // when this component is running with ExactIncludingChildren mode, in lazy mode we need to manually unselect
-        //     // the first nested child (if any) that currently selected
-        //     const childToRemove = categoriesFilters.find(filter => {
-        //       let result = false;
-        //
-        //       // check if this item is a parent of another item (don't validate last item which is the node itself)
-        //       for (let i = 0, length = filter.fullIdPath.length; i < length - 1 && !result; i++) {
-        //         result = filter.fullIdPath[i] === newFilter.value;
-        //       }
-        //
-        //       return result;
-        //     });
-        //
-        //     if (childToRemove) {
-        //       removedFilters.push(childToRemove);
-        //     }
-        //   });
-        // }
-        //
-        // if (newFilters.length > 0) {
-        //   this._entriesStore.addFilters(...newFilters);
-        // }
-        //
-        // if (removedFilters.length > 0) {
-        //   this._entriesStore.removeFilters(...removedFilters);
-        // }
+
     }
 
 
@@ -383,25 +392,25 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     _onSuggestionSelected(): void {
 
-        const selectedItem = this._autoComplete.getValue();
-        if (selectedItem) {
-            const data = selectedItem.data;
-
-            const nodeToBeSelected = this._categoriesTree.findNodeByFullIdPath(data.fullIdPath);
-            if (nodeToBeSelected) {
-                // the requested node found in the tree - select that node
-                this._onTreeNodeSelected(nodeToBeSelected);
-
-                nodeToBeSelected.expand();
-
-            } else {
-                // the requested node is not part of the tree - create a filter directly
-                this.updateFilters([this._createFilter(data)], null);
-            }
-
-            // clear user text from component
-            this._autoComplete.clearValue();
-        }
+        // const selectedItem = this._autoComplete.getValue();
+        // if (selectedItem) {
+        //     const data = selectedItem.data;
+        //
+        //     const nodeToBeSelected = this._categoriesTree.findNodeByFullIdPath(data.fullIdPath);
+        //     if (nodeToBeSelected) {
+        //         // the requested node found in the tree - select that node
+        //         this._onTreeNodeSelected(nodeToBeSelected);
+        //
+        //         nodeToBeSelected.expand();
+        //
+        //     } else {
+        //         // the requested node is not part of the tree - create a filter directly
+        //         this.updateFilters([this._createFilter(data)], null);
+        //     }
+        //
+        //     // clear user text from component
+        //     this._autoComplete.clearValue();
+        // }
     }
 
 

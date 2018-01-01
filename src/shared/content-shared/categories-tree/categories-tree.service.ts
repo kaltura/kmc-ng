@@ -61,7 +61,7 @@ export class CategoriesTreeService {
         } else {
           node.setChildrenLoadStatus(NodeChildrenStatuses.loading);
 
-          this._categoriesSearchService.getChildrenCategories(<number>node.data).subscribe(result => {
+          this._categoriesSearchService.getChildrenCategories(Number(node.data)).subscribe(result => {
               // add children to the node
               let nodeChildren = this.primeTreeDataProvider.create(
                 this.createTreeHandlerArguments(result.items, node)
