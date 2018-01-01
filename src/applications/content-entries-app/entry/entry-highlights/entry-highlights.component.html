@@ -1,0 +1,55 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
+	<div class="kHighlights">
+		<p class="kTitle">{{'applications.content.entryDetails.highlights.highlights' | translate}}</p>
+		<button type="button" class="kButtonDefault" (click)="highlightsPopup.open()" pButton label="{{'applications.content.entryDetails.highlights.add' | translate}}"></button>
+
+		<div class="kTable">
+			<p-dataTable [value]="(_widgetService.entries$ | async)?.items" scrollable="true" [sortField]="_widgetService.sortBy" [sortOrder]="_convertSortValue(_widgetService.sortAsc)" (onSort)="_onSortChanged($event)">
+				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}" [style]="{'width':'120px','padding-left': '24px'}">
+					<ng-template let-col let-entry="rowData" pTemplate="body">
+						<a (click)="_widgetService.navigateToEntry(entry.id)">{{entry.id}}</a>
+					</ng-template>
+				</p-column>
+				<p-column field="name" header="{{'applications.content.entryDetails.clips.name' | translate}}" [sortable]="'custom'">
+				</p-column>
+				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'50px'}">
+				</p-column>
+				<p-column field="createdAt" header="{{'applications.content.entryDetails.clips.created' | translate}}" [sortable]="'custom'" [style]="{'width':'110px'}">
+					<ng-template let-col let-entry="rowData" pTemplate="body">
+						<span>{{entry[col.field] | date:'MM/dd/yy HH:mm'}}</span>
+					</ng-template>
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.clips.status' | translate}}" [style]="{'width':'70px'}">
+					<ng-template let-col let-entry="rowData" pTemplate="body">
+						<span>{{entry | entryStatus}}</span>
+					</ng-template>
+				</p-column>
+			</p-dataTable>
+		</div>
+
+		<p-paginator [rows]="_widgetService.pageSize" (onPageChange)="_onPaginationChanged($event)"
+					 [totalRecords]="(_widgetService.entries$ | async)?.totalItems"
+					 [rowsPerPageOptions]="_widgetService.pageSizesAvailable"></p-paginator>
+	</div>
+</k-area-blocker>
+
+<kPopupWidget #highlightsPopup [popupWidth]="380" [popupHeight]="300" [modal]="true">
+	<div class="kFloater">
+		<div class="kHeader">
+			<span class="kTitle">{{'applications.content.entryDetails.highlights.editTitle' | translate}}</span>
+		</div>
+
+		<div class="kContainer">
+			<div class="kRow">
+				<span class="kLabel">{{'applications.content.entryDetails.highlights.title' | translate}}</span>
+			</div>
+			<div class="kRow">
+				<p-dropdown [options]="_profiles" [(ngModel)]="_selectedProfile"></p-dropdown>
+			</div>
+		</div>
+
+		<div class="kFooter">
+			<button type="button" class="kButtonBranded" (click)="_createAndClose()" pButton label="{{'applications.content.entryDetails.highlights.create' | translate}}"></button>
+		</div>
+	</div>
+</kPopupWidget>

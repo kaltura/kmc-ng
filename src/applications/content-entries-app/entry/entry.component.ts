@@ -20,6 +20,7 @@ import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltur
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntryHighlightsWidget } from './entry-highlights/entry-highlights-widget.service';
 
 @Component({
     selector: 'kEntry',
@@ -36,6 +37,7 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
         EntryFlavoursWidget,
         EntryLiveWidget,
         EntryClipsWidget,
+		EntryHighlightsWidget,
         EntryCaptionsWidget,
         EntryAccessControlWidget,
         EntryMetadataWidget,
@@ -70,10 +72,11 @@ export class EntryComponent implements OnInit, OnDestroy {
                 widget11: EntryMetadataWidget,
 				widget12: EntryDetailsWidget,
 				widget13: EntryPreviewWidget,
+				widget14: EntryHighlightsWidget,
 				private _entriesStore: EntriesStore,
 				private _appLocalization: AppLocalization,
     			public _entryStore: EntryStore) {
-        entryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5, widget6, widget7, widget8, widget9, widget10, widget11, widget12, widget13]);
+        entryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5, widget6, widget7, widget8, widget9, widget10, widget11, widget12, widget13, widget14]);
     }
 
 	ngOnDestroy() {

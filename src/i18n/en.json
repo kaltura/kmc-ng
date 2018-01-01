@@ -861,6 +861,7 @@
           "live": "Live Stream",
           "relatedFiles": "Related Files",
           "clips": "Clips",
+          "highlights": "Highlights",
           "users": "Users"
         },
         "preview": {
@@ -1145,6 +1146,13 @@
           "duration": "Duration",
           "status": "Status",
           "n_a": "N/A"
+        },
+        "highlights":{
+          "highlights": "Highlights",
+          "add": "Wow Me!",
+          "editTitle": "Create New Highlights Entry",
+          "title": "Highlights Profile:",
+          "create": "Wow Me!"
         },
         "users": {
           "users": "Users",

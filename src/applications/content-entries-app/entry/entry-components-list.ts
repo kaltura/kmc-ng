@@ -13,6 +13,7 @@ import { EntryLive } from "./entry-live/entry-live.component";
 import { EntryRelated } from "./entry-related/entry-related.component";
 import { EntryRelatedEdit } from "./entry-related/entry-related-edit.component";
 import { EntryClips } from "./entry-clips/entry-clips.component";
+import { EntryHighlights } from "./entry-highlights/entry-highlights.component";
 import { EntryUsers } from "./entry-users/entry-users.component";
 import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.component";
 import { EntryComponent } from './entry.component';
@@ -34,6 +35,7 @@ export const EntryComponentsList = [
     EntryCaptions,
     EntryCaptionsEdit,
     EntryClips,
+    EntryHighlights,
     EntryComponent,
     EntryFlavours,
     EntryLive,

@@ -10,6 +10,10 @@ export const SectionsList = [
         key : EntryWidgetKeys.Thumbnails
     },
     {
+        label : 'applications.content.entryDetails.sections.highlights',
+        key : EntryWidgetKeys.Highlights
+    },
+    {
         label : 'applications.content.entryDetails.sections.accessControl',
         key : EntryWidgetKeys.AccessControl
     },
