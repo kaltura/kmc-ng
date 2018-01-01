@@ -44,6 +44,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	public _recordStatus: string = "";
 	public _DVRStatus: string = "";
 	public _showDVRWindow: boolean = false;
+	public _dvrWindowAvailable: boolean = false;
 
 	public _selectedConversionProfile: number;
 	public _manualStreamsConfiguration = [];
@@ -55,6 +56,11 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	}
 
 	protected onReset() {
+		this._DVRStatus = "";
+		this._showDVRWindow = false;
+		this._dvrWindowAvailable = false;
+		this._manualStreamsConfiguration = [];
+		this._bitrates = [];
 		this.dirty = false;
 	}
 
@@ -186,6 +192,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			this._DVRStatus = this._appLocalization.get('app.common.on');
 			if (this._liveType === "kaltura") {
 				this._showDVRWindow = true;
+				this._dvrWindowAvailable = !isNaN(entry.dvrWindow);
 			}
 		}
 	}
