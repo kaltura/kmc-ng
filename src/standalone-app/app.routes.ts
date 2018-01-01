@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ErrorComponent } from './components/error/error.component';
 
+// TODO sakal load from environment
 
 const routes: Routes = <Routes>[
     {
@@ -21,8 +22,7 @@ const routes: Routes = <Routes>[
             },
             {
                 path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
-                    {path: '', redirectTo: 'analytics', pathMatch: 'full'},
-                    {
+                {
                         path: 'analytics',
                         loadChildren: '../applications/analytics-live-app/analytics-live-app.module#AnalyticsLiveAppModule'
                     }

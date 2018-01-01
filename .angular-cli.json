@@ -45,7 +45,7 @@
         "favicon.ico"
       ],
       "index": "index.html",
-      "main": "analytics-app/main.ts",
+      "main": "standalone-app/main.ts",
       "polyfills": "polyfills.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
@@ -59,8 +59,8 @@
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
-        "dev": "environments/environment.ts",
-        "prod": "environments/environment.prod.ts"
+        "dev": "analytics-app/environments/environment.ts",
+        "prod": "analytics-app/environments/environment.prod.ts"
       },
       "stylePreprocessorOptions" : {
         "includePaths" : ["styles"]
