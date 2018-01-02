@@ -23,6 +23,7 @@ import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminU
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { BrowserService } from '../providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client/api/types/AdminUserSetInitialPasswordAction';
 
 
 
@@ -122,6 +123,11 @@ export class AppAuthentication {
 
   updatePassword(payload: IUpdatePasswordPayload): Observable<{ email: string, password: string }> {
     return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
+      .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
+  }
+
+  setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<void> {
+    return this.kalturaServerClient.request(new AdminUserSetInitialPasswordAction(payload))
       .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
   }
 

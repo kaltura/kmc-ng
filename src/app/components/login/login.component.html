@@ -38,7 +38,11 @@
                               (onSetScreen)="_setScreen($event)"></kKMCInvalidLoginHash>
 
         <kKMCRestorePassword *ngSwitchCase="_loginScreens.RestorePassword"
-                             [restorePasswordHash]="_restorePasswordHash"></kKMCRestorePassword>
+                             [restorePasswordHash]="_restorePasswordHash"
+                             [inProgress]="_inProgress"
+                             [errorMessage]="_errorMessage"
+                             [passwordRestored]="_passwordRestored"
+                             (onRestorePassword)="_restorePassword($event)"></kKMCRestorePassword>
       </ng-container>
     </div>
     <div class="kLoginControls">

@@ -112,6 +112,7 @@
       },
       "restorePassword": {
         "title": "Welcome to Kaltura, please select your password.",
+        "restored": "Your new password has been set, please login to Kaltura management console.",
         "error": {
           "equal": "Passwords do not match",
           "required": "Field is required"

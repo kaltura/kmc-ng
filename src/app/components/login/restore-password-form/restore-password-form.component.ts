@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EqualFieldsValidator } from 'app-shared/kmc-shell/validators/equalFields.validator';
 
@@ -12,6 +12,9 @@ export class RestorePasswordFormComponent {
   @Input() errorCode: string;
   @Input() inProgress = false;
   @Input() restorePasswordHash: string;
+  @Input() passwordRestored = false;
+
+  @Output() onRestorePassword = new EventEmitter<{ newPassword: string, hashKey: string }>();
 
   public _formSent = false;
   public _resetPasswordForm: FormGroup;
@@ -71,7 +74,11 @@ export class RestorePasswordFormComponent {
 
     if (this._resetPasswordForm.valid) {
       this._formSent = false;
-      // TODO [kmcng] update password
+      const value = this._resetPasswordForm.value;
+      this.onRestorePassword.emit({
+        newPassword: value.passwords.newPassword,
+        hashKey: this.restorePasswordHash
+      });
     }
   }
 }

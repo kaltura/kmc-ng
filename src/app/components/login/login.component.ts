@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
   public _restorePasswordHash: string;
+  public _passwordRestored = false;
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -198,5 +199,21 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public _signUp(): void {
     this._browserService.openLink(environment.core.externalLinks.SIGNUP, {}, '_self');
+  }
+
+  public _restorePassword(payload: {newPassword: string, hashKey: string}): void {
+    this._inProgress = true;
+    this._appAuthentication.setInitalPassword(payload)
+      .subscribe(
+        () => {
+          this._inProgress = false;
+          this._passwordRestored = true;
+        },
+        err => {
+          this._errorMessage = err.message;
+          this._errorCode = err.code;
+          this._inProgress = false;
+        }
+      );
   }
 }
