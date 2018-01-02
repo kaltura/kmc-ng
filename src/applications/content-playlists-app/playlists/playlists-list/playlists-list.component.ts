@@ -184,7 +184,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               this._browserService.confirm(
                   {
                       header: this._appLocalization.get('applications.content.playlists.deletePlaylist'),
-                      message: this._appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: event.playlist.id}),
+                      message: this._appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: event.playlist.name}),
                       accept: () => {
                           this._deleteCurrentPlaylist(event.playlist.id);
                       }

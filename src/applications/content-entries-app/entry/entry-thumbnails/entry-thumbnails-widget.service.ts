@@ -259,23 +259,34 @@ export class EntryThumbnailsWidget extends EntryWidget
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
       const fileData: File = selectedFiles[0];
-
-      this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({ entryId: this.data.id, fileData: fileData }))
-        .tag('block-shell')
-        .cancelOnDestroy(this, this.widgetReset$)
-        .monitor('add thumb')
-        .subscribe(
-          () => this.reloadThumbnails(),
-          () => {
-            this._showBlockerMessage(new AreaBlockerMessage({
-              message: this._appLocalization.get('applications.content.entryDetails.errors.thumbnailsUploadError'),
-              buttons: [{
-                label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
-                action: () => super._removeBlockerMessage()
-              }]
-            }), true);
-          }
-        );
+      const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+	  const fileSize = fileData.size / 1024 / 1024; // convert to Mb
+	    if (fileSize > maxFileSize) {
+		    this._browserService.alert({
+			    header: this._appLocalization.get('app.common.attention'),
+			    message: this._appLocalization.get('applications.upload.validation.fileSizeExceeded')
+		    });
+	    }else {
+		    this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({
+			    entryId: this.data.id,
+			    fileData: fileData
+		    }))
+		    .tag('block-shell')
+		    .cancelOnDestroy(this, this.widgetReset$)
+		    .monitor('add thumb')
+		    .subscribe(
+			    () => this.reloadThumbnails(),
+			    () => {
+				    this._showBlockerMessage(new AreaBlockerMessage({
+					    message: this._appLocalization.get('applications.content.entryDetails.errors.thumbnailsUploadError'),
+					    buttons: [{
+						    label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+						    action: () => super._removeBlockerMessage()
+					    }]
+				    }), true);
+			    }
+		    );
+	    }
     }
   }
 

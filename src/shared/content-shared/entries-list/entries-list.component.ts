@@ -4,6 +4,7 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
@@ -35,10 +36,9 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       this._entriesStore.resetFilters(); // TODO [kmcng] reset filters without loading entries
     }
   }
+  @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
   @ViewChild('tags') private tags: StickyComponent;
-
-  @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
 
   public _orderByOptions = [
     {

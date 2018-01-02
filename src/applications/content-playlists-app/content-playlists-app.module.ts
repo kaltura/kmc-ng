@@ -33,43 +33,43 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    AreaBlockerModule,
-    DataTableModule,
-    KalturaCommonModule,
-    KalturaUIModule,
-    PaginatorModule,
-    TooltipModule,
-    ButtonModule,
-    TieredMenuModule,
-    CheckboxModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InputTextModule,
-    PopupWidgetModule,
-    CalendarModule,
-    MenuModule,
-    RadioButtonModule,
-    TagsModule,
-    KalturaPrimeNgUIModule,
-    AutoCompleteModule,
-    SharedModule,
-    DetailsBarModule,
-    RouterModule.forChild(routing),
-    StickyModule,
-    ContentSharedModule,
-    FiltersModule
-  ],
-  declarations: [
-    ContentPlaylistsComponent,
-    PlaylistsComponentsList,
-    PlaylistComponentsList
-  ],
-  exports: [],
-  providers: [
-    PlaylistCanDeactivate
-  ]
+    imports: [
+      CommonModule,
+      AreaBlockerModule,
+      DataTableModule,
+      KalturaCommonModule,
+      KalturaUIModule,
+      PaginatorModule,
+      TooltipModule,
+      ButtonModule,
+      TieredMenuModule,
+      CheckboxModule,
+      FormsModule,
+      ReactiveFormsModule,
+      InputTextModule,
+      PopupWidgetModule,
+      CalendarModule,
+      MenuModule,
+      RadioButtonModule,
+      TagsModule,
+      KalturaPrimeNgUIModule,
+      AutoCompleteModule,
+      SharedModule,
+	  DetailsBarModule,
+      RouterModule.forChild(routing),
+	  StickyModule,
+      ContentSharedModule,
+    FiltersModule],
+    declarations: [
+      ContentPlaylistsComponent,
+      PlaylistsComponentsList,
+      PlaylistComponentsList
+    ],
+    exports: [
+    ],
+    providers : [
+      PlaylistCanDeactivate
+    ]
 })
 export class ContentPlaylistsAppModule {
 }

@@ -7,7 +7,7 @@
     <kDetailInfo *ngIf="_isLive && _currentEntry?.recordedEntryId" [label]="'applications.content.entryDetails.preview.vodEntry' | translate" [value]="_currentEntry?.recordedEntryId" (itemClick)="navigateToEntry(currentEntry.recordedEntryId)"></kDetailInfo>
     <kDetailInfo *ngIf="_isRecordedLive && _currentEntry?.rootEntryId" [label]="'applications.content.entryDetails.preview.archiveOf' | translate" [value]="_currentEntry?.rootEntryId" (itemClick)="navigateToEntry(currentEntry.rootEntryId)"></kDetailInfo>
     <kDetailInfo [label]="'applications.content.entryDetails.preview.type' | translate" [value]="_currentEntry?.mediaType | entryType: true"></kDetailInfo>
-    <kDetailInfo [label]="'applications.content.entryDetails.preview.moderation' | translate" [value]="_currentEntry?.moderationStatus | moderation"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.moderation' | translate" [value]="_currentEntry?.moderationStatus | kModerationStatus"></kDetailInfo>
     <kDetailInfo *ngIf="_entryReady" [label]="'applications.content.entryDetails.preview.plays' | translate" [valueField]="'plays'"></kDetailInfo>
     <kDetailInfo *ngIf="_entryReady && _currentEntry?.rank" [label]="'applications.content.entryDetails.preview.rating' | translate" [valueField]="'rank'"></kDetailInfo>
     <kDetailInfo *ngIf="_hasDuration" [label]="'applications.content.entryDetails.preview.duration' | translate" [value]="_currentEntry?.duration | kTime"></kDetailInfo>

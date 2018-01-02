@@ -1,0 +1,54 @@
+<k-area-blocker [message]="_blockerMessage">
+  <div class="kUsers kOverrideFAIcons">
+    <div #usersTableHolder class="kUsersHolder kContent">
+      <div class="kUsersHeader">
+        <div class="kUsersNeedMore">
+          <span class="kCurrentStatus">{{'applications.administration.users.currentStatus' | translate}}</span>
+          {{_usersInfo}}
+          <span class="kMoreUsers">
+            {{'applications.administration.users.moreUsers' | translate}}
+            <a class="kClickHere" (click)="_upgradeAccount()">{{'applications.administration.users.clickHere' | translate}}</a>
+            {{'applications.administration.users.usersUpgrade' | translate}}
+          </span>
+        </div>
+      </div>
+      <kSticky stickyId="usersFilters" [sticksTo]="'header'" [scrollOffset]="166">
+        <div class="kUsersTableFilters kContent">
+          <button [disabled]="_usersTotalCount >= _partnerInfo.adminLoginUsersQuota"
+                  pButton
+                  type="button"
+                  label="{{'applications.administration.users.addUser' | translate}}"
+                  class="kButtonBranded kAddUserBtn"
+                  (click)="_addUser()"></button>
+          <span class="kSelectedUsersNum" *ngIf="_usersAmount">
+            {{_usersAmount}}
+          </span>
+          <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh"
+                  [kTooltip]="'applications.administration.users.refresh' | translate"></button>
+        </div>
+      </kSticky>
+      <kUsersTable
+        class="kUsersTable"
+        [users]="_users"
+        (editUser)="_onEditUser($event)"
+        (toggleUserStatus)="_onToggleUserStatus($event)"
+        (deleteUser)="_onDeleteUser($event)"></kUsersTable>
+      <div class="kUsersTableFooter kContent" #footer *ngIf="(_usersStore.users.data$ | async)?.users.totalCount">
+        <p-paginator
+          [rows]="_filter.pageSize"
+          [first]="_filter.pageIndex * _filter.pageSize"
+          [rowsPerPageOptions]="[25,50,100,250,500]"
+          [totalRecords]="(_usersStore.users.data$ | async)?.users.totalCount"
+          (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+
+  <kPopupWidget #editUserPopup [popupWidth]="791" [popupHeight]="663" [modal]="true">
+    <ng-template>
+      <kEditUser [parentPopupWidget]="editUserPopup" [user]="_user">
+      </kEditUser>
+    </ng-template>
+  </kPopupWidget>
+</k-area-blocker>

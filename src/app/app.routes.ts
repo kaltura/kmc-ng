@@ -45,7 +45,11 @@ const routes: Routes = <Routes>[
           {
             path: 'bulk',
             loadChildren: '../applications/content-bulk-log-app/content-bulk-log-app.module#ContentBulkLogAppModule'
-          }
+          },
+            {
+                path: 'moderation',
+                loadChildren: '../applications/content-moderation-app/content-moderation-app.module#ContentModerationAppModule'
+            }
         ]},
         {
           path: 'settings', children: [
@@ -62,12 +66,16 @@ const routes: Routes = <Routes>[
         },
         {
           path: 'administration', children: [
-          { path: '', redirectTo: 'roles', pathMatch: 'full' },
+            { path: '', redirectTo: 'users', pathMatch: 'full' },
+            {
+              path: 'roles',
+              loadChildren: '../applications/administration-roles-app/administration-roles-app.module#AdministrationRolesAppModule'
+            },
           {
-            path: 'roles',
-            loadChildren: '../applications/administration-roles-app/administration-roles-app.module#AdministrationRolesAppModule'
-          },
-        ]
+            path: 'users',
+            loadChildren: '../applications/administration-users-app/administration-users-app.module#AdministrationUsersAppModule'
+          }
+          ]
         },
         { path: 'studio', loadChildren: '../applications/studio-app/studio-app.module#StudioAppModule' },
       ]

@@ -19,7 +19,6 @@ import { EntryComponent } from './entry.component';
 import { EntryPreview } from './entry-preview/entry-preview.component';
 import { EntryDetails } from './entry-details/entry-details.component';
 import { JumpToSection } from './entry-metadata/jump-to-section.component';
-import { ModerationPipe } from './pipes/moderation.pipe';
 import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.component';
 import { LinkedEntriesPopup } from './entry-metadata/entry-selector/linked-entries-popup.component';
 import { CategoriesSelector } from './entry-metadata/category-selector/categories-selector.component';
@@ -53,6 +52,5 @@ export const EntryComponentsList = [
     JumpToSection,
     LinkedEntries,
     LinkedEntriesPopup,
-    ModerationPipe,
     TagsPipe
 ];

@@ -10,14 +10,16 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
+      "Administration": "Administration",
       "Settings": "Settings",
+      "Users": "Users",
       "Account Settings": "Account Settings",
       "Account Upgrade": "Account Upgrade",
-      "Administration": "Administration",
       "Roles": "Roles",
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
-      "DropFolders": "Drop Folders"
+      "DropFolders": "Drop Folders",
+      "UploadMonitor": "Upload Monitor"
     },
     "userSettings": {
       "changeAccount": "Change Account",
@@ -55,6 +57,7 @@
       "ok": "OK",
       "cancel": "Cancel",
       "retry": "Retry",
+      "reload": "Reload",
       "confirm": "Confirm",
       "close": "Close",
       "note": "Note:",
@@ -257,7 +260,7 @@
         "upToDate": "Up to date",
         "loading": "Loading...",
         "errors": {
-          "poll": "Cannot get upload data. Retrying...",
+          "poll": "Cannot get upload status. Retrying...",
           "prepare": "Could not connect upload monitor!"
         }
       },
@@ -323,8 +326,8 @@
           }
         },
         "confirmEntryNavigation": {
-          "title" : "Stream has been created successfully.",
-          "message": "Live Stream Entry has been created successfully. \n Do you want to view entry details?"
+          "title": "Stream has been created successfully.",
+          "message": "Live Stream Entry has been created successfully.\nStream activation for broadcasting with the CDN may take up to 3 hours.\n Do you want to view entry details?"
         }
       }
     },
@@ -466,8 +469,8 @@
         "requiresAuthentication": "Requires Authentication",
         "private": "Private",
         "selectedCategory": "Selected: {{0}}",
-        "errors" : {
-          "categoryCouldNotBeDeleted" : "Category could not be deleted"
+        "errors": {
+          "categoryCouldNotBeDeleted": "Category could not be deleted"
         }
       },
       "addNewCategory": {
@@ -477,10 +480,27 @@
         "discard": "Discard all changes?",
         "apply": "Apply",
         "cancel": "Cancel",
-        "noParent":"No Parent",
+        "noParent": "No Parent",
         "searchCategories": "Search Categories",
         "selectedParentCategory":"Parent Category Id: {{value}}"
-
+,
+        "name": "Name",
+        "categoryMovedSuccessfully": "Category moved successfully",
+        "errors": {
+          "requiredName": "You must enter name"
+        }
+      },
+      "moveCategory":{
+        "noParent":"No Parent",
+        "selectCategoryParent": "Select the parent category under which the selected category will appear",
+        "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
+        "errors": {
+          "invalidParentSelection": "Category cannot be moved into itself or one of its children categories",
+          "categoryMovedFailure": "An error occurred while trying to move category to selected parent",
+          "unableToMove": "Cannot perform Move Category action since no categories to move were selected",
+          "categoryAlreadyBelongsToParent": "Category is already a child of selected parent",
+          "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together."
+        }
       },
       "entries": {
         "entries": "{{0}} Entries",
@@ -531,6 +551,48 @@
         "confirmDeleteEntries": "Are you sure you want to delete the selected entries?",
         "addRule": "Add rule to your playlist"
       },
+      "moderation": {
+        "entryReports": "Entry Reports",
+        "approveEntry": "Approve Entry",
+        "rejectEntry": "Reject Entry",
+        "report": "Report",
+        "details": "Details",
+        "banCreator": "Ban Creator",
+        "flagSingular": "{{0}} Flag",
+        "flagPlural": "{{0}} Flags",
+        "sexualContent": "Sexual Content",
+        "harmfulOrDangerousAct": "Harmful Or Dangerous Act",
+        "spamOrCommercials": "Spam / Commercials",
+        "violentOrRepulsive": "Violent / Repulsive",
+        "errorConnecting": "Error connecting to server",
+        "errorOccured": "An error has occurred",
+        "notificationHasBeenSent": "A notification has been sent to your CMS system to flag this user.",
+        "approveMedia": "Moderation: Approve media",
+        "sureToApprove": "Are you sure you want to approve the following entry? \n {{0}}",
+        "sureToApproveMultiple": "Are you sure you want to approve the following entries? \n {{0}}",
+        "rejectMedia": "Moderation: Reject media",
+        "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
+        "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
+        "selectAction": "Select Action",
+        "errors": {
+          "missingIds": "Missing entryIds argument",
+          "bulkApproveEntry": "An error occurred while approving entry. \n Please try again.",
+          "bulkRejectEntry": "An error occurred while rejecting entry. \n Please try again."
+        }
+      },
+      "moderationDetails": {
+        "name": "Name",
+        "entryId": "Entry ID",
+        "duration": "Duration",
+        "plays": "Plays",
+        "moderationStatus": "Moderation Status",
+        "clippedFrom": "Clipped from",
+        "creator": "Creator",
+        "errors": {
+          "entryDetails": "Unable to load the entry moderation details",
+          "ban": "Unable to ban the Creator"
+        }
+      },
       "filters": {
         "errorLoading": "Error loading filters",
         "activeFilters": "Active Filters:",
@@ -567,7 +629,11 @@
         "dateFilter": {
           "until": "Until {{0}}",
           "from": "From {{0}}"
-        }
+        },
+        "privacyTypes": "Content Privacy: {{0}}",
+        "categoryListing": "Category Listing: {{0}}",
+        "contributionPolicy": "Contribution Policy: {{0}}",
+        "endUserPermissions": "End-User Permission: {{0}}"
       },
       "table": {
         "thumbnail": "Thumbnail",
@@ -585,6 +651,18 @@
         "view": "View Details",
         "loading": "Loading...",
         "noResults": "No Results",
+        "flags": "Flags",
+        "moderationStatus": "Moderation Status",
+        "reportsAndDetails": "Reports & Details",
+        "approve": "Approve",
+        "reject": "Reject",
+        "userName": "User name",
+        "userId": "User ID",
+        "emailAddress": "Email Address",
+        "role": "Role",
+        "lastLogin": "Last Login",
+        "edit": "Edit",
+        "blockUnblock": "Block / Unblock",
         "ruleName": "Rule Name",
         "entriesCount": "No.Entries",
         "limit": "Limit",
@@ -715,6 +793,11 @@
         "staticList": "Manual",
         "unknown": "Unknown"
       },
+      "userStatus": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "deleted": "Deleted"
+      },
       "addNewPlaylist": {
         "addNewPlaylist": "Add New Playlist",
         "selectPlaylistType": "Select playlist type",
@@ -773,6 +856,8 @@
         "moveDown": "Move Down",
         "duplicate": "Duplicate",
         "removeCategoriesNone": "No categories to remove",
+        "approve": "Approve",
+        "reject": "Reject",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
         "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries",
@@ -819,7 +904,7 @@
           "categories": "Categories",
           "browse": "Browse categories",
           "selectCategories": "Select Categories",
-          "addCategories": "Add Categories",
+          "addCategories": "Change Categories",
           "catSelect": "Select one or several categories",
           "offlineMsg": "Offline Message",
           "refId": "Reference ID",
@@ -1234,8 +1319,51 @@
           "delete": "Delete"
         },
         "errors": {
-          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users."
+          "loadError": "Can't load entries",
+          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users.",
+          "cantDeleteRole": "Can't delete role",
+          "cantDeleteAdminRole": "Can't delete Administrator role",
+          "cantDuplicateRole": "Can't duplicate role",
+          "duplicationError": "Error occurred while trying to duplicate role"
         }
+      },
+      "users": {
+        "user": "user",
+        "users": "users",
+        "moreUsers": "Need more KMC users?",
+        "clickHere": "Click here",
+        "usersUpgrade": "to upgrade your account!",
+        "you": "You",
+        "accountOwner": "Account Owner",
+        "deleteUser": "Delete User",
+        "confirmDelete": "Are you sure you want to delete the selected user? \n ({{0}})",
+        "save": "Save",
+        "editUser": "Edit User",
+        "loginEmailAddress": "Login Email address",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "publisherUserId": "Publisher User ID",
+        "userRole": "User role",
+        "addRole": "Add role",
+        "addUser": "Add User",
+        "currentStatus": "Current status:",
+        "usersInfo": "{{0}} KMC {{1}} in use, {{2}} additional available.",
+        "failedLoading": "Failed to load users data",
+        "cantPerform": "You don't have access to perform this action",
+        "successSavingUser": "Changes will take effect immediately. \nPlease instruct the user to refresh their browser.",
+        "personalDetails": "Personal Details",
+        "accountSpecificDetails": "Account Specific Details",
+        "required": "This field is required",
+        "emailFormat": "This Email format is not valid",
+        "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
+        "alreadyExist": "User already exist",
+        "alreadyExistError": "Login e-mail {{0}} is already listed in the system as an authorized user in your account.",
+        "userAssociatedCaption": "Associated user",
+        "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?",
+        "refresh": "Refresh",
+        "commonError": "Error happened during server request",
+        "addUserError": "Missing one of mandatory fields",
+        "invalidUserId": "Invalid user id"
       },
       "role": {
         "titleEdit": "Edit Role",

@@ -1,9 +1,8 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 
 import * as moment from 'moment';
-import { ListType } from '@kaltura-ng/mc-shared/filters';
-import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
+import {GroupedListType, ListType} from '@kaltura-ng/mc-shared/filters';
+import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries-store/entries-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export interface TagItem
@@ -161,28 +160,31 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     private _syncTagsOfList(filterName: keyof EntriesFilters): void {
-
         const currentValue =  <ListType>this._entriesStore.cloneFilter(filterName, []);
-        const tagsFilters = this._filterTags.filter(item => item.type === filterName);
 
-        const tagsFiltersMap = this._entriesStore.filtersUtils.toMap(tagsFilters, 'value');
-        const currentValueMap = this._entriesStore.filtersUtils.toMap(currentValue, 'value');
-        const diff = this._entriesStore.filtersUtils.getDiff(tagsFiltersMap, currentValueMap);
+        if (currentValue instanceof Array) {
+          // Developer notice: we must make sure the type at runtime is an array. this is a safe check only we don't expect the value to be different
+          const tagsFilters = this._filterTags.filter(item => item.type === filterName);
 
-        diff.deleted.forEach(item => {
+          const tagsFiltersMap = this._entriesStore.filtersUtils.toMap(tagsFilters, 'value');
+          const currentValueMap = this._entriesStore.filtersUtils.toMap(currentValue, 'value');
+          const diff = this._entriesStore.filtersUtils.getDiff(tagsFiltersMap, currentValueMap);
+
+          diff.deleted.forEach(item => {
             this._filterTags.splice(
-                this._filterTags.indexOf(item),
-                1);
-        });
+              this._filterTags.indexOf(item),
+              1);
+          });
 
-        diff.added.forEach(item => {
+          diff.added.forEach(item => {
             this._filterTags.push({
-                type: filterName,
-                value: (<any>item).value,
-                label: (<any>item).label,
-                tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': (<any>item).label})
+              type: filterName,
+              value: item.value,
+              label: item.label,
+              tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item.label})
             });
-        });
+          });
+        }
     }
 
     private _syncTagsOfCustomMetadata(customMetadataFilters: GroupedListType): void {

@@ -39,8 +39,6 @@ export interface CustomMenuItem extends MenuItem {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-  @Input() fillHeight = true;
-
   @Input() set columns(value: EntriesTableColumns) {
     this._columns = value || this._defaultColumns;
   }
@@ -73,8 +71,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
   private _deferredEntries: any[];
-  private entriesStoreStatusSubscription: ISubscription;
-  private actionsMenuEntryId = '';
+  private _actionsMenuEntry: KalturaMediaEntry = null;
+  private _entriesStoreStatusSubscription: ISubscription;
   private _defaultColumns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
@@ -96,7 +94,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._blockerMessage = null;
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this.entriesStoreStatusSubscription = this.entriesStore.entries.state$.subscribe(
+    this._entriesStoreStatusSubscription = this.entriesStore.entries.state$.subscribe(
       result => {
         if (result.errorMessage) {
           this._blockerMessage = new AreaBlockerMessage({
@@ -129,8 +127,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.actionsMenu.hide();
-    this.entriesStoreStatusSubscription.unsubscribe();
-    this.entriesStoreStatusSubscription = null;
+    this._entriesStoreStatusSubscription.unsubscribe();
+    this._entriesStoreStatusSubscription = null;
   }
 
   ngAfterViewInit() {
@@ -171,32 +169,33 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     return item.id;
   }
 
-  public _openActionsMenu(event: any, entry: KalturaMediaEntry) {
+  public _openActionsMenu(event: any, entry: KalturaMediaEntry): void {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (this.actionsMenuEntryId !== entry.id) {
-        this.actionsMenuEntryId = entry.id;
+      if (!this._actionsMenuEntry || this._actionsMenuEntry.id !== entry.id) {
+        this._actionsMenuEntry = entry;
         this._buildMenu(entry);
         this.actionsMenu.show(event);
       }
     }
   }
 
-  public _allowDrilldown(mediaType: string, status: string) {
+
+  public _allowDrilldown(mediaType: string, status: string): boolean {
     const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash.toString();
     const isReady = status && status !== KalturaEntryStatus.ready.toString();
     return !(isLiveStream && isReady);
   }
 
-  public _onActionSelected(action: string, entry: KalturaMediaEntry) {
-    this.actionSelected.emit({ action, entry });
+  public _onActionSelected(action: string, entry: KalturaMediaEntry): void {
+      this.actionSelected.emit({ action, entry });
   }
 
   public _onSortChanged(event) {
     this.sortChanged.emit(event);
   }
 
-  public _onSelectionChange(event) {
+  public _onSelectionChange(event): void {
     this.selectedEntriesChange.emit(event);
   }
 
