@@ -46,7 +46,7 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   @Output()
   sortChanged = new EventEmitter<any>();
   @Output()
-  onActionSelected = new EventEmitter<{action: string, users: User, actionPayload: any}>();
+  onActionSelected = new EventEmitter<{action: string, users: User, payload: { level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType}}>();
   @Output()
   selectedUsersChange = new EventEmitter<any>();
 
@@ -138,8 +138,8 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
     }
   }
 
-  _onActionSelected(action: string, user: User, actionPayload: any) {
-    this.onActionSelected.emit({action, users: user, actionPayload});
+  _onActionSelected(action: string, user: User, payload: { level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType}) {
+    this.onActionSelected.emit({action, users: user, payload});
   }
 
 

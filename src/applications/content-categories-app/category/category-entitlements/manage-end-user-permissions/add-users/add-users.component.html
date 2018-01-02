@@ -9,7 +9,7 @@
         <p-radioButton class="kRadio" [(ngModel)]="_selectedPermissionSettings" [value]="'inherit'"
                        name="permissionSettings"
                        [disabled]="!(category.inheritanceType === _kalturaInheritanceType.manual &&
-                                     parentCategory && parentCategory.membersCount > 0)"
+                                     parentCategory && parentCategory.membersCount > 0 && !usersCount)"
                        name="policy"
                        label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.inheritUser' | translate}}"
                        (onClick)="_clearUsers()"></p-radioButton>
@@ -61,10 +61,13 @@
       <button type="button" class="kButtonDefault" pButton
               label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.cancel' | translate}}"
               (click)="parentPopupWidget.close()"></button>
-      <button type="button" class="kButtonBranded" pButton
-              label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.save' | translate: {'0': _users?.length || 0} }}"
-              (click)="_apply()"
+      <button *ngIf="_selectedPermissionSettings === 'setPermissions'" type="button" class="kButtonBranded" pButton
+              label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.addUsers' | translate: {'0': _users?.length || 0} }}"
+              (click)="_addUsers()"
               [disabled]="_selectedPermissionSettings === 'inherit' || !_users?.length"></button>
+      <button *ngIf="_selectedPermissionSettings === 'inherit'" type="button" class="kButtonBranded" pButton
+              label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.save' | translate: {'0': _users?.length || 0} }}"
+              (click)="_copyUsersFromParent()"></button>
     </div>
   </div>
 </k-area-blocker>

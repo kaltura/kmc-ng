@@ -34,7 +34,7 @@
       <ng-template let-col let-user="rowData" pTemplate="body">
         <p-dropdown [options]="_permissionLevelOptions"
                     [(ngModel)]="user[col.field]"
-                    (onChange)="_onActionSelected('permissionLevel', user, user.permissionLevel)"
+                    (onChange)="_onActionSelected('permissionLevel', user, { level: user.permissionLevel})"
                     appendTo="body"
         [disabled]="categoryInheritUserPermissions"></p-dropdown>
       </ng-template>
@@ -47,7 +47,7 @@
       <ng-template let-col let-user="rowData" let-i="rowIndex" pTemplate="body">
         <p-dropdown [options]="_updateMethodOptions"
                     [(ngModel)]="user[col.field]"
-                    (onChange)="_onActionSelected('updateMethod', user, user.updateMethod)"
+                    (onChange)="_onActionSelected('updateMethod', user, { method: user.updateMethod})"
                     appendTo="body"
                     [disabled]="categoryInheritUserPermissions"></p-dropdown>
       </ng-template>
@@ -67,7 +67,7 @@
       <ng-template let-col let-user="rowData" pTemplate="body">
         <p-inputSwitch class="kInputSwitch"
                        [ngModel]="user[col.field] === _kalturaCategoryUserStatus.active"
-                       (onChange)="_onActionSelected($event.checked ? 'activate': 'deactivate', user)"
+                       (onChange)="_onActionSelected($event.checked ? 'activate': 'deactivate', user, {})"
                        [disabled]="categoryInheritUserPermissions"></p-inputSwitch>
         <span class="kCategoryUserStatus">{{user[col.field] | kCategoryUserStatus}}</span>
       </ng-template>
@@ -76,7 +76,7 @@
     <!--Remove-->
     <p-column styleClass="removeColumn" header="">
       <ng-template let-user="rowData" pTemplate="body">
-        <i class="kIconremove" [class.kEnabled]="!categoryInheritUserPermissions" (click)="_onActionSelected('delete', user)"></i>
+        <i class="kIconremove" [class.kEnabled]="!categoryInheritUserPermissions" (click)="_onActionSelected('delete', user, {})"></i>
       </ng-template>
     </p-column>
 

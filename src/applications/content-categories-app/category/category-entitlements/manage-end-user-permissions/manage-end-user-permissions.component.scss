@@ -15,6 +15,19 @@
     font-weight: 700;
     padding: 8px;
   }
+  .kInheritanceMessage {
+    display: block;
+    clear: both;
+    padding: 0 8px;
+    width: 850px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: $kDandger;
+  }
+}
+.kHeader.kInheritance{
+  height: 80px;
 }
 
 .kManageEndUserPermissionsBulkOperationsContent {
@@ -36,6 +49,7 @@
   flex: 0 0 auto;
   padding: 0 14px 28px;
   display: block;
+  width: 996px;
 }
 
 .kPaginatorShowRowsLabel {

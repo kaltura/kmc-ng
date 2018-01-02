@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CategoryEntitlementsWidget} from './category-entitlements-widget.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
@@ -6,10 +6,8 @@ import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-
-
-interface KalturaCategory {
-}
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {BrowserService} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kCategoryEntitlements',
@@ -18,11 +16,12 @@ interface KalturaCategory {
 })
 export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
 
-
+  @ViewChild('manageUsersPopup') manageUsersPopup: PopupWidgetComponent;
   public _defaultPermissionLevelOptions: { value: number, label: string }[] = [];
 
   constructor(public _widgetService: CategoryEntitlementsWidget,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService) {
   }
 
   ngOnInit() {
@@ -63,7 +62,7 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
   // owner changed
   onOwnerChanged(owner: KalturaUser): void {
     // reset the form to have the new user in the textbox
-    this._widgetService.entitlementsForm.patchValue({ owner: owner.email});
+    this._widgetService.entitlementsForm.patchValue({ owner: (owner.email || owner.id)});
 
     this._widgetService.setDirty();
   }
@@ -86,5 +85,20 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
 
   public _onUsersNumberChanged({totalCount}: {totalCount: number}) {
     this._widgetService.membersTotalCount = totalCount;
+  }
+
+  public mananageUsersPermissions() {
+    if (this._widgetService.entitlementsForm.get('inheritUsersPermissions').pristine) {
+      this.manageUsersPopup.open();
+    } else {
+      this._browserService.alert(
+        {
+          header: this._appLocalization
+            .get('applications.content.categoryDetails.entitlements.manageUsersPermissionsEditMessage.title'),
+          message: this._appLocalization
+            .get('applications.content.categoryDetails.entitlements.manageUsersPermissionsEditMessage.description'),
+          accept: () => {}
+        });
+    }
   }
 }

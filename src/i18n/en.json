@@ -1239,6 +1239,10 @@
           "privacyContentLabel": {
             "label" : "Privacy Content Label"
           },
+          "manageUsersPermissionsEditMessage": {
+            "title": "Error",
+            "description": "You must save the category before setting its user permissions"
+          },
           "contentPrivacy": {
             "label": "Content Privacy",
             "help": "The content privacy option that you select will define the visibility of content in this category, including its related metadata. This setting will apply to the application's content search results, content lists or specific content item retrieved.\n\nFor content associated with more than one category, the privacy will be determined based on the category with the lowest restriction level.\n\nAdditional playback restrictions may apply through each entry's access control settings.",
@@ -1304,6 +1308,7 @@
           },
           "usersPermissions": {
             "title":"Manage End-user Permissions",
+            "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",
             "close": "Close",
             "table": {
               "userNameId": "User Name / ID",
@@ -1322,7 +1327,7 @@
               "usersCount": "{{0}} Users",
               "selectedUsersCount": "{{0}} Selected",
               "cancel": "Cancel",
-              "remove": "Remove",
+              "remove": "Delete",
               "search": "Search",
               "refine": "Refine",
               "moreActions": "More Actions",
@@ -1343,7 +1348,7 @@
                 "automatic": "Automatic",
                 "manual" : "Manual"
               },
-              "removeUsers": "Remove Users"
+              "removeUsers": "Delete Users"
             },
             "addUsers": {
               "title": "Add Users",
@@ -1352,9 +1357,12 @@
               "selectEndUsers": "Select End-Users",
               "permissionLevel": "Permission Level",
               "updateMethod": "Update method",
-              "save": "Add {{0}} Users",
+              "addUsers": "Add {{0}} Users",
+              "save": "Save",
               "cancel": "Cancel",
               "retry": "Retry",
+              "copyUsersFromParentConfirmationTitle": "Add End-User Permissions",
+              "copyUsersFromParentConfirmation": "All specific end-user permissions assigned to parent category will be saved immediately to this category.\nPlease note that this is a one-time operation and not an automatic inheritance.\n\nDo you want to continue?",
               "permissionsLevelOptions": {
                 "member": "Member",
                 "contributor": "Contributor",
@@ -1366,19 +1374,21 @@
                 "automatic": "Automatic"
               },
               "errors" : {
-                "actionFailed": "Error connecting to server",
+                "actionFailed": "An error occurred while trying to perform action",
                 "loadFailed": "Could not load End-Users Permissions",
                 "missingUsers": "Please enter at least one user",
                 "addUsersFailed": "An error occurred while trying to add end-users",
                 "invalidAction": "Please select a valid action for selected users",
-                "backToEntitlements": "Back to Entitlements"
+                "backToEntitlements": "Back to Entitlements",
+                "duplicateUsers": "Some of the added users were already set with permissions for this category",
+                "error": "Error"
               }
             },
             "errors" : {
               "loadEndUserPermissions": "An error occurred while trying to load Manage End-Users Permissions",
               "setUpdateMethod": "Unable to set update method for selected users",
               "setPermissionLevel": "Unable to set Permission Level for selected users",
-              "deleteUsers": "Unable to remove selected users",
+              "deleteUsers": "Unable to delete selected users",
               "deactivateUsers": "Unable to deactivate selected users",
               "activateUsers": "Unable to activate selected users"
             }

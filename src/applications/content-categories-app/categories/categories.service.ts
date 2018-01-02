@@ -557,12 +557,6 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
      * @return {boolean}
      */
     public isParentCategorySelectionValid(moveCategoryData: MoveCategoryData): boolean {
-
-      if (!moveCategoryData.categoryParent.fullIds) {
-        console.log('[CategoriesService.isParentCategorySelectionValid] invalid selected parent category');
-        return false;
-      }
-
       const isValid = (category) => {
         // Only siblings are allowed to be moved
         if (!category || !category.id || category.parentId !== moveCategoryData.categories[0].parentId) {
@@ -579,9 +573,18 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         return !selectedCategoryIdSameAsParent && !selectedParentIsDescendantOfCategoryToMove;
       };
 
+      if (!moveCategoryData) {
+        console.log('[CategoriesService.isParentCategorySelectionValid] invalid move category data parameter');
+        return false;
+      }
 
-      if (!moveCategoryData || !moveCategoryData.categories || !moveCategoryData.categories.length) {
+      if (!moveCategoryData.categories || !moveCategoryData.categories.length) {
         console.log('[CategoriesService.isParentCategorySelectionValid] invalid categories parameter');
+        return false;
+      }
+
+      if (!moveCategoryData.categoryParent || !moveCategoryData.categoryParent.fullIds) {
+        console.log('[CategoriesService.isParentCategorySelectionValid] invalid selected parent category');
         return false;
       }
 

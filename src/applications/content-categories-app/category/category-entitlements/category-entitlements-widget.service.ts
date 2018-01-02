@@ -7,21 +7,15 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategoryService} from '../category.service';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
-import {KalturaMetadata} from 'kaltura-ngx-client/api/types/KalturaMetadata';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoryGetAction} from 'kaltura-ngx-client/api/types/CategoryGetAction';
-import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
 import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
 import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
 
   public entitlementsForm: FormGroup;
-  private _categoryMetadata: KalturaMetadata[] = [];
   public parentCategory: KalturaCategory = null;
   public membersTotalCount = 0;
 
@@ -40,6 +34,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     if (this.data.parentId > 0) {
       super._showLoader();
       super._removeBlockerMessage();
+      this.membersTotalCount = this.data.membersCount;
       return this._fetchData('activation');
     } else {
       this._resetFormData();
@@ -82,7 +77,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
                     .get('applications.content.categoryDetails.entitlements.inheritUsersPermissions.errors.categoryLoadError'),
                   buttons: [
                     {
-                      label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+                      label: this._appLocalization.get('app.common.retry'),
                       action: () => {
                         this.refresh(reset);
                       }
@@ -129,10 +124,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   private _monitorFormChanges() {
-    const formsChanges: Observable<any>[] = [];
-    formsChanges.push(this.entitlementsForm.valueChanges, this.entitlementsForm.statusChanges);
-
-    Observable.merge(...formsChanges)
+    Observable.merge(this.entitlementsForm.valueChanges, this.entitlementsForm.statusChanges)
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(
         () => {
@@ -158,13 +150,13 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     const categoryInheritUsersPermission = this.parentCategory && this.data.inheritanceType === KalturaInheritanceType.inherit;
     this.entitlementsForm.reset(
       {
-        contentPrivacy: this.data.privacy || KalturaPrivacyType.all,
-        categoryListing: this.data.appearInList || KalturaAppearInListType.partnerOnly,
-        contentPublishPermissions: this.data.contributionPolicy || KalturaContributionPolicyType.all,
-        moderateContent: this.data.moderation === KalturaNullableBoolean.trueValue || false,
-        inheritUsersPermissions: categoryInheritUsersPermission || false,
+        contentPrivacy: this.data.privacy,
+        categoryListing: this.data.appearInList,
+        contentPublishPermissions: this.data.contributionPolicy,
+        moderateContent: this.data.moderation === KalturaNullableBoolean.trueValue,
+        inheritUsersPermissions: categoryInheritUsersPermission,
         defaultPermissionLevel: {
-          value: this.data.defaultPermissionLevel || KalturaCategoryUserPermissionLevel.member,
+          value: this.data.defaultPermissionLevel,
           disabled: categoryInheritUsersPermission
         },
         owner: {
@@ -180,7 +172,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
 
     if (!this.entitlementsForm.valid) {
-      return undefined;
+      throw new Error('Cannot perform save operation since the entitlement form is invalid');
     }
 
     const metadataFormValue = this.entitlementsForm.value;
@@ -201,7 +193,8 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
    */
   protected onReset() {
     this.entitlementsForm.reset({});
-    this._categoryMetadata = [];
+    this.parentCategory = null;
+    this.membersTotalCount = 0;
   }
 
   onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
@@ -227,10 +220,6 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     if (category && category.id) {
       this._categoryService.openCategory(category.id);
     }
-  }
-
-  protected onDataLoaded(data: KalturaCategory): void {
-      this.membersTotalCount = data.membersCount;
   }
 }
 
