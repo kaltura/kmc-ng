@@ -48,7 +48,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngOnInit() {
-        this._prepare();
     }
 
 
@@ -73,62 +72,32 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     private _updateComponentState(updates: Partial<EntriesFilters>): void {
-        const filteredItems = updates['categories'];
-
-        const listSelectionsMap = this._entriesStore.filtersUtils.toMap(this._selection, 'data');
-        const listFilterMap = this._entriesStore.filtersUtils.toMap(filteredItems, 'value');
-        const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
-
-        diff.added.forEach(addedItem => {
-            const matchingItem = filteredItems.find(item => item.value === addedItem.value);
-            if (!matchingItem) {
-                console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
-            } else {
-                listData.selections.push(matchingItem);
-            }
-        });
-
-        diff.deleted.forEach(removedItem => {
-
-            if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
-                // ignore root items (they are managed by the component tree)
-                listData.selections.splice(
-                    listData.selections.indexOf(removedItem),
-                    1
-                );
-                updatedPrimeTreeSelections = true;
-            }
-        });
-        const categoriesFilters = this._entriesStore.getFiltersByType(CategoriesFilter);
-
-        if (categoriesFilters && this._selectionMode === TreeSelectionModes.SelfAndChildren) {
-          newFilters.forEach((newFilter: CategoriesFilter) => {
-            // when this component is running with ExactIncludingChildren mode, in lazy mode we need to manually unselect
-            // the first nested child (if any) that currently selected
-            const childToRemove = categoriesFilters.find(filter => {
-              let result = false;
-
-              // check if this item is a parent of another item (don't validate last item which is the node itself)
-              for (let i = 0, length = filter.fullIdPath.length; i < length - 1 && !result; i++) {
-                result = filter.fullIdPath[i] === newFilter.value;
-              }
-
-              return result;
-            });
-
-            if (childToRemove) {
-              removedFilters.push(childToRemove);
-            }
-          });
-        }
-
-        if (newFilters.length > 0) {
-          this._entriesStore.addFilters(...newFilters);
-        }
-
-        if (removedFilters.length > 0) {
-          this._entriesStore.removeFilters(...removedFilters);
-        }
+        // const filteredItems = updates['categories'];
+        //
+        // const listSelectionsMap = this._entriesStore.filtersUtils.toMap(this._selection, 'data');
+        // const listFilterMap = this._entriesStore.filtersUtils.toMap(filteredItems, 'value');
+        // const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
+        //
+        // diff.added.forEach(addedItem => {
+        //     const matchingItem = filteredItems.find(item => item.value === addedItem.value);
+        //     if (!matchingItem) {
+        //         console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
+        //     } else {
+        //         listData.selections.push(matchingItem);
+        //     }
+        // });
+        //
+        // diff.deleted.forEach(removedItem => {
+        //
+        //     if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
+        //         // ignore root items (they are managed by the component tree)
+        //         listData.selections.splice(
+        //             listData.selections.indexOf(removedItem),
+        //             1
+        //         );
+        //         updatedPrimeTreeSelections = true;
+        //     }
+        // });
 
 
         // if (typeof updates.createdAt !== 'undefined') {
@@ -255,6 +224,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         // }
     }
 
+
     public _onTreeNodeUnselected(node: PrimeTreeNode) {
         const newFilterItem = this._entriesStore.cloneFilter('categories', []);
         const itemIndex = newFilterItem.findIndex(item => item.value === node.data);
@@ -268,16 +238,34 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         const newFilterItem = this._entriesStore.cloneFilter('categories', []);
         if (!newFilterItem.find(item => item.value === node.data)) {
-            newFilterItem.push({value: node.data + '', label: node.label, tooltip: (node.origin.fullNamePath || []).join(' > ') });
+            if (this._selectionMode === TreeSelectionModes.SelfAndChildren) {
+                // when this component is running with SelfAndChildren mode, we need to manually unselect
+                // the first nested child (if any) that is currently selected
+                const childToRemove = newFilterItem.find(item => {
+                    // check if this item is a parent of another item (don't validate last item which is the node itself)
+                    let result = false;
+                    for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
+                        result = String(item.fullIdPath[i]) === node.data;
+                    }
+                    return result;
+                });
+
+                if (childToRemove) {
+                    newFilterItem.splice(
+                        newFilterItem.indexOf(childToRemove),
+                        1);
+                }
+            }
+
+            newFilterItem.push({
+                value: node.data + '', label: node.label,
+                fullIdPath: node.origin.fullIdPath,
+                tooltip: (node.origin.fullNamePath || []).join(' > ')
+            });
+
             this._entriesStore.filter({'categories': newFilterItem});
         }
     }
-
-    private updateFilters(newFilters: any[], removedFilters: any[]): void {
-
-
-    }
-
 
     public _onNodeChildrenLoaded({ node }) {
         // if (node instanceof PrimeTreeNode) {
@@ -291,40 +279,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     public _onCategoriesLoad({ categories }: { categories: PrimeTreeNode[] }): void {
-        // this._categoriesLoaded = categories && categories.length > 0;
-        //
-        // if (!this.filterUpdateSubscription) {
-        //   this._entriesStore.activeFilters$
-        //     .cancelOnDestroy(this)
-        //     .first()
-        //     .subscribe(result => {
-        //       result.filters.forEach(filter => {
-        //         if (filter instanceof CategoriesFilter) {
-        //           this._onFilterAdded(filter);
-        //         }
-        //       });
-        //     });
-        //
-        //   this.filterUpdateSubscription = this._entriesStore.query$.subscribe(
-        //     filter => {
-        //       if (filter.removedFilters && filter.removedFilters.length > 0) {
-        //         filter.removedFilters.forEach(removedFilter => {
-        //           if (removedFilter instanceof CategoriesFilter) {
-        //             this._onFilterRemoved(removedFilter);
-        //           }
-        //         });
-        //       }
-        //
-        //       if (filter.addedFilters && filter.addedFilters.length > 0) {
-        //         filter.addedFilters.forEach(addedFilter => {
-        //           if (addedFilter instanceof CategoriesFilter) {
-        //             this._onFilterAdded(addedFilter);
-        //           }
-        //         });
-        //       }
-        //     }
-        //   );
-        // }
+        this._prepare();
     }
 
     private createTreeHandlerArguments(items: any[], parentNode: PrimeTreeNode = null): any {

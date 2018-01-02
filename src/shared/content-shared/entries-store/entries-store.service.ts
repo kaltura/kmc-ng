@@ -43,6 +43,7 @@ import {
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
 import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
+import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-shared/categories/categories-list-type';
 
 export enum SortDirection {
     Desc,
@@ -67,7 +68,7 @@ export interface EntriesFilters {
     accessControlProfiles: ListType,
     flavors: ListType,
     distributions: ListType,
-    categories: ListType,
+    categories: CategoriesListType,
     customMetadata: GroupedListType
 }
 
@@ -523,7 +524,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             accessControlProfiles: new ListAdapter(),
             flavors: new ListAdapter(),
             distributions: new ListAdapter(),
-            categories: new ListAdapter(),
+            categories: new CategoriesListAdapter(),
             customMetadata: new GroupedListAdapter()
         };
     }
