@@ -21,8 +21,12 @@ export class EntryHighlights implements OnInit, OnDestroy {
     public _actions: MenuItem[] = [];
     public _loading = false;
     public _loadingError = null;
-    public _profiles = [{label: "Sports", value: "Sports"}, {label: "Lecture", value: "Lecture"}, {label: "Drama", value: "Drama"}, {label: "Action", value: "Action"}, {label: "Other", value: "Other"}];
-    public _selectedProfile = this._profiles[0].value;
+    public _profiles = [
+        {label: "Sports", value: "Sports", selected: false},
+        {label: "Lecture", value: "Lecture", selected: false},
+        {label: "Drama", value: "Drama", selected: false},
+        {label: "Action", value: "Action", selected: false},
+        {label: "Other", value: "Other", selected: false}];
     public _selectedHighlightsEntry: KalturaMediaEntry = null;
 
     constructor(public _widgetService: EntryHighlightsWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _appAuthentication: AppAuthentication)
@@ -51,7 +55,7 @@ export class EntryHighlights implements OnInit, OnDestroy {
 
     public _createAndClose():void{
         this.popup.close();
-        this._widgetService.create(this._selectedHighlightsEntry, this._selectedProfile);
+        this._widgetService.create(this._selectedHighlightsEntry, this._profiles);
     }
 
     openActionsMenu(event: any, file: KalturaMediaEntry): void{

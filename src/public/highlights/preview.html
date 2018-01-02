@@ -49,6 +49,8 @@
 	var uiconfId = url.searchParams.get("uiconfId");
 	var scriptSrc = "https://cdnapisec.kaltura.com/p/"+pid+"/sp/"+pid+"00/embedIframeJs/uiconf_id/"+uiconfId+"/partner_id/"+pid;
 	var script = document.createElement('script');
+	var videoHeight = window.innerWidth * 9 / 16;
+	document.getElementById("kaltura_player").style.height = videoHeight + "px";
 	script.onload = function () {
 		kWidget.embed({
 			"targetId": "kaltura_player",
@@ -58,6 +60,7 @@
 				"largePlayBtn.plugin": false,
 				"autoPlay": true,
 				"autoMute": true,
+                "loop": true,
 				"controlBarContainer.plugin": false,
 				"topBarContainer.plugin": false
 			},

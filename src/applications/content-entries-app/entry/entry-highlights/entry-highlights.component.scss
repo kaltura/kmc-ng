@@ -48,7 +48,7 @@
 		flex: 0 0 auto;
 		margin: 24px;
 		margin-top: 8px;
-		height: 124px;
+		height: 204px;
 	}
 	.kFooter{
 		flex: 0 0 auto;
@@ -69,7 +69,7 @@
 	margin-top: 20px;
 	font-size: 15px;
 	.kLabel{
-		width: 120px;
+		width: 160px;
 		flex: 0 0 auto;
 	}
 	input{
@@ -80,7 +80,12 @@
 		width: 100%;
 	}
 }
-
+.checkboxes{
+	flex-direction: column;
+}
+.checkbox{
+	height: 30px;
+}
 .kFloater {
 	display: flex;
 	flex-direction: column;
@@ -121,6 +126,10 @@
 
 :host /deep/ .ui-paginator {
 	padding-right: 12px;
+}
+
+p-checkbox /deep/ .ui-chkbox-label {
+	font-weight: normal;
 }
 
 kPopupWidget /deep/ .ui-dropdown.ui-widget{

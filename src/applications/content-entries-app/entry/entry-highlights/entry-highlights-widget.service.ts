@@ -164,14 +164,19 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
 
     }
 
-	create(source: KalturaMediaEntry, profile: string):void{
+	create(source: KalturaMediaEntry, profiles: any[]):void{
     	// Demo code for status demo - TODO - implement real server all and returned entry addition to the entries array
     	let items = this._highlights.getValue().items;
-    	const newHighlights = new KalturaMediaEntry({
-		    name: this.data.name + " Highlights - " + profile,
-		    tags: "highlights"
+    	profiles.forEach(profile => {
+    		if (profile.selected) {
+			    const newHighlights = new KalturaMediaEntry({
+				    name: this.data.name + " Highlights - " + profile.label,
+				    tags: "highlights"
+			    });
+			    items.push(newHighlights);
+		    }
 	    });
-    	items.push(newHighlights);
+
 		this._highlights.next({items: items, totalItems: items.length});
 	}
 
