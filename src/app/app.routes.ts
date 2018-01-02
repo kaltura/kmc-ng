@@ -14,6 +14,7 @@ const routes: Routes = <Routes>[
     path: '', canActivate: [AppBootstrap],
     children: [
       { path: 'login', component: LoginComponent },
+      { path: 'setpasshashkey/:hash', component: LoginComponent },
         {
             path: '', redirectTo: '/login', pathMatch: 'full'
         },

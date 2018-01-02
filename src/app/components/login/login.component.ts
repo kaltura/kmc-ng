@@ -4,12 +4,14 @@ import { environment } from 'app-environment';
 import { AppAuthentication, AppNavigator, BrowserService, ILoginError, ILoginResponse } from 'app-shared/kmc-shell';
 import { TranslateService } from 'ng2-translate';
 import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export enum LoginScreens {
   Login,
   ForgotPassword,
   PasswordExpired,
-  InvalidLoginHash
+  InvalidLoginHash,
+  RestorePassword
 }
 
 @Component({
@@ -27,6 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _loginScreens = LoginScreens;
   public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
+  public _restorePasswordHash: string;
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -44,7 +47,16 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               private _translate: TranslateService,
               private _browserService: BrowserService,
               private _el: ElementRef,
-              private _renderer: Renderer2) {
+              private _renderer: Renderer2,
+              private _route: ActivatedRoute,
+              private _router: Router) {
+    const restorePasswordHash = this._route.snapshot.paramMap.get('hash');
+    if (restorePasswordHash) {
+      this._currentScreen = LoginScreens.RestorePassword;
+      this._restorePasswordHash = restorePasswordHash;
+    } else {
+      this._router.navigate(['login']);
+    }
   }
 
   ngAfterViewInit() {

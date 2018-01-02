@@ -36,6 +36,9 @@
                               [passwordReset]="_passwordReset"
                               (onResendLink)="_forgotPassword($event)"
                               (onSetScreen)="_setScreen($event)"></kKMCInvalidLoginHash>
+
+        <kKMCRestorePassword *ngSwitchCase="_loginScreens.RestorePassword"
+                             [restorePasswordHash]="_restorePasswordHash"></kKMCRestorePassword>
       </ng-container>
     </div>
     <div class="kLoginControls">

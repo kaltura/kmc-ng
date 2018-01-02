@@ -110,6 +110,17 @@
           "confirm": "Confirm new password"
         }
       },
+      "restorePassword": {
+        "title": "Welcome to Kaltura, please select your password.",
+        "error": {
+          "equal": "Passwords do not match",
+          "required": "Field is required"
+        },
+        "placeholder": {
+          "new": "Enter new password",
+          "confirm": "Confirm new password"
+        }
+      },
       "error": {
         "email": "Wrong email format",
         "badCredentials": "The username or password you have entered is incorrect.",

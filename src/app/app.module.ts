@@ -80,6 +80,7 @@ import { ChangelogContentComponent } from './components/changelog/changelog-cont
 import { PlaylistCreationModule, PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
 import {CategoryCreationModule} from 'app-shared/kmc-shared/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
+import { RestorePasswordFormComponent } from './components/login/restore-password-form/restore-password-form.component';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -148,7 +149,8 @@ export function clientConfigurationFactory() {
     InvalidLoginHashFormComponent,
     ChangeAccountComponent,
     ChangelogComponent,
-    ChangelogContentComponent
+    ChangelogContentComponent,
+    RestorePasswordFormComponent
   ],
   bootstrap: <any>[
     AppComponent
