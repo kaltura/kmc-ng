@@ -72,83 +72,33 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     private _updateComponentState(updates: Partial<EntriesFilters>): void {
-        // const filteredItems = updates['categories'];
-        //
-        // const listSelectionsMap = this._entriesStore.filtersUtils.toMap(this._selection, 'data');
-        // const listFilterMap = this._entriesStore.filtersUtils.toMap(filteredItems, 'value');
-        // const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
-        //
-        // diff.added.forEach(addedItem => {
-        //     const matchingItem = filteredItems.find(item => item.value === addedItem.value);
-        //     if (!matchingItem) {
-        //         console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
-        //     } else {
-        //         listData.selections.push(matchingItem);
-        //     }
-        // });
-        //
-        // diff.deleted.forEach(removedItem => {
-        //
-        //     if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
-        //         // ignore root items (they are managed by the component tree)
-        //         listData.selections.splice(
-        //             listData.selections.indexOf(removedItem),
-        //             1
-        //         );
-        //         updatedPrimeTreeSelections = true;
-        //     }
-        // });
 
+        const filteredItems = updates['categories'];
+        const listSelectionsMap = this._entriesStore.filtersUtils.toMap(this._selection, 'data');
+        const listFilterMap = this._entriesStore.filtersUtils.toMap(filteredItems, 'value');
+        const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
 
-        // if (typeof updates.createdAt !== 'undefined') {
-        //     this._createdAfter = updates.createdAt.fromDate || null;
-        //     this._createdBefore = updates.createdAt.toDate || null;
-        // }
-        //
-        // let updatedPrimeTreeSelections = false;
-        // Object.keys(this._primeListsMap).forEach(listName => {
-        //     const listData = this._primeListsMap[listName];
-        //     let listFilter: { value: string, label: string }[];
-        //     if (listData.group === 'customMetadata') {
-        //         const customMetadataFilter = updates['customMetadata'];
-        //         listFilter = customMetadataFilter ? customMetadataFilter[listName] : null;
-        //     } else {
-        //         listFilter = updates[listName];
-        //     }
-        //
-        //     if (typeof listFilter !== 'undefined') {
-        //         const listSelectionsMap = this._categoriesService.filtersUtils.toMap(listData.selections, 'value');
-        //         const listFilterMap = this._categoriesService.filtersUtils.toMap(listFilter, 'value');
-        //         const diff = this._categoriesService.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
-        //
-        //         diff.added.forEach(addedItem => {
-        //             const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-        //             const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
-        //             if (!matchingItem) {
-        //                 console.warn(`[categories-refine-filters]: failed to sync filter for '${listName}'`);
-        //             } else {
-        //                 updatedPrimeTreeSelections = true;
-        //                 listData.selections.push(matchingItem);
-        //             }
-        //         });
-        //
-        //         diff.deleted.forEach(removedItem => {
-        //
-        //             if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
-        //                 // ignore root items (they are managed by the component tree)
-        //                 listData.selections.splice(
-        //                     listData.selections.indexOf(removedItem),
-        //                     1
-        //                 );
-        //                 updatedPrimeTreeSelections = true;
-        //             }
-        //         });
-        //     }
-        // });
-        //
-        // if (updatedPrimeTreeSelections) {
-        //     this._fixPrimeTreePropagation();
-        // }
+        diff.added.forEach(addedItem => {
+            const matchingItem = filteredItems.find(item => item.value === addedItem.value);
+            if (matchingItem) {
+                const nodeOfFilter = this._categoriesTree.findNodeByFullIdPath(addedItem.fullIdPath);
+
+                if (nodeOfFilter) {
+                  // update selection of tree - handle situation when the node was added by auto-complete
+                  if (this._selection.indexOf(nodeOfFilter) === -1) {
+                    // IMPORTANT - we create a new array and not altering the existing one due to out-of-sync issue with angular binding.
+                    this._selection = [...this._selection, nodeOfFilter];
+                  }
+                }
+            }
+        });
+
+        diff.deleted.forEach(removedItem => {
+                this._selection.splice(
+                    this._selection.indexOf(removedItem),
+                    1
+                );
+        });
     }
 
 
@@ -194,36 +144,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             });
         }
     }
-
-    public _onFilterAdded(filter: any) {
-        // const nodeOfFilter = this._categoriesTree.findNodeByFullIdPath(filter.fullIdPath);
-        //
-        // if (nodeOfFilter) {
-        //
-        //   // update selection of tree - handle situation when the node was added by auto-complete
-        //   if (this._selection.indexOf(nodeOfFilter) === -1) {
-        //     // IMPORTANT - we create a new array and not altering the existing one due to out-of-sync issue with angular binding.
-        //     this._selection = [...this._selection, nodeOfFilter];
-        //   }
-        // }
-    }
-
-
-    public _onFilterRemoved(filter: any) {
-
-        // const nodeOfFilter = this._categoriesTree.findNodeByFullIdPath(filter.fullIdPath);
-        //
-        // if (nodeOfFilter) {
-        //
-        //   const nodeIndexInSelection = this._selection.indexOf(nodeOfFilter);
-        //
-        //   if (nodeIndexInSelection > -1) {
-        //     // IMPORTANT - we create a new array and not altering the existing one due to out-of-sync issue with angular binding.
-        //     this._selection = this._selection.filter(item => item !== nodeOfFilter);
-        //   }
-        // }
-    }
-
 
     public _onTreeNodeUnselected(node: PrimeTreeNode) {
         const newFilterItem = this._entriesStore.cloneFilter('categories', []);
@@ -317,7 +237,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     public _clearAll() {
-        //this._entriesStore.removeFiltersByType(CategoriesFilter);
+        this._entriesStore.resetFilters(['categories']);
     }
 
     public _blockTreeSelection(e: MouseEvent) {
