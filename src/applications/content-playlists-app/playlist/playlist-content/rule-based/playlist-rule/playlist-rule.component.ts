@@ -37,10 +37,12 @@ export class PlaylistRuleComponent {
 
     const convertedFilters = <any>Object.keys(filters).reduce((rules, key) => {
       const item = filters[key];
-      if (typeof item === 'string' || typeof item === 'number' || item.fromDate || item.toDate) {
-        rules[key] = item;
-      } else if (item && item.length) {
-        rules[key] = item.map(({ value }) => value).join(',')
+      if (item) {
+        if (typeof item === 'string' || typeof item === 'number' || item.fromDate || item.toDate) {
+          rules[key] = item;
+        } else if (item.length) {
+          rules[key] = item.map(({ value }) => value).join(',')
+        }
       }
 
       return rules;
