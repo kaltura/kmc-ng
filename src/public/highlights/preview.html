@@ -15,13 +15,13 @@
     <div class="verticalLine"></div>
     <span class="title bebas-neue">Magikaltura</span>
     <div class="header-right">
-        <span class="email">Contact@Hackathon-winners.com</span>
+        <span class="email" onclick="sendMail()">Contact@Hackathon-winners.com</span>
         <i class="share fa fa-twitter"></i>
         <i class="share fa fa-linkedin"></i>
         <i class="share fa fa-facebook"></i>
     </div>
 </div>
-<span class="slogan" style="bottom: 210px">Maximize video content with AUTOMAGICAL*</span><br>
+<!--span class="slogan" style="bottom: 210px">Maximize video content with AUTOMAGICAL*</span><br>
 <span class="slogan" style="bottom: 150px">Highlights create by magiKaltura</span>
 <span class="slogan2" style="bottom: 120px">*Automagical – defines something that happens automatically but you can’t quite explain how it happens or the explanation is too complex</span>
 <span class="slogan2" style="bottom: 100px">[Urban Dictionary]</span>
@@ -40,7 +40,7 @@
     <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/sap2.png?itok=lOyCvbDC">
     <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/Yes-logo.png?itok=zkzsvvT7">
     <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer_logo/public/nnit-de.png?itok=UnR6VJVP">
-</div>
+</div-->
 <script>
 	// get params
 	var url = new URL(window.location.href);
@@ -70,6 +70,14 @@
 	};
 	script.src = scriptSrc;
 	document.head.appendChild(script);
+
+	function sendMail(){
+		opener = window.open('mailto:all@kaltura.com?subject=Hackathon winners announced!&body=MagiKaltura Wins!');
+		setTimeout(function(){
+			opener.close();
+        },1000);
+
+    }
 </script>
 
 </body>
