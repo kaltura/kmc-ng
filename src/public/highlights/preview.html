@@ -1,10 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="intro.css" rel="stylesheet"/>
     <meta charset="UTF-8">
-    <title>Highlights Preview</title>
+    <title>Magikaltura</title>
+    <link rel="shortcut icon" href="https://corp.kaltura.com/sites/default/files/favicon.ico" type="image/vnd.microsoft.icon" />
+    <link rel="stylesheet" href="./fonts/FontAwesome/css/font-awesome.min.css">
 </head>
 <body>
-    <p>Highlights Preview</p>
+
+<div id="kaltura_player" style="width: 100%; height: 100vh;" itemprop="video" itemscope itemtype="http://schema.org/VideoObject"></div>
+<div class="header">
+    <img src="logo.png" width="60px" height="55px">
+    <div class="verticalLine"></div>
+    <span class="title bebas-neue">Magikaltura</span>
+    <div class="header-right">
+        <span class="email">Contact@Hackathon-winners.com</span>
+        <i class="share fa fa-twitter"></i>
+        <i class="share fa fa-linkedin"></i>
+        <i class="share fa fa-facebook"></i>
+    </div>
+</div>
+<span class="slogan" style="bottom: 210px">Maximize video content with AUTOMAGICAL*</span><br>
+<span class="slogan" style="bottom: 150px">Highlights create by magiKaltura</span>
+<span class="slogan2" style="bottom: 120px">*Automagical – defines something that happens automatically but you can’t quite explain how it happens or the explanation is too complex</span>
+<span class="slogan2" style="bottom: 100px">[Urban Dictionary]</span>
+<div class="footer">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/HBO.png?itok=V9oQPEdv">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/tmz.png?itok=SMpUiE3W">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/WB.png?itok=xNrsW8n2">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/paramount.png?itok=ej2P-_j0">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/obsev.png?itok=A0SzI_A9">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/thechive.png?itok=FT3H3bot">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/mp_logo_rund_Grey.png?itok=Dn_GffWE">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/Target_Grey.png?itok=oob8euMg">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/PearsonLogo_Horizontal_Mono_Blk_RGB.png?itok=I4vmv1XF">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/astra-de.png?itok=BqgV0B21">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/unh.png?itok=SJXcQVyL">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/sap2.png?itok=lOyCvbDC">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/Yes-logo.png?itok=zkzsvvT7">
+    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer_logo/public/nnit-de.png?itok=UnR6VJVP">
+</div>
+<script>
+	// get params
+	var url = new URL(window.location.href);
+	var entryId = url.searchParams.get("entryId");
+	var pid = url.searchParams.get("pid");
+	var uiconfId = url.searchParams.get("uiconfId");
+	var scriptSrc = "https://cdnapisec.kaltura.com/p/"+pid+"/sp/"+pid+"00/embedIframeJs/uiconf_id/"+uiconfId+"/partner_id/"+pid;
+	var script = document.createElement('script');
+	script.onload = function () {
+		kWidget.embed({
+			"targetId": "kaltura_player",
+			"wid": "_"+pid,
+			"uiconf_id": uiconfId,
+			"flashvars": {
+				"largePlayBtn.plugin": false,
+				"autoPlay": true,
+				"autoMute": true,
+				"controlBarContainer.plugin": false,
+				"topBarContainer.plugin": false
+			},
+			"cache_st": 1514888096,
+			"entry_id": entryId
+		});
+	};
+	script.src = scriptSrc;
+	document.head.appendChild(script);
+</script>
+
 </body>
 </html>

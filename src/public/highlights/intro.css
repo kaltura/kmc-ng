@@ -1,0 +1,94 @@
+@font-face {
+    font-family: "Bebas";
+    src: url("fonts/BebasNeue.otf");
+    src: url("fonts/BebasNeue.otf") format("opentype");
+}
+@font-face {
+    font-family: "Gilroy";
+    src: url("fonts/Gilroy-ExtraBold.otf");
+    src: url("fonts/Gilroy-ExtraBold.otf") format("opentype");
+}
+body{
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    text-rendering: geometricPrecision;
+}
+.header {
+    position: fixed;
+    width: 100%;
+    height: 100px;
+    top: 0px;
+    left: 0px;
+    z-index: 4;
+    background: rgba(0,0,0,.7);
+    display: flex;
+    align-items: center;
+    padding-left: 100px;
+}
+.verticalLine{
+    width: 1px;
+    height: 60px;
+    background-color: white;
+    margin-left: 14px;
+    margin-right: 14px;
+}
+.title{
+    font-family: 'Bebas', Arial;
+    font-size: 42px;
+    letter-spacing: 1px;
+    color: white;
+}
+.header-right{
+    margin-left: auto;
+    color: white;
+    padding-right: 140px;
+}
+.email{
+    font-family: 'Bebas', Arial;
+    font-size: 20px;
+    font-weight: 400;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.share{
+    margin-left: 16px;
+    cursor: pointer;
+    font-size: 20px !important;
+}
+.slogan{
+    font-family: 'Bebas', Arial;
+    font-size: 56px;
+    letter-spacing: 1px;
+    color: white;
+    text-shadow: 2px 2px 2px black;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+}
+.slogan2{
+    font-family: 'Gilroy', Arial;
+    font-size: 18px;
+    font-style: italic;
+    color: white;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+}
+.footer{
+    position: fixed;
+    width: 100%;
+    height: 80px;
+    bottom: 0px;
+    left: 0px;
+    z-index: 5;
+    background: rgba(255,255,255,.8);
+    padding-bottom: 10px;
+    padding-top: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+.customerLogo{
+    height: 80px;
+}

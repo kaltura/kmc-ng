@@ -4,7 +4,7 @@ import { EntryHighlightsWidget } from './entry-highlights-widget.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
 
 @Component({
@@ -25,7 +25,7 @@ export class EntryHighlights implements OnInit, OnDestroy {
     public _selectedProfile = this._profiles[0].value;
     public _selectedHighlightsEntry: KalturaMediaEntry = null;
 
-    constructor(public _widgetService: EntryHighlightsWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService)
+    constructor(public _widgetService: EntryHighlightsWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _appAuthentication: AppAuthentication)
     {
     }
 
@@ -89,7 +89,7 @@ export class EntryHighlights implements OnInit, OnDestroy {
                 );
                 break;
             case "preview":
-                this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+this._selectedHighlightsEntry.id);
+                this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+this._selectedHighlightsEntry.id+"&uiconfId="+environment.core.kaltura.previewUIConf+"&pid="+this._appAuthentication.appUser.partnerId);
                 break;
         }
     }
