@@ -171,7 +171,7 @@ export const environment = {
         "contentEntries" : {
             "createdAtDateRange" : "2005:2030",
             "bulkActionsLimit": 50,
-            "highlightsPreview": "./assets/highlights.html"
+            "highlightsPreview": "./public/highlights/preview.html"
         },
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",

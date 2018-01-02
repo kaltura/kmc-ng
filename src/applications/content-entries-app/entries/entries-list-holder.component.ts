@@ -9,6 +9,7 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/ent
 import { ContentEntriesAppService } from '../content-entries-app.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
+import { environment } from 'app-environment';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -42,6 +43,10 @@ export class EntriesListHolderComponent {
     {
       label: this._appLocalization.get('applications.content.table.view'),
       commandName: 'view'
+    },
+    {
+      label: this._appLocalization.get('applications.content.table.highlights'),
+      commandName: 'highlights'
     }
   ];
 
@@ -70,6 +75,9 @@ export class EntriesListHolderComponent {
               accept: () => this._deleteEntry(entry.id)
             }
         );
+        break;
+      case 'highlights':
+        this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+entry.id);
         break;
       default:
         break;

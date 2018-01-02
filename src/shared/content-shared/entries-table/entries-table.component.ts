@@ -144,18 +144,20 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  private _hideMenuItems(status, mediaType, { commandName }): boolean {
+  private _hideMenuItems(status, mediaType, entry, { commandName }): boolean {
     const isNotReady = status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString();
     const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
+    const isNotHighlights = entry.rootEntryId !== null ? (entry.tags ? entry.tags.indexOf("highlights") === -1 : true) : true;
     const isPreviewCommand = commandName === 'preview';
     const isViewCommand = commandName === 'view';
+    const isHighlightCommand = commandName === 'highlights';
 
-    return !(isNotReady && isPreviewCommand) && !(isNotReady && isLiveStreamFlash && isViewCommand);
+    return !(isNotHighlights && isHighlightCommand) && !(isNotReady && isPreviewCommand) && !(isNotReady && isLiveStreamFlash && isViewCommand);
   }
 
   private _buildMenu(entry: KalturaMediaEntry): void {
     this._items = this.rowActions
-		.filter(item => this._hideMenuItems(status, entry.mediaType, item))
+		.filter(item => this._hideMenuItems(status, entry.mediaType, entry, item))
 		.map(action =>
             Object.assign({}, action, {
               command: ({ item }) => {
