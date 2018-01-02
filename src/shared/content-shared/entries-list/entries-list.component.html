@@ -146,14 +146,15 @@
               [targetRef]="resultsLimitBtn"
               [targetOffset]="{'x': 0, 'y': 37}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'resultsLimitPopup'"
-              [scrollOffset]="80">
+              [scrollOffset]="80"
+              (onClose)="_applyResultsLimit()">
   <div class="kResultsLimitPopup">
     <div class="kResultsLimitSlider">
       <kSlider [(ngModel)]="_resultsLimit" [min]="1" [max]="200"></kSlider>
     </div>
     <div class="kResultsLimitPopupFooter">
       <span>{{ 'applications.content.entries.resultsLimitRange' | translate }}</span>
-      <a (click)="_applyResultsLimit()">{{ 'app.common.apply' | translate }}</a>
+      <a (click)="resultsLimitPopup.close()">{{ 'app.common.apply' | translate }}</a>
     </div>
   </div>
 </kPopupWidget>
