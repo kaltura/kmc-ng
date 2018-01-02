@@ -6,6 +6,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
+import { Kea2HosterConfig } from 'app-shared/kmc-shared/kea2-hoster/kea2-hoster.component';
 
 @Component({
     selector: 'kEntryHighlights',
@@ -17,6 +18,8 @@ export class EntryHighlights implements OnInit, OnDestroy {
     @ViewChild('highlightsPopup') popup: PopupWidgetComponent;
     @ViewChild('edit') editPopup: PopupWidgetComponent;
     @ViewChild('actionsmenu') private actionsMenu: Menu;
+
+    public _keaConfig: Kea2HosterConfig;
 
     public _actions: MenuItem[] = [];
     public _loading = false;
@@ -54,8 +57,8 @@ export class EntryHighlights implements OnInit, OnDestroy {
         this._widgetService.create(this._selectedHighlightsEntry, this._selectedProfile);
     }
 
-    openActionsMenu(event: any, file: KalturaMediaEntry): void{
-        this._selectedHighlightsEntry = file;
+    openActionsMenu(event: any, entry: KalturaMediaEntry): void{
+        this._selectedHighlightsEntry = entry;
         if (this.actionsMenu){
             this.actionsMenu.toggle(event);
         }
@@ -75,7 +78,12 @@ export class EntryHighlights implements OnInit, OnDestroy {
     private actionSelected(action: string): void{
         switch (action){
             case "edit":
+                this._keaConfig = {
+                    entryId: '1_1c3q51nr', // TODO this._selectedHighlightsEntry.id,
+                    tab: 'chopAndSlice'
+                };
                 this.editPopup.open();
+
                 break;
             case "delete":
                 this._browserService.confirm(

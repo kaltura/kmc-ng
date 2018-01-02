@@ -1,0 +1,190 @@
+{
+    "common": {
+        "preview": "Preview",
+        "created_by": "Creator",
+        "last_update": "Last update",
+        "ok": "OK",
+        "cancel": "Cancel",
+        "error_message_title": "Oh snap!",
+        "dismiss": "Dismiss",
+        "leave_tab_confirmation": "You have unsaved changes, continue anyway?",
+        "open_left" : "Open left panel",
+        "close_left" : "Close left panel",
+        "thumbnail_for_entry": "Thumbnail for media: {{name}}"
+    },
+    "index": {
+        "init": "Initializing...",
+        "entry_in_replacement_message": "Media is still being saved. Please wait or try again later."
+    },
+    "convert": {
+        "wait": "Please wait while media is processing"
+    },
+    "error": {
+        "resolution_not_supported": "The editor is not supported on this screen size ",
+        "orientation_not_supported": "To view the Editor, please adjust your device to Landscape",
+        "conv_fail": "Entry conversion failed, cannot create quiz.",
+        "general_err": "An error has occurred."
+    },
+    "audio_levels": {
+        "show": "Show Audio",
+        "hide": "Hide Audio"
+    },
+    "quiz": {
+        "quiz" : "Quiz",
+        "m_details": "Details",
+        "m_experience": "Experience",
+        "m_scores": "Scores",
+        "done" : "Done",
+        "revert": "Revert to defaults",
+        "apply": "Apply",
+        "save": "Save",
+        "delete": "Delete",
+        "remove": "Remove",
+        "error": "Error",
+        "ok": "OK",
+        "cancel": "Cancel",
+        "menu": "Menu",
+        "goto_quiz": "Edit Quiz",
+        "goto_entry": "Go to Media Page",
+        "number_of_questions": "Total Q:",
+        "welcome" : {
+            "intro" : "Press <strong>Start</strong> to create a new quiz.<br/>A copy of the media will be created and the original media will stay intact.",
+            "start" : "Start"
+        },
+        "general": {
+            "name": "Quiz Name",
+            "name_ph": "Insert Quiz Name",
+            "name_missing": "Please Insert Quiz Name",
+            "default_name": "{{value}} - Quiz",
+            "welcome": "Welcome Message",
+            "welcome_ph": "Insert Welcome Message",
+            "welcome_missing": "Please Insert Welcome Message",
+            "welcome_txt": "In this video, you will be given a Quiz. Good Luck!",
+            "invideo_tip": "Instructions",
+            "invideo_hb": "The following text will be displayed:",
+            "invideo_txt": "\"All questions must be answered. The quiz will be submitted at the end.\""
+        },
+        "exp": {
+            "questions_list": "Question List",
+            "questions_list_hb": "Your viewers will be able to download the quiz question list before they start playing the media",
+            "edit_answer": "Edit Answer",
+            "edit_answer_hb": "Your viewers will be able to change an answer before submitting the entire quiz",
+            "skip": "Skip For Now",
+            "skip_hb": "Your viewers will be able to skip a question and come back to answer it later"
+        },
+        "score": {
+            "title": "Upon Submission:",
+            "no_score": "Do Not Show Scores",
+            "no_score_hb": "A 'Thank You' message will display after submitting the quiz.",
+            "yes_score": "Show Scores",
+            "yes_score_hb": "Your viewers will see the quiz score page after the quiz is submitted.",
+            "feedback": "Include Answers",
+            "feedback_hb": "Your viewers will be able to see correct/incorrect answers"
+        },
+        "ques": {
+            "title": "How to Create a Question",
+            "txt": "While watching the video, press pause where you want a question.<br/>Press the '+' button to add a question and related answers</br>Don’t forget to shuffle the answers!</br>You can add and edit as much as you like"
+        },
+        "questionmenu": {
+            "hint": "Hint",
+            "why": "Why"
+        },
+        "question": {
+            "question_txt_ph": "Add a Question Here",
+            "correct_txt_ph": "Add the CORRECT Answer Here",
+            "wrong_txt_ph": "Add Additional Answer Here",
+            "hint": "Add Question Hint",
+            "hint_ph": "Add Question Hint Here",
+            "explanation": "Add Correct Answer Rationale",
+            "explanation_ph": "Add Rationale Here",
+            "unsaved_warn": "Are you sure you want to proceed? Any unsaved changes will be lost",
+            "missing_ans": "Please set at least 2 answers",
+            "missing_ques": "Please fill in a question",
+            "empty_ans": "There is an empty answer box, please fill it in",
+            "question_number": "Question {{order}}",
+            "delete_warn": "Are you sure you want to delete this question?"
+        },
+        "timeline": {
+            "question_number": "Question {{order}}"
+        }
+    },
+    "keyboard": {
+        "title": "Help",
+        "sub_title": "Accessibility shortcuts",
+        "manual_link_text": "Go to User Manual",
+        "saving": {
+            "label": "Saving",
+            "done": "Done",
+            "save_question": "Save question",
+            "save": "Save",
+            "save_as": "Save a copy"
+        },
+        "layout": {
+            "label": "Layout",
+            "toggle_left_panel": "Open/Close left panel",
+            "show_tooltips": "Help"
+        },
+        "player": {
+            "label": "Player",
+            "toggle": "Toggle Play / Pause",
+            "preview": "Preview",
+            "go_to_time": "Go To Time",
+            "jump_to_start": "Jump to start of selected range",
+            "jump_to_end": "Jump to end of selected range"
+        },
+        "timeline": {
+            "label": "Timeline",
+            "next_cue_point": "Jump to next cue point",
+            "previous_cue_point": "Jump to previous cue point",
+            "zoom_in": "Zoom In the timeline",
+            "zoom_out": "Zoom Out the timeline",
+            "reset": "Reset Timeline",
+            "left_handlebar": "Select left handlebar on movie bar",
+            "right_handlebar": "Select right handlebar on movie bar",
+            "snap": "Snap to Playhead position"
+        }
+    },
+    "home": {
+        "main_title": "Media Editor",
+        "title_subtext": "To create engaging content such as interactive quizzes, clips and trimmed videos easily.",
+        "media_details": "Media Details",
+        "media_name": "Name",
+        "media_creator": "Creator",
+        "media_created_at": "Creation Date",
+        "media_type": "Type",
+        "media_duration": "Duration"
+    },
+    "chopAndSlice": {
+        "title": "Chop & Slice"
+    },
+    "editor": {
+        "save": "Save",
+        "save_as": "Save a Copy",
+        "title": "Video Editor",
+        "media_details": "Media Details",
+        "save_as_dialog": {
+            "header": "Create a Copy of the Media",
+            "message": "",
+            "clip_of_entry": "Clip of {{entryName}}",
+            "create": "Create"
+        },
+        "save_dialog": {
+            "header": "Save",
+            "override_message": "You are about to override <strong>{{entryName}}</strong> permanently. Your changes will affect captions and cue points as well. This process may take a while.",
+            "save_warn": "Are you sure you want to continue?",
+            "save": "Save",
+            "save_in_progress": "Saving is in progress... Please be patient.",
+            "save_complete": "Media was successfully saved.",
+            "save_complete_no_auto_approved": "Note that your media must be approved by the application administrator. Until the version is approved, the original version will be displayed."
+        },
+        "cancel": "Cancel",
+        "conversion_error_message": "An error occurred while trying to convert the media. Please try again later.",
+        "trimming_failed_error_message": "An error occurred while tyring to save the media. Please try again later."
+    },
+    "timeline": {
+        "frames_error_message": "* Frames preview are not supported for this type of media"
+    },
+    "player": {
+        "go_to_time_title": "Go to a time"
+    }
+}

@@ -66,6 +66,12 @@ export class BrowserService implements IAppStorage {
 		}
 	};
 
+	public getRootUrl(): string {
+        return window.location.origin
+            ? window.location.origin + '/'
+            : window.location.protocol + '//' + window.location.host + '/';
+	}
+
   public get sessionStartedAt(): Date {
     return this._sessionStartedAt;
   }

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
+    import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell';

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="7px" height="14px" viewBox="0 0 7 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>Drag</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-5.000000, -1.000000)" fill="#FFFFFF">
+            <g id="Drag" transform="translate(5.000000, 1.000000)">
+                <rect id="Rectangle-5" x="4.71755725" y="0" width="1.8870229" height="2" rx="0.94351145"></rect>
+                <rect id="Rectangle-5" x="4.71755725" y="4" width="1.8870229" height="2" rx="0.94351145"></rect>
+                <rect id="Rectangle-5" x="4.71755725" y="12" width="1.8870229" height="2" rx="0.94351145"></rect>
+                <rect id="Rectangle-5" x="4.71755725" y="8" width="1.8870229" height="2" rx="0.94351145"></rect>
+                <rect id="Rectangle-5" x="0" y="0" width="1.8870229" height="2" rx="0.94351145"></rect>
+                <rect id="Rectangle-5" x="0" y="4" width="1.8870229" height="2" rx="0.94351145"></rect>
+                <rect id="Rectangle-5" x="0" y="12" width="1.8870229" height="2" rx="0.94351145"></rect>
+                <rect id="Rectangle-5" x="0" y="8" width="1.8870229" height="2" rx="0.94351145"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

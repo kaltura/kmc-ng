@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>close</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="close">
+            <g id="Delete">
+                <circle id="Oval" fill-opacity="0.387737772" fill="#000000" cx="10" cy="10" r="10"></circle>
+                <path d="M9.33333333,9.33333333 L4.66226512,9.33333333 C4.29663086,9.33333333 4,9.63181017 4,10 C4,10.3707568 4.29650619,10.6666667 4.66226512,10.6666667 L9.33333333,10.6666667 L9.33333333,15.3377349 C9.33333333,15.7033691 9.63181017,16 10,16 C10.3707568,16 10.6666667,15.7034938 10.6666667,15.3377349 L10.6666667,10.6666667 L15.3377349,10.6666667 C15.7033691,10.6666667 16,10.3681898 16,10 C16,9.62924321 15.7034938,9.33333333 15.3377349,9.33333333 L10.6666667,9.33333333 L10.6666667,4.66226512 C10.6666667,4.29663086 10.3681898,4 10,4 C9.62924321,4 9.33333333,4.29650619 9.33333333,4.66226512 L9.33333333,9.33333333 Z" id="Combined-Shape" fill="#FFFFFF" transform="translate(10.000000, 10.000000) rotate(-315.000000) translate(-10.000000, -10.000000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

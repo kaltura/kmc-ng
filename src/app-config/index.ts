@@ -8,6 +8,10 @@ export const environment = {
             "storageNamespace": "kmc-ng"
         }
     },
+    "integrations":
+        {
+          "keaUri": "public/kea2.18.0/index.html"
+        },
     "core": {
         "kaltura": {
             "serverEndpoint" : "www.kaltura.com",

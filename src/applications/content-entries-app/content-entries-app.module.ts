@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
+import { Kea2HosterModule } from 'app-shared/kmc-shared/kea2-hoster/kea2-hoster.module';
+
 import {
   AccordionModule,
   ButtonModule,
@@ -48,6 +50,7 @@ import { ContentEntriesAppService } from './content-entries-app.service';
 
 @NgModule({
   imports: [
+    Kea2HosterModule,
     AccordionModule,
     AreaBlockerModule,
     AutoCompleteModule,
