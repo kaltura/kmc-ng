@@ -881,7 +881,8 @@
           "duration": "Duration:",
           "flags": "Flags:",
           "votes": "Votes:",
-          "clippedFrom": "Clipped from:"
+          "clippedFrom": "Clipped from:",
+          "highlightOf": "Highlights of:"
         },
         "metadata": {
           "entryID": "ID",
@@ -1153,6 +1154,7 @@
           "editTitle": "Create New Highlights Entry",
           "title": "Highlights Profile:",
           "create": "Wow Me!",
+          "preview": "Wow Me!",
           "deleteConfirmHeader": "Delete Highlights Entry",
           "deleteConfirm": "Are you sure you want to delete selected highlights entry?"
         },

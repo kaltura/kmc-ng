@@ -21,6 +21,7 @@ import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import { EntryWidget } from '../entry-widget';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 
 
 export interface HighlightsData
@@ -162,6 +163,17 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
 		});
 
     }
+
+	create(source: KalturaMediaEntry, profile: string):void{
+    	// Demo code for status demo - TODO - implement real server all and returned entry addition to the entries array
+    	let items = this._highlights.getValue().items;
+    	const newHighlights = new KalturaMediaEntry({
+		    name: this.data.name + " Highlights - " + profile,
+		    tags: "highlights"
+	    });
+    	items.push(newHighlights);
+		this._highlights.next({items: items, totalItems: items.length});
+	}
 
     protected onActivate(firstTimeActivating: boolean) {
 	    return this._getEntryHighlights('activation');

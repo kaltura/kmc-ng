@@ -21,7 +21,13 @@
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.clips.status' | translate}}" [style]="{'width':'70px'}">
 					<ng-template let-col let-entry="rowData" pTemplate="body">
-						<span>{{entry | entryStatus}}</span>
+						<span *ngIf="entry.status && entry.status == 2">{{entry | entryStatus}}</span>
+						<div *ngIf="!entry.status || (entry.status && entry.status != 2)" style="position: relative; width: 36px">
+							<span>{{entry.status}}</span>
+							<div class="k-spinner-background">
+								<div class="k-spinner-animation"></div>
+							</div>
+						</div>
 					</ng-template>
 				</p-column>
 				<p-column [style]="{'width':'80px'}">

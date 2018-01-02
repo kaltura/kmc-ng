@@ -21,7 +21,7 @@ export class EntryHighlights implements OnInit, OnDestroy {
     public _actions: MenuItem[] = [];
     public _loading = false;
     public _loadingError = null;
-    public _profiles = [{label: "Sports", value: "Sports"}, {label: "Lecture", value: "Lecture"}, {label: "Drama", value: "Drama"}, {label: "Action", value: "Action"}];
+    public _profiles = [{label: "Sports", value: "Sports"}, {label: "Lecture", value: "Lecture"}, {label: "Drama", value: "Drama"}, {label: "Action", value: "Action"}, {label: "Other", value: "Other"}];
     public _selectedProfile = this._profiles[0].value;
     public _selectedHighlightsEntry: KalturaMediaEntry = null;
 
@@ -51,7 +51,7 @@ export class EntryHighlights implements OnInit, OnDestroy {
 
     public _createAndClose():void{
         this.popup.close();
-        console.log("create new highlights for "+this._selectedProfile); // TODO - implement server call
+        this._widgetService.create(this._selectedHighlightsEntry, this._selectedProfile);
     }
 
     openActionsMenu(event: any, file: KalturaMediaEntry): void{
@@ -67,7 +67,7 @@ export class EntryHighlights implements OnInit, OnDestroy {
         this._actions = [
             {label: this._appLocalization.get('applications.content.entryDetails.related.edit'), command: (event) => {this.actionSelected("edit");}},
             {label: this._appLocalization.get('applications.content.entryDetails.related.delete'), command: (event) => {this.actionSelected("delete");}},
-            {label: this._appLocalization.get('applications.content.entryDetails.related.preview'), command: (event) => {this.actionSelected("preview");}}
+            {label: this._appLocalization.get('applications.content.entryDetails.highlights.preview'), command: (event) => {this.actionSelected("preview");}}
         ];
 
     }

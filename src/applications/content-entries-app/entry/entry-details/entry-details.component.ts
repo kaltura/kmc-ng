@@ -24,6 +24,7 @@ export class EntryDetails implements OnInit, OnDestroy {
 	public _isRecordedLive: boolean = false;
 	public _hasDuration: boolean = false;
 	public _isClip: boolean = false;
+	public _isHighlight: boolean = false;
 
 	public _currentEntry: EntryDetailsKalturaMediaEntry;
 
@@ -56,6 +57,7 @@ export class EntryDetails implements OnInit, OnDestroy {
 					this._isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
 					this._hasDuration = (this._currentEntry.status !== KalturaEntryStatus.noContent && !this._isLive && this._currentEntry.mediaType.toString() !== KalturaMediaType.image.toString());
 					this._isClip = !this._isRecordedLive && (this._currentEntry.id !== this._currentEntry.rootEntryId);
+					this._isHighlight = this._isClip && this._currentEntry.tags.indexOf('highlights') > -1;
 				}
 			}
 		);
