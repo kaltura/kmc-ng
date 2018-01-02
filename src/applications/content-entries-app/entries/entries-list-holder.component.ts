@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
@@ -55,7 +55,8 @@ export class EntriesListHolderComponent {
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               public _entriesStore: EntriesStore,
-              private _contentEntriesAppService: ContentEntriesAppService) {
+              private _contentEntriesAppService: ContentEntriesAppService,
+              private _appAuthentication: AppAuthentication) {
     this._entriesStore.paginationCacheToken = 'entries-list';
   }
 
@@ -77,7 +78,7 @@ export class EntriesListHolderComponent {
         );
         break;
       case 'highlights':
-        this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+entry.id);
+        this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+entry.id+"&uiconfId="+environment.core.kaltura.previewUIConf+"&pid="+this._appAuthentication.appUser.partnerId);
         break;
       default:
         break;
