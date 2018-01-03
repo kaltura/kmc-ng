@@ -19,9 +19,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     public _blockerMessage: AreaBlockerMessage = null;
     public _selectedCategories: KalturaCategory[] = [];
-    public _categoriesTotalCount: number = null;
     public _selectedCategoryToMove: KalturaCategory;
-
+    public _categoriesTotalCount: number = null;
     public _linkedEntries: { entryId: string }[] = [];
     @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
     @ViewChild('addNewCategory') addNewCategory: PopupWidgetComponent;
@@ -47,6 +46,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     ngOnInit() {
         this._restoreFiltersState();
         this._registerToFilterStoreDataChanges();
+        this._categoriesService.categories.data$
+        .cancelOnDestroy(this)
+        .subscribe(response => {
+          this._categoriesTotalCount = response.totalCount
+        });
     }
 
     ngAfterViewInit() {

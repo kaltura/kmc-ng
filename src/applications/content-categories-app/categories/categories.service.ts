@@ -124,7 +124,6 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                     ignoredCreateMode: MetadataProfileCreateModes.App
                 })
                 .cancelOnDestroy(this)
-                .first()
                 .monitor('categories.service: get metadata profiles')
                 .subscribe(
                     metadataProfiles => {

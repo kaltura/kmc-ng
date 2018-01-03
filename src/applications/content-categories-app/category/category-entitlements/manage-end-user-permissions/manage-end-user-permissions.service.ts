@@ -54,17 +54,6 @@ export interface Users {
   totalCount: number
 }
 
-export enum SortDirection {
-  Desc,
-  Asc
-}
-
-export interface QueryData {
-  pageIndex: number,
-  pageSize: number,
-  fields: string
-}
-
 export interface UsersFilters {
   freetext: string,
   pageSize: number,
@@ -78,6 +67,7 @@ export interface UsersFilters {
 @Injectable()
 export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilters> implements OnDestroy {
 
+  public usersTotalCount = null;
   private _users = {
     data: new BehaviorSubject<Users>({items: [], totalCount: 0}),
     state: new BehaviorSubject<LoadingStatus>({loading: false, errorMessage: null})
@@ -95,6 +85,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
   private _isReady = false;
   private _querySubscription: ISubscription;
+  public queryRequest$: Observable<Users>;
   private readonly _pageSizeCacheKey = 'categories.list.pageSize';
   private _categoryId: number = null;
 
@@ -104,15 +95,13 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
               private _appLocalization: AppLocalization,
               _logger: KalturaLogger) {
     super(_logger);
-    this._categoryId = this._widgetService.data.id;
+    this.queryRequest$ = this.buildQueryRequest();
   }
 
 
   private _prepare(): void {
     if (!this._isReady) {
       this._users.state.next({loading: true, errorMessage: null});
-
-      this._isReady = true;
 
       const defaultPageSize = this.browserService.getFromLocalStorage(this._pageSizeCacheKey);
       if (defaultPageSize !== null) {
@@ -174,12 +163,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       this.browserService.setInLocalStorage(this._pageSizeCacheKey, pageSize);
     }
 
-    this._users.state.next({loading: true, errorMessage: null});
-
-
     this._querySubscription = this.buildQueryRequest()
-      .cancelOnDestroy(this).subscribe(
-        response => {
+      .cancelOnDestroy(this)
+      .subscribe(response => {
           this._querySubscription = null;
 
           this._users.state.next({loading: false, errorMessage: null});
@@ -190,12 +176,16 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
           });
 
           this._widgetService.membersTotalCount = response.totalCount;
+          this._categoryId = this._widgetService.data.id;
+          this._isReady = true;
         },
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
           this._users.state.next({loading: false, errorMessage});
         });
+
+    this._users.state.next({loading: true, errorMessage: null});
   }
 
 
@@ -494,7 +484,5 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       updateMethod: new ListAdapter(),
     };
   }
-
-
 }
 

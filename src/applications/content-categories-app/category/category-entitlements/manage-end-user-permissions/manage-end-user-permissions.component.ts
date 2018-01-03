@@ -3,7 +3,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import {ManageEndUserPermissionsService, User, UsersFilters} from './manage-end-user-permissions.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
@@ -21,7 +21,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedUsers: User[] = [];
-  public _usersTotalCount: number = null;
+  public _usersTotalCount = 0;
   @Input() category: KalturaCategory = null;
   @Input() parentCategory: KalturaCategory = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
@@ -29,7 +29,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
   @Output() usersNumberChanged = new EventEmitter<{totalCount: number}>();
 
-  @ViewChild('tags') private tags: StickyComponent;
+  @ViewChild('refinePopup') refinePopup: PopupWidgetComponent;
 
   public _query = {
     freetext: '',
@@ -65,6 +65,12 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     this._registerToFilterStoreDataChanges();
 
     this._manageEndUsersPermissionsService.categoryId = this.category.id;
+
+    this._manageEndUsersPermissionsService.users.data$
+      .cancelOnDestroy(this)
+      .subscribe(response => {
+        this._usersTotalCount = response.totalCount
+    });
   }
 
   private _restoreFiltersState(): void {
@@ -122,7 +128,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  _onActionSelected({action, users, actionPayload}: { action: string, users: User | User[], actionPayload: { level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType} }) {
+  _onActionSelected({action, users, payload}: { action: string, users: User | User[], payload: { level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType} }) {
     const showInvalidActionError = () => {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization
@@ -145,21 +151,35 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     }
     switch (action) {
       case 'permissionLevel':
-        if (!actionPayload || typeof actionPayload.level === 'undefined') {
+        if (!payload || typeof payload.level === 'undefined') {
           showInvalidActionError();
           return undefined;
         }
-        this._executeAction(this._manageEndUsersPermissionsService.setPermissionLevel(usersIds, actionPayload.level));
+        this._executeAction(this._manageEndUsersPermissionsService.setPermissionLevel(usersIds, payload.level));
         break;
       case 'updateMethod':
-        if (!actionPayload || typeof actionPayload.method === 'undefined') {
+        if (!payload || typeof payload.method === 'undefined') {
           showInvalidActionError();
           return undefined;
         }
-        this._executeAction(this._manageEndUsersPermissionsService.setUpdateMethod(usersIds, actionPayload.method));
+        this._executeAction(this._manageEndUsersPermissionsService.setUpdateMethod(usersIds, payload.method));
         break;
       case 'delete':
-        this._executeAction(this._manageEndUsersPermissionsService.deleteUsers(usersIds));
+        if (usersIds.find(id => id === this.category.owner)) {
+          this._blockerMessage = new AreaBlockerMessage({
+            message: this._appLocalization
+              .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.deleteOwner'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }
+            ]
+          });
+        } else {
+          this._executeAction(this._manageEndUsersPermissionsService.deleteUsers(usersIds));
+        }
         break;
       case 'activate':
         this._executeAction(this._manageEndUsersPermissionsService.activateUsers(usersIds));
@@ -199,10 +219,6 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
       );
   }
 
-  public _deleteSelected(selectedUsers: User[]): void {
-    this._clearSelection();
-    this._executeAction(this._manageEndUsersPermissionsService.deleteUsers(selectedUsers.map(user => user.id)));
-  }
 
   public _onUsersAdded() {
     this._reload();
@@ -210,9 +226,5 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
   onFreetextChanged(): void {
     this._manageEndUsersPermissionsService.filter({freetext: this._query.freetext});
-  }
-
-  onTagsChange() {
-    this.tags.updateLayout();
   }
 }

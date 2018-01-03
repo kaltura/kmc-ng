@@ -47,24 +47,31 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   private _fetchEntitlementsData(): Observable<void> {
-    if (!this.data || !this.data.parentId) {
+    if (!this.data || typeof(this.data.parentId) === 'undefined') {
       return Observable.throw('Could not load parent category, unable to extract parent ID')
     }
 
-    return this._getParentCategory(this.data.parentId)
-      .monitor('get category parent category')
-      .cancelOnDestroy(this, this.widgetReset$)
-      .map(parentCategory => {
-        this.parentCategory = parentCategory;
-        this.membersTotalCount = this.data.membersCount;
-        this._resetFormData();
-        this._monitorFormChanges();
-        return undefined;
-      })
-      .catch(error => {
-        this.parentCategory = null;
-        throw error;
-      });
+    if (!this.data.parentId) { // if category is root category
+      this.membersTotalCount = this.data.membersCount;
+      this._resetFormData();
+      this._monitorFormChanges();
+      return Observable.of(undefined);
+    } else { // if category has parent
+      return this._getParentCategory(this.data.parentId)
+        .monitor('get category parent category')
+        .cancelOnDestroy(this, this.widgetReset$)
+        .map(parentCategory => {
+          this.parentCategory = parentCategory;
+          this.membersTotalCount = this.data.membersCount;
+          this._resetFormData();
+          this._monitorFormChanges();
+          return undefined;
+        })
+        .catch(error => {
+          this.parentCategory = null;
+          throw error;
+        });
+    }
   }
 
   private _getParentCategory(parentCategoryId: number): Observable<KalturaCategory> {

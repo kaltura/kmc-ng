@@ -1381,7 +1381,8 @@
                 "invalidAction": "Please select a valid action for selected users",
                 "backToEntitlements": "Back to Entitlements",
                 "duplicateUsers": "Some of the added users were already set with permissions for this category",
-                "error": "Error"
+                "error": "Error",
+                "deleteOwner": "The category owner can not be deleted.\nPlease adjust or reset the category's ownership first"
               }
             },
             "errors" : {
