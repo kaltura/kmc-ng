@@ -57,12 +57,34 @@ export class SchemasListComponent implements OnInit, OnDestroy {
       });
   }
 
-  public _clearSelection(): void {
-    this._selectedSchemas = [];
+  private _proceedDeleteSchemas(schemas: SettingsMetadataProfile[]): void {
+    this._schemasStore.deleteProfiles(schemas)
+      .tag('block-shell')
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this._blockerMessage = null;
+          this._schemasStore.reload();
+          this._clearSelection();
+        },
+        error => {
+          this._blockerMessage = new AreaBlockerMessage({
+            message: error.message || this._appLocalization.get('applications.settings.metadata.updateError'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+                this._clearSelection();
+                this._schemasStore.reload();
+              }
+            }]
+          });
+        }
+      );
   }
 
-  public _deleteSchemas(schemas: SettingsMetadataProfile[]): void {
-
+  public _clearSelection(): void {
+    this._selectedSchemas = [];
   }
 
   public _addSchema(): void {
@@ -80,11 +102,36 @@ export class SchemasListComponent implements OnInit, OnDestroy {
         }
         break;
       case 'delete':
-        // TBD
+        this._deleteSchemas([schema]);
         break;
       default:
         break;
     }
+  }
+
+  public _deleteSchemas(selectedSchemas: SettingsMetadataProfile[]): void {
+    const schemasToDelete = selectedSchemas.map((playlist, index) => `${index + 1}: ${playlist.name}`);
+    const schemas = selectedSchemas.length <= 5 ? schemasToDelete.join(',').replace(/,/gi, '\n') : '';
+    let message = '';
+    if (selectedSchemas.length > 5) {
+      message = this._appLocalization.get('applications.settings.metadata.confirmDeleteMultiple');
+    } else if (selectedSchemas.length === 1) {
+      message = this._appLocalization.get('applications.settings.metadata.confirmDeleteSingle', { 0: schemas });
+    } else {
+      message = this._appLocalization.get('applications.settings.metadata.confirmDeleteMultipleNames', { 0: schemas });
+    }
+    const header = selectedSchemas.length > 1 ?
+      this._appLocalization.get('applications.settings.metadata.deleteSchemas') :
+      this._appLocalization.get('applications.settings.metadata.deleteSchema');
+    this._browserService.confirm(
+      {
+        header,
+        message,
+        accept: () => {
+          this._proceedDeleteSchemas(selectedSchemas);
+        }
+      }
+    );
   }
 
   public _onPaginationChanged(state: any): void {

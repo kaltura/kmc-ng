@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
@@ -19,6 +19,7 @@ import { MetadataProfile, MetadataProfileParser } from 'app-shared/kmc-shared';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { environment } from 'app-environment';
 import { AppAuthentication } from 'app-shared/kmc-shell';
+import { MetadataProfileDeleteAction } from 'kaltura-ngx-client/api/types/MetadataProfileDeleteAction';
 
 export interface SchemasFilters {
   pageSize: number,
@@ -220,5 +221,15 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       this._prepare();
     }
   }
+
+  public deleteProfiles(profiles: SettingsMetadataProfile[]): Observable<void> {
+    const request = new KalturaMultiRequest(
+      ...profiles.map(profile => new MetadataProfileDeleteAction({ id: profile.id }))
+    );
+    return this._kalturaServerClient.multiRequest(request)
+      .map(() => {
+      });
+  }
+
 }
 
