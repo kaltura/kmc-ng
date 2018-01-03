@@ -101,15 +101,14 @@ export class AppBootstrap implements CanActivate {
 
         const configFileUri = this.browserService.getRootUrl() + 'kmc-config/kmc-config';
 
-        Observable.race(this.http.get(`${configFileUri}.json`),
-            this.http.get(`${configFileUri}.php`))
+        this.http.get(`${configFileUri}.json`)
             .map(res => res.json())
             .subscribe(config =>
             {
                 Object.assign(environment.core.kaltura, config.server);
                 // Temporary workaround until upgrading kaltura client
 
-                this.kalturaClient.endpointUrl = (environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://') + config.server.apiUri;
+                this.kalturaClient.endpointUrl = (environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://') + config.server.serverEndpoint;
 
                 // init localization, wait for localization to load before continuing
                 this.appLocalization.setFilesHash(environment.appVersion);

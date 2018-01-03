@@ -33,7 +33,8 @@
 	var entryId = url.searchParams.get("entryId");
 	var pid = url.searchParams.get("pid");
 	var uiconfId = url.searchParams.get("uiconfId");
-	var scriptSrc = "https://cdnapisec.kaltura.com/p/"+pid+"/sp/"+pid+"00/embedIframeJs/uiconf_id/"+uiconfId+"/partner_id/"+pid;
+	var baseUrl = url.searchParams.get("baseUrl");
+	var scriptSrc = "http://" + baseUrl + "/p/"+pid+"/sp/"+pid+"00/embedIframeJs/uiconf_id/"+uiconfId+"/partner_id/"+pid;
 	var script = document.createElement('script');
 	var videoHeight = window.innerWidth * 9 / 16;
 	document.getElementById("kaltura_player").style.height = videoHeight + "px";

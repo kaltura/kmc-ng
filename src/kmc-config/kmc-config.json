@@ -1,6 +1,6 @@
 {
   "server": {
-    "apiUri": "192.168.163.88",
+    "serverEndpoint": "192.168.163.88",
     "cdnUrl": "http://laio.mysystem.local",
     "legacyKmcUrl": "kmc.kaltura.com",
     "expiry": "86400",

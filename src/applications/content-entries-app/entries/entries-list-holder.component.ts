@@ -78,7 +78,7 @@ export class EntriesListHolderComponent {
         );
         break;
       case 'highlights':
-        this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+entry.id+"&uiconfId="+environment.core.kaltura.previewUIConf+"&pid="+this._appAuthentication.appUser.partnerId);
+        this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+entry.id+"&uiconfId="+environment.core.kaltura.previewUIConf+"&pid="+this._appAuthentication.appUser.partnerId+"&baseUrl="+environment.core.kaltura.serverEndpoint);
         break;
       default:
         break;

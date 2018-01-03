@@ -135,7 +135,7 @@ export class EntryHighlights implements OnInit, OnDestroy {
                 );
                 break;
             case "preview":
-                this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+this._selectedHighlightsEntry.id+"&uiconfId="+environment.core.kaltura.previewUIConf+"&pid="+this._appAuthentication.appUser.partnerId);
+                this._browserService.openLink(environment.modules.contentEntries.highlightsPreview + "?entryId="+this._selectedHighlightsEntry.id+"&uiconfId="+environment.core.kaltura.previewUIConf+"&pid="+this._appAuthentication.appUser.partnerId+"&baseUrl="+environment.core.kaltura.serverEndpoint);
                 break;
         }
     }
