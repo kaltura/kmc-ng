@@ -2,7 +2,7 @@
 	<div class="kHighlights">
 		<p class="kTitle">{{'applications.content.entryDetails.highlights.highlights' | translate}}</p>
 		<div>
-			<button type="button" class="kButtonDefault" (click)="highlightsPopup.open()" pButton label="{{'applications.content.entryDetails.highlights.add' | translate}}"></button>
+			<button type="button" class="kButtonDefault" (click)="createWowMe()" pButton label="{{'applications.content.entryDetails.highlights.add' | translate}}"></button>
 			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService.reload()" [kTooltip]="'applications.content.entries.refresh' | translate"></button>
 		</div>
 		<div class="kTable">

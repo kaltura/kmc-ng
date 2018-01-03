@@ -30,7 +30,8 @@ export class EntryHighlights implements OnInit, OnDestroy {
         {label: "Sports", value: KalturaHighlightType.sports, selected: false},
         {label: "Lecture", value: KalturaHighlightType.lecture, selected: false},
         {label: "Drama", value: KalturaHighlightType.drama, selected: false},
-        {label: "Action", value: KalturaHighlightType.action, selected: false}];
+        {label: "Action", value: KalturaHighlightType.action, selected: false},
+        {label: "Custom Mode - Dragon", value: KalturaHighlightType.dragon, selected: false}];
 
     public _selectedHighlightsEntry: KalturaMediaEntry = null;
 
@@ -113,6 +114,10 @@ export class EntryHighlights implements OnInit, OnDestroy {
 
     }
 
+    public createWowMe(): void{
+        this._profiles.forEach(profile => profile.selected = false);
+        this.popup.open();
+    }
     private actionSelected(action: string): void{
         switch (action){
             case "edit":
