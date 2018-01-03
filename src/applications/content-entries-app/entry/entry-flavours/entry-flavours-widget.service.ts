@@ -13,7 +13,7 @@ import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/a
 import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
 import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { KalturaWidevineFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaWidevineFlavorAsset';
+//import { KalturaWidevineFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaWidevineFlavorAsset';
 import { FlavorAssetDeleteAction } from 'kaltura-ngx-client/api/types/FlavorAssetDeleteAction';
 import { FlavorAssetConvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetConvertAction';
 import { FlavorAssetReconvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetReconvertAction';
@@ -117,7 +117,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         newFlavor.id = flavor.flavorAsset ? flavor.flavorAsset.id : '';
         newFlavor.paramsId = flavor.flavorParams.id;
         newFlavor.isSource = flavor.flavorAsset ? flavor.flavorAsset.isOriginal : false;
-        newFlavor.isWidevine = flavor.flavorAsset ? flavor.flavorAsset instanceof KalturaWidevineFlavorAsset : false;
+        newFlavor.isWidevine = false; // flavor.flavorAsset ? flavor.flavorAsset instanceof KalturaWidevineFlavorAsset : false;
         newFlavor.isWeb = flavor.flavorAsset ? flavor.flavorAsset.isWeb : false;
         newFlavor.format = flavor.flavorAsset ? flavor.flavorAsset.fileExt : '';
         newFlavor.codec = flavor.flavorAsset ? flavor.flavorAsset.videoCodecId : '';
@@ -145,34 +145,34 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         }
 
         // add DRM details
-        if (newFlavor.isWidevine) {
-            // get source flavors for DRM
-            const sourceIDs = (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds ? (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds.split(",") : [];
-            let sources = [];
-            sourceIDs.forEach(sourceId => {
-                allFlavors.forEach(flavor => {
-                    if (flavor.flavorParams.id.toString() === sourceId) {
-                        sources.push(flavor.flavorParams.name);
-                    }
-                });
-            });
-            // set start and end date
-            let startDate = (flavor.flavorAsset as KalturaWidevineFlavorAsset).widevineDistributionStartDate;
-            if (startDate == -2147483648 || startDate == 18001 || startDate == 2000001600) {
-                startDate = null;
-            }
-            let endDate = (flavor.flavorAsset as KalturaWidevineFlavorAsset).widevineDistributionEndDate;
-            if (endDate == -2147483648 || endDate == 18001 || endDate == 2000001600) {
-                endDate = null;
-            }
-            newFlavor.drm = {
-                name: flavor.flavorParams.name,
-                id: (flavor.flavorAsset as KalturaWidevineFlavorAsset).widevineAssetId,
-                flavorSources: sources,
-                startTime: startDate,
-                endTime: endDate
-            };
-        }
+        // if (newFlavor.isWidevine) {
+        //     // get source flavors for DRM
+        //     const sourceIDs = (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds ? (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds.split(",") : [];
+        //     let sources = [];
+        //     sourceIDs.forEach(sourceId => {
+        //         allFlavors.forEach(flavor => {
+        //             if (flavor.flavorParams.id.toString() === sourceId) {
+        //                 sources.push(flavor.flavorParams.name);
+        //             }
+        //         });
+        //     });
+        //     // set start and end date
+        //     let startDate = (flavor.flavorAsset as KalturaWidevineFlavorAsset).widevineDistributionStartDate;
+        //     if (startDate == -2147483648 || startDate == 18001 || startDate == 2000001600) {
+        //         startDate = null;
+        //     }
+        //     let endDate = (flavor.flavorAsset as KalturaWidevineFlavorAsset).widevineDistributionEndDate;
+        //     if (endDate == -2147483648 || endDate == 18001 || endDate == 2000001600) {
+        //         endDate = null;
+        //     }
+        //     newFlavor.drm = {
+        //         name: flavor.flavorParams.name,
+        //         id: (flavor.flavorAsset as KalturaWidevineFlavorAsset).widevineAssetId,
+        //         flavorSources: sources,
+        //         startTime: startDate,
+        //         endTime: endDate
+        //     };
+        // }
         return newFlavor;
     }
 

@@ -5,6 +5,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization, AppStorage } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from './app-authentication.service';
 import { environment } from 'app-config';
+import { Http } from '@angular/http'
+import 'rxjs/add/observable/race';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { KalturaClient, KalturaClientConfiguration } from 'kaltura-ngx-client';
 
 export const BootstrapAdapterToken = new InjectionToken('bootstrapAdapter');
 
@@ -43,6 +47,9 @@ export class AppBootstrap implements CanActivate {
     constructor(private appLocalization: AppLocalization,
                 private auth: AppAuthentication,
                 private appStorage: AppStorage,
+                private browserService: BrowserService,
+                private http: Http,
+                private kalturaClient: KalturaClient,
                 @Inject(BootstrapAdapterToken) @Optional() private bootstrapAdapters: BootstrapAdapter[]) {
 
     }
@@ -92,33 +99,47 @@ export class AppBootstrap implements CanActivate {
         // save config localy
         this._bootstrapConfig = appBootstrapConfig;
 
-        // init localization, wait for localization to load before continuing
-        this.appLocalization.setFilesHash(environment.appVersion);
-        const language = this.getCurrentLanguage();
-        this.appLocalization.load(language,'en').subscribe(
-            () => {
-                // Start authentication process
-                if (!this.executeAdapter(BootstrapAdapterType.preAuth)) {
-                    bootstrapFailure("preAuth adapter execution failure");
-                    return;
-                }
-                this.auth.loginAutomatically().subscribe(
+        const configFileUri = this.browserService.getRootUrl() + 'kmc-config/kmc-config';
+
+        Observable.race(this.http.get(`${configFileUri}.json`),
+            this.http.get(`${configFileUri}.php`))
+            .map(res => res.json())
+            .subscribe(config =>
+            {
+                environment.core.kaltura.serverEndpoint = config.server.apiUri;
+                // Temporary workaround until upgrading kaltura client
+
+                this.kalturaClient.endpointUrl = (environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://') + config.server.apiUri;
+
+                // init localization, wait for localization to load before continuing
+                this.appLocalization.setFilesHash(environment.appVersion);
+                const language = this.getCurrentLanguage();
+                this.appLocalization.load(language,'en').subscribe(
                     () => {
-                        if (!this.executeAdapter(BootstrapAdapterType.postAuth)) {
-                            bootstrapFailure("postAuth adapter execution failure");
+                        // Start authentication process
+                        if (!this.executeAdapter(BootstrapAdapterType.preAuth)) {
+                            bootstrapFailure("preAuth adapter execution failure");
                             return;
                         }
-                        this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
+                        this.auth.loginAutomatically().subscribe(
+                            () => {
+                                if (!this.executeAdapter(BootstrapAdapterType.postAuth)) {
+                                    bootstrapFailure("postAuth adapter execution failure");
+                                    return;
+                                }
+                                this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
+                            },
+                            () => {
+                                bootstrapFailure("Authentication process failed");
+                            }
+                        );
                     },
-                    () => {
-                        bootstrapFailure("Authentication process failed");
+                    (error) => {
+                        bootstrapFailure(error);
                     }
                 );
-            },
-            (error) => {
-                bootstrapFailure(error);
-            }
-        );
+            });
+
     }
 
 

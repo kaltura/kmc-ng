@@ -11,7 +11,8 @@
         "assets",
         "i18n",
         "favicon.ico",
-        "./public"
+        "./public",
+        "./kmc-config"
       ],
       "index": "index.html",
       "main": "main.ts",

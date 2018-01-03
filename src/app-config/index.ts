@@ -14,8 +14,8 @@ export const environment = {
         },
     "core": {
         "kaltura": {
-            "serverEndpoint" : "www.kaltura.com",
-            "useHttpsProtocol": true,
+            "serverEndpoint" : "192.168.163.88",
+            "useHttpsProtocol": false,
             "cdnUrl": "http://cdnapi.kaltura.com",
             "legacyKmcUrl": "kmc.kaltura.com",
             "expiry": "86400",
