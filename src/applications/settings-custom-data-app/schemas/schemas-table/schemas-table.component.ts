@@ -100,7 +100,7 @@ export class SchemasTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private _buildMenu(schema: SettingsMetadataProfile): void {
-    this._items = [
+    const nonDisableSchemaActions = [
       {
         label: this._appLocalization.get('applications.settings.metadata.table.actions.edit'),
         command: () => this._onActionSelected('edit', schema)
@@ -109,11 +109,18 @@ export class SchemasTableComponent implements AfterViewInit, OnInit, OnDestroy {
         label: this._appLocalization.get('applications.settings.metadata.table.actions.download'),
         command: () => this._onActionSelected('download', schema)
       },
+    ];
+
+    this._items = [
       {
         label: this._appLocalization.get('applications.settings.metadata.table.actions.delete'),
         command: () => this._onActionSelected('delete', schema)
       }
     ];
+
+    if (!schema.profileDisabled) {
+      this._items = [...nonDisableSchemaActions, ...this._items];
+    }
   }
 
   public _openActionsMenu(event: any, schema: SettingsMetadataProfile): void {

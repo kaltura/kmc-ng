@@ -28,6 +28,7 @@ export interface SettingsMetadataProfile extends KalturaMetadataProfile {
   parsedProfile?: MetadataProfile;
   defaultLabel?: string;
   applyTo?: string;
+  downloadUrl?: string;
 }
 
 const localStoragePageSizeKey = 'schemas.list.pageSize';

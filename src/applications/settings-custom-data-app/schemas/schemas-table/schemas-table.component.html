@@ -46,7 +46,6 @@
         <ng-template let-col let-schema="rowData" pTemplate="body">
           <div class="kSchemasTableActions">
             <button type="button" pButton icon="kIconmore"
-                    [disabled]="schema?.profileDisabled"
                     (click)="_openActionsMenu($event, schema)"></button>
           </div>
         </ng-template>
