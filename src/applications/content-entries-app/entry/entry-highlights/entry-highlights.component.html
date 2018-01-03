@@ -1,8 +1,10 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
 	<div class="kHighlights">
 		<p class="kTitle">{{'applications.content.entryDetails.highlights.highlights' | translate}}</p>
-		<button type="button" class="kButtonDefault" (click)="highlightsPopup.open()" pButton label="{{'applications.content.entryDetails.highlights.add' | translate}}"></button>
-
+		<div>
+			<button type="button" class="kButtonDefault" (click)="highlightsPopup.open()" pButton label="{{'applications.content.entryDetails.highlights.add' | translate}}"></button>
+			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService.reload()" [kTooltip]="'applications.content.entries.refresh' | translate"></button>
+		</div>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService.entries$ | async)?.items" scrollable="true" [sortField]="_widgetService.sortBy" [sortOrder]="_convertSortValue(_widgetService.sortAsc)" (onSort)="_onSortChanged($event)">
 				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}" [style]="{'width':'120px','padding-left': '24px'}">
