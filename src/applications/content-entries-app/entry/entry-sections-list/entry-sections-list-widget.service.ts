@@ -10,6 +10,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 import { EntryWidget } from '../entry-widget';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 
 export interface SectionWidgetItem
 {
@@ -110,6 +111,8 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
         const mediaType = this.data.mediaType;
         const externalMedia = this.data instanceof KalturaExternalMediaEntry;
         switch (sectionKey) {
+            case EntryWidgetKeys.Highlights:
+                return this.data.sourceType === KalturaSourceType.clip  && (!this.data.tags || this.data.tags.split(',').indexOf('highlights') === -1);
             case EntryWidgetKeys.Thumbnails:
                 return mediaType !== KalturaMediaType.image;
             case EntryWidgetKeys.Flavours:
