@@ -73,6 +73,14 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
+  public get playlistPartialData(): { limit: number, name: string, orderBy: string } {
+    return {
+      limit: this._resultsLimit,
+      name: this._ruleName,
+      orderBy: this._orderBy
+    }
+  }
+
   constructor(private _entriesStore: EntriesStore,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {

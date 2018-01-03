@@ -16,7 +16,7 @@ export class PlaylistRuleComponent {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
   @Output() onClosePopupWidget = new EventEmitter<void>();
-  @Output() onAddRule = new EventEmitter<KalturaMediaEntryFilterForPlaylist>();
+  @Output() onAddRule = new EventEmitter<PlaylistRule>();
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -48,7 +48,7 @@ export class PlaylistRuleComponent {
       return rules;
     }, {});
 
-    const rule = new KalturaMediaEntryFilterForPlaylist({
+    const originalFilter = new KalturaMediaEntryFilterForPlaylist({
       isRoot: 1, // default
       moderationStatusIn: '2,5,6,1', // default
       typeIn: '1,7', // default
@@ -65,7 +65,15 @@ export class PlaylistRuleComponent {
       advancedSearch: this.rule.originalFilter.advancedSearch // TODO [kmcng] deal with advanced search
     });
 
-    this.onAddRule.emit(rule);
+    const { name, orderBy, limit } = this._entriesList.playlistPartialData;
+    const updatedRule = this.rule;
+
+    updatedRule.name = name;
+    updatedRule.orderBy = orderBy;
+    updatedRule.limit = limit;
+    updatedRule.originalFilter = originalFilter;
+
+    this.onAddRule.emit(updatedRule);
     this.onClosePopupWidget.emit();
   }
 }
