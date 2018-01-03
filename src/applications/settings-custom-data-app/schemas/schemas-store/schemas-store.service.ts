@@ -17,6 +17,8 @@ import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
 import { MetadataProfile, MetadataProfileParser } from 'app-shared/kmc-shared';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { environment } from 'app-environment';
+import { AppAuthentication } from 'app-shared/kmc-shell';
 
 export interface SchemasFilters {
   pageSize: number,
@@ -51,6 +53,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
 
   constructor(private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization,
+              private _appAuth: AppAuthentication,
               private _browserService: BrowserService,
               _logger: KalturaLogger) {
     super(_logger);
@@ -107,8 +110,16 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
             const parsedProfile = this._metadataProfileParser.parse(object);
             object.profileDisabled = !!parsedProfile.error; // disable profile if there's error during parsing
             object.parsedProfile = parsedProfile.profile;
+
             if (!object.profileDisabled) {
               object.defaultLabel = object.parsedProfile.items.map(({ label }) => label).join(',');
+
+              const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
+              const domain = environment.core.kaltura.serverEndpoint;
+              const apiUrl = environment.modules.settingsMetadata.apiUrl;
+              const ks = this._appAuth.appUser.ks;
+              const id = object.id;
+              object.downloadUrl = `${protocol}${domain}${apiUrl}/ks/${ks}/id/${id}`;
             }
           } else {
             object.profileDisabled = true; // disabled

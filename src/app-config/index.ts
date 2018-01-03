@@ -201,6 +201,9 @@ export const environment = {
         "dropFolders" : {
           "createdAtDateRange" : "2005:2030",
           "bulkActionsLimit": 50
+        },
+        "settingsMetadata": {
+          "apiUrl": "/api_v3/index.php/service/metadata_metadataprofile/action/serve"
         }
     },
     "entriesShared": {
