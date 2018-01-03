@@ -1408,7 +1408,12 @@
           "systemName": "System Name",
           "description": "Description",
           "applyTo": "Apply to",
-          "fieldsIncluded": "Fields included"
+          "fieldsIncluded": "Fields included",
+          "actions": {
+            "edit": "Edit",
+            "download": "Download",
+            "delete": "Delete"
+          }
         }
       }
     }

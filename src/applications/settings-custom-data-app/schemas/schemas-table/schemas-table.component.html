@@ -1,6 +1,5 @@
-<k-area-blocker
-  [showLoader]="this._deferredLoading"
-  [message]="_blockerMessage" [bodyScroll]="true">
+<k-area-blocker [showLoader]="(_schemasStore.schemas.state$ | async)?.loading || this._deferredLoading"
+                [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kSchemasTable" [class.noResults]="!_schemas.length">
     <p-dataTable
       #dataTable
@@ -30,11 +29,13 @@
 
       <p-column field="systemName" [header]="'applications.settings.metadata.table.systemName' | translate"></p-column>
 
-      <p-column field="description" [header]="'applications.settings.metadata.table.description' | translate"></p-column>
+      <p-column field="description"
+                [header]="'applications.settings.metadata.table.description' | translate"></p-column>
 
       <p-column field="applyTo" [header]="'applications.settings.metadata.table.applyTo' | translate"></p-column>
 
-      <p-column field="fieldsIncluded" [header]="'applications.settings.metadata.table.fieldsIncluded' | translate"></p-column>
+      <p-column field="fieldsIncluded"
+                [header]="'applications.settings.metadata.table.fieldsIncluded' | translate"></p-column>
 
       <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
         <ng-template let-col let-schema="rowData" pTemplate="body">

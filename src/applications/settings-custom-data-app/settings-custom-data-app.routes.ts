@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { SchemasListComponent } from './schemas/schemas-list/schemas-list.component';
+import { SettingsCustomDataComponent } from './settings-custom-data.component';
 
 export const routing: Route[] = [
-  { path: '', component: SchemasListComponent }
+  { path: '', component: SettingsCustomDataComponent }
 ];
