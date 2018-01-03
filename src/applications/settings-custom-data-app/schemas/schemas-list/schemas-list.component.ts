@@ -87,10 +87,6 @@ export class SchemasListComponent implements OnInit, OnDestroy {
     this._selectedSchemas = [];
   }
 
-  public _addSchema(): void {
-
-  }
-
   public _onActionSelected({ action, schema }: { action: string, schema: SettingsMetadataProfile }): void {
     switch (action) {
       case 'edit':

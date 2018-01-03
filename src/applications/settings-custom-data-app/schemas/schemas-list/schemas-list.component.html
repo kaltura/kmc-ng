@@ -10,7 +10,7 @@
               *ngIf="!_selectedSchemas.length"
               [label]="'applications.settings.metadata.addCustomSchema' | translate"
               class="kButtonBranded kAddSchemaBtn"
-              (click)="_addSchema()"></button>
+              (click)="addCustomSchema.open()"></button>
             <span
               class="kSelectedSchemasNum"
               *ngIf="(_schemasStore.schemas.data$ | async)?.totalCount">
@@ -47,3 +47,9 @@
     </div>
   </div>
 </k-area-blocker>
+
+<kPopupWidget #addCustomSchema [popupWidth]="995" [slider]="true">
+  <ng-template>
+    <h1>IT WORKS</h1>
+  </ng-template>
+</kPopupWidget>
