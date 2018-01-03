@@ -175,10 +175,10 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     }
   }
 
-  public addEntries(rules: PlaylistRule[]): void {
-    this._extendWithSelectionId(rules);
-    this.rules.push(...rules);
-    this.rulesTotalCount = this.rules.length;
-    this._setDirty();
+  public updateRules(rule: PlaylistRule): void {
+    const relevantRuleIndex = this.rules.findIndex(item => item.selectionId === rule.selectionId);
+    if (relevantRuleIndex !== -1) {
+      this.rules[relevantRuleIndex] = rule;
+    }
   }
 }

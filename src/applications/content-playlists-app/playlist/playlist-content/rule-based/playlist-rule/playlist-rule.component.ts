@@ -66,12 +66,7 @@ export class PlaylistRuleComponent {
     });
 
     const { name, orderBy, limit } = this._entriesList.playlistPartialData;
-    const updatedRule = this.rule;
-
-    updatedRule.name = name;
-    updatedRule.orderBy = orderBy;
-    updatedRule.limit = limit;
-    updatedRule.originalFilter = originalFilter;
+    const updatedRule = Object.assign({}, this.rule, { name, orderBy, limit, originalFilter });
 
     this.onAddRule.emit(updatedRule);
     this.onClosePopupWidget.emit();

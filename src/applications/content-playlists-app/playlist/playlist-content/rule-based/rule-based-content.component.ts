@@ -57,8 +57,9 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
     this._widgetService.deleteSelectedRules(selectedRules);
   }
 
-  public _addRule(rule: KalturaMediaEntryFilterForPlaylist): void {
-    console.warn(rule);
+  public _addRule(rule: PlaylistRule): void {
+    this._selectedRule = null;
+    this._widgetService.updateRules(rule);
   }
 }
 
