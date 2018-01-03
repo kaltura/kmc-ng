@@ -112,7 +112,7 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
         return this._kalturaServerClient.request(new BaseEntryListAction({
             filter: new KalturaMediaEntryFilter(
                 {
-                    parentEntryIdEqual: entry.id,
+                    rootEntryIdEqual: entry.id,
                     tagsLike: 'highlights',
                     orderBy: `${this.sortAsc ? '+' : '-'}${this.sortBy}`
                 }
