@@ -1,0 +1,56 @@
+@import 'app-theme/_variables.scss';
+
+.kSchemasTable {
+  background-color: white;
+  height: auto;
+  padding: 0;
+
+  .kSchemasTableActions {
+    width: 100%;
+    text-align: center;
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
+
+  .kTitle {
+    color: $kGrayscale1;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    max-height: 45px;
+    &:hover {
+      color: #000000;
+    }
+  }
+
+  .kSchemasNameWrap {
+    display: flex;
+    align-items: center;
+
+    .kMediaTypeIcon {
+      font-size: 26px;
+      margin-right: 23px;
+    }
+  }
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
+}
+
+:host /deep/ p-datatable .ui-datatable-scrollable-body {
+  margin-bottom: 34px;
+}
+
+:host /deep/ p-datatable .stickyHeader {
+  z-index: 10;
+  display: table;
+}

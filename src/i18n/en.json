@@ -1396,6 +1396,20 @@
           "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
           "sendFailed": "An error occurred during account upgrade"
         }
+      },
+      "metadata": {
+        "addCustomSchema": "Add Custom Schema",
+        "schemas": "{{0}} Custom Schemas",
+        "selected": "{{0}} Selected",
+        "cancel": "Cancel",
+        "table": {
+          "name": "Custom Schema Title",
+          "id": "ID",
+          "systemName": "System Name",
+          "description": "Description",
+          "applyTo": "Apply to",
+          "fieldsIncluded": "Fields included"
+        }
       }
     }
   },

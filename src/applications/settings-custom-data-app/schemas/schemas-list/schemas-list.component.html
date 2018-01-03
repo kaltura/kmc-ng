@@ -1,0 +1,48 @@
+<k-area-blocker [bodyScroll]="true" [message]="_blockerMessage">
+  <div class="kSchemas kOverrideFAIcons">
+    <div #playlistsTableHolder class="kSchemasHolder kContent">
+      <kSticky stickyId="schemasFilters" [scrollOffset]="80" [sticksTo]="'header'">
+        <div class="kContent kFiltersWrapper">
+          <div class="kSchemasTableFilters kContent">
+            <button
+              pButton
+              type="button"
+              [label]="'applications.settings.metadata.addCustomSchema' | translate"
+              class="kButtonBranded kAddSchemaBtn"
+              (click)="_addSchema()"></button>
+            <span
+              class="kSelectedSchemasNum"
+              *ngIf="true">
+              {{'applications.settings.metadata.schemas' | translate : [0] }}
+            </span>
+
+            <div class="kBulkOperations" [class.kHidden]="!_selectedSchemas.length">
+              <span class="kSelectedSchemasLabel">
+                • {{ 'applications.content.metadata.selected' | translate : [_selectedSchemas.length] }}</span>
+              <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                      (click)="_deleteSchemas(_selectedSchemas)"></button>
+              <a class="kBulkCancel" (click)="_clearSelection()">
+                {{'applications.content.metadata.cancel' | translate}}
+              </a>
+            </div>
+          </div>
+        </div>
+      </kSticky>
+      <kSchemasTable
+        class="kSchemasTable"
+        [schemas]="[]"
+        (actionSelected)="_onActionSelected($event)"
+        [(selectedSchemas)]="_selectedSchemas"></kSchemasTable>
+
+      <div class="kSchemasTableFooter kContent" #footer *ngIf="true">
+        <p-paginator
+          [rows]="25"
+          [first]="1"
+          [rowsPerPageOptions]="[25,50,75,100]"
+          [totalRecords]="0"
+          (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
