@@ -24,6 +24,7 @@ import { EntryWidget } from '../entry-widget';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { MediaWowmeAction } from 'kaltura-ngx-client/api/types/MediaWowmeAction';
 import { KalturaHighlightType } from 'kaltura-ngx-client/api/types/KalturaHighlightType';
+import { BaseEntryDeleteAction } from 'kaltura-ngx-client/api/types/BaseEntryDeleteAction';
 
 
 export interface HighlightsData
@@ -167,7 +168,17 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
     }
 
 	deleteEntry(entry: KalturaMediaEntry): void{
-    	console.log("Delete entry id: +entry.id"); // TODO - implement code
+		super._showLoader();
+		this._kalturaServerClient.request(new BaseEntryDeleteAction({entryId: entry.id})).cancelOnDestroy(this).subscribe(
+			result => {
+				super._hideLoader();
+				this.reload();
+			},
+			error => {
+				super._hideLoader();
+				// TODO - display error
+			}
+		);
 	}
 
     ngOnDestroy()
