@@ -114,6 +114,7 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
                 {
                     rootEntryIdEqual: entry.id,
                     tagsLike: 'highlights',
+                    statusIn: '-1,-2,0,1,2,7,4',
                     orderBy: `${this.sortAsc ? '+' : '-'}${this.sortBy}`
                 }
             ),
