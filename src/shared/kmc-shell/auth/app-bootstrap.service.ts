@@ -106,7 +106,7 @@ export class AppBootstrap implements CanActivate {
             .map(res => res.json())
             .subscribe(config =>
             {
-                environment.core.kaltura.serverEndpoint = config.server.apiUri;
+                Object.assign(environment.core.kaltura, config.server);
                 // Temporary workaround until upgrading kaltura client
 
                 this.kalturaClient.endpointUrl = (environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://') + config.server.apiUri;

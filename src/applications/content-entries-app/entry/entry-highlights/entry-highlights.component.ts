@@ -83,7 +83,7 @@ export class EntryHighlights implements OnInit, OnDestroy {
         switch (action){
             case "edit":
                 this._keaConfig = {
-                    entryId: '1_1c3q51nr', // TODO this._selectedHighlightsEntry.id,
+                    entryId: this._selectedHighlightsEntry.id,
                     tab: 'chopAndSlice'
                 };
                 this.editPopup.open();

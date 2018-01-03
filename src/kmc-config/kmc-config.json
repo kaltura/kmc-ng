@@ -1,5 +1,13 @@
 {
   "server": {
-    "apiUri": "192.168.163.88"
+    "apiUri": "192.168.163.88",
+    "cdnUrl": "http://laio.mysystem.local",
+    "legacyKmcUrl": "kmc.kaltura.com",
+    "expiry": "86400",
+    "privileges": "disableentitlement",
+    "previewUIConf": "23448192",
+    "liveAnalyticsVersion": "v2.6",
+    "securedCdnUrl": "https://laio.mysystem.local",
+    "contactsalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
   }
 }
