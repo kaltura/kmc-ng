@@ -12,7 +12,7 @@
          <span class="kLabelText">{{'applications.content.categoryDetails.entitlements.privacyContentLabel.label' | translate}}</span>
         </span>
         <div class="kControl">
-          {{_widgetService.data.privacyContext}}
+          {{_widgetService.data.privacyContexts}}
         </div>
       </div>
 
@@ -149,8 +149,8 @@
         <div class="kControl">
           <p-inputSwitch class="kInputSwitch" formControlName="inheritUsersPermissions"
                          (onChange)="_toggleInherit($event)"></p-inputSwitch>
-          <span>{{_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
-          <div class="kAdditional kExplanation">
+          <span>{{_widgetService.entitlementsForm.get('inheritUsersPermissions').value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+          <div *ngIf="_widgetService.entitlementsForm.get('inheritUsersPermissions').value" class="kAdditional kExplanation">
             <span>{{'applications.content.categoryDetails.entitlements.inheritUsersPermissions.parentCategory' | translate}}</span>
             <a (click)="_widgetService.openCategory(_widgetService.parentCategory)">{{_widgetService.parentCategory?.name}}</a>
           </div>
@@ -168,8 +168,16 @@
       <div class="kRow kChangeOwner">
         <span class="kLabel"><span class="kLabelText">{{'applications.content.categoryDetails.entitlements.owner.label' | translate}}</span></span>
         <div class="kControl">
-          <span *ngIf="_widgetService.entitlementsForm.get('owner').value" class="kOwner" [kTooltip]="_widgetService.entitlementsForm.get('owner').value">{{_widgetService.entitlementsForm.get('owner').value}}</span>
-          <span *ngIf="!_widgetService.entitlementsForm.get('owner').value" class="kOwner" >{{'applications.content.categoryDetails.entitlements.owner.notSpecified' | translate}}</span>
+          <!--If current category doesn't inherit users permissions then show the owner of the category-->
+          <span *ngIf="!_widgetService.entitlementsForm.get('inheritUsersPermissions').value">
+            <span *ngIf="_widgetService.entitlementsForm.get('owner').value" class="kOwner" [kTooltip]="_widgetService.entitlementsForm.get('owner').value">{{_widgetService.entitlementsForm.get('owner').value}}</span>
+            <span *ngIf="!_widgetService.entitlementsForm.get('owner').value" class="kOwner" >{{'applications.content.categoryDetails.entitlements.owner.notSpecified' | translate}}</span>
+          </span>
+          <!--If current category inherits users permissions then show the owner of the parent category-->
+          <span *ngIf="_widgetService.entitlementsForm.get('inheritUsersPermissions').value">
+            <span *ngIf="_widgetService.parentCategory.owner" class="kOwner" [kTooltip]="_widgetService.parentCategory.owner">{{_widgetService.parentCategory.owner}}</span>
+            <span *ngIf="!_widgetService.parentCategory.owner" class="kOwner" >{{'applications.content.categoryDetails.entitlements.owner.notSpecified' | translate}}</span>
+          </span>
           <a [class.disabled]="_widgetService.entitlementsForm.get('owner').disabled" class="kActionLink"
              (click)="changeOwnerPopup.open()">{{'applications.content.categoryDetails.entitlements.owner.changeOwner' | translate}}</a>
         </div>
@@ -185,7 +193,7 @@
       </span>
           <span *ngIf="!_widgetService.membersTotalCount">
         {{'applications.content.categoryDetails.entitlements.permittedUsers.none' | translate}} </span>
-          <a class="kActionLink" (click)="manageUsersPopup.open()">
+          <a class="kActionLink" (click)="mananageUsersPermissions()">
             <span *ngIf="!_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value">{{'applications.content.categoryDetails.entitlements.permittedUsers.manageUsers' | translate}}</span>
             <span *ngIf="_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value">{{'applications.content.categoryDetails.entitlements.permittedUsers.viewUsers' | translate}}</span>
           </a>

@@ -122,7 +122,21 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  _onActionSelected({action, users, actionPayload}: { action: string, users: User | User[], actionPayload: any }) {
+  _onActionSelected({action, users, actionPayload}: { action: string, users: User | User[], actionPayload: { level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType} }) {
+    const showInvalidActionError = () => {
+      this._blockerMessage = new AreaBlockerMessage({
+        message: this._appLocalization
+          .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.invalidAction'),
+        buttons: [{
+          label: this._appLocalization.get('app.common.close'),
+          action: () => {
+            this._blockerMessage = null;
+          }
+        }
+        ]
+      });
+    };
+
     let usersIds = [];
     if (Array.isArray(users) && users.length > 0) {
       usersIds = users.map(user => (user.id));
@@ -131,12 +145,18 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     }
     switch (action) {
       case 'permissionLevel':
-        this._executeAction(this._manageEndUsersPermissionsService.setPermissionLevel(usersIds,
-          <KalturaCategoryUserPermissionLevel>actionPayload));
+        if (!actionPayload || typeof actionPayload.level === 'undefined') {
+          showInvalidActionError();
+          return undefined;
+        }
+        this._executeAction(this._manageEndUsersPermissionsService.setPermissionLevel(usersIds, actionPayload.level));
         break;
       case 'updateMethod':
-        this._executeAction(this._manageEndUsersPermissionsService.setUpdateMethod(usersIds,
-          <KalturaUpdateMethodType>actionPayload));
+        if (!actionPayload || typeof actionPayload.method === 'undefined') {
+          showInvalidActionError();
+          return undefined;
+        }
+        this._executeAction(this._manageEndUsersPermissionsService.setUpdateMethod(usersIds, actionPayload.method));
         break;
       case 'delete':
         this._executeAction(this._manageEndUsersPermissionsService.deleteUsers(usersIds));
@@ -148,17 +168,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
         this._executeAction(this._manageEndUsersPermissionsService.deactivateUsers(usersIds));
         break;
       default:
-        this._blockerMessage = new AreaBlockerMessage({
-          message: this._appLocalization
-            .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.invalidAction'),
-          buttons: [{
-            label: this._appLocalization.get('app.common.close'),
-            action: () => {
-              this._blockerMessage = null;
-            }
-          }
-          ]
-        });
+        showInvalidActionError();
         break;
     }
   }

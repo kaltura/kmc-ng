@@ -1,11 +1,17 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <div class="kContainer">
-      <div class="kHeader">
-        <span
-          class="kTitle">{{'applications.content.categoryDetails.entitlements.usersPermissions.title' | translate}}</span>
+      <div class="kHeader" [class.kInheritance]="categoryInheritUserPermissions">
+        <span class="kTitle">
+          {{'applications.content.categoryDetails.entitlements.usersPermissions.title' | translate}}
+        </span>
         <button pButton class="kButtonDefault kButton"
                 label="{{'applications.content.categoryDetails.entitlements.usersPermissions.close' | translate}}"
                 (click)="parentPopupWidget?.close()"></button>
+        <span class="kInheritanceMessage" *ngIf="categoryInheritUserPermissions"
+              [kTooltip]="'applications.content.categoryDetails.entitlements.usersPermissions.inheritanceMessage' | translate:{'0': parentCategory.fullName}"
+              [maxWidth]="850">
+          {{'applications.content.categoryDetails.entitlements.usersPermissions.inheritanceMessage' | translate:{'0': parentCategory.fullName} }}
+        </span>
       </div>
       <div class="kManageEndUserPermissionsBulkOperationsContent">
         <kManageEndUserPermissionsBulkOperationsContent
@@ -30,7 +36,7 @@
           (closeParentPopup)="parentPopupWidget?.close()"
         </kManageEndUserPermissionsTable>
       </div>
-      <div class="kTableFooter kContent" #footer *ngIf="_usersTotalCount">
+      <div class="kTableFooter" #footer *ngIf="_usersTotalCount">
         <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
                      [first]="_query.pageIndex * _query.pageSize"
                      [totalRecords]="_usersTotalCount" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
@@ -42,6 +48,11 @@
  
 <kPopupWidget #addUser [popupWidth]="790" [popupHeight]="447" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kAddUsers [parentPopupWidget]="addUser" [category]="category" [parentCategory]="parentCategory" (usersAdded)="_onUsersAdded()"></kAddUsers>
+    <kAddUsers [parentPopupWidget]="addUser"
+               [category]="category"
+               [parentCategoryMembersCount]="parentCategory.membersCount"
+               [usersCount]="_users.length"
+               (usersAdded)="_onUsersAdded()"
+    ></kAddUsers>
   </ng-template>
 </kPopupWidget>

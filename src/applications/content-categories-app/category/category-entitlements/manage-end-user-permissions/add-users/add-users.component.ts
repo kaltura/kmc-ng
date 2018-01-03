@@ -12,7 +12,6 @@ import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/K
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {AddUsersService} from './add-users.service';
 
-
 @Component({
   selector: 'kAddUsers',
   templateUrl: './add-users.component.html',
@@ -23,9 +22,10 @@ export class AddUsersComponent implements OnInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() category: KalturaCategory;
-  @Input() parentCategory: KalturaCategory;
+  @Input() parentCategoryMembersCount: number;
   @Input() categoryInheritUserPermissions = false;
-  @Output() usersAdded = new EventEmitter<KalturaUser>();
+  @Input() usersCount: number;
+  @Output() usersAdded = new EventEmitter<void>();
 
   public _loading = false;
   public _blockerMessage: AreaBlockerMessage;
@@ -38,17 +38,20 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   public _updateMethodOptions: { value: number, label: string }[] = [];
   public _kalturaInheritanceType = KalturaInheritanceType;
 
-  public _selectedPermissionSettings: 'inherit' | 'setPermissions' = null;
+  public _selectedPermissionSettings: 'inherit' | 'setPermissions' = 'setPermissions';
 
   private _searchUsersSubscription: ISubscription;
   private _parentPopupStateChangesSubscription: ISubscription;
 
   constructor( private _appLocalization: AppLocalization,
-              private _addUsersService: AddUsersService) {
+               private _addUsersService: AddUsersService) {
   }
 
   ngOnInit() {
-    if (!this.category) {
+    if (this.category) {
+      this._fillPermissionLevelOptions();
+      this._fillUpdateMethodOptions();
+    } else {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization
           .get('applications.content.categoryDetails.entitlements.usersPermissions.errors.loadEndUserPermissions'),
@@ -64,13 +67,6 @@ export class AddUsersComponent implements OnInit, OnDestroy {
         ]
       });
     }
-    if (this.category.inheritanceType === this._kalturaInheritanceType.manual &&
-      this.parentCategory && this.parentCategory.membersCount > 0) {
-      this._selectedPermissionSettings = 'setPermissions';
-    }
-
-    this._fillPermissionLevelOptions();
-    this._fillUpdateMethodOptions();
   }
 
 
@@ -123,7 +119,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  public _apply() {
+  public _addUsers() {
     if (this._users) {
       this._addUsersService
         .addUsers(
@@ -144,20 +140,19 @@ export class AddUsersComponent implements OnInit, OnDestroy {
           },
           error => {
             this._blockerMessage = new AreaBlockerMessage({
-              message: this._appLocalization
-                .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.addUsersFailed'),
+              title: this._appLocalization
+                .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.error'),
+              message: error.message,
               buttons: [{
-                label: this._appLocalization.get('app.common.cancel'),
+                label: this._appLocalization.get('app.common.ok'),
                 action: () => {
                   this._blockerMessage = null;
+                  this.usersAdded.emit();
+                  if (this.parentPopupWidget) {
+                    this.parentPopupWidget.close();
+                  }
                 }
-              },  {
-                label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.retry'),
-                action: () => {
-                  this._apply();
-                }
-              }
-              ]
+              }]
             });
           }
         );
@@ -174,6 +169,58 @@ export class AddUsersComponent implements OnInit, OnDestroy {
         ]
       });
     }
+  }
+
+
+  public _copyUsersFromParent() {
+    const _executeCopyUsers = () => {
+      this._addUsersService
+        .copyUsersFromParent({categoryId: this.category.id})
+        .tag('block-shell')
+        .cancelOnDestroy(this)
+        .subscribe(
+          result => {
+            this.usersAdded.emit();
+            if (this.parentPopupWidget) {
+              this.parentPopupWidget.close();
+            }
+          },
+          error => {
+            this._blockerMessage = new AreaBlockerMessage({
+              title: this._appLocalization
+                .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.error'),
+              message: error.message,
+              buttons: [{
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this.usersAdded.emit();
+                  if (this.parentPopupWidget) {
+                    this.parentPopupWidget.close();
+                  }
+                }
+              }]
+            });
+          }
+        );
+    };
+
+    this._blockerMessage = new AreaBlockerMessage({
+      title: this._appLocalization
+        .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.copyUsersFromParentConfirmationTitle'),
+      message: this._appLocalization
+        .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.copyUsersFromParentConfirmation'),
+      buttons: [
+        {
+          label: this._appLocalization.get('app.common.yes'),
+          action: () => {
+            _executeCopyUsers();
+          }
+        }, {
+          label: this._appLocalization.get('app.common.yes'),
+          action: () => {}
+        }]
+    });
   }
 
   private _fillPermissionLevelOptions() {

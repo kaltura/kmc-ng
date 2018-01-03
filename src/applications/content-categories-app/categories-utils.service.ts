@@ -55,7 +55,7 @@ export class CategoriesUtilsService {
   // bulk delete
   public confirmDeleteMultiple(categoriesToDelete: KalturaCategory[], categories?: KalturaCategory[]): Observable<{ confirmed: boolean, error?: Error }> {
     return Observable.create(observer => {
-      if (!categoriesToDelete || !categoriesToDelete.length || categories && !categoriesToDelete.every(c => categories.indexOf(c) > -1)) {
+      if (!categoriesToDelete || !categoriesToDelete.length || (categories && !categoriesToDelete.every(c => categories.indexOf(c) > -1))) {
         observer.error(new Error('At least one of the categories to delete could not be found in given list'));
       } else {
         let message = '';
