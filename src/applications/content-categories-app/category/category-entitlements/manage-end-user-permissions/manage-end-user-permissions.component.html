@@ -48,7 +48,7 @@
   <ng-template>
     <kAddUsers [parentPopupWidget]="addUser"
                [category]="category"
-               [parentCategory]="parentCategory"
+               [parentCategoryMembersCount]="parentCategory.membersCount"
                [usersCount]="_users.length"
                (usersAdded)="_onUsersAdded()"
     ></kAddUsers>

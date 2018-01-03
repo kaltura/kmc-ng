@@ -22,7 +22,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() category: KalturaCategory;
-  @Input() parentCategory: KalturaCategory;
+  @Input() parentCategoryMembersCount: number;
   @Input() categoryInheritUserPermissions = false;
   @Input() usersCount: number;
   @Output() usersAdded = new EventEmitter<void>();

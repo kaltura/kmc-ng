@@ -29,73 +29,42 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
+
     super._showLoader();
-    super._removeBlockerMessage();
-    if (this.data.parentId > 0) {
-      super._showLoader();
-      super._removeBlockerMessage();
-      this.membersTotalCount = this.data.membersCount;
-      return this._fetchData('activation');
-    } else {
-      this._resetFormData();
-      this._monitorFormChanges();
-      this._hideLoader();
-      return Observable.of({failed: false});
-    }
+
+    return this._fetchEntitlementsData()
+      .monitor('get category parent category')
+      .cancelOnDestroy(this, this.widgetReset$)
+      .map(() => {
+        super._hideLoader();
+        return {failed: false};
+      })
+      .catch(error => {
+        super._hideLoader();
+        super._showActivationError();
+        return Observable.of({failed: true, error});
+      });
   }
 
-  public _fetchData(origin: 'activation' | 'reload', reset: boolean = true, showLoader: boolean = true):
-                  Observable<{ failed: boolean, error?: Error }> {
-    return Observable.create(observer => {
-      if (showLoader) {
-        super._showLoader();
-      }
-      if (reset) {
-        this.parentCategory = null;
-      }
+  private _fetchEntitlementsData(): Observable<void> {
+    if (!this.data || !this.data.parentId) {
+      return Observable.throw('Could not load parent category, unable to extract parent ID')
+    }
 
-      let requestSubscription = this._getParentCategory(this.data.parentId)
-        .monitor('get category parent category')
-        .cancelOnDestroy(this, this.widgetReset$)
-        .subscribe(
-          parentCategory => {
-            super._hideLoader();
-            this.parentCategory = parentCategory;
-            this._resetFormData();
-            this._monitorFormChanges();
-            observer.next({failed: false});
-            observer.complete();
-          }, error => {
-            this.parentCategory = null;
-            super._hideLoader();
-            if (origin === 'activation') {
-              super._showActivationError();
-            } else {
-              this._showBlockerMessage(new AreaBlockerMessage(
-                {
-                  message: this._appLocalization
-                    .get('applications.content.categoryDetails.entitlements.inheritUsersPermissions.errors.categoryLoadError'),
-                  buttons: [
-                    {
-                      label: this._appLocalization.get('app.common.retry'),
-                      action: () => {
-                        this.refresh(reset);
-                      }
-                    }
-                  ]
-                }
-              ), true);
-            }
-            observer.error({failed: true, error});
-          }
-        );
-      return () => {
-        if (requestSubscription) {
-          requestSubscription.unsubscribe();
-          requestSubscription = null;
-        }
-      }
-    });
+    return this._getParentCategory(this.data.parentId)
+      .monitor('get category parent category')
+      .cancelOnDestroy(this, this.widgetReset$)
+      .map(parentCategory => {
+        this.parentCategory = parentCategory;
+        this.membersTotalCount = this.data.membersCount;
+        this._resetFormData();
+        this._monitorFormChanges();
+        return undefined;
+      })
+      .catch(error => {
+        this.parentCategory = null;
+        throw error;
+      });
   }
 
   private _getParentCategory(parentCategoryId: number): Observable<KalturaCategory> {
@@ -206,11 +175,32 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     });
   }
 
-  public refresh(reset = false, showLoader = true) {
-    this._fetchData('reload', reset, showLoader)
+  public refresh() {
+    super._showLoader();
+
+    this._fetchEntitlementsData()
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(() => {
-      });
+          super._hideLoader();
+        },
+        (error) => {
+          super._hideLoader();
+
+          this._showBlockerMessage(new AreaBlockerMessage(
+            {
+              message: this._appLocalization
+                .get('applications.content.categoryDetails.entitlements.inheritUsersPermissions.errors.categoryLoadError'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this.refresh();
+                  }
+                }
+              ]
+            }
+          ), true);
+        });
   }
 
   ngOnDestroy() {

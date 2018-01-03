@@ -9,7 +9,7 @@
         <p-radioButton class="kRadio" [(ngModel)]="_selectedPermissionSettings" [value]="'inherit'"
                        name="permissionSettings"
                        [disabled]="!(category.inheritanceType === _kalturaInheritanceType.manual &&
-                                     parentCategory && parentCategory.membersCount > 0 && !usersCount)"
+                                     parentCategoryMembersCount > 0 && !usersCount)"
                        name="policy"
                        label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.inheritUser' | translate}}"
                        (onClick)="_clearUsers()"></p-radioButton>
