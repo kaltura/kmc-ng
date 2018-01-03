@@ -655,7 +655,7 @@
         "lastLogin": "Last Login",
         "edit": "Edit",
         "blockUnblock": "Block / Unblock",
-        "highlights": "Wow Me!"
+        "highlights": "Preview Wow Me!"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -1155,7 +1155,7 @@
           "editTitle": "Create New Highlights Entry",
           "title": "Highlights Profiles:",
           "create": "Create",
-          "preview": "Preview",
+          "preview": "Preview Wow Me!",
           "deleteConfirmHeader": "Delete Highlights Entry",
           "deleteConfirm": "Are you sure you want to delete selected highlights entry?"
         },
