@@ -56,7 +56,7 @@ export class EntryDetails implements OnInit, OnDestroy {
 					sourceType === KalturaSourceType.manualLiveStream.toString());
 					this._isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
 					this._hasDuration = (this._currentEntry.status !== KalturaEntryStatus.noContent && !this._isLive && this._currentEntry.mediaType.toString() !== KalturaMediaType.image.toString());
-					this._isHighlight = this._currentEntry.sourceType === KalturaSourceType.clip && this._currentEntry.tags && this._currentEntry.tags.indexOf('highlights') > -1;
+					this._isHighlight = !this._isRecordedLive && (this._currentEntry.id !== this._currentEntry.rootEntryId) && this._currentEntry.tags && this._currentEntry.tags.indexOf('highlights') > -1;
 
                     this._isClip = !this._isHighlight && !this._isRecordedLive && (this._currentEntry.id !== this._currentEntry.rootEntryId);
 				}
