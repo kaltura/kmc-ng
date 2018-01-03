@@ -1402,7 +1402,12 @@
         "schemas": "{{0}} Custom Schemas",
         "selected": "{{0}} Selected",
         "cancel": "Cancel",
+        "applyTo": {
+          "entries": "Entries",
+          "categories": "Categories"
+        },
         "table": {
+          "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
           "name": "Custom Schema Title",
           "id": "ID",
           "systemName": "System Name",

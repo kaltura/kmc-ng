@@ -26,6 +26,10 @@
     &:hover {
       color: #000000;
     }
+    &.kProfileDisabled {
+      color: $kGrayscale4;
+      cursor: text;
+    }
   }
 
   .kSchemasNameWrap {
@@ -53,4 +57,8 @@
 :host /deep/ p-datatable .stickyHeader {
   z-index: 10;
   display: table;
+}
+
+:host /deep/ .kSchemasTable tr.kProfileDisabled .ui-cell-data {
+  color: $kGrayscale4;
 }

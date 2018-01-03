@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
@@ -15,10 +14,20 @@ import { KalturaMetadataOrderBy } from 'kaltura-ngx-client/api/types/KalturaMeta
 import { KalturaMetadataProfileCreateMode } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileCreateMode';
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
 import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
+import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
+import { MetadataProfile, MetadataProfileParser } from 'app-shared/kmc-shared';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 export interface SchemasFilters {
   pageSize: number,
   pageIndex: number
+}
+
+export interface SettingsMetadataProfile extends KalturaMetadataProfile {
+  profileDisabled: boolean;
+  parsedProfile?: MetadataProfile;
+  defaultLabel?: string;
+  applyTo?: string;
 }
 
 const localStoragePageSizeKey = 'schemas.list.pageSize';
@@ -26,11 +35,12 @@ const localStoragePageSizeKey = 'schemas.list.pageSize';
 @Injectable()
 export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements OnDestroy {
   private _schemas = {
-    data: new BehaviorSubject<{ items: KalturaPlaylist[], totalCount: number }>({ items: [], totalCount: 0 }),
+    data: new BehaviorSubject<{ items: SettingsMetadataProfile[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
   private _isReady = false;
   private _querySubscription: ISubscription;
+  private _metadataProfileParser = new MetadataProfileParser();
 
   public readonly schemas = {
     data$: this._schemas.data.asObservable(),
@@ -39,6 +49,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
   };
 
   constructor(private _kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               _logger: KalturaLogger) {
     super(_logger);
@@ -89,6 +100,31 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
     this._schemas.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .cancelOnDestroy(this)
+      .map(({ objects, totalCount }) => {
+        objects.forEach((object: SettingsMetadataProfile) => {
+          if (!object.createMode || object.createMode === KalturaMetadataProfileCreateMode.kmc) {
+            const parsedProfile = this._metadataProfileParser.parse(object);
+            object.profileDisabled = !!parsedProfile.error; // disable profile if there's error during parsing
+            object.parsedProfile = parsedProfile.profile;
+            if (!object.profileDisabled) {
+              object.defaultLabel = object.parsedProfile.items.map(({ label }) => label).join(',');
+            }
+          } else {
+            object.profileDisabled = true; // disabled
+          }
+
+          const objectType = object.metadataObjectType.toString();
+          if (objectType === KalturaMetadataObjectType.entry.toString()) {
+            object.applyTo = this._appLocalization.get('applications.settings.metadata.applyTo.entries');
+          } else if (objectType === KalturaMetadataObjectType.category.toString()) {
+            object.applyTo = this._appLocalization.get('applications.settings.metadata.applyTo.categories');
+          } else {
+            object.applyTo = objectType;
+          }
+        });
+
+        return { objects, totalCount };
+      })
       .subscribe(
         response => {
           this._querySubscription = null;

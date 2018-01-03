@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { SchemasFilters, SchemasStore } from '../schemas-store/schemas-store.service';
+import { SettingsMetadataProfile, SchemasFilters, SchemasStore } from '../schemas-store/schemas-store.service';
 
 @Component({
   selector: 'kSchemasList',
@@ -12,7 +12,7 @@ import { SchemasFilters, SchemasStore } from '../schemas-store/schemas-store.ser
 export class SchemasListComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
 
-  public _selectedSchemas: any[] = [];
+  public _selectedSchemas: SettingsMetadataProfile[] = [];
 
   public _query = {
     pageIndex: 0,
@@ -61,7 +61,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
     this._selectedSchemas = [];
   }
 
-  public _deleteSchemas(schemas: any[]): void {
+  public _deleteSchemas(schemas: SettingsMetadataProfile[]): void {
 
   }
 
@@ -69,7 +69,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
 
   }
 
-  public _onActionSelected(action: { actions: string, schema: any }): void {
+  public _onActionSelected(action: { actions: string, schema: SettingsMetadataProfile }): void {
 
   }
 
