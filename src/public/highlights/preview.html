@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="intro.css" rel="stylesheet"/>
+    <link href="preview.css" rel="stylesheet"/>
     <meta charset="UTF-8">
     <title>Magikaltura</title>
     <link rel="shortcut icon" href="https://corp.kaltura.com/sites/default/files/favicon.ico" type="image/vnd.microsoft.icon" />
@@ -10,38 +10,24 @@
 <body>
 
 <div id="kaltura_player" style="width: 100%; height: 100vh;" itemprop="video" itemscope itemtype="http://schema.org/VideoObject"></div>
-<div class="header">
-    <img src="logo.png" width="60px" height="55px">
+<div class="header" id="header">
+    <img src="logo.png" width="60px" height="55px" class="logo">
     <div class="verticalLine"></div>
     <span class="title bebas-neue">Magikaltura</span>
     <div class="header-right">
         <span class="email" onclick="sendMail()">Contact@Hackathon-winners.com</span>
-        <i class="share fa fa-twitter"></i>
-        <i class="share fa fa-linkedin"></i>
-        <i class="share fa fa-facebook"></i>
+        <i class="share fa fa-twitter" onclick="share('twitter')" title="Share to Twitter"></i>
+        <i class="share fa fa-linkedin" onclick="share('linkedin')" title="Share to LinkedIn"></i>
+        <i class="share fa fa-facebook" onclick="share('facebook')" title="Share to Facebook"></i>
+        <i class="share fa fa-google-plus" onclick="share('googleplus')" title="Share to Google Plus"></i>
+        <i class="share fa fa-envelope" onclick="share('email')" title="Share via Email" style="margin-right: 60px"></i>
     </div>
+    <i class="fa fa-window-minimize toggleHeader" onclick="toggleHeader()" title="Toggle Header"></i>
 </div>
-<!--span class="slogan" style="bottom: 210px">Maximize video content with AUTOMAGICAL*</span><br>
-<span class="slogan" style="bottom: 150px">Highlights create by magiKaltura</span>
-<span class="slogan2" style="bottom: 120px">*Automagical – defines something that happens automatically but you can’t quite explain how it happens or the explanation is too complex</span>
-<span class="slogan2" style="bottom: 100px">[Urban Dictionary]</span>
-<div class="footer">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/HBO.png?itok=V9oQPEdv">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/tmz.png?itok=SMpUiE3W">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/WB.png?itok=xNrsW8n2">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/paramount.png?itok=ej2P-_j0">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/obsev.png?itok=A0SzI_A9">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/thechive.png?itok=FT3H3bot">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/mp_logo_rund_Grey.png?itok=Dn_GffWE">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/Target_Grey.png?itok=oob8euMg">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/PearsonLogo_Horizontal_Mono_Blk_RGB.png?itok=I4vmv1XF">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/astra-de.png?itok=BqgV0B21">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/unh.png?itok=SJXcQVyL">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/sap2.png?itok=lOyCvbDC">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer5_logo/public/Yes-logo.png?itok=zkzsvvT7">
-    <img class="customerLogo" src="https://corp.kaltura.com/sites/default/files/styles/customer_logo/public/nnit-de.png?itok=UnR6VJVP">
-</div-->
+
 <script>
+	var kdp;
+	var headerOpen = true;
 	// get params
 	var url = new URL(window.location.href);
 	var entryId = url.searchParams.get("entryId");
@@ -56,13 +42,18 @@
 			"targetId": "kaltura_player",
 			"wid": "_"+pid,
 			"uiconf_id": uiconfId,
+			"readyCallback": function(player){
+				kdp = document.getElementById(player);
+			},
 			"flashvars": {
 				"largePlayBtn.plugin": false,
 				"autoPlay": true,
 				"autoMute": true,
-                "loop": true,
+				"loop": true,
 				"controlBarContainer.plugin": false,
-				"topBarContainer.plugin": false
+				"topBarContainer.plugin": false,
+				"share.plugin": true,
+				"disableOnScreenClick": true
 			},
 			"cache_st": 1514888096,
 			"entry_id": entryId
@@ -75,9 +66,20 @@
 		opener = window.open('mailto:all@kaltura.com?subject=Hackathon winners announced!&body=MagiKaltura Wins!');
 		setTimeout(function(){
 			opener.close();
-        },1000);
+		},1000);
+	}
 
-    }
+	function share(platform){
+		if (kdp){
+			kdp.sendNotification("shareByPlatform",[platform]);
+		}
+	}
+
+	function toggleHeader(){
+		headerOpen = !headerOpen;
+		var top = headerOpen ? 0 : -84;
+		document.getElementById("header").style.top = top + "px";
+	}
 </script>
 
 </body>
