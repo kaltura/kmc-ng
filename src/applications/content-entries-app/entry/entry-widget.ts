@@ -15,20 +15,20 @@ export abstract class EntryWidget extends WidgetBase<EntryWidgetsManager, Kaltur
         super(_widgetKey);
     }
 
-    protected _showLoader() {
+    public _showLoader() {
 	    this._removeBlockerMessage();
         this.showSectionLoader = true;
     }
 
-    protected _hideLoader() {
+    public _hideLoader() {
         this.showSectionLoader = false;
     }
 
-    protected _removeBlockerMessage() : void{
+    public _removeBlockerMessage() : void{
         this.sectionBlockerMessage = null;
     }
 
-    protected _showBlockerMessage(message: AreaBlockerMessage, addBackToEntriesButton: boolean) {
+    public _showBlockerMessage(message: AreaBlockerMessage, addBackToEntriesButton: boolean) {
         let messageToShow = message;
         if (addBackToEntriesButton) {
             messageToShow = new AreaBlockerMessage({

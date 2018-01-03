@@ -7,6 +7,8 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
 import { Kea2HosterConfig } from 'app-shared/kmc-shared/kea2-hoster/kea2-hoster.component';
+import { KalturaHighlightType } from 'kaltura-ngx-client/api/types/KalturaHighlightType';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 @Component({
     selector: 'kEntryHighlights',
@@ -25,11 +27,11 @@ export class EntryHighlights implements OnInit, OnDestroy {
     public _loading = false;
     public _loadingError = null;
     public _profiles = [
-        {label: "Sports", value: "Sports", selected: false},
-        {label: "Lecture", value: "Lecture", selected: false},
-        {label: "Drama", value: "Drama", selected: false},
-        {label: "Action", value: "Action", selected: false},
-        {label: "Other", value: "Other", selected: false}];
+        {label: "Sports", value: KalturaHighlightType.sports, selected: false},
+        {label: "Lecture", value: KalturaHighlightType.lecture, selected: false},
+        {label: "Drama", value: KalturaHighlightType.drama, selected: false},
+        {label: "Action", value: KalturaHighlightType.action, selected: false}];
+
     public _selectedHighlightsEntry: KalturaMediaEntry = null;
 
     constructor(public _widgetService: EntryHighlightsWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _appAuthentication: AppAuthentication)
@@ -57,8 +59,40 @@ export class EntryHighlights implements OnInit, OnDestroy {
     }
 
     public _createAndClose(): void{
-        this.popup.close();
-        this._widgetService.create(this._selectedHighlightsEntry, this._profiles);
+        const selectedProfiles = this._profiles.filter(profile => profile.selected);
+
+        if (selectedProfiles.length > 0) {
+            this.popup.close();
+            this._widgetService._showLoader();
+            this._widgetService.create(selectedProfiles.map(profile => profile.value))
+                .cancelOnDestroy(this)
+                .subscribe(() =>
+                {
+                    this._widgetService._hideLoader();
+                    this._widgetService.reload();
+                },
+                    () =>
+                    {
+                        this._widgetService._hideLoader();
+
+                        this._widgetService._showBlockerMessage(new AreaBlockerMessage(
+                            {
+                                message: this._appLocalization.get('applications.content.entryDetails.errors.clipsLoadError'),
+                                buttons: [
+                                    {
+                                        label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+                                        action: () => {
+                                            this._widgetService.reload();
+                                        }
+                                    }
+                                ]
+                            }
+                        ), false);
+                    });
+        }else
+        {
+            this._browserService.alert({ message: 'Please select profile'});
+        }
     }
 
     openActionsMenu(event: any, entry: KalturaMediaEntry): void{

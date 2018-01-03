@@ -112,7 +112,7 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
         const externalMedia = this.data instanceof KalturaExternalMediaEntry;
         switch (sectionKey) {
             case EntryWidgetKeys.Highlights:
-                return this.data.sourceType === KalturaSourceType.clip  && (!this.data.tags || this.data.tags.split(',').indexOf('highlights') === -1);
+                return this.data.sourceType !== KalturaSourceType.clip  && (!this.data.tags || this.data.tags.split(',').indexOf('highlights') === -1);
             case EntryWidgetKeys.Thumbnails:
                 return mediaType !== KalturaMediaType.image;
             case EntryWidgetKeys.Flavours:

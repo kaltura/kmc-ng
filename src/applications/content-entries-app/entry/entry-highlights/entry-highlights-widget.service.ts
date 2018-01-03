@@ -22,6 +22,8 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import { EntryWidget } from '../entry-widget';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { MediaWowmeAction } from 'kaltura-ngx-client/api/types/MediaWowmeAction';
+import { KalturaHighlightType } from 'kaltura-ngx-client/api/types/KalturaHighlightType';
 
 
 export interface HighlightsData
@@ -135,21 +137,19 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
                 })
     }
 
-	create(source: KalturaMediaEntry, profiles: any[]):void{
-    	// Demo code for status demo - TODO - implement real server all and returned entry addition to the entries array
-    	let items = this._highlights.getValue().items;
-    	profiles.forEach(profile => {
-    		if (profile.selected) {
-			    const newHighlights = new KalturaMediaEntry({
-				    name: this.data.name + " Highlights - " + profile.label,
-				    tags: "highlights"
-			    });
-			    items.push(newHighlights);
-		    }
-	    });
+	create(profiles: KalturaHighlightType[]): Observable<void> {
+        const requests: MediaWowmeAction[] = [];
 
-		this._highlights.next({items: items, totalItems: items.length});
-	}
+        profiles.map(profile => {
+            requests.push(new MediaWowmeAction({
+                entryId: this.data.id,
+                highlightType: profile
+            }));
+        });
+
+        return this._kalturaServerClient.multiRequest(requests)
+            .map(() => undefined);
+    }
 
     protected onActivate(firstTimeActivating: boolean) {
         super._showLoader();
