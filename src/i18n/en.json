@@ -19,7 +19,8 @@
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
       "DropFolders": "Drop Folders",
-      "UploadMonitor": "Upload Monitor"
+      "UploadMonitor": "Upload Monitor",
+      "CustomData": "Custom Data"
     },
     "userSettings": {
       "changeAccount": "Change Account",
