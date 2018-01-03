@@ -88,7 +88,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
           const entriesDuration = result.reduce((duration, entry) => duration + entry.duration, 0);
 
           this.rules.push({
-            name: `Rule ${index + 1}`, // TODO [kmcng] replace with rule's name
+            name: /*filter.name || */`Rule ${index + 1}`, // TODO [kmcng] replace with rule's name
             orderBy: filter.orderBy,
             limit: filter.limit,
             entriesCount: result.length,
@@ -109,12 +109,6 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
         this._state.next({ loading: false, error: true });
         return Observable.of({ failed: true, error });
       });
-  }
-
-  private _extendWithSelectionId(rules: PlaylistRule[]): void {
-    rules.forEach(rule => {
-      rule.selectionId = this._selectionIdGenerator.generateUnique(rules.map(item => item.selectionId));
-    });
   }
 
   private _setDirty(): void {
@@ -179,6 +173,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     const relevantRuleIndex = this.rules.findIndex(item => item.selectionId === rule.selectionId);
     if (relevantRuleIndex !== -1) {
       this.rules[relevantRuleIndex] = rule;
+      this._setDirty();
     }
   }
 }
