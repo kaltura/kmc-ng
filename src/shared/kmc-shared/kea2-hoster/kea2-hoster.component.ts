@@ -132,10 +132,10 @@ export class Kea2HosterComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 /* id of uiconf to be used for internal player,
                 * if left empty the default deployed player will be used */
-                'player_uiconf_id': null,
+                'player_uiconf_id': environment.core.kaltura.previewUIConf,
 
                 /* id of uiconf to be used for preview. if not passed, main player is used */
-                'preview_player_uiconf_id': null,
+                'preview_player_uiconf_id': environment.core.kaltura.previewUIConf,
 
                 /* should a KS be appended to the thumbnails url, for access control issues */
                 'load_thumbnail_with_ks': false
