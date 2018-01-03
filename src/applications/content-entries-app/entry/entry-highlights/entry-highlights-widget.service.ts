@@ -71,97 +71,68 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
         this._highlights.next({ items : [], totalItems : 0});
     }
 
-    /**
-     * Updates list of clips
-     */
-    public updateClips() : void
-    {
-        if (this.data) {
-            this._getEntryHighlights('reload').subscribe(() =>
-            {
-	            // do nothing
+    public reload(): void
+	{
+        super._showLoader();
+        this._getEntryHighlights()
+            .subscribe(() => {
+                super._hideLoader();
+            },
+                () => {
+                super._hideLoader();
+
+                this._showBlockerMessage(new AreaBlockerMessage(
+                    {
+                        message: this._appLocalization.get('applications.content.entryDetails.errors.clipsLoadError'),
+                        buttons: [
+                            {
+                                label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+                                action: () => {
+                                    this.reload();
+                                }
+                            }
+                        ]
+                    }
+                ), true);
+
             });
-        }
-    }
+	}
 
 	public navigateToEntry(entryId) {
 		this._store.openEntry(entryId);
 	}
 
-	private _getEntryHighlights(origin: 'activation' | 'reload') : Observable<{ failed: boolean, error?: Error }> {
-		return Observable.create(observer =>
-		{
-	        const entry : KalturaMediaEntry = this.data;
+	private _getEntryHighlights() : Observable<void> {
 
-            super._showLoader();
+        const entry: KalturaMediaEntry = this.data;
 
-            // build the request
-	        let requestSubscription = this._kalturaServerClient.request(new BaseEntryListAction({
-                filter: new KalturaMediaEntryFilter(
-                    {
-                        rootEntryIdEqual : entry.id,
-	                    tagsLike: 'highlights',
-                        orderBy : `${this.sortAsc ? '+' : '-'}${this.sortBy}`
-                    }
-                ),
-                pager: new KalturaFilterPager(
-                    {
-                        pageSize : this.pageSize,
-                        pageIndex : this.pageIndex + 1
-                    }
-                ),
-                responseProfile: new KalturaDetachedResponseProfile({
-                    type : KalturaResponseProfileType.includeFields,
-                    fields : 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus'
+        // build the request
+        return this._kalturaServerClient.request(new BaseEntryListAction({
+            filter: new KalturaMediaEntryFilter(
+                {
+                    parentEntryIdEqual: entry.id,
+                    tagsLike: 'highlights',
+                    orderBy: `${this.sortAsc ? '+' : '-'}${this.sortBy}`
+                }
+            ),
+            pager: new KalturaFilterPager(
+                {
+                    pageSize: this.pageSize,
+                    pageIndex: this.pageIndex + 1
+                }
+            ),
+            responseProfile: new KalturaDetachedResponseProfile({
+                type: KalturaResponseProfileType.includeFields,
+                fields: 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus'
+            })
+        }))
+            .cancelOnDestroy(this, this.widgetReset$)
+            .monitor('get entry highlights')
+            .map(
+                response => {
+
+                    this._highlights.next({items: response.objects, totalItems: response.totalCount});
                 })
-            }))
-                .cancelOnDestroy(this,this.widgetReset$)
-                .monitor('get entry hilights')
-                .subscribe(
-                    response => {
-	                    super._hideLoader();
-	                    this._highlights.next({items: response.objects, totalItems: response.totalCount});
-	                    observer.next({failed: false});
-	                    observer.complete();
-                    },
-                    error => {
-                        this._highlights.next({items: [], totalItems: 0});
-	                    super._hideLoader();
-	                    if (origin === 'activation') {
-		                    super._showActivationError();
-	                    }else {
-		                    this._showBlockerMessage(new AreaBlockerMessage(
-			                    {
-				                    message: this._appLocalization.get('applications.content.entryDetails.errors.clipsLoadError'),
-				                    buttons: [
-					                    {
-						                    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
-						                    action: () => {
-							                    this._getEntryHighlights('reload').subscribe(() =>
-							                    {
-								                    // do nothing
-							                    });
-						                    }
-					                    }
-				                    ]
-			                    }
-		                    ), true);
-	                    }
-	                    observer.error({failed: true, error: error});
-
-                    });
-
-			return () =>
-			{
-				if (requestSubscription)
-				{
-					requestSubscription.unsubscribe();
-					requestSubscription = null;
-				}
-			}
-
-		});
-
     }
 
 	create(source: KalturaMediaEntry, profiles: any[]):void{
@@ -181,7 +152,18 @@ export class EntryHighlightsWidget extends EntryWidget implements OnDestroy
 	}
 
     protected onActivate(firstTimeActivating: boolean) {
-	    return this._getEntryHighlights('activation');
+        super._showLoader();
+	    return this._getEntryHighlights()
+			.do(() =>
+			{
+                super._hideLoader();
+			})
+			.catch((error, caught) =>
+			{
+                super._hideLoader();
+                super._showActivationError();
+                return Observable.of({ failed: true });
+			});
     }
 
 	deleteEntry(entry: KalturaMediaEntry): void{

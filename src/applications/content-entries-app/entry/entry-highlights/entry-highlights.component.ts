@@ -45,18 +45,18 @@ export class EntryHighlights implements OnInit, OnDestroy {
         this._widgetService.sortAsc = event.order === 1;
         this._widgetService.sortBy = event.field;
 
-        this._widgetService.updateClips();
+        this._widgetService.reload();
     }
 
     public _onPaginationChanged(state : any) : void {
         if (state.page !== this._widgetService.pageIndex || state.rows !== this._widgetService.pageSize) {
             this._widgetService.pageIndex = state.page;
             this._widgetService.pageSize = state.rows;
-            this._widgetService.updateClips();
+            this._widgetService.reload();
         }
     }
 
-    public _createAndClose():void{
+    public _createAndClose(): void{
         this.popup.close();
         this._widgetService.create(this._selectedHighlightsEntry, this._profiles);
     }
