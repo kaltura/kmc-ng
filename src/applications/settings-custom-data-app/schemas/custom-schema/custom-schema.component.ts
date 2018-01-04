@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kCustomSchema',
@@ -34,7 +35,8 @@ export class CustomSchemaComponent {
   public _schema: SettingsMetadataProfile;
   public _selectedFields: any[] = [];
 
-  constructor(private _appLocalization: AppLocalization) {
+  constructor(private _appLocalization: AppLocalization,
+              private _browserService: BrowserService) {
   }
 
   public _saveSchema(): void {
@@ -45,6 +47,12 @@ export class CustomSchemaComponent {
 
   public _clearSelection(): void {
     this._selectedFields = [];
+  }
+
+  public _downloadSchema(): void {
+    if (this._schema && this._schema.downloadUrl) {
+      this._browserService.download(this._schema.downloadUrl, `${this._schema.name}.xml`, 'text/xml');
+    }
   }
 }
 

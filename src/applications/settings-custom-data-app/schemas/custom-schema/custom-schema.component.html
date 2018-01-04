@@ -49,8 +49,9 @@
               class="kButtonDefault"
               icon="kIconupload"
               iconPos="left"
-              [disabled]="_schema?.isNew"
-              [label]="'applications.settings.metadata.downloadSchema' | translate"></button>
+              [disabled]="_schema?.isNew || !_schema?.downloadUrl"
+              [label]="'applications.settings.metadata.downloadSchema' | translate"
+              (click)="_downloadSchema()"></button>
           </div>
         </div>
       </div>
