@@ -33,9 +33,8 @@
 		<k-categories-tree #categoriesTree
 						   [(selection)]="_treeSelection"
 						   (onCategoriesLoad)="_onTreeCategoriesLoad($event)"
-						   (onNodeSelect)="_onTreeNodeSelected($event)"
-						   (onNodeUnselect)="_onTreeNodeUnselected($event)"
-						   (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
+						   (onCategorySelected)="_onTreeNodeSelected($event)"
+						   (onCategoriesUnselected)="_onTreeNodeUnselected($event)"></k-categories-tree>
 	</div>
 
     <div class="kFooter">

@@ -128,21 +128,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
     }
   }
 
-  public _onTreeNodeChildrenLoaded({node}) {
-    if (node instanceof PrimeTreeNode) {
-      const selectedNodes: PrimeTreeNode[] = [];
 
-      node.children.forEach((attachedCategory) => {
-        if (this._selectedCategories.find(category => String(category.id) === attachedCategory.data)) {
-          selectedNodes.push(attachedCategory);
-        }
-      });
-
-      if (selectedNodes.length) {
-        this._treeSelection = [...this._treeSelection || [], ...selectedNodes];
-      }
-    }
-  }
 
 
   public _onAutoCompleteSearch(event): void {

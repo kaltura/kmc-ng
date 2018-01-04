@@ -20,12 +20,11 @@
   </div>
   <kScrollToTopContainer class="kTreeContainer">
     <k-categories-tree #categoriesTree
-                       [disablePropagation]="_selectionMode === _TreeSelectionModes.SelfAndChildren"
-                       [(selection)]="_selection"
-                       (onNodeSelect)="_onTreeNodeSelected($event)"
-                       (onNodeUnselect)="_onTreeNodeUnselected($event)"
-                       (onCategoriesLoad)="_onCategoriesLoad($event)"
-                       (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)">
+                       [disablePropagation]="selectionMode === _TreeSelectionModes.SelfAndChildren"
+                       [(selection)]="selection"
+                       (onCategorySelected)="onCategorySelected.emit($event)"
+                       (onCategoryUnselected)="onCategoryUnselected.emit([$event])"
+                       >
     </k-categories-tree>
   </kScrollToTopContainer>
 
@@ -46,7 +45,7 @@
               [parentPopup]="parentPopupWidget"
               kSticky [stickyClass]="'kForceFix'" [stickyId]="'categoriesPref'" [sticksTo]="'header'" [scrollOffset]="80">
   <ng-template>
-    <kCategoriesFilterPrefs [selectionMode]="_selectionMode"
+    <kCategoriesFilterPrefs [selectionMode]="selectionMode"
                             (selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
   </ng-template>
 </kPopupWidget>

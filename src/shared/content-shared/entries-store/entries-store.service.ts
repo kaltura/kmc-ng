@@ -507,7 +507,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             flavors: [],
             distributions: [],
             categories: [],
-            categoriesMode: CategoriesModes.Self,
+            categoriesMode: CategoriesModes.SelfAndChildren,
             customMetadata: {}
         };
     }

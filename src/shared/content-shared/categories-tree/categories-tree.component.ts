@@ -5,6 +5,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { CategoriesTreeService } from './categories-tree.service';
+import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
+import { FiltersUtils } from '@kaltura-ng/mc-shared/filters/filters-utils';
 
 export type TreeSelectionMode = 'single' | 'multiple';
 
@@ -18,20 +20,32 @@ export class CategoriesTreeComponent implements OnInit {
 
   @Input() public disablePropagation = false;
   @Input() autoLoad = true;
-  @Input() selection: PrimeTreeNode | PrimeTreeNode[];
 
-  @Input()
+    @Input() public set selection(value: CategoriesListItem[])
+    {
+        this._selectedCategories = value;
+        this._syncTreeSelections();
+    }
+
+    @Output() public categoriesChange = new EventEmitter<CategoriesListItem[]>();
+
+  public _treeSelection: PrimeTreeNode[] = [];
+
+    private _selectedCategories: CategoriesListItem[];
+
+    @Input()
   set selectionMode(value: TreeSelectionMode) {
-    this._selectionMode = value === 'single' ? value : 'multiple';
-  }
+        this._selectionMode = value === 'single' ? value : 'multiple';
+    }
 
+    // TODO SAKAL remove
   @Output() onCategoriesLoad = new EventEmitter<{ categories: PrimeTreeNode[] }>();
-  @Output() selectionChange = new EventEmitter<PrimeTreeNode[] | PrimeTreeNode>();
-  @Output() onNodeChildrenLoaded = new EventEmitter<{ node: PrimeTreeNode }>();
-  @Output() onNodeSelect: EventEmitter<PrimeTreeNode> = new EventEmitter();
-  @Output() onNodeUnselect: EventEmitter<PrimeTreeNode> = new EventEmitter();
+
+  @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
+  @Output() onCategoryUnselected: EventEmitter<CategoriesListItem> = new EventEmitter();
 
   @ViewChild(PrimeTreePropagation) _primeTreeNodesState: PrimeTreePropagation;
+    public _categories: PrimeTreeNode[] = [];
 
   private inLazyMode = false;
   public _loading = false;
@@ -42,25 +56,8 @@ export class CategoriesTreeComponent implements OnInit {
     'single': 'single'
   };
 
-  public _onNodeSelect(event: any) {
-    if (event.node instanceof PrimeTreeNode) {
-      this.onNodeSelect.emit(event.node);
-    } else {
-      console.log(`[categories-tree.component] invalid type provided. cannot select node `);
-    }
-  }
 
-    public _onNodeUnselect(event: any) {
-        if (event.node instanceof PrimeTreeNode) {
-            this.onNodeUnselect.emit(event.node);
-        } else {
-            console.log(`[categories-tree.component] invalid type provided. cannot select node `);
-        }
-    }
-
-  public _categories: PrimeTreeNode[] = [];
-
-  public updateNodeState(node: PrimeTreeNode, addToSelection: boolean): void {
+  private updateNodeState(node: PrimeTreeNode, addToSelection: boolean): void {
     this._primeTreeNodesState.updateNodeState(node, addToSelection);
   }
 
@@ -81,10 +78,50 @@ export class CategoriesTreeComponent implements OnInit {
     }
   }
 
-  public _selectionChange(selection: PrimeTreeNode | PrimeTreeNode[]): void {
-    this.selection = selection;
-    this.selectionChange.emit(selection);
-  }
+    private _syncTreeSelections() {
+        const listSelectionsMap = FiltersUtils.toMap(this._treeSelection, 'data');
+        const listFilterMap = FiltersUtils.toMap(this._selectedCategories || [], 'value');
+        const diff = FiltersUtils.getDiff(listSelectionsMap, listFilterMap);
+
+        diff.added.forEach(item => {
+            const nodeOfFilter = this.findNodeByFullIdPath(item.fullIdPath);
+
+            if (nodeOfFilter) {
+                // update selection of tree - handle situation when the node was added by auto-complete
+                if (this._treeSelection.indexOf(nodeOfFilter) === -1) {
+                    // IMPORTANT - we create a new array and not altering the existing one due to out-of-sync issue with angular binding.
+                    this._treeSelection = [...this._treeSelection, nodeOfFilter];
+                }
+            }
+        });
+
+        diff.deleted.forEach(removedItem => {
+            this._treeSelection.splice(
+                this._treeSelection.indexOf(removedItem),
+                1
+            );
+        });
+
+    }
+
+    private _convertToCategory(node: PrimeTreeNode): CategoriesListItem {
+
+        return {
+            value: node.data + '', label: node.label,
+            fullIdPath: node.origin.fullIdPath,
+            tooltip: (node.origin.fullNamePath || []).join(' > ')
+        };
+    }
+
+
+    public _onNodeSelect({node}){
+      this.onCategorySelected.emit(this._convertToCategory(node));
+    }
+
+    public _onNodeUnselect({node}){
+      this.onCategoryUnselected.emit(this._convertToCategory(node));
+    }
+
 
   private _loadCategories(): void {
     this._loading = true;
@@ -93,6 +130,9 @@ export class CategoriesTreeComponent implements OnInit {
       .subscribe(result => {
           this._categories = result.categories;
           this._loading = false;
+
+          this._syncTreeSelections();
+
           this.onCategoriesLoad.emit({ categories: this._categories });
         },
         error => {
@@ -113,7 +153,19 @@ export class CategoriesTreeComponent implements OnInit {
 
     if (node && this.inLazyMode) {
       this._categoriesTreeService.loadNodeChildren(node, (children) => {
-        this.onNodeChildrenLoaded.emit({ node });
+          if (node instanceof PrimeTreeNode) {
+            node.children.forEach(nodeChild => {
+              const isNodeChildSelected = !!this._selectedCategories.find(categoryFilter => categoryFilter.value + '' === nodeChild.data + '');
+              this.updateNodeState(nodeChild, isNodeChildSelected);
+
+              if (isNodeChildSelected)
+              {
+                this._treeSelection.push(node);
+              }
+
+            });
+          }
+
         return children;
       });
     }
@@ -144,9 +196,11 @@ export class CategoriesTreeComponent implements OnInit {
 
     if (this._selectionMode === 'single') {
       resetValue = null;
+    }else
+    {
+        // TODO sakal
+        //this._treeSelection = [];
     }
-
-    this._selectionChange(resetValue);
   }
 }
 

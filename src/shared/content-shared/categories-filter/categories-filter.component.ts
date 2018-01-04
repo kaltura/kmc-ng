@@ -1,4 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
+    ViewChild
+} from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 
@@ -11,7 +14,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories-search.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
-import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 export enum TreeSelectionModes {
     Self = 0,
@@ -24,110 +27,31 @@ export enum TreeSelectionModes {
     styleUrls: ['./categories-filter.component.scss']
 })
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
-    @Input() parentPopupWidget: PopupWidgetComponent;
+    @Input() public parentPopupWidget: PopupWidgetComponent;
+    @Input() public selectionMode: TreeSelectionModes = TreeSelectionModes.Self;
+    @Input() public selection: CategoriesListItem[];
+    @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
+    @Output() onCategoriesUnselected: EventEmitter<CategoriesListItem[]> = new EventEmitter();
 
     @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
     @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
-    @ViewChild('searchCategory')
-
-    private _autoComplete: AutoComplete = null;
+    @ViewChild('searchCategory') private _autoComplete: AutoComplete = null;
     private _searchCategoriesRequest$: ISubscription;
     private filterUpdateSubscription: ISubscription;
     private parentPopupStateChangeSubscription: ISubscription;
 
     public _suggestionsProvider = new Subject<SuggestionsProviderData>();
     public _categoriesLoaded = false;
-    public _selectionMode: TreeSelectionModes = TreeSelectionModes.Self;
-    public _selection: PrimeTreeNode[] = [];
+
     public _TreeSelectionModes = TreeSelectionModes;
 
-    constructor(private _entriesStore: EntriesStore,
-                private _categoriesPrimeService: CategoriesSearchService,
+    constructor(private _categoriesPrimeService: CategoriesSearchService,
                 private _browserService: BrowserService,
                 private _filtersRef: ElementRef) {
     }
 
     ngOnInit() {
     }
-
-
-    private _restoreFiltersState(): void {
-        this._updateComponentState(this._entriesStore.cloneFilters(['categories']
-        ));
-        this._fixPrimeTreePropagation();
-    }
-
-    private _fixPrimeTreePropagation()
-    {
-        // setTimeout(() =>
-        // {
-        //     if (this._primeTreesActions)
-        //     {
-        //         this._primeTreesActions.forEach(item =>
-        //         {
-        //             item.fixPropagation();
-        //         })
-        //     }
-        // });
-    }
-
-    private _updateComponentState(updates: Partial<EntriesFilters>): void {
-
-        const filteredItems = updates['categories'];
-        const listSelectionsMap = this._entriesStore.filtersUtils.toMap(this._selection, 'data');
-        const listFilterMap = this._entriesStore.filtersUtils.toMap(filteredItems, 'value');
-        const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
-
-        diff.added.forEach(addedItem => {
-            const matchingItem = filteredItems.find(item => item.value === addedItem.value);
-            if (matchingItem) {
-                const nodeOfFilter = this._categoriesTree.findNodeByFullIdPath(addedItem.fullIdPath);
-
-                if (nodeOfFilter) {
-                  // update selection of tree - handle situation when the node was added by auto-complete
-                  if (this._selection.indexOf(nodeOfFilter) === -1) {
-                    // IMPORTANT - we create a new array and not altering the existing one due to out-of-sync issue with angular binding.
-                    this._selection = [...this._selection, nodeOfFilter];
-                  }
-                }
-            }
-        });
-
-        diff.deleted.forEach(removedItem => {
-                this._selection.splice(
-                    this._selection.indexOf(removedItem),
-                    1
-                );
-        });
-    }
-
-
-    private _registerToFilterStoreDataChanges(): void {
-        this._entriesStore.filtersChange$
-            .cancelOnDestroy(this)
-            .subscribe(
-                ({changes}) => {
-                    this._updateComponentState(changes);
-                }
-            );
-    }
-
-    private _prepare(): void {
-
-        // TODO sakal
-        //const mode = this._selectionMode === TreeSelectionModes.SelfAndChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
-
-        // update components when the active filter list is updated
-        const savedAutoSelectChildren: TreeSelectionModes = this._browserService
-            .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
-        this._selectionMode = typeof savedAutoSelectChildren === 'number'
-            ? savedAutoSelectChildren
-            : TreeSelectionModes.SelfAndChildren;
-
-        this._restoreFiltersState();
-        this._registerToFilterStoreDataChanges();
-    }
-
 
     ngAfterViewInit() {
         if (this.parentPopupWidget) {
@@ -145,62 +69,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    public _onTreeNodeUnselected(node: PrimeTreeNode) {
-        const newFilterItem = this._entriesStore.cloneFilter('categories', []);
-        const itemIndex = newFilterItem.findIndex(item => item.value === node.data);
-        if (itemIndex > -1) {
-            newFilterItem.splice(itemIndex, 1);
-            this._entriesStore.filter({'categories': newFilterItem});
-        }
-    }
-
-    public _onTreeNodeSelected(node: PrimeTreeNode) {
-
-        const newFilterItem = this._entriesStore.cloneFilter('categories', []);
-        if (!newFilterItem.find(item => item.value === node.data)) {
-            if (this._selectionMode === TreeSelectionModes.SelfAndChildren) {
-                // when this component is running with SelfAndChildren mode, we need to manually unselect
-                // the first nested child (if any) that is currently selected
-                const childToRemove = newFilterItem.find(item => {
-                    // check if this item is a parent of another item (don't validate last item which is the node itself)
-                    let result = false;
-                    for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
-                        result = String(item.fullIdPath[i]) === node.data;
-                    }
-                    return result;
-                });
-
-                if (childToRemove) {
-                    newFilterItem.splice(
-                        newFilterItem.indexOf(childToRemove),
-                        1);
-                }
-            }
-
-            newFilterItem.push({
-                value: node.data + '', label: node.label,
-                fullIdPath: node.origin.fullIdPath,
-                tooltip: (node.origin.fullNamePath || []).join(' > ')
-            });
-
-            this._entriesStore.filter({'categories': newFilterItem});
-        }
-    }
-
-    public _onNodeChildrenLoaded({ node }) {
-        // if (node instanceof PrimeTreeNode) {
-        //   const categoriesFilters = this._entriesStore.getFiltersByType(CategoriesFilter);
-        //
-        //   node.children.forEach(nodeChild => {
-        //     const isNodeChildSelected = !!categoriesFilters.find(categoryFilter => categoryFilter.value + '' === nodeChild.data + '');
-        //     this._categoriesTree.updateNodeState(nodeChild, isNodeChildSelected);
-        //   });
-        // }
-    }
-
-    public _onCategoriesLoad({ categories }: { categories: PrimeTreeNode[] }): void {
-        this._prepare();
-    }
 
     private createTreeHandlerArguments(items: any[], parentNode: PrimeTreeNode = null): any {
         return {
@@ -231,13 +99,17 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             this._resetNodeSelectionMode(node);
         });
 
-        this._selectionMode = value;
-        this._browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', this._selectionMode);
+        this.selectionMode = value;
+        this._browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', this.selectionMode);
 
     }
 
     public _clearAll() {
-        this._entriesStore.resetFilters(['categories']);
+        if (this.selection && this.selection.length)
+        {
+            this.onCategoriesUnselected.emit(this.selection);
+            this.selection = [];
+        }
     }
 
     public _blockTreeSelection(e: MouseEvent) {

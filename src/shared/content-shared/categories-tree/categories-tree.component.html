@@ -7,8 +7,7 @@
             [propagateDownMode]="disablePropagation ? 'preventNested' : 'none'"
             [propagateUpMode]="disablePropagation ? 'visualOnly' : 'none'"
             [value]="_categories"
-            [selection]="selection"
-            (selectionChange)="_selectionChange($event)"
+            [selection]="_treeSelection"
             (onNodeSelect)="_onNodeSelect($event)"
             (onNodeUnselect)="_onNodeUnselect($event)"
             (onNodeExpand)="_onNodeExpand($event)">
@@ -32,13 +31,12 @@
             *ngIf="_selectionModes.single === _selectionMode"
             selectionMode="single"
             [value]="_categories"
-            [selection]="selection"
-            (selectionChange)="_selectionChange($event)"
+            [selection]="_treeSelection"
             (onNodeSelect)="_onNodeSelect($event)"
-            (onNodeExpand)="_onNodeExpand($event)">
+            (onNodeExpand)="_onNodeUnselect($event)">
       <ng-template let-node pTemplate="default">
         <div>
-          <p-radioButton [value]="node" [ngModel]="selection"></p-radioButton>
+          <p-radioButton [value]="node" [ngModel]="_treeSelection"></p-radioButton>
           <span class="kTreeNodeLabel">{{node.label}}</span>
           <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
         </div>

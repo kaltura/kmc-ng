@@ -34,7 +34,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
 
   private _emptyTreeSelection = new PrimeTreeNode(null, 'empty', 0, null);
-  public _selectionMode: TreeSelectionMode = 'single';
+
   public _categoriesLoaded = false;
   public _treeSelection: PrimeTreeNode = null;
   public _selectionTooltip = '';
@@ -103,21 +103,6 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
     return fullNamePath ? fullNamePath.join(' > ') : null;
   }
 
-  public _onTreeNodeChildrenLoaded({ node }) {
-    if (node instanceof PrimeTreeNode) {
-      let selectedNode: PrimeTreeNode = null;
-
-      node.children.forEach((attachedCategory) => {
-        if (this._selectedParentCategory && String(this._selectedParentCategory.id) === attachedCategory.data) {
-          selectedNode = attachedCategory;
-        }
-      });
-
-      if (selectedNode) {
-        this._treeSelection = selectedNode;
-      }
-    }
-  }
 
   public _onAutoCompleteSearch(event): void {
     this._categoriesProvider.next({ suggestions: [], isLoading: true });

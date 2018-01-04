@@ -86,7 +86,11 @@
               [targetOffset]="{'x':-10, 'y': -21}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'" [scrollOffset]="80" >
   <ng-template>
-  <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
+  <kCategoriesFilter  [parentPopupWidget]="categoriesFilterPopup" [selection]="_query.categories"
+                      [selectionMode]="_query.categoriesMode"
+                      (onCategorySelected)="onCategorySelected($event)"
+                      (onCategoriesUnselected)="onCategoriesUnselected($event)"
+                     (selectionMode)="onCategoriesModeChanged($event)"></kCategoriesFilter>
   </ng-template>
 </kPopupWidget>
 
