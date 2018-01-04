@@ -1401,9 +1401,12 @@
       "metadata": {
         "addCustomSchema": "Add Custom Schema",
         "editCustomSchema": "Edit Custom Schema",
+        "addCustomField": "Add Custom Field",
+        "downloadSchema": "Download Schema",
         "schemas": "{{0}} Custom Schemas",
         "selected": "{{0}} Selected",
         "cancel": "Cancel",
+        "fields": "{{0}} Custom Fields",
         "applyTo": {
           "entries": "Entries",
           "categories": "Categories"

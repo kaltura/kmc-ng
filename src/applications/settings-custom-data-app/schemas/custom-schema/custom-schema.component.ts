@@ -21,6 +21,7 @@ export class CustomSchemaComponent {
 
   public _title;
   public _schema: SettingsMetadataProfile;
+  public _selectedFields: any[] = [];
 
   constructor(private _appLocalization: AppLocalization) {
   }
@@ -28,6 +29,10 @@ export class CustomSchemaComponent {
   public _saveSchema(): void {
     this.onSave.emit();
     this.onClosePopupWidget.emit();
+  }
+
+  public _clearSelection(): void {
+    this._selectedFields = [];
   }
 }
 

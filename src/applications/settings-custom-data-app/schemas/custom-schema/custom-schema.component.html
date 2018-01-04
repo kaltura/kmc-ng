@@ -15,6 +15,45 @@
     <div class="kContainer">
       <div class="kSchemaFormWrapper">
         <kCustomSchemaForm></kCustomSchemaForm>
+        <div class="kCustomSchemaTableControls">
+          <div *ngIf="_selectedFields.length" class="kBulkControls">
+            <button pButton
+                    class="kButtonDefault kMoveBtn kMoveBtnTop"
+                    icon="kIcondropdown_arrow_top"></button>
+            <button pButton
+                    class="kButtonDefault kMoveBtn kMoveBtnBottom"
+                    icon="kIcondropdown_arrow_bottom"></button>
+            <button pButton class="kButtonDanger kBulkDeleteBtn"
+                    icon="kIcontrash"></button>
+            <span class="kSelectedEntriesNum">
+              {{ 'applications.settings.metadata.fields' | translate : [0] }}
+            </span>
+            <div class="kSelected">
+              • {{ 'applications.settings.metadata.selected' | translate : [_selectedFields.length] }}
+              <a class="kBulkCancel" (click)="_clearSelection()">
+                {{'applications.settings.metadata.cancel' | translate}}
+              </a>
+            </div>
+          </div>
+          <div *ngIf="!_selectedFields.length" class="kDefaultControls">
+            <button
+              pButton
+              class="kButtonDefault"
+              type="button"
+              icon="kIconplus"
+              iconPos="left"
+              [label]="'applications.settings.metadata.addCustomField' | translate"></button>
+
+            <button
+              pButton
+              type="button"
+              class="kButtonDefault"
+              icon="kIconupload"
+              iconPos="left"
+              [disabled]="!_schema"
+              [label]="'applications.settings.metadata.downloadSchema' | translate"></button>
+          </div>
+        </div>
       </div>
       <div class="kSchemaTableWrapper">
         <kCustomSchemaFieldsTable [fields]="[]"></kCustomSchemaFieldsTable>

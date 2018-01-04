@@ -1,11 +1,14 @@
 @import 'app-theme/_variables.scss';
 
 .kCustomSchemaForm {
-  padding: 32px 28px;
+  padding: 32px 28px 23px 32px;
 
   .kRow {
     &:first-child {
       padding-top: 0;
+    }
+    &.applyTo {
+      padding-top: 13px;
     }
 
     display: flex;
