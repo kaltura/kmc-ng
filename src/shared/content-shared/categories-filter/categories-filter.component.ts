@@ -146,12 +146,12 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    private _convertToCategory(node: PrimeTreeNode): CategoriesListItem {
+    private _convertToCategory(item: CategoryData): CategoriesListItem {
 
         return {
-            value: node.data + '', label: node.label,
-            fullIdPath: node.origin.fullIdPath,
-            tooltip: (node.origin.fullNamePath || []).join(' > ')
+            value: String(item.id) + '', label: item.name,
+            fullIdPath: item.fullIdPath,
+            tooltip: (item.fullNamePath || []).join(' > ')
         };
     }
 

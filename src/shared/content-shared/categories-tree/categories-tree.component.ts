@@ -39,7 +39,7 @@ export class CategoriesTreeComponent implements OnInit {
     }
 
     // TODO SAKAL remove
-  @Output() onCategoriesLoad = new EventEmitter<{ categories: PrimeTreeNode[] }>();
+  @Output() onCategoriesLoaded = new EventEmitter<{ categories: PrimeTreeNode[] }>();
 
   @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
   @Output() onCategoryUnselected: EventEmitter<CategoriesListItem> = new EventEmitter();
@@ -133,7 +133,7 @@ export class CategoriesTreeComponent implements OnInit {
 
           this._syncTreeSelections();
 
-          this.onCategoriesLoad.emit({ categories: this._categories });
+          this.onCategoriesLoaded.emit({ categories: this._categories });
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({

@@ -20,7 +20,6 @@
   <k-categories-tree #categoriesTree
                      [selectionMode]="'single'"
                      [(selection)]="_treeSelection"
-                     (onCategoriesLoad)="_onTreeCategoriesLoad($event)"
                      (onCategorySelected)="_onTreeNodeSelected($event)"></k-categories-tree>
 </div>
 <div class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">{{ _selectionTooltip }}</div>

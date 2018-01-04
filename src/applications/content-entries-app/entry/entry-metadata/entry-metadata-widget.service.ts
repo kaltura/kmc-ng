@@ -36,8 +36,8 @@ import { EntryWidget } from '../entry-widget';
 
 export interface EntryCategoryItem
 {
-    id : number,
-    fullIdPath : number[],
+    id : string,
+    fullIdPath : string[],
     name : string,
     fullNamePath : string[],
     tooltip?: string
@@ -305,7 +305,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     request.requests.push(new CategoryEntryAddAction({
                         categoryEntry : new KalturaCategoryEntry({
                             entryId : this.data.id,
-                            categoryId : change.item.id
+                            categoryId : Number(change.item.id)
                         })
                     }));
                 });
@@ -314,7 +314,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 {
                     request.requests.push(new CategoryEntryDeleteAction({
                         entryId : this.data.id,
-                        categoryId : change.item.id
+                        categoryId : Number(change.item.id)
                     }));
                 });
             }
