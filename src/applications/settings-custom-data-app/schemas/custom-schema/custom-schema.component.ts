@@ -51,6 +51,7 @@ export class CustomSchemaComponent {
         if (relevantFieldIndex !== -1) {
           this._schema.parsedProfile.items.splice(relevantFieldIndex, 1);
         }
+        this._clearSelection();
       }
     });
   }
@@ -98,6 +99,31 @@ export class CustomSchemaComponent {
       default:
         break;
     }
+  }
+
+  public _bulkMove(direction: 'up' | 'down'): void {
+    const action = direction === 'down'
+      ? () => KalturaUtils.moveDownItems(this._schema.parsedProfile.items, this._selectedFields)
+      : () => KalturaUtils.moveUpItems(this._schema.parsedProfile.items, this._selectedFields);
+    if (action()) {
+      this._schema.fieldsMoved = true;
+    }
+  }
+
+  public _bulkRemove(): void {
+    this._browserService.confirm({
+      header: this._appLocalization.get('applications.settings.metadata.table.bulkDeleteCustomDataField'),
+      message: this._appLocalization.get('applications.settings.metadata.table.fieldBulkRemoveConfirmation'),
+      accept: () => {
+        this._selectedFields.forEach(field => {
+          const relevantFieldIndex = this._schema.parsedProfile.items.findIndex(item => item.id === field.id);
+          if (relevantFieldIndex !== -1) {
+            this._schema.parsedProfile.items.splice(relevantFieldIndex, 1);
+          }
+        });
+        this._clearSelection();
+      }
+    });
   }
 }
 

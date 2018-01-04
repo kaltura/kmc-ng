@@ -18,15 +18,22 @@
           <div *ngIf="_selectedFields.length" class="kBulkControls">
             <button pButton
                     class="kButtonDefault kMoveBtn kMoveBtnTop"
-                    icon="kIcondropdown_arrow_top"></button>
+                    icon="kIcondropdown_arrow_top"
+                    (click)="_bulkMove('up')"></button>
+
             <button pButton
                     class="kButtonDefault kMoveBtn kMoveBtnBottom"
-                    icon="kIcondropdown_arrow_bottom"></button>
+                    icon="kIcondropdown_arrow_bottom"
+                    (click)="_bulkMove('down')"></button>
+
             <button pButton class="kButtonDanger kBulkDeleteBtn"
-                    icon="kIcontrash"></button>
+                    icon="kIcontrash"
+                    (click)="_bulkRemove()"></button>
+
             <span class="kSelectedEntriesNum">
               {{ 'applications.settings.metadata.fields' | translate : [_schema?.parsedProfile?.items?.length || 0] }}
             </span>
+
             <div class="kSelected">
               • {{ 'applications.settings.metadata.selected' | translate : [_selectedFields.length] }}
               <a class="kBulkCancel" (click)="_clearSelection()">
