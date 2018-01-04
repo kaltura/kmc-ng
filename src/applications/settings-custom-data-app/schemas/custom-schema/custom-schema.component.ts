@@ -4,6 +4,7 @@ import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-prof
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 
 @Component({
   selector: 'kCustomSchema',
@@ -54,6 +55,15 @@ export class CustomSchemaComponent {
     });
   }
 
+  private _moveField(field: MetadataItem, direction: 'up' | 'down'): void {
+    const action = direction === 'down'
+      ? () => KalturaUtils.moveDownItems(this._schema.parsedProfile.items, [field])
+      : () => KalturaUtils.moveUpItems(this._schema.parsedProfile.items, [field]);
+    if (action()) {
+      this._schema.fieldsMoved = true;
+    }
+  }
+
   public _saveSchema(): void {
     console.warn(this._schema);
     this.onSave.emit(this._schema);
@@ -77,7 +87,8 @@ export class CustomSchemaComponent {
         break;
 
       case 'move':
-        // TBD
+        const { field, direction } = event.payload;
+        this._moveField(field, direction);
         break;
 
       case 'remove':

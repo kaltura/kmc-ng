@@ -1434,6 +1434,9 @@
           "searchable": "Searchable",
           "deleteCustomDataField": "Delete Custom Data Field",
           "fieldRemoveConfirmation": "Are you sure you want to delete {{0}}?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for bulk upload, deleting schema fields affects the validation of XMLs custom data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion",
+          "moveUp": "Move Up",
+          "moveDown": "Move Down",
+          "remove": "Remove",
           "actions": {
             "edit": "Edit",
             "download": "Download",
