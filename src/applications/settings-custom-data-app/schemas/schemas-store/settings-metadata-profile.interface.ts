@@ -8,5 +8,4 @@ export interface SettingsMetadataProfile extends KalturaMetadataProfile {
   applyTo?: string;
   downloadUrl?: string;
   isNew?: boolean;
-  fieldsMoved?: boolean;
 }

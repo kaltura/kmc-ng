@@ -1457,7 +1457,9 @@
         "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema: {{0}} ?",
         "confirmDeleteMultipleNames": "Are you sure you want to delete the following custom data schemas:\n {{0}} ?",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas",
-        "updateError": "An error occurred during custom data schemas update"
+        "updateError": "An error occurred during custom data schemas update",
+        "discardChanges": "Discard Changes",
+        "discardWarning": "You will lose any unsaved changes. Continue?"
       }
     }
   },

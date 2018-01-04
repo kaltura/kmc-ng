@@ -3,17 +3,19 @@
     <div class="kHeader">
       <span class="kTitle">{{ _title }}</span>
       <div class="kButtons">
-        <a class="kCancel" (click)="onClosePopupWidget.emit()">Cancel</a>
+        <a class="kCancel" (click)="_cancel()">Cancel</a>
         <button type="button"
                 class="kButtonBranded KButtonSave"
                 pButton
+                [disabled]="!_isDirty"
                 [label]="'app.common.save' | translate"
                 (click)="_saveSchema()"></button>
       </div>
     </div>
     <div class="kContainer">
       <div class="kSchemaFormWrapper">
-        <kCustomSchemaForm [(schema)]="_schema"></kCustomSchemaForm>
+        <kCustomSchemaForm [(schema)]="_schema" (schemaChanges)="_setDirty()"></kCustomSchemaForm>
+
         <div class="kCustomSchemaTableControls">
           <div *ngIf="_selectedFields.length" class="kBulkControls">
             <button pButton

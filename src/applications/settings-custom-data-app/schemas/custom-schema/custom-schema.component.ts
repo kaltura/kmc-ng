@@ -5,6 +5,7 @@ import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMeta
 import { BrowserService } from 'app-shared/kmc-shell';
 import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
+import { KalturaTypesFactory } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kCustomSchema',
@@ -14,7 +15,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 export class CustomSchemaComponent {
   @Input() set schema(value: SettingsMetadataProfile) {
     if (value) {
-      this._schema = value;
+      this._schema = <SettingsMetadataProfile>Object.assign(KalturaTypesFactory.createObject(value), value);
       this._title = this._appLocalization.get('applications.settings.metadata.editCustomSchema');
     } else {
       this._title = this._appLocalization.get('applications.settings.metadata.addCustomSchema');
@@ -37,6 +38,7 @@ export class CustomSchemaComponent {
   public _title;
   public _schema: SettingsMetadataProfile;
   public _selectedFields: any[] = [];
+  public _isDirty = false;
 
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
@@ -50,6 +52,7 @@ export class CustomSchemaComponent {
         const relevantFieldIndex = this._schema.parsedProfile.items.findIndex(item => item.id === field.id);
         if (relevantFieldIndex !== -1) {
           this._schema.parsedProfile.items.splice(relevantFieldIndex, 1);
+          this._setDirty();
         }
         this._clearSelection();
       }
@@ -61,7 +64,7 @@ export class CustomSchemaComponent {
       ? () => KalturaUtils.moveDownItems(this._schema.parsedProfile.items, [field])
       : () => KalturaUtils.moveUpItems(this._schema.parsedProfile.items, [field]);
     if (action()) {
-      this._schema.fieldsMoved = true;
+      this._setDirty();
     }
   }
 
@@ -106,7 +109,7 @@ export class CustomSchemaComponent {
       ? () => KalturaUtils.moveDownItems(this._schema.parsedProfile.items, this._selectedFields)
       : () => KalturaUtils.moveUpItems(this._schema.parsedProfile.items, this._selectedFields);
     if (action()) {
-      this._schema.fieldsMoved = true;
+      this._setDirty();
     }
   }
 
@@ -119,11 +122,30 @@ export class CustomSchemaComponent {
           const relevantFieldIndex = this._schema.parsedProfile.items.findIndex(item => item.id === field.id);
           if (relevantFieldIndex !== -1) {
             this._schema.parsedProfile.items.splice(relevantFieldIndex, 1);
+            this._setDirty();
           }
         });
         this._clearSelection();
       }
     });
+  }
+
+  public _setDirty(): void {
+    this._isDirty = true;
+  }
+
+  public _cancel(): void {
+    if (this._isDirty) {
+      this._browserService.confirm({
+        header: this._appLocalization.get('applications.settings.metadata.discardChanges'),
+        message: this._appLocalization.get('applications.settings.metadata.discardWarning'),
+        accept: () => {
+          this.onClosePopupWidget.emit();
+        }
+      });
+    } else {
+      this.onClosePopupWidget.emit();
+    }
   }
 }
 

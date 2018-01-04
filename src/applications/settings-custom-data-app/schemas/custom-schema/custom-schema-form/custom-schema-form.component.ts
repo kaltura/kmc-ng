@@ -11,6 +11,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 export class CustomSchemaFormComponent {
   @Input() set schema(value: SettingsMetadataProfile) {
     if (value) {
+      this._initialChange = true;
       this._schema = value;
       this._schemaForm.patchValue({
         name: value.name,
@@ -26,6 +27,7 @@ export class CustomSchemaFormComponent {
   @Output() schemaChanges = new EventEmitter<SettingsMetadataProfile>();
 
   private _schema: SettingsMetadataProfile;
+  private _initialChange = true;
 
   public _schemaForm: FormGroup;
   public _nameField: AbstractControl;
@@ -56,23 +58,35 @@ export class CustomSchemaFormComponent {
     this._applyToField = this._schemaForm.controls['applyTo'];
 
     this._schemaForm.valueChanges.subscribe((change) => {
+      if (this._initialChange) { // ignore initial update
+        this._initialChange = false;
+        return;
+      }
+
+      let sendUpdate = false;
       if (this._schema.name !== change.name) {
         this._schema.name = change.name;
+        sendUpdate = true;
       }
 
       if (this._schema.description !== change.description) {
         this._schema.description = change.description;
+        sendUpdate = true;
       }
 
       if (this._schema.systemName !== change.systemName) {
         this._schema.systemName = change.systemName;
+        sendUpdate = true;
       }
 
       if (this._schema.applyTo !== change.applyTo) {
         this._schema.applyTo = change.applyTo;
+        sendUpdate = true;
       }
 
-      this.schemaChanges.emit(this._schema);
+      if (sendUpdate) {
+        this.schemaChanges.emit(this._schema);
+      }
     });
   }
 }
