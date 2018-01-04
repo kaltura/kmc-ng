@@ -1,0 +1,19 @@
+<div class="kCustomSchemaWrap">
+  <div class="kFloater">
+    <div class="kHeader">
+      <span class="kTitle">{{ _title }}</span>
+      <div class="kButtons">
+        <a class="kCancel" (click)="onClosePopupWidget.emit()">Cancel</a>
+        <button type="button"
+                class="kButtonBranded"
+                [disabled]="true"
+                pButton
+                [label]="'app.common.save' | translate"
+                (click)="_saveSchema()"></button>
+      </div>
+    </div>
+    <div class="kContainer">
+
+    </div>
+  </div>
+</div>

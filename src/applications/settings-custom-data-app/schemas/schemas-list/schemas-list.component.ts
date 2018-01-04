@@ -1,8 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { SchemasFilters, SchemasStore, SettingsMetadataProfile } from '../schemas-store/schemas-store.service';
+import { SchemasFilters, SchemasStore } from '../schemas-store/schemas-store.service';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 
 @Component({
   selector: 'kSchemasList',
@@ -10,9 +12,12 @@ import { SchemasFilters, SchemasStore, SettingsMetadataProfile } from '../schema
   styleUrls: ['./schemas-list.component.scss']
 })
 export class SchemasListComponent implements OnInit, OnDestroy {
+  @ViewChild('customSchema') _customSchemaPopup: PopupWidgetComponent;
+
   public _blockerMessage: AreaBlockerMessage = null;
 
   public _selectedSchemas: SettingsMetadataProfile[] = [];
+  public _selectedSchema: SettingsMetadataProfile = null;
 
   public _query = {
     pageIndex: 0,
@@ -90,7 +95,8 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   public _onActionSelected({ action, schema }: { action: string, schema: SettingsMetadataProfile }): void {
     switch (action) {
       case 'edit':
-        // TBD
+        this._selectedSchema = schema;
+        this._customSchemaPopup.open();
         break;
       case 'download':
         if (schema.downloadUrl) {
@@ -137,5 +143,10 @@ export class SchemasListComponent implements OnInit, OnDestroy {
         pageSize: state.rows
       });
     }
+  }
+
+  public _onClosePopup(): void {
+    this._customSchemaPopup.close();
+    this._selectedSchema = null;
   }
 }

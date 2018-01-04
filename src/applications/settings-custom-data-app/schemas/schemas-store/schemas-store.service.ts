@@ -14,24 +14,16 @@ import { KalturaMetadataOrderBy } from 'kaltura-ngx-client/api/types/KalturaMeta
 import { KalturaMetadataProfileCreateMode } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileCreateMode';
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
 import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
-import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
-import { MetadataProfile, MetadataProfileParser } from 'app-shared/kmc-shared';
+import { MetadataProfileParser } from 'app-shared/kmc-shared';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { environment } from 'app-environment';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { MetadataProfileDeleteAction } from 'kaltura-ngx-client/api/types/MetadataProfileDeleteAction';
+import { SettingsMetadataProfile } from './settings-metadata-profile.interface';
 
 export interface SchemasFilters {
   pageSize: number,
   pageIndex: number
-}
-
-export interface SettingsMetadataProfile extends KalturaMetadataProfile {
-  profileDisabled: boolean;
-  parsedProfile?: MetadataProfile;
-  defaultLabel?: string;
-  applyTo?: string;
-  downloadUrl?: string;
 }
 
 const localStoragePageSizeKey = 'schemas.list.pageSize';
