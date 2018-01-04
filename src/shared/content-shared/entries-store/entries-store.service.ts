@@ -38,7 +38,7 @@ import {
     StringTypeAdapter,
     ListAdapter, ListType,
     NumberTypeAdapter,
-    GroupedListType
+    GroupedListType, EnumTypeAdapter
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
@@ -48,6 +48,11 @@ import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-sh
 export enum SortDirection {
     Desc,
     Asc
+}
+
+export enum CategoriesModes {
+    Self,
+    SelfAndChildren
 }
 
 export interface EntriesFilters {
@@ -69,6 +74,7 @@ export interface EntriesFilters {
     flavors: ListType,
     distributions: ListType,
     categories: CategoriesListType,
+    categoriesMode: CategoriesModes,
     customMetadata: GroupedListType
 }
 
@@ -501,6 +507,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             flavors: [],
             distributions: [],
             categories: [],
+            categoriesMode: CategoriesModes.Self,
             customMetadata: {}
         };
     }
@@ -525,6 +532,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             flavors: new ListAdapter(),
             distributions: new ListAdapter(),
             categories: new CategoriesListAdapter(),
+            categoriesMode: new EnumTypeAdapter<CategoriesModes>(),
             customMetadata: new GroupedListAdapter()
         };
     }
