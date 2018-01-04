@@ -135,7 +135,7 @@ export class CategoriesTreePropagationDirective implements OnInit, DoCheck, OnCh
         const hasActiveDiffer = !!this._selectionDiffer;
 
         this._selectionDiffer = this._differs.find([]).create<CategoriesTreeNode>((index, item) => {
-            return item ? item.data + '' : null;
+            return item ? item.value  : null;
         });
 
         if (hasActiveDiffer) {

@@ -160,7 +160,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
   public _onTreeNodeSelected(treeNode: CategoriesTreeNode) {
     if (treeNode instanceof CategoriesTreeNode) {
-      const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(treeNode.data);
+      const relevantCategory = this._selectedParentCategory && this._selectedParentCategory.id === treeNode.value;
 
       if (!relevantCategory) {
         this._selectedParentCategory = treeNode.origin;

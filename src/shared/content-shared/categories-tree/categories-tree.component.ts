@@ -79,7 +79,7 @@ export class CategoriesTreeComponent implements OnInit {
   }
 
     private _syncTreeSelections() {
-        const listSelectionsMap = FiltersUtils.toMap(this._treeSelection, 'data');
+        const listSelectionsMap = FiltersUtils.toMap(this._treeSelection, 'value');
         const listFilterMap = FiltersUtils.toMap(this._selectedCategories || [], 'value');
         const diff = FiltersUtils.getDiff(listSelectionsMap, listFilterMap);
 
@@ -107,7 +107,7 @@ export class CategoriesTreeComponent implements OnInit {
     private _convertToCategory(node: CategoriesTreeNode): CategoriesListItem {
 
         return {
-            value: node.data + '', label: node.label,
+            value: node.value, label: node.label,
             fullIdPath: node.origin.fullIdPath,
             tooltip: (node.origin.fullNamePath || []).join(' > ')
         };
@@ -155,7 +155,7 @@ export class CategoriesTreeComponent implements OnInit {
       this._categoriesTreeService.loadNodeChildren(node, (children) => {
           if (node instanceof CategoriesTreeNode) {
             node.children.forEach(nodeChild => {
-              const isNodeChildSelected = !!this._selectedCategories.find(categoryFilter => categoryFilter.value + '' === nodeChild.data + '');
+              const isNodeChildSelected = !!this._selectedCategories.find(categoryFilter => categoryFilter.value === nodeChild.value);
               this.updateNodeState(nodeChild, isNodeChildSelected);
 
               if (isNodeChildSelected)
@@ -181,7 +181,7 @@ export class CategoriesTreeComponent implements OnInit {
     let result: CategoriesTreeNode = null;
     for (let i = 0, length = fullIdPath.length; i < length; i++) {
       const itemIdToSearchFor = fullIdPath[i];
-      result = ((result ? result.children : this._categories) || []).find(child => child.data + '' === itemIdToSearchFor + '');
+      result = ((result ? result.children : this._categories) || []).find(child => child.value === itemIdToSearchFor);
 
       if (!result) {
         break;

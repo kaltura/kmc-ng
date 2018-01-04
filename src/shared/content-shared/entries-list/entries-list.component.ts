@@ -156,7 +156,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
                     // check if this item is a parent of another item (don't validate last item which is the node itself)
                     let result = false;
                     for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
-                        result = String(item.fullIdPath[i]) === category.value;
+                        result = item.fullIdPath[i] === category.value;
                     }
                     return result;
                 });

@@ -2,9 +2,9 @@ import { TypeAdapterBase } from '@kaltura-ng/mc-shared/filters';
 import { FiltersUtils } from '@kaltura-ng/mc-shared/filters/filters-utils';
 
 export interface CategoriesListItem {
-    value: string;
+    value: number;
     label: string;
-    fullIdPath: string[];
+    fullIdPath: number[];
     tooltip: string;
 }
 

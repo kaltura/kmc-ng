@@ -19,8 +19,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export interface CategoryData {
   parentId?: number,
-  id: string,
-  fullIdPath: string[],
+  id: number,
+  fullIdPath: number[],
   name: string,
   referenceId: string,
   sortValue: number,
@@ -140,9 +140,9 @@ export class CategoriesSearchService {
 
     if (response && response.objects) {
       response.objects.forEach((category: KalturaCategory) => {
-        const fullIdPath = (category.fullIds ? category.fullIds.split('>') : []).map((item: any) => item);
+        const fullIdPath = (category.fullIds ? category.fullIds.split('>') : []).map((item: any) => Number(item));
         result.push({
-          id: String(category.id),
+          id: category.id,
           name: category.name,
           fullIdPath: fullIdPath,
           referenceId: category.referenceId,

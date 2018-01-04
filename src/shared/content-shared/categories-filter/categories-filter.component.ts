@@ -122,7 +122,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     private _convertToCategory(item: CategoryData): CategoriesListItem {
 
         return {
-            value: String(item.id) + '', label: item.name,
+            value: item.id, label: item.name,
             fullIdPath: item.fullIdPath,
             tooltip: (item.fullNamePath || []).join(' > ')
         };
@@ -148,11 +148,11 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                     if (this.selectionMode === CategoriesSeclectionModes.SelfAndChildren) {
                       let alreadySelected = false;
                       for (let length = item.fullIdPath.length, i = length - 1; i >= 0 && !alreadySelected; i--) {
-                        alreadySelected = String(item.fullIdPath[i]) === categoryFilter.value;
+                        alreadySelected = item.fullIdPath[i] === categoryFilter.value;
                       }
                       return alreadySelected;
                     } else {
-                      return categoryFilter.value === String(item.id);
+                      return categoryFilter.value === item.id;
                     }
                   });
                   suggestions.push({ data: item, label: label, isSelectable: isSelectable });

@@ -59,7 +59,7 @@ export class CategoriesTreeService {
         } else {
           node.setChildrenLoadStatus(NodeChildrenStatuses.loading);
 
-          this._categoriesSearchService.getChildrenCategories(Number(node.data)).subscribe(result => {
+          this._categoriesSearchService.getChildrenCategories(node.value).subscribe(result => {
               // add children to the node
               let nodeChildren = this.createNode(result.items);
 
@@ -85,7 +85,7 @@ export class CategoriesTreeService {
     createNode(items: CategoryData[], parentNode: CategoriesTreeNode = null): CategoriesTreeNode[] {
         const result: CategoriesTreeNode[] = [];
         const rootParent = parentNode || null;
-        const rootParentId = rootParent ? rootParent.data : null;
+        const rootParentId = rootParent ? rootParent.value : null;
 
         if (items && items.length > 0) {
 
@@ -112,9 +112,9 @@ export class CategoriesTreeService {
             const childrenNodes: {parentId: any, node: CategoriesTreeNode }[] = [];
 
             items.forEach(item => {
-                const itemParentId = String(item.parentId) || null;
+                const itemParentId = item.parentId || null;
                 const itemChildrenCount = item.childrenCount || null;
-                const itemId = String(item.id);
+                const itemId = item.id;
                 const itemName = item.name;
 
                 const node = new CategoriesTreeNode(itemId, itemName, itemChildrenCount, item);

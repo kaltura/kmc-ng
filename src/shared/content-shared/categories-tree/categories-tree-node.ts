@@ -42,7 +42,7 @@ export class CategoriesTreeNode implements TreeNode{
         }
     }
 
-    constructor(public data: string, public label : string,  children : CategoriesTreeNode[] | number = null, public origin : any) {
+    constructor(public value: number, public label: string,  children : CategoriesTreeNode[] | number = null, public origin : any) {
         if (children !== null) {
             if (!isNaN(<any>children) && isFinite(<any>children)) {
                 this.setChildrenCount(<number>children);

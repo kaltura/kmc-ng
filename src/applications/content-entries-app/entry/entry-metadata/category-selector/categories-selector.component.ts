@@ -211,7 +211,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
 
   public _onTreeNodeUnselected({node}: { node: CategoriesTreeNode }) {
     if (node instanceof CategoriesTreeNode) {
-      const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id + '' === node.data + '');
+      const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
 
       if (autoCompleteItemIndex > -1) {
         this._selectedCategories.splice(autoCompleteItemIndex, 1);
@@ -222,7 +222,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
 
   public _onTreeNodeSelected({node}: { node: any }) {
     if (node instanceof CategoriesTreeNode) {
-      const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id + '' === node.data + '');
+      const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
 
 
 			if (autoCompleteItemIndex === -1) {

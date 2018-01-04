@@ -63,7 +63,7 @@ export interface MoveCategoryData {
 }
 
 export interface NewCategoryData {
-    categoryParentId?: string;
+    categoryParentId?: number;
     name: string;
   linkedEntriesIds?: string[]
 }
