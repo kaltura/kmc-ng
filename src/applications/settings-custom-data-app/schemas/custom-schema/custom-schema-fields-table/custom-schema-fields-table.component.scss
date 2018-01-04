@@ -35,6 +35,35 @@
       margin-right: 23px;
     }
   }
+
+  .kFieldsTableActions {
+    display: none;
+    align-content: center;
+    color: $kGrayscale1;
+
+    i {
+      margin-right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.kActionDisabled {
+        color: $kGrayscale3;
+        cursor: text;
+      }
+
+      &.kActionMoveDown {
+        transform: rotate(180deg);
+      }
+
+      &.kActionDelete {
+        color: $kDandger
+      }
+    }
+  }
 }
 
 :host {
@@ -47,6 +76,10 @@
 :host /deep/ .kFieldsTable {
   tr.kProfileDisabled .ui-cell-data {
     color: $kGrayscale4;
+  }
+
+  tr:hover .kFieldsTableActions {
+    display: flex !important;
   }
 
   p-datatable {

@@ -57,6 +57,7 @@
       </div>
       <div class="kSchemaTableWrapper">
         <kCustomSchemaFieldsTable [fields]="_schema?.parsedProfile?.items || []"
+                                  (onActionSelected)="_actionSelected($event)"
                                   [(selectedFields)]="_selectedFields"></kCustomSchemaFieldsTable>
       </div>
     </div>

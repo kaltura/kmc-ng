@@ -5,6 +5,7 @@
     dataKey="id"
     [scrollable]="true"
     [value]="fields"
+    [immutable]="false"
     [emptyMessage]="_emptyMessage"
     [rowTrackBy]="rowTrackBy"
     (selectionChange)="_onSelectionChange($event)"
@@ -21,7 +22,7 @@
     <p-column field="name"
               [header]="'applications.settings.metadata.table.fieldLabel' | translate">
       <ng-template let-col let-field="rowData" pTemplate="body">
-        <div class="kTitle">
+        <div class="kTitle" (click)="_editField(field)">
           {{field[col.field]}}
         </div>
       </ng-template>
@@ -54,6 +55,23 @@
               [header]="'applications.settings.metadata.table.searchable' | translate">
       <ng-template let-col let-field="rowData" pTemplate="body">
         {{ (field[col.field] ? 'app.common.yes' : 'app.common.no') | translate }}
+      </ng-template>
+    </p-column>
+
+    <p-column>
+      <ng-template let-col let-field="rowData" let-i="rowIndex" pTemplate="body">
+        <span class="kFieldsTableActions">
+          <i class="kIconarrow_up kActionMoveDown"
+             [class.kActionDisabled]="i === 0"
+             (click)="_moveField(field, 'down')"></i>
+
+          <i class="kIconarrow_up"
+             [class.kActionDisabled]="i + 1 === fields?.length"
+             (click)="_moveField(field, 'up')"></i>
+
+          <i class="kIconremove kActionDelete"
+             (click)="_removeField(field)"></i>
+        </span>
       </ng-template>
     </p-column>
 

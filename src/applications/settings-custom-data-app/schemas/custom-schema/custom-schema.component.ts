@@ -3,6 +3,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 
 @Component({
   selector: 'kCustomSchema',
@@ -28,6 +29,7 @@ export class CustomSchemaComponent {
       this._schema = schema;
     }
   }
+
   @Output() onClosePopupWidget = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<SettingsMetadataProfile>();
 
@@ -37,6 +39,19 @@ export class CustomSchemaComponent {
 
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
+  }
+
+  private _removeField(field: MetadataItem): void {
+    this._browserService.confirm({
+      header: this._appLocalization.get('applications.settings.metadata.table.deleteCustomDataField'),
+      message: this._appLocalization.get('applications.settings.metadata.table.fieldRemoveConfirmation', [field.name]),
+      accept: () => {
+        const relevantFieldIndex = this._schema.parsedProfile.items.findIndex(item => item.id === field.id);
+        if (relevantFieldIndex !== -1) {
+          this._schema.parsedProfile.items.splice(relevantFieldIndex, 1);
+        }
+      }
+    });
   }
 
   public _saveSchema(): void {
@@ -52,6 +67,25 @@ export class CustomSchemaComponent {
   public _downloadSchema(): void {
     if (this._schema && this._schema.downloadUrl) {
       this._browserService.download(this._schema.downloadUrl, `${this._schema.name}.xml`, 'text/xml');
+    }
+  }
+
+  public _actionSelected(event: { action: string, payload: { field: MetadataItem, direction?: 'up' | 'down' } }): void {
+    switch (event.action) {
+      case 'edit':
+        // TBD
+        break;
+
+      case 'move':
+        // TBD
+        break;
+
+      case 'remove':
+        this._removeField(event.payload.field);
+        break;
+
+      default:
+        break;
     }
   }
 }
