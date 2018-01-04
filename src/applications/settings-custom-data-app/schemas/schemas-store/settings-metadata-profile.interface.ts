@@ -7,4 +7,5 @@ export interface SettingsMetadataProfile extends KalturaMetadataProfile {
   defaultLabel?: string;
   applyTo?: string;
   downloadUrl?: string;
+  isNew?: boolean;
 }

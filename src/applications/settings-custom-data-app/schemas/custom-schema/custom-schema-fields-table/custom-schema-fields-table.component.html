@@ -12,11 +12,9 @@
 
     <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
 
-    <p-column field="type">
+    <p-column field="type" [style]="{'width':'50px'}">
       <ng-template let-col let-field="rowData" pTemplate="body">
-        <div class="kTitle">
-          {{field[col.field]}}
-        </div>
+        <i class="kTypeIcon" [ngClass]="field[col.field] | kCustomSchemaTypePipe:'icon'"></i>
       </ng-template>
     </p-column>
 
@@ -29,17 +27,35 @@
       </ng-template>
     </p-column>
 
-    <p-column field="type" [header]="'applications.settings.metadata.table.fieldType' | translate"></p-column>
-
-    <p-column field="shortDescription" [header]="'applications.settings.metadata.table.shortDescription' | translate"></p-column>
+    <p-column field="type"
+              [style]="{'width':'115px'}"
+              [header]="'applications.settings.metadata.table.fieldType' | translate">
+      <ng-template let-col let-field="rowData" pTemplate="body">
+        {{field[col.field] | kCustomSchemaTypePipe:'label'}}
+      </ng-template>
+    </p-column>
 
     <p-column field="description"
+              [header]="'applications.settings.metadata.table.shortDescription' | translate"></p-column>
+
+    <p-column field="documentations"
               [header]="'applications.settings.metadata.table.description' | translate"></p-column>
 
-    <p-column field="maxValues" [header]="'applications.settings.metadata.table.maxValues' | translate"></p-column>
+    <p-column field="allowMultiple"
+              [style]="{'width':'100px'}"
+              [header]="'applications.settings.metadata.table.maxValues' | translate">
+      <ng-template let-col let-field="rowData" pTemplate="body">
+        {{field[col.field] ? ('applications.settings.metadata.unlimited' | translate) : '1'}}
+      </ng-template>
+    </p-column>
 
-    <p-column field="searchable"
-              [header]="'applications.settings.metadata.table.searchable' | translate"></p-column>
+    <p-column field="isSearchable"
+              [style]="{'width':'100px'}"
+              [header]="'applications.settings.metadata.table.searchable' | translate">
+      <ng-template let-col let-field="rowData" pTemplate="body">
+        {{ (field[col.field] ? 'app.common.yes' : 'app.common.no') | translate }}
+      </ng-template>
+    </p-column>
 
   </p-dataTable>
 </div>

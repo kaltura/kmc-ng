@@ -6,7 +6,6 @@
         <a class="kCancel" (click)="onClosePopupWidget.emit()">Cancel</a>
         <button type="button"
                 class="kButtonBranded KButtonSave"
-                [disabled]="true"
                 pButton
                 [label]="'app.common.save' | translate"
                 (click)="_saveSchema()"></button>
@@ -14,7 +13,7 @@
     </div>
     <div class="kContainer">
       <div class="kSchemaFormWrapper">
-        <kCustomSchemaForm></kCustomSchemaForm>
+        <kCustomSchemaForm [(schema)]="_schema"></kCustomSchemaForm>
         <div class="kCustomSchemaTableControls">
           <div *ngIf="_selectedFields.length" class="kBulkControls">
             <button pButton
@@ -26,7 +25,7 @@
             <button pButton class="kButtonDanger kBulkDeleteBtn"
                     icon="kIcontrash"></button>
             <span class="kSelectedEntriesNum">
-              {{ 'applications.settings.metadata.fields' | translate : [0] }}
+              {{ 'applications.settings.metadata.fields' | translate : [_schema?.parsedProfile?.items?.length || 0] }}
             </span>
             <div class="kSelected">
               • {{ 'applications.settings.metadata.selected' | translate : [_selectedFields.length] }}
@@ -50,13 +49,14 @@
               class="kButtonDefault"
               icon="kIconupload"
               iconPos="left"
-              [disabled]="!_schema"
+              [disabled]="_schema?.isNew"
               [label]="'applications.settings.metadata.downloadSchema' | translate"></button>
           </div>
         </div>
       </div>
       <div class="kSchemaTableWrapper">
-        <kCustomSchemaFieldsTable [fields]="[]"></kCustomSchemaFieldsTable>
+        <kCustomSchemaFieldsTable [fields]="_schema?.parsedProfile?.items || []"
+                                  [(selectedFields)]="_selectedFields"></kCustomSchemaFieldsTable>
       </div>
     </div>
   </div>

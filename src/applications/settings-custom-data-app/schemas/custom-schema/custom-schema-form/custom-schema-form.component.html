@@ -1,26 +1,23 @@
-<form class="kCustomSchemaForm">
+<form class="kCustomSchemaForm" [formGroup]="_schemaForm">
   <div class="kRow">
     <span class="kLabel">{{'applications.settings.metadata.form.customSchemaTitle' | translate}}</span>
     <div class="kRequired">*</div>
     <div>
-      <input class="kControl" pInputText>
-      <div *ngIf="false" class="error">
-        {{'applications.settings.accountSettings.errors.requiredName' | translate}}
-      </div>
+      <input class="kControl" pInputText [formControl]="_nameField">
     </div>
   </div>
 
   <div class="kRow">
     <span class="kLabel">{{'applications.settings.metadata.form.description' | translate}}</span>
     <div>
-      <textarea class="kControl KTextArea" pInputText></textarea>
+      <textarea class="kControl KTextArea" pInputText [formControl]="_descriptionField"></textarea>
     </div>
   </div>
 
   <div class="kRow">
     <span class="kLabel">{{'applications.settings.metadata.form.systemName' | translate}}</span>
     <div>
-      <input class="kControl" pInputText>
+      <input class="kControl" pInputText [formControl]="_systemNameField">
     </div>
   </div>
 
@@ -29,11 +26,13 @@
     <div class="kSelectApplyTo">
       <p-radioButton class="kRadioLeft"
                      name="applyTo"
-                     value="entries"
+                     [value]="_applyToValues.entries"
+                     [formControl]="_applyToField"
                      [label]="'applications.settings.metadata.form.entries' | translate"></p-radioButton>
       <p-radioButton class="kRadioRight"
                      name="applyTo"
-                     value="categories"
+                     [value]="_applyToValues.categories"
+                     [formControl]="_applyToField"
                      [label]="'applications.settings.metadata.form.categories' | translate"></p-radioButton>
     </div>
   </div>

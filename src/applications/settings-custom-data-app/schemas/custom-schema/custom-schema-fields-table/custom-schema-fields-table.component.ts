@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 
 @Component({
   selector: 'kCustomSchemaFieldsTable',
@@ -7,21 +7,20 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
   styleUrls: ['./custom-schema-fields-table.component.scss']
 })
 export class CustomSchemaFieldsTableComponent {
-  @Input() fields: any[];
-
-  @Input() selectedFields: any[] = [];
+  @Input() fields: MetadataItem[];
+  @Input() selectedFields: MetadataItem[] = [];
 
   @Output() selectedFieldsChange = new EventEmitter<any>();
-  @Output() actionSelected = new EventEmitter<any>();
+  @Output() actionSelected = new EventEmitter<MetadataItem>();
 
   public rowTrackBy: Function = (index: number, item: any) => {
     return item.id
   };
 
-  constructor(private _appLocalization: AppLocalization) {
+  constructor() {
   }
 
-  public _onSelectionChange(event): void {
+  public _onSelectionChange(event: MetadataItem[]): void {
     this.selectedFieldsChange.emit(event);
   }
 }

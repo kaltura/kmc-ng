@@ -1438,6 +1438,13 @@
             "delete": "Delete"
           }
         },
+        "type": {
+          "object": "Entry-ID list",
+          "date": "Date",
+          "list": "Text select list",
+          "text": "Text"
+        },
+        "unlimited": "Unlimited",
         "deleteSchema": "Delete Custom Data Schema",
         "deleteSchemas": "Delete Custom Data Schemas",
         "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema: {{0}} ?",

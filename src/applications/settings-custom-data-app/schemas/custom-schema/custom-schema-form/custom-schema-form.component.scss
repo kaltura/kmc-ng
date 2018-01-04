@@ -42,10 +42,6 @@
       font-size: 24px;
       color: $kGrayscale3;
       margin-left: -28px;
-      &.kHasError {
-        color: $kDandger;
-        font-weight: bold;
-      }
     }
     .kRequired, .kLabel {
       padding: 8px 4px;
@@ -56,16 +52,9 @@
       color: $kGrayscale2;
       width: 529px;
       border-radius: 3px;
-      &.kHasError {
-        border: 1px solid $kDandger;
-        background: initial;
-      }
     }
     .KTextArea {
       height: 60px;
-    }
-    .error {
-      padding-top: 8px;
     }
   }
 }

@@ -126,6 +126,8 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
           } else {
             object.applyTo = objectType;
           }
+
+          object.isNew = false;
         });
 
         return { objects, totalCount };

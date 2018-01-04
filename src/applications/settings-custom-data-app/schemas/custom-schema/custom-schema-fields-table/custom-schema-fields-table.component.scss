@@ -20,6 +20,12 @@
     }
   }
 
+  .kTypeIcon {
+    font-size: 24px;
+    color: $kGrayscale3;
+    vertical-align: middle;
+  }
+
   .kFieldNameWrap {
     display: flex;
     align-items: center;
@@ -38,15 +44,23 @@
   flex-direction: column;
 }
 
-:host /deep/ p-datatable .ui-datatable-scrollable-body {
-  margin-bottom: 34px;
-}
+:host /deep/ .kFieldsTable {
+  tr.kProfileDisabled .ui-cell-data {
+    color: $kGrayscale4;
+  }
 
-:host /deep/ p-datatable .stickyHeader {
-  z-index: 10;
-  display: table;
-}
+  p-datatable {
+    .ui-datatable-scrollable-body {
+      margin-bottom: 34px;
+    }
 
-:host /deep/ .kFieldsTable tr.kProfileDisabled .ui-cell-data {
-  color: $kGrayscale4;
+    .ui-datatable-scrollable-table-wrapper {
+      height: calc(100vh - 521px);
+    }
+
+    .stickyHeader {
+      z-index: 10;
+      display: table;
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
+import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
 
 @Component({
   selector: 'kCustomSchema',
@@ -14,10 +15,20 @@ export class CustomSchemaComponent {
       this._title = this._appLocalization.get('applications.settings.metadata.editCustomSchema');
     } else {
       this._title = this._appLocalization.get('applications.settings.metadata.addCustomSchema');
+      const schema = <SettingsMetadataProfile>(new KalturaMetadataProfile({
+        name: '',
+        description: '',
+        systemName: ''
+      }));
+      schema.isNew = true;
+      schema.profileDisabled = false;
+      schema.applyTo = this._appLocalization.get('applications.settings.metadata.applyTo.entries');
+
+      this._schema = schema;
     }
   }
   @Output() onClosePopupWidget = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<any>();
+  @Output() onSave = new EventEmitter<SettingsMetadataProfile>();
 
   public _title;
   public _schema: SettingsMetadataProfile;
@@ -27,7 +38,8 @@ export class CustomSchemaComponent {
   }
 
   public _saveSchema(): void {
-    this.onSave.emit();
+    console.warn(this._schema);
+    this.onSave.emit(this._schema);
     this.onClosePopupWidget.emit();
   }
 
