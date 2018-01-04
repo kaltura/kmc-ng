@@ -56,7 +56,7 @@ export class NewSubcategoryComponent implements OnInit, OnDestroy {
     this._createNewCategory(this.categoryParentId);
   }
 
-  private _createNewCategory(categoryParentId: number) {
+  private _createNewCategory(categoryParentId: string) {
     const categoryName = this.newCategoryForm.controls['name'].value;
     if (!categoryName || !categoryName.length) {
       this._blockerMessage = new AreaBlockerMessage({

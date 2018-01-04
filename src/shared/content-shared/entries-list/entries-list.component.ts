@@ -116,7 +116,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
 
     // TODO sakal
-    // public _onTreeNodeUnselected(node: PrimeTreeNode) {
+    // public _onTreeNodeUnselected(node: CategoriesTreeNode) {
     //     const newFilterItem = this._entriesStore.cloneFilter('categories', []);
     //     const itemIndex = newFilterItem.findIndex(item => item.value === node.data);
     //     if (itemIndex > -1) {

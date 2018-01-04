@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
+import { CategoriesTreeNode } from './categories-tree-node';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
+import { CategoriesTreePropagationDirective } from './categories-tree-propagation.directive';
 import { CategoriesTreeService } from './categories-tree.service';
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 import { FiltersUtils } from '@kaltura-ng/mc-shared/filters/filters-utils';
@@ -29,7 +29,7 @@ export class CategoriesTreeComponent implements OnInit {
 
     @Output() public categoriesChange = new EventEmitter<CategoriesListItem[]>();
 
-  public _treeSelection: PrimeTreeNode[] = [];
+  public _treeSelection: CategoriesTreeNode[] = [];
 
     private _selectedCategories: CategoriesListItem[];
 
@@ -39,13 +39,13 @@ export class CategoriesTreeComponent implements OnInit {
     }
 
     // TODO SAKAL remove
-  @Output() onCategoriesLoaded = new EventEmitter<{ categories: PrimeTreeNode[] }>();
+  @Output() onCategoriesLoaded = new EventEmitter<{ categories: CategoriesTreeNode[] }>();
 
   @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
   @Output() onCategoryUnselected: EventEmitter<CategoriesListItem> = new EventEmitter();
 
-  @ViewChild(PrimeTreePropagation) _primeTreeNodesState: PrimeTreePropagation;
-    public _categories: PrimeTreeNode[] = [];
+  @ViewChild(CategoriesTreePropagationDirective) _CategoriesTreeNodesState: CategoriesTreePropagationDirective;
+    public _categories: CategoriesTreeNode[] = [];
 
   private inLazyMode = false;
   public _loading = false;
@@ -57,11 +57,11 @@ export class CategoriesTreeComponent implements OnInit {
   };
 
 
-  private updateNodeState(node: PrimeTreeNode, addToSelection: boolean): void {
-    this._primeTreeNodesState.updateNodeState(node, addToSelection);
+  private updateNodeState(node: CategoriesTreeNode, addToSelection: boolean): void {
+    this._CategoriesTreeNodesState.updateNodeState(node, addToSelection);
   }
 
-  public get categories(): PrimeTreeNode[] {
+  public get categories(): CategoriesTreeNode[] {
     return this._categories;
   }
 
@@ -104,7 +104,7 @@ export class CategoriesTreeComponent implements OnInit {
 
     }
 
-    private _convertToCategory(node: PrimeTreeNode): CategoriesListItem {
+    private _convertToCategory(node: CategoriesTreeNode): CategoriesListItem {
 
         return {
             value: node.data + '', label: node.label,
@@ -149,11 +149,11 @@ export class CategoriesTreeComponent implements OnInit {
 
 
   public _onNodeExpand(event: any): void {
-    const node: PrimeTreeNode = event && event.node instanceof PrimeTreeNode ? event.node : null;
+    const node: CategoriesTreeNode = event && event.node instanceof CategoriesTreeNode ? event.node : null;
 
     if (node && this.inLazyMode) {
       this._categoriesTreeService.loadNodeChildren(node, (children) => {
-          if (node instanceof PrimeTreeNode) {
+          if (node instanceof CategoriesTreeNode) {
             node.children.forEach(nodeChild => {
               const isNodeChildSelected = !!this._selectedCategories.find(categoryFilter => categoryFilter.value + '' === nodeChild.data + '');
               this.updateNodeState(nodeChild, isNodeChildSelected);
@@ -176,9 +176,9 @@ export class CategoriesTreeComponent implements OnInit {
     e.stopPropagation();
   }
 
-  public findNodeByFullIdPath(fullIdPath: (number | string)[]): PrimeTreeNode {
+  public findNodeByFullIdPath(fullIdPath: (number | string)[]): CategoriesTreeNode {
     // find the item in the tree (if exists)
-    let result: PrimeTreeNode = null;
+    let result: CategoriesTreeNode = null;
     for (let i = 0, length = fullIdPath.length; i < length; i++) {
       const itemIdToSearchFor = fullIdPath[i];
       result = ((result ? result.children : this._categories) || []).find(child => child.data + '' === itemIdToSearchFor + '');

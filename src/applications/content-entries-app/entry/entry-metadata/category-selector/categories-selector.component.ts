@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 
-import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
+import { CategoriesTreeNode } from 'app-shared/content-shared/categories-tree/categories-tree-node';
 import { Subject } from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -34,7 +34,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
   @ViewChild('autoComplete') private _autoComplete: AutoComplete;
 
   public _categoriesLoaded = false;
-  public _treeSelection: PrimeTreeNode[] = [];
+  public _treeSelection: CategoriesTreeNode[] = [];
 
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
@@ -119,7 +119,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
     this._ngAfterViewCheckedContext.updateTreeSelections = true;
   }
 
-  public _onTreeCategoriesLoad({categories}: { categories: PrimeTreeNode[] }): void {
+  public _onTreeCategoriesLoad({categories}: { categories: CategoriesTreeNode[] }): void {
     this._categoriesLoaded = categories && categories.length > 0;
     this.updateTreeSelections();
 
@@ -209,8 +209,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
 
   }
 
-  public _onTreeNodeUnselected({node}: { node: PrimeTreeNode }) {
-    if (node instanceof PrimeTreeNode) {
+  public _onTreeNodeUnselected({node}: { node: CategoriesTreeNode }) {
+    if (node instanceof CategoriesTreeNode) {
       const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id + '' === node.data + '');
 
       if (autoCompleteItemIndex > -1) {
@@ -221,7 +221,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
   }
 
   public _onTreeNodeSelected({node}: { node: any }) {
-    if (node instanceof PrimeTreeNode) {
+    if (node instanceof CategoriesTreeNode) {
       const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id + '' === node.data + '');
 
 

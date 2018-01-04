@@ -5,7 +5,6 @@ import {
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 
@@ -69,35 +68,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
 
-    private createTreeHandlerArguments(items: any[], parentNode: PrimeTreeNode = null): any {
-        return {
-            items: items,
-            idProperty: 'id',
-            nameProperty: 'name',
-            parentIdProperty: 'parentId',
-            sortByProperty: 'sortValue',
-            childrenCountProperty: 'childrenCount',
-            rootParent: parentNode
-        }
-    }
-
-    private _resetNodeSelectionMode(node: PrimeTreeNode) {
-        node.partialSelected = false;
-        node.selectable = true;
-
-        if (node.children && node.children.length) {
-            node.children.forEach(childNode => this._resetNodeSelectionMode(childNode));
-        }
-    }
-
     public _onSelectionModeChanged(value) {
         // clear current selection
         this._clearAll();
-
-        (this._categoriesTree._categories || []).forEach(node => {
-            this._resetNodeSelectionMode(node);
-        });
-
         this.selectionMode = value;
         this.selectionModeChange.emit(this.selectionMode);
     }

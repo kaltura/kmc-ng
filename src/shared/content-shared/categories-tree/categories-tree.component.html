@@ -3,7 +3,7 @@
 
     <p-tree #tree
             *ngIf="_selectionModes.multiple === _selectionMode"
-            kPrimeTreePropagation
+            kCategoriesTreePropagation
             [propagateDownMode]="disablePropagation ? 'preventNested' : 'none'"
             [propagateUpMode]="disablePropagation ? 'visualOnly' : 'none'"
             [value]="_categories"

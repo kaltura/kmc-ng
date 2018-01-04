@@ -9,7 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
-import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
+import {CategoriesTreeNode} from 'app-shared/content-shared/categories-tree/categories-tree-node';
 import {Subject} from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import {
@@ -33,10 +33,10 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
 
 
-  private _emptyTreeSelection = new PrimeTreeNode(null, 'empty', 0, null);
+  private _emptyTreeSelection = new CategoriesTreeNode(null, 'empty', 0, null);
 
   public _categoriesLoaded = false;
-  public _treeSelection: PrimeTreeNode = null;
+  public _treeSelection: CategoriesTreeNode = null;
   public _selectionTooltip = '';
 
   private _searchCategoriesSubscription: ISubscription;
@@ -94,7 +94,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
     this._treeSelection = treeSelectedItem;
   }
 
-  public _onTreeCategoriesLoad({ categories }: { categories: PrimeTreeNode[] }): void {
+  public _onTreeCategoriesLoad({ categories }: { categories: CategoriesTreeNode[] }): void {
     this._categoriesLoaded = categories && categories.length > 0;
     this._updateTreeSelections(null, true);
   }
@@ -158,8 +158,8 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
   }
 
-  public _onTreeNodeSelected(treeNode: PrimeTreeNode) {
-    if (treeNode instanceof PrimeTreeNode) {
+  public _onTreeNodeSelected(treeNode: CategoriesTreeNode) {
+    if (treeNode instanceof CategoriesTreeNode) {
       const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(treeNode.data);
 
       if (!relevantCategory) {
