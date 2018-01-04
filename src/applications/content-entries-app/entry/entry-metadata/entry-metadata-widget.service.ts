@@ -408,7 +408,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     .subscribe(
                         result =>
                         {
-                            observer.next(result.items);
+                            observer.next(result);
                             observer.complete();
                         },
                         err =>

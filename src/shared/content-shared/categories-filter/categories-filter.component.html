@@ -20,10 +20,10 @@
   </div>
   <kScrollToTopContainer class="kTreeContainer">
     <k-categories-tree #categoriesTree
-                       [disablePropagation]="selectionMode === _TreeSelectionModes.SelfAndChildren"
+                       [disablePropagation]="selectionMode === _CategoriesSeclectionModes.SelfAndChildren"
                        [(selection)]="selection"
                        (onCategorySelected)="onCategorySelected.emit($event)"
-                       (onCategoryUnselected)="onCategoryUnselected.emit([$event])"
+                       (onCategoryUnselected)="onCategoriesUnselected.emit([$event])"
                        >
     </k-categories-tree>
   </kScrollToTopContainer>

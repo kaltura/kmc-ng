@@ -9,7 +9,7 @@ import {
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { TreeSelectionModes } from 'app-shared/content-shared/categories-filter/categories-filter.component';
+import { CategoriesSeclectionModes } from 'app-shared/content-shared/categories-filter/categories-filter.component';
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 @Component({
@@ -39,7 +39,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         sortBy: 'createdAt',
         sortDirection: SortDirection.Desc,
         categories: [],
-        categoriesMode: TreeSelectionModes.Self
+        categoriesMode: CategoriesSeclectionModes.Self
     };
 
     constructor(private _entriesStore: EntriesStore,
@@ -55,14 +55,14 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     // private _prepare(): void {
     //
     //     // TODO sakal
-    //     //const mode = this._selectionMode === TreeSelectionModes.SelfAndChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
+    //     //const mode = this._selectionMode === CategoriesSeclectionModes.SelfAndChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
     //
     //     // update components when the active filter list is updated
-    //     const savedAutoSelectChildren: TreeSelectionModes = this._browserService
+    //     const savedAutoSelectChildren: CategoriesSeclectionModes = this._browserService
     //         .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
     //     this.selectionMode = typeof savedAutoSelectChildren === 'number'
     //         ? savedAutoSelectChildren
-    //         : TreeSelectionModes.SelfAndChildren;
+    //         : CategoriesSeclectionModes.SelfAndChildren;
     // }
 
     private _prepare(): void{
@@ -106,7 +106,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         }
 
         if (typeof updates.categoriesMode !== 'undefined') {
-            this._query.categoriesMode = updates.categoriesMode === CategoriesModes.Self ? TreeSelectionModes.Self: TreeSelectionModes.SelfAndChildren;
+            this._query.categoriesMode = updates.categoriesMode === CategoriesModes.Self ? CategoriesSeclectionModes.Self: CategoriesSeclectionModes.SelfAndChildren;
         }
 
         if (typeof updates.categories !== 'undefined') {
@@ -125,9 +125,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     //     }
     // }
 
-    onCategoriesModeChanged()
+    onCategoriesModeChanged(categoriesMode)
     {
-
+        this._query.categoriesMode = categoriesMode;
+        this._browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', categoriesMode);
     }
 
     onCategoriesUnselected(categoriesToRemove: CategoriesListItem[]) {
@@ -148,7 +149,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     onCategorySelected(category: CategoriesListItem){
         const categories = this._entriesStore.cloneFilter('categories', []);
         if (!categories.find(item => item.value === category.value)) {
-            if (this._query.categoriesMode === TreeSelectionModes.SelfAndChildren) {
+            if (this._query.categoriesMode === CategoriesSeclectionModes.SelfAndChildren) {
                 // when this component is running with SelfAndChildren mode, we need to manually unselect
                 // the first nested child (if any) that is currently selected
                 const childToRemove = categories.find(item => {

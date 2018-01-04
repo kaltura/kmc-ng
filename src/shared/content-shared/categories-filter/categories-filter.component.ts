@@ -9,14 +9,13 @@ import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories-search.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
-export enum TreeSelectionModes {
+export enum CategoriesSeclectionModes {
     Self = 0,
     SelfAndChildren = 1
 }
@@ -28,7 +27,8 @@ export enum TreeSelectionModes {
 })
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() public parentPopupWidget: PopupWidgetComponent;
-    @Input() public selectionMode: TreeSelectionModes = TreeSelectionModes.Self;
+    @Input() public selectionMode: CategoriesSeclectionModes = CategoriesSeclectionModes.Self;
+    @Output() public selectionModeChange = new EventEmitter<CategoriesSeclectionModes>();
     @Input() public selection: CategoriesListItem[];
     @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
     @Output() onCategoriesUnselected: EventEmitter<CategoriesListItem[]> = new EventEmitter();
@@ -43,10 +43,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     public _suggestionsProvider = new Subject<SuggestionsProviderData>();
     public _categoriesLoaded = false;
 
-    public _TreeSelectionModes = TreeSelectionModes;
+    public _CategoriesSeclectionModes = CategoriesSeclectionModes;
 
-    constructor(private _categoriesPrimeService: CategoriesSearchService,
-                private _browserService: BrowserService,
+    constructor(private _categoriesSearch: CategoriesSearchService,
                 private _filtersRef: ElementRef) {
     }
 
@@ -100,8 +99,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         });
 
         this.selectionMode = value;
-        this._browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', this.selectionMode);
-
+        this.selectionModeChange.emit(this.selectionMode);
     }
 
     public _clearAll() {
@@ -139,27 +137,23 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     _onSuggestionSelected(): void {
 
-        // const selectedItem = this._autoComplete.getValue();
-        // if (selectedItem) {
-        //     const data = selectedItem.data;
-        //
-        //     const nodeToBeSelected = this._categoriesTree.findNodeByFullIdPath(data.fullIdPath);
-        //     if (nodeToBeSelected) {
-        //         // the requested node found in the tree - select that node
-        //         this._onTreeNodeSelected(nodeToBeSelected);
-        //
-        //         nodeToBeSelected.expand();
-        //
-        //     } else {
-        //         // the requested node is not part of the tree - create a filter directly
-        //         this.updateFilters([this._createFilter(data)], null);
-        //     }
-        //
-        //     // clear user text from component
-        //     this._autoComplete.clearValue();
-        // }
+        const selectedItem = this._autoComplete.getValue();
+        if (selectedItem) {
+            const data = selectedItem.data;
+            this.onCategorySelected.emit(this._convertToCategory(data));
+            // clear user text from component
+            this._autoComplete.clearValue();
+        }
     }
 
+    private _convertToCategory(node: PrimeTreeNode): CategoriesListItem {
+
+        return {
+            value: node.data + '', label: node.label,
+            fullIdPath: node.origin.fullIdPath,
+            tooltip: (node.origin.fullNamePath || []).join(' > ')
+        };
+    }
 
     _searchSuggestions(event): void {
         this._suggestionsProvider.next({ suggestions: [], isLoading: true });
@@ -170,26 +164,26 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             this._searchCategoriesRequest$ = null;
         }
 
-        this._searchCategoriesRequest$ = this._categoriesPrimeService.getSuggestions(event.query).subscribe(data => {
+        this._searchCategoriesRequest$ = this._categoriesSearch.getSuggestions(event.query).subscribe(data => {
                 const suggestions = [];
 
-                // (data || []).forEach(item => {
-                //   const label = item.fullNamePath.join(' > ') + (item.referenceId ? ` (${item.referenceId})` : '');
-                //
-                //   const isSelectable = !this._entriesStore.getFiltersByType(CategoriesFilter).find(categoryFilter => {
-                //
-                //     if (this._selectionMode === TreeSelectionModes.SelfAndChildren) {
-                //       let alreadySelected = false;
-                //       for (let length = item.fullIdPath.length, i = length - 1; i >= 0 && !alreadySelected; i--) {
-                //         alreadySelected = item.fullIdPath[i] === categoryFilter.value;
-                //       }
-                //       return alreadySelected;
-                //     } else {
-                //       return categoryFilter.value === item.id;
-                //     }
-                //   });
-                //   suggestions.push({ data: item, label: label, isSelectable: isSelectable });
-                // });
+                (data || []).forEach(item => {
+                  const label = item.fullNamePath.join(' > ') + (item.referenceId ? ` (${item.referenceId})` : '');
+
+                  const isSelectable = !this.selection.find(categoryFilter => {
+
+                    if (this.selectionMode === CategoriesSeclectionModes.SelfAndChildren) {
+                      let alreadySelected = false;
+                      for (let length = item.fullIdPath.length, i = length - 1; i >= 0 && !alreadySelected; i--) {
+                        alreadySelected = String(item.fullIdPath[i]) === categoryFilter.value;
+                      }
+                      return alreadySelected;
+                    } else {
+                      return categoryFilter.value === String(item.id);
+                    }
+                  });
+                  suggestions.push({ data: item, label: label, isSelectable: isSelectable });
+                });
 
                 this._suggestionsProvider.next({ suggestions: suggestions, isLoading: false });
             },

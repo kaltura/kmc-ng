@@ -118,7 +118,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
         const entryCategory = this._selectedParentCategory;
 
 
-        (data.items || []).forEach(suggestedCategory => {
+        (data || []).forEach(suggestedCategory => {
           const label = suggestedCategory.fullNamePath.join(' > ') +
               (suggestedCategory.referenceId ?
               ` (${suggestedCategory.referenceId})` : '');

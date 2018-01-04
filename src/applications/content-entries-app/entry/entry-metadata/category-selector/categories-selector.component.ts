@@ -145,7 +145,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
         const entryCategories = this._selectedCategories || [];
 
 
-				(data.items|| []).forEach(suggestedCategory => {
+				(data || []).forEach(suggestedCategory => {
 					const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
 
           const isSelectable = !entryCategories.find(category => {
