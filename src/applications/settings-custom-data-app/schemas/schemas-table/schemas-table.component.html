@@ -24,7 +24,7 @@
                [kTooltip]="schema?.profileDisabled ? ('applications.settings.metadata.table.disabledLabel' | translate) : schema[col.field]"
                [maxWidth]="300"
                (click)="_onActionSelected('view', schema)">
-            {{schema[col.field]}}
+            {{schema[col.field]}} <span *ngIf="schema?.profileDisabled">*</span>
           </div>
         </ng-template>
       </p-column>
