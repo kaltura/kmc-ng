@@ -1408,6 +1408,14 @@
           "entries": "Entries",
           "categories": "Categories"
         },
+        "form": {
+          "customSchemaTitle": "Custom Schema title",
+          "description": "Description",
+          "systemName": "System Name",
+          "applyTo": "Apply to",
+          "entries": "Entries",
+          "categories": "Categories"
+        },
         "table": {
           "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
           "name": "Custom Schema Title",

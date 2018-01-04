@@ -1,0 +1,40 @@
+<form class="kCustomSchemaForm">
+  <div class="kRow">
+    <span class="kLabel">{{'applications.settings.metadata.form.customSchemaTitle' | translate}}</span>
+    <div class="kRequired">*</div>
+    <div>
+      <input class="kControl" pInputText>
+      <div *ngIf="false" class="error">
+        {{'applications.settings.accountSettings.errors.requiredName' | translate}}
+      </div>
+    </div>
+  </div>
+
+  <div class="kRow">
+    <span class="kLabel">{{'applications.settings.metadata.form.description' | translate}}</span>
+    <div>
+      <textarea class="kControl KTextArea" pInputText></textarea>
+    </div>
+  </div>
+
+  <div class="kRow">
+    <span class="kLabel">{{'applications.settings.metadata.form.systemName' | translate}}</span>
+    <div>
+      <input class="kControl" pInputText>
+    </div>
+  </div>
+
+  <div class="kRow">
+    <span class="kLabel">{{'applications.settings.metadata.form.applyTo' | translate}}</span>
+    <div class="kSelectApplyTo">
+      <p-radioButton class="kRadioLeft"
+                     name="applyTo"
+                     value="entries"
+                     [label]="'applications.settings.metadata.form.entries' | translate"></p-radioButton>
+      <p-radioButton class="kRadioRight"
+                     name="applyTo"
+                     value="categories"
+                     [label]="'applications.settings.metadata.form.categories' | translate"></p-radioButton>
+    </div>
+  </div>
+</form>
