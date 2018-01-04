@@ -25,6 +25,11 @@
         display: flex;
         margin-left: auto;
 
+        .KButtonSave {
+          height: 34px;
+          width: 100px;
+        }
+
         .kCancel {
           font-size: 15px;
           color: #333333;
@@ -40,6 +45,11 @@
 
     .kContainer{
       flex: 1 1 auto;
+
+      .kSchemaFormWrapper {
+        height: 272px;
+        padding: 32px 28px 24px 28px;
+      }
     }
   }
 }

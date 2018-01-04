@@ -1,0 +1,52 @@
+@import 'app-theme/_variables.scss';
+
+.kFieldsTable {
+  background-color: white;
+  height: auto;
+  padding: 0;
+
+  .kTitle {
+    color: $kGrayscale1;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    max-height: 45px;
+    &:hover {
+      color: #000000;
+    }
+    &.kProfileDisabled {
+      color: $kGrayscale4;
+      cursor: text;
+    }
+  }
+
+  .kFieldNameWrap {
+    display: flex;
+    align-items: center;
+
+    .kMediaTypeIcon {
+      font-size: 26px;
+      margin-right: 23px;
+    }
+  }
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
+}
+
+:host /deep/ p-datatable .ui-datatable-scrollable-body {
+  margin-bottom: 34px;
+}
+
+:host /deep/ p-datatable .stickyHeader {
+  z-index: 10;
+  display: table;
+}
+
+:host /deep/ .kFieldsTable tr.kProfileDisabled .ui-cell-data {
+  color: $kGrayscale4;
+}

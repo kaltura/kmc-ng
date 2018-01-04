@@ -1416,6 +1416,11 @@
           "description": "Description",
           "applyTo": "Apply to",
           "fieldsIncluded": "Fields included",
+          "fieldLabel": "Field Label",
+          "fieldType": "Field Type",
+          "shortDescription": "Short Description",
+          "maxValues": "Max Values",
+          "searchable": "Searchable",
           "actions": {
             "edit": "Edit",
             "download": "Download",
