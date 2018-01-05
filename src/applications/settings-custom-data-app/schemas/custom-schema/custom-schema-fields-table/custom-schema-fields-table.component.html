@@ -4,9 +4,8 @@
     scrollHeight="100%"
     dataKey="id"
     [scrollable]="true"
-    [value]="fields"
+    [value]="_fields"
     [immutable]="false"
-    [emptyMessage]="_emptyMessage"
     [rowTrackBy]="rowTrackBy"
     (selectionChange)="_onSelectionChange($event)"
     [(selection)]="selectedFields">
@@ -19,7 +18,7 @@
       </ng-template>
     </p-column>
 
-    <p-column field="name"
+    <p-column field="label"
               [header]="'applications.settings.metadata.table.fieldLabel' | translate">
       <ng-template let-col let-field="rowData" pTemplate="body">
         <div class="kTitle" (click)="_editField(field)">

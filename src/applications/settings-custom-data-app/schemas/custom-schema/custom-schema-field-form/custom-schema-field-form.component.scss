@@ -27,11 +27,19 @@
     align-items: center;
     justify-content: center;
 
+    .kButtonDefault {
+      border: 1px solid #cccccc;
+    }
+
     button {
       min-width: 100px;
       height: 34px;
       border-width: 0;
       font-size: 14px;
+
+      &:first-child {
+        margin-right: 24px;
+      }
 
       &:disabled {
         border-width: 1px;

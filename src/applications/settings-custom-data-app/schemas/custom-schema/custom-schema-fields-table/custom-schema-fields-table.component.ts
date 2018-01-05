@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 
 @Component({
@@ -6,18 +6,45 @@ import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-pro
   templateUrl: './custom-schema-fields-table.component.html',
   styleUrls: ['./custom-schema-fields-table.component.scss']
 })
-export class CustomSchemaFieldsTableComponent {
-  @Input() fields: MetadataItem[];
+export class CustomSchemaFieldsTableComponent implements AfterViewInit {
+  @Input() set fields(data: MetadataItem[]) {
+    if (!this._deferredLoading) {
+      this._fields = [];
+      this._cdRef.detectChanges();
+      this._fields = data;
+      this._cdRef.detectChanges();
+    } else {
+      this._deferredFields = data
+    }
+  }
+
   @Input() selectedFields: MetadataItem[] = [];
 
   @Output() selectedFieldsChange = new EventEmitter<MetadataItem[]>();
   @Output() onActionSelected = new EventEmitter<{ action: string, payload: { field: MetadataItem, direction?: 'up' | 'down' } }>();
 
+  private _deferredFields: MetadataItem[] = [];
+
+  public _fields: MetadataItem[] = [];
+  public _deferredLoading = true;
+
   public rowTrackBy: Function = (index: number, item: any) => {
     return item.id
   };
 
-  constructor() {
+  constructor(private _cdRef: ChangeDetectorRef) {
+  }
+
+  ngAfterViewInit() {
+    if (this._deferredLoading) {
+      // use timeout to allow the DOM to render before setting the data to the datagrid.
+      // This prevents the screen from hanging during datagrid rendering of the data.
+      setTimeout(() => {
+        this._deferredLoading = false;
+        this._fields = this._deferredFields;
+        this._deferredFields = null;
+      }, 0);
+    }
   }
 
   public _onSelectionChange(event: MetadataItem[]): void {

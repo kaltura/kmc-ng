@@ -1408,6 +1408,7 @@
         "selected": "{{0}} Selected",
         "cancel": "Cancel",
         "add": "Add",
+        "save": "Save",
         "fields": "{{0}} Custom Fields",
         "applyTo": {
           "entries": "Entries",
@@ -1473,7 +1474,18 @@
           "listValues": "List Values",
           "listValuesPlaceholder": "Enter the values, one per line",
           "single": "Single",
-          "unlimited": "Unlimited"
+          "unlimited": "Unlimited",
+          "saveChanges": "Would you like to save the changes you made?",
+          "validationErrors": {
+            "invalidInput": "Invalid Input",
+            "invalidSystemName": "Field system name must be unique, please enter a different name.",
+            "emptyLabel": "Please insert a field label",
+            "invalidLabelPrefix": "Field name must begin with a letter.",
+            "invalidChars": "Invalid input. The special characters < > & \" and ' are not allowed.",
+            "emptyListValues": "Invalid input in \"List values\": at least one option should be listed.",
+            "invalidListOptions": "Invalid input in \"List values\": only letters, digits and the following special characters - ()|-@~&/^$=_%.': -  are allowed.",
+            "invalidListOptionsPrefix": "Invalid input in \"List values\": - is an illegal prefix."
+          }
         }
       }
     }

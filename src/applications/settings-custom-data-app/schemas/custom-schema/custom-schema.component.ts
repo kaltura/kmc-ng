@@ -17,6 +17,8 @@ export class CustomSchemaComponent {
   @Input() set schema(value: SettingsMetadataProfile) {
     if (value) {
       this._schema = <SettingsMetadataProfile>Object.assign(KalturaTypesFactory.createObject(value), value);
+      this._profileFields = (this._schema.parsedProfile && this._schema.parsedProfile.items && this._schema.parsedProfile.items.length)
+        ? this._schema.parsedProfile.items : [];
       this._title = this._appLocalization.get('applications.settings.metadata.editCustomSchema');
     } else {
       this._title = this._appLocalization.get('applications.settings.metadata.addCustomSchema');
@@ -30,6 +32,7 @@ export class CustomSchemaComponent {
       schema.applyTo = this._appLocalization.get('applications.settings.metadata.applyTo.entries');
 
       this._schema = schema;
+      this._profileFields = [];
     }
   }
 
@@ -43,6 +46,7 @@ export class CustomSchemaComponent {
   public _selectedFields: MetadataItem[] = [];
   public _selectedField: MetadataItem;
   public _isDirty = false;
+  public _profileFields: MetadataItem[];
 
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
@@ -53,9 +57,9 @@ export class CustomSchemaComponent {
       header: this._appLocalization.get('applications.settings.metadata.table.deleteCustomDataField'),
       message: this._appLocalization.get('applications.settings.metadata.table.fieldRemoveConfirmation', [field.name]),
       accept: () => {
-        const relevantFieldIndex = this._schema.parsedProfile.items.findIndex(item => item.id === field.id);
+        const relevantFieldIndex = this._profileFields.findIndex(item => item.id === field.id);
         if (relevantFieldIndex !== -1) {
-          this._schema.parsedProfile.items.splice(relevantFieldIndex, 1);
+          this._profileFields.splice(relevantFieldIndex, 1);
           this._setDirty();
         }
         this._clearSelection();
@@ -65,8 +69,8 @@ export class CustomSchemaComponent {
 
   private _moveField(field: MetadataItem, direction: 'up' | 'down'): void {
     const action = direction === 'down'
-      ? () => KalturaUtils.moveDownItems(this._schema.parsedProfile.items, [field])
-      : () => KalturaUtils.moveUpItems(this._schema.parsedProfile.items, [field]);
+      ? () => KalturaUtils.moveDownItems(this._profileFields, [field])
+      : () => KalturaUtils.moveUpItems(this._profileFields, [field]);
     if (action()) {
       this._setDirty();
     }
@@ -74,6 +78,9 @@ export class CustomSchemaComponent {
 
   public _saveSchema(): void {
     console.warn(this._schema);
+    if (this._schema.parsedProfile && this._schema.parsedProfile.items) {
+      this._schema.parsedProfile.items = this._profileFields;
+    }
     this.onSave.emit(this._schema);
     this.onClosePopupWidget.emit();
   }
@@ -111,8 +118,8 @@ export class CustomSchemaComponent {
 
   public _bulkMove(direction: 'up' | 'down'): void {
     const action = direction === 'down'
-      ? () => KalturaUtils.moveDownItems(this._schema.parsedProfile.items, this._selectedFields)
-      : () => KalturaUtils.moveUpItems(this._schema.parsedProfile.items, this._selectedFields);
+      ? () => KalturaUtils.moveDownItems(this._profileFields, this._selectedFields)
+      : () => KalturaUtils.moveUpItems(this._profileFields, this._selectedFields);
     if (action()) {
       this._setDirty();
     }
@@ -124,9 +131,9 @@ export class CustomSchemaComponent {
       message: this._appLocalization.get('applications.settings.metadata.table.fieldBulkRemoveConfirmation'),
       accept: () => {
         this._selectedFields.forEach(field => {
-          const relevantFieldIndex = this._schema.parsedProfile.items.findIndex(item => item.id === field.id);
+          const relevantFieldIndex = this._profileFields.findIndex(item => item.id === field.id);
           if (relevantFieldIndex !== -1) {
-            this._schema.parsedProfile.items.splice(relevantFieldIndex, 1);
+            this._profileFields.splice(relevantFieldIndex, 1);
             this._setDirty();
           }
         });
@@ -156,6 +163,23 @@ export class CustomSchemaComponent {
   public _editField(field: MetadataItem): void {
     this._selectedField = field;
     this._customSchemaFieldPopup.open();
+  }
+
+  public _saveField(field: MetadataItem): void {
+    const relevantFieldIndex = this._profileFields.findIndex(({ id }) => id === field.id);
+    const isNew = relevantFieldIndex === -1;
+    if (isNew) {
+      this._profileFields.push(field);
+    } else {
+      this._profileFields = [
+        ...this._profileFields.slice(0, relevantFieldIndex),
+        field,
+        ...this._profileFields.slice(relevantFieldIndex + 1)
+      ];
+    }
+
+    this._selectedField = null;
+    this._setDirty();
   }
 }
 
