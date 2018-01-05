@@ -20,6 +20,10 @@ import { environment } from 'app-environment';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { MetadataProfileDeleteAction } from 'kaltura-ngx-client/api/types/MetadataProfileDeleteAction';
 import { SettingsMetadataProfile } from './settings-metadata-profile.interface';
+import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
+import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
+import { MetadataProfileUpdateAction } from 'kaltura-ngx-client/api/types/MetadataProfileUpdateAction';
+import { MetadataProfileAddAction } from 'kaltura-ngx-client/api/types/MetadataProfileAddAction';
 
 export interface SchemasFilters {
   pageSize: number,
@@ -181,6 +185,40 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
     }
   }
 
+  private _getUpdateSchemaAction(schema: SettingsMetadataProfile): KalturaRequest<KalturaMetadataProfile> {
+    const updatedProfile = new KalturaMetadataProfile({
+      name: schema.name,
+      systemName: schema.systemName,
+      description: schema.description,
+      metadataObjectType: schema.applyTo === this._appLocalization.get('applications.settings.metadata.applyTo.categories')
+        ? KalturaMetadataObjectType.category
+        : KalturaMetadataObjectType.entry
+    });
+
+    return new MetadataProfileUpdateAction({
+      id: schema.id,
+      metadataProfile: updatedProfile,
+      xsdData: ''
+    })
+  }
+
+  private _getCreateSchemaAction(schema: SettingsMetadataProfile): KalturaRequest<KalturaMetadataProfile> {
+    const newProfile = new KalturaMetadataProfile({
+      createMode: KalturaMetadataProfileCreateMode.kmc,
+      name: schema.name,
+      systemName: schema.systemName,
+      description: schema.description,
+      metadataObjectType: schema.applyTo === this._appLocalization.get('applications.settings.metadata.applyTo.categories')
+        ? KalturaMetadataObjectType.category
+        : KalturaMetadataObjectType.entry
+    });
+
+    return new MetadataProfileAddAction({
+      metadataProfile: newProfile,
+      xsdData: ''
+    });
+  }
+
   protected _preFilter(updates: Partial<SchemasFilters>): Partial<SchemasFilters> {
     if (typeof updates.pageIndex === 'undefined') {
       // reset page index to first page everytime filtering the list by any filter that is not page index
@@ -225,5 +263,12 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       });
   }
 
+  public saveSchema(schema: SettingsMetadataProfile): Observable<void> {
+    const action = schema.isNew ? this._getCreateSchemaAction(schema) : this._getUpdateSchemaAction(schema);
+
+    return this._kalturaServerClient.request(action)
+      .map(() => {
+      });
+  }
 }
 

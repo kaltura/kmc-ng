@@ -1486,7 +1486,13 @@
             "invalidListOptions": "Invalid input in \"List values\": only letters, digits and the following special characters - ()|-@~&/^$=_%.': -  are allowed.",
             "invalidListOptionsPrefix": "Invalid input in \"List values\": - is an illegal prefix."
           }
-        }
+        },
+        "fieldsOrderChangedTitle": "You reordered fields in your schema",
+        "fieldsOrderChangedWaring": "Note: If you use XMLs for bulk upload,Reordering schema fields affects the validation of custom data elements in existing XMLs. If you reorder schema fields, you also need to update your bulk upload XML structure to reflect the new field order. Do you want to save your schema changes?",
+        "requiredSchemaName": "Name must not be empty",
+        "schemaNameLength": "31 characters max in field \"Name\"",
+        "fieldsRequired": "Custom Data must contain at least one field",
+        "invalidInput": "Invalid Input"
       }
     }
   },

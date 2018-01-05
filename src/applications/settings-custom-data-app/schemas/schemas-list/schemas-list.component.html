@@ -51,6 +51,7 @@
 <kPopupWidget #customSchema [popupWidth]="995" [slider]="true">
   <ng-template>
     <kCustomSchema [schema]="_selectedSchema"
+                   (onSave)="_saveSchema($event)"
                    (onClosePopupWidget)="_onClosePopup()"></kCustomSchema>
   </ng-template>
 </kPopupWidget>

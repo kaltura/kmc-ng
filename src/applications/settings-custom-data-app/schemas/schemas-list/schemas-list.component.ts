@@ -149,4 +149,27 @@ export class SchemasListComponent implements OnInit, OnDestroy {
     this._customSchemaPopup.close();
     this._selectedSchema = null;
   }
+
+  public _saveSchema(schema: SettingsMetadataProfile): void {
+    this._schemasStore.saveSchema(schema)
+      .cancelOnDestroy(this)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this._blockerMessage = null;
+          this._schemasStore.reload();
+        },
+        (error) => {
+          this._blockerMessage = new AreaBlockerMessage({
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._schemasStore.reload();
+              }
+            }]
+          });
+        }
+      )
+  }
 }

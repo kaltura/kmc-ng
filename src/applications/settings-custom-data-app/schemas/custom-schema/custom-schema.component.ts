@@ -41,6 +41,8 @@ export class CustomSchemaComponent {
 
   @ViewChild('customSchemaField') _customSchemaFieldPopup: PopupWidgetComponent;
 
+  private _isFieldsOrderChanged = false;
+
   public _title;
   public _schema: SettingsMetadataProfile;
   public _selectedFields: MetadataItem[] = [];
@@ -50,6 +52,34 @@ export class CustomSchemaComponent {
 
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
+  }
+
+  private _fieldsOrderChanged(): void {
+    this._isFieldsOrderChanged = true;
+  }
+
+  private _validateSchema(): boolean {
+    const schemaName = this._schema.name.trim();
+    let error = '';
+
+    if (!schemaName) {
+      error = this._appLocalization.get('applications.settings.metadata.requiredSchemaName');
+    } else if (schemaName.length > 31) {
+      error = this._appLocalization.get('applications.settings.metadata.schemaNameLength');
+    } else if (!this._profileFields.length) {
+      error = this._appLocalization.get('applications.settings.metadata.fieldsRequired');
+    }
+
+    if (error) {
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.settings.metadata.invalidInput'),
+        message: error
+      });
+
+      return false;
+    }
+
+    return true;
   }
 
   private _removeField(field: MetadataItem): void {
@@ -73,16 +103,30 @@ export class CustomSchemaComponent {
       : () => KalturaUtils.moveUpItems(this._profileFields, [field]);
     if (action()) {
       this._setDirty();
+      this._fieldsOrderChanged();
     }
   }
 
   public _saveSchema(): void {
-    console.warn(this._schema);
-    if (this._schema.parsedProfile && this._schema.parsedProfile.items) {
-      this._schema.parsedProfile.items = this._profileFields;
+    if (this._validateSchema()) {
+      if (this._schema.parsedProfile && this._schema.parsedProfile.items) {
+        this._schema.parsedProfile.items = this._profileFields;
+      }
+
+      if (this._isFieldsOrderChanged) {
+        this._browserService.confirm({
+          header: this._appLocalization.get('applications.settings.metadata.fieldsOrderChangedTitle'),
+          message: this._appLocalization.get('applications.settings.metadata.fieldsOrderChangedWaring'),
+          accept: () => {
+            this.onSave.emit(this._schema);
+            this.onClosePopupWidget.emit();
+          }
+        });
+      } else {
+        this.onSave.emit(this._schema);
+        this.onClosePopupWidget.emit();
+      }
     }
-    this.onSave.emit(this._schema);
-    this.onClosePopupWidget.emit();
   }
 
   public _clearSelection(): void {
@@ -122,6 +166,7 @@ export class CustomSchemaComponent {
       : () => KalturaUtils.moveUpItems(this._profileFields, this._selectedFields);
     if (action()) {
       this._setDirty();
+      this._fieldsOrderChanged();
     }
   }
 
