@@ -50,7 +50,8 @@
               type="button"
               icon="kIconplus"
               iconPos="left"
-              [label]="'applications.settings.metadata.addCustomField' | translate"></button>
+              [label]="'applications.settings.metadata.addCustomField' | translate"
+              (click)="_editField(null)"></button>
 
             <button
               pButton
@@ -72,3 +73,9 @@
     </div>
   </div>
 </div>
+
+<kPopupWidget #customSchemaField [popupWidth]="586" [popupHeight]="613" [closeBtn]="true" [modal]="true">
+  <ng-template>
+    <kCustomSchemaFieldForm [field]="null"></kCustomSchemaFieldForm>
+  </ng-template>
+</kPopupWidget>

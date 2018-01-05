@@ -4,6 +4,7 @@ import { CustomSchemaComponent } from './custom-schema/custom-schema.component';
 import { CustomSchemaFieldsTableComponent } from './custom-schema/custom-schema-fields-table/custom-schema-fields-table.component';
 import { CustomSchemaFormComponent } from './custom-schema/custom-schema-form/custom-schema-form.component';
 import { CustomSchemaTypePipe } from './custom-schema/custom-schema-type.pipe';
+import { CustomSchemaFieldFormComponent } from './custom-schema/custom-schema-field-form/custom-schema-field-form.component';
 
 export const SchemasComponents = [
   SchemasTableComponent,
@@ -11,5 +12,6 @@ export const SchemasComponents = [
   CustomSchemaComponent,
   CustomSchemaFieldsTableComponent,
   CustomSchemaFormComponent,
-  CustomSchemaTypePipe
+  CustomSchemaTypePipe,
+  CustomSchemaFieldFormComponent
 ];

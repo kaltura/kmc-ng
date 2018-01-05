@@ -1402,10 +1402,12 @@
         "addCustomSchema": "Add Custom Schema",
         "editCustomSchema": "Edit Custom Schema",
         "addCustomField": "Add Custom Field",
+        "editCustomField": "Edit Custom Field",
         "downloadSchema": "Download Schema",
         "schemas": "{{0}} Custom Schemas",
         "selected": "{{0}} Selected",
         "cancel": "Cancel",
+        "add": "Add",
         "fields": "{{0}} Custom Fields",
         "applyTo": {
           "entries": "Entries",
@@ -1459,7 +1461,20 @@
         "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas",
         "updateError": "An error occurred during custom data schemas update",
         "discardChanges": "Discard Changes",
-        "discardWarning": "You will lose any unsaved changes. Continue?"
+        "discardWarning": "You will lose any unsaved changes. Continue?",
+        "fieldForm": {
+          "type": "Field Type",
+          "allowMultiple": "Max No. of Values",
+          "label": "Field Label",
+          "shortDescription": "Short Description",
+          "description": "Description",
+          "searchable": "Searchable",
+          "includeTime": "Include Time",
+          "listValues": "List Values",
+          "listValuesPlaceholder": "Enter the values, one per line",
+          "single": "Single",
+          "unlimited": "Unlimited"
+        }
       }
     }
   },

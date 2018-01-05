@@ -1,0 +1,91 @@
+<div class="kCustomSchemaFieldFormWrapper">
+  <div class="kHeader">
+    <span class="kTitle">{{_title}}</span>
+  </div>
+
+  <form class="kCustomSchemaFieldForm" [formGroup]="_fieldForm" novalidate>
+    <div class="kRow">
+      <span class="kLabel">{{'applications.settings.metadata.fieldForm.type' | translate}}</span>
+      <div>
+        <p-dropdown class="kControl"
+                    [options]="_fieldTypes"
+                    [autoWidth]="false"
+                    [formControl]="_typeField"></p-dropdown>
+      </div>
+    </div>
+
+    <div class="kRow" *ngIf="_typeField.value === _metadataItemTypes.Date">
+      <span class="kLabel">{{'applications.settings.metadata.fieldForm.includeTime' | translate}}</span>
+      <div>
+        <!-- TODO [kmcng] update checkbox according to the design-->
+        <p-checkbox [formControl]="_includeTimeField"
+                    [binary]="true"></p-checkbox>
+      </div>
+    </div>
+
+    <div class="kRow" *ngIf="_typeField.value === _metadataItemTypes.List">
+      <span class="kLabel">{{'applications.settings.metadata.fieldForm.listValues' | translate}}</span>
+      <div>
+        <textarea class="kControl kTextArea" pInputText
+                  [formControl]="_listValuesFiled"
+                  [placeholder]="'applications.settings.metadata.fieldForm.listValuesPlaceholder' | translate"></textarea>
+      </div>
+    </div>
+
+    <div class="kRow allowMultiple">
+      <span class="kLabel">{{'applications.settings.metadata.fieldForm.allowMultiple' | translate}}</span>
+      <div class="kAllowMultiple">
+        <p-radioButton class="kRadioLeft"
+                       name="allowMultiple"
+                       [value]="false"
+                       [formControl]="_allowMultipleField"
+                       [label]="'applications.settings.metadata.fieldForm.single' | translate"></p-radioButton>
+        <p-radioButton class="kRadioRight"
+                       name="allowMultiple"
+                       [value]="true"
+                       [formControl]="_allowMultipleField"
+                       [label]="'applications.settings.metadata.fieldForm.unlimited' | translate"></p-radioButton>
+      </div>
+    </div>
+
+    <div class="kRow">
+      <span class="kLabel">{{'applications.settings.metadata.fieldForm.label' | translate}}</span>
+      <div>
+        <input class="kControl" pInputText [formControl]="_labelField">
+      </div>
+    </div>
+
+    <div class="kRow">
+      <span class="kLabel">{{'applications.settings.metadata.fieldForm.shortDescription' | translate}}</span>
+      <div>
+        <input class="kControl" pInputText [formControl]="_shortDescriptionField">
+      </div>
+    </div>
+
+    <div class="kRow">
+      <span class="kLabel">{{'applications.settings.metadata.fieldForm.description' | translate}}</span>
+      <div>
+        <textarea class="kControl kTextArea" pInputText [formControl]="_descriptionField"></textarea>
+      </div>
+    </div>
+
+    <div class="kRow">
+      <span class="kLabel">{{'applications.settings.metadata.fieldForm.searchable' | translate}}</span>
+      <div>
+        <!-- TODO [kmcng] update checkbox according to the design-->
+        <p-checkbox [formControl]="_searchableField"
+                    [binary]="true"></p-checkbox>
+      </div>
+    </div>
+  </form>
+
+  <div class="kFooter">
+    <button type="button"
+            class="kButtonDefault"
+            pButton [label]="'applications.settings.metadata.cancel' | translate"></button>
+
+    <button type="button"
+            class="kButtonBranded"
+            pButton [label]="'applications.settings.metadata.add' | translate"></button>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
@@ -6,6 +6,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kCustomSchema',
@@ -35,9 +36,12 @@ export class CustomSchemaComponent {
   @Output() onClosePopupWidget = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<SettingsMetadataProfile>();
 
+  @ViewChild('customSchemaField') _customSchemaFieldPopup: PopupWidgetComponent;
+
   public _title;
   public _schema: SettingsMetadataProfile;
-  public _selectedFields: any[] = [];
+  public _selectedFields: MetadataItem[] = [];
+  public _selectedField: MetadataItem;
   public _isDirty = false;
 
   constructor(private _appLocalization: AppLocalization,
@@ -85,18 +89,19 @@ export class CustomSchemaComponent {
   }
 
   public _actionSelected(event: { action: string, payload: { field: MetadataItem, direction?: 'up' | 'down' } }): void {
-    switch (event.action) {
+    const { action, payload } = event;
+    switch (action) {
       case 'edit':
-        // TBD
+        this._editField(payload.field);
         break;
 
       case 'move':
-        const { field, direction } = event.payload;
+        const { field, direction } = payload;
         this._moveField(field, direction);
         break;
 
       case 'remove':
-        this._removeField(event.payload.field);
+        this._removeField(payload.field);
         break;
 
       default:
@@ -146,6 +151,11 @@ export class CustomSchemaComponent {
     } else {
       this.onClosePopupWidget.emit();
     }
+  }
+
+  public _editField(field: MetadataItem): void {
+    this._selectedField = field;
+    this._customSchemaFieldPopup.open();
   }
 }
 
