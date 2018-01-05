@@ -198,7 +198,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
     return new MetadataProfileUpdateAction({
       id: schema.id,
       metadataProfile: updatedProfile,
-      xsdData: ''
+      xsdData: '' // TODO [kmcng] create xsd schema
     })
   }
 
@@ -215,7 +215,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
 
     return new MetadataProfileAddAction({
       metadataProfile: newProfile,
-      xsdData: ''
+      xsdData: ''  // TODO [kmcng] create xsd schema
     });
   }
 

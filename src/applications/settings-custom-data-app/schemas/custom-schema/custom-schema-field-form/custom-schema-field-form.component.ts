@@ -201,7 +201,6 @@ export class CustomSchemaFieldFormComponent implements OnDestroy {
       description: shortDescription,
       documentations: description,
       optionalValues: [],
-      // TODO [kmcng] check if this needed
       isRequired: false,
       children: [],
       id: this._fieldIdGenerator.generateUnique(this._fieldsIds)
