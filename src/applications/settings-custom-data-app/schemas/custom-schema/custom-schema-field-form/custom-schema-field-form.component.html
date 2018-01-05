@@ -82,10 +82,12 @@
   <div class="kFooter">
     <button type="button"
             class="kButtonDefault"
-            pButton [label]="'applications.settings.metadata.cancel' | translate"></button>
+            pButton [label]="'applications.settings.metadata.cancel' | translate"
+            (click)="_cancel()"></button>
 
     <button type="button"
             class="kButtonBranded"
-            pButton [label]="'applications.settings.metadata.add' | translate"></button>
+            pButton [label]="'applications.settings.metadata.add' | translate"
+            (click)="_save()"></button>
   </div>
 </div>

@@ -76,6 +76,7 @@
 
 <kPopupWidget #customSchemaField [popupWidth]="586" [popupHeight]="613" [closeBtn]="true" [modal]="true">
   <ng-template>
-    <kCustomSchemaFieldForm [field]="null"></kCustomSchemaFieldForm>
+    <kCustomSchemaFieldForm [field]="_selectedField"
+                            (onClose)="customSchemaField.close()"></kCustomSchemaFieldForm>
   </ng-template>
 </kPopupWidget>
