@@ -88,6 +88,13 @@
         color: $kGrayscale2;
         border-radius: 3px;
 
+        .kTypeIcon {
+          font-size: 20px;
+          vertical-align: text-top;
+          margin-right: 11px;
+          color: $kGrayscale3;
+        }
+
         &.kTextArea {
           height: 66px;
         }

@@ -10,7 +10,14 @@
         <p-dropdown class="kControl"
                     [options]="_fieldTypes"
                     [autoWidth]="false"
-                    [formControl]="_typeField"></p-dropdown>
+                    [formControl]="_typeField">
+          <ng-template let-type pTemplate="item">
+            <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+              <i class="kTypeIcon" [ngClass]="type.value | kCustomSchemaTypePipe:'icon'"></i>
+              {{ type.label }}
+            </div>
+          </ng-template>
+        </p-dropdown>
       </div>
     </div>
 
