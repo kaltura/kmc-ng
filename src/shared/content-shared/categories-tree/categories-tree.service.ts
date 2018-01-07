@@ -61,7 +61,7 @@ export class CategoriesTreeService {
 
           this._categoriesSearchService.getChildrenCategories(node.value).subscribe(result => {
               // add children to the node
-              let nodeChildren = this.createNode(result.items);
+              let nodeChildren = this.createNode(result.items, node);
 
               if (childrenResolver) {
                 nodeChildren = childrenResolver.call(this, nodeChildren);

@@ -39,7 +39,6 @@ export interface EntryCategoryItem
     id : number,
     fullIdPath : number[],
     name : string,
-    fullNamePath : string[],
     tooltip?: string
 }
 

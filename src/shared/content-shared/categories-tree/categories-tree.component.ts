@@ -39,8 +39,8 @@ export class CategoriesTreeComponent implements OnInit {
   set selectionMode(value: TreeSelectionMode) {
         this._selectionMode = value === 'single' ? value : 'multiple';
     }
-    
-  @Output() onCategoriesLoaded = new EventEmitter<{ categories: CategoriesTreeNode[] }>();
+
+  @Output() onCategoriesLoaded = new EventEmitter<{ totalCategories: number }>();
 
   @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
   @Output() onCategoryUnselected: EventEmitter<CategoriesListItem> = new EventEmitter();
@@ -85,7 +85,7 @@ export class CategoriesTreeComponent implements OnInit {
         const diff = FiltersUtils.getDiff(listSelectionsMap, listFilterMap);
 
         diff.added.forEach(item => {
-            const nodeOfFilter = this.findNodeByFullIdPath(item.fullIdPath);
+            const nodeOfFilter = this._findNodeByFullIdPath(item.fullIdPath);
 
             if (nodeOfFilter) {
                 // update selection of tree - handle situation when the node was added by auto-complete
@@ -134,7 +134,7 @@ export class CategoriesTreeComponent implements OnInit {
 
           this._syncTreeSelections();
 
-          this.onCategoriesLoaded.emit({ categories: this._categories });
+          this.onCategoriesLoaded.emit({ totalCategories: (this._categories || []).length });
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({
@@ -154,8 +154,8 @@ export class CategoriesTreeComponent implements OnInit {
 
     if (node && this.inLazyMode) {
       this._categoriesTreeService.loadNodeChildren(node, (children) => {
-          if (node instanceof CategoriesTreeNode) {
-            node.children.forEach(nodeChild => {
+          if (node instanceof CategoriesTreeNode && node.children) {
+              node.children.forEach(nodeChild => {
               const isNodeChildSelected = !!this._selectedCategories.find(categoryFilter => categoryFilter.value === nodeChild.value);
               this.updateNodeState(nodeChild, isNodeChildSelected);
 
@@ -188,19 +188,26 @@ export class CategoriesTreeComponent implements OnInit {
     e.stopPropagation();
   }
 
-  public findNodeByFullIdPath(fullIdPath: (number | string)[]): CategoriesTreeNode {
-    // find the item in the tree (if exists)
-    let result: CategoriesTreeNode = null;
-    for (let i = 0, length = fullIdPath.length; i < length; i++) {
-      const itemIdToSearchFor = fullIdPath[i];
-      result = ((result ? result.children : this._categories) || []).find(child => child.value === itemIdToSearchFor);
+  public expandNode(fullIdPath: number[]): void {
+      setTimeout(() => {
+          const result = this._findNodeByFullIdPath(fullIdPath);
+          if (result) {
+              result.expand();
+          }
+      });
+  }
 
-      if (!result) {
-        break;
+  private _findNodeByFullIdPath(fullIdPath: (number | string)[]): CategoriesTreeNode {
+      let result: CategoriesTreeNode = null;
+      for (let i = 0, length = fullIdPath.length; i < length; i++) {
+          const itemIdToSearchFor = fullIdPath[i];
+          result = ((result ? result.children : this._categories) || []).find(child => child.value === itemIdToSearchFor);
+
+          if (!result) {
+              break;
+          }
       }
-    }
-
-    return result;
+      return result;
   }
 }
 

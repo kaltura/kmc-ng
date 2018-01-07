@@ -83,13 +83,14 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
   private _updateTreeSelections(expandNodeId = null, initial = false): void {
     let treeSelectedItem = initial ? null : this._emptyTreeSelection;
-    const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedParentCategory ? this._selectedParentCategory.fullIdPath : []);
-    if (treeItem) {
-      treeSelectedItem = treeItem;
-      if (expandNodeId && this._selectedParentCategory && expandNodeId === this._selectedParentCategory.id) {
-        treeItem.expand();
-      }
-    }
+    // TODO sakal
+    //const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedParentCategory ? this._selectedParentCategory.fullIdPath : []);
+    // if (treeItem) {
+    //   treeSelectedItem = treeItem;
+    //   if (expandNodeId && this._selectedParentCategory && expandNodeId === this._selectedParentCategory.id) {
+    //     treeItem.expand();
+    //   }
+    // }
 
     this._treeSelection = treeSelectedItem;
   }

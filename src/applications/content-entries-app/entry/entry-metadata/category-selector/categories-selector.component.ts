@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 
-import { CategoriesTreeNode } from 'app-shared/content-shared/categories-tree/categories-tree-node';
+
 import { Subject } from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -20,6 +20,7 @@ import { EntryCategoryItem } from '../entry-metadata-widget.service';
 
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import {  TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';import {CategoriesSearchService} from "app-shared/content-shared/categories-search.service";
+import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 
 @Component({
@@ -27,212 +28,195 @@ import {  TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';impo
   templateUrl: './categories-selector.component.html',
   styleUrls: ['./categories-selector.component.scss']
 })
-export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
+export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
-  @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
-  @ViewChild('tags') _tags: TagsComponent;
-  @ViewChild('autoComplete') private _autoComplete: AutoComplete;
+    @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
+    @ViewChild('tags') _tags: TagsComponent;
+    @ViewChild('autoComplete') private _autoComplete: AutoComplete;
 
-  public _categoriesLoaded = false;
-  public _treeSelection: CategoriesTreeNode[] = [];
+    public _categoriesLoaded = false;
+    public _treeSelection: CategoriesListItem[] = [];
 
-  private _searchCategoriesSubscription: ISubscription;
-  public _categoriesProvider = new Subject<SuggestionsProviderData>();
+    private _searchCategoriesSubscription: ISubscription;
+    public _categoriesProvider = new Subject<SuggestionsProviderData>();
     @Input() buttonLabel = '';
-  @Input() value: EntryCategoryItem[] = [];
-  @Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
+    @Input() set value(value: EntryCategoryItem[])
+    {
+        this._selectedCategories = value  ? [...value] : [];
+        this._treeSelection = value ? [ ...value.map(item =>
+        {
+            return {
+                value: item.id,
+                label: item.name,
+                fullIdPath: item.fullIdPath,
+                tooltip: item.tooltip
+            };
+        })] : [];
 
-  public _selectedCategories: EntryCategoryItem[] = [];
+    }
 
-  private parentPopupStateChangeSubscription: ISubscription;
-  @Input() parentPopupWidget: PopupWidgetComponent;
+    @Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
 
-  private _ngAfterViewCheckedContext: { updateTreeSelections: boolean, expendTreeSelectionNodeId: number } = {
-    updateTreeSelections: false,
-    expendTreeSelectionNodeId: null
-  };
+    public _selectedCategories: EntryCategoryItem[] = [];
 
-  constructor(private _categoriesSearchService: CategoriesSearchService, private cdRef: ChangeDetectorRef) {
-  }
+    private parentPopupStateChangeSubscription: ISubscription;
+    @Input() parentPopupWidget: PopupWidgetComponent;
+
+    constructor(private _categoriesSearchService: CategoriesSearchService, private cdRef: ChangeDetectorRef) {
+    }
 
 
-	ngOnInit() {
-		this._selectedCategories = this.value && this.value instanceof Array ? [...this.value] : [];
-	}
+    ngOnInit() {
 
-	ngAfterViewInit() {
-		setTimeout(() => {
-          if (typeof this._tags !== 'undefined' && this._tags !== null) {
+    }
+
+    ngAfterViewInit() {
+        setTimeout(() => {
+            if (typeof this._tags !== 'undefined' && this._tags !== null) {
                 this._tags.checkShowMore();
-          }
-		}, 0);
-	}
-
-  ngOnDestroy() {
-
-    if (this._searchCategoriesSubscription) {
-      this._searchCategoriesSubscription.unsubscribe();
-      this._searchCategoriesSubscription = null;
+            }
+        }, 0);
     }
 
-    if (this.parentPopupStateChangeSubscription) {
-      this.parentPopupStateChangeSubscription.unsubscribe();
-      this.parentPopupStateChangeSubscription = null;
-    }
-  }
+    ngOnDestroy() {
 
-
-  public _apply(): void {
-
-    this.valueChange.emit(this._selectedCategories);
-
-    if (this.parentPopupWidget) {
-      this.parentPopupWidget.close({isDirty: true});
-    }
-  }
-
-
-  ngAfterViewChecked() {
-    if (this._ngAfterViewCheckedContext.updateTreeSelections) {
-      this.updateTreeSelections(this._ngAfterViewCheckedContext.expendTreeSelectionNodeId);
-
-      this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = null;
-      this._ngAfterViewCheckedContext.updateTreeSelections = false;
-      this.cdRef.detectChanges();
-    }
-  }
-
-  public _removeTag(tag) {
-    if (tag && tag.id) {
-      const tagIndex = this._selectedCategories.findIndex(item => item.id + '' === tag.id + '');
-
-      if (tagIndex > -1) {
-        this._selectedCategories.splice(tagIndex, 1);
-        this._ngAfterViewCheckedContext.updateTreeSelections = true;
-      }
-
-    }
-  }
-
-  public _removeAllTag() {
-    this._selectedCategories = [];
-    this._ngAfterViewCheckedContext.updateTreeSelections = true;
-  }
-
-  public _onTreeCategoriesLoad({categories}: { categories: CategoriesTreeNode[] }): void {
-    this._categoriesLoaded = categories && categories.length > 0;
-    this.updateTreeSelections();
-
-    if (this._categoriesLoaded) {
-      this._autoComplete.focusInput();
-    }
-  }
-
-
-
-
-  public _onAutoCompleteSearch(event): void {
-    this._categoriesProvider.next({suggestions: [], isLoading: true});
-
-    if (this._searchCategoriesSubscription) {
-      // abort previous request
-      this._searchCategoriesSubscription.unsubscribe();
-      this._searchCategoriesSubscription = null;
-    }
-
-    this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query).subscribe(data => {
-        const suggestions = [];
-        const entryCategories = this._selectedCategories || [];
-
-
-				(data || []).forEach(suggestedCategory => {
-					const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
-
-          const isSelectable = !entryCategories.find(category => {
-            return category.id === suggestedCategory.id;
-          });
-
-
-          suggestions.push({name: label, isSelectable: isSelectable, item: suggestedCategory});
-        });
-        this._categoriesProvider.next({suggestions: suggestions, isLoading: false});
-      },
-      (err) => {
-        this._categoriesProvider.next({suggestions: [], isLoading: false, errorMessage: <any>(err.message || err)});
-      });
-  }
-
-  private updateTreeSelections(expandNodeId = null): void {
-
-    const treeSelectedItems = [];
-
-    this._selectedCategories.forEach(category => {
-      const treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
-
-      if (treeItem) {
-        treeSelectedItems.push(treeItem);
-        if (expandNodeId && expandNodeId === category.id) {
-          treeItem.expand();
+        if (this._searchCategoriesSubscription) {
+            this._searchCategoriesSubscription.unsubscribe();
+            this._searchCategoriesSubscription = null;
         }
-      }
-    });
 
-    this._treeSelection = treeSelectedItems;
-  }
-
-  private _createCategoryTooltip(fullNamePath: string[]): string {
-    return fullNamePath ? fullNamePath.join(' > ') : null;
-  }
-
-  public _onAutoCompleteSelected(event: any) {
-
-    const selectedItem = this._autoComplete.getValue();
-
-    if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
-      const selectedCategoryIndex = this._selectedCategories.findIndex(item => item.id + '' === selectedItem.id + '');
-
-			if (selectedCategoryIndex === -1) {
-				this._selectedCategories.push({
-					id: selectedItem.id,
-					fullIdPath: selectedItem.fullIdPath,
-					fullNamePath : selectedItem.fullNamePath,
-					name: selectedItem.name,
-				    tooltip: selectedItem.tooltip});
-
-        this._ngAfterViewCheckedContext.updateTreeSelections = true;
-        this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
-      }
+        if (this.parentPopupStateChangeSubscription) {
+            this.parentPopupStateChangeSubscription.unsubscribe();
+            this.parentPopupStateChangeSubscription = null;
+        }
     }
 
-    // clear user text from component
-    this._autoComplete.clearValue();
 
-  }
+    public _apply(): void {
 
-  public _onTreeNodeUnselected({node}: { node: CategoriesTreeNode }) {
-    if (node instanceof CategoriesTreeNode) {
-      const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
+        this.valueChange.emit(this._selectedCategories);
 
-      if (autoCompleteItemIndex > -1) {
-        this._selectedCategories.splice(autoCompleteItemIndex, 1);
-      }
+        if (this.parentPopupWidget) {
+            this.parentPopupWidget.close({isDirty: true});
+        }
+    }
+
+
+    public _removeTag(tag) {
+        if (tag && tag.id) {
+            const tagIndex = this._selectedCategories.findIndex(item => item.id + '' === tag.id + '');
+            if (tagIndex > -1) {
+                this._selectedCategories.splice(tagIndex, 1);
+            }
+
+            this._treeSelection = this._treeSelection.filter(item => item.value + '' !== tag.id + '');
+        }
+    }
+
+    public _removeAllTag() {
+        this._selectedCategories = [];
+        this._treeSelection = [];
+    }
+
+    public _onTreeCategoriesLoad({totalCategories}): void {
+        this._categoriesLoaded = totalCategories > 0;
+
+        if (this._categoriesLoaded) {
+            this._autoComplete.focusInput();
+        }
+    }
+
+
+    public _onAutoCompleteSearch(event): void {
+        this._categoriesProvider.next({suggestions: [], isLoading: true});
+
+        if (this._searchCategoriesSubscription) {
+            // abort previous request
+            this._searchCategoriesSubscription.unsubscribe();
+            this._searchCategoriesSubscription = null;
+        }
+
+        this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query).subscribe(data => {
+                const suggestions = [];
+                const entryCategories = this._selectedCategories || [];
+
+
+                (data || []).forEach(suggestedCategory => {
+                    const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
+
+                    const isSelectable = !entryCategories.find(category => {
+                        return category.id === suggestedCategory.id;
+                    });
+
+
+                    suggestions.push({name: label, isSelectable: isSelectable, item: suggestedCategory});
+                });
+                this._categoriesProvider.next({suggestions: suggestions, isLoading: false});
+            },
+            (err) => {
+                this._categoriesProvider.next({
+                    suggestions: [],
+                    isLoading: false,
+                    errorMessage: <any>(err.message || err)
+                });
+            });
+    }
+
+
+    public _onAutoCompleteSelected(event: any) {
+
+        const selectedItem = this._autoComplete.getValue();
+
+        if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
+            const selectedCategoryIndex = this._selectedCategories.findIndex(item => item.id + '' === selectedItem.id + '');
+
+            if (selectedCategoryIndex === -1) {
+                this._selectedCategories.push({
+                    id: selectedItem.id,
+                    fullIdPath: selectedItem.fullIdPath,
+                    name: selectedItem.name,
+                    tooltip: selectedItem.tooltip
+                });
+            }
+
+            const treeSelectionIndex = this._treeSelection.findIndex(item => item.value + '' === selectedItem.id + '');
+
+            if (treeSelectionIndex === -1) {
+                this._treeSelection = [...this._treeSelection, {
+                    value: selectedItem.id,
+                    fullIdPath: selectedItem.fullIdPath,
+                    label: selectedItem.name,
+                    tooltip: selectedItem.tooltip
+                }];
+
+                this._categoriesTree.expandNode(selectedItem.fullIdPath);
+            }
+        }
+
+        // clear user text from component
+        this._autoComplete.clearValue();
 
     }
-  }
 
-  public _onTreeNodeSelected({node}: { node: any }) {
-    if (node instanceof CategoriesTreeNode) {
-      const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
+    public _onTreeNodeUnselected(node: CategoriesListItem) {
+        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
+
+        if (autoCompleteItemIndex > -1) {
+            this._selectedCategories.splice(autoCompleteItemIndex, 1);
+        }
+    }
+
+    public _onTreeNodeSelected(node: CategoriesListItem) {
+        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
 
 
-			if (autoCompleteItemIndex === -1) {
-				this._selectedCategories.push({
-					id: node.origin.id,
-					fullIdPath: node.origin.fullIdPath,
-					fullNamePath : node.origin.fullNamePath,
-					name: node.origin.name,
-				    tooltip: node.origin.tooltip});
-			}
-		}
-	}
+        if (autoCompleteItemIndex === -1) {
+            this._selectedCategories.push({
+                id: node.value,
+                fullIdPath: node.fullIdPath,
+                name: node.label,
+                tooltip: node.tooltip
+            });
+        }
+    }
 }
