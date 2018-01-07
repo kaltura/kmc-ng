@@ -217,8 +217,10 @@ export class AddUsersComponent implements OnInit, OnDestroy {
             _executeCopyUsers();
           }
         }, {
-          label: this._appLocalization.get('app.common.yes'),
-          action: () => {}
+          label: this._appLocalization.get('app.common.no'),
+          action: () => {
+            this._blockerMessage = null;
+          }
         }]
     });
   }

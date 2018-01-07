@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {CategoryWidgetKeys} from './../category-widget-keys';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategoryService} from '../category.service';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
@@ -11,6 +10,8 @@ import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoryGetAction} from 'kaltura-ngx-client/api/types/CategoryGetAction';
 import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
 import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
@@ -32,13 +33,13 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
     super._showLoader();
 
-    return this._getParentCategory(this.data.parentId)
+    return this._fetchAdditionalData(this.data.owner, this.data.parentId)
       .monitor('get category parent category')
       .cancelOnDestroy(this, this.widgetReset$)
-      .map((parentCategory) => {
+      .map(({owner, parentCategory}) => {
         this.membersTotalCount = this.data.membersCount;
-          this.parentCategory = parentCategory || null;
-        this._resetFormData();
+        this.parentCategory = parentCategory || null;
+        this._resetFormData(owner);
         this._monitorFormChanges();
         super._hideLoader();
         return {failed: false};
@@ -50,16 +51,36 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       });
   }
 
-  private _getParentCategory(parentCategoryId: number): Observable<KalturaCategory> {
-    if (parentCategoryId === null || typeof parentCategoryId === 'undefined' || parentCategoryId === 0) {
-      return Observable.of(null);
+
+  private _fetchAdditionalData(ownerId: string, parentCategoryId: number): Observable<{owner: KalturaUser, parentCategory?: KalturaCategory}> {
+    const multiRequest = new KalturaMultiRequest(
+      new UserGetAction({userId: ownerId})
+    );
+
+    if (parentCategoryId > 0) {
+      multiRequest.requests.push(new CategoryGetAction({
+        id: parentCategoryId
+      }));
     }
 
-    return <any>this._kalturaClient.request(
-      new CategoryGetAction({
-        id: parentCategoryId
-      })
-    );
+    return this._kalturaClient.multiRequest(multiRequest)
+      .map(
+        data => {
+          if (data.hasErrors()) {
+            throw new Error('error occurred in action \'_fetchAdditionalData\'');
+          }
+
+          let owner: KalturaUser = null;
+          let parentCategory = null;
+          data.forEach(response => {
+            if (response.result instanceof KalturaCategory) {
+              parentCategory = response.result;
+            } else if (response.result instanceof KalturaUser) {
+              owner = response.result;
+            }
+          });
+          return {owner, parentCategory};
+        })
   }
 
   private _buildForm(): void {
@@ -70,7 +91,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       moderateContent: null,
       inheritUsersPermissions: null, // no
       defaultPermissionLevel: {value: null, disabled: true},
-      owner: '',
+      owner: null,
       permittedUsers: []
     });
   }
@@ -98,7 +119,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     });
   }
 
-  private _resetFormData() {
+  private _resetFormData(owner: KalturaUser) {
     const categoryInheritUsersPermission = this.parentCategory && this.data.inheritanceType === KalturaInheritanceType.inherit;
     this.entitlementsForm.reset(
       {
@@ -112,7 +133,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
           disabled: categoryInheritUsersPermission
         },
         owner: {
-          value: this.data.owner || '',
+          value: owner,
           disabled: categoryInheritUsersPermission
         },
         permittedUsers: []
@@ -136,7 +157,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     newData.inheritanceType = metadataFormValue.inheritUsersPermissions ? KalturaInheritanceType.inherit : KalturaInheritanceType.manual;
     if (!metadataFormValue.inheritUsersPermissions) {
       newData.defaultPermissionLevel = metadataFormValue.defaultPermissionLevel;
-      newData.owner = metadataFormValue.owner;
+      newData.owner = metadataFormValue.owner.id;
     }
   }
 

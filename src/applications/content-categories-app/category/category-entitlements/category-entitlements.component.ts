@@ -62,8 +62,7 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
   // owner changed
   onOwnerChanged(owner: KalturaUser): void {
     // reset the form to have the new user in the textbox
-    this._widgetService.entitlementsForm.patchValue({ owner: (owner.email || owner.id)});
-
+    this._widgetService.entitlementsForm.patchValue({ owner });
     this._widgetService.setDirty();
   }
 

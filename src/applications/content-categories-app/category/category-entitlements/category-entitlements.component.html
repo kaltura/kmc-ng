@@ -170,7 +170,9 @@
         <div class="kControl">
           <!--If current category doesn't inherit users permissions then show the owner of the category-->
           <span *ngIf="!_widgetService.entitlementsForm.get('inheritUsersPermissions').value">
-            <span *ngIf="_widgetService.entitlementsForm.get('owner').value" class="kOwner" [kTooltip]="_widgetService.entitlementsForm.get('owner').value">{{_widgetService.entitlementsForm.get('owner').value}}</span>
+            <span *ngIf="_widgetService.entitlementsForm.get('owner').value" class="kOwner" [kTooltip]="_widgetService.entitlementsForm.get('owner').value | kCategoryOwnerName">
+              {{_widgetService.entitlementsForm.get('owner').value | kCategoryOwnerName}}
+            </span>
             <span *ngIf="!_widgetService.entitlementsForm.get('owner').value" class="kOwner" >{{'applications.content.categoryDetails.entitlements.owner.notSpecified' | translate}}</span>
           </span>
           <!--If current category inherits users permissions then show the owner of the parent category-->

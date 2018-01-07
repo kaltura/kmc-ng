@@ -1,149 +1,153 @@
 @import 'app-theme/_variables.scss';
-.kHeader {
-  height: 72px;
-  width: 100%;
-  padding: 18px;
-  box-sizing: border-box;
-  border-bottom: 1px solid $kGrayscale4;
-  .kButton {
-    float: right;
-    height: 34px;
-    width: 88px;
-  }
-  .kTitle {
-    float: left;
-    font-weight: 700;
-    padding: 8px;
-  }
-  .kInheritanceMessage {
-    display: block;
-    clear: both;
-    padding: 0 8px;
-    width: 850px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    color: $kDandger;
-  }
-}
-.kHeader.kInheritance{
-  height: 80px;
-}
 
-.kBulkActionsContainer {
-  padding: 9px;
-  padding-left: 24px;
-  font-size: 15px;
-  display: inline-flex;
-  align-items: center;
+.kContainer {
+  overflow: hidden;
 
-  .kAddItemBtn {
-    height: 34px;
-    width: 100px;
+  .kHeader {
+    height: 72px;
+    width: 100%;
+    padding: 18px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kButton {
+      float: right;
+      height: 34px;
+      width: 88px;
+    }
+    .kTitle {
+      float: left;
+      font-weight: 700;
+      padding: 8px;
+    }
+    .kInheritanceMessage {
+      display: block;
+      clear: both;
+      padding: 0 8px;
+      width: 850px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      color: $kDandger;
+    }
+  }
+  .kHeader.kInheritance {
+    height: 80px;
   }
 
-  .kItemsNum {
+  .kBulkActionsContainer {
+    padding: 9px;
     padding-left: 24px;
-    display: inline-block;
-    width: 387px;
-  }
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
 
-  .kItemsNum.kSelected {
-    width: auto;
-    padding-left: 0px;
-  }
-
-  .kBulkActions {
-    margin-left: 16px;
-    display: inline-block;
-
-    .kSelectedItems {
-      font-weight: bold;
+    .kAddItemBtn {
+      height: 34px;
+      width: 100px;
     }
 
-    .kBulkCancel {
-      padding: 0 24px;
-      color: #333333;
-    }
-  }
-
-  .kFiltersContainer {
-    display: flex;
-
-    .kSearchInput {
-      background: $kMagnifyingGlassBkg;
-      padding-left: 30px;
-      margin-right: 16px;
-      width: 258px;
+    .kItemsNum {
+      padding-left: 24px;
+      display: inline-block;
+      width: 387px;
     }
 
-    .kRefine {
-      border: 1px solid $kGrayscale4;
-      border-radius: 4px;
+    .kItemsNum.kSelected {
+      width: auto;
+      padding-left: 0px;
+    }
+
+    .kBulkActions {
+      margin-left: 16px;
+      display: inline-block;
+
+      .kSelectedItems {
+        font-weight: bold;
+      }
+
+      .kBulkCancel {
+        padding: 0 24px;
+        color: #333333;
+      }
+    }
+
+    .kFiltersContainer {
       display: flex;
-      background-color: #ffffff;
-      height: 32px;
-      align-items: center;
-      cursor: pointer;
-      color: $kGrayscale1;
-      width: 160px;
-      position: relative;
-      i {
-        margin-right: 12px;
-        margin-left: 8px;
-        font-size: 24px;
-        color: $kGrayscale4;
-        &.dropdown {
-          font-size: 10px;
-        }
+
+      .kSearchInput {
+        background: $kMagnifyingGlassBkg;
+        padding-left: 30px;
+        margin-right: 16px;
+        width: 258px;
       }
-      &:hover {
-        color: $kPrimary;
+
+      .kRefine {
+        border: 1px solid $kGrayscale4;
+        border-radius: 4px;
+        display: flex;
+        background-color: #ffffff;
+        height: 32px;
+        align-items: center;
+        cursor: pointer;
+        color: $kGrayscale1;
+        width: 160px;
+        position: relative;
         i {
+          margin-right: 12px;
+          margin-left: 8px;
+          font-size: 24px;
+          color: $kGrayscale4;
+          &.dropdown {
+            font-size: 10px;
+          }
+        }
+        &:hover {
           color: $kPrimary;
+          i {
+            color: $kPrimary;
+          }
+          i.kIcondropdown_arrow_bottom.dropdown {
+            color: $kGrayscale3;
+          }
         }
-        i.kIcondropdown_arrow_bottom.dropdown {
-          color: $kGrayscale3;
+        .dropdown {
+          position: absolute;
+          right: 4px;
+          top: 12px;
         }
       }
-      .dropdown {
-        position: absolute;
-        right: 4px;
-        top: 12px;
-      }
+    }
+
+    .kHidden {
+      visibility: hidden;
+      width: 0px;
+      height: 0px;
     }
   }
 
-  .kHidden {
-    visibility: hidden;
-    width: 0px;
-    height: 0px;
+  .kManageEndUserPermissionsTable {
+
   }
-}
 
+  .kTableFooter {
+    bottom: 0px;
+    height: 34px;
+    background-color: white;
+    border-top: 1px solid $kGrayscale6;
+    position: fixed;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    padding: 0 14px 28px;
+    display: block;
+    width: 996px;
+  }
 
-.kManageEndUserPermissionsTable{
-
-}
-
-.kTableFooter {
-  bottom: 0px;
-  height: 34px;
-  background-color: white;
-  border-top: 1px solid $kGrayscale6;
-  position: fixed;
-  box-sizing: border-box;
-  flex: 0 0 auto;
-  padding: 0 14px 28px;
-  display: block;
-  width: 996px;
-}
-
-.kPaginatorShowRowsLabel {
-  color: $kGrayscale1;
-  position: absolute;
-  top: 7px;
-  right: 80px;
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
+  }
 }
 
 :host /deep/ {
