@@ -180,7 +180,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
               type: filterName,
               value: item.value,
               label: item.label,
-              tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item.label})
+              tooltip: item.tooltip || this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item.label})
             });
           });
         }

@@ -405,6 +405,15 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                 });
             }
 
+            if (data.categories && data.categories.length) {
+                const categoriesValue = data.categories.map(item => item.value).join(',');
+                if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
+                    filter.categoryAncestorIdIn = categoriesValue;
+                } else {
+                    filter.categoriesIdsMatchOr = categoriesValue;
+                }
+            }
+
             // remove advanced search arg if it is empty
             if (advancedSearch.items && advancedSearch.items.length === 0) {
                 delete filter.advancedSearch;

@@ -88,25 +88,11 @@ export class CategoriesTreeService {
         const rootParentId = rootParent ? rootParent.value : null;
 
         if (items && items.length > 0) {
-
-            // sort items if required
-            // TODO sakal
-            // items.sort((a, b) => {
-            //     let sortField = args.nameProperty;
-            //     let aValue: any, bValue: any;
-            //     if (args.sortByProperty && a[args.sortByProperty] !== b[args.sortByProperty]) {
-            //         sortField = args.sortByProperty;
-            //     }
-            //     if (typeof a[sortField] === 'string') {
-            //         aValue = (a[sortField] || '').toLowerCase();
-            //         bValue = (b[sortField] || '').toLowerCase();
-            //     } else {
-            //         aValue = a[sortField] || 0;
-            //         bValue = b[sortField] || 0;
-            //     }
-            //     return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-            // });
-
+            items.sort((a, b) => {
+                const aValue = a ? a['partnerSortValue'] || 0 : 0;
+                const bValue = b ? b['partnerSortValue'] || 0 : 0;
+                return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+            });
 
             const map: { [key: string]: CategoriesTreeNode} = {};
             const childrenNodes: {parentId: any, node: CategoriesTreeNode }[] = [];
