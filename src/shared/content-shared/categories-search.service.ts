@@ -65,7 +65,7 @@ export class CategoriesSearchService {
     return this._getCategoriesWithCache({ requestToken: parentId + '', parentId });
   }
 
-  public getSuggestions(text: string): Observable<{ error: {}, items: CategoryData[] }> {
+  public getSuggestions(text: string): Observable<CategoryData[]> {
     if (text) {
       return Observable.create(observer => {
         const filter = new KalturaCategoryFilter({
@@ -83,7 +83,7 @@ export class CategoriesSearchService {
         ).subscribe(result => {
             const items = this.parseCategoriesItems(result);
 
-            observer.next({ items: items });
+            observer.next(items);
             observer.complete();
           },
           err => {
@@ -97,7 +97,7 @@ export class CategoriesSearchService {
         }
       });
     } else {
-      return Observable.of({ error: null, items: [] });
+      return Observable.of([]);
     }
   }
 
@@ -140,7 +140,7 @@ export class CategoriesSearchService {
 
     if (response && response.objects) {
       response.objects.forEach((category: KalturaCategory) => {
-        const fullIdPath = (category.fullIds ? category.fullIds.split('>') : []).map((item: any) => item * 1);
+        const fullIdPath = (category.fullIds ? category.fullIds.split('>') : []).map((item: any) => Number(item));
         result.push({
           id: category.id,
           name: category.name,

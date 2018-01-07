@@ -496,7 +496,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         }
         const category = new KalturaCategory({
             name: newCategoryData.name,
-            parentId: newCategoryData.categoryParentId || 0,
+            parentId: Number(newCategoryData.categoryParentId) || 0,
             privacy: KalturaPrivacyType.all,
             appearInList: KalturaAppearInListType.partnerOnly,
             contributionPolicy: KalturaContributionPolicyType.all,

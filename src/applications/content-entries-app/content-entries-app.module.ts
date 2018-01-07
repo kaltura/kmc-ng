@@ -33,7 +33,6 @@ import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc
 
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -77,7 +76,6 @@ import { ContentEntriesAppService } from './content-entries-app.service';
     ReactiveFormsModule,
     RouterModule.forChild(routing),
     SharedModule,
-    PrimeTreeModule,
     SpinnerModule,
     TagsModule,
     TieredMenuModule,

@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PrimeTreeModule} from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 
 import {
@@ -39,6 +38,7 @@ import { ModerationPipe } from './pipes/moderation.pipe';
 import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-selector/entries-selector.component';
 import { EntriesListTagsComponent } from 'app-shared/content-shared/entries-list/entries-list-tags.component';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
+import { CategoriesTreePropagationDirective } from 'app-shared/content-shared/categories-tree/categories-tree-propagation.directive';
 
 @NgModule({
   imports: [
@@ -49,7 +49,6 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
     FormsModule,
     ReactiveFormsModule,
     TreeModule,
-    PrimeTreeModule,
     KalturaCommonModule,
     KalturaPrimeNgUIModule,
     KalturaUIModule,
@@ -83,7 +82,8 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
     EntriesTableComponent,
     EntriesListComponent,
     EntriesListTagsComponent,
-    EntriesSelectorComponent
+    EntriesSelectorComponent,
+      CategoriesTreePropagationDirective
   ],
   exports: [
     EntryStatusPipe,

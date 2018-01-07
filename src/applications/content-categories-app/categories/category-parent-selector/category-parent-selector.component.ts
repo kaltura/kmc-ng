@@ -9,7 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
-import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
+import {CategoriesTreeNode} from 'app-shared/content-shared/categories-tree/categories-tree-node';
 import {Subject} from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import {
@@ -33,10 +33,10 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
 
 
-  private _emptyTreeSelection = new PrimeTreeNode(null, 'empty', 0, null);
-  public _selectionMode: TreeSelectionMode = 'single';
+  private _emptyTreeSelection = new CategoriesTreeNode(null, 'empty', 0, null);
+
   public _categoriesLoaded = false;
-  public _treeSelection: PrimeTreeNode = null;
+  public _treeSelection: CategoriesTreeNode = null;
   public _selectionTooltip = '';
 
   private _searchCategoriesSubscription: ISubscription;
@@ -83,18 +83,19 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
   private _updateTreeSelections(expandNodeId = null, initial = false): void {
     let treeSelectedItem = initial ? null : this._emptyTreeSelection;
-    const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedParentCategory ? this._selectedParentCategory.fullIdPath : []);
-    if (treeItem) {
-      treeSelectedItem = treeItem;
-      if (expandNodeId && this._selectedParentCategory && expandNodeId === this._selectedParentCategory.id) {
-        treeItem.expand();
-      }
-    }
+    // TODO sakal
+    //const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedParentCategory ? this._selectedParentCategory.fullIdPath : []);
+    // if (treeItem) {
+    //   treeSelectedItem = treeItem;
+    //   if (expandNodeId && this._selectedParentCategory && expandNodeId === this._selectedParentCategory.id) {
+    //     treeItem.expand();
+    //   }
+    // }
 
     this._treeSelection = treeSelectedItem;
   }
 
-  public _onTreeCategoriesLoad({ categories }: { categories: PrimeTreeNode[] }): void {
+  public _onTreeCategoriesLoad({ categories }: { categories: CategoriesTreeNode[] }): void {
     this._categoriesLoaded = categories && categories.length > 0;
     this._updateTreeSelections(null, true);
   }
@@ -103,21 +104,6 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
     return fullNamePath ? fullNamePath.join(' > ') : null;
   }
 
-  public _onTreeNodeChildrenLoaded({ node }) {
-    if (node instanceof PrimeTreeNode) {
-      let selectedNode: PrimeTreeNode = null;
-
-      node.children.forEach((attachedCategory) => {
-        if (this._selectedParentCategory && this._selectedParentCategory.id === attachedCategory.data) {
-          selectedNode = attachedCategory;
-        }
-      });
-
-      if (selectedNode) {
-        this._treeSelection = selectedNode;
-      }
-    }
-  }
 
   public _onAutoCompleteSearch(event): void {
     this._categoriesProvider.next({ suggestions: [], isLoading: true });
@@ -133,7 +119,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
         const entryCategory = this._selectedParentCategory;
 
 
-        (data.items || []).forEach(suggestedCategory => {
+        (data || []).forEach(suggestedCategory => {
           const label = suggestedCategory.fullNamePath.join(' > ') +
               (suggestedCategory.referenceId ?
               ` (${suggestedCategory.referenceId})` : '');
@@ -173,9 +159,9 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
   }
 
-  public _onTreeNodeSelected(treeNode: PrimeTreeNode) {
-    if (treeNode instanceof PrimeTreeNode) {
-      const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(treeNode.data);
+  public _onTreeNodeSelected(treeNode: CategoriesTreeNode) {
+    if (treeNode instanceof CategoriesTreeNode) {
+      const relevantCategory = this._selectedParentCategory && this._selectedParentCategory.id === treeNode.value;
 
       if (!relevantCategory) {
         this._selectedParentCategory = treeNode.origin;

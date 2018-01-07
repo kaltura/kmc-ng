@@ -8,7 +8,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 export interface TagItem
 { type: string, value: any, label: string, tooltip: string}
 
-const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions' ];
+const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'categories' ];
 
 @Component({
     selector: 'k-entries-list-tags',
@@ -180,7 +180,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
               type: filterName,
               value: item.value,
               label: item.label,
-              tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item.label})
+              tooltip: item.tooltip || this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item.label})
             });
           });
         }
@@ -227,7 +227,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                    });
 
                    diff.added.forEach(item => {
-                       const tooltip = item.payload && item.payload.tooltip ? item.payload.tooltip : item.label;
+                       const tooltip = item.tooltip  || item.label;
                        this._filterTags.push({
                            type: `customMetadata|${listId}`,
                            value: item.value,

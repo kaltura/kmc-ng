@@ -19,7 +19,7 @@ import {
   TreeModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { KalturaPrimeNgUIModule, PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -57,7 +57,6 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
     SharedModule,
     RouterModule.forChild(routing),
     TreeModule,
-    PrimeTreeModule,
     StickyModule,
       FiltersModule
   ],

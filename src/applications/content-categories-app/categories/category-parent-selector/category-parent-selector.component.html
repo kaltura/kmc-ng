@@ -18,10 +18,9 @@
                  (completeMethod)="_onAutoCompleteSearch($event)">
   </kAutoComplete>
   <k-categories-tree #categoriesTree
-                     [selectionMode]="_selectionMode"
+                     [selectionMode]="'single'"
                      [(selection)]="_treeSelection"
-                     (onCategoriesLoad)="_onTreeCategoriesLoad($event)"
-                     (onNodeSelect)="_onTreeNodeSelected($event)"
-                     (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
+                     (onCategoriesLoaded)="_categoriesLoaded = true"
+                     (onCategorySelected)="_onTreeNodeSelected($event)"></k-categories-tree>
 </div>
 <div class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">{{ _selectionTooltip }}</div>
