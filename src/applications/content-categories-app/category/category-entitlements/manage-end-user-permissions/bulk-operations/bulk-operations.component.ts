@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {User} from '../manage-end-user-permissions.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {MenuItem} from 'primeng/primeng';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 import {UserActionData} from '../manage-end-user-permissions.component';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
+import { EndUserPermissionsUser } from '../manage-end-user-permissions.service';
 
 @Component({
   selector: 'kManageEndUserPermissionsBulkOperationsContent',
@@ -13,7 +13,7 @@ import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdat
 })
 export class ManageEndUserPermissionsBulkOperationsComponent implements OnInit {
 
-  @Input() selectedItems: User[] = [];
+  @Input() selectedItems: EndUserPermissionsUser[] = [];
   @Input() itemsTotalCount = 0;
   @Input() categoryInheritUserPermissions = false;
 
