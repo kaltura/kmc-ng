@@ -32,11 +32,12 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
     super._showLoader();
 
-    return this._fetchEntitlementsData()
+    return this._getParentCategory(this.data.parentId)
       .monitor('get category parent category')
       .cancelOnDestroy(this, this.widgetReset$)
-      .map(() => {
+      .map((parentCategory) => {
         this.membersTotalCount = this.data.membersCount;
+          this.parentCategory = parentCategory || null;
         this._resetFormData();
         this._monitorFormChanges();
         super._hideLoader();
@@ -49,31 +50,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       });
   }
 
-  private _fetchEntitlementsData(): Observable<void> {
-    if (!this.data || typeof this.data.parentId === 'undefined') {
-      return Observable.throw('Could not load parent category data, unable to extract parent ID')
-    }
-
-    if (this.data.parentId === 0) { // if parent category doesn't exist
-      return Observable.of(undefined);
-    }
-
-    return this._getParentCategory(this.data.parentId)
-      .monitor('get category parent category')
-      .cancelOnDestroy(this, this.widgetReset$)
-      .map(parentCategory => {
-        this.parentCategory = parentCategory;
-        return undefined;
-      })
-      .catch(error => {
-        this.parentCategory = null;
-        throw error;
-      });
-  }
-
   private _getParentCategory(parentCategoryId: number): Observable<KalturaCategory> {
-    if (!parentCategoryId) {
-      return Observable.throw(new Error('parentCategoryId to get Parent category for is not defined'));
+    if (parentCategoryId === null || typeof parentCategoryId === 'undefined' || parentCategoryId === 0) {
+      return Observable.of(null);
     }
 
     return <any>this._kalturaClient.request(
@@ -179,33 +158,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     });
   }
 
-  public refresh() {
-    super._showLoader();
 
-    this._fetchEntitlementsData()
-      .cancelOnDestroy(this, this.widgetReset$)
-      .subscribe(() => {
-          super._hideLoader();
-        },
-        (error) => {
-          super._hideLoader();
-
-          this._showBlockerMessage(new AreaBlockerMessage(
-            {
-              message: this._appLocalization
-                .get('applications.content.categoryDetails.entitlements.inheritUsersPermissions.errors.categoryLoadError'),
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this.refresh();
-                  }
-                }
-              ]
-            }
-          ), true);
-        });
-  }
 
   ngOnDestroy() {
   }
