@@ -39,8 +39,7 @@ export class CategoriesTreeComponent implements OnInit {
   set selectionMode(value: TreeSelectionMode) {
         this._selectionMode = value === 'single' ? value : 'multiple';
     }
-
-    // TODO SAKAL remove
+    
   @Output() onCategoriesLoaded = new EventEmitter<{ categories: CategoriesTreeNode[] }>();
 
   @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
