@@ -175,8 +175,8 @@
           </span>
           <!--If current category inherits users permissions then show the owner of the parent category-->
           <span *ngIf="_widgetService.entitlementsForm.get('inheritUsersPermissions').value">
-            <span *ngIf="_widgetService.parentCategory.owner" class="kOwner" [kTooltip]="_widgetService.parentCategory.owner">{{_widgetService.parentCategory.owner}}</span>
-            <span *ngIf="!_widgetService.parentCategory.owner" class="kOwner" >{{'applications.content.categoryDetails.entitlements.owner.notSpecified' | translate}}</span>
+            <span *ngIf="_widgetService.parentCategory?.owner" class="kOwner" [kTooltip]="_widgetService.parentCategory.owner">{{_widgetService.parentCategory.owner}}</span>
+            <span *ngIf="!_widgetService.parentCategory?.owner" class="kOwner" >{{'applications.content.categoryDetails.entitlements.owner.notSpecified' | translate}}</span>
           </span>
           <a [class.disabled]="_widgetService.entitlementsForm.get('owner').disabled" class="kActionLink"
              (click)="changeOwnerPopup.open()">{{'applications.content.categoryDetails.entitlements.owner.changeOwner' | translate}}</a>

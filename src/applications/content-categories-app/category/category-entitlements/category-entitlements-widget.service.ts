@@ -36,6 +36,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       .monitor('get category parent category')
       .cancelOnDestroy(this, this.widgetReset$)
       .map(() => {
+        this.membersTotalCount = this.data.membersCount;
+        this._resetFormData();
+        this._monitorFormChanges();
         super._hideLoader();
         return {failed: false};
       })
@@ -47,8 +50,12 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   private _fetchEntitlementsData(): Observable<void> {
-    if (!this.data || !this.data.parentId) {
-      return Observable.throw('Could not load parent category, unable to extract parent ID')
+    if (!this.data || typeof this.data.parentId === 'undefined') {
+      return Observable.throw('Could not load parent category data, unable to extract parent ID')
+    }
+
+    if (this.data.parentId === 0) { // if parent category doesn't exist
+      return Observable.of(undefined);
     }
 
     return this._getParentCategory(this.data.parentId)
@@ -56,9 +63,6 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       .cancelOnDestroy(this, this.widgetReset$)
       .map(parentCategory => {
         this.parentCategory = parentCategory;
-        this.membersTotalCount = this.data.membersCount;
-        this._resetFormData();
-        this._monitorFormChanges();
         return undefined;
       })
       .catch(error => {
