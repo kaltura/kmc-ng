@@ -30,7 +30,7 @@
 
 <kPopupWidget #addNewEntitlement [popupWidth]="586" [popupHeight]="656" [modal]="true" [preventPageScroll]="true">
 <ng-template>
-<kNewEntitlement></kNewEntitlement>
+<kNewEntitlement (onApply)="_fetchEntitlements()" [parentPopupWidget]="addNewEntitlement"></kNewEntitlement>
 </ng-template>
 </kPopupWidget>
 

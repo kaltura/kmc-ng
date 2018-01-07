@@ -1,11 +1,10 @@
 @import 'app-theme/_variables.scss';
 
 .kContainer {
-  padding: 28px 30px;
   background-color: white;
-  height: $contentArea;
   margin-left: 30px;
-
+  box-sizing: border-box;
+  padding: 28px 15px 28px 30px;
   .kTitle {
     color: $kGrayscale1;
     padding-bottom: 32px;
@@ -67,4 +66,7 @@
     }
   }
 
+}
+:host {
+  height: 100%;
 }

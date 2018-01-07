@@ -8,7 +8,6 @@
     </span>
     </div>
     <div class="kContainer">
-
       <div class="kRow">
         <div class="kExplanation">
           {{('applications.settings.integrationSettings.entitlement.addEntitlement.explanation') | translate}}
@@ -40,7 +39,8 @@
     <div class="kFooter">
       <button type="button" class="kButtonBranded" pButton
               label="{{'applications.content.addNewCategory.apply' | translate}}"
-              (click)="_apply()" [disabled]="!addEntitlementForm.get('privacyContextLabel').valid"></button>
+              (click)="_apply()"
+              [disabled]="!addEntitlementForm.get('privacyContextLabel').valid || !this._selectedCategory"></button>
       <a class="kLink" (click)="_cancel()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
     </div>
   </div>

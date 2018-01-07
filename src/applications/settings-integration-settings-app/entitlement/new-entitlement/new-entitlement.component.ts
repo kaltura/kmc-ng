@@ -60,7 +60,7 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _addEntitlment(category: CategoryData, privacyContextLabel: string) {
+  private _addEntitlment(category: CategoryData, privacyContextLabel: string): void {
     this._entitlementService
       .addEntitlement({
         categoryId: category && category.id,

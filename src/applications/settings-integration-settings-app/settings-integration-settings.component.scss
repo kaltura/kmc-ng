@@ -4,10 +4,13 @@
   display: flex;
   background-color: $kGrayscale7;
   padding-top: 32px;
+  height: $minTableHeight;
+  box-sizing: border-box;
   .kColumn {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
+
     .kAccountInfoContainer {
       background-color: white;
       flex: 0 0 auto;
@@ -18,7 +21,6 @@
     .kNotifications {
       background-color: white;
       flex: 1 1 auto;
-      height: $contentArea;
       padding-left: 30px;
       padding-top: 28px;
 
