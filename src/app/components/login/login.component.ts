@@ -33,10 +33,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   onResize() {
     const areaBlocker = <any>document.querySelector('k-area-blocker');
     const content = this._el.nativeElement.querySelector('.kLoginCenter');
-    const windowHeight = window.innerHeight;
-    const height = windowHeight <= content.offsetHeight ? 'auto' : '100%';
+    if (content) {
+      const windowHeight = window.innerHeight;
+      const height = windowHeight <= content.offsetHeight ? 'auto' : '100%';
 
-    this._renderer.setStyle(areaBlocker, 'height', height);
+      this._renderer.setStyle(areaBlocker, 'height', height);
+    }
   }
 
   constructor(private _appAuthentication: AppAuthentication,

@@ -1,8 +1,8 @@
 <k-details-bar #detailsBar [data]="_currentEntry">
     <kDetailInfo [label]="'applications.content.entryDetails.preview.entryID' | translate" [valueField]="'id'"></kDetailInfo>
     <kDetailInfo [label]="'applications.content.entryDetails.preview.creator' | translate" [valueField]="'creatorId'" [tooltip]="_currentEntry?.creatorId"></kDetailInfo>
-    <kDetailInfo [label]="'applications.content.entryDetails.preview.creationDate' | translate" [value]="_currentEntry?.createdAt | date:'MM/dd/y hh:mm'"></kDetailInfo>
-    <kDetailInfo [label]="'applications.content.entryDetails.preview.updateDate' | translate" [value]="_currentEntry?.updatedAt | date:'MM/dd/y hh:mm'"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.creationDate' | translate" [value]="_currentEntry?.createdAt | date:'MM/dd/y HH:mm'"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.updateDate' | translate" [value]="_currentEntry?.updatedAt | date:'MM/dd/y HH:mm'"></kDetailInfo>
     <kDetailInfo *ngIf="_widgetService._landingPage" [label]="'applications.content.entryDetails.preview.landingPage' | translate" [link]="_widgetService._landingPage" [tooltip]="_widgetService._landingPage"></kDetailInfo>
     <kDetailInfo *ngIf="_isLive && _currentEntry?.recordedEntryId" [label]="'applications.content.entryDetails.preview.vodEntry' | translate" [value]="_currentEntry?.recordedEntryId" (itemClick)="navigateToEntry(currentEntry.recordedEntryId)"></kDetailInfo>
     <kDetailInfo *ngIf="_isRecordedLive && _currentEntry?.rootEntryId" [label]="'applications.content.entryDetails.preview.archiveOf' | translate" [value]="_currentEntry?.rootEntryId" (itemClick)="navigateToEntry(currentEntry.rootEntryId)"></kDetailInfo>
