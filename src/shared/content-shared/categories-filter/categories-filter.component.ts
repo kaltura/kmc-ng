@@ -110,19 +110,20 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         const selectedItem = this._autoComplete.getValue();
         if (selectedItem) {
             const data = selectedItem.data;
-            this.onCategorySelected.emit(this._convertToCategory(data));
+            this.onCategorySelected.emit(
+                {
+                    value: data.id,
+                    label: data.name,
+                    fullIdPath: data.fullIdPath,
+                    tooltip: (data.fullNamePath || []).join(' > ')
+                }
+            );
+
+            this._categoriesTree.expandNode(data.fullIdPath);
+
             // clear user text from component
             this._autoComplete.clearValue();
         }
-    }
-
-    private _convertToCategory(item: CategoryData): CategoriesListItem {
-
-        return {
-            value: item.id, label: item.name,
-            fullIdPath: item.fullIdPath,
-            tooltip: (item.fullNamePath || []).join(' > ')
-        };
     }
 
     _searchSuggestions(event): void {

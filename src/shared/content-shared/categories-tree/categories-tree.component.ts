@@ -18,7 +18,7 @@ export type TreeSelectionMode = 'single' | 'multiple';
 })
 export class CategoriesTreeComponent implements OnInit {
 
-  @Input() public disablePropagation = false;
+  @Input() public disablePropagation = true;
   @Input() autoLoad = true;
   @ViewChild(CategoriesTreePropagationDirective) public _categoriesTreePropagation: CategoriesTreePropagationDirective;
 
@@ -97,10 +97,7 @@ export class CategoriesTreeComponent implements OnInit {
         });
 
         diff.deleted.forEach(removedItem => {
-            this._treeSelection.splice(
-                this._treeSelection.indexOf(removedItem),
-                1
-            );
+            this._treeSelection = this._treeSelection.filter(item => item !== removedItem);
         });
 
     }
@@ -173,7 +170,7 @@ export class CategoriesTreeComponent implements OnInit {
 
               if (isNodeChildSelected)
               {
-                this._treeSelection.push(node);
+                this._treeSelection = [...this._treeSelection, nodeChild];
               }
 
             });

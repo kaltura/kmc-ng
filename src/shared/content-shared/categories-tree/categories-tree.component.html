@@ -4,8 +4,8 @@
     <p-tree #tree
             *ngIf="_selectionModes.multiple === _selectionMode"
             kCategoriesTreePropagation
-            [propagateDownMode]="disablePropagation ? 'preventNested' : 'none'"
-            [propagateUpMode]="disablePropagation ? 'visualOnly' : 'none'"
+            [propagateDownMode]="disablePropagation ? 'none' : 'preventNested'"
+            [propagateUpMode]="disablePropagation ? 'none' : 'visualOnly'"
             [value]="_categories"
             [(selection)]="_treeSelection"
             (onNodeSelect)="_onNodeSelect($event)"

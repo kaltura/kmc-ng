@@ -66,7 +66,7 @@ export class CategoriesTreePropagationDirective implements OnInit, DoCheck, OnCh
     }
 
     ngDoCheck(): void {
-        if (this._selectionDiffer) {
+        if (this._selectionDiffer && (this.propagateDownMode !== 'none' || this.propagateUpMode !== 'none')) {
             const changes = this._selectionDiffer.diff(this._treeComponent.selection);
             if (changes) {
                 this._applyChanges(changes);
