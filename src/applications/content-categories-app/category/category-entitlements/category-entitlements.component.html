@@ -150,9 +150,9 @@
           <p-inputSwitch class="kInputSwitch" formControlName="inheritUsersPermissions"
                          (onChange)="_toggleInherit($event)"></p-inputSwitch>
           <span>{{_widgetService.entitlementsForm.get('inheritUsersPermissions').value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
-          <div *ngIf="_widgetService.entitlementsForm.get('inheritUsersPermissions').value" class="kAdditional kExplanation">
+          <div *ngIf="_widgetService.entitlementsForm.get('inheritUsersPermissions').value" class="kExplanation">
             <span>{{'applications.content.categoryDetails.entitlements.inheritUsersPermissions.parentCategory' | translate}}</span>
-            <a (click)="_widgetService.openCategory(_widgetService.parentCategory)">{{_widgetService.parentCategory?.name}}</a>
+            <a class="kParentLink" (click)="_widgetService.openCategory(_widgetService.parentCategory)">{{_widgetService.parentCategory?.name}}</a>
           </div>
         </div>
       </div>
