@@ -14,6 +14,7 @@ import {ManageEndUserPermissionsService, User} from '../manage-end-user-permissi
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
+import {UserActionData} from '../manage-end-user-permissions.component';
 
 @Component({
   selector: 'kManageEndUserPermissionsTable',
@@ -41,12 +42,12 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
 
   @Input() filter: any = {};
   @Input() selectedUsers: User[] = [];
-  @Input() categoryInheritUserPermissions: boolean = false;
+  @Input() categoryInheritUserPermissions = false;
 
   @Output()
   sortChanged = new EventEmitter<any>();
   @Output()
-  onActionSelected = new EventEmitter<{action: string, users: User, payload: { level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType}}>();
+  onActionSelected = new EventEmitter<UserActionData>();
   @Output()
   selectedUsersChange = new EventEmitter<any>();
 
@@ -138,8 +139,9 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
     }
   }
 
-  _onActionSelected(action: string, user: User, payload: { level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType}) {
-    this.onActionSelected.emit({action, users: user, payload});
+  _onActionSelected(userActionData: UserActionData) {
+    this.onActionSelected.emit(userActionData);
+
   }
 
 

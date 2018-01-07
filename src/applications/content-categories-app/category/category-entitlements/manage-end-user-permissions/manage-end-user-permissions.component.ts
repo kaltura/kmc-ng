@@ -11,6 +11,14 @@ import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/K
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {Observable} from 'rxjs/Observable';
 
+export interface UserActionData {
+  action: 'activate' | 'deactivate' | 'permissionLevel'| 'updateMethod' | 'delete',
+  users: User | User[],
+  payload: {
+    level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType
+  }
+}
+
 @Component({
   selector: 'kManageEndUsers',
   templateUrl: './manage-end-user-permissions.component.html',
@@ -125,7 +133,8 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  _onActionSelected({action, users, actionPayload}: { action: string, users: User | User[], actionPayload: { level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType} }) {
+  _onActionSelected(userActionData: UserActionData) {
+
     const showInvalidActionError = () => {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization
@@ -140,26 +149,30 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
       });
     };
 
-    let usersIds = [];
-    if (Array.isArray(users) && users.length > 0) {
-      usersIds = users.map(user => (user.id));
-    } else {
-      usersIds = [(<User>users).id];
+
+    if (!userActionData || !userActionData.users || !userActionData.action ) {
+      showInvalidActionError();
+      return undefined;
     }
-    switch (action) {
+
+    const users = userActionData.users;
+    const payload = userActionData.payload;
+    const usersIds = Array.isArray(users) && users.length > 0 ? users.map(user => (user.id)) : [(<User>users).id];
+
+    switch (userActionData.action) {
       case 'permissionLevel':
-        if (!actionPayload || typeof actionPayload.level === 'undefined') {
+        if (!payload || typeof payload.level === 'undefined') {
           showInvalidActionError();
           return undefined;
         }
-        this._executeAction(this._manageEndUsersPermissionsService.setPermissionLevel(usersIds, actionPayload.level));
+        this._executeAction(this._manageEndUsersPermissionsService.setPermissionLevel(usersIds, payload.level));
         break;
       case 'updateMethod':
-        if (!actionPayload || typeof actionPayload.method === 'undefined') {
+        if (!payload || typeof payload.method === 'undefined') {
           showInvalidActionError();
           return undefined;
         }
-        this._executeAction(this._manageEndUsersPermissionsService.setUpdateMethod(usersIds, actionPayload.method));
+        this._executeAction(this._manageEndUsersPermissionsService.setUpdateMethod(usersIds, payload.method));
         break;
       case 'delete':
         this._executeAction(this._manageEndUsersPermissionsService.deleteUsers(usersIds));
