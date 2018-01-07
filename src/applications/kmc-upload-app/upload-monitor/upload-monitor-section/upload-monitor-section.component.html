@@ -2,16 +2,7 @@
   <div class="kUploadMonitorSectionHeading">
     <span class="kUploadMonitorSectionHeadingTitle">{{ title }}</span>
 
-    <!--TODO [kmcng] cleanup after implement all sections -->
-    <a *ngIf="!detailsLink"
-       [routerLink]="detailsLink"
-       class="kUploadMonitorSectionHeadingDetails"
-       (click)="uploadMonitorPopup.close()">
-      {{ 'applications.upload.uploadMonitor.viewDetails' | translate }}
-    </a>
-
-    <a *ngIf="detailsLink"
-       [routerLink]="detailsLink"
+    <a [routerLink]="detailsLink"
        class="kUploadMonitorSectionHeadingDetails"
        (click)="uploadMonitorPopup.close()">
       {{ 'applications.upload.uploadMonitor.viewDetails' | translate }}
@@ -28,7 +19,7 @@
           {{ _uploadingTitle | translate:{'0': uploading} }}
         </span>
         <span class="kUploadMonitorStatus" *ngIf="queued !== 0">
-          <i class="kIconcheck_small kUploadMonitorStatusIcon queued"></i>
+          <i class="kIconupload2 kUploadMonitorStatusIcon queued"></i>
           {{ 'applications.upload.uploadMonitor.queued' | translate:{'0': queued} }}
         </span>
         <span class="kUploadMonitorStatus" *ngIf="completed !== 0">
@@ -58,6 +49,7 @@
         {{ 'applications.upload.uploadMonitor.errors.prepare' | translate }}
         <a (click)="requestToRecover.emit()">{{ 'app.common.retry' | translate }}</a>
       </span>
+
     </ng-container>
 
   </div>

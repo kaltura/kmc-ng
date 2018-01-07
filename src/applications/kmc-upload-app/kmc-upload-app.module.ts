@@ -31,6 +31,7 @@ import {PrepareEntryComponent} from './prepare-entry/prepare-entry.component';
 import { NewUploadMonitorService } from './upload-monitor/new-upload-monitor.service';
 import { BulkUploadMonitorService } from './upload-monitor/bulk-upload-monitor.service';
 import { DropFoldersMonitorService } from './upload-monitor/drop-folders-monitor.service';
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @NgModule({
   imports: [
@@ -78,6 +79,10 @@ export class KmcUploadAppModule {
     return {
       ngModule: KmcUploadAppModule,
       providers: <any[]>[
+        KalturaLogger,
+        {
+          provide: KalturaLoggerName, useValue: 'upload-monitor'
+        },
         BulkUploadMonitorService,
         NewUploadMonitorService,
         DropFoldersMonitorService

@@ -45,7 +45,9 @@
         }
 
         &.queued {
-          background-color: $kOrange;
+          color: $kOrange;
+          font-size: 17px;
+          margin-bottom: 1px;
         }
 
         &.completed {
@@ -55,7 +57,7 @@
         &.error {
           color: $kDandger;
           font-size: 17px;
-          vertical-align: baseline;
+          margin-bottom: 1px;
         }
       }
     }

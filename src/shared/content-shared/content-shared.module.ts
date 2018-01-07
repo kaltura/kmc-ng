@@ -36,11 +36,11 @@ import {EntriesTableComponent} from 'app-shared/content-shared/entries-table/ent
 import {EntriesListComponent} from 'app-shared/content-shared/entries-list/entries-list.component';
 import {TagsModule} from '@kaltura-ng/kaltura-ui/tags';
 import {PrimeTableSortTransformPipe} from 'app-shared/content-shared/pipes/prime-table-sort-transform.pipe';
-
+import { ModerationPipe } from './pipes/moderation.pipe';
 import {EntriesSelectorComponent} from 'app-shared/content-shared/entries-selector/entries-selector.component';
 import {EntriesListTagsComponent} from 'app-shared/content-shared/entries-list/entries-list-tags.component';
 import {FiltersModule} from '@kaltura-ng/mc-shared/filters';
-import {CategorySelectorComponent} from "app-shared/content-shared/category-selector/category-selector.component";
+import {CategorySelectorComponent} from 'app-shared/content-shared/category-selector/category-selector.component';
 
 @NgModule({
   imports: [
@@ -78,6 +78,7 @@ import {CategorySelectorComponent} from "app-shared/content-shared/category-sele
     MaxEntriesPipe,
     PrimeTableSortDirectionPipe,
     PrimeTableSortTransformPipe,
+    ModerationPipe,
     EntriesRefineFiltersComponent,
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
@@ -90,6 +91,7 @@ import {CategorySelectorComponent} from "app-shared/content-shared/category-sele
   exports: [
     EntryStatusPipe,
     EntryTypePipe,
+    ModerationPipe,
     MaxEntriesPipe,
     CategoriesTreeComponent,
     SchedulingComponent,

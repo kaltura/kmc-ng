@@ -127,7 +127,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
               diff.added.forEach(addedItem => {
                   const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-                  const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
+                  const matchingItem = listItems.find(item => item.value === addedItem.value);
                   if (!matchingItem) {
                       console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
                   } else {

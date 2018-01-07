@@ -23,9 +23,12 @@ export class PrepareEntryService {
 
     const entry: KalturaMediaEntry = new KalturaMediaEntry({
       name: this._appLocalization.get('applications.upload.uploadMenu.createDraft.draftEntry'),
-      mediaType,
-      conversionProfileId: conversionProfileId || -1
+      mediaType
     });
+
+    if (conversionProfileId) {
+      entry.conversionProfileId = conversionProfileId;
+    }
 
     return this._kalturaServerClient
       .request(new MediaAddAction({entry}))

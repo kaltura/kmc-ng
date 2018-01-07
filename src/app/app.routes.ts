@@ -45,7 +45,11 @@ const routes: Routes = <Routes>[
           {
             path: 'bulk',
             loadChildren: '../applications/content-bulk-log-app/content-bulk-log-app.module#ContentBulkLogAppModule'
-          }
+          },
+            {
+                path: 'moderation',
+                loadChildren: '../applications/content-moderation-app/content-moderation-app.module#ContentModerationAppModule'
+            }
         ]},
         {
           path: 'settings', children: [
