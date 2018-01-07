@@ -13,11 +13,8 @@ import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tr
 import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories-search.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
+import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
-export enum CategoriesSeclectionModes {
-    Self = 0,
-    SelfAndChildren = 1
-}
 
 @Component({
     selector: 'kCategoriesFilter',
@@ -26,8 +23,8 @@ export enum CategoriesSeclectionModes {
 })
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() public parentPopupWidget: PopupWidgetComponent;
-    @Input() public selectionMode: CategoriesSeclectionModes = CategoriesSeclectionModes.Self;
-    @Output() public selectionModeChange = new EventEmitter<CategoriesSeclectionModes>();
+    @Input() public selectionMode: CategoriesModes;
+    @Output() public selectionModeChange = new EventEmitter<CategoriesModes>();
     @Input() public selection: CategoriesListItem[];
     @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
     @Output() onCategoriesUnselected: EventEmitter<CategoriesListItem[]> = new EventEmitter();
@@ -42,7 +39,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     public _suggestionsProvider = new Subject<SuggestionsProviderData>();
     public _categoriesLoaded = false;
 
-    public _CategoriesSeclectionModes = CategoriesSeclectionModes;
+    public _CategoriesModes = CategoriesModes;
 
     constructor(private _categoriesSearch: CategoriesSearchService,
                 private _filtersRef: ElementRef) {
@@ -145,7 +142,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
                   const isSelectable = !this.selection.find(categoryFilter => {
 
-                    if (this.selectionMode === CategoriesSeclectionModes.SelfAndChildren) {
+                    if (this.selectionMode === CategoriesModes.SelfAndChildren) {
                       let alreadySelected = false;
                       for (let length = item.fullIdPath.length, i = length - 1; i >= 0 && !alreadySelected; i--) {
                         alreadySelected = item.fullIdPath[i] === categoryFilter.value;

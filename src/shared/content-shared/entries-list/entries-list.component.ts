@@ -2,14 +2,14 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import {
-    CategoriesModes,
     EntriesFilters, EntriesStore,
     SortDirection
 } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { CategoriesSeclectionModes } from 'app-shared/content-shared/categories-filter/categories-filter.component';
+import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
+
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 @Component({
@@ -35,11 +35,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         createdAfter: null,
         createdBefore: null,
         pageIndex: 0,
-        pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
-        sortBy: 'createdAt',
-        sortDirection: SortDirection.Desc,
+        pageSize: null,
+        sortBy: null,
+        sortDirection: null,
         categories: [],
-        categoriesMode: CategoriesSeclectionModes.Self
+        categoriesMode: null
     };
 
     constructor(private _entriesStore: EntriesStore,
@@ -49,21 +49,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this._prepare();
     }
-
-
-    // TODO sakal
-    // private _prepare(): void {
-    //
-    //     // TODO sakal
-    //     //const mode = this._selectionMode === CategoriesSeclectionModes.SelfAndChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
-    //
-    //     // update components when the active filter list is updated
-    //     const savedAutoSelectChildren: CategoriesSeclectionModes = this._browserService
-    //         .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
-    //     this.selectionMode = typeof savedAutoSelectChildren === 'number'
-    //         ? savedAutoSelectChildren
-    //         : CategoriesSeclectionModes.SelfAndChildren;
-    // }
 
     private _prepare(): void{
         this._restoreFiltersState();
@@ -106,7 +91,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         }
 
         if (typeof updates.categoriesMode !== 'undefined') {
-            this._query.categoriesMode = updates.categoriesMode === CategoriesModes.Self ? CategoriesSeclectionModes.Self: CategoriesSeclectionModes.SelfAndChildren;
+            this._query.categoriesMode = updates.categoriesMode === CategoriesModes.Self ? CategoriesModes.Self : CategoriesModes.SelfAndChildren;
         }
 
         if (typeof updates.categories !== 'undefined') {
@@ -114,21 +99,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         }
     }
 
-
-    // TODO sakal
-    // public _onTreeNodeUnselected(node: CategoriesTreeNode) {
-    //     const newFilterItem = this._entriesStore.cloneFilter('categories', []);
-    //     const itemIndex = newFilterItem.findIndex(item => item.value === node.data);
-    //     if (itemIndex > -1) {
-    //         newFilterItem.splice(itemIndex, 1);
-    //         this._entriesStore.filter({'categories': newFilterItem});
-    //     }
-    // }
-
     onCategoriesModeChanged(categoriesMode)
     {
-        this._query.categoriesMode = categoriesMode;
-        this._browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', categoriesMode);
+        this._entriesStore.filter({
+            categoriesMode
+        })
     }
 
     onCategoriesUnselected(categoriesToRemove: CategoriesListItem[]) {
@@ -149,7 +124,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     onCategorySelected(category: CategoriesListItem){
         const categories = this._entriesStore.cloneFilter('categories', []);
         if (!categories.find(item => item.value === category.value)) {
-            if (this._query.categoriesMode === CategoriesSeclectionModes.SelfAndChildren) {
+            if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
                 // when this component is running with SelfAndChildren mode, we need to manually unselect
                 // the first nested child (if any) that is currently selected
                 const childToRemove = categories.find(item => {

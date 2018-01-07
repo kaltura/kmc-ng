@@ -44,15 +44,14 @@ import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNull
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
 import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
 import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-shared/categories/categories-list-type';
+import {
+    CategoriesModeAdapter, CategoriesModes,
+    CategoriesModeType
+} from 'app-shared/content-shared/categories/categories-mode-type';
 
 export enum SortDirection {
     Desc,
     Asc
-}
-
-export enum CategoriesModes {
-    Self,
-    SelfAndChildren
 }
 
 export interface EntriesFilters {
@@ -74,7 +73,7 @@ export interface EntriesFilters {
     flavors: ListType,
     distributions: ListType,
     categories: CategoriesListType,
-    categoriesMode: CategoriesModes,
+    categoriesMode: CategoriesModeType,
     customMetadata: GroupedListType
 }
 
@@ -117,6 +116,11 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         if (typeof updates.pageIndex === 'undefined') {
             // reset page index to first page everytime filtering the list by any filter that is not page index
             updates.pageIndex = 0;
+        }
+
+        if (typeof updates.categoriesMode !== 'undefined')
+        {
+            this.browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', updates.categoriesMode);
         }
 
         return updates;
@@ -488,6 +492,13 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     }
 
     protected _createDefaultFiltersValue(): EntriesFilters {
+
+        const savedAutoSelectChildren: CategoriesModes = this.browserService
+            .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
+        const categoriesMode = typeof savedAutoSelectChildren === 'number'
+            ? savedAutoSelectChildren
+            : CategoriesModes.SelfAndChildren;
+
         return {
             freetext: '',
             pageSize: 50,
@@ -507,7 +518,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             flavors: [],
             distributions: [],
             categories: [],
-            categoriesMode: CategoriesModes.SelfAndChildren,
+            categoriesMode,
             customMetadata: {}
         };
     }
@@ -532,7 +543,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             flavors: new ListAdapter(),
             distributions: new ListAdapter(),
             categories: new CategoriesListAdapter(),
-            categoriesMode: new EnumTypeAdapter<CategoriesModes>(),
+            categoriesMode: new CategoriesModeAdapter(),
             customMetadata: new GroupedListAdapter()
         };
     }
