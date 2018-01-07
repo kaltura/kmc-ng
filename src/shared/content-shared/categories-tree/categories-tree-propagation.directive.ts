@@ -30,6 +30,29 @@ export class CategoriesTreePropagationDirective implements OnInit, DoCheck, OnCh
     }
 
 
+    public resetNodesState(): void{
+        if (this._treeComponent.value){
+            this._treeComponent.value.forEach(item =>
+            {
+                if (item instanceof CategoriesTreeNode) {
+                    this._resetNodeState(item);
+                }
+            });
+        }
+    }
+
+    private _resetNodeState(item: CategoriesTreeNode): void{
+        if (item instanceof CategoriesTreeNode) {
+            item.selectable = true;
+            item.partialSelected = false;
+
+            if (item.children) {
+                item.children.forEach(child => {
+                    this._resetNodeState(child);
+                });
+            }
+        }
+    }
 
     ngOnInit()
     {
@@ -396,7 +419,7 @@ export class CategoriesTreePropagationDirective implements OnInit, DoCheck, OnCh
 
             if(select && selectedCount == node.children.length) {
                 if (!this._treeComponent.isSelected(node)) {
-                    node.partialSelected = false;
+                    node.partialSelected = true;
                 }
             }
             else {

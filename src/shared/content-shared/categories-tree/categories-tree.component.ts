@@ -20,6 +20,8 @@ export class CategoriesTreeComponent implements OnInit {
 
   @Input() public disablePropagation = false;
   @Input() autoLoad = true;
+  @ViewChild(CategoriesTreePropagationDirective) public _categoriesTreePropagation: CategoriesTreePropagationDirective;
+
 
     @Input() public set selection(value: CategoriesListItem[])
     {
@@ -171,6 +173,17 @@ export class CategoriesTreeComponent implements OnInit {
     }
   }
 
+    /**
+     * Workaround a complex scenario where changing selection mode leaves
+     * some nodes in state relevant only to 'SelfAndChildren'
+     */
+  public resetNodesState(): void{
+      if (this._categoriesTreePropagation)
+      {
+          this._categoriesTreePropagation.resetNodesState();
+      }
+  }
+
   public _blockTreeSelection(e: MouseEvent): void {
     e.preventDefault();
     e.stopPropagation();
@@ -189,18 +202,6 @@ export class CategoriesTreeComponent implements OnInit {
     }
 
     return result;
-  }
-
-  public clearSelection(): void {
-    let resetValue = [];
-
-    if (this._selectionMode === 'single') {
-      resetValue = null;
-    }else
-    {
-        // TODO sakal
-        //this._treeSelection = [];
-    }
   }
 }
 

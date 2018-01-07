@@ -70,13 +70,13 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         this._clearAll();
         this.selectionMode = value;
         this.selectionModeChange.emit(this.selectionMode);
+        this._categoriesTree.resetNodesState();
     }
 
     public _clearAll() {
         if (this.selection && this.selection.length)
         {
             this.onCategoriesUnselected.emit(this.selection);
-            this.selection = [];
         }
     }
 
