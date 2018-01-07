@@ -1,6 +1,9 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
-import {ManageEndUserPermissionsService, User, UsersFilters} from './manage-end-user-permissions.service';
+import {
+    EndUserPermissionsUser, ManageEndUserPermissionsService,
+    UsersFilters
+} from './manage-end-user-permissions.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
@@ -12,7 +15,7 @@ import {Observable} from 'rxjs/Observable';
 
 export interface UserActionData {
   action: 'activate' | 'deactivate' | 'permissionLevel'| 'updateMethod' | 'delete',
-  users: User | User[],
+  users: EndUserPermissionsUser | EndUserPermissionsUser[],
   payload: {
     level?: KalturaCategoryUserPermissionLevel, method?: KalturaUpdateMethodType
   }
@@ -28,7 +31,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedUsers: User[] = [];
+  public _selectedUsers: EndUserPermissionsUser[] = [];
   public _usersTotalCount = 0;
   @Input() category: KalturaCategory = null;
   @Input() parentCategory: KalturaCategory = null;
@@ -72,7 +75,11 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
 
-    this._manageEndUsersPermissionsService.categoryId = this.category.id;
+    this._manageEndUsersPermissionsService.filter(
+        {
+          categoryId: this.category.id,
+          inheritUsers: this.categoryInheritUserPermissions
+        });
 
     this._manageEndUsersPermissionsService.users.data$
       .cancelOnDestroy(this)
@@ -160,7 +167,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
     const users = userActionData.users;
     const payload = userActionData.payload;
-    const usersIds = Array.isArray(users) && users.length > 0 ? users.map(user => (user.id)) : [(<User>users).id];
+    const usersIds = Array.isArray(users) && users.length > 0 ? users.map(user => (user.id)) : [(<EndUserPermissionsUser>users).id];
 
     switch (userActionData.action) {
       case 'permissionLevel':
@@ -168,14 +175,14 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
           showInvalidActionError();
           return undefined;
         }
-        this._executeAction(this._manageEndUsersPermissionsService.setPermissionLevel(usersIds, payload.level));
+        this._executeAction(this._manageEndUsersPermissionsService.setPermissionLevel(this.category.id, usersIds, payload.level));
         break;
       case 'updateMethod':
         if (!payload || typeof payload.method === 'undefined') {
           showInvalidActionError();
           return undefined;
         }
-        this._executeAction(this._manageEndUsersPermissionsService.setUpdateMethod(usersIds, payload.method));
+        this._executeAction(this._manageEndUsersPermissionsService.setUpdateMethod(this.category.id, usersIds, payload.method));
         break;
       case 'delete':
         if (usersIds.find(id => id === this.category.owner)) {
@@ -191,14 +198,14 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
             ]
           });
         } else {
-          this._executeAction(this._manageEndUsersPermissionsService.deleteUsers(usersIds));
+          this._executeAction(this._manageEndUsersPermissionsService.deleteUsers(this.category.id, usersIds));
         }
         break;
       case 'activate':
-        this._executeAction(this._manageEndUsersPermissionsService.activateUsers(usersIds));
+        this._executeAction(this._manageEndUsersPermissionsService.activateUsers(this.category.id, usersIds));
         break;
       case 'deactivate':
-        this._executeAction(this._manageEndUsersPermissionsService.deactivateUsers(usersIds));
+        this._executeAction(this._manageEndUsersPermissionsService.deactivateUsers(this.category.id, usersIds));
         break;
       default:
         showInvalidActionError();

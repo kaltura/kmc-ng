@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {ManageEndUserPermissionsService, User} from '../manage-end-user-permissions.service';
+import { EndUserPermissionsUser, ManageEndUserPermissionsService } from '../manage-end-user-permissions.service';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
@@ -23,13 +23,13 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
   styleUrls: ['./manage-end-user-permissions-table.component.scss']
 })
 export class ManageEndUserPermissionsTableComponent implements OnInit, AfterViewInit, OnDestroy {
-  public _users: User[] = [];
+  public _users: EndUserPermissionsUser[] = [];
   public _blockerMessage: AreaBlockerMessage = null;
   private _deferredUsers: any[];
   public _deferredLoading = true;
 
   @Input()
-  set users(data: User[]) {
+  set users(data: EndUserPermissionsUser[]) {
     if (!this._deferredLoading) {
       // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of Users
       // (ie when returning from UserPermission page) - we should force detect changes on an empty list
@@ -43,7 +43,7 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   }
 
   @Input() filter: any = {};
-  @Input() selectedUsers: User[] = [];
+  @Input() selectedUsers: EndUserPermissionsUser[] = [];
   @Input() categoryInheritUserPermissions = false;
 
   @Output()

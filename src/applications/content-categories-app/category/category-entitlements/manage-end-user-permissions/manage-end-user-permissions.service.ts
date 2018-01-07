@@ -16,9 +16,7 @@ import {KalturaCategoryUserFilter} from 'kaltura-ngx-client/api/types/KalturaCat
 import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
 import {KalturaCategoryUserListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryUserListResponse';
 import {KalturaCategoryUser} from 'kaltura-ngx-client/api/types/KalturaCategoryUser';
-import {CategoryEntitlementsWidget} from '../category-entitlements-widget.service';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {CategoryUserActivateAction} from 'kaltura-ngx-client/api/types/CategoryUserActivateAction';
 import {CategoryUserDeactivateAction} from 'kaltura-ngx-client/api/types/CategoryUserDeactivateAction';
@@ -28,33 +26,37 @@ import {
   FiltersStoreBase,
   ListAdapter,
   ListType,
+  BooleanTypeAdapter,
   NumberTypeAdapter,
   StringTypeAdapter,
   TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
 import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
+import { KalturaCategoryUserStatus } from "kaltura-ngx-client/api/types/KalturaCategoryUserStatus";
 
 export interface LoadingStatus {
   loading: boolean;
   errorMessage: string;
 }
 
-export interface User {
-  id: string,
-  name: string, // User Name / ID
-  permissionLevel: KalturaCategoryUserPermissionLevel; // Permission Level
-  status: KalturaCategoryUserStatus; // Active
-  updateMethod: KalturaUpdateMethodType; // Update Method
-  updatedAt: Date; // Updated On
+export interface EndUserPermissionsUser {
+    id: string,
+    name: string, // User Name / ID
+    permissionLevel: KalturaCategoryUserPermissionLevel; // Permission Level
+    status: KalturaCategoryUserStatus; // Active
+    updateMethod: KalturaUpdateMethodType; // Update Method
+    updatedAt: Date; // Updated On
 }
 
 export interface Users {
-  items: User[],
+  items: EndUserPermissionsUser[],
   totalCount: number
 }
 
 export interface UsersFilters {
+  categoryId: number,
+  inheritUsers: boolean,
   freetext: string,
   pageSize: number,
   pageIndex: number,
@@ -85,24 +87,20 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
   private _isReady = false;
   private _querySubscription: ISubscription;
-  public queryRequest$: Observable<Users>;
   private readonly _pageSizeCacheKey = 'categories.list.pageSize';
-  private _categoryId: number = null;
+
 
   constructor(private _kalturaClient: KalturaClient,
               private browserService: BrowserService,
-              private _widgetService: CategoryEntitlementsWidget,
               private _appLocalization: AppLocalization,
               _logger: KalturaLogger) {
     super(_logger);
-    this.queryRequest$ = this.buildQueryRequest();
+    this._prepare();
   }
 
 
   private _prepare(): void {
     if (!this._isReady) {
-      this._users.state.next({loading: true, errorMessage: null});
-
       const defaultPageSize = this.browserService.getFromLocalStorage(this._pageSizeCacheKey);
       if (defaultPageSize !== null) {
         this.filter({
@@ -111,7 +109,8 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       }
 
       this._registerToFilterStoreDataChanges();
-      this._executeQuery();
+
+      this._isReady = true;
     }
   }
 
@@ -129,16 +128,6 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
     this._users.data.complete();
   }
 
-  set categoryId(categoryId: number) {
-    if (categoryId) {
-      this._categoryId = categoryId;
-      this.reload();
-    }
-  }
-
-  get categoryId() {
-    return this._categoryId;
-  }
 
   public reload(): void {
     if (this._users.state.getValue().loading) {
@@ -158,12 +147,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       this._querySubscription = null;
     }
 
-    const pageSize = this.cloneFilter('pageSize', null);
-    if (pageSize) {
-      this.browserService.setInLocalStorage(this._pageSizeCacheKey, pageSize);
-    }
+      this._users.state.next({loading: true, errorMessage: null});
 
-    this._querySubscription = this.buildQueryRequest()
+      this._querySubscription = this.buildQueryRequest()
       .cancelOnDestroy(this)
       .subscribe(response => {
           this._querySubscription = null;
@@ -174,34 +160,37 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
             items: response.items,
             totalCount: response.totalCount
           });
-
-          this._widgetService.membersTotalCount = response.totalCount;
-          this._categoryId = this._widgetService.data.id;
-          this._isReady = true;
         },
         error => {
           this._querySubscription = null;
-          const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          const errorMessage = (error && error.message) ? error.message : typeof error === 'string' ? error : 'invalid error';
           this._users.state.next({loading: false, errorMessage});
         });
-
-    this._users.state.next({loading: true, errorMessage: null});
   }
 
 
   private buildQueryRequest(): Observable<Users> {
     try {
 
+        const data: UsersFilters = this._getFiltersAsReadonly();
+
       // create request items
-      if (!this._categoryId) {
-        return Observable.throw(new Error('ManageEndUserPermissionsService: Category has no end-users'));
+      if (typeof data.categoryId === 'undefined' || typeof data.inheritUsers === 'undefined') {
+        //  this is valid condition - this scenario will happen until category id will be provided
+        return Observable.of({ items: [], totalCount: 0});
       }
 
       const filter: KalturaCategoryUserFilter = new KalturaCategoryUserFilter({
-        categoryIdEqual: this._categoryId
+        categoryIdEqual: data.categoryId,
+          categoryDirectMembers: false
       });
 
-      let pagination: KalturaFilterPager = null;
+      const pagination = new KalturaFilterPager(
+          {
+              pageSize: data.pageSize,
+              pageIndex: data.pageIndex + 1
+          });
+
       // update desired fields of entries
       const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
@@ -211,21 +200,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
       advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
-      const data: UsersFilters = this._getFiltersAsReadonly();
-
       // filter 'freeText'
       if (data.freetext) {
         filter.freeText = data.freetext;
-      }
-
-      // update pagination args
-      if (data.pageIndex || data.pageSize) {
-        pagination = new KalturaFilterPager(
-          {
-            pageSize: data.pageSize,
-            pageIndex: data.pageIndex + 1
-          }
-        );
       }
 
       // filter 'status'
@@ -248,6 +225,11 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
         delete filter.advancedSearch;
       }
 
+      if (typeof filter.permissionLevelIn === 'undefined' && !data.inheritUsers)
+      {
+        filter.permissionLevelIn = '3,2,1,0';
+      }
+
       return this._kalturaClient.request(
         new CategoryUserListAction({
           filter,
@@ -255,26 +237,43 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
           responseProfile
         }))
         .monitor('ManageEndUserPermissionsService: get Category users')
-        .switchMap((result: KalturaCategoryUserListResponse) => (this._getKalturaUsers(result.objects, result.totalCount)))
-        .catch(error => {
-          return Observable.throw(error);
-        });
+        .switchMap(
+            result => this._getKalturaUsers(result.objects.map(item => item.userId)),
+            (categoryUserListResult, getKalturaUsersResult) =>
+            {
+                const items = categoryUserListResult.objects.map((categoryUser, index) =>
+                {
+                    const kalturaUser = getKalturaUsersResult[index];
+                    return {
+                        id: categoryUser.userId,
+                        name: kalturaUser.screenName || categoryUser.userId,
+                        permissionLevel: categoryUser.permissionLevel,
+                        status: categoryUser.status,
+                        updateMethod: categoryUser.updateMethod,
+                        updatedAt: categoryUser.updatedAt
+                    };
+                });
+                return {
+                    items,
+                    totalCount: categoryUserListResult.totalCount
+                };
+            });
     } catch (err) {
       return Observable.throw(err);
     }
   }
 
-  private _getKalturaUsers(categoryUsers: KalturaCategoryUser[], totalCount: number): Observable<Users> {
-    if (!categoryUsers) {
+  private _getKalturaUsers(categoryUsersId: string[]): Observable<KalturaUser[]> {
+    if (!categoryUsersId) {
       return Observable.throw(new Error('ManageEndUserPermissionsService: Category has no end-users'))
     }
-    if (!categoryUsers.length) {
-      return Observable.of({items: [], totalCount: 0});
+    if (!categoryUsersId.length) {
+      return Observable.of([]);
     }
     const multiRequest = new KalturaMultiRequest();
-    categoryUsers.forEach(user => {
+    categoryUsersId.forEach(userId => {
       multiRequest.requests.push(new UserGetAction({
-          userId: user.userId,
+          userId,
         })
       );
     });
@@ -284,39 +283,20 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       .map(
         data => {
           if (data.hasErrors()) {
-            return Observable.throw(new Error('ManageEndUserPermissionsService: error occurred while trying to buildQueryRequest'));
+            throw new Error('ManageEndUserPermissionsService: error occurred while trying to buildQueryRequest');
           }
-          const kalturaUsers = data.map(response => (response.result)).filter(result => (result instanceof KalturaUser));
-          const users: User[] = categoryUsers.map(categoryUser => ({
-            id: categoryUser.userId,
-            name: null,
-            permissionLevel: categoryUser.permissionLevel,
-            status: categoryUser.status,
-            updateMethod: categoryUser.updateMethod,
-            updatedAt: categoryUser.updatedAt
-          }));
-          categoryUsers.forEach(cu => {
-            kalturaUsers.forEach((kUsr, i) => {
-              if (cu.userId === kUsr.id) {
-                users[i].name = kUsr.screenName || kUsr.id;
-              }
-            })
-          });
-          return {items: users, totalCount};
-        })
-      .catch(error => {
-        return Observable.throw(error);
-      });
+          return data.map(item => item.result);
+        });
   }
 
-  public activateUsers(usersIds: string[]): Observable<void> {
+  public activateUsers(categoryId: number, usersIds: string[]): Observable<void> {
     if (!usersIds || !usersIds.length) {
       return Observable.throw('Unable to activate users');
     }
 
     const multiRequest = new KalturaMultiRequest();
     usersIds.forEach(userId => {
-      multiRequest.requests.push(new CategoryUserActivateAction({categoryId: this.categoryId, userId: userId}));
+      multiRequest.requests.push(new CategoryUserActivateAction({categoryId, userId: userId}));
     });
 
     return this._kalturaClient.multiRequest(multiRequest)
@@ -331,14 +311,14 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       .catch(err => Observable.throw(err));
   }
 
-  public deactivateUsers(usersIds: string[]): Observable<void> {
+  public deactivateUsers(categoryId: number, usersIds: string[]): Observable<void> {
     if (!usersIds || !usersIds.length) {
       return Observable.throw('Unable to deactivate users');
     }
 
     const multiRequest = new KalturaMultiRequest();
     usersIds.forEach(userId => {
-      multiRequest.requests.push(new CategoryUserDeactivateAction({categoryId: this.categoryId, userId}));
+      multiRequest.requests.push(new CategoryUserDeactivateAction({categoryId, userId}));
     });
 
     return this._kalturaClient.multiRequest(multiRequest)
@@ -353,14 +333,14 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       .catch(err => Observable.throw(err));
   }
 
-  public deleteUsers(usersIds: string[]): Observable<void> {
+  public deleteUsers(categoryId: number, usersIds: string[]): Observable<void> {
     if (!usersIds || !usersIds.length) {
       return Observable.throw('Unable to delete users');
     }
 
     const multiRequest = new KalturaMultiRequest();
     usersIds.forEach(userId => {
-      multiRequest.requests.push(new CategoryUserDeleteAction({categoryId: this.categoryId, userId: userId}));
+      multiRequest.requests.push(new CategoryUserDeleteAction({categoryId, userId: userId}));
     });
 
     return this._kalturaClient.multiRequest(multiRequest)
@@ -375,7 +355,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       .catch(err => Observable.throw(err));
   }
 
-  public setPermissionLevel(usersId: string[], permissionLevel: KalturaCategoryUserPermissionLevel): Observable<void> {
+  public setPermissionLevel(categoryId: number, usersId: string[], permissionLevel: KalturaCategoryUserPermissionLevel): Observable<void> {
     if (!usersId || !usersId.length || typeof permissionLevel === 'undefined') {
       return Observable.throw('Unable to set permission level for users');
     }
@@ -383,7 +363,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
     const multiRequest = new KalturaMultiRequest();
     usersId.forEach(userId => {
       multiRequest.requests.push(new CategoryUserUpdateAction({
-        categoryId: this.categoryId,
+        categoryId,
         userId: userId,
         categoryUser: new KalturaCategoryUser({
           permissionLevel: permissionLevel,
@@ -405,7 +385,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       .catch(err => Observable.throw(err));
   }
 
-  public setUpdateMethod(usersIds: string[], updateMethod: KalturaUpdateMethodType): Observable<void> {
+  public setUpdateMethod(categoryId: number, usersIds: string[], updateMethod: KalturaUpdateMethodType): Observable<void> {
     if (!usersIds || !usersIds.length || typeof updateMethod === 'undefined') {
       return Observable.throw('Unable to set update method for users');
     }
@@ -414,7 +394,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
     const multiRequest = new KalturaMultiRequest();
     usersIds.forEach(userId => {
       multiRequest.requests.push(new CategoryUserUpdateAction({
-        categoryId: this.categoryId,
+        categoryId,
         userId: userId,
         categoryUser: new KalturaCategoryUser({
           updateMethod: updateMethod
@@ -455,16 +435,34 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
   }
 
   protected _preFilter(updates: Partial<UsersFilters>): Partial<UsersFilters> {
-    if (typeof updates.pageIndex === 'undefined') {
-      // reset page index to first page everytime filtering the list by any filter that is not page index
-      updates.pageIndex = 0;
-    }
+      if (typeof updates.pageIndex === 'undefined') {
+          // reset page index to first page everytime filtering the list by any filter that is not page index
+          updates.pageIndex = 0;
+      }
 
-    return updates;
+      // prevent deletion of filter categoryId
+      if (typeof updates.categoryId === null)
+      {
+        delete updates.categoryId;
+      }
+
+      // prevent deletion of filter inheritUsers
+      if (typeof updates.inheritUsers === null)
+      {
+          delete updates.inheritUsers;
+      }
+
+      if (typeof updates.pageSize !== 'undefined') {
+          this.browserService.setInLocalStorage(this._pageSizeCacheKey, updates.pageSize);
+      }
+
+      return updates;
   }
 
   protected _createDefaultFiltersValue(): UsersFilters {
     return {
+      categoryId: null,
+      inheritUsers: null,
       freetext: '',
       pageSize: 50,
       pageIndex: 0,
@@ -476,6 +474,8 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
   protected _getTypeAdaptersMapping(): TypeAdaptersMapping<UsersFilters> {
     return {
+      categoryId: new NumberTypeAdapter(),
+        inheritUsers: new BooleanTypeAdapter(),
       freetext: new StringTypeAdapter(),
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),

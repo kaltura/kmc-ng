@@ -65,7 +65,7 @@
     <p-column styleClass="statusColumn" field="status"
               [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.active' | translate">
       <ng-template let-col let-user="rowData" pTemplate="body">
-        <p-inputSwitch class="kInputSwitch"
+        <p-inputSwitch *ngIf="user[col.field] === 1 || user[col.field] === 3" class="kInputSwitch"
                        [ngModel]="user[col.field] === _kalturaCategoryUserStatus.active"
                        (onChange)="_onActionSelected({action: $event.checked ? 'activate': 'deactivate', users: user, payload: {} })"
                        [disabled]="categoryInheritUserPermissions"></p-inputSwitch>
