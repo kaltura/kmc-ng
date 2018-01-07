@@ -40,9 +40,9 @@ export class AddUsersService {
     return this._kalturaServerClient.multiRequest(multiRequest)
       .map(response => {
           if (response.hasErrors()) {
-            const errorMessage = (response.find(r => (r.error && r.error.code === 'CATEGORY_USER_ALREADY_EXISTS'))) ?
-              'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.duplicateUsers' :
-              'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.addUsersFailed';
+            const errorMessage = (response.find(r => (r.error && r.error.code !== 'CATEGORY_USER_ALREADY_EXISTS'))) ?
+                'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.addUsersFailed':
+                'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.duplicateUsers';
             throw new Error(this._appLocalization.get(errorMessage));
           }
           return undefined;

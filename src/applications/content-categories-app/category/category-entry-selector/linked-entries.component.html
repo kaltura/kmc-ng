@@ -11,7 +11,6 @@
                 <button pButton icon="kIcondropdown_arrow_top" (click)="moveUpSelections()" class="kButtonDefault"></button>
                 <a class="kDelete" (click)="_selectedEntries=[]">{{'applications.content.entryDetails.metadata.clear' | translate}}</a>
             </div>
-            <!--<button *ngIf="!_selectedEntries?.length" pButton class="kButtonDefault" (click)="_addEntry()" label="{{'applications.content.entryDetails.metadata.addEntry' | translate}}"></button>-->
         </div>
         <div>
             <p-dataTable [value]="_entries" [(selection)]="_selectedEntries">

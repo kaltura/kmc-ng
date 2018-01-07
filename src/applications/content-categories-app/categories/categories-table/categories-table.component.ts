@@ -77,7 +77,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       result => {
         if (result.errorMessage) {
           this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage || 'Error loading entries',
+            message: result.errorMessage || 'Error loading categories',
             buttons: [{
               label: 'Retry',
               action: () => {

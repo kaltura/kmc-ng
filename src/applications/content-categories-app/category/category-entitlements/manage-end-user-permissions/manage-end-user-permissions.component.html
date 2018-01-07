@@ -1,45 +1,85 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <div class="kContainer">
-      <div class="kHeader" [class.kInheritance]="categoryInheritUserPermissions">
+    <div class="kHeader" [class.kInheritance]="categoryInheritUserPermissions">
         <span class="kTitle">
           {{'applications.content.categoryDetails.entitlements.usersPermissions.title' | translate}}
         </span>
-        <button pButton class="kButtonDefault kButton"
-                label="{{'applications.content.categoryDetails.entitlements.usersPermissions.close' | translate}}"
-                (click)="parentPopupWidget?.close()"></button>
-        <span class="kInheritanceMessage" *ngIf="categoryInheritUserPermissions"
-              [kTooltip]="'applications.content.categoryDetails.entitlements.usersPermissions.inheritanceMessage' | translate:{'0': parentCategory.fullName}"
-              [maxWidth]="850">
+      <button pButton class="kButtonDefault kButton"
+              label="{{'applications.content.categoryDetails.entitlements.usersPermissions.close' | translate}}"
+              (click)="parentPopupWidget?.close()"></button>
+      <span class="kInheritanceMessage" *ngIf="categoryInheritUserPermissions"
+            [kTooltip]="'applications.content.categoryDetails.entitlements.usersPermissions.inheritanceMessage' | translate:{'0': parentCategory.fullName}"
+            [maxWidth]="850">
           {{'applications.content.categoryDetails.entitlements.usersPermissions.inheritanceMessage' | translate:{'0': parentCategory.fullName} }}
         </span>
+    </div>
+    <div class="kBulkActionsContainer">
+
+      <button class="kButtonBranded kAddItemBtn"
+              *ngIf="!_selectedUsers.length"
+              pButton
+              type="button"
+              label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.addUsers' | translate}}"
+              (click)="addUser.open()"
+              [disabled]="categoryInheritUserPermissions">
+      </button>
+
+      <div class="kItemsNum" [class.kSelected]="_selectedUsers.length">
+          <span *ngIf="_usersTotalCount">
+              {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.usersCount' | translate: {'0': _usersTotalCount } }}
+          </span>
       </div>
-      <div class="kManageEndUserPermissionsBulkOperationsContent">
+
+      <div class="kFiltersContainer"
+           [class.kHidden]="_selectedUsers.length">
+        <input type="text"
+               pInputText
+               class="kSearchInput"
+               [(ngModel)]="_query.freetext"
+               (keyup.enter)="onFreetextChanged()"
+               placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+
+        <div #refineBtn class="kRefine">
+          <i class="kIconfilter"></i>
+          <span>{{'applications.content.entries.refine' | translate}}</span>
+          <i class="kIcondropdown_arrow_bottom dropdown"></i>
+        </div>
+
+      </div>
+
+      <div class="kBulkActions" [class.kHidden]="!_selectedUsers.length">
+        <span class="kSelectedItems">
+             • {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.selectedUsersCount' | translate: {'0':_selectedUsers.length} }}
+        </span>
         <kManageEndUserPermissionsBulkOperationsContent
-          [itemsTotalCount]="_usersTotalCount"
-          (deleteItems)="_deleteSelected($event)"
           (clearSelection)="_clearSelection()"
           [selectedItems]="_selectedUsers"
-          (onActionSelected)="_onActionSelected($event)"
-          (addItem)="addUser.open()"
-        [categoryInheritUserPermissions]="categoryInheritUserPermissions">
+          (onActionSelected)="_onActionSelected($event)">
         </kManageEndUserPermissionsBulkOperationsContent>
-         
+        <a class="kBulkCancel" (click)="_clearSelection()">
+          {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.cancel' |
+          translate}}
+        </a>
       </div>
-      <div class="kManageEndUserPermissionsTable">
-
-        <kManageEndUserPermissionsTable
-          [(selectedUsers)]="_selectedUsers"
-          [users]="_users"
-          (onActionSelected)="_onActionSelected($event)"
+    </div>
+    <div class="kManageEndUserPermissionsFiltersTags">
+      <kManageEndUserPermissionsFilterTags></kManageEndUserPermissionsFilterTags>
+    </div>
+    <div class="kManageEndUserPermissionsTable">
+      <kManageEndUserPermissionsTable
+        [(selectedUsers)]="_selectedUsers"
+        [users]="(_manageEndUsersPermissionsService.users.data$ | async)?.items"
+        (onActionSelected)="_onActionSelected($event)"
         [categoryInheritUserPermissions]="categoryInheritUserPermissions">
-        </kManageEndUserPermissionsTable>
-      </div>
-      <div class="kTableFooter" #footer *ngIf="_usersTotalCount">
-        <p-paginator [rows]="_filter.pageSize" (onPageChange)="_onPaginationChanged($event)"
-                     [first]="_filter.pageIndex * _filter.pageSize"
-                     [totalRecords]="_usersTotalCount" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
-        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
-      </div>
+        (closeParentPopup)="parentPopupWidget?.close()"
+      </kManageEndUserPermissionsTable>
+    </div>
+    <div class="kTableFooter" #footer *ngIf="_usersTotalCount">
+      <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
+                   [first]="_query.pageIndex * _query.pageSize"
+                   [totalRecords]="_usersTotalCount" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+      <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+    </div>
   </div>
 </k-area-blocker>
  
@@ -49,8 +89,21 @@
     <kAddUsers [parentPopupWidget]="addUser"
                [category]="category"
                [parentCategoryMembersCount]="parentCategory?.membersCount"
-               [usersCount]="_users.length"
+               [usersCount]="_usersTotalCount"
                (usersAdded)="_onUsersAdded()"
     ></kAddUsers>
+  </ng-template>
+</kPopupWidget>
+
+
+<kPopupWidget #refinePopup
+              placement="top"
+              [popupWidth]="400"
+              [popupHeight]="500"
+              [closeBtn]="false"
+              [targetRef]="refineBtn"
+              [targetOffset]="{'x':-190, 'y': -9}">
+  <ng-template>
+    <kManageEndUserPermissionsRefineFilters [parentPopupWidget]="refinePopup"></kManageEndUserPermissionsRefineFilters>
   </ng-template>
 </kPopupWidget>
