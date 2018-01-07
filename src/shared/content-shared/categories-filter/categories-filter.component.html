@@ -21,7 +21,7 @@
   <kScrollToTopContainer class="kTreeContainer">
     <k-categories-tree #categoriesTree
                        [disablePropagation]="selectionMode === _CategoriesModes.SelfAndChildren"
-                       [(selection)]="selection"
+                       [selection]="selection"
                        (onCategoriesLoaded)="_categoriesLoaded = true"
                        (onCategorySelected)="onCategorySelected.emit($event)"
                        (onCategoryUnselected)="onCategoriesUnselected.emit([$event])"

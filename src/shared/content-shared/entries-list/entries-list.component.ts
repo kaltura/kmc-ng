@@ -127,7 +127,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
             if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
                 // when this component is running with SelfAndChildren mode, we need to manually unselect
                 // the first nested child (if any) that is currently selected
-                const childToRemove = categories.find(item => {
+                const childrenToRemove = categories.filter(item => {
                     // check if this item is a parent of another item (don't validate last item which is the node itself)
                     let result = false;
                     for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
@@ -136,15 +136,14 @@ export class EntriesListComponent implements OnInit, OnDestroy {
                     return result;
                 });
 
-                if (childToRemove) {
+                childrenToRemove.forEach(childToRemove => {
                     categories.splice(
                         categories.indexOf(childToRemove),
                         1);
-                }
+                });
             }
 
             categories.push(category);
-
             this._entriesStore.filter({'categories': categories});
         }
     }

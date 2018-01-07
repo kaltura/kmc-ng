@@ -31,7 +31,7 @@
 
 
 		<k-categories-tree #categoriesTree
-						   [selection]="_treeSelection"
+						   [(selection)]="_treeSelection"
 						   (onCategoriesLoaded)="_onTreeCategoriesLoad($event)"
 						   (onCategorySelected)="_onTreeNodeSelected($event)"
 						   (onCategoryUnselected)="_onTreeNodeUnselected($event)"></k-categories-tree>

@@ -7,7 +7,7 @@
             [propagateDownMode]="disablePropagation ? 'preventNested' : 'none'"
             [propagateUpMode]="disablePropagation ? 'visualOnly' : 'none'"
             [value]="_categories"
-            [selection]="_treeSelection"
+            [(selection)]="_treeSelection"
             (onNodeSelect)="_onNodeSelect($event)"
             (onNodeUnselect)="_onNodeUnselect($event)"
             (onNodeExpand)="_onNodeExpand($event)">

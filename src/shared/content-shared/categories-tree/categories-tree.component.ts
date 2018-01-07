@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { CategoriesTreeNode } from './categories-tree-node';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -22,18 +22,17 @@ export class CategoriesTreeComponent implements OnInit {
   @Input() autoLoad = true;
   @ViewChild(CategoriesTreePropagationDirective) public _categoriesTreePropagation: CategoriesTreePropagationDirective;
 
-
-    @Input() public set selection(value: CategoriesListItem[])
+  private _selection: CategoriesListItem[];
+  
+    @Input() set selection(value: CategoriesListItem[])
     {
-        this._selectedCategories = value;
+        this._selection = value ? [...value] : [];
         this._syncTreeSelections();
     }
 
-    @Output() public categoriesChange = new EventEmitter<CategoriesListItem[]>();
+    @Output() selectionChange = new EventEmitter<CategoriesListItem[]>();
 
   public _treeSelection: CategoriesTreeNode[] = [];
-
-    private _selectedCategories: CategoriesListItem[];
 
     @Input()
   set selectionMode(value: TreeSelectionMode) {
@@ -71,6 +70,7 @@ export class CategoriesTreeComponent implements OnInit {
               private _appLocalization: AppLocalization) {
   }
 
+
   ngOnInit() {
     this.inLazyMode = this._appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
 
@@ -81,7 +81,7 @@ export class CategoriesTreeComponent implements OnInit {
 
     private _syncTreeSelections() {
         const listSelectionsMap = FiltersUtils.toMap(this._treeSelection, 'value');
-        const listFilterMap = FiltersUtils.toMap(this._selectedCategories || [], 'value');
+        const listFilterMap = FiltersUtils.toMap(this._selection || [], 'value');
         const diff = FiltersUtils.getDiff(listSelectionsMap, listFilterMap);
 
         diff.added.forEach(item => {
@@ -116,11 +116,23 @@ export class CategoriesTreeComponent implements OnInit {
 
 
     public _onNodeSelect({node}){
-      this.onCategorySelected.emit(this._convertToCategory(node));
+      const category = this._convertToCategory(node);
+      this._selection.push(category);
+      this.selectionChange.emit(this._selection);
+      this.onCategorySelected.emit(category);
     }
 
     public _onNodeUnselect({node}){
-      this.onCategoryUnselected.emit(this._convertToCategory(node));
+      const nodeIndex = (this._selection || []).findIndex(item => item.value === node.value);
+        if (nodeIndex !== -1)
+        {
+            const category = this._selection.splice(
+                nodeIndex,
+                1
+            );
+
+            this.onCategoryUnselected.emit(category[0]);
+        }
     }
 
 
@@ -156,7 +168,7 @@ export class CategoriesTreeComponent implements OnInit {
       this._categoriesTreeService.loadNodeChildren(node, (children) => {
           if (node instanceof CategoriesTreeNode && node.children) {
               node.children.forEach(nodeChild => {
-              const isNodeChildSelected = !!this._selectedCategories.find(categoryFilter => categoryFilter.value === nodeChild.value);
+              const isNodeChildSelected = !!this._selection.find(categoryFilter => categoryFilter.value === nodeChild.value);
               this.updateNodeState(nodeChild, isNodeChildSelected);
 
               if (isNodeChildSelected)
