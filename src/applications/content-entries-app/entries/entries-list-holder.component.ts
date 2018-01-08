@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
+import { EntriesListComponent } from 'app-shared/entries/entries-list/entries-list.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesTableColumns } from 'app-shared/entries/entries-table/entries-table.component';
 import { ContentEntriesAppService } from '../content-entries-app.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';

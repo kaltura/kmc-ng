@@ -4,8 +4,8 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import {
     EntriesFilters, EntriesStore,
     SortDirection
-} from 'app-shared/content-shared/entries-store/entries-store.service';
-import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+} from 'app-shared/entries/entries-store/entries-store.service';
+import { EntriesTableColumns } from 'app-shared/entries/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';

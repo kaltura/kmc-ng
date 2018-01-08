@@ -19,7 +19,7 @@ import { EntryWidgetsManager } from './entry-widgets-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/entries/entries-store/entries-store.service';
 
 @Component({
     selector: 'kEntry',

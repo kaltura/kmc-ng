@@ -17,7 +17,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/entries/entries-store/entries-store.service';
 
 export interface EntriesTableColumns {
   [key: string]: {

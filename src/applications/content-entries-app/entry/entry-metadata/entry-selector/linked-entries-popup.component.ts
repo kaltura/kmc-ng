@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/entries/entries-store/entries-store.service';
 
 @Component({
   selector: 'k-linked-entries-popup',

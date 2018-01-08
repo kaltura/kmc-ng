@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/entries/entries-store/entries-store.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({

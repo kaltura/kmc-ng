@@ -17,7 +17,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryWidgetsManager } from './entry-widgets-manager';
 import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/entries/entries-store/entries-store.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 export enum ActionTypes
