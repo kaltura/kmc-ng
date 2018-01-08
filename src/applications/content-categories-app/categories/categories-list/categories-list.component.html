@@ -62,6 +62,23 @@
   </div>
 </k-area-blocker>
 
+<kPopupWidget #categoriesFilterPopup
+              [popupWidth]="400"
+              [popupHeight]="500"
+              placement="top"
+              [closeBtn]="false"
+              [targetRef]="categoriesFilterBtn"
+              [targetOffset]="{'x':-10, 'y': -21}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'" [scrollOffset]="80" >
+  <ng-template>
+    <kCategoriesFilter  [parentPopupWidget]="categoriesFilterPopup" [selection]="_query.categories"
+                        [selectionMode]="_query.categoriesMode"
+                        (onCategorySelected)="onCategorySelected($event)"
+                        (onCategoriesUnselected)="onCategoriesUnselected($event)"
+                        (selectionModeChange)="onCategoriesModeChanged($event)"></kCategoriesFilter>
+  </ng-template>
+</kPopupWidget>
+
 <kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="658" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kNewCategory (onApply)="onCategoryAdded($event)" [parentPopupWidget]="addNewCategory" [linkedEntries]="_linkedEntries"></kNewCategory>

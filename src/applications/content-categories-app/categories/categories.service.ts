@@ -41,6 +41,11 @@ import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppea
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
 import {KalturaCategoryEntry} from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
 import {CategoryEntryAddAction} from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
+import { CategoriesListAdapter, CategoriesListType } from "app-shared/content-shared/categories/categories-list-type";
+import {
+    CategoriesModeAdapter, CategoriesModes,
+    CategoriesModeType
+} from 'app-shared/content-shared/categories/categories-mode-type';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -79,6 +84,8 @@ export interface CategoriesFilters {
   categoryListing: ListType,
   contributionPolicy: ListType,
   endUserPermissions: ListType,
+    categories: CategoriesListType,
+    categoriesMode: CategoriesModeType,
   customMetadata: GroupedListType
 }
 
@@ -323,6 +330,16 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         });
       }
 
+
+        if (data.categories && data.categories.length) {
+            const categoriesValue = data.categories.map(item => item.value).join(',');
+            if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
+                filter.ancestorIdIn = categoriesValue;
+            } else {
+                filter.parentIdIn = categoriesValue;
+            }
+        }
+
       // update the sort by args
       if (data.sortBy) {
         filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
@@ -448,10 +465,22 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             updates.pageIndex = 0;
         }
 
+        if (typeof updates.categoriesMode !== 'undefined')
+        {
+            this.browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', updates.categoriesMode);
+        }
+
         return updates;
     }
 
     protected _createDefaultFiltersValue(): CategoriesFilters {
+
+        const savedAutoSelectChildren: CategoriesModes = this.browserService
+            .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
+        const categoriesMode = typeof savedAutoSelectChildren === 'number'
+            ? savedAutoSelectChildren
+            : CategoriesModes.SelfAndChildren;
+
         return {
             freetext: '',
             pageSize: 50,
@@ -463,6 +492,8 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             categoryListing: [],
             contributionPolicy: [],
             endUserPermissions: [],
+            categories: [],
+            categoriesMode,
             customMetadata: {}
         };
     }
@@ -479,6 +510,8 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             categoryListing: new ListAdapter(),
             contributionPolicy: new ListAdapter(),
             endUserPermissions: new ListAdapter(),
+            categories: new CategoriesListAdapter(),
+            categoriesMode: new CategoriesModeAdapter(),
             customMetadata: new GroupedListAdapter()
         };
     }
