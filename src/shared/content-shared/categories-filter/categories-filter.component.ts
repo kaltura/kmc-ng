@@ -10,7 +10,7 @@ import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-prime
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
-import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories-search.service';
+import {CategoriesSearchService} from 'app-shared/content-shared/categories-search.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';

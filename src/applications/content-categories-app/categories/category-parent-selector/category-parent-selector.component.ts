@@ -1,6 +1,4 @@
 import {
-  AfterViewChecked,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   OnDestroy,
@@ -41,7 +39,6 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
 
 
   constructor(private _categoriesSearchService: CategoriesSearchService,
-              private cdRef: ChangeDetectorRef,
               private _appLocalization: AppLocalization) {
     this._updateSelectionTooltip();
   }
@@ -100,12 +97,12 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
       this._autoComplete.clearValue();
 
       if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
-this._selectedCategory = {
-    value: selectedItem.id,
-    label: selectedItem.name,
-    fullIdPath: selectedItem.fullIdPath,
-    tooltip: (selectedItem.fullNamePath || []).join(' > ')
-};
+          this._selectedCategory = {
+              value: selectedItem.id,
+              label: selectedItem.name,
+              fullIdPath: selectedItem.fullIdPath,
+              tooltip: (selectedItem.fullNamePath || []).join(' > ')
+          };
           this.onCategorySelected.emit(this._selectedCategory);
 
           this._categoriesTree.expandNode(selectedItem.fullIdPath);
