@@ -2,13 +2,13 @@
   <div class="kTreeContainer kOverrideFAIcons">
 
     <p-tree #tree
-            *ngIf="_selectionModes.multiple === _selectionMode"
+            *ngIf="selectionMode === 'multiple'"
             kCategoriesTreePropagation
             [propagateDownMode]="disablePropagation ? 'none' : 'preventNested'"
             [propagateUpMode]="disablePropagation ? 'none' : 'visualOnly'"
             [value]="_categories"
-            [(selection)]="_treeSelection"
-            (onNodeSelect)="_onNodeSelect($event)"
+            [(selection)]="_selectedCategory"
+            (onNodeSelect)="_onNodeSelect($event.node)"
             (onNodeUnselect)="_onNodeUnselect($event)"
             (onNodeExpand)="_onNodeExpand($event)">
       <ng-template let-node pTemplate="default">
@@ -28,15 +28,12 @@
     </p-tree>
 
     <p-tree #tree
-            *ngIf="_selectionModes.single === _selectionMode"
-            selectionMode="single"
-            [value]="_categories"
-            [selection]="_treeSelection"
-            (onNodeSelect)="_onNodeSelect($event)"
-            (onNodeExpand)="_onNodeUnselect($event)">
+            *ngIf="selectionMode === 'single'"
+            (onNodeExpand)="_onNodeExpand($event)"
+            [value]="_categories">
       <ng-template let-node pTemplate="default">
-        <div>
-          <p-radioButton [value]="node" [ngModel]="_treeSelection"></p-radioButton>
+        <div (click)="_onNodeSelect(node)">
+          <p-radioButton [value]="node" [ngModel]="_selectedTreeNode"></p-radioButton>
           <span class="kTreeNodeLabel">{{node.label}}</span>
           <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
         </div>

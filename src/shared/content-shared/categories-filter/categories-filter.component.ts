@@ -108,6 +108,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     _onSuggestionSelected(): void {
 
         const selectedItem = this._autoComplete.getValue();
+        // clear user text from component
+        this._autoComplete.clearValue();
+
         if (selectedItem) {
             const data = selectedItem.data;
             this.onCategorySelected.emit(
@@ -120,9 +123,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             );
 
             this._categoriesTree.expandNode(data.fullIdPath);
-
-            // clear user text from component
-            this._autoComplete.clearValue();
         }
     }
 

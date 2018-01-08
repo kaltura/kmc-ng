@@ -16,28 +16,41 @@ export type TreeSelectionMode = 'single' | 'multiple';
   styleUrls: ['./categories-tree.component.scss'],
   providers: [CategoriesTreeService]
 })
-export class CategoriesTreeComponent implements OnInit {
+export class CategoriesTreeComponent implements OnInit, OnChanges {
 
   @Input() public disablePropagation = true;
-  @Input() autoLoad = true;
   @ViewChild(CategoriesTreePropagationDirective) public _categoriesTreePropagation: CategoriesTreePropagationDirective;
 
+  private _selectedCategory: CategoriesListItem;
   private _selection: CategoriesListItem[];
-  
-    @Input() set selection(value: CategoriesListItem[])
-    {
-        this._selection = value ? [...value] : [];
-        this._syncTreeSelections();
-    }
+  @Input() public selection: CategoriesListItem[];
+    @Input()   public selectedCategory: CategoriesListItem;
 
+    public _treeSelection: CategoriesTreeNode[] = [];
+    public _selectedTreeNode: CategoriesTreeNode = null;
+
+
+    @Output() selectedCategoryChange = new EventEmitter<CategoriesListItem>();
     @Output() selectionChange = new EventEmitter<CategoriesListItem[]>();
 
-  public _treeSelection: CategoriesTreeNode[] = [];
+    ngOnChanges(changes) {
+        if (typeof changes.selection !== 'undefined') {
+            if (this.selectionMode === 'multiple') {
+                this._selection = changes.selection.currentValue ? [...changes.selection.currentValue] : [];
+                this._syncTreeSelections();
+            }
+        }
 
-    @Input()
-  set selectionMode(value: TreeSelectionMode) {
-        this._selectionMode = value === 'single' ? value : 'multiple';
+        if (typeof changes.selectedCategory !== 'undefined') {
+            if (this.selectionMode === 'single') {
+                this._selectedCategory = changes.selectedCategory.currentValue;
+                this._syncSelectedTreeNode();
+            }
+        }
     }
+
+
+    @Input() selectionMode: TreeSelectionMode = 'multiple';
 
   @Output() onCategoriesLoaded = new EventEmitter<{ totalCategories: number }>();
 
@@ -50,12 +63,6 @@ export class CategoriesTreeComponent implements OnInit {
   private inLazyMode = false;
   public _loading = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectionMode: TreeSelectionMode = 'multiple';
-  public _selectionModes = {
-    'multiple': 'multiple',
-    'single': 'single'
-  };
-
 
   private updateNodeState(node: CategoriesTreeNode, addToSelection: boolean): void {
     this._CategoriesTreeNodesState.updateNodeState(node, addToSelection);
@@ -72,34 +79,51 @@ export class CategoriesTreeComponent implements OnInit {
 
 
   ngOnInit() {
-    this.inLazyMode = this._appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
+      this.inLazyMode = this._appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
 
-    if (this.autoLoad) {
       this._loadCategories();
-    }
   }
 
-    private _syncTreeSelections() {
-        const listSelectionsMap = FiltersUtils.toMap(this._treeSelection, 'value');
-        const listFilterMap = FiltersUtils.toMap(this._selection || [], 'value');
-        const diff = FiltersUtils.getDiff(listSelectionsMap, listFilterMap);
-
-        diff.added.forEach(item => {
-            const nodeOfFilter = this._findNodeByFullIdPath(item.fullIdPath);
-
-            if (nodeOfFilter) {
-                // update selection of tree - handle situation when the node was added by auto-complete
-                if (this._treeSelection.indexOf(nodeOfFilter) === -1) {
-                    // IMPORTANT - we create a new array and not altering the existing one due to out-of-sync issue with angular binding.
-                    this._treeSelection = [...this._treeSelection, nodeOfFilter];
+    private _syncSelectedTreeNode() {
+        if (this.selectionMode === 'single') {
+            if (this._selectedTreeNode && this._selectedCategory)
+            {
+                if (this._selectedTreeNode.value !== this._selectedCategory.value)
+                {
+                    this._selectedTreeNode = this._findNodeByFullIdPath(this._selectedCategory.fullIdPath) || null;
                 }
+            }else if (!this._selectedTreeNode && this._selectedCategory)
+            {
+                this._selectedTreeNode = this._findNodeByFullIdPath(this._selectedCategory.fullIdPath) || null;
+            }else if (this._selectedTreeNode && !this._selectedCategory)
+            {
+                this._selectedTreeNode = null;
             }
-        });
+        }
+    }
 
-        diff.deleted.forEach(removedItem => {
-            this._treeSelection = this._treeSelection.filter(item => item !== removedItem);
-        });
+    private _syncTreeSelections() {
+      if (this.selectionMode === 'multiple') {
+          const listSelectionsMap = FiltersUtils.toMap(this._treeSelection, 'value');
+          const listFilterMap = FiltersUtils.toMap(this._selection || [], 'value');
+          const diff = FiltersUtils.getDiff(listSelectionsMap, listFilterMap);
 
+          diff.added.forEach(item => {
+              const nodeOfFilter = this._findNodeByFullIdPath(item.fullIdPath);
+
+              if (nodeOfFilter) {
+                  // update selection of tree - handle situation when the node was added by auto-complete
+                  if (this._treeSelection.indexOf(nodeOfFilter) === -1) {
+                      // IMPORTANT - we create a new array and not altering the existing one due to out-of-sync issue with angular binding.
+                      this._treeSelection = [...this._treeSelection, nodeOfFilter];
+                  }
+              }
+          });
+
+          diff.deleted.forEach(removedItem => {
+              this._treeSelection = this._treeSelection.filter(item => item !== removedItem);
+          });
+      }
     }
 
     private _convertToCategory(node: CategoriesTreeNode): CategoriesListItem {
@@ -112,24 +136,39 @@ export class CategoriesTreeComponent implements OnInit {
     }
 
 
-    public _onNodeSelect({node}){
+    public _onNodeSelect(node){
       const category = this._convertToCategory(node);
-      this._selection.push(category);
-      this.selectionChange.emit(this._selection);
+
+      if (this.selectionMode === 'single')
+      {
+          this._selectedTreeNode = node;
+          this._selectedCategory = category;
+          this.selectedCategoryChange.emit(category);
+      }else
+      {
+          this._selection.push(category);
+          this.selectionChange.emit(this._selection);
+      }
       this.onCategorySelected.emit(category);
     }
 
     public _onNodeUnselect({node}){
-      const nodeIndex = (this._selection || []).findIndex(item => item.value === node.value);
-        if (nodeIndex !== -1)
-        {
-            const category = this._selection.splice(
-                nodeIndex,
-                1
-            );
 
-            this.onCategoryUnselected.emit(category[0]);
+        if (this.selectionMode === 'multiple')
+        {
+            const nodeIndex = (this._selection || []).findIndex(item => item.value === node.value);
+            if (nodeIndex !== -1)
+            {
+                const category = this._selection.splice(
+                    nodeIndex,
+                    1
+                );
+
+                this.onCategoryUnselected.emit(category[0]);
+            }
         }
+
+
     }
 
 
@@ -142,6 +181,7 @@ export class CategoriesTreeComponent implements OnInit {
           this._loading = false;
 
           this._syncTreeSelections();
+          this._syncSelectedTreeNode();
 
           this.onCategoriesLoaded.emit({ totalCategories: (this._categories || []).length });
         },
@@ -208,13 +248,18 @@ export class CategoriesTreeComponent implements OnInit {
 
   private _findNodeByFullIdPath(fullIdPath: (number | string)[]): CategoriesTreeNode {
       let result: CategoriesTreeNode = null;
-      for (let i = 0, length = fullIdPath.length; i < length; i++) {
-          const itemIdToSearchFor = fullIdPath[i];
-          result = ((result ? result.children : this._categories) || []).find(child => child.value === itemIdToSearchFor);
+      if (fullIdPath && Array.isArray(fullIdPath)) {
+          for (let i = 0, length = fullIdPath.length; i < length; i++) {
+              const itemIdToSearchFor = fullIdPath[i];
+              result = ((result ? result.children : this._categories) || []).find(child => child.value === itemIdToSearchFor);
 
-          if (!result) {
-              break;
+              if (!result) {
+                  break;
+              }
           }
+      }else
+      {
+          console.warn(`[categories-tree]: trying to find node without providing full id path`);
       }
       return result;
   }
