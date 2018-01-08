@@ -9,6 +9,7 @@
       line-height: 43px;
       text-overflow: ellipsis;
       margin-left: 5px;
+      color: $kGrayscale1;
     }
 
     .kTreeNodeNumChildren {
@@ -61,5 +62,5 @@
 
 :host /deep/ .ui-tree.ui-widget.ui-widget-content {
   width: 100%;
+  border: none;
 }
-
