@@ -1,5 +1,4 @@
-import {LinkedEntriesPopup} from './category-entry-selector/linked-entries-popup.component';
-import {LinkedEntries} from '././category-entry-selector/linked-entries.component';
+
 import {JumpToSection} from './category-metadata/jump-to-section.component';
 import {CategoryDetailsComponent} from './category-details/category-details.component';
 import {CategorySectionsListComponent} from './category-sections-list/category-sections-list.component';
@@ -33,8 +32,6 @@ export const CategoryComponentsList = [
     CategoryEntitlementsComponent,
     CategoryChangeOwnerComponent,
     JumpToSection,
-    LinkedEntriesPopup,
-    LinkedEntries,
     ManageEndUserPermissionsComponent,
     ManageEndUserPermissionsTableComponent,
     ManageEndUserPermissionsRefineFiltersComponent,

@@ -76,7 +76,7 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
     let loadedOnce = false; // used to set the empty message to "no results" only after search
     this._fillPermissionLevelOptions();
     this._fillUpdateMethodOptions();
-    
+
     this._usersServiceStatusSubscription = this.manageEndUserPermissionsService.users.state$.subscribe(
       result => {
         if (result.errorMessage) {
