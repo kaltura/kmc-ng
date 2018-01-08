@@ -441,13 +441,13 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       }
 
       // prevent deletion of filter categoryId
-      if (typeof updates.categoryId === null)
+      if (updates.categoryId === null)
       {
         delete updates.categoryId;
       }
 
       // prevent deletion of filter inheritUsers
-      if (typeof updates.inheritUsers === null)
+      if (updates.inheritUsers === null)
       {
           delete updates.inheritUsers;
       }

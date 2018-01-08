@@ -4,11 +4,8 @@
       <div class="kFiltersGroupTitle">
         <span>{{'applications.content.filters.additionalFilters' | translate | uppercase}}</span>
       </div>
-      <div *ngFor="let group of _primeListsGroups">
-        <div *ngIf="group.label" class="kFiltersGroupTitle">
-          <span>{{group.label | uppercase}}</span>
-        </div>
-        <div *ngFor="let treeInstance of group.lists">
+
+        <div *ngFor="let treeInstance of _primeLists">
           <p-tree [value]="treeInstance.items"
                   [selectionMode]="'checkbox'"
                   kRefinePrimeTree
@@ -22,8 +19,6 @@
             </ng-template>
           </p-tree>
         </div>
-
-      </div>
     </kScrollToTopContainer>
 
     <p>

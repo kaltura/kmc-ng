@@ -140,8 +140,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
     if (value) {
       result = new KalturaUser(
         {
-          id: value,
-          screenName: value
+          id: value
         }
       );
     }

@@ -33,7 +33,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
     super._showLoader();
 
-    return this._fetchAdditionalData(this.data.owner, this.data.parentId)
+    return this._fetchAdditionalData()
       .monitor('get category parent category')
       .cancelOnDestroy(this, this.widgetReset$)
       .map(({owner, parentCategory}) => {
@@ -52,35 +52,44 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
 
-  private _fetchAdditionalData(ownerId: string, parentCategoryId: number): Observable<{owner: KalturaUser, parentCategory?: KalturaCategory}> {
-    const multiRequest = new KalturaMultiRequest(
-      new UserGetAction({userId: ownerId})
-    );
+  private _fetchAdditionalData(): Observable<{owner: KalturaUser, parentCategory?: KalturaCategory}> {
 
-    if (parentCategoryId > 0) {
-      multiRequest.requests.push(new CategoryGetAction({
-        id: parentCategoryId
-      }));
-    }
+      const multiRequest = new KalturaMultiRequest();
+      if (this.data.owner) {
+          multiRequest.requests.push(
+              new UserGetAction({userId: this.data.owner})
+          );
+      }
 
-    return this._kalturaClient.multiRequest(multiRequest)
-      .map(
-        data => {
-          if (data.hasErrors()) {
-            throw new Error('error occurred in action \'_fetchAdditionalData\'');
-          }
+      if (this.data.parentId > 0) {
+          multiRequest.requests.push(new CategoryGetAction({
+              id: this.data.parentId
+          }));
+      }
 
-          let owner: KalturaUser = null;
-          let parentCategory = null;
-          data.forEach(response => {
-            if (response.result instanceof KalturaCategory) {
-              parentCategory = response.result;
-            } else if (response.result instanceof KalturaUser) {
-              owner = response.result;
-            }
-          });
-          return {owner, parentCategory};
-        })
+      if (multiRequest.requests.length) {
+          return this._kalturaClient.multiRequest(multiRequest)
+              .map(
+                  data => {
+                      if (data.hasErrors()) {
+                          throw new Error('error occurred in action \'_fetchAdditionalData\'');
+                      }
+
+                      let owner: KalturaUser = null;
+                      let parentCategory = null;
+                      data.forEach(response => {
+                          if (response.result instanceof KalturaCategory) {
+                              parentCategory = response.result;
+                          } else if (response.result instanceof KalturaUser) {
+                              owner = response.result;
+                          }
+                      });
+                      return {owner, parentCategory};
+                  });
+      }else
+      {
+          return Observable.of({ owner: null, parentCategory: null});
+      }
   }
 
   private _buildForm(): void {
@@ -157,7 +166,10 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     newData.inheritanceType = metadataFormValue.inheritUsersPermissions ? KalturaInheritanceType.inherit : KalturaInheritanceType.manual;
     if (!metadataFormValue.inheritUsersPermissions) {
       newData.defaultPermissionLevel = metadataFormValue.defaultPermissionLevel;
-      newData.owner = metadataFormValue.owner.id;
+
+      if (metadataFormValue.owner) {
+          newData.owner = metadataFormValue.owner.id;
+      }
     }
   }
 

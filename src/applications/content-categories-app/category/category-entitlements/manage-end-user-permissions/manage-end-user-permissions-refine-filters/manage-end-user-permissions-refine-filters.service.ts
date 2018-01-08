@@ -4,24 +4,18 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 
 import {DefaultFiltersList} from './default-filters-list';
+import { Observable } from 'rxjs/Observable';
 
-export interface RefineGroupListItem {
-  value: string,
-  label: string
+export interface RefineListItem {
+    value: string,
+    label: string
 }
 
-export class RefineGroupList {
-  public items: RefineGroupListItem[] = [];
+export class RefineList {
+    public items: RefineListItem[] = [];
 
-  constructor(public name: string,
-              public label: string,
-              public group?: string) {
-  }
-}
-
-export interface RefineGroup {
-  label: string;
-  lists: RefineGroupList[];
+    constructor(public name: string, public label: string) {
+    }
 }
 
 @Injectable()
@@ -30,22 +24,22 @@ export class ManageEndUserPermissionsRefineFiltersService {
   constructor() {
   }
 
-  public getFilters(): RefineGroup {
-    const result: RefineGroup = {label: '', lists: []};
+    public getFilters(): Observable<RefineList[]> {
+        return Observable.of(this._buildDefaultFiltersGroup());
+    }
 
-    // build constant filters
-    DefaultFiltersList.forEach((defaultFilterList) => {
-      const newRefineFilter = new RefineGroupList(
-        defaultFilterList.name,
-        defaultFilterList.label
-      );
-      result.lists.push(newRefineFilter);
-      defaultFilterList.items.forEach((item: any) => {
-        newRefineFilter.items.push({value: item.value, label: item.label});
-      });
+    private _buildDefaultFiltersGroup(): RefineList[] {
+        return DefaultFiltersList.map((list) => {
+            const refineList = new RefineList(
+                list.name,
+                list.label
+            );
 
-    });
+            list.items.forEach((item: any) => {
+                refineList.items.push({value: item.value, label: item.label});
+            });
 
-    return result;
-  }
+            return refineList;
+        });
+    }
 }

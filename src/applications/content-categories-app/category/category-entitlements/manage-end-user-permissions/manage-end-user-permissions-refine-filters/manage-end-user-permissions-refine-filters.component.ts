@@ -8,8 +8,8 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import {ManageEndUserPermissionsService, UsersFilters} from '../manage-end-user-permissions.service';
 import {
-  ManageEndUserPermissionsRefineFiltersService,
-  RefineGroup
+    ManageEndUserPermissionsRefineFiltersService,
+    RefineList
 } from './manage-end-user-permissions-refine-filters.service';
 
 const listOfFilterNames: (keyof UsersFilters)[] = [
@@ -19,22 +19,16 @@ const listOfFilterNames: (keyof UsersFilters)[] = [
 ];
 
 export interface PrimeListItem {
-  label: string,
-  value: string,
-  parent: PrimeListItem,
-  listName: string,
-  children: PrimeListItem[]
+    label: string,
+    value: string,
+    parent: PrimeListItem,
+    listName: string,
+    children: PrimeListItem[]
 }
 
 export interface PrimeList {
-  group?: string;
-  items: PrimeListItem[];
-  selections: PrimeListItem[];
-}
-
-export interface PrimeListsGroup {
-  label: string;
-  lists: PrimeList[];
+    items: PrimeListItem[];
+    selections: PrimeListItem[];
 }
 
 
@@ -54,7 +48,7 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
   // properties that are exposed to the template
-  public _primeListsGroups: PrimeListsGroup[] = [];
+    public _primeLists: PrimeList[];
 
   public _showLoader = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -87,50 +81,41 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
 
   private _updateComponentState(updates: Partial<UsersFilters>): void {
 
-    let updatedPrimeTreeSelections = false;
-    Object.keys(this._primeListsMap).forEach(listName => {
-      const listData = this._primeListsMap[listName];
-      let listFilter: { value: string, label: string }[];
-      if (listData.group === 'customMetadata') {
-        const customMetadataFilter = updates['customMetadata'];
-        listFilter = customMetadataFilter ? customMetadataFilter[listName] : null;
-      } else {
-        listFilter = updates[listName];
-      }
+      let updatedPrimeTreeSelections = false;
+      Object.keys(this._primeListsMap).forEach(listName => {
+          const listData = this._primeListsMap[listName];
+          const listFilter: { value: string, label: string }[] = updates[listName];
 
-      if (typeof listFilter !== 'undefined') {
-        const listSelectionsMap = this.manageEndUserPermissionsService.filtersUtils.toMap(listData.selections, 'value');
-        const listFilterMap = this.manageEndUserPermissionsService.filtersUtils.toMap(listFilter, 'value');
-        const diff = this.manageEndUserPermissionsService.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
+          if (typeof listFilter !== 'undefined') {
+              const listSelectionsMap = this.manageEndUserPermissionsService.filtersUtils.toMap(listData.selections, 'value');
+              const listFilterMap = this.manageEndUserPermissionsService.filtersUtils.toMap(listFilter, 'value');
+              const diff = this.manageEndUserPermissionsService.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
 
-        diff.added.forEach(addedItem => {
-          const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-          const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
-          if (!matchingItem) {
-            console.warn(`[categories-refine-filters]: failed to sync filter for '${listName}'`);
-          } else {
-            updatedPrimeTreeSelections = true;
-            listData.selections.push(matchingItem);
+              diff.added.forEach(addedItem => {
+                  const listItems = listData.items.length > 0 ? listData.items[0].children : [];
+                  const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
+                  if (!matchingItem) {
+                      console.warn(`[drop-folders-refine-filters]: failed to sync filter for '${listName}'`);
+                  } else {
+                      updatedPrimeTreeSelections = true;
+                      listData.selections.push(matchingItem);
+                  }
+              });
+
+              diff.deleted.forEach(removedItem => {
+
+                  if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
+                      // ignore root items (they are managed by the component tree)
+                      listData.selections.splice(listData.selections.indexOf(removedItem), 1);
+                      updatedPrimeTreeSelections = true;
+                  }
+              });
           }
-        });
+      });
 
-        diff.deleted.forEach(removedItem => {
-
-          if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
-            // ignore root items (they are managed by the component tree)
-            listData.selections.splice(
-              listData.selections.indexOf(removedItem),
-              1
-            );
-            updatedPrimeTreeSelections = true;
-          }
-        });
+      if (updatedPrimeTreeSelections) {
+          this._fixPrimeTreePropagation();
       }
-    });
-
-    if (updatedPrimeTreeSelections) {
-      this._fixPrimeTreePropagation();
-    }
   }
 
 
@@ -145,12 +130,30 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
   }
 
   private _prepare(): void {
-    this._showLoader = true;
-    const group = this._refineFiltersService.getFilters()
-    this._showLoader = false;
-    this._buildComponentLists(group);
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
+      this._showLoader = true;
+      const group = this._refineFiltersService.getFilters()
+          .cancelOnDestroy(this)
+          .first() // only handle it once, no need to handle changes over time
+          .subscribe(
+              lists => {
+                  this._showLoader = false;
+                  this._buildComponentLists(lists);
+                  this._restoreFiltersState();
+                  this._registerToFilterStoreDataChanges();
+              },
+              error => {
+                  this._showLoader = false;
+                  this._blockerMessage = new AreaBlockerMessage({
+                      message: error.message || this._appLocalization.get('applications.content.filters.errorLoading'),
+                      buttons: [{
+                          label: this._appLocalization.get('app.common.retry'),
+                          action: () => {
+                              this._blockerMessage = null;
+                              this._prepare();
+                          }
+                      }]
+                  });
+              });
   }
 
   private _fixPrimeTreePropagation() {
@@ -163,43 +166,38 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
     });
   }
 
-  _buildComponentLists(group: RefineGroup): void {
-    this._primeListsMap = {};
-    this._primeListsGroups = [];
+  _buildComponentLists(lists: RefineList[]): void {
+      this._primeListsMap = {};
+      this._primeLists = [];
 
-    // create root nodes
-    const filtersGroup = {label: group.label, lists: []};
-    this._primeListsGroups.push(filtersGroup);
+      // create root nodes
 
-    group.lists.forEach(list => {
+      lists.forEach(list => {
+          if (list.items.length > 0) {
+              const primeList = { items: [], selections: [] };
+              this._primeListsMap[list.name] = primeList;
+              this._primeLists.push(primeList);
+              const listRootNode: PrimeListItem = {
+                  label: list.label,
+                  value: null,
+                  listName: list.name,
+                  parent: null,
+                  children: []
+              };
 
-      if (list.items.length > 0) {
-        const primeList = {items: [], selections: [], group: list.group};
+              list.items.forEach(item => {
+                  listRootNode.children.push({
+                      label: item.label,
+                      value: item.value,
+                      children: [],
+                      listName: <any>list.name,
+                      parent: listRootNode
+                  })
+              });
 
-        this._primeListsMap[list.name] = primeList;
-        filtersGroup.lists.push(primeList);
-
-        const listRootNode: PrimeListItem = {
-          label: list.label,
-          value: null,
-          listName: list.name,
-          parent: null,
-          children: []
-        };
-
-        list.items.forEach(item => {
-          listRootNode.children.push({
-            label: item.label,
-            value: item.value,
-            children: [],
-            listName: <any>list.name,
-            parent: listRootNode
-          })
-        });
-
-        primeList.items.push(listRootNode);
-      }
-    });
+              primeList.items.push(listRootNode);
+          }
+      });
   }
 
 
