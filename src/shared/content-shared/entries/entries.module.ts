@@ -34,7 +34,7 @@ import { ModerationPipe } from './pipes/moderation.pipe';
 import { EntriesSelectorComponent } from './entries-selector/entries-selector.component';
 import { EntriesListTagsComponent } from './entries-list/entries-list-tags.component';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
-import { CategoriesModule } from '../content-shared/categories/categories.module';
+import { CategoriesModule } from '../categories/categories.module';
 
 @NgModule({
   imports: [

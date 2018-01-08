@@ -5,7 +5,7 @@ import { routing } from './content-moderation-app.routes';
 
 import { ContentModerationComponent } from './content-moderation.component';
 import { EntriesComponentsList } from './entries-components-list';
-import { EntriesModule } from 'app-shared/entries/entries.module';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 
 import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {

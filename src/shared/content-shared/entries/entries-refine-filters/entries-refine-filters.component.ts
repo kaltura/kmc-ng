@@ -7,7 +7,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
-import { EntriesFilters, EntriesStore } from 'app-shared/entries/entries-store/entries-store.service';
+import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',

@@ -42,7 +42,7 @@ import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
 
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
-import { EntriesModule } from 'app-shared/entries/entries.module';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { ContentEntriesAppService } from './content-entries-app.service';
 import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
 

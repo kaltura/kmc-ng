@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { EntriesListComponent } from 'app-shared/entries/entries-list/entries-list.component';
-import { EntriesStore } from 'app-shared/entries/entries-store/entries-store.service';
+import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
+import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { EntriesTableColumns } from 'app-shared/entries/entries-table/entries-table.component';
+import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 

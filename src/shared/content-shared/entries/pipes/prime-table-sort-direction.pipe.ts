@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { SortDirection } from 'app-shared/entries/entries-store/entries-store.service';
+import { SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 
 @Pipe({ name: 'kPrimeTableSortDirection' })
 export class PrimeTableSortDirectionPipe implements PipeTransform {

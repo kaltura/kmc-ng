@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core'
 
 import * as moment from 'moment';
 import {GroupedListType, ListType} from '@kaltura-ng/mc-shared/filters';
-import {EntriesFilters, EntriesStore} from 'app-shared/entries/entries-store/entries-store.service';
+import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export interface TagItem
