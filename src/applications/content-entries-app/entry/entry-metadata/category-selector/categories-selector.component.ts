@@ -18,8 +18,8 @@ import {AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primen
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryCategoryItem } from '../entry-metadata-widget.service';
 
-import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
-import {  TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';import {CategoriesSearchService} from "app-shared/content-shared/categories-search.service";
+import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
+import {  TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';import {CategoriesSearchService} from "app-shared/content-shared/categories/categories-search.service";
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 

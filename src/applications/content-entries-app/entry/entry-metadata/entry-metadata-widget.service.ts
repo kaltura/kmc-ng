@@ -26,7 +26,7 @@ import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes 
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { DynamicMetadataForm, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
-import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories-search.service';
+import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';

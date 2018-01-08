@@ -5,7 +5,7 @@ import { routing } from './content-moderation-app.routes';
 
 import { ContentModerationComponent } from './content-moderation.component';
 import { EntriesComponentsList } from './entries-components-list';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { EntriesModule } from 'app-shared/content-shared/entries.module';
 
 import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
@@ -52,7 +52,7 @@ import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc
     MenuModule,
     KalturaPrimeNgUIModule,
     SharedModule,
-    ContentSharedModule,
+      EntriesModule,
     AccordionModule,
     CalendarModule,
     CheckboxModule,

@@ -11,9 +11,9 @@ import {Subject} from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import {
   CategoriesTreeComponent
-} from 'app-shared/content-shared/categories-tree/categories-tree.component';
+} from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {CategoriesSearchService} from 'app-shared/content-shared/categories-search.service';
+import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 @Component({

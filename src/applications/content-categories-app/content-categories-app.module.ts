@@ -8,7 +8,8 @@ import {
   CategoriesBulkRemoveTagsService
 } from './categories/bulk-actions/services';
 import {CategoriesBulkActionsComponent} from './categories/bulk-actions/categories-bulk-actions.component';
-import {ContentSharedModule} from 'app-shared/content-shared/content-shared.module';
+import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
+
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
@@ -69,6 +70,7 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         CheckboxModule,
         CommonModule,
         ConfirmDialogModule,
+        CategoriesModule,
         DataTableModule,
         DropdownModule,
         DynamicFormModule,
@@ -96,7 +98,6 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         TooltipModule,
         TreeModule,
         DetailsBarModule,
-        ContentSharedModule,
         StickyModule,
         InputSwitchModule
     ],

@@ -8,6 +8,8 @@ import {Ng2Webstorage} from 'ng2-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
 import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 import { PreviewAndEmbedModule } from '../applications/preview-and-embed/preview-and-embed.module';
+import {EntriesModule} from 'app-shared/content-shared/entries.module';
+import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 
 import {
   AppBootstrap,
@@ -109,6 +111,8 @@ export function clientConfigurationFactory() {
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
     TranslateModule.forRoot(),
+      EntriesModule.forRoot(),
+      CategoriesModule.forRoot(),
     Ng2Webstorage,
     PopupWidgetModule,
     routing,

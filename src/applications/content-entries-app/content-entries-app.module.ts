@@ -42,8 +42,9 @@ import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
 
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { EntriesModule } from 'app-shared/content-shared/entries.module';
 import { ContentEntriesAppService } from './content-entries-app.service';
+import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import { ContentEntriesAppService } from './content-entries-app.service';
     CommonModule,
     ConfirmDialogModule,
     DataTableModule,
+      CategoriesModule,
     DropdownModule,
     DynamicFormModule,
     FormsModule,
@@ -82,7 +84,7 @@ import { ContentEntriesAppService } from './content-entries-app.service';
     TooltipModule,
     TreeModule,
     DetailsBarModule,
-    ContentSharedModule,
+      EntriesModule,
     StickyModule
   ],
   declarations: [
