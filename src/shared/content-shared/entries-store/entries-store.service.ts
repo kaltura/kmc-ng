@@ -38,11 +38,16 @@ import {
     StringTypeAdapter,
     ListAdapter, ListType,
     NumberTypeAdapter,
-    GroupedListType
+    GroupedListType, EnumTypeAdapter
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
 import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
+import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-shared/categories/categories-list-type';
+import {
+    CategoriesModeAdapter, CategoriesModes,
+    CategoriesModeType
+} from 'app-shared/content-shared/categories/categories-mode-type';
 
 export enum SortDirection {
     Desc,
@@ -67,6 +72,8 @@ export interface EntriesFilters {
     accessControlProfiles: ListType,
     flavors: ListType,
     distributions: ListType,
+    categories: CategoriesListType,
+    categoriesMode: CategoriesModeType,
     customMetadata: GroupedListType
 }
 
@@ -109,6 +116,11 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         if (typeof updates.pageIndex === 'undefined') {
             // reset page index to first page everytime filtering the list by any filter that is not page index
             updates.pageIndex = 0;
+        }
+
+        if (typeof updates.categoriesMode !== 'undefined')
+        {
+            this.browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', updates.categoriesMode);
         }
 
         return updates;
@@ -393,6 +405,15 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                 });
             }
 
+            if (data.categories && data.categories.length) {
+                const categoriesValue = data.categories.map(item => item.value).join(',');
+                if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
+                    filter.categoryAncestorIdIn = categoriesValue;
+                } else {
+                    filter.categoriesIdsMatchOr = categoriesValue;
+                }
+            }
+
             // remove advanced search arg if it is empty
             if (advancedSearch.items && advancedSearch.items.length === 0) {
                 delete filter.advancedSearch;
@@ -480,6 +501,13 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     }
 
     protected _createDefaultFiltersValue(): EntriesFilters {
+
+        const savedAutoSelectChildren: CategoriesModes = this.browserService
+            .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
+        const categoriesMode = typeof savedAutoSelectChildren === 'number'
+            ? savedAutoSelectChildren
+            : CategoriesModes.SelfAndChildren;
+
         return {
             freetext: '',
             pageSize: 50,
@@ -498,6 +526,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             accessControlProfiles: [],
             flavors: [],
             distributions: [],
+            categories: [],
+            categoriesMode,
             customMetadata: {}
         };
     }
@@ -521,6 +551,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             accessControlProfiles: new ListAdapter(),
             flavors: new ListAdapter(),
             distributions: new ListAdapter(),
+            categories: new CategoriesListAdapter(),
+            categoriesMode: new CategoriesModeAdapter(),
             customMetadata: new GroupedListAdapter()
         };
     }

@@ -2,15 +2,14 @@
   <div class="kTreeContainer kOverrideFAIcons">
 
     <p-tree #tree
-            *ngIf="_selectionModes.multiple === _selectionMode"
-            kPrimeTreePropagation
-            [propagateDownMode]="disablePropagation ? 'preventNested' : 'none'"
-            [propagateUpMode]="disablePropagation ? 'visualOnly' : 'none'"
+            *ngIf="selectionMode === 'multiple'"
+            kCategoriesTreePropagation
+            [propagateDownMode]="disablePropagation ? 'none' : 'preventNested'"
+            [propagateUpMode]="disablePropagation ? 'none' : 'visualOnly'"
             [value]="_categories"
-            [selection]="selection"
-            (selectionChange)="_selectionChange($event)"
-            (onNodeSelect)="onNodeSelect.emit($event)"
-            (onNodeUnselect)="onNodeUnselect.emit($event)"
+            [(selection)]="_selectedTreeNodes"
+            (onNodeSelect)="_onNodeSelect($event.node)"
+            (onNodeUnselect)="_onNodeUnselect($event)"
             (onNodeExpand)="_onNodeExpand($event)">
       <ng-template let-node pTemplate="default">
         <div>
@@ -29,16 +28,12 @@
     </p-tree>
 
     <p-tree #tree
-            *ngIf="_selectionModes.single === _selectionMode"
-            selectionMode="single"
-            [value]="_categories"
-            [selection]="selection"
-            (selectionChange)="_selectionChange($event)"
-            (onNodeSelect)="_onNodeSelect($event)"
-            (onNodeExpand)="_onNodeExpand($event)">
+            *ngIf="selectionMode === 'single'"
+            (onNodeExpand)="_onNodeExpand($event)"
+            [value]="_categories">
       <ng-template let-node pTemplate="default">
-        <div>
-          <p-radioButton [value]="node" [ngModel]="selection"></p-radioButton>
+        <div (click)="_onNodeSelect(node)">
+          <p-radioButton [value]="node" [ngModel]="_selectedTreeNode"></p-radioButton>
           <span class="kTreeNodeLabel">{{node.label}}</span>
           <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
         </div>

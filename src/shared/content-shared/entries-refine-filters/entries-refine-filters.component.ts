@@ -379,7 +379,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                       if (!newFilterItems.find(item => item.value === selectedNode.value)) {
 
                           if (listData.group === 'customMetadata') {
-                              newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label, payload: { tooltip: `${listData.items[0].label}: ${selectedNode.value}` } });
+                              newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label,  tooltip: `${listData.items[0].label}: ${selectedNode.value}`  });
                           } else {
                               newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label });
                           }

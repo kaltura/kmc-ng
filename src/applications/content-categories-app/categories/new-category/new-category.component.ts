@@ -3,9 +3,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoriesService} from '../categories.service';
-import {CategoryData} from 'app-shared/content-shared/categories-search.service';
+
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 @Component({
   selector: 'kNewCategory',
@@ -19,7 +19,7 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
   @Output() onApply = new EventEmitter<{ categoryId: number }>();
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedParentCategory: CategoryData = null;
+  public _selectedParentCategory: CategoriesListItem = null;
   public newCategoryForm: FormGroup;
 
   constructor(private _appLocalization: AppLocalization,
@@ -37,16 +37,16 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  public _onCategorySelected(event: CategoryData) {
+  public _onCategorySelected(event: CategoriesListItem) {
     this._selectedParentCategory = event;
   }
 
   public _apply(): void {
     this._blockerMessage = null;
-    this._createNewCategory(this._selectedParentCategory);
+    this._createNewCategory();
   }
 
-  private _createNewCategory(categoryParent: CategoryData) {
+  private _createNewCategory() {
     const categoryName = this.newCategoryForm.controls['name'].value;
     if (!categoryName || !categoryName.length) {
       this._blockerMessage = new AreaBlockerMessage({
@@ -63,7 +63,7 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
     } else {
       this._categoriesService
         .addNewCategory({
-          categoryParentId: categoryParent && categoryParent.id,
+          categoryParentId: this._selectedParentCategory ? this._selectedParentCategory.value : null,
           name: categoryName,
           linkedEntriesIds: this.linkedEntries.map(entry => entry.entryId)
         })

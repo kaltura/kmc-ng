@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TreeSelectionModes } from 'app-shared/content-shared/categories-filter/categories-filter.component';
+import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
 @Component({
   selector: 'kCategoriesFilterPrefs',
@@ -8,11 +8,11 @@ import { TreeSelectionModes } from 'app-shared/content-shared/categories-filter/
 })
 export class CategoriesFilterPrefsComponent {
 
-  @Input() selectionMode: TreeSelectionModes;
-  @Output() selectionModeChange: EventEmitter<TreeSelectionModes> = new EventEmitter<TreeSelectionModes>();
+  @Input() selectionMode: CategoriesModes;
+  @Output() selectionModeChange = new EventEmitter<CategoriesModes>();
 
   // expose enum to the template
-  public _TreeSelectionModes = TreeSelectionModes;
+  public _CategoriesModes = CategoriesModes;
 
   constructor() {
   }

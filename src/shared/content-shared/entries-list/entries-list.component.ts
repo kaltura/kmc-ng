@@ -8,6 +8,9 @@ import {
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
+
+import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 @Component({
   selector: 'kEntriesList',
@@ -32,9 +35,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         createdAfter: null,
         createdBefore: null,
         pageIndex: 0,
-        pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
-        sortBy: 'createdAt',
-        sortDirection: SortDirection.Desc
+        pageSize: null,
+        sortBy: null,
+        sortDirection: null,
+        categories: [],
+        categoriesMode: null
     };
 
     constructor(private _entriesStore: EntriesStore,
@@ -57,7 +62,9 @@ export class EntriesListComponent implements OnInit, OnDestroy {
                 'pageSize',
                 'pageIndex',
                 'sortBy',
-                'sortDirection'
+                'sortDirection',
+                'categories',
+                'categoriesMode'
             ]
         ));
     }
@@ -82,7 +89,65 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         if (typeof updates.sortDirection !== 'undefined') {
             this._query.sortDirection = updates.sortDirection;
         }
+
+        if (typeof updates.categoriesMode !== 'undefined') {
+            this._query.categoriesMode = updates.categoriesMode === CategoriesModes.Self ? CategoriesModes.Self : CategoriesModes.SelfAndChildren;
+        }
+
+        if (typeof updates.categories !== 'undefined') {
+            this._query.categories = [...updates.categories];
+        }
     }
+
+    onCategoriesModeChanged(categoriesMode)
+    {
+        this._entriesStore.filter({
+            categoriesMode
+        })
+    }
+
+    onCategoriesUnselected(categoriesToRemove: CategoriesListItem[]) {
+        const categories = this._entriesStore.cloneFilter('categories', []);
+
+        categoriesToRemove.forEach(categoryToRemove => {
+            const categoryIndex = categories.findIndex(item => item.value === categoryToRemove.value);
+            if (categoryIndex !== -1) {
+                categories.splice(
+                    categoryIndex,
+                    1
+                );
+            }
+        });
+        this._entriesStore.filter({categories});
+    }
+
+    onCategorySelected(category: CategoriesListItem){
+        const categories = this._entriesStore.cloneFilter('categories', []);
+        if (!categories.find(item => item.value === category.value)) {
+            if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
+                // when this component is running with SelfAndChildren mode, we need to manually unselect
+                // the first nested child (if any) that is currently selected
+                const childrenToRemove = categories.filter(item => {
+                    // check if this item is a parent of another item (don't validate last item which is the node itself)
+                    let result = false;
+                    for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
+                        result = item.fullIdPath[i] === category.value;
+                    }
+                    return result;
+                });
+
+                childrenToRemove.forEach(childToRemove => {
+                    categories.splice(
+                        categories.indexOf(childToRemove),
+                        1);
+                });
+            }
+
+            categories.push(category);
+            this._entriesStore.filter({'categories': categories});
+        }
+    }
+
 
     private _registerToFilterStoreDataChanges(): void {
         this._entriesStore.filtersChange$

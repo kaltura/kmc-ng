@@ -35,7 +35,6 @@ import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KMCShellModule } from 'app-shared/kmc-shell';
-import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc-shared';
 
@@ -75,7 +74,6 @@ import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc
     KMCShellModule,
     PrimeDynamicFormModule,
     ReactiveFormsModule,
-    PrimeTreeModule,
     TagsModule
   ],
   declarations: [
