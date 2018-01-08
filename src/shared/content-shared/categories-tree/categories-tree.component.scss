@@ -10,6 +10,9 @@
       text-overflow: ellipsis;
       margin-left: 5px;
     }
+    .kTreeNodeLabelSingle{
+      color: $kGrayscale1;
+    }
 
     .kTreeNodeNumChildren {
       font-size: 14px;
@@ -61,5 +64,5 @@
 
 :host /deep/ .ui-tree.ui-widget.ui-widget-content {
   width: 100%;
+  border: none;
 }
-
