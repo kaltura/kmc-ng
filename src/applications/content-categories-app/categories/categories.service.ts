@@ -41,10 +41,11 @@ import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppea
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
 import {KalturaCategoryEntry} from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
 import {CategoryEntryAddAction} from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
-import { CategoriesListAdapter, CategoriesListType } from "app-shared/content-shared/categories/categories-list-type";
+import {CategoriesListAdapter, CategoriesListType} from "app-shared/content-shared/categories/categories-list-type";
 import {
-    CategoriesModeAdapter, CategoriesModes,
-    CategoriesModeType
+  CategoriesModeAdapter,
+  CategoriesModes,
+  CategoriesModeType
 } from 'app-shared/content-shared/categories/categories-mode-type';
 
 export interface UpdateStatus {
@@ -555,13 +556,16 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             .map(
                 data => {
                     if (data.hasErrors()) {
-                        throw new Error('error occurred while trying to add new category');
+                        let message = 'An error occurred while trying to add new category';
+                        if (data[0].error && data[0].error.message) { // show error of CategoryAddAction
+                          message = data[0].error.message;
+                        } else if (multiRequest.requests.length > 1) {
+                          message = 'Category was created, but failed to link some of the entries, please review the created category'
+                        }
+                        throw new Error(message);
                     }
                     return {category: data[0].result};
-                })
-            .catch(error => {
-                throw new Error('error occurred while trying to add new category');
-            });
+                });
     }
 
     /**
