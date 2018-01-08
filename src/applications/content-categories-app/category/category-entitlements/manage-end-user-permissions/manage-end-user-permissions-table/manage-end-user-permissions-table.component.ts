@@ -74,6 +74,9 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
     this._blockerMessage = null;
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to "no results" only after search
+    this._fillPermissionLevelOptions();
+    this._fillUpdateMethodOptions();
+    
     this._usersServiceStatusSubscription = this.manageEndUserPermissionsService.users.state$.subscribe(
       result => {
         if (result.errorMessage) {
@@ -95,8 +98,6 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
           if (result.loading) {
             this._emptyMessage = '';
             loadedOnce = true;
-            this._fillPermissionLevelOptions();
-            this._fillUpdateMethodOptions();
           } else {
             if (loadedOnce) {
               this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
