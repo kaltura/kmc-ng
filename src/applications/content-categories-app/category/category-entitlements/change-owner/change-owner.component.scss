@@ -62,14 +62,9 @@
   input{
     width: 100%;
   }
-  .ui-autocomplete-input-token{
-    width:100%;
-  }
 
   ul.ui-autocomplete-multiple-container {
-
-    height: 53px;
-    overflow: auto;
+    height: auto;
   }
 }
 
