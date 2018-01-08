@@ -39,8 +39,7 @@
 
   .kBulkActionsContainer {
     flex: 0 0 auto;
-    padding: 9px;
-    padding-left: 24px;
+    padding: 9px 0 9px 24px;
     font-size: 15px;
     display: inline-flex;
     align-items: center;
@@ -53,7 +52,7 @@
     .kItemsNum {
       padding-left: 24px;
       display: inline-block;
-      width: 387px;
+      width: 392px;
     }
 
     .kItemsNum.kSelected {
