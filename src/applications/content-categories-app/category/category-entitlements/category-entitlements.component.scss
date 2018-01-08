@@ -116,6 +116,10 @@
     }
   }
 
+  .kParentLink {
+    padding-left: 4px;
+  }
+
   a {
     color: $kTertiary;
   }
@@ -142,6 +146,7 @@
     .ui-dropdown-label.ui-inputtext {
       background-color: #ffffff;
       width: 330px;
+      color: $kBlack;
     }
   }
 }

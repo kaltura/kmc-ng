@@ -16,6 +16,9 @@ import {ManageEndUserPermissionsTableComponent} from './category-entitlements/ma
 import {CategoryUserStatusPipe} from './category-entitlements/manage-end-user-permissions/manage-end-user-permissions-table/category-user-status.pipe';
 import {ManageEndUserPermissionsBulkOperationsComponent} from './category-entitlements/manage-end-user-permissions/bulk-operations/bulk-operations.component';
 import {AddUsersComponent} from './category-entitlements/manage-end-user-permissions/add-users/add-users.component';
+import {ManageEndUserPermissionsRefineFiltersComponent} from './category-entitlements/manage-end-user-permissions/manage-end-user-permissions-refine-filters/manage-end-user-permissions-refine-filters.component';
+import {ManageEndUserPermissionsFilterTagsComponent} from './category-entitlements/manage-end-user-permissions/manage-end-user-permissions-filter-tags/manage-end-user-permissions-filter-tags.component';
+import {CategoryOwnerNamePipe} from "./category-entitlements/category-owner-name.pipe";
 
 export const CategoryComponentsList = [
     CategoryComponent,
@@ -34,7 +37,10 @@ export const CategoryComponentsList = [
     LinkedEntries,
     ManageEndUserPermissionsComponent,
     ManageEndUserPermissionsTableComponent,
+    ManageEndUserPermissionsRefineFiltersComponent,
+    ManageEndUserPermissionsFilterTagsComponent,
     CategoryUserStatusPipe,
+    CategoryOwnerNamePipe,
     ManageEndUserPermissionsBulkOperationsComponent,
     AddUsersComponent
 ];

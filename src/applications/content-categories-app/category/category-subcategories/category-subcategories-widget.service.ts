@@ -20,7 +20,7 @@ import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteA
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CategoriesUtilsService} from '../../categories-utils.service';
-import { CategoryService } from '../category.service';
+import {CategoryService} from '../category.service';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -242,7 +242,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
                 this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.applications.content.categoryDetails.subcategories.errors.subcategoriesLoadError'),
               buttons: [
                 {
-                  label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+                  label: this._appLocalization.get('app.common.retry'),
                   action: () => {
                     this.refresh();
                   }

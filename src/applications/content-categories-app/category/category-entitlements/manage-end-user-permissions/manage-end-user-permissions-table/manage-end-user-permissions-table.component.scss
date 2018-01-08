@@ -2,10 +2,12 @@
 
 .kTable {
   background-color: white;
-  overflow: hidden;
   position: relative;
   padding: 0px;
-
+  height: 100%;
+  k-area-blocker {
+    min-height: 250px;
+  }
   .kTableActions {
     width: 100%;
     text-align: center;
@@ -109,6 +111,7 @@
   display: flex;
   flex-flow: row wrap;
   margin: 0;
+  height: 100%;
   flex-direction: column;
 }
 

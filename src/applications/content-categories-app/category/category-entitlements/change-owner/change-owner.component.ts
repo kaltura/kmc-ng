@@ -26,7 +26,6 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
   @Input() category: KalturaCategory;
   @Output() ownerChanged = new EventEmitter<KalturaUser>();
 
-  public _loading = false;
   public _blockerMessage: AreaBlockerMessage;
 
   public _usersProvider = new Subject<SuggestionsProviderData>();
@@ -150,37 +149,10 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   public _apply() {
-    this._blockerMessage = null;
-    this._loading = true;
-    if (this.category && this._owner) {
-      this.categoriesBulkChangeOwnerService.execute([this.category], this._owner)
-        .subscribe(result => {
-          this._confirmClose = false;
-          this.ownerChanged.emit(Array.isArray(this._owner) ? this._owner[0] : this._owner);
-          this.parentPopupWidget.close();
-        }, error => {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.errors.changeOwnerFailed'),
-            buttons: [{
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => {
-                this._apply();
-              }
-            }
-            ]
-          });
-        });
-    } else {
-      this._blockerMessage = new AreaBlockerMessage({
-        message: this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.errors.selectUser'),
-        buttons: [{
-          label: this._appLocalization.get('app.common.ok'),
-          action: () => {
-            this._blockerMessage = null;
-          }
-        }
-        ]
-      });
+    this._confirmClose = false;
+    this.ownerChanged.emit(Array.isArray(this._owner) ? this._owner[0] : this._owner);
+    if (this.parentPopupWidget) {
+      this.parentPopupWidget.close();
     }
   }
 }

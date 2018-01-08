@@ -9,6 +9,7 @@ import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdat
 import {CategoryUserAddAction} from 'kaltura-ngx-client/api/types/CategoryUserAddAction';
 import {KalturaCategoryUser} from 'kaltura-ngx-client/api/types/KalturaCategoryUser';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {CategoryUserCopyFromCategoryAction} from "kaltura-ngx-client/api/types/CategoryUserCopyFromCategoryAction";
 
 @Injectable()
 export class AddUsersService {
@@ -39,15 +40,25 @@ export class AddUsersService {
     return this._kalturaServerClient.multiRequest(multiRequest)
       .map(response => {
           if (response.hasErrors()) {
-            throw new Error(
-              this._appLocalization
-                .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.addUsersFailed'));
+            const errorMessage = (response.find(r => (r.error && r.error.code !== 'CATEGORY_USER_ALREADY_EXISTS'))) ?
+                'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.addUsersFailed':
+                'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.duplicateUsers';
+            throw new Error(this._appLocalization.get(errorMessage));
           }
           return undefined;
         }
       )
       .catch(err => Observable.throw(err));
   }
+
+
+
+  public copyUsersFromParent({categoryId}: {categoryId: number}): Observable<void> {
+    return this._kalturaServerClient.request(
+      new CategoryUserCopyFromCategoryAction({categoryId})
+    );
+  }
+
 
   public getUsersSuggestions(query: string) {
     return this._kalturaServerClient.request(

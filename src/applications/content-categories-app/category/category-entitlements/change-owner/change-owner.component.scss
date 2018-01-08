@@ -57,8 +57,14 @@
 
 :host /deep/ .ui-autocomplete.ui-widget{
   width: 100%;
+  font-size: 15px;
+
   input{
     width: 100%;
+  }
+
+  ul.ui-autocomplete-multiple-container {
+    height: auto;
   }
 }
 
@@ -69,5 +75,3 @@
 /deep/ kPopupWidget .kPopupWidget {
   overflow: visible !important;
 }
-
-

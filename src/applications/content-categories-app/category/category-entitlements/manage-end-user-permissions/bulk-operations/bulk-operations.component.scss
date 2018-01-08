@@ -1,129 +1,21 @@
-@import 'app-theme/_variables.scss';
 
-.kHeader {
-  display: flex;
-  align-items: center;
-  width: 100%;
 
-  .kBulkActionsContainer {
-    font-size: 15px;
-    display: inline-flex;
-    align-items: center;
+  .kSelectedItems {
+    font-weight: bold;
+  }
 
-    .kAddItemBtn {
+  .kBulkDeleteBtnContainer {
+    display: inline-block;
+    padding: 0 24px;
+    .kBulkDeleteBtn {
       height: 34px;
       width: 100px;
     }
-
-    .kItemsNum {
-      padding-left: 24px;
-      display: inline-block;
-      width: 387px;
-    }
-
-    .kItemsNum.kSelected {
-      width: auto;
-      padding-left: 0px;
-    }
-
-    .kBulkActions {
-      margin-left: 16px;
-      display: inline-block;
-
-      .kSelectedItems {
-        font-weight: bold;
-      }
-
-      .kBulkDeleteBtnContainer {
-        display: inline-block;
-        padding: 0 24px;
-        .kBulkDeleteBtn {
-          height: 34px;
-          width: 100px;
-        }
-      }
-      .kBulkActionsBtn {
-      }
-
-      .kBulkCancel {
-        padding: 0 24px;
-        color: #333333;
-      }
-    }
-
-    .kFiltersContainer {
-      display: flex;
-
-      .kSearchInput {
-        background: $kMagnifyingGlassBkg;
-        padding-left: 30px;
-        margin-right: 16px;
-        width: 258px;
-      }
-
-      .kRefine {
-        border: 1px solid $kGrayscale4;
-        border-radius: 4px;
-        display: flex;
-        background-color: #ffffff;
-        height: 32px;
-        align-items: center;
-        cursor: pointer;
-        color: $kGrayscale1;
-        position: relative;
-        width: 160px;
-        .kIconfilter {
-          font-size: 22px;
-          padding-left: 11px;
-          color: $kGrayscale3;
-        }
-        .kRefineText {
-          width: 95px;
-          color: $kGrayscale1;
-          font-size: 15px;
-          padding-left: 8px;
-        }
-      }
-    }
   }
-}
-
-:host /deep/  .kIcondropdown_arrow_bottom {
-  font-size: 12px;
-  color: $kGrayscale3;
-}
-
-:host /deep/  .ui-button-text-icon-right .ui-button-text {
-padding-left: 10px;
-}
-
-.kEntriesTableFilters {
-  color: $kGrayscale1;
-  z-index: 502;
-  height: 66px;
-  background-color: white;
-  flex: 0 0 auto;
-  align-items: center;
-  margin-left: 0px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  display: flex;
-  .kSelectedEntriesNum {
-    padding-left: 16px;
+  .kBulkActionsBtn {
   }
-}
 
-:host /deep/ kSticky {
-  width: 100%;
-}
-
-:host /deep/ .kStickyHeader {
-  background-color: white;
-  border-top: 2px solid $kGrayscale6;
-  box-shadow: $kGrayscale5 0px 1px 0px;
-  display: flex;
-  height: 68px;
-  width: inherit;
-}
-
-
+  .kBulkCancel {
+    padding: 0 24px;
+    color: #333333;
+  }
