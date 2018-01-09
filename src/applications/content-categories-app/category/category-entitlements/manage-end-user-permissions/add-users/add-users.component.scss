@@ -99,7 +99,7 @@ $autoCompleteWidth: 326px;
 }
 
 
-/deep/ .ui-autocomplete.ui-widget{
+:host /deep/ .ui-autocomplete.ui-widget{
   width: $autoCompleteWidth;
   font-size: 15px;
 

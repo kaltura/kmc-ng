@@ -133,7 +133,7 @@
   /*********************/
   /* PrimeNG overrides */
   /*********************/
-  /deep/ {
+  :host /deep/ {
 
     .ui-radiobutton-label {
       font-weight: normal;
