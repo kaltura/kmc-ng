@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 
 @Component({
     selector: 'kEntries',
@@ -8,7 +8,11 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
     styleUrls: ['./content-entries.component.scss'],
     providers : [
         EntriesStore,
-        KalturaLogger.createFactory('entries-store.service')]
+        KalturaLogger,
+        {
+            provide: KalturaLoggerName, useValue: 'entries-store.service'
+        }
+    ]
 })
 export class ContentEntriesComponent  {
 

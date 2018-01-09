@@ -193,7 +193,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteEntries(): void {
-    const entriesToDelete = this.selectedEntries.map((entry, index) => entry.name ),
+    const entriesToDelete = this.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}` ),
       entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
       message: string = this.selectedEntries.length > 1 ?
         this._appLocalization.get('applications.content.entries.confirmDeleteMultiple', { 0: entries }) :

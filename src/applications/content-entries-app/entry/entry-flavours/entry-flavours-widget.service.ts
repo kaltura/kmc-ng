@@ -27,6 +27,8 @@ import {FlavorAssetGetUrlAction} from 'kaltura-ngx-client/api/types/FlavorAssetG
 import {KalturaUploadedFileTokenResource} from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
 import {EntryWidget} from '../entry-widget';
 import {NewEntryFlavourFile} from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
@@ -40,7 +42,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     public sourceAvailabale: boolean = false;
 
     constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
-                private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement: UploadManagement) {
+                private _appAuthentication: AppAuthentication, private _browserService: BrowserService,
+                private _uploadManagement: UploadManagement, private _appEvents: AppEventsService) {
         super(EntryWidgetKeys.Flavours);
     }
 
@@ -433,6 +436,10 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .cancelOnDestroy(this, this.widgetReset$)
             .subscribe(() => {
                     super._hideLoader();
+                    const entryId = this.data ? this.data.id : null;
+                    if (entryId) {
+                        this._appEvents.publish(new PreviewMetadataChangedEvent(entryId));
+                    }
                 },
                 (error) => {
                     super._hideLoader();

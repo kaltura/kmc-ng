@@ -106,7 +106,9 @@ export class CategoryService implements OnDestroy {
         if (this._categoryIsDirty) {
             this._pageExitVerificationToken = this._pageExitVerificationService.add();
         } else {
-            this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+        	if (this._pageExitVerificationToken) {
+                this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+            }
             this._pageExitVerificationToken = null;
         }
     }
@@ -116,7 +118,10 @@ export class CategoryService implements OnDestroy {
         this._state.complete();
         this._category.complete();
 
-        this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+        if (this._pageExitVerificationToken) {
+            this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+        }
+
         if (this._saveCategoryInvoked) {
             this._categoriesStore.reload();
         }

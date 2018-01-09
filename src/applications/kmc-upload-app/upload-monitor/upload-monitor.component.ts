@@ -19,10 +19,12 @@ export interface UploadMonitorStatuses {
 export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
 
+  private _sectionHeight = 91;
+
+  public _popupHeight = 273; // default height that fits 3 sections
   public _showErrorIcon = false;
   public _menuOpened = false;
   public _upToDate = true;
-  public _hasError = false;
   public _uploadFromDesktop: UploadMonitorStatuses = {
     uploading: 0,
     queued: 0,
@@ -85,7 +87,10 @@ export class UploadMonitorComponent implements OnDestroy {
     this._dropFoldersMonitor.totals.state$
       .cancelOnDestroy(this)
       .subscribe(state => {
-        if (state.error && state.isErrorRecoverable) {
+        if (state.error && state.notPermitted) {
+          this._dropFoldersLayout = null;
+          this._popupHeight -= this._sectionHeight; // reduce popup height
+        } else if (state.error && state.isErrorRecoverable) {
           this._dropFoldersLayout = 'recoverableError';
         } else if (state.error && !state.isErrorRecoverable) {
           this._dropFoldersLayout = 'error';
@@ -134,5 +139,9 @@ export class UploadMonitorComponent implements OnDestroy {
 
   public _bulkTryReconnect(): void {
     this._bulkUploadMonitor.retryTracking();
+  }
+
+  public _dropFoldersTryReconnect(): void {
+    this._dropFoldersMonitor.retryTracking();
   }
 }
