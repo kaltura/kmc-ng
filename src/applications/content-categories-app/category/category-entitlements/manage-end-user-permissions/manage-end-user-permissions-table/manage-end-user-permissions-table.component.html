@@ -33,7 +33,7 @@
               field="permissionLevel">
       <ng-template let-col let-user="rowData" pTemplate="body">
         <p-dropdown [options]="_permissionLevelOptions"
-                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active"
+                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions"
                     [(ngModel)]="user[col.field]"
                     (onChange)="_onActionSelected({action: 'permissionLevel', users: user, payload: { level: user.permissionLevel}})"
                     appendTo="body"
@@ -47,7 +47,7 @@
               field="updateMethod">
       <ng-template let-col let-user="rowData" let-i="rowIndex" pTemplate="body">
         <p-dropdown [options]="_updateMethodOptions"
-                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active"
+                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions"
                     [(ngModel)]="user[col.field]"
                     (onChange)="_onActionSelected({action: 'updateMethod', users: user, payload: { method: user.updateMethod} })"
                     appendTo="body"
