@@ -29,7 +29,7 @@ import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 
 @NgModule({
@@ -58,7 +58,7 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 	  DetailsBarModule,
       RouterModule.forChild(routing),
 	  StickyModule,
-      ContentSharedModule,
+        EntriesModule,
     FiltersModule],
     declarations: [
       ContentPlaylistsComponent,

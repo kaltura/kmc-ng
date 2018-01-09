@@ -33,8 +33,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   @Input()
   set categories(data: any[]) {
     if (!this._deferredLoading) {
-      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
-      // (ie when returning from entry page) - we should force detect changes on an empty list
+      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of categories
+      // (ie when returning from category page) - we should force detect changes on an empty list
       this._categories = [];
       this.cdRef.detectChanges();
       this._categories = data;
@@ -50,12 +50,12 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   @Output()
   sortChanged = new EventEmitter<any>();
   @Output()
-  actionSelected = new EventEmitter<any>();
+  actionSelected = new EventEmitter<{action: string, category: KalturaCategory}>();
   @Output()
   selectedCategoriesChange = new EventEmitter<any>();
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
-  private _actionsMenuCategory: KalturaCategory = null;
+  private _actionsMenuCategory: KalturaCategory;
   private _categoriesServiceStatusSubscription: ISubscription;
 
   public _emptyMessage = '';
@@ -77,7 +77,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       result => {
         if (result.errorMessage) {
           this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage || 'Error loading entries',
+            message: result.errorMessage || 'Error loading categories',
             buttons: [{
               label: 'Retry',
               action: () => {
@@ -128,7 +128,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   openActionsMenu(event: any, category: KalturaCategory) {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (this._actionsMenuCategory.id !== category.id) {
+      if (!this._actionsMenuCategory || this._actionsMenuCategory.id !== category.id) {
         this.buildMenu();
         this._actionsMenuCategory = category;
         this._actionsMenu.show(event);

@@ -168,7 +168,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
       });
   }
 
-  public _onTagsChange(event): void {
+  public _onTagsChange(): void {
     this.tags.updateLayout();
   }
 

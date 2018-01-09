@@ -14,7 +14,7 @@ import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMed
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { EntriesDataProvider, EntriesFilters, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesDataProvider, EntriesFilters, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 

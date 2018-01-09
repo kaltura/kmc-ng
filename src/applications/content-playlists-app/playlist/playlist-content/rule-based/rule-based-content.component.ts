@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
 import { RuleBasedContentWidget } from './rule-based-content-widget.service';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 import { PlaylistEntriesDataProvider } from './playlist-rule/playlistEntriesDataProvider';
-import { EntriesDataProviderToken } from 'app-shared/content-shared/entries-store/defaultEntriesDataProvider';
+import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 
 @Component({

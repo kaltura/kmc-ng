@@ -117,7 +117,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 				    fileExt: thumbnail.fileExt
 			    };
 			    thumb.isDefault = thumbnail.tags.indexOf("default_thumb") > -1;
-			    thumb.url = "http://" + environment.core.kaltura.cdnUrl + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
+			    thumb.url = environment.core.kaltura.cdnUrl + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
 			    thumbs.push(thumb);
 		    }
 	    });

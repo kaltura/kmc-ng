@@ -7,7 +7,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 
 import { MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
-import { EntryMetadataWidget, EntryCategoryItem } from './entry-metadata-widget.service';
+import { EntryMetadataWidget } from './entry-metadata-widget.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
@@ -20,7 +20,6 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 })
 export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
-    public _categoriesSelectorValue : EntryCategoryItem[] = [];
     private _searchCategoriesSubscription : ISubscription;
     private _searchTagsSubscription : ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();

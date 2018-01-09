@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
-import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
+import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 

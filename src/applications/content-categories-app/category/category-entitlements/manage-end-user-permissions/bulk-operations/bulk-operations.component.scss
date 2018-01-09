@@ -1,0 +1,21 @@
+
+
+  .kSelectedItems {
+    font-weight: bold;
+  }
+
+  .kBulkDeleteBtnContainer {
+    display: inline-block;
+    padding: 0 24px;
+    .kBulkDeleteBtn {
+      height: 34px;
+      width: 100px;
+    }
+  }
+  .kBulkActionsBtn {
+  }
+
+  .kBulkCancel {
+    padding: 0 24px;
+    color: #333333;
+  }

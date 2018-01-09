@@ -1,0 +1,87 @@
+<div class="kTable">
+  <k-area-blocker  [showLoader]="(manageEndUserPermissionsService.users.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
+    <p-dataTable #dataTable
+               dataKey="id"
+               scrollable="true"
+               scrollHeight="100%"
+               [immutable]="false"
+               [value]="_users"
+               [emptyMessage]="_emptyMessage"
+               [class.noResults]="!_users.length"
+               (selectionChange)="_onSelectionChange($event)"
+               [rowTrackBy]="rowTrackBy"
+               [(selection)]="selectedUsers"
+                 [class.kDisabled]="categoryInheritUserPermissions">
+
+    <p-column styleClass="selectionColumn"
+              selectionMode="multiple"></p-column>
+
+    <!--User Name / ID-->
+    <p-column styleClass="nameColumn"
+              field="name"
+              [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.userNameId' | translate">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <div class="kTitle" [kTooltip]="user[col.field]" [maxWidth]="300">
+          {{user[col.field]}}
+        </div>
+      </ng-template>
+    </p-column>
+
+    <!--Permission Level-->
+    <p-column styleClass="permissionLevelColumn"
+              [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.permissionLevel' | translate"
+              field="permissionLevel">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <p-dropdown [options]="_permissionLevelOptions"
+                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions"
+                    [(ngModel)]="user[col.field]"
+                    (onChange)="_onActionSelected({action: 'permissionLevel', users: user, payload: { level: user.permissionLevel}})"
+                    appendTo="body"
+        [disabled]="categoryInheritUserPermissions"></p-dropdown>
+      </ng-template>
+    </p-column>
+
+    <!--Update Method-->
+    <p-column styleClass="updateMethodColumn"
+              [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.updateMethod' | translate"
+              field="updateMethod">
+      <ng-template let-col let-user="rowData" let-i="rowIndex" pTemplate="body">
+        <p-dropdown [options]="_updateMethodOptions"
+                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions"
+                    [(ngModel)]="user[col.field]"
+                    (onChange)="_onActionSelected({action: 'updateMethod', users: user, payload: { method: user.updateMethod} })"
+                    appendTo="body"
+                    [disabled]="categoryInheritUserPermissions"></p-dropdown>
+      </ng-template>
+    </p-column>
+
+    <!--Updated On-->
+    <p-column styleClass="updatedAtColumn" field="updatedAt"
+              [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.updatedOn' | translate">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <span>{{user[col.field] | kDate:'MM/DD/YYYY'}}</span>
+      </ng-template>
+    </p-column>
+
+    <!--Active-->
+    <p-column styleClass="statusColumn" field="status"
+              [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.active' | translate">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <p-inputSwitch *ngIf="user[col.field] === _kalturaCategoryUserStatus.active || user[col.field] === _kalturaCategoryUserStatus.notActive || user[col.field] === _kalturaCategoryUserStatus.pending" class="kInputSwitch"
+                       [ngModel]="user[col.field] === _kalturaCategoryUserStatus.active"
+                       (onChange)="_onActionSelected({action: $event.checked ? 'activate': 'deactivate', users: user, payload: {} })"
+                       [disabled]="categoryInheritUserPermissions"></p-inputSwitch>
+        <span class="kCategoryUserStatus">{{user[col.field] | kCategoryUserStatus}}</span>
+      </ng-template>
+    </p-column>
+
+    <!--Remove-->
+    <p-column styleClass="removeColumn" header="">
+      <ng-template let-user="rowData" pTemplate="body">
+        <i class="kIconremove" [class.kEnabled]="!categoryInheritUserPermissions" (click)="_onActionSelected({action: 'delete', users: user, payload: {} })"></i>
+      </ng-template>
+    </p-column>
+
+  </p-dataTable>
+  </k-area-blocker>
+</div>
