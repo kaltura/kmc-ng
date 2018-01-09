@@ -77,12 +77,13 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
           },
           error => {
 
+              const message = 'An error occurred while trying to add new category';
             this._blockerMessage = new AreaBlockerMessage(
               {
-                message: error.message,
+                message: error.message || message,
                 buttons: [
                   {
-                    label: this._appLocalization.get('app.common.cancel'),
+                    label: this._appLocalization.get('app.common.ok'),
                     action: () => {
                       this._blockerMessage = null;
                     }
