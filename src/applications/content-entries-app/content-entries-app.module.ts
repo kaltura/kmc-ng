@@ -33,7 +33,6 @@ import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc
 
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -43,8 +42,9 @@ import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
 
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { ContentEntriesAppService } from './content-entries-app.service';
+import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
 
 @NgModule({
   imports: [
@@ -57,6 +57,7 @@ import { ContentEntriesAppService } from './content-entries-app.service';
     CommonModule,
     ConfirmDialogModule,
     DataTableModule,
+      CategoriesModule,
     DropdownModule,
     DynamicFormModule,
     FormsModule,
@@ -77,14 +78,13 @@ import { ContentEntriesAppService } from './content-entries-app.service';
     ReactiveFormsModule,
     RouterModule.forChild(routing),
     SharedModule,
-    PrimeTreeModule,
     SpinnerModule,
     TagsModule,
     TieredMenuModule,
     TooltipModule,
     TreeModule,
     DetailsBarModule,
-    ContentSharedModule,
+      EntriesModule,
     StickyModule
   ],
   declarations: [

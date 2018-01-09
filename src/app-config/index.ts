@@ -209,7 +209,8 @@ export const environment = {
         "MAX_CATEGORIES": 10000,
         "categoriesFilters": {
             "maxChildrenToShow": 500
-        }
+        },
+        "SUB_CATEGORIES_LIMIT": 50
     },
     "rolesShared": {
         "MAX_ROLES": 10000,
