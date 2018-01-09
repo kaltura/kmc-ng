@@ -848,6 +848,7 @@
         "apply": "Apply to all selected entries",
         "error": "An error occurred during entries update.",
         "errorPlaylists": "An error occurred during playlists update.",
+        "errorCategories": "An error occurred during categories update.",
         "updated": "Entries updated successfully",
         "note": "Update Note",
         "confirm": "Are you sure you want to update {{0}} entries? It could take a while...",
