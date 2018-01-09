@@ -42,7 +42,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         categoriesMode: null
     };
 
-    constructor(private _entriesStore: EntriesStore,
+    constructor(public _entriesStore: EntriesStore,
                 private _browserService: BrowserService) {
     }
 
@@ -193,7 +193,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         this.selectedEntries = [];
     }
 
-    onTagsChange() {
+        onTagsChange() {
         this.tags.updateLayout();
     }
 

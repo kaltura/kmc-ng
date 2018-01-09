@@ -67,7 +67,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
           }
           if (event.state === PopupWidgetStates.BeforeClose) {
             if (event.context && event.context.allowClose) {
-              if (this._owner && this._confirmClose) {
+              if (this._owner  && this._confirmClose) {
                 event.context.allowClose = false;
                 this._browserService.confirm(
                   {

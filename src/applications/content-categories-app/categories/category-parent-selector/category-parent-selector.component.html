@@ -13,7 +13,7 @@
                  suggestionSelectableField="isSelectable"
                  placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
                  [minLength]="3"
-                 (onSelect)="_onAutoCompleteSelected($event)"
+                 (onSelect)="_onAutoCompleteSelected()"
                  [suggestionsProvider]="_categoriesProvider"
                  (completeMethod)="_onAutoCompleteSearch($event)">
   </kAutoComplete>

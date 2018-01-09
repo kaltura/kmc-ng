@@ -51,7 +51,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   public _isClip = false;
   public _flagsAmount = '';
   public EntryReportSections = EntryReportSections;
-  public _playerConfig = {};
+  public _playerConfig : any = {};
   public _isBusy = false;
 
   constructor(public _moderationStore: ModerationStore,
