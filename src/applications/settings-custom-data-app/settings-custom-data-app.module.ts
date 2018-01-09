@@ -11,7 +11,7 @@ import {
   PaginatorModule,
   RadioButtonModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module.ts';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.module';
 import { TooltipModule } from '@kaltura-ng/kaltura-ui/tooltip/k-tooltip.module';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.module';
@@ -41,7 +41,7 @@ import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
     SharedModule,
     RouterModule.forChild(routing),
     StickyModule,
-    ContentSharedModule,
+    EntriesModule,
     DropdownModule,
     InputSwitchModule
   ],
