@@ -90,9 +90,8 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
         .subscribe(event => {
           const canPreventClose = event.context && event.context.allowClose;
 
-          // TODO FIX BEFORE CLOSE LOGIC
           if (canPreventClose) {
-            if (this._validateOnClose) {
+            if (this._validateOnClose && !this._fieldForm.dirty) {
               event.context.allowClose = this._validateForm();
             }
 
@@ -288,22 +287,16 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
   }
 
   public _cancel(): void {
-    console.warn('in _cancel');
     if (this._fieldForm.dirty) {
       this._browserService.confirm({
         message: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChanges'),
         accept: () => {
-          console.warn('to _save');
           this._save();
         },
         reject: () => {
-          const formValid = this._validateForm();
-
-          if (formValid) {
-            this._validateOnClose = false;
-            this._setPristine();
-            this.parentPopupWidget.close();
-          }
+          this._validateOnClose = false;
+          this._setPristine();
+          this.parentPopupWidget.close();
         }
       });
     } else {
@@ -314,13 +307,10 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
   public _save(): void {
     const formValid = this._validateForm();
 
-    console.warn('in _save > formValid', formValid);
     if (formValid) {
       const updatedField = this._field ? this._update() : this._create();
 
       if (updatedField) {
-        console.warn('in _save > updatedField', updatedField);
-
         this.onSave.emit(updatedField);
 
         this._validateOnClose = false;
