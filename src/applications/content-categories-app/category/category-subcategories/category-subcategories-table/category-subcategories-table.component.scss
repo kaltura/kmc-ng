@@ -5,7 +5,7 @@
   overflow: hidden;
   position: relative;
   padding: 0px;
-
+  width: 100%;
   .kTableActions {
     width: 100%;
     text-align: center;
@@ -55,6 +55,11 @@
   margin: 0;
   flex-direction: column;
 }
+
+:host /deep/ p-datatable{
+  width: 100%;
+}
+
 
 :host /deep/ p-datatable .stickyHeader{
   z-index: 10;
