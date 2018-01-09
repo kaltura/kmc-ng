@@ -1,16 +1,17 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { MetadataItem, MetadataItemTypes } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kCustomSchemaFieldForm',
   templateUrl: './custom-schema-field-form.component.html',
   styleUrls: ['./custom-schema-field-form.component.scss']
 })
-export class CustomSchemaFieldFormComponent implements OnDestroy {
+export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit {
   @Input() set field(value: MetadataItem | null) {
     if (value) {
       this._isNew = false;
@@ -31,7 +32,8 @@ export class CustomSchemaFieldFormComponent implements OnDestroy {
     }
   }
 
-  @Output() onClose = new EventEmitter<void>();
+  @Input() parentPopupWidget: PopupWidgetComponent;
+
   @Output() onSave = new EventEmitter<MetadataItem>();
 
   private _field: MetadataItem;
@@ -39,6 +41,7 @@ export class CustomSchemaFieldFormComponent implements OnDestroy {
   private _systemNames: string[] = [];
   private _fieldsIds: string[] = [];
   private _fieldIdGenerator = new FriendlyHashId();
+  private _validateOnClose = true;
 
   public _title: string;
   public _saveBtnLabel: string;
@@ -79,6 +82,29 @@ export class CustomSchemaFieldFormComponent implements OnDestroy {
     this._buildForm();
   }
 
+  ngAfterViewInit() {
+    if (this.parentPopupWidget) {
+      this.parentPopupWidget.state$
+        .cancelOnDestroy(this)
+        .filter(event => event.state === PopupWidgetStates.BeforeClose)
+        .subscribe(event => {
+          const canPreventClose = event.context && event.context.allowClose;
+
+          // TODO FIX BEFORE CLOSE LOGIC
+          if (canPreventClose) {
+            if (this._validateOnClose) {
+              event.context.allowClose = this._validateForm();
+            }
+
+            if (this._fieldForm.dirty) {
+              event.context.allowClose = false;
+              this._cancel();
+            }
+          }
+        });
+    }
+  }
+
   ngOnDestroy() {
 
   }
@@ -101,8 +127,12 @@ export class CustomSchemaFieldFormComponent implements OnDestroy {
     this._typeField.disable();
     this._allowMultipleField.disable();
 
+    this._setPristine();
+  }
+
+  private _setPristine(): void {
     this._fieldForm.markAsPristine();
-    this._fieldForm.updateValueAndValidity()
+    this._fieldForm.updateValueAndValidity();
   }
 
   private _buildForm(): void {
@@ -258,32 +288,44 @@ export class CustomSchemaFieldFormComponent implements OnDestroy {
   }
 
   public _cancel(): void {
+    console.warn('in _cancel');
     if (this._fieldForm.dirty) {
       this._browserService.confirm({
         message: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChanges'),
         accept: () => {
+          console.warn('to _save');
           this._save();
         },
         reject: () => {
           const formValid = this._validateForm();
 
           if (formValid) {
-            this.onClose.emit();
+            this._validateOnClose = false;
+            this._setPristine();
+            this.parentPopupWidget.close();
           }
         }
       });
     } else {
-      this.onClose.emit();
+      this.parentPopupWidget.close();
     }
   }
 
   public _save(): void {
     const formValid = this._validateForm();
 
+    console.warn('in _save > formValid', formValid);
     if (formValid) {
       const updatedField = this._field ? this._update() : this._create();
+
       if (updatedField) {
+        console.warn('in _save > updatedField', updatedField);
+
         this.onSave.emit(updatedField);
+
+        this._validateOnClose = false;
+        this._setPristine();
+        this.parentPopupWidget.close();
       }
     }
   }

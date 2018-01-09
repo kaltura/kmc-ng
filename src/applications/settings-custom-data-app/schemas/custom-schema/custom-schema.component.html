@@ -77,13 +77,13 @@
 <kPopupWidget #customSchemaField
               [popupWidth]="586"
               [popupHeight]="613"
-              [closeBtn]="false"
+              [closeBtn]="true"
               [closeOnClickOutside]="false"
               [modal]="true">
   <ng-template>
     <kCustomSchemaFieldForm [field]="_selectedField"
                             [fields]="_profileFields"
-                            (onSave)="_saveField($event); customSchemaField.close()"
-                            (onClose)="customSchemaField.close()"></kCustomSchemaFieldForm>
+                            [parentPopupWidget]="customSchemaField"
+                            (onSave)="_saveField($event)"></kCustomSchemaFieldForm>
   </ng-template>
 </kPopupWidget>
