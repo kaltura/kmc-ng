@@ -1,5 +1,5 @@
 export const environment = {
-    "appVersion": "3.3.0", // will be changed by release script
+    "appVersion": "3.4.0", // will be changed by release script
     "shell": {
         "defaultRoute": "/content/entries",
         "loginRoute" : "/login",
