@@ -1,0 +1,67 @@
+@import 'app-theme/_variables.scss';
+
+.kTable {
+  background-color: white;
+  overflow: hidden;
+  position: relative;
+  padding: 0px;
+  width: 100%;
+  .kTableActions {
+    width: 100%;
+    text-align: center;
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
+
+  .kTitle {
+    color: #333333;
+    font-weight: 700;
+  }
+}
+
+:host /deep/ .selectionColumn {
+  width: 24px;
+  padding-left: 14px!important;
+}
+
+:host /deep/ .ui-datatable .nameColumn {
+  width: 100px;
+}
+
+:host /deep/ .ui-datatable .createdAtColumn {
+  width: 40px;
+  text-align: center;
+}
+
+:host /deep/ .ui-datatable .entriesCountColumn {
+  width: 50px;
+  text-align: center;
+}
+
+:host /deep/ .ui-datatable .actionsColumn {
+  overflow: visible;
+  width: 30px;
+}
+
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
+}
+
+:host /deep/ p-datatable{
+  width: 100%;
+}
+
+
+:host /deep/ p-datatable .stickyHeader{
+  z-index: 10;
+  display: table;
+}

@@ -52,3 +52,11 @@
     }
   }
 }
+
+:host /deep/ .ui-autocomplete.ui-widget{
+  ul.ui-autocomplete-multiple-container {
+    width:100%;
+    height: 36px;
+    overflow: hidden;
+  }
+}

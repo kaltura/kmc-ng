@@ -5,10 +5,10 @@
                [sticksTo]="'header'">
         <div class="kCategoriesTableFilters kContent">
           <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}"
-                  class="kButtonBranded kAddCategoryBtn"
+                  class="kButtonBranded kAddCategoryBtn" [class.kHidden]="_selectedCategories?.length"
                   [disabled]="_selectedCategories?.length" (click)="addNewCategory.open()"></button>
           <span class="kSelectedCategoriesNum" *ngIf="_categoriesTotalCount">
-              {{_categoriesTotalCount}} {{'applications.content.categories.categories' | translate}}
+             {{'applications.content.categories.categories' | translate: {'0': _categoriesTotalCount} }}
             </span>
           <div [class.kHidden]="!_selectedCategories?.length" class="kBulkOperations">
             <span class="kSelectedCategoriesLabel">• {{_selectedCategories?.length}} {{'applications.content.categories.selected' | translate}}</span>
@@ -41,7 +41,7 @@
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="categoriesTags" [sticksTo]="'categoriesListFilters'">
         <div class="kContent">
           <kCategoriesListTags
-            (onTagsChange)="onTagsChange($event)"></kCategoriesListTags>
+            (onTagsChange)="onTagsChange()"></kCategoriesListTags>
         </div>
       </kSticky>
       <kCategoriesTable class="kCategoriesTable"
@@ -51,16 +51,33 @@
                         (actionSelected)="_onActionSelected($event)"
                         [(selectedCategories)]="_selectedCategories">
       </kCategoriesTable>
-      <div class="kCategoriesTableFooter kContent" #footer *ngIf="(_categoriesService.categories.data$ | async)?.totalCount">
+      <div class="kCategoriesTableFooter kContent" #footer *ngIf="_categoriesTotalCount">
         <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
                      [first]="_query.pageIndex * _query.pageSize"
-                     [totalRecords]="(_categoriesService.categories.data$ | async)?.totalCount | kMaxCategories"
+                     [totalRecords]="_categoriesTotalCount"
                      [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
     </div>
   </div>
 </k-area-blocker>
+
+<kPopupWidget #categoriesFilterPopup
+              [popupWidth]="400"
+              [popupHeight]="500"
+              placement="top"
+              [closeBtn]="false"
+              [targetRef]="categoriesFilterBtn"
+              [targetOffset]="{'x':-10, 'y': -21}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'" [scrollOffset]="80" >
+  <ng-template>
+    <kCategoriesFilter  [parentPopupWidget]="categoriesFilterPopup" [selection]="_query.categories"
+                        [selectionMode]="_query.categoriesMode"
+                        (onCategorySelected)="onCategorySelected($event)"
+                        (onCategoriesUnselected)="onCategoriesUnselected($event)"
+                        (selectionModeChange)="onCategoriesModeChanged($event)"></kCategoriesFilter>
+  </ng-template>
+</kPopupWidget>
 
 <kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="658" [modal]="true" [preventPageScroll]="true">
   <ng-template>

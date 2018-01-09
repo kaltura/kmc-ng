@@ -5,7 +5,7 @@ import { routing } from './content-moderation-app.routes';
 
 import { ContentModerationComponent } from './content-moderation.component';
 import { EntriesComponentsList } from './entries-components-list';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 
 import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
@@ -35,7 +35,6 @@ import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KMCShellModule } from 'app-shared/kmc-shell';
-import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc-shared';
 
@@ -53,7 +52,7 @@ import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc
     MenuModule,
     KalturaPrimeNgUIModule,
     SharedModule,
-    ContentSharedModule,
+      EntriesModule,
     AccordionModule,
     CalendarModule,
     CheckboxModule,
@@ -75,7 +74,6 @@ import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc
     KMCShellModule,
     PrimeDynamicFormModule,
     ReactiveFormsModule,
-    PrimeTreeModule,
     TagsModule
   ],
   declarations: [

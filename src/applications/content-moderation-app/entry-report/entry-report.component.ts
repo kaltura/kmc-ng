@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { BulkService } from '../bulk-service/bulk.service';
 import { environment } from 'app-environment';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntryReportSections } from './entry-report-sections';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaModerationFlag } from 'kaltura-ngx-client/api/types/KalturaModerationFlag';
@@ -51,7 +51,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   public _isClip = false;
   public _flagsAmount = '';
   public EntryReportSections = EntryReportSections;
-  public _playerConfig = {};
+  public _playerConfig : any = {};
   public _isBusy = false;
 
   constructor(public _moderationStore: ModerationStore,

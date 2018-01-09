@@ -58,15 +58,17 @@
 </k-area-blocker>
 
 <kPopupWidget #refinePopup
-              [appendTo]="entriesTableHolder"
+              placement="top"
               [popupWidth]="400"
               [popupHeight]="500"
               [closeBtn]="false"
               [targetRef]="refineBtn"
-              [targetOffset]="{'x':-200, 'y': -15}"
+              [targetOffset]="{'x':-236, 'y': -15}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'bulklogFilterPopup'"
-              [scrollOffset]="80" [appendTo]="entriesTableHolder">
+              [scrollOffset]="80">
   <ng-template>
     <k-bulk-log-refine-filters [parentPopupWidget]="refinePopup"></k-bulk-log-refine-filters>
   </ng-template>
 </kPopupWidget>
+
+

@@ -168,7 +168,7 @@ export class RolesService implements OnDestroy {
 
   }
 
-  public deleteRole(role: KalturaUserRole): Observable<KalturaUserRole> {
+  public deleteRole(role: KalturaUserRole): Observable<void> {
     if (!role) {
       return Observable.throw(new Error(this._appLocalization.get('applications.administration.roles.errors.cantDeleteRole')));
     }
@@ -180,8 +180,8 @@ export class RolesService implements OnDestroy {
       userRoleId: role.id
     }))
       .do(() => this.reload(true))
-      .map((deletedRole) => {
-        return deletedRole;
+      .map(() => {
+        return undefined;
       })
       .catch(error => {
         if (error.code === 'ROLE_IS_BEING_USED') {

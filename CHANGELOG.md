@@ -267,7 +267,7 @@
 
 ### Performance Improvements
 
-* import kaltura-typescript-client object explicitly to bundle only elements being used ([#163](https://github.com/kaltura/kmc-ng/issues/163)) ([9597b5e](https://github.com/kaltura/kmc-ng/commit/9597b5e))
+* import kaltura-ngx-client object explicitly to bundle only elements being used ([#163](https://github.com/kaltura/kmc-ng/issues/163)) ([9597b5e](https://github.com/kaltura/kmc-ng/commit/9597b5e))
 * upgrade PrimeNG version to 4.1.3 to gain datagrid performances enhancements ([a459304](https://github.com/kaltura/kmc-ng/commit/a459304))
 
 
