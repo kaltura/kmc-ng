@@ -63,12 +63,12 @@
           <i class="kIconarrow_up kActionMoveDown"
              [kTooltip]="'applications.settings.metadata.table.moveDown' | translate"
              [class.kActionDisabled]="i + 1 === fields?.length"
-             (click)="_moveField(field, 'down')"></i>
+             (click)="i + 1 !== fields?.length && _moveField(field, 'down')"></i>
 
           <i class="kIconarrow_up"
              [kTooltip]="'applications.settings.metadata.table.moveUp' | translate"
              [class.kActionDisabled]="i === 0"
-             (click)="_moveField(field, 'up')"></i>
+             (click)="i !== 0 && _moveField(field, 'up')"></i>
 
           <i class="kIconremove kActionDelete"
              [kTooltip]="'applications.settings.metadata.table.remove' | translate"
