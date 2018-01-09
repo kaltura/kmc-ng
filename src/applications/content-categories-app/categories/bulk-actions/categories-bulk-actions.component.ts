@@ -224,7 +224,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           this.onBulkChange.emit({ reload: reloadCategories });
         },
         error => {
-          this._browserService.setAppStatus({ errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
+          this._browserService.setAppStatus({ errorMessage: this._appLocalization.get('applications.content.bulkActions.errorCategories') });
           this.onBulkChange.emit({ reload: reloadCategories });
         }
       );
