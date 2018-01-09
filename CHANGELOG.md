@@ -43,18 +43,17 @@
 
 ### Features
 
-* add categories list filters ([37bece0](https://github.com/kaltura/kmc-ng/commit/37bece0))
-* add drop folder list and monitor ([25d281c](https://github.com/kaltura/kmc-ng/commit/25d281c))
-* Administration > Users module ([84e33e6](https://github.com/kaltura/kmc-ng/commit/84e33e6))
-* create new playlist from entries bulk operation ([cfe3564](https://github.com/kaltura/kmc-ng/commit/cfe3564))
-* **content-entry:** Add help tips to metadata labels with description ([3d69e93](https://github.com/kaltura/kmc-ng/commit/3d69e93))
+* **content/entries:** add Preview&Embed view ([#308](https://github.com/kaltura/kmc-ng/issues/308)) ([d127ed9](https://github.com/kaltura/kmc-ng/commit/d127ed9))
+* **content/categories:** add categories list view filters ([37bece0](https://github.com/kaltura/kmc-ng/commit/37bece0))
 * **content/categories:** add category details view ([824d8d2](https://github.com/kaltura/kmc-ng/commit/824d8d2))
-* Preview & Embed ([#308](https://github.com/kaltura/kmc-ng/issues/308)) ([d127ed9](https://github.com/kaltura/kmc-ng/commit/d127ed9))
+* **content/categories:** add new category and move categories views ([026c4f5](https://github.com/kaltura/kmc-ng/commit/026c4f5))
+* **content/drop-folder:** add drop folder list view ([25d281c](https://github.com/kaltura/kmc-ng/commit/25d281c))
+* **content/drop-folder:** add drop folder to monitor notification ([25d281c](https://github.com/kaltura/kmc-ng/commit/25d281c))
+* **administration/users:** add users list and details views ([84e33e6](https://github.com/kaltura/kmc-ng/commit/84e33e6))
 * **content/moderation:** add moderation view ([a4ba524](https://github.com/kaltura/kmc-ng/commit/a4ba524))
-* **content/playlists:** add playlists list filters ([f4be2a6](https://github.com/kaltura/kmc-ng/commit/f4be2a6))
-* support add new category, and move categories ([026c4f5](https://github.com/kaltura/kmc-ng/commit/026c4f5))
-* support new dynamic form control help tip ([#318](https://github.com/kaltura/kmc-ng/issues/318)) ([19d3838](https://github.com/kaltura/kmc-ng/commit/19d3838))
-
+* **content/entries**: create new playlist from entries bulk operation ([cfe3564](https://github.com/kaltura/kmc-ng/commit/cfe3564))
+* **content/entries:** Add help tips to metadata labels with description ([3d69e93](https://github.com/kaltura/kmc-ng/commit/3d69e93))
+* **content/playlists:** add playlists list view filters ([f4be2a6](https://github.com/kaltura/kmc-ng/commit/f4be2a6))
 
 
 <a name="3.3.0"></a>
