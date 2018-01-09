@@ -22,8 +22,18 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
 
+  private _loadedOnce = false;
   @Input()
   set entries(data: any[]) {
+
+    if (!this._loadedOnce)
+    {
+      this._loadedOnce = true;
+    }else
+    {
+        this.assignEmptyMessage();
+    }
+
     if (!this._deferredLoading) {
       this._entries = [];
       this._cdRef.detectChanges();
@@ -51,27 +61,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   ngOnInit() {
-    let loadedOnce = false;
-
-    this._widgetService.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        result => {
-          if (!result.error) {
-            if (result.loading) {
-              this._emptyMessage = '';
-              loadedOnce = true;
-            } else {
-              if (loadedOnce) {
-                this.assignEmptyMessage();
-              }
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load entries'); // navigate to error page
-          throw error;
-        });
   }
 
   ngAfterViewInit() {
