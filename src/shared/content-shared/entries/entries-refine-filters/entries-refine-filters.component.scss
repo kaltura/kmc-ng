@@ -84,6 +84,10 @@ a.disabled {
   margin-left: -100px;
   left: 0px !important;
 }
+:host /deep/ .kPullLeft120 .ui-datepicker.ui-widget {
+  margin-left: -120px;
+  left: 0px !important;
+}
 
 :host /deep/ .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
   border-bottom-left-radius: 3px;

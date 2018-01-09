@@ -75,8 +75,8 @@ a.disabled {
 }
 
 /* prevent calendars from being cut by the popup widget borders */
-:host /deep/ .kPullLeft60 .ui-datepicker.ui-widget {
-  margin-left: -60px;
+:host /deep/ .kPullLeft100 .ui-datepicker.ui-widget {
+  margin-left: -100px;
   left: 0px !important;
 }
 
