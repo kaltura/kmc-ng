@@ -7,7 +7,8 @@ import { AreaBlockerModule, KalturaUIModule } from '@kaltura-ng/kaltura-ui';
 import { SchemasComponents } from './schemas/schemas-components-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
+  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputSwitchModule, InputTextModule, MenuModule,
+  PaginatorModule,
   RadioButtonModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
@@ -41,7 +42,8 @@ import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
     RouterModule.forChild(routing),
     StickyModule,
     ContentSharedModule,
-    DropdownModule
+    DropdownModule,
+    InputSwitchModule
   ],
   declarations: [
     SettingsCustomDataComponent,
