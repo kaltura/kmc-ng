@@ -8,6 +8,7 @@ import {CategoryWidgetsManager} from './category-widgets-manager';
 import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {Observable} from 'rxjs/Observable';
+import {CategoryEntitlementsWidget} from './category-entitlements/category-entitlements-widget.service';
 import {CategorySubcategoriesWidget} from './category-subcategories/category-subcategories-widget.service';
 import {CategoryDetailsWidget} from "./category-details/category-details-widget.service";
 
@@ -21,6 +22,7 @@ import {CategoryDetailsWidget} from "./category-details/category-details-widget.
     CategorySectionsListWidget,
     CategoryDetailsWidget,
     CategoryMetadataWidget,
+      CategoryEntitlementsWidget,
     CategorySubcategoriesWidget
   ]
 })
@@ -38,10 +40,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
               widget2: CategoryDetailsWidget,
               widget3: CategoryMetadataWidget,
               widget4: CategorySubcategoriesWidget,
+              widget5: CategoryEntitlementsWidget,
               public _categoryStore: CategoryService,
               private _categoriesStore: CategoriesService,
               private _appLocalization: AppLocalization) {
-    categoryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4]);
+    categoryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5]);
   }
 
   ngOnDestroy() {
@@ -183,38 +186,29 @@ export class CategoryComponent implements OnInit, OnDestroy {
     this._categoryStore.saveCategory();
   }
 
-  public _navigateToCategory(direction: 'next' | 'prev'): void {
-    // TODO [kmcng] find a better way that doesn't need access to the category directly
-    const categories = this._categoriesStore.categories;
-    if (categories.data() && categories.data().length && this._currentCategoryId) {
-      const currentPlaylistIndex = categories.data().findIndex(category => category.id === +this._currentCategoryId);
-      let newCategory = null;
-      if (direction === 'next' && this._enableNextButton) {
-        newCategory = categories[currentPlaylistIndex + 1];
-      }
-      if (direction === 'prev' && this._enablePrevButton) {
-        newCategory = categories[currentPlaylistIndex - 1];
-      }
-      if (newCategory) {
-        this._categoryStore.openCategory(newCategory.id);
-      }
-    }
-  }
 
   public _navigateToPrevious(): void {
-    if (this._currentCategoryId) {
-      const prevCategoryId = this._categoriesStore.getPrevCategoryId(this._currentCategoryId);
-      if (prevCategoryId) {
-        this._categoryStore.openCategory(prevCategoryId);
+    const categories = this._categoriesStore.categories.data();
+
+    if (categories && this._currentCategoryId) {
+      const currentCategory = categories.find(entry => entry.id === this._currentCategoryId);
+      const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
+      if (currentCategoryIndex > 0) {
+        const prevCategory = categories[currentCategoryIndex - 1];
+        this._categoryStore.openCategory(prevCategory.id);
       }
     }
   }
 
   public _navigateToNext(): void {
-    if (this._currentCategoryId) {
-      const nextCategoryId = this._categoriesStore.getNextCategoryId(this._currentCategoryId);
-      if (nextCategoryId) {
-        this._categoryStore.openCategory(nextCategoryId);
+    const categories = this._categoriesStore.categories.data();
+
+    if (categories && this._currentCategoryId) {
+      const currentCategory = categories.find(entry => entry.id === this._currentCategoryId);
+      const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
+      if (currentCategoryIndex >= 0 && (currentCategoryIndex < categories.length - 1)) {
+        const nextEntry = categories[currentCategoryIndex + 1];
+        this._categoryStore.openCategory(nextEntry.id);
       }
     }
   }

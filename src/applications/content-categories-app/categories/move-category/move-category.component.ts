@@ -2,10 +2,10 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {CategoriesService} from '../categories.service';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {CategoryData} from 'app-shared/content-shared/categories-search.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 @Component({
   selector: 'kMoveCategory',
@@ -19,7 +19,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   @Output() onMovedCategories = new EventEmitter<null>();
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedParentCategory: CategoryData = null;
+  public _selectedParentCategory: CategoriesListItem = null;
 
   constructor(private _categoriesService: CategoriesService,
               private _appLocalization: AppLocalization,
@@ -50,13 +50,13 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  public _onCategorySelected(event: CategoryData) {
+  public _onCategorySelected(event: CategoriesListItem) {
     this._selectedParentCategory = event;
   }
 
   public _apply(): void {
     const invalidCategory = this.selectedCategories.find((category) =>
-      (!this._validateCategoryMove(category, this._selectedParentCategory))
+      (!this._validateCategoryMove(category))
     );
     if (!invalidCategory) {
       this._browserService.confirm(
@@ -65,16 +65,16 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
           message: this._appLocalization.get('applications.content.moveCategory.treeUpdateNotification'),
           accept: () => {
             this._blockerMessage = null;
-            this._moveCategory(this._selectedParentCategory);
+            this._moveCategory();
           }
         }
       );
     }
   }
 
-  private _moveCategory(categoryParentData: CategoryData) {
-    const categoryParent = categoryParentData ?
-      {id: categoryParentData.id, fullIds: categoryParentData.fullIdPath} :
+  private _moveCategory() {
+    const categoryParent = this._selectedParentCategory ?
+      {id: this._selectedParentCategory.value, fullIds: this._selectedParentCategory.fullIdPath} :
       {id: 0, fullIds: []};
     this._categoriesService
       .moveCategory({categories: this.selectedCategories, categoryParent})
@@ -93,7 +93,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
-                  this._moveCategory(categoryParentData);
+                  this._moveCategory();
                 }
               },
                 {
@@ -107,10 +107,10 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
         });
   }
 
-  private _validateCategoryMove(categoryToMove: KalturaCategory, selectedCategoryParent: CategoryData) {
+  private _validateCategoryMove(categoryToMove: KalturaCategory) {
     // if category moved to the same parent or to 'no parent' as it was before
-    if (!selectedCategoryParent && !categoryToMove.parentId ||
-      selectedCategoryParent && categoryToMove.parentId === selectedCategoryParent.id) {
+    if ((!this._selectedParentCategory && !categoryToMove.parentId) ||
+        (this._selectedParentCategory && categoryToMove.parentId === this._selectedParentCategory.value)) {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.moveCategory.errors.categoryAlreadyBelongsToParent'),
         buttons: [
@@ -123,10 +123,10 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
         ]
       });
       return false;
-    } else if (selectedCategoryParent && !this._categoriesService.isParentCategorySelectionValid(
+    } else if (this._selectedParentCategory && !this._categoriesService.isParentCategorySelectionValid(
         {
           categories: this.selectedCategories,
-          categoryParent: {id: selectedCategoryParent.id, fullIds: selectedCategoryParent.fullIdPath}
+          categoryParent: {id: this._selectedParentCategory.value, fullIds: this._selectedParentCategory.fullIdPath}
         })) {
       // if trying to move category be a child of itself or one of its children show error message
       this._blockerMessage = new AreaBlockerMessage({

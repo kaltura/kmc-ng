@@ -225,7 +225,7 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
         });
 
         diff.added.forEach(item => {
-          const tooltip = item.payload && item.payload.tooltip ? item.payload.tooltip : item.label;
+          const tooltip = item.tooltip || item.label;
           this._filterTags.push({
             type: `customMetadata|${listId}`,
             value: item.value,

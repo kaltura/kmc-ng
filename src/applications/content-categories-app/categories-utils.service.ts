@@ -25,12 +25,12 @@ export class CategoriesUtilsService {
         let message: string;
         if (this.hasEditWarnings(categoryToDelete)) {
           message = hasSubcategories ?
-            this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteWarningSubcategoriesConfirmation') :
-            this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteWarningConfirmation');
+            this._appLocalization.get('applications.content.categories.deleteAction.deleteWarningSubcategoriesConfirmation') :
+            this._appLocalization.get('applications.content.categories.deleteAction.deleteWarningConfirmation');
         } else {
           message = hasSubcategories ?
-            this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteSubcategoriesConfirmation') :
-            this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteConfirmation');
+            this._appLocalization.get('applications.content.categories.deleteAction.deleteSubcategoriesConfirmation') :
+            this._appLocalization.get('applications.content.categories.deleteAction.deleteConfirmation');
         }
 
         this._browserService.confirm(
@@ -55,42 +55,37 @@ export class CategoriesUtilsService {
   // bulk delete
   public confirmDeleteMultiple(categoriesToDelete: KalturaCategory[], categories?: KalturaCategory[]): Observable<{ confirmed: boolean, error?: Error }> {
     return Observable.create(observer => {
-      if (!categoriesToDelete || !categoriesToDelete.length || categories && !categoriesToDelete.every(c => categories.indexOf(c) > -1)) {
+      if (!categoriesToDelete || !categoriesToDelete.length || (categories && !categoriesToDelete.every(c => categories.indexOf(c) > -1))) {
         observer.error(new Error('At least one of the categories to delete could not be found in given list'));
-      }
-      let message = '';
-      let deleteMessage = '';
-
-      if (this.hasEditWarnings(categoriesToDelete)) {
-        deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
-      }
-
-      const isSubCategoriesExist = !!categoriesToDelete.find(c => {
-        return (c.directSubCategoriesCount && c.directSubCategoriesCount > 0);
-      });
-
-      if (isSubCategoriesExist) {
-        message = deleteMessage.concat(categoriesToDelete.length > 1 ?
-          this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories') :
-          this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
       } else {
-        message = deleteMessage.concat(categoriesToDelete.length > 1 ?
-          this._appLocalization.get('applications.content.categories.confirmDeleteMultiple') :
-          this._appLocalization.get('applications.content.categories.confirmDeleteSingle'));
-      }
+        let message = '';
+        const isSubCategoriesExist = !!categoriesToDelete.find(c => {
+          return (c.directSubCategoriesCount && c.directSubCategoriesCount > 0);
+        });
 
-      this._browserService.confirm(
-        {
-          header: this._appLocalization.get('applications.content.categories.deleteCategories'),
-          message: message,
-          accept: () => {
-            observer.next({confirmed: true});
+        if (this.hasEditWarnings(categoriesToDelete)) {
+          message = isSubCategoriesExist ?
+            this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteWarningSubcategoriesConfirmation') :
+            this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteWarningConfirmation');
+        } else {
+          message = isSubCategoriesExist ?
+            this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteSubcategoriesConfirmation') :
+            this._appLocalization.get('applications.content.categories.deleteActionMultiple.deleteConfirmation');
+        }
 
-          }, reject: () => {
+        this._browserService.confirm(
+          {
+            header: this._appLocalization.get('applications.content.categories.deleteCategories'),
+            message: message,
+            accept: () => {
+              observer.next({confirmed: true});
+
+            }, reject: () => {
             observer.next({confirmed: false});
           }
-        }
-      );
+          }
+        );
+      }
     });
   }
 

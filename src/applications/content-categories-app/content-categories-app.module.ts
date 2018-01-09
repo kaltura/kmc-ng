@@ -8,7 +8,8 @@ import {
   CategoriesBulkRemoveTagsService
 } from './categories/bulk-actions/services';
 import {CategoriesBulkActionsComponent} from './categories/bulk-actions/categories-bulk-actions.component';
-import {ContentSharedModule} from 'app-shared/content-shared/content-shared.module';
+import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
+
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
@@ -23,6 +24,7 @@ import {
   ConfirmDialogModule,
   DataTableModule,
   DropdownModule,
+  InputSwitchModule,
   InputTextareaModule,
   InputTextModule,
   MenuModule,
@@ -32,7 +34,7 @@ import {
   SharedModule,
   SpinnerModule,
   TieredMenuModule,
-  TreeModule
+  TreeModule,
 } from 'primeng/primeng';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 
@@ -43,7 +45,6 @@ import {DynamicMetadataFormModule, MetadataProfileModule} from 'app-shared/kmc-s
 
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
-import {PrimeTreeModule} from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -69,6 +70,7 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         CheckboxModule,
         CommonModule,
         ConfirmDialogModule,
+        CategoriesModule,
         DataTableModule,
         DropdownModule,
         DynamicFormModule,
@@ -90,15 +92,14 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         ReactiveFormsModule,
         RouterModule.forChild(routing),
         SharedModule,
-        PrimeTreeModule,
         SpinnerModule,
         TagsModule,
         TieredMenuModule,
         TooltipModule,
         TreeModule,
         DetailsBarModule,
-        ContentSharedModule,
-        StickyModule
+        StickyModule,
+        InputSwitchModule
     ],
     declarations: [
         ContentCategoriesComponent,
