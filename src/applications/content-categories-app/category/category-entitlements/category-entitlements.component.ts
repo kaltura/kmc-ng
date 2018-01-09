@@ -87,7 +87,7 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
   }
 
   public mananageUsersPermissions() {
-    if (this._widgetService.entitlementsForm.get('inheritUsersPermissions').pristine) {
+    if (this._widgetService.entitlementsForm.get('inheritUsersPermissions').value === this._widgetService.inheritUsersPermissionsOriginalValue) {
       this.manageUsersPopup.open();
     } else {
       this._browserService.alert(

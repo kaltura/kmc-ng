@@ -7,8 +7,8 @@
             <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
             <div class="kTitle">{{ _categoryHeader }}</div>
             <button pButton class="kButtonBranded kSaveBtn" [disabled]="!_categoryStore.categoryIsDirty" label="Save" (click)="_save()"></button>
-            <button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToCategory('prev')" icon="kIconarrow_backward"></button>
-            <button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToCategory('next')" icon="kIconarrow_forward"></button>
+            <button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+            <button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
           </div>
         </div>
       </kSticky>

@@ -82,9 +82,9 @@
 :host /deep/ .ui-datatable {
   .statusColumn {
     font-weight: normal;
-    width: 140px;
+    width: 170px;
     text-align: left;
-    padding-left: 35px;
+    padding-left: 20px;
     .kCategoryUserStatus {
       padding-left: 10px;
     }
@@ -97,7 +97,8 @@
 
 :host /deep/ .ui-datatable .removeColumn {
   overflow: visible;
-  width: 70px;
+  width: 55px;
+  text-align: center;
 
   .kIconremove {
     font-size: 22px;

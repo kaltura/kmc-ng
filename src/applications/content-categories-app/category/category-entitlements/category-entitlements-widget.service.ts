@@ -19,6 +19,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   public entitlementsForm: FormGroup;
   public parentCategory: KalturaCategory = null;
   public membersTotalCount = 0;
+  public inheritUsersPermissionsOriginalValue: boolean;
 
   constructor(private _kalturaClient: KalturaClient,
               private _formBuilder: FormBuilder,
@@ -129,21 +130,21 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   private _resetFormData(owner: KalturaUser) {
-    const categoryInheritUsersPermission = this.parentCategory && this.data.inheritanceType === KalturaInheritanceType.inherit;
+    this.inheritUsersPermissionsOriginalValue = this.parentCategory && this.data.inheritanceType === KalturaInheritanceType.inherit;
     this.entitlementsForm.reset(
       {
         contentPrivacy: this.data.privacy,
         categoryListing: this.data.appearInList,
         contentPublishPermissions: this.data.contributionPolicy,
         moderateContent: this.data.moderation === KalturaNullableBoolean.trueValue,
-        inheritUsersPermissions: categoryInheritUsersPermission,
+        inheritUsersPermissions: this.inheritUsersPermissionsOriginalValue,
         defaultPermissionLevel: {
           value: this.data.defaultPermissionLevel,
-          disabled: categoryInheritUsersPermission
+          disabled: this.inheritUsersPermissionsOriginalValue
         },
         owner: {
           value: owner,
-          disabled: categoryInheritUsersPermission
+          disabled: this.inheritUsersPermissionsOriginalValue
         },
         permittedUsers: []
       }

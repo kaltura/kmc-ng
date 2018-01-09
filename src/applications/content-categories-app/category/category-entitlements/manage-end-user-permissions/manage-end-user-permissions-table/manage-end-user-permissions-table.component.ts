@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import { EndUserPermissionsUser, ManageEndUserPermissionsService } from '../manage-end-user-permissions.service';
+import {EndUserPermissionsUser, ManageEndUserPermissionsService} from '../manage-end-user-permissions.service';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
@@ -90,7 +90,10 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
                 this._blockerMessage = null;
                 this.closeParentPopup.emit();
               }
-            }
+            }, {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => this.manageEndUserPermissionsService.reload()
+              }
             ]
           });
         } else {

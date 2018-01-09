@@ -70,8 +70,8 @@
         [(selectedUsers)]="_selectedUsers"
         [users]="(_manageEndUsersPermissionsService.users.data$ | async)?.items"
         (onActionSelected)="_onActionSelected($event)"
-        [categoryInheritUserPermissions]="categoryInheritUserPermissions">
-        (closeParentPopup)="parentPopupWidget?.close()"
+        [categoryInheritUserPermissions]="categoryInheritUserPermissions"
+        (closeParentPopup)="parentPopupWidget?.close()">
       </kManageEndUserPermissionsTable>
     </div>
     <div class="kTableFooter" #footer *ngIf="_usersTotalCount">
