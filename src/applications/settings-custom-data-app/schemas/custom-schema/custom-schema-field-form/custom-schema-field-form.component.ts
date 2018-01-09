@@ -41,7 +41,6 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
   private _systemNames: string[] = [];
   private _fieldsIds: string[] = [];
   private _fieldIdGenerator = new FriendlyHashId();
-  private _validateOnClose = true;
 
   public _title: string;
   public _saveBtnLabel: string;
@@ -90,15 +89,9 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
         .subscribe(event => {
           const canPreventClose = event.context && event.context.allowClose;
 
-          if (canPreventClose) {
-            if (this._validateOnClose && !this._fieldForm.dirty) {
-              event.context.allowClose = this._validateForm();
-            }
-
-            if (this._fieldForm.dirty) {
-              event.context.allowClose = false;
-              this._cancel();
-            }
+          if (canPreventClose && this._fieldForm.dirty) {
+            event.context.allowClose = false;
+            this._cancel();
           }
         });
     }
@@ -294,7 +287,6 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
           this._save();
         },
         reject: () => {
-          this._validateOnClose = false;
           this._setPristine();
           this.parentPopupWidget.close();
         }
@@ -313,7 +305,6 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
       if (updatedField) {
         this.onSave.emit(updatedField);
 
-        this._validateOnClose = false;
         this._setPristine();
         this.parentPopupWidget.close();
       }
