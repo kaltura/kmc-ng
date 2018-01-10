@@ -11,7 +11,7 @@
                      suggestionItemField="item"
                      suggestionLabelField="name"
                      field="screenName"
-                     [onItemAdding]="_convertUserInputToValidValue"
+                     [onItemAdding]="_convertUserInputToValidValue.bind(this)"
                      [multiple]="false"
                      [limitToSuggestions]="false"
                      placeholder="{{'applications.content.categoryDetails.entitlements.owner.changeOwnerPlaceholder' | translate}}"

@@ -71,8 +71,8 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
                 event.context.allowClose = false;
                 this._browserService.confirm(
                   {
-                    header: this._appLocalization.get('applications.content.entryDetails.captions.cancelEdit'),
-                    message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
+                    header: this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.cancelEdit'),
+                    message: this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.discard'),
                     accept: () => {
                       this._confirmClose = false;
                       this.parentPopupWidget.close();
@@ -136,6 +136,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
 
   public _convertUserInputToValidValue(value: string): KalturaUser {
     let result = null;
+    const tt: string = this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.tooltip', {0: value});
 
     if (value) {
       result = new KalturaUser(
@@ -144,6 +145,12 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
           screenName:  value
         }
       );
+
+      // workaround to 'force' auto complete to show custom tooltip and use custom class
+      Object.assign(<any>result, {
+        userAdded: true,
+        tooltip: tt
+      });
     }
     return result;
   }

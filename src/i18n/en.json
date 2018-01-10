@@ -1297,6 +1297,9 @@
             "changeOwner": "Change Owner",
             "changeOwnerLabel": "Set a new owner for this category",
             "changeOwnerPlaceholder": "Enter Username/Id",
+            "cancelEdit": "Cancel Edit",
+            "discard": "Discard all changes?",
+            "tooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier",
             "errors": {
               "changeOwnerFailed" : "An error occurred while changing owner",
               "unableToChange": "Unable to change owner for current category",
