@@ -156,11 +156,33 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   public _apply() {
-    this._confirmClose = false;
-    this.ownerChanged.emit(Array.isArray(this._owner) ? this._owner[0] : this._owner);
-    if (this.parentPopupWidget) {
-      this.parentPopupWidget.close();
+    const owner: KalturaUser = Array.isArray(this._owner) ? this._owner[0] : this._owner;
+    if (owner.id && this._isOwnerValid(owner.id)) {
+      this._confirmClose = false;
+      this.ownerChanged.emit(owner);
+      if (this.parentPopupWidget) {
+        this.parentPopupWidget.close();
+      }
+    } else {
+      const message = owner.id ?
+        this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.errors.invalidOwner', {'0': owner.id}) :
+        this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.errors.ownerRequired');
+      this._blockerMessage = new AreaBlockerMessage({
+        message,
+        buttons: [{
+          label: this._appLocalization.get('app.common.close'),
+          action: () => {
+            this._blockerMessage = null;
+          }
+        }
+        ]
+      });
     }
+  }
+
+  private _isOwnerValid(userId: string) {
+    const ownerRegex = /^[A-Za-z0-9,!#\$%&\'\*\+\?\^_`\{\|}~.@-]{1,320}$/;
+    return ownerRegex.test(userId);
   }
 }
 

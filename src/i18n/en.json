@@ -1303,7 +1303,9 @@
             "errors": {
               "changeOwnerFailed" : "An error occurred while changing owner",
               "unableToChange": "Unable to change owner for current category",
-              "selectUser" : "Unable to change owner since no user was selected"
+              "selectUser" : "Unable to change owner since no user was selected",
+              "invalidOwner": "Cannot set owner field with user id\n\"{{0}}\"\nuser id is invalid",
+              "ownerRequired": "Cannot set owner field,\nuser id is invalid"
             }
           },
           "permittedUsers": {
