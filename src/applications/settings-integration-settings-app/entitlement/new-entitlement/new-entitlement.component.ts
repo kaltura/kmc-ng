@@ -80,7 +80,7 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
               message: error.message,
               buttons: [
                 {
-                  label: this._appLocalization.get('app.common.cancel'),
+                  label: this._appLocalization.get('app.common.ok'),
                   action: () => {
                     this._blockerMessage = null;
                   }

@@ -5,6 +5,8 @@
   margin-left: 30px;
   box-sizing: border-box;
   padding: 28px 15px 28px 30px;
+  display: flex;
+  flex-direction: column;
   .kTitle {
     color: $kGrayscale1;
     padding-bottom: 32px;
@@ -13,7 +15,7 @@
     font-size: 20px;
     font-weight: bold;
     line-height: 24px;
-
+    flex: 0 0 auto;
     .kHelp {
       /deep/ {
         .kInputHelper {
@@ -30,11 +32,13 @@
     font-size: 15px;
     line-height: 22px;
     padding-bottom: 20px;
+    flex: 0 0 auto;
   }
 
   .kEntitlementReforcement{
     display: flex;
     padding-bottom: 32px;
+    flex: 0 0 auto;
 
     .kApiDefault{
       flex: 0 0 auto;
@@ -49,11 +53,19 @@
 
   .kAddEntitlement{
     padding-bottom: 16px;
+    flex: 0 0 auto;
+
     button {
       font-weight: bold;
       height: 34px;	width: 142px;
       font-size: 14px;
     }
+  }
+
+  .kEntitlementsHolder{
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 5px;
   }
 
   .kRow {

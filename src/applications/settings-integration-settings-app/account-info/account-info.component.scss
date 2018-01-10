@@ -1,8 +1,7 @@
 @import 'app-theme/_variables.scss';
 
 .kContainer {
-  padding-left: 30px;
-  padding-top: 28px;
+  width: 100%;
 
   .kTitle {
     color: $kGrayscale1;
@@ -30,6 +29,9 @@
       padding-left: 30px;
       flex: 1 1 auto;
       color: $kGrayscale1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
