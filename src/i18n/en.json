@@ -1606,6 +1606,8 @@
       "integrationSettings": {
         "accountInfo": {
           "title": "Account Info",
+          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges. <a href=\"http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/entitlementsettings.htm\">Read More.</a>",
+          "readMore": "Read More.",
           "partnerId": "Partner ID",
           "subPartnerId": "Sub Partner ID",
           "adminSecret": "Administrator Secret",

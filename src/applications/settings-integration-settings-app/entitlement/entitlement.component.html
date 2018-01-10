@@ -1,8 +1,13 @@
 <k-area-blocker [showLoader]="_isBusy"
                 [message]="_blockerMessage">
   <div class="kContainer">
-    <div class="kTitle">{{'applications.settings.integrationSettings.entitlement.title' | translate}}</div>
-    <!-- TODO: BEN Add helptip after Dvir finishes-->
+    <div class="kTitle">
+      <span>{{'applications.settings.integrationSettings.entitlement.title' | translate}}</span>
+      <kInputHelper class="kHelp" trigger="click">
+        <span [innerHTML]="'applications.settings.integrationSettings.accountInfo.helpText' | translate">
+        </span>
+      </kInputHelper>
+    </div>
     <div class="kExplanation">{{'applications.settings.integrationSettings.entitlement.explanation' | translate}}</div>
     <div class="kEntitlementReforcement">
       <div class="kApiDefault">{{'applications.settings.integrationSettings.entitlement.apiDefault' | translate}}</div>

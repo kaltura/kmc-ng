@@ -4,7 +4,7 @@ import {routing} from './settings-integration-settings-app.routes';
 import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ButtonModule, DataTableModule, DropdownModule, InputTextModule, MenuModule} from 'primeng/primeng';
-import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerModule, InputHelperModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 import {TranslateModule} from 'ng2-translate';
 import {SettingsIntegrationSettingsComponent} from './settings-integration-settings.component';
 import {AccountInfoComponent} from './account-info/account-info.component';
@@ -30,7 +30,8 @@ import {CategoriesModule} from 'app-shared/content-shared/categories/categories.
     MenuModule,
     PopupWidgetModule,
     StickyModule,
-      CategoriesModule
+    CategoriesModule,
+    InputHelperModule
   ],
   declarations: [
     SettingsIntegrationSettingsComponent,
