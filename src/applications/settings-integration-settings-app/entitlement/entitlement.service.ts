@@ -4,15 +4,13 @@ import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Observable} from 'rxjs/Observable';
 import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
-import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
-import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
 import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
 
-export interface Entitlement {
+export interface EntitlementSectionData {
   categories: KalturaCategory[];
   partnerDefaultEntitlementEnforcement: boolean
 }
@@ -23,7 +21,7 @@ export class EntitlementService {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  public getEntitlement(): Observable<Entitlement> {
+  public getEntitlementsSectionData(): Observable<EntitlementSectionData> {
 
     const request = new KalturaMultiRequest(
       new PartnerGetInfoAction(),
@@ -34,71 +32,57 @@ export class EntitlementService {
       })
     );
 
-    return <any>(this._kalturaServerClient.multiRequest(request).map(
+    return this._kalturaServerClient.multiRequest(request).map(
       response => {
         if (response.hasErrors()) {
-          throw new Error('error occurred in action \'getEntitlement\'');
+          throw new Error('error occurred in action \'getEntitlementsSectionData\'');
         }
 
-        const partnerDefaultEntitlementEnforcement =
-          (<KalturaPartner>response[0].result).defaultEntitlementEnforcement;
-        const categories = (<KalturaCategoryListResponse>response[1].result).objects;
+        const partnerDefaultEntitlementEnforcement: boolean = response[0].result.defaultEntitlementEnforcement;
+        const categories: KalturaCategory[] = response[1].result.objects;
         return {categories, partnerDefaultEntitlementEnforcement};
       }
-    ));
+    );
   }
 
-  private _getCategoriesList(): Observable<KalturaCategory[]> {
+  public deleteEntitlement({id, privacyContextData}: { id: number, privacyContextData?: { privacyContext: string, privacyContexts: string } }): Observable<void> {
+    if (!id) {
+      return Observable.throw(new Error('Error occurred while trying to delete entitlement'));
+    }
 
-    const filter = new KalturaCategoryFilter({
-      privacyContextEqual: '*'
-    });
-
-    return this._kalturaServerClient.request(new CategoryListAction({filter}))
-      .map(
-        (response: KalturaCategoryListResponse) => {
-          return response.objects;
-        });
-  }
-
-  private _getPartnerDefaultEntitlementEnforcement(): Observable<{ defaultEntitlementEnforcement: boolean }> {
-
-    return this._kalturaServerClient.request(new PartnerGetInfoAction())
-      .map(
-        (response: KalturaPartner) => {
-
-          return response;
-        });
-  }
-
-  public deleteEntitlement(entitlement: KalturaCategory): Observable<void> {
     const category = new KalturaCategory();
     category.privacyContext = null;
 
-    const context = entitlement.privacyContext.split(',');
-    const contexts = entitlement.privacyContexts.split(',');
+    if (privacyContextData) {
+      const context = (privacyContextData && privacyContextData.privacyContext.split(',')) || [];
+      const contexts = (privacyContextData && privacyContextData.privacyContexts.split(',')) || [];
 
-    // Subtract privacyContext from privacyContexts and if no contexts left so set the following properties
-    if (contexts.filter(c => (context.indexOf(c) < 0)).length) {
-      category.privacy = KalturaPrivacyType.all;
-      category.appearInList = KalturaAppearInListType.partnerOnly;
-      category.contributionPolicy = KalturaContributionPolicyType.all;
+      // Subtract privacyContext from privacyContexts and if no contexts left so set the following properties
+      if (contexts.length && contexts.filter(c => (context.indexOf(c) < 0)).length) {
+        category.privacy = KalturaPrivacyType.all;
+        category.appearInList = KalturaAppearInListType.partnerOnly;
+        category.contributionPolicy = KalturaContributionPolicyType.all;
+      }
     }
 
     return this._kalturaServerClient.request(new CategoryUpdateAction({
-      id: entitlement.id,
+      id,
       category
     }))
       .map(_ => (undefined));
   }
 
-  public addEntitlement(newEntitlementData: { categoryId: number, privacyContextLabel: string }): Observable<void> {
+  public addEntitlement({id, privacyContext}: { id: number, privacyContext: string }): Observable<void> {
+    if (!id || !privacyContext) {
+      return Observable.throw(new Error('Error occurred while trying to add entitlement, invalid entitlement\'s data'));
+    }
+
     const category = new KalturaCategory({
-      privacyContext: newEntitlementData.privacyContextLabel
+      privacyContext
     });
 
     return this._kalturaServerClient.request(new CategoryUpdateAction({
-      id: newEntitlementData.categoryId,
+      id,
       category
     }))
       .map(_ => (undefined));

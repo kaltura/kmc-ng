@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {Entitlement, EntitlementService} from './entitlement.service';
+import {EntitlementSectionData, EntitlementService} from './entitlement.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
@@ -28,7 +28,7 @@ export class EntitlementComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._fetchEntitlements();
+    this._loadEntitlementSectionData();
   }
 
   ngOnDestroy() {
@@ -49,18 +49,7 @@ export class EntitlementComponent implements OnInit, OnDestroy {
               .get('applications.settings.integrationSettings.entitlement.deleteEntitlement.confirmation',
                 {0: entitlement.name}),
             accept: () => {
-              this._isBusy = true;
-              this._entitlementService.deleteEntitlement(entitlement)
-                .cancelOnDestroy(this)
-                .subscribe(
-                  result => {
-                    this._fetchEntitlements();
-                  },
-                  error => {
-                    this._isBusy = false;
-                    this._blockerMessage =  error.message;
-                  }
-                );
+              this._deleteEntitlement(entitlement);
             }
           }
         );
@@ -70,28 +59,71 @@ export class EntitlementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _fetchEntitlements() {
-    this._isBusy = true;
-    this._blockerMessage = null;
-    this._entitlementService.getEntitlement()
+  private _deleteEntitlement(entitlement: KalturaCategory) {
+    this._updateAreaBlockerState(true, null);
+    this._entitlementService.deleteEntitlement({
+      id: entitlement.id,
+      privacyContextData: {
+        privacyContexts: entitlement.privacyContexts,
+        privacyContext: entitlement.privacyContext
+      }
+    })
       .cancelOnDestroy(this)
       .subscribe(
-        (response: Entitlement) => {
-          this._isBusy = false;
+        result => {
+          this._updateAreaBlockerState(false, null);
+          this._loadEntitlementSectionData();
+        },
+        error => {
+          const blockerMessage = new AreaBlockerMessage({
+            message: error.message || `Error occurred while trying to delete entitlement \'${entitlement.name}\'`,
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._deleteEntitlement(entitlement);
+                }
+              }, {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._blockerMessage = null;
+                }
+              }
+            ]
+          });
+          this._updateAreaBlockerState(false, blockerMessage);
+        }
+      );
+  }
+
+  private _loadEntitlementSectionData() {
+    this._updateAreaBlockerState(true, null);
+    this._entitlementService.getEntitlementsSectionData()
+      .cancelOnDestroy(this)
+      .subscribe(
+        (response: EntitlementSectionData) => {
+          this._updateAreaBlockerState(false, null);
           this._entitlements = response.categories;
           this._partnerDefaultEntitlementEnforcement = response.partnerDefaultEntitlementEnforcement;
         },
         error => {
-          this._blockerMessage = new AreaBlockerMessage({
+          const blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization.get('applications.settings.integrationSettings.entitlement.errors.loadError'),
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
-                action: () => this._fetchEntitlements()
+                action: () => this._loadEntitlementSectionData()
               }
             ]
           });
+          this._updateAreaBlockerState(false, blockerMessage);
         }
       );
   }
+
+  private _updateAreaBlockerState(isBusy: boolean, areaBlocker: AreaBlockerMessage): void {
+    this._isBusy = isBusy;
+    this._blockerMessage = areaBlocker;
+  }
+
 }

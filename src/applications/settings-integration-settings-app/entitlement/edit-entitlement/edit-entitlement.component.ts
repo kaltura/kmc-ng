@@ -57,7 +57,7 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _apply() {
+  public _apply() {
     if (!this.editEntitlementForm.valid) {
       this.markFormFieldsAsTouched();
       return;
@@ -70,29 +70,53 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
           .get('applications.settings.integrationSettings.entitlement.editEntitlement.confirmation',
             {0: this.entitlement.name}),
         accept: () => {
-          this._editEntitlementService.updateEntitlementPrivacyContext(this.entitlement.id,
-            this.editEntitlementForm.controls['privacyContextLabel'].value)
-            .cancelOnDestroy(this)
-            .tag('block-shell')
-            .subscribe(
-              result => {
-                this.onEntitlementUpdated.emit();
-                this.ownerPopup.close();
-              },
-              error => {
-                this._updateAreaBlockerState(false, error.message);
-              }
-            );
+          this._updateEntitlementPrivacyContext();
         }
       }
     );
   }
 
-
-  private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
-    this._isBusy = isBusy;
-    this._blockerMessage = message;
+  private _updateEntitlementPrivacyContext() {
+    this._updateAreaBlockerState(true, null);
+    this._editEntitlementService.updateEntitlementPrivacyContext(this.entitlement.id,
+      this.editEntitlementForm.controls['privacyContextLabel'].value)
+      .cancelOnDestroy(this)
+      .tag('block-shell')
+      .subscribe(
+        result => {
+          this._updateAreaBlockerState(false, null);
+          this.onEntitlementUpdated.emit();
+          if (this.ownerPopup) {
+            this.ownerPopup.close();
+          }
+        },
+        error => {
+          const blockerMessage = new AreaBlockerMessage({
+            message: error.message || `Error occurred while trying to edit entitlement \'${this.entitlement.name}\'`,
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._updateEntitlementPrivacyContext();
+                }
+              }, {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._blockerMessage = null;
+                }
+              }
+            ]
+          });
+          this._updateAreaBlockerState(false, blockerMessage);
+        }
+      );
   }
+
+  private _updateAreaBlockerState(isBusy: boolean, areaBlocker: AreaBlockerMessage): void {
+    this._isBusy = isBusy;
+    this._blockerMessage = areaBlocker;
+  }
+
 
   // Create empty structured form on loading
   private _createForm(): void {

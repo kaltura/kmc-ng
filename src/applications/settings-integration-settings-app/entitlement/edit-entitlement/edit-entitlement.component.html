@@ -33,7 +33,7 @@
 
       </div>
       <div class="kFooter">
-        <button type="button" class="kButtonDefault" [disabled]="false" (click)="ownerPopup.close()" pButton label="{{'app.common.cancel' | translate}}"></button>
+        <button type="button" class="kButtonDefault" [disabled]="false" (click)="ownerPopup?.close()" pButton label="{{'app.common.cancel' | translate}}"></button>
         <button type="button" class="kButtonBranded" pButton label="{{'app.common.apply' | translate}}" (click)="_apply()"  [disabled]="!editEntitlementForm.valid || editEntitlementForm.pristine"></button>
       </div>
     </div>

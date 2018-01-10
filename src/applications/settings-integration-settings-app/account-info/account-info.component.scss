@@ -21,8 +21,10 @@
       flex: 0 0 auto;
       color: $kGrayscale1;
       font-weight: bold;
-      width: 200px;
+      width: 35%;
       word-wrap: break-word;
+      min-width: 145px;
+      max-width: 200px;
     }
 
     .kControl {

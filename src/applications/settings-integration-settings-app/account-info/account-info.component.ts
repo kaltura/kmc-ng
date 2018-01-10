@@ -62,8 +62,8 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
         });
   }
 
-  private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
+  private _updateAreaBlockerState(isBusy: boolean, areaBlocker: AreaBlockerMessage): void {
     this._isBusy = isBusy;
-    this._blockerMessage = message;
+    this._blockerMessage = areaBlocker;
   }
 }
