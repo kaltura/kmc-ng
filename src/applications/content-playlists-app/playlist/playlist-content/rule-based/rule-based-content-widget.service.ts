@@ -86,6 +86,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
         responses.forEach(({result = []}, index) => {
           const filter = this.data.filters[index];
           const entriesDuration = result.reduce((duration, entry) => duration + entry.duration, 0);
+          this.entriesDuration += entriesDuration;
 
           this.rules.push({
             name: (<any>filter).name,
@@ -121,6 +122,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     if (ruleIndex !== -1) {
       this.rules.splice(ruleIndex, 1);
       this.rulesTotalCount = this.rules.length;
+      this.entriesDuration = this.rules.reduce((duration, rule) => duration + rule.entriesDuration, 0);
 
       this._setDirty();
     }

@@ -3,9 +3,9 @@
     <p-dataTable
       #dataTable
       dataKey="selectionId"
-      scrollable="true"
       scrollHeight="100%"
       [immutable]="false"
+      [scrollable]="true"
       [value]="_rules"
       [emptyMessage]="_emptyMessage"
       (selectionChange)="_onSelectionChange($event)"
