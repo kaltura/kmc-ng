@@ -1,0 +1,77 @@
+@import "app-theme/_variables.scss";
+
+.kFloater{
+  display: flex;
+  flex-direction: column;
+  height: 260px;
+  width: 100%;
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    flex: 0 0 auto;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer{
+    flex: 0 0 auto;
+    height: 72px;
+    margin: 24px;
+    .kLabel{
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+  .kFooter{
+    flex: 0 0 auto;
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button{
+      height: 34px;
+      margin-left: 8px;
+    }
+  }
+  /deep/ .ui-autocomplete.ui-widget{
+    width: 100%;
+    input{
+      width: 100%;
+    }
+  }
+  /deep/ kAutoComplete{
+    margin-top: 4px;
+    width: 100%;
+    .ui-autocomplete-input-token{
+      width: 200px;
+    }
+  }
+}
+
+:host /deep/ .ui-autocomplete.ui-widget{
+  width: 100%;
+  font-size: 15px;
+
+  input{
+    width: 100%;
+  }
+
+  ul.ui-autocomplete-multiple-container {
+    height: auto;
+  }
+}
+
+:host /deep/ kAutoComplete{
+  width: 100%;
+}
+
+/deep/ kPopupWidget .kPopupWidget {
+  overflow: visible !important;
+}

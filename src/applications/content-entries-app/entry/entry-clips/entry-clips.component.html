@@ -3,7 +3,7 @@
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
 
 		<div class="kTable">
-			<p-dataTable [value]="(_widgetService.entries.data$ | async)?.items" scrollable="true" [sortField]="_widgetService.sortBy" [sortOrder]="_convertSortValue(_widgetService.sortAsc)" (onSort)="_onSortChanged($event)">
+			<p-dataTable [value]="(_widgetService.entries$ | async)?.items" scrollable="true" [sortField]="_widgetService.sortBy" [sortOrder]="_convertSortValue(_widgetService.sortAsc)" (onSort)="_onSortChanged($event)">
 				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}" [style]="{'width':'120px','padding-left': '24px'}">
 					<ng-template let-col let-entry="rowData" pTemplate="body">
 						<a (click)="_widgetService.navigateToEntry(entry.id)">{{entry.id}}</a>
@@ -15,7 +15,7 @@
 				</p-column>
 				<p-column field="createdAt" header="{{'applications.content.entryDetails.clips.created' | translate}}" [sortable]="'custom'" [style]="{'width':'110px'}">
 					<ng-template let-col let-entry="rowData" pTemplate="body">
-						<span>{{entry[col.field] | date:'MM/dd/yy HH:mm'}}</span>
+						<span>{{entry[col.field] | kDate}}</span>
 					</ng-template>
 				</p-column>
 				<p-column field="offset" header="{{'applications.content.entryDetails.clips.offset' | translate}}" [style]="{'width':'80px'}">
@@ -31,7 +31,7 @@
 		</div>
 
 		<p-paginator [rows]="_widgetService.pageSize" (onPageChange)="_onPaginationChanged($event)"
-					 [totalRecords]="(_widgetService.entries.data$ | async)?.totalItems"
+					 [totalRecords]="(_widgetService.entries$ | async)?.totalItems"
 					 [rowsPerPageOptions]="_widgetService.pageSizesAvailable"></p-paginator>
 	</div>
 </k-area-blocker>

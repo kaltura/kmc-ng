@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { CategoriesBulkActionBaseService } from "./categories-bulk-action-base.service";
-import { KalturaCategory } from "kaltura-ngx-client/api/types/KalturaCategory";
-import { CategoryDeleteAction } from "kaltura-ngx-client/api/types/CategoryDeleteAction";
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {CategoriesBulkActionBaseService} from "./categories-bulk-action-base.service";
+import {KalturaCategory} from "kaltura-ngx-client/api/types/KalturaCategory";
+import {CategoryDeleteAction} from "kaltura-ngx-client/api/types/CategoryDeleteAction";
 
 @Injectable()
 export class CategoriesBulkDeleteService extends CategoriesBulkActionBaseService<{}> {
@@ -12,12 +12,12 @@ export class CategoriesBulkDeleteService extends CategoriesBulkActionBaseService
     super(_kalturaServerClient);
   }
 
-  public execute(selectedEntries: KalturaCategory[]) : Observable<{}>{
+  public execute(selectedCategories: KalturaCategory[]) : Observable<{}>{
     return Observable.create(observer =>{
 
-      let requests: CategoryDeleteAction[] = [];
+      const requests: CategoryDeleteAction[] = [];
 
-      selectedEntries.forEach(category => {
+      selectedCategories.forEach(category => {
         requests.push(new CategoryDeleteAction({
           id: category.id
         }));

@@ -1,6 +1,4 @@
 <k-area-blocker [showLoader]="_transcodingProfileLoading" [message]="_transcodingProfileError">
-
-
   <div class="kUploadSettings">
     <div class="kHeader">
       <h1>{{ 'applications.upload.uploadSettings.title' | translate }}</h1>
@@ -58,8 +56,11 @@
             <ng-template let-col let-file="rowData" pTemplate="body">
               <p-dropdown [options]="_fileTypes"
                           [autoWidth]="false"
+                          appendTo="body"
+                          kDropdownCloseOnScroll
+                          [scrollTarget]="_tableScrollableWrapper"
                           [(ngModel)]="file.mediaType"
-                          placeholder="{{'applications.content.entryDetails.related.select' | translate}}"></p-dropdown>
+                          [placeholder]="'applications.content.entryDetails.related.select' | translate"></p-dropdown>
             </ng-template>
           </p-column>
           <p-column field="size"
@@ -73,7 +74,7 @@
           <p-column [style]="{ 'width': '40px', 'text-align': 'center'}">
             <ng-template let-col let-file="rowData" pTemplate="body">
               <i *ngIf="file.hasError"
-                 class="kIconinfo kIconError"
+                 class="kIconerror kIconError"
                  [kTooltip]="file.errorToken | translate"
                  placement="top"
                  (click)="_removeFile(file)"></i>

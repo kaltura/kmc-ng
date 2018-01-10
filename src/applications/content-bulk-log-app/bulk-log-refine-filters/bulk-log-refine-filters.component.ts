@@ -313,15 +313,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Stop propagating clicks of the provided event.
-   *
-   * Not part of the API, don't use it from outside this component
-   */
-  public _blockScheduleToggle(event) {
-    event.stopPropagation();
-  }
-
+    
   /**
    * Invoke a request to the popup widget container to close the popup widget.
    *

@@ -24,7 +24,9 @@ export class UploadPageExitVerificationService implements OnDestroy {
         this._pageExitVerificationToken = this._pageExitVerificationService.add();
       }
     } else {
-      this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+        if (this._pageExitVerificationToken) {
+            this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+        }
       this._pageExitVerificationToken = null;
     }
   }

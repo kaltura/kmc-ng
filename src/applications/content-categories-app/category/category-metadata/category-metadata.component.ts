@@ -1,13 +1,12 @@
-import { MenuItem } from 'primeng/primeng';
-import { ISubscription } from 'rxjs/Subscription';
-import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { Subject } from 'rxjs/Subject';
-import { Component, OnInit, QueryList, ViewChild, ViewChildren, Inject, ElementRef } from '@angular/core';
-import { JumpToSection } from './jump-to-section.component';
-import { DOCUMENT } from '@angular/platform-browser';
-import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
-import { CategoryMetadataWidget } from './category-metadata-widget.service';
-
+import {MenuItem} from 'primeng/primeng';
+import {ISubscription} from 'rxjs/Subscription';
+import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import {Subject} from 'rxjs/Subject';
+import {Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {JumpToSection} from './jump-to-section.component';
+import {DOCUMENT} from '@angular/platform-browser';
+import {PageScrollInstance, PageScrollService} from 'ng2-page-scroll';
+import {CategoryMetadataWidget} from './category-metadata-widget.service';
 
 
 @Component({
@@ -105,7 +104,7 @@ export class CategoryMetadataComponent implements OnInit {
     let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
       document: this.document,
       scrollTarget: element,
-      scrollingViews: [this._container.nativeElement]
+      pageScrollOffset: 105
     });
     this._pageScrollService.start(pageScrollInstance);
   }

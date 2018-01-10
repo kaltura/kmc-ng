@@ -1,48 +1,44 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import {TagsModule} from '@kaltura-ng/kaltura-ui/tags';
+import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import {
-  TreeModule,
-  TieredMenuModule,
-  SharedModule,
   AccordionModule,
   ButtonModule,
-  InputTextareaModule,
-  PaginatorModule,
-  InputTextModule,
-  MenuModule,
+  CalendarModule,
+  CheckboxModule,
+  ConfirmDialogModule,
   DataTableModule,
   DropdownModule,
-  RadioButtonModule,
+  InputTextareaModule,
+  InputTextModule,
+  MenuModule,
   MultiSelectModule,
-  CheckboxModule,
-  CalendarModule,
+  PaginatorModule,
+  RadioButtonModule,
+  SharedModule,
   SpinnerModule,
-  ConfirmDialogModule
+  TieredMenuModule,
+  TreeModule
 } from 'primeng/primeng';
-import {KMCShellModule} from 'app-shared/kmc-shell';
+import { KMCShellModule } from 'app-shared/kmc-shell';
 
-import {routing} from './administration-roles-app.routes';
-import {AdministrationRolesComponent} from './administration-roles.component';
+import { routing } from './administration-roles-app.routes';
+import { AdministrationRolesComponent } from './administration-roles.component';
 
-import {MetadataProfileModule} from 'app-shared/kmc-shared';
+import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc-shared';
 
-import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
-import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
-import {PrimeTreeModule} from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import {KalturaUIModule, TooltipModule, StickyModule} from '@kaltura-ng/kaltura-ui';
-import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
-
-import {AreaBlockerModule} from '@kaltura-ng/kaltura-ui';
-import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
-import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
-import {DynamicMetadataFormModule} from 'app-shared/kmc-shared';
-import {RolesComponentsList} from './roles/roles-components-list';
-import {EditRoleComponent} from './role/edit-role/edit-role.component';
+import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
+import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
+import { RolesComponentsList } from './roles/roles-components-list';
+import { EditRoleComponent } from './role/edit-role/edit-role.component';
 
 @NgModule({
   imports: [
@@ -75,7 +71,6 @@ import {EditRoleComponent} from './role/edit-role/edit-role.component';
     ReactiveFormsModule,
     RouterModule.forChild(routing),
     SharedModule,
-    PrimeTreeModule,
     SpinnerModule,
     TagsModule,
     TieredMenuModule,

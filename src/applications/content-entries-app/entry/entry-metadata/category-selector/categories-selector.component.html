@@ -9,9 +9,9 @@
 			<div class="k-spinner-animation kSpinnerAnim"></div>
 		</div>
 		<span *ngIf="!_selectedCategories.length && !_categoriesLocked">{{'applications.content.entryDetails.metadata.catSelect' | translate}}</span>
-		<kTags #tags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'" [tooltipField]="'fullNamePath'" (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()">
+		<kTags #tags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'" [tooltipField]="'tooltip'" (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()">
 			<ng-template let-item="item">
-				<div class="kTagContent" [kTooltip]="item.tooltip | kCategoryTooltip">
+				<div class="kTagContent" [kTooltip]="item.tooltip">
 					<span class="kTagLabel">{{item.label}}</span>
 					<i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="_removeTag(item.data)"></i>
 				</div>
@@ -35,11 +35,10 @@
 
 
 		<k-categories-tree #categoriesTree
-						   [(selection)]="_treeSelection"
-						   (onCategoriesLoad)="_onTreeCategoriesLoad($event)"
-						   (onNodeSelect)="_onTreeNodeSelected($event)"
-						   (onNodeUnselect)="_onTreeNodeUnselected($event)"
-						   (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
+						   [(selectedCategories)]="_treeSelection"
+						   (onCategoriesLoaded)="_onTreeCategoriesLoad($event)"
+						   (onCategorySelected)="_onTreeNodeSelected($event)"
+						   (onCategoryUnselected)="_onTreeNodeUnselected($event)"></k-categories-tree>
 	</div>
 
     <div class="kFooter" [class.kLocked]="_categoriesLocked">

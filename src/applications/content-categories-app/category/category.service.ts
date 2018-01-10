@@ -1,167 +1,167 @@
-import { CategoriesService } from './../categories/categories.service';
-import { Host, Injectable, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {CategoriesService} from './../categories/categories.service';
+import {Host, Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ISubscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
-import { CategoryUpdateAction } from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
+import {KalturaClient, KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {CategoryGetAction} from 'kaltura-ngx-client/api/types/CategoryGetAction';
+import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryWidgetsManager } from './category-widgets-manager';
-import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import {CategoryWidgetsManager} from './category-widgets-manager';
+import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
+import {AppEventsService} from 'app-shared/kmc-shared';
 
 export enum ActionTypes {
-	CategoryLoading,
-	CategoryLoaded,
-	CategoryLoadingFailed,
-	CategorySaving,
-	CategoryPrepareSavingFailed,
-	CategorySavingFailed,
-	CategoryDataIsInvalid,
-	ActiveSectionBusy
+  CategoryLoading,
+  CategoryLoaded,
+  CategoryLoadingFailed,
+  CategorySaving,
+  CategoryPrepareSavingFailed,
+  CategorySavingFailed,
+  CategoryDataIsInvalid,
+  ActiveSectionBusy
 }
 
-declare type StatusArgs =
-	{
-		action: ActionTypes;
-		error?: Error;
-	}
+declare interface StatusArgs {
+  action: ActionTypes;
+  error?: Error;
+}
 
 @Injectable()
 export class CategoryService implements OnDestroy {
 
-	private _loadCategorySubscription: ISubscription;
-	private _sectionToRouteMapping: { [key: number]: string } = {};
-	private _state = new BehaviorSubject<StatusArgs>({ action: ActionTypes.CategoryLoading, error: null });
-	private _saveCategoryInvoked = false;
-	public state$ = this._state.asObservable();
-	private _categoryIsDirty: boolean;
-	private _pageExitVerificationToken: string;
+    private _loadCategorySubscription: ISubscription;
+    private _sectionToRouteMapping: { [key: number]: string } = {};
+    private _state = new BehaviorSubject<StatusArgs>({action: ActionTypes.CategoryLoading, error: null});
 
-	public get categoryIsDirty(): boolean {
-		return this._categoryIsDirty;
-	}
+    private _saveCategoryInvoked = false;
+    public state$ = this._state.asObservable();
+    private _categoryIsDirty: boolean;
+    private _pageExitVerificationToken: string;
 
-	private _reloadCategoriesOnLeave = false;
-	private _category: BehaviorSubject<KalturaCategory> = new BehaviorSubject<KalturaCategory>(null);
-	public category$ = this._category.asObservable();
-	private _categoryId: number;
-
-	public get categoryId(): number {
-		return this._categoryId;
-	}
-	public get category(): KalturaCategory {
-		return this._category.getValue();
-	}
-
-	constructor(private _kalturaServerClient: KalturaClient,
-		private _router: Router,
-		private _browserService: BrowserService,
-		private _categoriesStore: CategoriesService,
-		@Host() private _widgetsManager: CategoryWidgetsManager,
-		private _categoryRoute: ActivatedRoute,
-		private _appLocalization: AppLocalization,
-    private _pageExitVerificationService: PageExitVerificationService) {
-
-		this._widgetsManager.categoryStore = this;
-
-		this._mapSections();
-
-		this._onSectionsStateChanges();
-		this._onRouterEvents();
-	}
-
-	private _onSectionsStateChanges() {
-		this._widgetsManager.widgetsState$
-			.cancelOnDestroy(this)
-			.debounce(() => Observable.timer(500))
-			.subscribe(
-			sectionsState => {
-				const newDirtyState = Object.keys(sectionsState).reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
-
-				if (this._categoryIsDirty !== newDirtyState) {
-					console.log(`category store: update category is dirty state to ${newDirtyState}`);
-					this._categoryIsDirty = newDirtyState;
-					this._updatePageExitVerification();
-				}
-			}
-			);
-	}
-
-  private _updatePageExitVerification() {
-    if (this._categoryIsDirty) {
-      this._pageExitVerificationToken = this._pageExitVerificationService.add();
-    } else {
-      this._pageExitVerificationService.remove(this._pageExitVerificationToken);
-      this._pageExitVerificationToken = null;
+    public get categoryIsDirty(): boolean {
+        return this._categoryIsDirty;
     }
-  }
 
-	ngOnDestroy() {
-		this._loadCategorySubscription && this._loadCategorySubscription.unsubscribe();
-		this._state.complete();
-		this._category.complete();
+    private _category: BehaviorSubject<KalturaCategory> = new BehaviorSubject<KalturaCategory>(null);
+    public category$ = this._category.asObservable();
+    private _categoryId: number;
 
-		this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+    public get categoryId(): number {
+        return this._categoryId;
+    }
 
-		if (this._reloadCategoriesOnLeave) {
-			this._categoriesStore.reload(true);
-		}
+    public get category(): KalturaCategory {
+        return this._category.getValue();
+    }
+
+    public notifyChangesInCategory(): void{
+    	this._saveCategoryInvoked = true;
 	}
+    constructor(private _kalturaServerClient: KalturaClient,
+                private _router: Router,
+                private _browserService: BrowserService,
+                private _categoriesStore: CategoriesService,
+                @Host() private _widgetsManager: CategoryWidgetsManager,
+                private _categoryRoute: ActivatedRoute,
+                private _appLocalization: AppLocalization,
+                private _pageExitVerificationService: PageExitVerificationService,
+                appEvents: AppEventsService) {
 
-	private _mapSections(): void {
-		if (!this._categoryRoute || !this._categoryRoute.snapshot.data.categoryRoute) {
-			throw new Error("this service can be injected from component that is associated to the category route");
-		}
+        this._widgetsManager.categoryStore = this;
 
-		this._categoryRoute.snapshot.routeConfig.children.forEach(childRoute => {
-			const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
+        this._mapSections();
 
-			if (routeSectionType !== null) {
-				this._sectionToRouteMapping[routeSectionType] = childRoute.path;
-			}
-		});
-	}
+        this._onSectionsStateChanges();
+        this._onRouterEvents();
+    }
+
+    private _onSectionsStateChanges() {
+        this._widgetsManager.widgetsState$
+            .cancelOnDestroy(this)
+            .debounce(() => Observable.timer(500))
+            .subscribe(
+                sectionsState => {
+                    const newDirtyState = Object.keys(sectionsState).reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
+
+                    if (this._categoryIsDirty !== newDirtyState) {
+                        console.log(`category store: update category is dirty state to ${newDirtyState}`);
+                        this._categoryIsDirty = newDirtyState;
+                        this._updatePageExitVerification();
+                    }
+                }
+            );
+    }
+
+    private _updatePageExitVerification() {
+        if (this._categoryIsDirty) {
+            this._pageExitVerificationToken = this._pageExitVerificationService.add();
+        } else {
+        	if (this._pageExitVerificationToken) {
+                this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+            }
+            this._pageExitVerificationToken = null;
+        }
+    }
+
+    ngOnDestroy() {
+        this._loadCategorySubscription && this._loadCategorySubscription.unsubscribe();
+        this._state.complete();
+        this._category.complete();
+
+        if (this._pageExitVerificationToken) {
+            this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+        }
+
+        if (this._saveCategoryInvoked) {
+            this._categoriesStore.reload();
+        }
+    }
+
+    private _mapSections(): void {
+        if (!this._categoryRoute || !this._categoryRoute.snapshot.data.categoryRoute) {
+            throw new Error('this service can be injected from component that is associated to the category route');
+        }
+
+        this._categoryRoute.snapshot.routeConfig.children.forEach(childRoute => {
+            const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
+
+            if (routeSectionType !== null) {
+                this._sectionToRouteMapping[routeSectionType] = childRoute.path;
+            }
+        });
+    }
+
 
 	private _onRouterEvents(): void {
 		this._router.events
 			.cancelOnDestroy(this)
-			.subscribe(
-			event => {
-				if (event instanceof NavigationStart) {
-				} else if (event instanceof NavigationEnd) {
-
+			.filter(
+			event => event instanceof NavigationEnd)
+.subscribe(
+                event => {
 					// we must defer the loadCategory to the next event cycle loop to allow components
 					// to init them-selves when entering this module directly.
 					setTimeout(() => {
 						const currentCategoryId = this._categoryRoute.snapshot.params.id;
-						if (currentCategoryId === "new") {
-							if (this._categoriesStore && this._categoriesStore.getNewCategoryData()) {
-								const parentId = this._categoriesStore.getNewCategoryData().parentCategoryId;
-								this._loadCategory(parentId);
-							}
-						}
-						else {
-							const category = this._category.getValue();
-							if (!category || (category && category.id.toString() !== currentCategoryId)) {
-								this._loadCategory(currentCategoryId);
-							}
-						}
+                        const category = this._category.getValue();
+                        if (!category || (category && category.id.toString() !== currentCategoryId)) {
+                          this._loadCategory(currentCategoryId);
+                        }
 					});
-				}
+				});
 			}
-			)
-	}
+
+
 
 	private _transmitSaveRequest(newCategory: KalturaCategory) {
 		this._state.next({ action: ActionTypes.CategorySaving });
@@ -186,8 +186,8 @@ export class CategoryService implements OnDestroy {
 						.monitor('category store: save category')
                         .tag('block-shell')
                         .map(
-						response => {
-							if (response.hasErrors()) {
+						categorySavedResponse => {
+							if (categorySavedResponse.hasErrors()) {
 								this._state.next({ action: ActionTypes.CategorySavingFailed });
 							} else {
 								this._loadCategory(this.categoryId);
@@ -242,28 +242,30 @@ export class CategoryService implements OnDestroy {
 		}
 	}
 
-	private _loadCategory(categoryId: number): void {
+	private _loadCategory(id: number): void {
 		if (this._loadCategorySubscription) {
 			this._loadCategorySubscription.unsubscribe();
 			this._loadCategorySubscription = null;
 		}
 
-		this._categoryId = categoryId;
+		this._categoryId = id;
 		this._categoryIsDirty = false;
 		this._updatePageExitVerification();
 
 		this._state.next({ action: ActionTypes.CategoryLoading });
-		this._widgetsManager.notifyDataLoading(categoryId);
+		this._widgetsManager.notifyDataLoading(id);
 
-		this._loadCategorySubscription = this._getCategory(categoryId)
+		if (!id) {
+      return this._state.next({action: ActionTypes.CategoryLoadingFailed, error: new Error('Missing categoryId')});
+    }this._loadCategorySubscription = this._kalturaServerClient
+      .request(new CategoryGetAction({id}))
 			.cancelOnDestroy(this)
-			.subscribe(
-			response => {
+			.subscribe(category => {
+			this._loadCategorySubscription = null;
 
-				this._category.next(response);
-				this._categoryId = response.id;
+				this._category.next(category);
 
-				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
+				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
 
 				if (dataLoadedResult.errors.length) {
 					this._state.next({
@@ -275,10 +277,10 @@ export class CategoryService implements OnDestroy {
 				}
 			},
 			error => {
-				this._state.next({ action: ActionTypes.CategoryLoadingFailed, error });
-
-			}
+				this._loadCategorySubscription = null;this._state.next({ action: ActionTypes.CategoryLoadingFailed, error });
+}
 			);
+
 	}
 
 	public openSection(sectionKey: string): void {
@@ -289,27 +291,20 @@ export class CategoryService implements OnDestroy {
 		}
 	}
 
-	private _getCategory(id: number): Observable<KalturaCategory> {
-		if (id) {
-			return this._kalturaServerClient.request(new CategoryGetAction({ id }));
-		} else {
-			return Observable.throw(new Error('missing category ID'));
-		}
-	}
-
 	public openCategory(categoryId: number) {
-		this.canLeave()
+		if ( this.categoryId!== categoryId) {
+		this.canLeaveWithoutSaving()
 			.cancelOnDestroy(this)
 			.subscribe(
 			response => {
 				if (response.allowed) {
-					this._router.navigate(["category", categoryId], { relativeTo: this._categoryRoute.parent });
+					this._router.navigate(['category', categoryId], { relativeTo: this._categoryRoute.parent });
 				}
 			}
 			);
-	}
+	}}
 
-	public canLeave(): Observable<{ allowed: boolean }> {
+	public canLeaveWithoutSaving(): Observable<{ allowed: boolean }> {
 		return Observable.create(observer => {
 			if (this._categoryIsDirty) {
 				this._browserService.confirm(
@@ -333,9 +328,8 @@ export class CategoryService implements OnDestroy {
 		}).monitor('category store: check if can leave section without saving');
 	}
 
-	public returnToCategories(params: { force?: boolean } = {}) {
+	public returnToCategories() {
 		this._router.navigate(['content/categories']);
 	}
-
 }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { DefaultFiltersList } from './default-filters-list';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 export interface RefineListItem {
   value: string,
@@ -16,22 +17,27 @@ export class RefineList {
 
 @Injectable()
 export class BulkLogRefineFiltersProviderService {
-    public getFilters(): Observable<RefineList[]> {
-        return Observable.of(this._buildDefaultFiltersGroup());
-    }
+  constructor(private _appLocalization: AppLocalization) {
 
-    private _buildDefaultFiltersGroup(): RefineList[] {
-        return DefaultFiltersList.map((list) => {
-            const refineList = new RefineList(
-                list.name,
-                list.label
-            );
+  }
 
-            refineList.items = list.items.map((item: any) => (
-                {value: item.value, label: item.label}
-            ));
+  public getFilters(): Observable<RefineList[]> {
+    return Observable.of(this._buildDefaultFiltersGroup());
+  }
 
-            return refineList;
-        });
-    }
+  private _buildDefaultFiltersGroup(): RefineList[] {
+    return DefaultFiltersList.map((list) => {
+      const refineList = new RefineList(
+        list.name,
+        this._appLocalization.get(`applications.content.bulkUpload.filters.${list.label}`)
+      );
+
+      refineList.items = list.items.map((item: any) => ({
+        value: item.value,
+        label: this._appLocalization.get(`applications.content.bulkUpload.filters.${item.label}`)
+      }));
+
+      return refineList;
+    });
+  }
 }

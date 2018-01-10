@@ -21,7 +21,7 @@ export class CategoriesStatusMonitorService implements OnDestroy {
     // TODO [kmcng] replace this function with log library
     private _log(level: 'silly' | 'verbose' | 'info' | 'warn' | 'error', message: string, context?: string): void {
         const messageContext = context || 'general';
-        const origin = 'bulk upload monitor';
+        const origin = 'categories status monitor';
         const formattedMessage = `log: [${level}] [${origin}] ${messageContext}: ${message}`;
         switch (level) {
             case 'silly':

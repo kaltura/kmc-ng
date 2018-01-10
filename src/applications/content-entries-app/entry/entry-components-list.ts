@@ -19,17 +19,14 @@ import { EntryComponent } from './entry.component';
 import { EntryPreview } from './entry-preview/entry-preview.component';
 import { EntryDetails } from './entry-details/entry-details.component';
 import { JumpToSection } from './entry-metadata/jump-to-section.component';
-import { ModerationPipe } from './pipes/moderation.pipe';
 import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.component';
 import { LinkedEntriesPopup } from './entry-metadata/entry-selector/linked-entries-popup.component';
 import { CategoriesSelector } from './entry-metadata/category-selector/categories-selector.component';
-import { CategoryTooltip } from './entry-metadata/category-selector/category-tooltip.pipe';
 import { TagsPipe } from './entry-flavours/tags.pipe';
 
 
 export const EntryComponentsList = [
     CategoriesSelector,
-    CategoryTooltip,
     DRMDetails,
     EntryAccessControl,
     EntryCaptions,
@@ -53,6 +50,5 @@ export const EntryComponentsList = [
     JumpToSection,
     LinkedEntries,
     LinkedEntriesPopup,
-    ModerationPipe,
     TagsPipe
 ];
