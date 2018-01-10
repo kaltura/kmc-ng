@@ -14,11 +14,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
-  @Input() set isNewPlaylist(value) {
-    if (value) {
-      this.assignEmptyMessage();
-    }
-  };
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
 
@@ -61,6 +56,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   ngOnInit() {
+      this.assignEmptyMessage();
+
   }
 
   ngAfterViewInit() {
