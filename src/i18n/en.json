@@ -663,7 +663,7 @@
         "createdOn": "Created On",
         "duration": "Duration",
         "status": "Status",
-        "previewAndEmbed": "Preview & Embed",
+        "previewAndEmbed": "Share & Embed",
         "delete": "Delete",
         "view": "View Details",
         "entries": "Entries",
@@ -898,7 +898,7 @@
           "users": "Users"
         },
         "preview": {
-          "pande": "Preview & Embed",
+          "pande": "Share & Embed",
           "details": "Details",
           "entryID": "ID:",
           "creator": "Created by:",
