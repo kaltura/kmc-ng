@@ -8,10 +8,6 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
-import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
-import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
 
 @Component({
   selector: 'kEntriesList',
@@ -20,7 +16,6 @@ import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
 
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
-  @Input() additionalFilters = false;
   @Input() showReload = true;
   @Input() isBusy = false;
   @Input() blockerMessage: AreaBlockerMessage = null;
@@ -28,43 +23,9 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() columns: EntriesTableColumns | null;
   @Input() rowActions: { label: string, commandName: string }[];
 
-  @Input() set rule(value: PlaylistRule) {  // rule-based playlist specific
-    if (value) {
-      this._resultsLimit = value.limit;
-      this._ruleName = value.name;
-      this._orderBy = value.orderBy;
-
-      this._entriesStore.filter(this._mapRuleFilters(value));
-    } else {
-      this._entriesStore.resetFilters(); // TODO [kmcng] reset filters without loading entries
-    }
-  }
   @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
   @ViewChild('tags') private tags: StickyComponent;
-
-  public _orderByOptions = [
-    {
-      value: KalturaPlayableEntryOrderBy.playsDesc,
-      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.mostPlayed')
-    },
-    {
-      value: KalturaPlayableEntryOrderBy.recentDesc,
-      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.mostRecent')
-    },
-    {
-      value: KalturaPlayableEntryOrderBy.rankDesc,
-      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.highestRated')
-    },
-    {
-      value: KalturaPlayableEntryOrderBy.nameAsc,
-      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.entryName')
-    }
-  ];
-
-  public _resultsLimit = 200;
-  public _ruleName = '';
-  public _orderBy = null;
 
   public _query = {
     freetext: '',
@@ -74,21 +35,12 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     pageSize: null,
     sortBy: null,
     sortDirection: null,
-        categories: [],
-        categoriesMode: null
+    categories: [],
+    categoriesMode: null
   };
 
-  public get playlistPartialData(): { limit: number, name: string, orderBy: string } {
-    return {
-      limit: this._resultsLimit,
-      name: this._ruleName,
-      orderBy: this._orderBy
-    }
-  }
-
   constructor(public _entriesStore: EntriesStore,
-              private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _browserService: BrowserService) {
   }
 
   ngOnInit() {
@@ -96,45 +48,17 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this._registerToFilterStoreDataChanges();
   }
 
-  private _mapRuleFilters(rule: PlaylistRule): Partial<EntriesFilters> {
-    const { originalFilter } = rule;
-    const getListTypeFilterFromRule = (ruleItem: string): ListType => {
-      if (!ruleItem) {
-        return null;
-      }
-      return ruleItem.split(',').map(item => ({ value: item, label: item })); // TODO [kmcng] fix label
-    };
-
-    const getSortDirection = (value) => value === '+' ? SortDirection.Asc : SortDirection.Desc;
-    const sortBy = rule.orderBy ? rule.orderBy.substr(1) : null;
-    const sortDirection = sortBy ? getSortDirection(rule.orderBy.substr(0, 1)) : null;
-
-    return {
-      mediaTypes: getListTypeFilterFromRule(originalFilter.mediaTypeIn),
-      durations: getListTypeFilterFromRule(originalFilter.durationTypeMatchOr),
-      replacementStatuses: getListTypeFilterFromRule(originalFilter.replacementStatusIn),
-      flavors: getListTypeFilterFromRule(originalFilter.flavorParamsIdsMatchOr),
-      limits: rule.limit,
-      freetext: rule.originalFilter.freeText,
-      sortBy: sortBy,
-      sortDirection: sortDirection,
-      createdAt: {
-        fromDate: new Date(originalFilter.createdAtGreaterThanOrEqual),
-        toDate: new Date(originalFilter.createdAtLessThanOrEqual)
-      }
-    }
-  }  private _restoreFiltersState(): void {
-        this._updateComponentState(this._entriesStore.cloneFilters(
-            [
-                'freetext',
-                'pageSize',
-                'pageIndex',
-                'sortBy',
-                'sortDirection',
-            'categories',
-                'categoriesMode']
-        ));
-    }
+  private _restoreFiltersState(): void {
+    this._updateComponentState(this._entriesStore.cloneFilters([
+      'freetext',
+      'pageSize',
+      'pageIndex',
+      'sortBy',
+      'sortDirection',
+      'categories',
+      'categoriesMode'
+    ]));
+  }
 
   private _updateComponentState(updates: Partial<EntriesFilters>): void {
     if (typeof updates.freetext !== 'undefined') {
@@ -153,66 +77,65 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       this._query.sortBy = updates.sortBy;
     }
 
-        if (typeof updates.sortDirection !== 'undefined') {
-            this._query.sortDirection = updates.sortDirection;
-        }
+    if (typeof updates.sortDirection !== 'undefined') {
+      this._query.sortDirection = updates.sortDirection;
+    }
     if (typeof updates.categoriesMode !== 'undefined') {
-            this._query.categoriesMode = updates.categoriesMode === CategoriesModes.Self ? CategoriesModes.Self : CategoriesModes.SelfAndChildren;
-        }
-
-        if (typeof updates.categories !== 'undefined') {
-            this._query.categories = [...updates.categories];
-        }
+      this._query.categoriesMode = updates.categoriesMode === CategoriesModes.Self ? CategoriesModes.Self : CategoriesModes.SelfAndChildren;
     }
 
-    onCategoriesModeChanged(categoriesMode)
-    {
-        this._entriesStore.filter({
-            categoriesMode
-        })
+    if (typeof updates.categories !== 'undefined') {
+      this._query.categories = [...updates.categories];
     }
+  }
 
-    onCategoriesUnselected(categoriesToRemove: CategoriesListItem[]) {
-        const categories = this._entriesStore.cloneFilter('categories', []);
+  onCategoriesModeChanged(categoriesMode) {
+    this._entriesStore.filter({
+      categoriesMode
+    })
+  }
 
-        categoriesToRemove.forEach(categoryToRemove => {
-            const categoryIndex = categories.findIndex(item => item.value === categoryToRemove.value);
-            if (categoryIndex !== -1) {
-                categories.splice(
-                    categoryIndex,
-                    1
-                );
-            }
+  onCategoriesUnselected(categoriesToRemove: CategoriesListItem[]) {
+    const categories = this._entriesStore.cloneFilter('categories', []);
+
+    categoriesToRemove.forEach(categoryToRemove => {
+      const categoryIndex = categories.findIndex(item => item.value === categoryToRemove.value);
+      if (categoryIndex !== -1) {
+        categories.splice(
+          categoryIndex,
+          1
+        );
+      }
+    });
+    this._entriesStore.filter({ categories });
+  }
+
+  onCategorySelected(category: CategoriesListItem) {
+    const categories = this._entriesStore.cloneFilter('categories', []);
+    if (!categories.find(item => item.value === category.value)) {
+      if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
+        // when this component is running with SelfAndChildren mode, we need to manually unselect
+        // the first nested child (if any) that is currently selected
+        const childrenToRemove = categories.filter(item => {
+          // check if this item is a parent of another item (don't validate last item which is the node itself)
+          let result = false;
+          for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
+            result = item.fullIdPath[i] === category.value;
+          }
+          return result;
         });
-        this._entriesStore.filter({categories});
+
+        childrenToRemove.forEach(childToRemove => {
+          categories.splice(
+            categories.indexOf(childToRemove),
+            1);
+        });
+      }
+
+      categories.push(category);
+      this._entriesStore.filter({ 'categories': categories });
     }
-
-    onCategorySelected(category: CategoriesListItem){
-        const categories = this._entriesStore.cloneFilter('categories', []);
-        if (!categories.find(item => item.value === category.value)) {
-            if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
-                // when this component is running with SelfAndChildren mode, we need to manually unselect
-                // the first nested child (if any) that is currently selected
-                const childrenToRemove = categories.filter(item => {
-                    // check if this item is a parent of another item (don't validate last item which is the node itself)
-                    let result = false;
-                    for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
-                        result = item.fullIdPath[i] === category.value;
-                    }
-                    return result;
-                });
-
-                childrenToRemove.forEach(childToRemove => {
-                    categories.splice(
-                        categories.indexOf(childToRemove),
-                        1);
-                });
-            }
-
-            categories.push(category);
-            this._entriesStore.filter({'categories': categories});
-        }
-    }
+  }
 
   private _registerToFilterStoreDataChanges(): void {
     this._entriesStore.filtersChange$
@@ -257,25 +180,15 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this.selectedEntries = [];
   }
 
-    onTagsChange() {
-        this.tags.updateLayout();
-    }
+  onTagsChange() {
+    this.tags.updateLayout();
+  }
 
 
   onBulkChange(event): void {
     if (event.reload === true) {
       this._reload();
     }
-  }
-
-  public _onOrderByChange(): void {
-    const sortBy = this._orderBy.toString().substring(1);
-
-    this._entriesStore.filter({ sortBy });
-  }
-
-  public _applyResultsLimit(): void {
-    this._entriesStore.filter({ limits: this._resultsLimit });
   }
 }
 

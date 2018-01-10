@@ -12,10 +12,50 @@
       </div>
     </div>
     <div class="kContainer">
-      <kEntriesList [columns]="_columns"
-                    [rule]="rule"
-                    [showReload]="false"
-                    [additionalFilters]="true"></kEntriesList>
+      <kEntriesList [columns]="_columns" [showReload]="false">
+        <div class="additional-filters kFilters">
+          <label for="ruleNameInput" class="kRuleNameLabel">
+            {{'applications.content.entries.ruleName' | translate}}
+          </label>
+          <input type="text"
+                 id="ruleNameInput"
+                 pInputText
+                 class="kRuleNameInput"
+                 [(ngModel)]="_ruleName"
+                 [placeholder]="'applications.content.entries.ruleNamePlaceholder' | translate">
+          <div #resultsLimitBtn class="kResultsLimit">
+            <span>{{'applications.content.entries.resultsLimit' | translate}}</span>
+            <i class="kIcondropdown_arrow_bottom dropdown"></i>
+          </div>
+          <div class="kOrderBy">
+            <p-dropdown [options]="_orderByOptions"
+                        [autoWidth]="false"
+                        [placeholder]="'applications.content.entries.orderBy' | translate"
+                        (onChange)="_onOrderByChange()"
+                        [(ngModel)]="_orderBy"></p-dropdown>
+          </div>
+        </div>
+      </kEntriesList>
     </div>
   </div>
 </div>
+
+<kPopupWidget #resultsLimitPopup
+              [popupWidth]="260"
+              [popupHeight]="101"
+              [closeBtn]="false"
+              [targetRef]="resultsLimitBtn"
+              [targetOffset]="{'x': 0, 'y': 37}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'resultsLimitPopup'"
+              [scrollOffset]="80"
+              (onClose)="_applyResultsLimit()">
+  <div class="kResultsLimitPopup">
+    <div class="kResultsLimitSlider">
+      <kSlider [(ngModel)]="_resultsLimit" [min]="1" [max]="200"></kSlider>
+    </div>
+    <div class="kResultsLimitPopupFooter">
+      <span>{{ 'applications.content.entries.resultsLimitRange' | translate }}</span>
+      <a (click)="resultsLimitPopup.close()">{{ 'app.common.apply' | translate }}</a>
+    </div>
+  </div>
+</kPopupWidget>

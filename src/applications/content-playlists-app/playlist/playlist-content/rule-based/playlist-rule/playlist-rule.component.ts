@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
+import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
 
 @Component({
   selector: 'kPlaylistRule',
@@ -11,7 +14,17 @@ import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types
   styleUrls: ['./playlist-rule.component.scss']
 })
 export class PlaylistRuleComponent {
-  @Input() rule: PlaylistRule;
+  @Input() set rule(value: PlaylistRule) {  // rule-based playlist specific
+    if (value) {
+      this._resultsLimit = value.limit;
+      this._ruleName = value.name;
+      this._orderBy = value.orderBy;
+
+      this._entriesStore.filter(this._mapRuleFilters(value));
+    } else {
+      this._entriesStore.resetFilters(); // TODO [kmcng] reset filters without loading entries
+    }
+  }
 
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
@@ -28,8 +41,60 @@ export class PlaylistRuleComponent {
     plays: { width: '100px' }
   };
 
-  constructor(public _entriesStore: EntriesStore) {
+  public _orderByOptions = [
+    {
+      value: KalturaPlayableEntryOrderBy.playsDesc,
+      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.mostPlayed')
+    },
+    {
+      value: KalturaPlayableEntryOrderBy.recentDesc,
+      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.mostRecent')
+    },
+    {
+      value: KalturaPlayableEntryOrderBy.rankDesc,
+      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.highestRated')
+    },
+    {
+      value: KalturaPlayableEntryOrderBy.nameAsc,
+      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.entryName')
+    }
+  ];
+
+  public _resultsLimit = 200;
+  public _ruleName = '';
+  public _orderBy = null;
+
+  constructor(public _entriesStore: EntriesStore, private _appLocalization: AppLocalization) {
     this._entriesStore.paginationCacheToken = 'entries-list';
+  }
+
+  private _mapRuleFilters(rule: PlaylistRule): Partial<EntriesFilters> {
+    const { originalFilter } = rule;
+    const getListTypeFilterFromRule = (ruleItem: string): ListType => {
+      if (!ruleItem) {
+        return null;
+      }
+      return ruleItem.split(',').map(item => ({ value: item, label: item })); // TODO [kmcng] fix label
+    };
+
+    const getSortDirection = (value) => value === '+' ? SortDirection.Asc : SortDirection.Desc;
+    const sortBy = rule.orderBy ? rule.orderBy.substr(1) : null;
+    const sortDirection = sortBy ? getSortDirection(rule.orderBy.substr(0, 1)) : null;
+
+    return {
+      mediaTypes: getListTypeFilterFromRule(originalFilter.mediaTypeIn),
+      durations: getListTypeFilterFromRule(originalFilter.durationTypeMatchOr),
+      replacementStatuses: getListTypeFilterFromRule(originalFilter.replacementStatusIn),
+      flavors: getListTypeFilterFromRule(originalFilter.flavorParamsIdsMatchOr),
+      limits: rule.limit,
+      freetext: rule.originalFilter.freeText,
+      sortBy: sortBy,
+      sortDirection: sortDirection,
+      createdAt: {
+        fromDate: new Date(originalFilter.createdAtGreaterThanOrEqual),
+        toDate: new Date(originalFilter.createdAtLessThanOrEqual)
+      }
+    }
   }
 
   public _addToPlaylist(): void {
@@ -65,10 +130,22 @@ export class PlaylistRuleComponent {
       advancedSearch: this.rule.originalFilter.advancedSearch // TODO [kmcng] deal with advanced search
     });
 
-    const { name, orderBy, limit } = this._entriesList.playlistPartialData;
+    const name = this._ruleName;
+    const orderBy = this._orderBy;
+    const limit = this._resultsLimit;
     const updatedRule = Object.assign({}, this.rule, { name, orderBy, limit, originalFilter });
 
     this.onAddRule.emit(updatedRule);
     this.onClosePopupWidget.emit();
+  }
+
+  public _onOrderByChange(): void {
+    const sortBy = this._orderBy.toString().substring(1);
+
+    this._entriesStore.filter({ sortBy });
+  }
+
+  public _applyResultsLimit(): void {
+    this._entriesStore.filter({ limits: this._resultsLimit });
   }
 }

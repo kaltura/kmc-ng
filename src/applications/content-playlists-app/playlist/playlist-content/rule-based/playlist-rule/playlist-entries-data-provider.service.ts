@@ -17,6 +17,7 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { EntriesDataProvider, EntriesFilters, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
+import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
 @Injectable()
 export class PlaylistEntriesDataProvider implements EntriesDataProvider {
@@ -145,6 +146,15 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
             }
           });
         });
+      }
+
+      if (data.categories && data.categories.length) {
+        const categoriesValue = data.categories.map(item => item.value).join(',');
+        if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
+          filter.categoryAncestorIdIn = categoriesValue;
+        } else {
+          filter.categoriesIdsMatchOr = categoriesValue;
+        }
       }
 
       // remove advanced search arg if it is empty

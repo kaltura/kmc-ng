@@ -1,7 +1,7 @@
 @import 'app-theme/_variables.scss';
 
 .kPlaylistRuleWrap {
-  .kFloater{
+  .kFloater {
     display: flex;
     flex-direction: column;
 
@@ -42,8 +42,91 @@
       }
     }
 
-    .kContainer{
+    .kContainer {
       flex: 1 1 auto;
+
+      .kFilters {
+        display: flex;
+        margin-left: auto;
+
+        .kResultsLimit {
+          width: 248px !important;
+          margin-right: 16px;
+          padding-left: 10px;
+          border: 1px solid $kGrayscale4;
+          border-radius: 4px;
+          display: flex;
+          background-color: #ffffff;
+          height: 32px;
+          align-items: center;
+          cursor: pointer;
+          color: $kGrayscale1;
+          position: relative;
+          i {
+            margin-right: 12px;
+            margin-left: 8px;
+            font-size: 24px;
+            color: $kGrayscale4;
+            &.dropdown {
+              font-size: 10px;
+            }
+          }
+          &:hover {
+            color: $kPrimary;
+            i {
+              color: $kPrimary;
+            }
+            i.kIcondropdown_arrow_bottom.dropdown {
+              color: $kGrayscale3;
+            }
+          }
+          .dropdown {
+            position: absolute;
+            right: 4px;
+            top: 12px;
+          }
+        }
+
+        .kRuleNameInput {
+          width: 298px;
+          margin-right: 16px;
+          padding-left: 10px;
+        }
+
+        .kRuleNameLabel {
+          font-size: 15px;
+          font-weight: normal;
+          line-height: 32px;
+          margin-right: 16px;
+        }
+
+        .kOrderBy {
+          width: 260px;
+          margin-right: 16px;
+
+          p-dropdown {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.kResultsLimitPopup {
+  padding: 29px 16px 24px 16px;
+
+  .kResultsLimitSlider {
+
+  }
+
+  .kResultsLimitPopupFooter {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      color: $kGrayscale3;
     }
   }
 }
@@ -60,5 +143,13 @@
     .ui-datatable-scrollable-body {
       height: calc(100vh - 450px);
     }
+  }
+}
+
+:host /deep/ .kOrderBy .ui-dropdown {
+  width: 100%;
+
+  label {
+    color: $kGrayscale1;
   }
 }

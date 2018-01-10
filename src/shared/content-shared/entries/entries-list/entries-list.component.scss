@@ -200,21 +200,7 @@
       top: 12px;
     }
   }
-  .kResultsLimit {
-    @extend .kCategoriesFilter;
-    width: 248px !important;
-    margin-right: 16px;
-    padding-left: 10px;
-  }
 
-  .kOrderBy {
-    width: 260px;
-    margin-right: 16px;
-
-    p-dropdown {
-      width: 100%;
-    }
-  }
   .kRefine {
     @extend .kCategoriesFilter;
     width: 160px;
@@ -225,24 +211,6 @@
     height: 0px;
   }
 
-}
-
-.kResultsLimitPopup {
-  padding: 29px 16px 24px 16px;
-
-  .kResultsLimitSlider {
-
-  }
-
-  .kResultsLimitPopupFooter {
-    margin-top: 24px;
-    display: flex;
-    justify-content: space-between;
-
-    span {
-      color: $kGrayscale3;
-    }
-  }
 }
 
 :host /deep/ .kStickyClass {
@@ -273,12 +241,4 @@
 
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
-}
-
-:host /deep/ .kOrderBy .ui-dropdown {
-  width: 100%;
-
-  label {
-    color: $kGrayscale1;
-  }
 }

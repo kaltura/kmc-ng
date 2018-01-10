@@ -1,24 +1,15 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
-import {SliderModule} from '@kaltura-ng/kaltura-primeng-ui/slider';
+import { CommonModule } from '@angular/common';
+import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 
 import {
-  ButtonModule,
-  CalendarModule,
-  CheckboxModule,
-  DataTableModule,
-  InputTextModule,
-  MenuModule,
-    DropdownModule,
-  PaginatorModule,
-  RadioButtonModule, TieredMenuModule,
-  TreeModule
+  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
+  RadioButtonModule, TieredMenuModule, TreeModule
 } from 'primeng/primeng';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
-import {AutoCompleteModule, KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
-import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import { AutoCompleteModule, KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
 import { EntryStatusPipe } from './pipes/entry-status.pipe';
 import { SchedulingComponent } from './scheduling/scheduling.component';
@@ -43,7 +34,6 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
 
 @NgModule({
   imports: [
-      SliderModule,
     AreaBlockerModule,
     TooltipModule,
     AutoCompleteModule,
@@ -55,7 +45,7 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     KalturaPrimeNgUIModule,
 
     KalturaUIModule,
-      DropdownModule,
+    DropdownModule,
     ButtonModule,
     CalendarModule,
     RadioButtonModule,
@@ -69,7 +59,7 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     InputTextModule,
     StickyModule,
     FiltersModule,
-      CategoriesModule
+    CategoriesModule
   ],
   declarations: [
     EntryStatusPipe,
@@ -85,7 +75,7 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     EntriesListComponent,
     EntriesListTagsComponent,
     EntriesSelectorComponent,
-      EntriesTotalDurationPipe
+    EntriesTotalDurationPipe
   ],
   exports: [
     EntryStatusPipe,
@@ -99,17 +89,17 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     EntriesTableComponent,
     EntriesListComponent,
     EntriesSelectorComponent,
-      EntriesTotalDurationPipe
+    EntriesTotalDurationPipe
   ]
 })
 export class EntriesModule {
-    static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: EntriesModule,
-            providers: <any[]>[
-                EntriesRefineFiltersService,
-                {provide: EntriesDataProviderToken, useClass: EntriesStoreDataProvider}
-            ]
-        };
-    }
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: EntriesModule,
+      providers: <any[]>[
+        EntriesRefineFiltersService,
+        { provide: EntriesDataProviderToken, useClass: EntriesStoreDataProvider }
+      ]
+    };
+  }
 }
