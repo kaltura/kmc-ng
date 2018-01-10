@@ -59,9 +59,11 @@ import {CategoryParentSelectorComponent} from './categories/category-parent-sele
 import {NewCategoryComponent} from './categories/new-category/new-category.component';
 import {MoveCategoryComponent} from './categories/move-category/move-category.component';
 import {CategoriesRefineFiltersService} from './categories/categories-refine-filters/categories-refine-filters.service';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 
 @NgModule({
     imports: [
+        FiltersModule,
         AccordionModule,
         AreaBlockerModule,
         AutoCompleteModule,
