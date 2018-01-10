@@ -140,9 +140,11 @@ export class PlaylistRuleComponent {
   }
 
   public _onOrderByChange(): void {
-    const sortBy = this._orderBy.toString().substring(1);
+    const orderBy = this._orderBy.toString();
+    const sortDirection = orderBy.charAt(0) === '-' ? SortDirection.Desc : SortDirection.Asc;
+    const sortBy = orderBy.substring(1);
 
-    this._entriesStore.filter({ sortBy });
+    this._entriesStore.filter({ sortBy, sortDirection });
   }
 
   public _applyResultsLimit(): void {
