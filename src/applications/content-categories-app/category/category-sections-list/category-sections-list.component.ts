@@ -1,7 +1,8 @@
-import { ISubscription } from 'rxjs/Subscription';
-import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
-import { CategoryService } from '../category.service';
-import { SectionWidgetItem, CategorySectionsListWidget } from './category-sections-list-widget.service';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {CategoryService} from '../category.service';
+import {CategorySectionsListWidget, SectionWidgetItem} from './category-sections-list-widget.service';
+import {StickyComponent} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from "app-shared/kmc-shell";
 
 
 @Component({
@@ -9,17 +10,20 @@ import { SectionWidgetItem, CategorySectionsListWidget } from './category-sectio
   templateUrl: './category-sections-list.component.html',
   styleUrls: ['./category-sections-list.component.scss']
 })
-export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnDestroy {
+export class CategorySectionsListComponent implements OnInit, OnDestroy {
+
+  @ViewChild('categorySections') private categorySections: StickyComponent;
 
   public _loading = false;
   public _showList = false;
   public _sections: SectionWidgetItem[] = [];
 
 
-  constructor(public _widgetService: CategorySectionsListWidget, public _categoryService: CategoryService) {
+  constructor(public _widgetService: CategorySectionsListWidget, public _categoryService: CategoryService, private _browserService: BrowserService) {
   }
 
   public navigateToSection(widget: SectionWidgetItem): void {
+    this._browserService.scrollToTop();
     this._categoryService.openSection(widget.key);
   }
 
@@ -34,15 +38,13 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
         this._loading = false;
         this._sections = sections;
         this._showList = sections && sections.length > 0;
+        this.categorySections.updateLayout();
       }
       );
   }
 
   ngOnDestroy() {
     this._widgetService.detachForm();
-  }
-
-  ngAfterViewInit() {
   }
 }
 

@@ -257,7 +257,7 @@
   margin-left: -.5em;
 }
 
-/deep/ .kActionsMenu .ui-menuitem-text {
+:host /deep/ .kActionsMenu .ui-menuitem-text {
   color: $kDandger;
 }
 

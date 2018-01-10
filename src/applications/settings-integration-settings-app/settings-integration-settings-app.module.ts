@@ -13,7 +13,7 @@ import {EntitlementTableComponent} from './entitlement/entitlement-table/entitle
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {NewEntitlementComponent} from './entitlement/new-entitlement/new-entitlement.component';
 import {EditEntitlementComponent} from './entitlement/edit-entitlement/edit-entitlement.component';
-import {ContentSharedModule} from 'app-shared/content-shared/content-shared.module';
+import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 
 @NgModule({
   imports: [
@@ -30,7 +30,7 @@ import {ContentSharedModule} from 'app-shared/content-shared/content-shared.modu
     MenuModule,
     PopupWidgetModule,
     StickyModule,
-    ContentSharedModule
+      CategoriesModule
   ],
   declarations: [
     SettingsIntegrationSettingsComponent,

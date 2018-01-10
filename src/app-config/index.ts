@@ -1,5 +1,5 @@
 export const environment = {
-    "appVersion": "3.3.0", // will be changed by release script
+    "appVersion": "3.4.0", // will be changed by release script
     "shell": {
         "defaultRoute": "/content/entries",
         "loginRoute" : "/login",
@@ -214,7 +214,8 @@ export const environment = {
         "MAX_CATEGORIES": 10000,
         "categoriesFilters": {
             "maxChildrenToShow": 500
-        }
+        },
+        "SUB_CATEGORIES_LIMIT": 50
     },
     "rolesShared": {
         "MAX_ROLES": 10000,

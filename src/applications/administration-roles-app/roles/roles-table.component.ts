@@ -1,9 +1,19 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { Menu, MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { RolesService } from './roles.service';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
+import {Menu, MenuItem} from 'primeng/primeng';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {RolesService} from './roles.service';
+import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
 
 @Component({
   selector: 'kRolesTable',
@@ -14,7 +24,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input()
   set roles(data: KalturaUserRole[]) {
     if (!this._deferredLoading) {
-      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
+      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of roles
       // (ie when returning from entry page) - we should force detect changes on an empty list
       this._roles = [];
       this._cdRef.detectChanges();
