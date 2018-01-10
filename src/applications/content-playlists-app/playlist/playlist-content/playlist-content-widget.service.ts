@@ -56,7 +56,16 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
-    data.playlistContent = this.entries.map(({ id }) => id).join(',');
+      if (this.wasActivated)
+      {
+          data.playlistContent = this.entries.map(({ id }) => id).join(',');
+      } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
+          data.playlistContent = this.data.playlistContent
+      }else {
+          // shouldn't reach this part since 'onValidate' should prevent execution of this function
+          // if data is invalid
+          throw new Error('invalid scenario');
+      }
   }
 
   /**
