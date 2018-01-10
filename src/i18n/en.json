@@ -562,7 +562,9 @@
         "deleteEntriesNote": "Please note: those entries will be permanently deleted from your playlist.",
         "confirmDeleteEntry": "Are you sure you want to delete the selected entry?",
         "confirmDeleteEntries": "Are you sure you want to delete the selected entries?",
-        "addRule": "Add rule to your playlist"
+        "addRule": "Add rule to your playlist",
+        "updateRule": "Update rule in your playlist",
+        "save": "Save"
       },
       "moderation": {
         "entryReports": "Entry Reports",

@@ -34,7 +34,14 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
     this._widgetService.selectedRule$.subscribe(rule => {
       this._selectedRule = rule;
       this._rulePopup.open();
-    })
+    });
+
+    this._widgetService.state$
+      .cancelOnDestroy(this)
+      .filter(state => state.loading)
+      .subscribe(() => {
+        this._clearSelection();
+      });
   };
 
   ngOnDestroy() {
@@ -55,7 +62,7 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
     this._widgetService.deleteSelectedRules(selectedRules);
   }
 
-  public _addRule(rule: PlaylistRule): void {
+  public _saveRule(rule: PlaylistRule): void {
     this._selectedRule = null;
     this._widgetService.updateRules(rule);
   }

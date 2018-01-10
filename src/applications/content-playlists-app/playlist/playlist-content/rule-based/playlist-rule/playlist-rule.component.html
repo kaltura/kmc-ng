@@ -1,14 +1,14 @@
 <div class="kPlaylistRuleWrap">
   <div class="kFloater">
     <div class="kHeader">
-      <span class="kTitle">{{'applications.content.playlists.addRule' | translate}}</span>
+      <span class="kTitle">{{_title}}</span>
       <div class="kButtons">
         <a class="kCancel" (click)="onClosePopupWidget.emit()">Cancel</a>
         <button type="button"
                 class="kButtonBranded KAddRule"
                 pButton
-                [label]="'applications.content.playlists.addToPlaylist' | translate"
-                (click)="_addToPlaylist()"></button>
+                [label]="_saveBtnLabel"
+                (click)="_save()"></button>
       </div>
     </div>
     <div class="kContainer">

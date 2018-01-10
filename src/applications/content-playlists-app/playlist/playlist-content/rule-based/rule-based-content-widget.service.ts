@@ -14,6 +14,7 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
 import { environment } from 'app-environment';
 import { Subject } from 'rxjs/Subject';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
+import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -51,7 +52,6 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
       if (typeof data.totalResults === 'undefined' || data.totalResults <= 0) {
         data.totalResults = environment.modules.contentPlaylists.ruleBasedTotalResults;
       }
-      // TODO [kmcng] investigate why filters property is ignored by request
       data.filters = this.rules.map(({ originalFilter }) => originalFilter);
     }
   }
@@ -88,8 +88,8 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
           const entriesDuration = result.reduce((duration, entry) => duration + entry.duration, 0);
 
           this.rules.push({
-            name: /*filter.name || */`Rule ${index + 1}`, // TODO [kmcng] replace with rule's name
-            orderBy: filter.orderBy,
+            name: (<any>filter).name,
+            orderBy: new KalturaPlayableEntryOrderBy(filter.orderBy),
             limit: filter.limit,
             entriesCount: result.length,
             selectionId: this._selectionIdGenerator.generateUnique(this.rules.map(item => item.selectionId)),
@@ -173,7 +173,11 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     const relevantRuleIndex = this.rules.findIndex(item => item.selectionId === rule.selectionId);
     if (relevantRuleIndex !== -1) {
       this.rules[relevantRuleIndex] = rule;
-      this._setDirty();
+    } else {
+      rule.selectionId = this._selectionIdGenerator.generateUnique(this.rules.map(item => item.selectionId));
+      this.rules.push(rule);
     }
+
+    this._setDirty();
   }
 }

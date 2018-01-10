@@ -21,7 +21,7 @@
     <ng-template>
       <kPlaylistRule [rule]="_selectedRule"
                      (onClosePopupWidget)="playlistRule.close()"
-                     (onAddRule)="_addRule($event)"></kPlaylistRule>
+                     (onSaveRule)="_saveRule($event)"></kPlaylistRule>
     </ng-template>
   </kPopupWidget>
 </k-area-blocker>

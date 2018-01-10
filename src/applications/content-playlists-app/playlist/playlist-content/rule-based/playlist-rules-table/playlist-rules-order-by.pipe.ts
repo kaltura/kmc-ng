@@ -9,17 +9,17 @@ export class PlaylistOrderByPipe implements PipeTransform {
   }
 
   transform(rule: PlaylistRule = null): string {
-    switch (rule.orderBy) {
-      case KalturaPlayableEntryOrderBy.playsDesc.toString():
+    switch (true) {
+      case KalturaPlayableEntryOrderBy.playsDesc.equals(rule.orderBy):
         return this._appLocalization.get('applications.content.playlistDetails.content.orderBy.mostPlayed');
 
-      case KalturaPlayableEntryOrderBy.recentDesc.toString():
+      case KalturaPlayableEntryOrderBy.recentDesc.equals(rule.orderBy):
         return this._appLocalization.get('applications.content.playlistDetails.content.orderBy.mostRecent');
 
-      case KalturaPlayableEntryOrderBy.rankDesc.toString():
+      case KalturaPlayableEntryOrderBy.rankDesc.equals(rule.orderBy):
         return this._appLocalization.get('applications.content.playlistDetails.content.orderBy.highestRated');
 
-      case KalturaPlayableEntryOrderBy.nameAsc.toString():
+      case KalturaPlayableEntryOrderBy.nameAsc.equals(rule.orderBy):
         return this._appLocalization.get('applications.content.playlistDetails.content.orderBy.entryName');
 
       default:

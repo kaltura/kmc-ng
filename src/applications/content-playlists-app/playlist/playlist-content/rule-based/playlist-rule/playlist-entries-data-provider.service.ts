@@ -24,6 +24,16 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
+  private _updateFilterWithJoinedList(list: ListType,
+                                      requestFilter: KalturaMediaEntryFilter,
+                                      requestFilterProperty: keyof KalturaMediaEntryFilter): void {
+    const value = (list || []).map(item => item.value).join(',');
+
+    if (value) {
+      requestFilter[requestFilterProperty] = value;
+    }
+  }
+
   public executeQuery(data: EntriesFilters, metadataProfiles): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {
     try {
 
@@ -214,17 +224,32 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
 
   }
 
-  public queryDuringBootstrap(): boolean {
-    return true;
-  }
+  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes): EntriesFilters {
+    const categoriesMode = typeof savedAutoSelectChildren === 'number'
+      ? savedAutoSelectChildren
+      : CategoriesModes.SelfAndChildren;
 
-  private _updateFilterWithJoinedList(list: ListType,
-                                      requestFilter: KalturaMediaEntryFilter,
-                                      requestFilterProperty: keyof KalturaMediaEntryFilter): void {
-    const value = (list || []).map(item => item.value).join(',');
-
-    if (value) {
-      requestFilter[requestFilterProperty] = value;
-    }
+    return {
+      freetext: '',
+      pageSize: 50,
+      pageIndex: 0,
+      sortBy: 'plays',
+      sortDirection: SortDirection.Desc,
+      createdAt: { fromDate: null, toDate: null },
+      scheduledAt: { fromDate: null, toDate: null },
+      mediaTypes: [],
+      timeScheduling: [],
+      ingestionStatuses: [],
+      durations: [],
+      originalClippedEntries: [],
+      moderationStatuses: [],
+      replacementStatuses: [],
+      accessControlProfiles: [],
+      flavors: [],
+      distributions: [], categories: [],
+      categoriesMode,
+      customMetadata: {},
+      limits: 200,
+    };
   }
 }

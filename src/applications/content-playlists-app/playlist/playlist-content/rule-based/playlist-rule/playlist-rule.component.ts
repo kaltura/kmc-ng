@@ -19,17 +19,29 @@ export class PlaylistRuleComponent {
       this._resultsLimit = value.limit;
       this._ruleName = value.name;
       this._orderBy = value.orderBy;
+      this._rule = value;
+
+      this._title = this._appLocalization.get('applications.content.playlists.updateRule');
+      this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.save');
 
       this._entriesStore.filter(this._mapRuleFilters(value));
     } else {
-      this._entriesStore.resetFilters(); // TODO [kmcng] reset filters without loading entries
+      this._title = this._appLocalization.get('applications.content.playlists.addRule');
+      this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.addToPlaylist');
+
+      this._entriesStore.resetFilters();
     }
   }
 
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
   @Output() onClosePopupWidget = new EventEmitter<void>();
-  @Output() onAddRule = new EventEmitter<PlaylistRule>();
+  @Output() onSaveRule = new EventEmitter<PlaylistRule>();
+
+  private _rule: PlaylistRule;
+
+  public _title: string;
+  public _saveBtnLabel: string;
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -60,9 +72,9 @@ export class PlaylistRuleComponent {
     }
   ];
 
-  public _resultsLimit = 200;
+  public _resultsLimit = 200; // default
   public _ruleName = '';
-  public _orderBy = null;
+  public _orderBy = KalturaPlayableEntryOrderBy.playsDesc; // default
 
   constructor(public _entriesStore: EntriesStore, private _appLocalization: AppLocalization) {
     this._entriesStore.paginationCacheToken = 'entries-list';
@@ -78,8 +90,8 @@ export class PlaylistRuleComponent {
     };
 
     const getSortDirection = (value) => value === '+' ? SortDirection.Asc : SortDirection.Desc;
-    const sortBy = rule.orderBy ? rule.orderBy.substr(1) : null;
-    const sortDirection = sortBy ? getSortDirection(rule.orderBy.substr(0, 1)) : null;
+    const sortBy = rule.orderBy ? rule.orderBy.toString().substr(1) : null;
+    const sortDirection = sortBy ? getSortDirection(rule.orderBy.toString().charAt(0)) : null;
 
     return {
       mediaTypes: getListTypeFilterFromRule(originalFilter.mediaTypeIn),
@@ -97,12 +109,12 @@ export class PlaylistRuleComponent {
     }
   }
 
-  public _addToPlaylist(): void {
+  public _save(): void {
     const filters = this._entriesStore.getFilters();
 
     const convertedFilters = <any>Object.keys(filters).reduce((rules, key) => {
       const item = filters[key];
-      if (item) {
+      if (item !== undefined) {
         if (typeof item === 'string' || typeof item === 'number' || item.fromDate || item.toDate) {
           rules[key] = item;
         } else if (item.length) {
@@ -126,16 +138,20 @@ export class PlaylistRuleComponent {
       createdAtGreaterThanOrEqual: convertedFilters.createdAt ? convertedFilters.createdAt.fromDate : undefined,
       createdAtLessThanOrEqual: convertedFilters.createdAt ? convertedFilters.createdAt.toDate : undefined,
       replacementStatusIn: convertedFilters.replacementStatuses,
-      orderBy: convertedFilters.sortBy ? `${convertedFilters.sortDirection === SortDirection.Desc ? '-' : '+'}${convertedFilters.sortBy}` : undefined,
-      advancedSearch: this.rule.originalFilter.advancedSearch // TODO [kmcng] deal with advanced search
+      orderBy: convertedFilters.sortBy ? `${convertedFilters.sortDirection === SortDirection.Desc ? '-' : '+'}${convertedFilters.sortBy}` : undefined
     });
 
+    (<any>originalFilter).name = this._ruleName; // TODO [kmcng] add to the constructor after client lib update
+
+    const entries = this._entriesStore.entries.data() || [];
     const name = this._ruleName;
     const orderBy = this._orderBy;
     const limit = this._resultsLimit;
-    const updatedRule = Object.assign({}, this.rule, { name, orderBy, limit, originalFilter });
+    const entriesDuration = entries.reduce((duration, entry) => duration + entry.duration, 0) || 0;
+    const entriesCount = entries.length || 0;
+    const updatedRule = Object.assign({}, this._rule, { name, orderBy, limit, entriesDuration, entriesCount, originalFilter });
 
-    this.onAddRule.emit(updatedRule);
+    this.onSaveRule.emit(updatedRule);
     this.onClosePopupWidget.emit();
   }
 

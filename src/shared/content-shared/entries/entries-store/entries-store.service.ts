@@ -18,21 +18,13 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {
-    FiltersStoreBase, TypeAdaptersMapping,
-    GroupedListAdapter,
-    DatesRangeAdapter, DatesRangeType,
-    StringTypeAdapter,
-    ListAdapter, ListType,
-    NumberTypeAdapter,
-    GroupedListType
+  DatesRangeAdapter, DatesRangeType, FiltersStoreBase, GroupedListAdapter, GroupedListType, ListAdapter, ListType, NumberTypeAdapter,
+  StringTypeAdapter, TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import * as Immutable from 'seamless-immutable';
 import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-shared/categories/categories-list-type';
-import {
-    CategoriesModeAdapter, CategoriesModes,
-    CategoriesModeType
-} from 'app-shared/content-shared/categories/categories-mode-type';
+import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-shared/content-shared/categories/categories-mode-type';
 
 export enum SortDirection {
   Desc,
@@ -40,35 +32,39 @@ export enum SortDirection {
 }
 
 export interface EntriesDataProvider {
-  executeQuery(filters: EntriesFilters, metadataProfiles: MetadataProfileData[]): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }>;
+  executeQuery(filters: EntriesFilters,
+               metadataProfiles: MetadataProfileData[]): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }>;
 
-  queryDuringBootstrap(): boolean;
+  getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes): EntriesFilters;
 }
 
-export interface MetadataProfileData
-{ id: number, name: string, lists: { id: string, name: string }[] }
+export interface MetadataProfileData {
+  id: number,
+  name: string,
+  lists: { id: string, name: string }[]
+}
 
 export interface EntriesFilters {
-    freetext: string,
-    pageSize: number,
-    pageIndex: number,
-    sortBy: string,
-    sortDirection: number,
-    createdAt: DatesRangeType,
-    scheduledAt: DatesRangeType,
-    mediaTypes: ListType,
-    timeScheduling: ListType,
-    ingestionStatuses: ListType,
-    durations: ListType,
-    originalClippedEntries: ListType,
-    moderationStatuses: ListType,
-    replacementStatuses: ListType,
-    accessControlProfiles: ListType,
-    flavors: ListType,
-    distributions: ListType,
-    categories: CategoriesListType,
-    categoriesMode: CategoriesModeType,
-    customMetadata: GroupedListType,
+  freetext: string,
+  pageSize: number,
+  pageIndex: number,
+  sortBy: string,
+  sortDirection: number,
+  createdAt: DatesRangeType,
+  scheduledAt: DatesRangeType,
+  mediaTypes: ListType,
+  timeScheduling: ListType,
+  ingestionStatuses: ListType,
+  durations: ListType,
+  originalClippedEntries: ListType,
+  moderationStatuses: ListType,
+  replacementStatuses: ListType,
+  accessControlProfiles: ListType,
+  flavors: ListType,
+  distributions: ListType,
+  categories: CategoriesListType,
+  categoriesMode: CategoriesModeType,
+  customMetadata: GroupedListType,
   limits: number
 }
 
@@ -112,11 +108,11 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       updates.pageIndex = 0;
     }
 
-        if (typeof updates.categoriesMode !== 'undefined')
-        {
-            this._browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', updates.categoriesMode);
-        }return updates;
+    if (typeof updates.categoriesMode !== 'undefined') {
+      this._browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', updates.categoriesMode);
     }
+    return updates;
+  }
 
   private _prepare(): void {
     if (!this._isReady) {
@@ -147,9 +143,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
             this._registerToFilterStoreDataChanges();
 
-            if (this._dataProvider.queryDuringBootstrap()) {
-              this._executeQuery();
-            }
+            this._executeQuery();
           },
           (error) => {
             this._entries.state.next({ loading: false, errorMessage: error.message });
@@ -234,60 +228,37 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       });
   }
 
-    protected _createDefaultFiltersValue(): EntriesFilters {
-    const savedAutoSelectChildren: CategoriesModes = this._browserService
-            .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
-        const categoriesMode = typeof savedAutoSelectChildren === 'number'
-            ? savedAutoSelectChildren
-            : CategoriesModes.SelfAndChildren;    return {
-            freetext: '',
-            pageSize: 50,
-            pageIndex: 0,
-            sortBy: 'createdAt',
-            sortDirection: SortDirection.Desc,
-            createdAt: {fromDate: null, toDate: null},
-            scheduledAt: {fromDate: null, toDate: null},
-            mediaTypes: [],
-            timeScheduling: [],
-            ingestionStatuses: [],
-            durations: [],
-            originalClippedEntries: [],
-            moderationStatuses: [],
-            replacementStatuses: [],
-            accessControlProfiles: [],
-            flavors: [],
-            distributions: [],categories: [],
-            categoriesMode,
-            customMetadata: {},
-      limits: 200,  };
-    }
+  protected _createDefaultFiltersValue(): EntriesFilters {
+    const savedAutoSelectChildren: CategoriesModes = this._browserService.getFromLocalStorage('contentShared.categoriesTree.selectionMode');
+    return this._dataProvider.getDefaultFilterValues(savedAutoSelectChildren);
+  }
 
-    protected _getTypeAdaptersMapping(): TypeAdaptersMapping<EntriesFilters> {
-        return {
-            freetext: new StringTypeAdapter(),
-            pageSize: new NumberTypeAdapter(),
-            pageIndex: new NumberTypeAdapter(),
-            sortBy: new StringTypeAdapter(),
-            sortDirection: new NumberTypeAdapter(),
-            createdAt: new DatesRangeAdapter(),
-            scheduledAt: new DatesRangeAdapter(),
-            mediaTypes: new ListAdapter(),
-            timeScheduling: new ListAdapter(),
-            ingestionStatuses: new ListAdapter(),
-            durations: new ListAdapter(),
-            originalClippedEntries: new ListAdapter(),
-            moderationStatuses: new ListAdapter(),
-            replacementStatuses: new ListAdapter(),
-            accessControlProfiles: new ListAdapter(),
-            flavors: new ListAdapter(),
-            distributions: new ListAdapter(),
-            categories: new CategoriesListAdapter(),
-            categoriesMode: new CategoriesModeAdapter(),customMetadata: new GroupedListAdapter(),
-        limits: new NumberTypeAdapter()
+  protected _getTypeAdaptersMapping(): TypeAdaptersMapping<EntriesFilters> {
+    return {
+      freetext: new StringTypeAdapter(),
+      pageSize: new NumberTypeAdapter(),
+      pageIndex: new NumberTypeAdapter(),
+      sortBy: new StringTypeAdapter(),
+      sortDirection: new NumberTypeAdapter(),
+      createdAt: new DatesRangeAdapter(),
+      scheduledAt: new DatesRangeAdapter(),
+      mediaTypes: new ListAdapter(),
+      timeScheduling: new ListAdapter(),
+      ingestionStatuses: new ListAdapter(),
+      durations: new ListAdapter(),
+      originalClippedEntries: new ListAdapter(),
+      moderationStatuses: new ListAdapter(),
+      replacementStatuses: new ListAdapter(),
+      accessControlProfiles: new ListAdapter(),
+      flavors: new ListAdapter(),
+      distributions: new ListAdapter(),
+      categories: new CategoriesListAdapter(),
+      categoriesMode: new CategoriesModeAdapter(), customMetadata: new GroupedListAdapter(),
+      limits: new NumberTypeAdapter()
     };
   }
 
   public getFilters(): Immutable.ImmutableObject<EntriesFilters> {
     return this._getFiltersAsReadonly();
-    }
+  }
 }
