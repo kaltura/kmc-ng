@@ -134,6 +134,7 @@ export class PlaylistRuleComponent {
       limit: convertedFilters.limits || 200,
       mediaTypeIn: convertedFilters.mediaTypes,
       flavorParamsIdsMatchOr: convertedFilters.flavors,
+      categoriesIdsMatchOr: convertedFilters.categories,
       durationTypeMatchOr: convertedFilters.durations,
       createdAtGreaterThanOrEqual: convertedFilters.createdAt ? convertedFilters.createdAt.fromDate : undefined,
       createdAtLessThanOrEqual: convertedFilters.createdAt ? convertedFilters.createdAt.toDate : undefined,
