@@ -17,18 +17,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
 
-  private _loadedOnce = false;
   @Input()
   set entries(data: any[]) {
-
-    if (!this._loadedOnce)
-    {
-      this._loadedOnce = true;
-    }else
-    {
-        this.assignEmptyMessage();
-    }
-
     if (!this._deferredLoading) {
       this._entries = [];
       this._cdRef.detectChanges();
