@@ -32,13 +32,14 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedUsers: EndUserPermissionsUser[] = [];
-  public _usersTotalCount = 0;
+  public _users: EndUserPermissionsUser[];
+  public _usersCount: number;
+  public _actualUsersCount = { updated: false, total: 0};
   @Input() category: KalturaCategory = null;
   @Input() parentCategory: KalturaCategory = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() categoryInheritUserPermissions = false;
 
-  @Output() usersNumberChanged = new EventEmitter<{totalCount: number}>();
 
   @ViewChild('refinePopup') refinePopup: PopupWidgetComponent;
 
@@ -83,8 +84,11 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
     this._manageEndUsersPermissionsService.users.data$
       .cancelOnDestroy(this)
+        .skip(1) // skip the first emitted value which is the default for '_actualUsersCount' to behave correctly
       .subscribe(response => {
-        this._usersTotalCount = response.totalCount
+        this._users = response.items;
+        this._usersCount = response.totalCount;
+        this._actualUsersCount = { updated: true, total: response.actualUsersCount};
     });
   }
 

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {CategoryEntitlementsWidget} from './category-entitlements-widget.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
@@ -6,7 +6,7 @@ import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
 
 @Component({
@@ -14,11 +14,12 @@ import {BrowserService} from 'app-shared/kmc-shell';
   templateUrl: './category-entitlements.component.html',
   styleUrls: ['./category-entitlements.component.scss'],
 })
-export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
+export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('manageUsersPopup') manageUsersPopup: PopupWidgetComponent;
   public _defaultPermissionLevelOptions: { value: number, label: string }[] = [];
 
+  public _membersCount: { loading: boolean, value: number, hasError?: boolean } = { loading: true, value: 0, hasError : false };
   constructor(public _widgetService: CategoryEntitlementsWidget,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
@@ -26,6 +27,13 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._widgetService.attachForm();
+
+    this._widgetService.data$
+        .cancelOnDestroy(this)
+        .subscribe(data =>
+        {
+            this._membersCount = { loading: !data, value: data ? data.membersCount : 0, hasError: false };
+        });
 
     this._defaultPermissionLevelOptions = [{
       value: KalturaCategoryUserPermissionLevel.member,
@@ -42,6 +50,32 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
     }];
   }
 
+  ngAfterViewInit() {
+      this.manageUsersPopup.state$
+          .cancelOnDestroy(this)
+          .skip(1)
+          .subscribe(data => {
+                  if (data.state === PopupWidgetStates.Close) {
+                      this._membersCount.loading = true;
+                      this._membersCount.hasError = false;
+                      this._widgetService.fetchUpdatedMembersCount()
+                          .cancelOnDestroy(this)
+                          .subscribe(
+                              value =>
+                              {
+                                  this._membersCount.loading = false;
+                                  this._membersCount.value = value;
+                              },
+                              error =>
+                              {
+                                  this._membersCount.loading = false;
+                                  this._membersCount.hasError = true;
+                              }
+                          )
+                  }
+              }
+          );
+  }
 
   ngOnDestroy() {
     this._widgetService.detachForm();
@@ -82,9 +116,6 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
     this._widgetService.setDirty();
   }
 
-  public _onUsersNumberChanged({totalCount}: {totalCount: number}) {
-    this._widgetService.membersTotalCount = totalCount;
-  }
 
   public mananageUsersPermissions() {
     if (this._widgetService.entitlementsForm.get('inheritUsersPermissions').value === this._widgetService.inheritUsersPermissionsOriginalValue) {

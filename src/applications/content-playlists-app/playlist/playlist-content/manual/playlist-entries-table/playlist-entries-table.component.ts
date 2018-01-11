@@ -14,11 +14,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
-  @Input() set isNewPlaylist(value) {
-    if (value) {
-      this.assignEmptyMessage();
-    }
-  };
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
 
@@ -51,27 +46,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   ngOnInit() {
-    let loadedOnce = false;
+      this.assignEmptyMessage();
 
-    this._widgetService.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        result => {
-          if (!result.error) {
-            if (result.loading) {
-              this._emptyMessage = '';
-              loadedOnce = true;
-            } else {
-              if (loadedOnce) {
-                this.assignEmptyMessage();
-              }
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load entries'); // navigate to error page
-          throw error;
-        });
   }
 
   ngAfterViewInit() {

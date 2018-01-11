@@ -189,7 +189,16 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .subscribe(response => {
           this._confirmEntryNavigation(response.id);
         }, error => {
-          this._blockerMessage = error.message;
+          this._blockerMessage = new AreaBlockerMessage({
+            title: 'Error',
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }]
+          });
         });
     }
   }
@@ -202,7 +211,16 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .subscribe(response => {
           this._confirmEntryNavigation(response.id);
         }, error => {
-          this._blockerMessage = error.message;
+          this._blockerMessage = new AreaBlockerMessage({
+            title: 'Error',
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }]
+          });
         });
     }
   }
@@ -215,7 +233,16 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .subscribe(response => {
           this._confirmEntryNavigation(response.id);
         }, error => {
-          this._blockerMessage = error.message;
+          this._blockerMessage = new AreaBlockerMessage({
+            title: 'Error',
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }]
+          });
         });
     }
   }
