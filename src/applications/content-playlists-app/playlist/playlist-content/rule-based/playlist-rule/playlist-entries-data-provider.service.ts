@@ -18,6 +18,7 @@ import { EntriesDataProvider, EntriesFilters, SortDirection } from 'app-shared/c
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
+import { environment } from 'app-environment';
 
 @Injectable()
 export class PlaylistEntriesDataProvider implements EntriesDataProvider {
@@ -188,7 +189,9 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
         fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl,sourceType'
       });
 
-      filter.limit = data.limits && data.limits > 0 && data.limits <= 200 ? data.limits : 200;
+      filter.limit = data.limits && data.limits > 0 && data.limits <= environment.modules.contentPlaylists.ruleBasedTotalResults
+        ? data.limits
+        : environment.modules.contentPlaylists.ruleBasedTotalResults;
 
       // update pagination args
       if (data.pageIndex || data.pageSize) {
@@ -209,7 +212,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
       return <any>this._kalturaServerClient.request(
         new PlaylistExecuteFromFiltersAction({
           filters: [filter],
-          totalResults: 200,
+          totalResults: environment.modules.contentPlaylists.ruleBasedTotalResults,
           pager: pagination,
           responseProfile
         })
@@ -249,7 +252,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
       distributions: [], categories: [],
       categoriesMode,
       customMetadata: {},
-      limits: 200,
+      limits: environment.modules.contentPlaylists.ruleBasedTotalResults,
     };
   }
 }

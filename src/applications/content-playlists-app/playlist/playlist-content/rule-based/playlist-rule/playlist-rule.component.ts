@@ -7,6 +7,7 @@ import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
+import { environment } from 'app-environment';
 
 @Component({
   selector: 'kPlaylistRule',
@@ -72,7 +73,7 @@ export class PlaylistRuleComponent {
     }
   ];
 
-  public _resultsLimit = 200; // default
+  public _resultsLimit = environment.modules.contentPlaylists.ruleBasedTotalResults;
   public _ruleName = '';
   public _orderBy = KalturaPlayableEntryOrderBy.playsDesc; // default
 
@@ -131,7 +132,7 @@ export class PlaylistRuleComponent {
       typeIn: '1,7', // default
       statusIn: '2,1', // default
       freeText: convertedFilters.freetext,
-      limit: convertedFilters.limits || 200,
+      limit: convertedFilters.limits || environment.modules.contentPlaylists.ruleBasedTotalResults,
       mediaTypeIn: convertedFilters.mediaTypes,
       flavorParamsIdsMatchOr: convertedFilters.flavors,
       categoriesIdsMatchOr: convertedFilters.categories,
