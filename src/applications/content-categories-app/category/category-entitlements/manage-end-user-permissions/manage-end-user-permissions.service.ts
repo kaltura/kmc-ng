@@ -33,6 +33,7 @@ import {
 import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
 import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
+import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
 
 export interface LoadingStatus {
   loading: boolean;
@@ -50,7 +51,8 @@ export interface EndUserPermissionsUser {
 
 export interface Users {
   items: EndUserPermissionsUser[],
-  totalCount: number
+  totalCount: number,
+    actualUsersCount: number
 }
 
 export interface UsersFilters {
@@ -68,9 +70,8 @@ export interface UsersFilters {
 @Injectable()
 export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilters> implements OnDestroy {
 
-  public usersTotalCount = null;
   private _users = {
-    data: new BehaviorSubject<Users>({items: [], totalCount: 0}),
+    data: new BehaviorSubject<Users>({items: [], totalCount: 0, actualUsersCount: null}),
     state: new BehaviorSubject<LoadingStatus>({loading: false, errorMessage: null})
   };
 
@@ -157,7 +158,8 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
           this._users.data.next({
             items: response.items,
-            totalCount: response.totalCount
+            totalCount: response.totalCount,
+              actualUsersCount: response.actualUsersCount
           });
         },
         error => {
@@ -169,97 +171,110 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
 
   private buildQueryRequest(): Observable<Users> {
-    try {
+      try {
 
-        const data: UsersFilters = this._getFiltersAsReadonly();
+          const data: UsersFilters = this._getFiltersAsReadonly();
 
-      // create request items
-      if (typeof data.categoryId === 'undefined' || typeof data.inheritUsers === 'undefined') {
-        //  this is valid condition - this scenario will happen until category id will be provided
-        return Observable.of({ items: [], totalCount: 0});
-      }
+          // create request items
+          if (typeof data.categoryId === 'undefined' || typeof data.inheritUsers === 'undefined') {
+              //  this is valid condition - this scenario will happen until category id will be provided
+              return Observable.of({items: [], totalCount: 0});
+          }
 
-      const filter: KalturaCategoryUserFilter = new KalturaCategoryUserFilter({
-        categoryIdEqual: data.categoryId,
-          categoryDirectMembers: false
-      });
-
-      const pagination = new KalturaFilterPager(
-          {
-              pageSize: data.pageSize,
-              pageIndex: data.pageIndex + 1
+          const filter: KalturaCategoryUserFilter = new KalturaCategoryUserFilter({
+              categoryIdEqual: data.categoryId,
+              categoryDirectMembers: false
           });
 
-      // update desired fields of entries
-      const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-        type: KalturaResponseProfileType.includeFields,
-        fields: 'userId,permissionLevel,status,updateMethod,updatedAt'
-      });
+          const pagination = new KalturaFilterPager(
+              {
+                  pageSize: data.pageSize,
+                  pageIndex: data.pageIndex + 1
+              });
 
-      const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-      advancedSearch.type = KalturaSearchOperatorType.searchAnd;
+          // update desired fields of entries
+          const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+              type: KalturaResponseProfileType.includeFields,
+              fields: 'userId,permissionLevel,status,updateMethod,updatedAt'
+          });
 
-      // filter 'freeText'
-      if (data.freetext) {
-        filter.freeText = data.freetext;
+          const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
+          advancedSearch.type = KalturaSearchOperatorType.searchAnd;
+
+          // filter 'freeText'
+          if (data.freetext) {
+              filter.freeText = data.freetext;
+          }
+
+          // filter 'status'
+          if (data.status && data.status.length > 0) {
+              filter.statusIn = data.status.map(e => e.value).join(',');
+          }
+
+          // filter 'updateMethod'
+          if (data.updateMethod && data.updateMethod.length > 0) {
+              filter.updateMethodIn = data.updateMethod.map(e => e.value).join(',');
+          }
+
+          // filter 'permissionLevels'
+          if (data.permissionLevels && data.permissionLevels.length > 0) {
+              filter.permissionLevelIn = data.permissionLevels.map(e => e.value).join(',');
+          }
+
+          // remove advanced search arg if it is empty
+          if (advancedSearch.items && advancedSearch.items.length === 0) {
+              delete filter.advancedSearch;
+          }
+
+          if (typeof filter.permissionLevelIn === 'undefined' && !data.inheritUsers) {
+              filter.permissionLevelIn = '3,2,1,0';
+          }
+
+          const requests = new KalturaMultiRequest(
+              new CategoryUserListAction({
+                  filter,
+                  pager: pagination,
+                  responseProfile
+              }),
+              new CategoryGetAction({id: data.categoryId})
+          );
+
+          return this._kalturaClient.multiRequest(requests)
+              .monitor('ManageEndUserPermissionsService: get Category users')
+              .map(result => {
+                  if (result.hasErrors()) {
+                      throw new Error(result.find(item => !!item.error).error.message);
+                  } else {
+                      const users = result[0].result.objects;
+                      const totalCount = result[0].result.totalCount;
+                      const actualUsersCount = result[1].result.membersCount;
+                      return {users, totalCount, actualUsersCount};
+                  }
+              })
+              .switchMap(
+                  result => this._getKalturaUsers(result.users.map(item => item.userId)),
+                  (categoryUserListResult, getKalturaUsersResult) => {
+                      const items = categoryUserListResult.users.map((categoryUser, index) => {
+                          const kalturaUser = getKalturaUsersResult[index];
+                          return {
+                              id: categoryUser.userId,
+                              name: kalturaUser.screenName || categoryUser.userId,
+                              permissionLevel: categoryUser.permissionLevel,
+                              status: categoryUser.status,
+                              updateMethod: categoryUser.updateMethod,
+                              updatedAt: categoryUser.updatedAt
+                          };
+                      });
+                      return {
+                          items,
+                          totalCount: categoryUserListResult.totalCount,
+                          actualUsersCount: categoryUserListResult.actualUsersCount
+                      };
+                  }
+              );
+      } catch (err) {
+          return Observable.throw(err);
       }
-
-      // filter 'status'
-      if (data.status && data.status.length > 0) {
-        filter.statusIn = data.status.map(e => e.value).join(',');
-      }
-
-      // filter 'updateMethod'
-      if (data.updateMethod && data.updateMethod.length > 0) {
-        filter.updateMethodIn = data.updateMethod.map(e => e.value).join(',');
-      }
-
-      // filter 'permissionLevels'
-      if (data.permissionLevels && data.permissionLevels.length > 0) {
-        filter.permissionLevelIn = data.permissionLevels.map(e => e.value).join(',');
-      }
-
-      // remove advanced search arg if it is empty
-      if (advancedSearch.items && advancedSearch.items.length === 0) {
-        delete filter.advancedSearch;
-      }
-
-      if (typeof filter.permissionLevelIn === 'undefined' && !data.inheritUsers)
-      {
-        filter.permissionLevelIn = '3,2,1,0';
-      }
-
-      return this._kalturaClient.request(
-        new CategoryUserListAction({
-          filter,
-          pager: pagination,
-          responseProfile
-        }))
-        .monitor('ManageEndUserPermissionsService: get Category users')
-        .switchMap(
-            result => this._getKalturaUsers(result.objects.map(item => item.userId)),
-            (categoryUserListResult, getKalturaUsersResult) =>
-            {
-                const items = categoryUserListResult.objects.map((categoryUser, index) =>
-                {
-                    const kalturaUser = getKalturaUsersResult[index];
-                    return {
-                        id: categoryUser.userId,
-                        name: kalturaUser.screenName || categoryUser.userId,
-                        permissionLevel: categoryUser.permissionLevel,
-                        status: categoryUser.status,
-                        updateMethod: categoryUser.updateMethod,
-                        updatedAt: categoryUser.updatedAt
-                    };
-                });
-                return {
-                    items,
-                    totalCount: categoryUserListResult.totalCount
-                };
-            });
-    } catch (err) {
-      return Observable.throw(err);
-    }
   }
 
   private _getKalturaUsers(categoryUsersId: string[]): Observable<KalturaUser[]> {

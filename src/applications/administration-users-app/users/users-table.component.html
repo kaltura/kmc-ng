@@ -1,7 +1,7 @@
 <k-area-blocker kFillHeight
                 [showLoader]="(_usersStore.users.state$ | async)?.loading || this._deferredLoading"
                 [message]="_blockerMessage">
-  <div class="kUsersTable" [class.noResults]="!_users.length">
+  <div class="kUsersTable" [class.noResults]="!_users?.length">
     <p-dataTable
       [value]="_users"
       scrollable="true"

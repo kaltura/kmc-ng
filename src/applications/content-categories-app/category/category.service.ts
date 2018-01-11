@@ -19,6 +19,7 @@ import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
 import {AppEventsService} from 'app-shared/kmc-shared';
+import { CategoryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -187,6 +188,21 @@ export class CategoryService implements OnDestroy {
                         .tag('block-shell')
                         .map(
 						categorySavedResponse => {
+
+						    const bla = request.requests.find((innerRequest, index) =>
+                            {
+                                return (innerRequest instanceof CategoryDeleteAction
+                                && categorySavedResponse[index].result);
+                            });
+
+						    if (bla)
+                            {
+                                // whatever
+                            }
+                            request.requests.filter(innerRequest => innerRequest instanceof CategoryDeleteAction)
+
+
+
 							if (categorySavedResponse.hasErrors()) {
 								this._state.next({ action: ActionTypes.CategorySavingFailed });
 							} else {
