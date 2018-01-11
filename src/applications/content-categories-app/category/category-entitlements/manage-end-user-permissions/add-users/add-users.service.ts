@@ -57,7 +57,7 @@ export class AddUsersService {
   public copyUsersFromParent({categoryId}: {categoryId: number}): Observable<void> {
     return this._kalturaServerClient.request(
       new CategoryUserCopyFromCategoryAction({categoryId})
-    ).delay(5000); // we delay the response for the server to be able to index the new users
+    ).delay(6000); // we delay the response for the server to be able to index the new users
   }
 
 
