@@ -4,6 +4,7 @@ import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/en
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaTypesFactory } from 'kaltura-ngx-client';
 
 
 @Component({
@@ -41,7 +42,8 @@ export class EntriesSelectorComponent {
   public _onActionSelected({ action, entry }: { action: string, entry: KalturaMediaEntry }): void {
     switch (action) {
       case 'addToBucket':
-        this.selectedEntries.push(entry);
+          const clonedEntry = <KalturaMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
+        this.selectedEntries.push(clonedEntry);
         this.selectedEntriesChange.emit(this.selectedEntries);
         break;
       default:
