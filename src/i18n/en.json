@@ -656,7 +656,7 @@
         "createdOn": "Created On",
         "duration": "Duration",
         "status": "Status",
-        "previewAndEmbed": "Preview & Embed",
+        "previewAndEmbed": "Share & Embed",
         "delete": "Delete",
         "view": "View Details",
         "entries": "Entries",
@@ -885,7 +885,7 @@
           "users": "Users"
         },
         "preview": {
-          "pande": "Preview & Embed",
+          "pande": "Share & Embed",
           "details": "Details",
           "entryID": "ID:",
           "creator": "Created by:",
@@ -1300,10 +1300,15 @@
             "changeOwner": "Change Owner",
             "changeOwnerLabel": "Set a new owner for this category",
             "changeOwnerPlaceholder": "Enter Username/Id",
+            "cancelEdit": "Cancel Edit",
+            "discard": "Discard all changes?",
+            "tooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier",
             "errors": {
               "changeOwnerFailed" : "An error occurred while changing owner",
               "unableToChange": "Unable to change owner for current category",
-              "selectUser" : "Unable to change owner since no user was selected"
+              "selectUser" : "Unable to change owner since no user was selected",
+              "invalidOwner": "Cannot set owner field with user id\n\"{{0}}\"\nuser id is invalid",
+              "ownerRequired": "Cannot set owner field,\nuser id is invalid"
             }
           },
           "permittedUsers": {
