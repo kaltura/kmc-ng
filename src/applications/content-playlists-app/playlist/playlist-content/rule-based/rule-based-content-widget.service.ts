@@ -27,7 +27,6 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   private _selectedRule = new Subject<PlaylistRule>();
   private _selectionIdGenerator = new FriendlyHashId();
 
-  public isNewPlaylist = false;
   public rules: PlaylistRule[] = [];
   public rulesTotalCount = 0;
   public entriesDuration = 0;
@@ -65,7 +64,6 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
     this._state.next({ loading: true, error: false });
-    this.isNewPlaylist = false;
     this.rules = [];
     this.rulesTotalCount = 0;
 
