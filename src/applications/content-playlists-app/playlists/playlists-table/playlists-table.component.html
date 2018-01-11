@@ -1,7 +1,7 @@
 <k-area-blocker
   [showLoader]="(playlistsStore.playlists.state$ | async)?.loading || this._deferredLoading"
   [message]="_blockerMessage" [bodyScroll]="true">
-  <div class="kPlaylistsTable" [class.noResults]="!_playlists.length">
+  <div class="kPlaylistsTable" [class.noResults]="!_playlists?.length">
     <p-dataTable
       #dataTable
       [value]="_playlists"

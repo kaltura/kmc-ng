@@ -18,7 +18,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
   public entitlementsForm: FormGroup;
   public parentCategory: KalturaCategory = null;
-  public membersTotalCount = 0;
+
   public inheritUsersPermissionsOriginalValue: boolean;
 
   constructor(private _kalturaClient: KalturaClient,
@@ -30,6 +30,19 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     this._buildForm();
   }
 
+  public fetchUpdatedMembersCount(): Observable<number> {
+      if (this.data) {
+          return this._kalturaClient.request(
+              new CategoryGetAction({id: this.data.id})
+          ).cancelOnDestroy(this, this.widgetReset$)
+              .map(value => {
+                  return value.membersCount;
+              });
+      } else {
+          return Observable.throw(new Error('missing data'));
+      }
+  }
+
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
 
     super._showLoader();
@@ -38,7 +51,6 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       .monitor('get category parent category')
       .cancelOnDestroy(this, this.widgetReset$)
       .map(({owner, parentCategory}) => {
-        this.membersTotalCount = this.data.membersCount;
         this.parentCategory = parentCategory || null;
         this._resetFormData(owner);
         this._monitorFormChanges();
@@ -180,7 +192,6 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   protected onReset() {
     this.entitlementsForm.reset({});
     this.parentCategory = null;
-    this.membersTotalCount = 0;
   }
 
   onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {

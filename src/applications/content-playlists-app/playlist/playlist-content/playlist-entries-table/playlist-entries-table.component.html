@@ -1,5 +1,5 @@
 <k-area-blocker [showLoader]="_deferredLoading">
-  <div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
+  <div class="kPlaylistEntriesTable" [class.noResults]="!_entries?.length">
     <p-dataTable
       #dataTable
       dataKey="selectionId"
