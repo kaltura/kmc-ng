@@ -8,6 +8,7 @@ import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/Kaltur
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
 import { environment } from 'app-environment';
+import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
 @Component({
   selector: 'kPlaylistRule',
@@ -142,6 +143,12 @@ export class PlaylistRuleComponent {
       replacementStatusIn: convertedFilters.replacementStatuses,
       orderBy: convertedFilters.sortBy ? `${convertedFilters.sortDirection === SortDirection.Desc ? '-' : '+'}${convertedFilters.sortBy}` : undefined
     });
+
+    if (convertedFilters.categoriesMode === CategoriesModes.SelfAndChildren) {
+      originalFilter.categoryAncestorIdIn = convertedFilters.categories;
+    } else {
+      originalFilter.categoriesIdsMatchOr = convertedFilters.categories;
+    }
 
     (<any>originalFilter).name = this._ruleName; // TODO [kmcng] add to the constructor after client lib update
 
