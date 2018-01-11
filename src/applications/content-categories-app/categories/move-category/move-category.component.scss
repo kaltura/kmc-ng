@@ -18,7 +18,7 @@
     }
   }
   .kContainer {
-    width: 520px;
+    width: 540px;
     margin: 0 auto;
     height: 437px;
 
@@ -27,7 +27,17 @@
       display: -ms-flexbox;
       display: flex;
       padding-bottom: 20px;
-
+      .kSpinnerBkg{
+        width: 20px;
+        height: 20px;
+        position: relative;
+        margin-top: -1px;
+        margin-right: 8px;
+        .kSpinnerAnim{
+          width: 12px;
+          height: 12px;
+        }
+      }
       &:first-child {
         padding-top: 20px;
       }

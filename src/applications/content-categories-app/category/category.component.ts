@@ -1,5 +1,5 @@
 import {CategoryMetadataWidget} from './category-metadata/category-metadata-widget.service';
-
+import { Router } from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActionTypes, CategoryService} from './category.service';
 import {CategorySectionsListWidget} from './category-sections-list/category-sections-list-widget.service';
@@ -11,6 +11,11 @@ import {Observable} from 'rxjs/Observable';
 import {CategoryEntitlementsWidget} from './category-entitlements/category-entitlements-widget.service';
 import {CategorySubcategoriesWidget} from './category-subcategories/category-subcategories-widget.service';
 import {CategoryDetailsWidget} from "./category-details/category-details-widget.service";
+import {
+  CategoriesStatus,
+  CategoriesStatusMonitorService
+} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+
 
 @Component({
   selector: 'kCategory',
@@ -42,9 +47,20 @@ export class CategoryComponent implements OnInit, OnDestroy {
               widget4: CategorySubcategoriesWidget,
               widget5: CategoryEntitlementsWidget,
               public _categoryStore: CategoryService,
+              private _router: Router,
               private _categoriesStore: CategoriesService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+
     categoryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5]);
+    this._categoriesStatusMonitorService.$categoriesStatus
+	    .cancelOnDestroy(this)
+	    .subscribe((status: CategoriesStatus) => {
+          if (status.lock){
+            this._router.navigate(['content/categories']);
+          }
+        });
+    this._categoriesStatusMonitorService.updateCategoriesStatus();
   }
 
   ngOnDestroy() {

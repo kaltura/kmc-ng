@@ -25,6 +25,9 @@
         </div>
       </form>
       <div class="kRow">
+        <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
+          <div class="k-spinner-animation kSpinnerAnim"></div>
+        </div>
         <span>{{('applications.content.addNewCategory.selectCategoryParent') | translate}}</span>
       </div>
       <kCategoryParentSelector (onCategorySelected)="_onCategorySelected($event)"></kCategoryParentSelector>

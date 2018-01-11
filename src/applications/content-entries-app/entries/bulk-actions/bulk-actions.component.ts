@@ -274,9 +274,16 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private _addSelectedEntriesToNewCategory() {
-    if (this.selectedEntries.length > 0) {
-      const creationEvent = new CreateNewCategoryEvent({entries: this.selectedEntries});
-      this._appEvents.publish(creationEvent);
+    if (this._categoriesLocked){
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.categories.categoriesLockTitle'),
+        message: this._appLocalization.get('applications.content.categories.categoriesLockMsg')
+      });
+    }else {
+      if (this.selectedEntries.length > 0) {
+        const creationEvent = new CreateNewCategoryEvent({entries: this.selectedEntries});
+        this._appEvents.publish(creationEvent);
+      }
     }
   }
 

@@ -137,6 +137,18 @@
     width: 190px;
     position: relative;
     margin-right: 8px;
+    .kSpinnerBkg{
+      position: relative;
+      width: 20px;
+      height: 20px;
+      padding-left: 8px;
+      padding-right: 8px;
+      margin-top: 0px;
+    }
+    .kSpinnerAnim{
+      width: 12px;
+      height: 12px;
+    }
     i {
       margin-right: 12px;
       margin-left: 8px;

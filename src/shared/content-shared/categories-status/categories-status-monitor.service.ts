@@ -77,23 +77,26 @@ export class CategoriesStatusMonitorService implements OnDestroy {
             this._status.next({lock: false, update: false});
             return;
         }
+        let lockFlagFound = false;
+        let updateFlagFound = false;
 
         const status: KalturaFeatureStatusListResponse = response.result;
-        let lockFlagFound = false;
-        let updateFlagFound = false
-        status.objects.forEach((kfs: KalturaFeatureStatus)=>{
-            switch (kfs.type) {
-                case KalturaFeatureStatusType.lockCategory:
-                    lockFlagFound = true;
-                    updateFlagFound = true;
-                    break;
-                case KalturaFeatureStatusType.category:
-                    updateFlagFound = true;
-                    break;
-            }
-        });
+        if (status && status.objects) {
+            status.objects.forEach((kfs: KalturaFeatureStatus) => {
+                switch (kfs.type) {
+                    case KalturaFeatureStatusType.lockCategory:
+                        lockFlagFound = true;
+                        updateFlagFound = true;
+                        break;
+                    case KalturaFeatureStatusType.category:
+                        updateFlagFound = true;
+                        break;
+                }
+            });
+        }
         this._log('info', `got categories status: locked: ${lockFlagFound}, update: ${updateFlagFound}`);
-        this._status.next({lock: lockFlagFound, update: updateFlagFound});
+        this._status.next({lock: lockFlagFound, update: true});
+
     }
 
     // API to invoke immediate categories status update

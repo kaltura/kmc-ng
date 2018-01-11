@@ -28,7 +28,10 @@
                    (keyup.enter)="onFreetextChanged()"
                    placeholder="{{'applications.content.categories.search' | translate}}">
             <div #categoriesFilterBtn class="kCategoriesFilter">
-              <i class="kIconfolder"></i>
+              <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
+              <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
+                <div class="k-spinner-animation kSpinnerAnim"></div>
+              </div>
               <span>{{'applications.content.categories.filterCategories' | translate}}</span><i
               class="kIcondropdown_arrow_bottom dropdown"></i>
             </div>
@@ -83,14 +86,14 @@
   </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="658" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #addNewCategory [popupWidth]="600" [popupHeight]="658" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kNewCategory (onApply)="onCategoryAdded($event)" [parentPopupWidget]="addNewCategory" [linkedEntries]="_linkedEntries"></kNewCategory>
   </ng-template>
 </kPopupWidget>
 
 
-<kPopupWidget #moveCategory [popupWidth]="586" [popupHeight]="580" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #moveCategory [popupWidth]="600" [popupHeight]="580" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kMoveCategory [parentPopupWidget]="moveCategory" [selectedCategories]="[_selectedCategoryToMove]" ></kMoveCategory>
   </ng-template>

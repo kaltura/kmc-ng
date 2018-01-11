@@ -27,7 +27,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     public _linkedEntries: { entryId: string }[] = [];
     @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
     @ViewChild('addNewCategory') addNewCategory: PopupWidgetComponent;
-    public _categoriesLocked;
+    public _categoriesLocked = false;
+    public _categoriesUpdating = false;
 
     @ViewChild('tags') private tags: StickyComponent;
 
@@ -53,6 +54,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 		    .cancelOnDestroy(this)
 		    .subscribe((status: CategoriesStatus) => {
                 this._categoriesLocked = status.lock;
+                this._categoriesUpdating = status.update;
             });
     }
 
