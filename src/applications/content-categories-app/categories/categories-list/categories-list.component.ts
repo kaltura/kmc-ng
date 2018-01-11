@@ -276,6 +276,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                                         severity: 'success',
                                         detail: this._appLocalization.get('applications.content.categories.deleted')
                                     });
+                                    this._categoriesStatusMonitorService.updateCategoriesStatus();
                                     this._categoriesService.reload();
                                 },
                                 error => {

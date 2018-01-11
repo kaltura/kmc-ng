@@ -19,6 +19,8 @@ import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
 import {AppEventsService} from 'app-shared/kmc-shared';
+import { CategoryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
+import { CategoriesStatusMonitorService } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -75,7 +77,8 @@ export class CategoryService implements OnDestroy {
                 private _categoryRoute: ActivatedRoute,
                 private _appLocalization: AppLocalization,
                 private _pageExitVerificationService: PageExitVerificationService,
-                appEvents: AppEventsService) {
+                appEvents: AppEventsService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
         this._widgetsManager.categoryStore = this;
 
@@ -187,6 +190,15 @@ export class CategoryService implements OnDestroy {
                         .tag('block-shell')
                         .map(
 						categorySavedResponse => {
+
+							// if categories were deleted during the save operation (sub-categories window) - invoke immediate polling of categories status
+							const deletedCategories = request.requests.find((req, index) => {
+								return (req instanceof CategoryDeleteAction && !categorySavedResponse[index].error)
+							});
+							if (deletedCategories){
+								this._categoriesStatusMonitorService.updateCategoriesStatus();
+							}
+
 							if (categorySavedResponse.hasErrors()) {
 								this._state.next({ action: ActionTypes.CategorySavingFailed });
 							} else {
