@@ -93,7 +93,6 @@ export class PlaylistRuleComponent {
       orderBy: this._orderBy,
       rule: this._rule
     }).subscribe(updatedRule => {
-      console.warn(updatedRule);
       this.onSaveRule.emit(updatedRule);
       this.onClosePopupWidget.emit();
     });
