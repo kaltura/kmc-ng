@@ -240,7 +240,6 @@ export class PlaylistRuleParserService implements OnDestroy {
       limit: convertedFilters.limits || environment.modules.contentPlaylists.ruleBasedTotalResults,
       mediaTypeIn: convertedFilters.mediaTypes,
       flavorParamsIdsMatchOr: convertedFilters.flavors,
-      categoriesIdsMatchOr: convertedFilters.categories,
       durationTypeMatchOr: convertedFilters.durations,
       createdAtGreaterThanOrEqual: convertedFilters.createdAt ? convertedFilters.createdAt.fromDate : undefined,
       createdAtLessThanOrEqual: convertedFilters.createdAt ? convertedFilters.createdAt.toDate : undefined,
