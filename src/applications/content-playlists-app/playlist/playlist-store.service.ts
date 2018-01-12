@@ -8,7 +8,7 @@ import { KalturaPlaylist, KalturaPlaylistArgs } from 'kaltura-ngx-client/api/typ
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistUpdateAction } from 'kaltura-ngx-client/api/types/PlaylistUpdateAction';
 import { Observable } from 'rxjs/Observable';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
@@ -66,6 +66,7 @@ export class PlaylistStore implements OnDestroy {
 
   constructor(private _router: Router,
               private _playlistRoute: ActivatedRoute,
+              private _appAuth: AppAuthentication,
               private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
@@ -200,8 +201,9 @@ export class PlaylistStore implements OnDestroy {
                   playlist: new KalturaPlaylist({
                     name: newData.name,
                     description: newData.description,
-                    playlistType: KalturaPlaylistType.staticList,
-                    playlistContent: newData.playlistContent
+                    playlistContent: newData.playlistContent,
+                    playlistType: newData.type,
+                    creatorId: this._appAuth.appUser.id
                   })
                 });
 

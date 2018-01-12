@@ -10,9 +10,10 @@
   display: flex;
   flex-flow: row wrap;
   margin: 0px;
-  .kFiltersWrapper{
+  .kFiltersWrapper {
     display: block;
     height: 66px;
+    margin-left: auto;
   }
   .kEntriesHolder {
     min-height: $minTableHeight;
@@ -21,6 +22,12 @@
     position: relative;
     display: flex;
     flex-direction: column;
+
+    .kEntriesInfo {
+      position: absolute;
+      top: 144px;
+      left: 28px;
+    }
   }
   .kRefreshBtn {
     font-size: 24px;
@@ -51,6 +58,28 @@
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     display: flex;
+
+    &.kAdditionalFilters {
+      height: 150px;
+      padding-top: 28px;
+      align-items: start;
+
+      .kFiltersWrapper {
+        height: 88px;
+        justify-content: space-between;
+        padding-right: 12px;
+
+        .kSearchInput {
+          width: 298px;
+          margin-right: 16px;
+        }
+
+        .kCategoriesFilter, .kRefine {
+          width: 258px;
+          margin-right: 16px;
+        }
+      }
+    }
     .kSelectedEntriesNum {
       padding-left: 16px;
     }
@@ -88,7 +117,18 @@
     background: $kMagnifyingGlassBkg;
     padding-left: 30px;
     margin-right: 8px;
-    width: 260px;
+    width: 250px;
+  }
+  .kRuleNameInput {
+    width: 298px;
+    margin-right: 16px;
+    padding-left: 10px;
+  }
+  .kRuleNameLabel {
+    font-size: 15px;
+    font-weight: normal;
+    line-height: 32px;
+    margin-right: 16px;
   }
   .kBulkOperations {
     width: 400px;
@@ -113,10 +153,17 @@
     font-weight: 400;
     font-size: 15px;
   }
-  .kFilters {
+  .kFiltersWrapper {
     display: flex;
-    margin-left: auto;
+    flex-direction: column;
+    justify-content: center;
+
+    .kFilters {
+      display: flex;
+      margin-left: auto;
+    }
   }
+
   .kCategoriesFilter {
     border: 1px solid $kGrayscale4;
     border-radius: 4px;
@@ -153,6 +200,7 @@
       top: 12px;
     }
   }
+
   .kRefine {
     @extend .kCategoriesFilter;
     width: 160px;
@@ -165,7 +213,7 @@
 
 }
 
-:host /deep/ .kStickyClass{
+:host /deep/ .kStickyClass {
   border-bottom: 1px solid $kGrayscale5;
 }
 

@@ -6,6 +6,8 @@ import { PlaylistWidget } from '../playlist-widget';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { SectionsList } from './sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { PlaylistWidgetKeys } from '../playlist-widget-keys';
 
 export interface SectionWidgetItem {
   label: string,
@@ -98,6 +100,15 @@ export class PlaylistSectionsListWidget extends PlaylistWidget implements OnDest
   }
 
   private _isSectionEnabled(sectionKey: string, playlist: KalturaPlaylist): boolean {
-    return true;
+    switch (sectionKey) {
+      case PlaylistWidgetKeys.Content:
+        return playlist.playlistType === KalturaPlaylistType.staticList;
+      case PlaylistWidgetKeys.ContentRuleBased:
+        return playlist.playlistType === KalturaPlaylistType.dynamic;
+      case PlaylistWidgetKeys.Metadata:
+        return true;
+      default:
+        return false;
+    }
   }
 }

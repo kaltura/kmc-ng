@@ -1,0 +1,57 @@
+<k-area-blocker [showLoader]="_deferredLoading">
+  <div class="kPlaylistRulesTable" [class.noResults]="!_rules.length">
+    <p-dataTable
+      #dataTable
+      dataKey="selectionId"
+      scrollHeight="100%"
+      [immutable]="false"
+      [scrollable]="true"
+      [value]="_rules"
+      [emptyMessage]="_emptyMessage"
+      (selectionChange)="_onSelectionChange($event)"
+      [(selection)]="selectedRules">
+      <p-column selectionMode="multiple" [style]="{'width':'44px', 'padding-left': '14px'}"></p-column>
+
+      <p-column field="name" header="{{'applications.content.table.ruleName' | translate}}">
+        <ng-template let-col let-rule="rowData" pTemplate="body">
+          <span class="kTitle" (click)="_viewRule(rule)">{{rule[col.field]}}</span>
+        </ng-template>
+      </p-column>
+
+      <p-column field="entriesCount"
+                [style]="{'width': '80px'}"
+                [header]="'applications.content.table.entriesCount' | translate">
+      </p-column>
+
+      <p-column field="limit"
+                [style]="{'width': '70px'}"
+                [header]="'applications.content.table.limit' | translate">
+      </p-column>
+
+      <p-column field="orderBy"
+                [style]="{'width': '120px'}"
+                [header]="'applications.content.table.orderBy' | translate">
+        <ng-template let-col let-rule="rowData" pTemplate="body">
+          <span>{{rule | playlistRuleOrderBy}}</span>
+        </ng-template>
+      </p-column>
+
+      <p-column field="entriesDuration"
+                [style]="{'width': '70px'}"
+                [header]="'applications.content.table.duration' | translate">
+        <ng-template let-col let-rule="rowData" pTemplate="body">
+          <span>{{rule[col.field] | kTime}}</span>
+        </ng-template>
+      </p-column>
+
+      <p-column header="" [style]="{'width': '70px'}">
+        <ng-template let-col let-rule="rowData" pTemplate="body" let-i="rowIndex">
+          <div class="kPlaylistRulesTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, rule)"></button>
+          </div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+  </div>
+</k-area-blocker>

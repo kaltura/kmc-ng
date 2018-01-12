@@ -9,7 +9,8 @@ import { PlaylistDetailsWidget } from './playlist-details-widget.service';
 })
 export class PlaylistDetailsComponent implements OnInit, OnDestroy {
   public _currentPlaylist: KalturaPlaylist;
-  public _numberOfEntries = 0;
+  public _numberOfEntries = '0'; // zero number value is not shown by kDetailInfo
+  public _isNew = false;
 
   constructor(public _widgetService: PlaylistDetailsWidget) {
   }
@@ -21,7 +22,8 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
       .filter(Boolean)
       .subscribe(data => {
         this._currentPlaylist = data;
-        this._numberOfEntries = this._getNumberOfEntries(data.playlistContent);
+        this._isNew = !this._currentPlaylist.id;
+        this._numberOfEntries = String(this._getNumberOfEntries(data.playlistContent));
       });
   }
 

@@ -1,21 +1,18 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { PlaylistWidget } from '../playlist-widget';
-import { PlaylistWidgetKeys } from '../playlist-widget-keys';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { Observable } from 'rxjs/Observable';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { PlaylistExecuteAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteAction';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
 import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBaseEntryFilter';
-import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
+import { PlaylistWidget } from '../../playlist-widget';
+import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -27,8 +24,7 @@ export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
 }
 
 @Injectable()
-export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
-
+export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   private _selectionIdGenerator = new FriendlyHashId();
 
   public entries: PlaylistContentMediaEntry[] = [];
@@ -44,37 +40,36 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
-      if (this.wasActivated) {
-          return Observable.of({
-              isValid: !!this.entries.length
-          });
-      } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
-          return Observable.of({isValid: true});
-      } else {
-          return Observable.of({isValid: false});
-      }
+    if (this.wasActivated) {
+      return Observable.of({
+        isValid: !!this.entries.length
+      });
+    } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
+      return Observable.of({ isValid: true });
+    } else {
+      return Observable.of({ isValid: false });
+    }
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
-      if (this.wasActivated)
-      {
-          data.playlistContent = this.entries.map(({ id }) => id).join(',');
-      } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
-          data.playlistContent = this.data.playlistContent
-      }else {
-          // shouldn't reach this part since 'onValidate' should prevent execution of this function
-          // if data is invalid
-          throw new Error('invalid scenario');
-      }
+    if (this.wasActivated) {
+      data.playlistContent = this.entries.map(({ id }) => id).join(',');
+    } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
+      data.playlistContent = this.data.playlistContent
+    } else {
+      // shouldn't reach this part since 'onValidate' should prevent execution of this function
+      // if data is invalid
+      throw new Error('invalid scenario');
+    }
   }
 
   /**
    * Do some cleanups if needed once the section is removed
    */
   protected onReset(): void {
-      this.entries = [];
-      this.entriesTotalCount = 0;
-      this.entriesDuration = 0;
+    this.entries = [];
+    this.entriesTotalCount = 0;
+    this.entriesDuration = 0;
   }
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
@@ -99,30 +94,30 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
   private _getEntriesRequest(): Observable<KalturaBaseEntry[]> {
 
-      const responseProfile = new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
-      });
+    const responseProfile = new KalturaDetachedResponseProfile({
+      type: KalturaResponseProfileType.includeFields,
+      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
+    });
 
-      if (this.isNewData) {
-          if (this.data.playlistContent) {
-              return this._kalturaClient.request(new BaseEntryListAction({
-                  filter: new KalturaBaseEntryFilter({idIn: this.data.playlistContent}),
-                  responseProfile: responseProfile
-              }))
-                  .map(response => {
-                      return response.objects;
-                  });
-          }else {
-              return Observable.of([]);
-          }
+    if (this.isNewData) {
+      if (this.data.playlistContent) {
+        return this._kalturaClient.request(new BaseEntryListAction({
+          filter: new KalturaBaseEntryFilter({ idIn: this.data.playlistContent }),
+          responseProfile: responseProfile
+        }))
+          .map(response => {
+            return response.objects;
+          });
       } else {
-          return this._kalturaClient.request(new PlaylistExecuteAction({
-              id: this.data.id,
-              acceptedTypes: [KalturaMediaEntry],
-              responseProfile: responseProfile
-          }));
+        return Observable.of([]);
       }
+    } else {
+      return this._kalturaClient.request(new PlaylistExecuteAction({
+        id: this.data.id,
+        acceptedTypes: [KalturaMediaEntry],
+        responseProfile: responseProfile
+      }));
+    }
   }
 
   private _extendWithSelectionId(entries: PlaylistContentMediaEntry[]): void {

@@ -516,7 +516,7 @@
         }
       },
       "entries": {
-        "entries": "Entries",
+        "entries": "{{0}} Entries",
         "selected": "Selected",
         "bulkActions": "More Actions",
         "cancel": "Cancel",
@@ -529,7 +529,14 @@
         "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "entryId": "Entry ID: {{0}}",
-        "deleteNote": "Please note: the entry will be permanently deleted from your account."
+        "deleteNote": "Please note: the entry will be permanently deleted from your account.",
+        "ruleName": "Rule name",
+        "ruleNamePlaceholder": "Top videos of past week",
+        "resultsLimit": "Results limit",
+        "orderBy": "Order by",
+        "totalDuration": "Total duration {{0}}",
+        "resultsLimitRange": "1 - 200 Entries",
+        "noEntries": "No entries"
       },
       "playlists": {
         "playlists": "{{0}} Playlists",
@@ -554,7 +561,10 @@
         "deleteEntryNote": "Please note: this entry will be permanently deleted from your playlist.",
         "deleteEntriesNote": "Please note: those entries will be permanently deleted from your playlist.",
         "confirmDeleteEntry": "Are you sure you want to delete the selected entry?",
-        "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
+        "confirmDeleteEntries": "Are you sure you want to delete the selected entries?",
+        "addRule": "Add rule to your playlist",
+        "updateRule": "Update rule in your playlist",
+        "save": "Save"
       },
       "moderation": {
         "entryReports": "Entry Reports",
@@ -671,7 +681,11 @@
         "role": "Role",
         "lastLogin": "Last Login",
         "edit": "Edit",
-        "blockUnblock": "Block / Unblock"
+        "blockUnblock": "Block / Unblock",
+        "ruleName": "Rule Name",
+        "entriesCount": "No.Entries",
+        "limit": "Limit",
+        "orderBy": "Order By"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -866,7 +880,9 @@
         "reject": "Reject",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
-        "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries"
+        "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries",
+        "viewRule": "View/Edit rule",
+        "deleteRule": "Delete rule"
       },
       "entryDetails": {
         "sections": {
@@ -1482,6 +1498,16 @@
           "tags": "Tags",
           "nameIsMandatory": "You must enter a playlist name"
         },
+        "content": {
+          "orderBy": {
+            "mostPlayed": "Most Played",
+            "mostRecent": "Most Recent",
+            "highestRated": "Highest Rated",
+            "entryName": "Entry Name"
+          },
+          "addRule": "Add rule",
+          "rules": "{{0}} Rules"
+        },
         "errors": {
           "reload": "Reload",
           "dismiss": "Dismiss",
@@ -1496,7 +1522,8 @@
           "contentValidationError": "Add at least one entry",
           "loadError": "An error occurred while loading data",
           "addAtLeastOneMedia": "Add at least one media",
-          "entriesLoadError": "Error loading entries"
+          "entriesLoadError": "Error loading entries",
+          "addRules": "Add rules to your playlist"
         }
       }
     },
