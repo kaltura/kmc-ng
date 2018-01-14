@@ -86,7 +86,7 @@
     "@angular/compiler-cli": "^4.0.0",
     "@angular/language-service": "^4.0.0",
     "@compodoc/compodoc": "^1.0.0-beta.10",
-    "@kaltura-ng/dev-workspace": "~2.2.0",
+    "@kaltura-ng/dev-workspace": "~2.4.0",
     "@types/core-js": "0.9.28",
     "@types/jasmine": "2.5.45",
     "@types/jquery": "^2.0.40",
