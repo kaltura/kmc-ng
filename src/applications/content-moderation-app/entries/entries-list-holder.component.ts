@@ -25,9 +25,6 @@ export class EntriesListHolderComponent implements OnDestroy {
   private _shouldConfirmEntryApproval = false; // TODO [kmcng] need to get such permissions from somewhere
   private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
   public _defaultFilters: Partial<EntriesFilters> = {
-    //'moderationStatuses': [{ value: '1', label: '1'}, { value: '5', label: '5'}]
-  };
-  public _tempEnforced: Partial<EntriesFilters> = {
     'moderationStatuses': [{ value: '1', label: '1'}, { value: '5', label: '5'}]
   };
 
