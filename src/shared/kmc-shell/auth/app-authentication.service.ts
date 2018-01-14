@@ -58,11 +58,6 @@ export class AppAuthentication {
 
   appEvents$ = this._appAuthStatus.asObservable();
 
-  defaultRoutes = {
-    loginRoute: '',
-    defaultRoute: '',
-    errorRoute: ''
-  };
 
   constructor(private kalturaServerClient: KalturaClient,
               private appStorage: AppStorage,
@@ -313,7 +308,7 @@ export class AppAuthentication {
 
   // Prevents the browser to verify page exit before reload
   private forceReload() {
-    this._pageExitVerificationService.disable();
+    this._pageExitVerificationService.removeAll();
     this.reload();
   }
 }

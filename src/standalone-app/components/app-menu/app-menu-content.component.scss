@@ -1,0 +1,51 @@
+@import 'app-theme/_variables.scss';
+
+a {
+  color: $subLinkColor;
+  line-height: $appMenuHeight;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  text-decoration: none;
+  &.disabled {
+    color: $kGrayscale4;
+    border: 0px solid white;
+    pointer-events: none;
+  }
+  &:hover {
+    text-decoration: none;
+    color: $menuBkgColor;
+  }
+  &.activeLink {
+    text-decoration: none;
+    color: $menuBkgColor;
+  }
+}
+
+.linkMarker {
+  width: 100%;
+  height: 4px;
+  position: absolute;
+  background-color: $menuBkgColor;
+  opacity: 0;
+  bottom: 0;
+  transition: opacity .3s ease-in-out;
+  -moz-transition: opacity .3s ease-in-out;
+  -webkit-transition: opacity .3s ease-in-out;
+}
+
+.subMenuContainer {
+  position: relative;
+  &.kLeft {
+    margin-right: 30px;
+  }
+  &.kRight {
+    margin-left: 30px;
+  }
+  &.active {
+    > .linkMarker {
+      opacity: 1;
+    }
+  }
+}
