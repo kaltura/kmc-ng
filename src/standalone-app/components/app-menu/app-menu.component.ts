@@ -45,7 +45,8 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     showSubMenu: boolean = true;
 
     setSelectedRoute(path) {
-        this.menuConfig = this.appMenuService.getMenuConfig();
+        let item = R.find(R.propEq('routePath', path.split("/")[1]))(this.menuConfig);
+
         if (item) {
             this.selectedMenuItem = item;
             this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;

@@ -76,6 +76,8 @@ import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { PlaylistCreationModule } from 'app-shared/kmc-shared/playlist-creation';
 import {CategoryCreationModule} from 'app-shared/kmc-shared/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
+import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -115,6 +117,8 @@ export function clientConfigurationFactory() {
     KalturaServerModule,
     AreaBlockerModule,
     CheckboxModule,
+      EntriesModule.forRoot(),
+      CategoriesModule.forRoot(),
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
