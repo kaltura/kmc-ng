@@ -14,11 +14,6 @@ import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBase
 import { PlaylistWidget } from '../../playlist-widget';
 import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
 
-export interface LoadEntriesStatus {
-  loading: boolean;
-  error: boolean
-}
-
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
   selectionId?: string;
 }
@@ -78,8 +73,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     return this._getEntriesRequest()
       .cancelOnDestroy(this, this.widgetReset$)
       .map((entries: KalturaMediaEntry[]) => {
-        this._extendWithSelectionId(entries);
-        this.entries = entries;
+        this.entries = this._extendWithSelectionId(entries);
         this.entriesTotalCount = entries.length;
         this.entriesDuration = this.entries.reduce((acc, val) => acc + val.duration, 0);
         super._hideLoader();
@@ -120,9 +114,11 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
-  private _extendWithSelectionId(entries: PlaylistContentMediaEntry[]): void {
-    entries.forEach(entry => {
-      entry.selectionId = this._selectionIdGenerator.generateUnique(entries.map(item => item.selectionId));
+  private _extendWithSelectionId(entries: KalturaMediaEntry[]): PlaylistContentMediaEntry[] {
+    return entries.map(entry => {
+        (<PlaylistContentMediaEntry>entry).selectionId = this._selectionIdGenerator.generateUnique(this.entries.map(item => item.selectionId));
+
+        return (<PlaylistContentMediaEntry>entry);
     });
   }
 
@@ -196,9 +192,8 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
-  public addEntries(entries: PlaylistContentMediaEntry[]): void {
-    this._extendWithSelectionId(entries);
-    this.entries.push(...entries);
+  public addEntries(entries: KalturaMediaEntry[]): void {
+    this.entries.push(...this._extendWithSelectionId(entries));
     this.entriesTotalCount = this.entries.length;
     this._setDirty();
   }

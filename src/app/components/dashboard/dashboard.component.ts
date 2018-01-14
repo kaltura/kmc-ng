@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { AppShellService } from "app-shared/kmc-shell";
+import { AppAuthentication, AppAuthStatusTypes, AppShellService } from "app-shared/kmc-shell";
 
 import * as $ from 'jquery';
 
@@ -12,15 +12,20 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('appMenu',true) private _appMenuRef : any;
   private onResize : () => void;
 
-  constructor(private appShellService : AppShellService) {
-    this.onResize = this._resizeContent.bind(this);
+
+  constructor(private appShellService : AppShellService, private appAuthentication: AppAuthentication) {
+      this.onResize = this._resizeContent.bind(this);
+
+
   }
 
   private _resizeContent() : void
   {
     const $window = $(window);
-    const $appMenu = $(this._appMenuRef.nativeElement);
-    this.appShellService.setContentAreaHeight($window.outerHeight()-$appMenu.outerHeight());
+    if (this._appMenuRef) {
+        const $appMenu = $(this._appMenuRef.nativeElement);
+        this.appShellService.setContentAreaHeight($window.outerHeight() - $appMenu.outerHeight());
+    }
   }
 
   ngAfterViewInit()
