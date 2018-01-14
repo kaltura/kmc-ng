@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { PlaylistContentWidget } from './playlist-content-widget.service';
+import { PlaylistContentMediaEntry, PlaylistContentWidget } from './playlist-content-widget.service';
 
 @Component({
   selector: 'kPlaylistContent',
@@ -27,7 +27,7 @@ export class PlaylistContentComponent implements OnInit, OnDestroy {
     this._selectedEntries = [];
   }
 
-  public _onActionSelected(event: { action: string, entry: KalturaMediaEntry }): void {
+  public _onActionSelected(event: { action: string, entry: PlaylistContentMediaEntry }): void {
     this._clearSelection();
     this._widgetService.onActionSelected(event);
   }
@@ -37,7 +37,7 @@ export class PlaylistContentComponent implements OnInit, OnDestroy {
     this._widgetService.onSortChanged(event);
   }
 
-  public _deleteSelected(selectedEntries: KalturaMediaEntry[]): void {
+  public _deleteSelected(selectedEntries: PlaylistContentMediaEntry[]): void {
     this._clearSelection();
     this._widgetService.deleteSelectedEntries(selectedEntries);
   }
