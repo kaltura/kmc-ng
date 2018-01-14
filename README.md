@@ -11,13 +11,13 @@ In the coming months we plan to complete adding all the features we have in the 
 
 The following list contains some major features in our roadmap:
 
-[ ] upgrade to Angular 5
-[ ] add on-prem server configuration provided at run-time
-[ ] embed permission support across views
-[ ] add multi language translations
-[ ] add missing views (like settings > custom data, content > syndication etc)
-[ ] add missing tools like thumbnail grab from video
-[ ] add external app integration (like studio, analytics, usage dashboard, entry Clip&Trim etc)
+[] upgrade to Angular 5
+[] add on-prem server configuration provided at run-time
+[] embed permission support across views
+[] add multi language translations
+[] add missing views (like settings > custom data, content > syndication etc)
+[] add missing tools like thumbnail grab from video
+[] add external app integration (like studio, analytics, usage dashboard, entry Clip&Trim etc)
 
 
 
