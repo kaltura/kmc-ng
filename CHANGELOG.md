@@ -1,3 +1,27 @@
+<a name="3.5.0"></a>
+# [3.5.0](https://github.com/kaltura/kmc-ng/compare/v3.4.0...v3.5.0) (2018-01-14)
+
+
+### Bug Fixes
+
+* add bulk entries to new playlist validation issue ([42d25a0](https://github.com/kaltura/kmc-ng/commit/42d25a0))
+* aggregate 50 items per bulk request ([3bce5bd](https://github.com/kaltura/kmc-ng/commit/3bce5bd))
+* category entitlement tooltips, category change owner ID validation and tooltips ([4fc552e](https://github.com/kaltura/kmc-ng/commit/4fc552e))
+* **content-playlists:** fix playlist name validation style and logic, allow adding the same entry multiple times to the playlist, block interface during playlist save operation ([457bb4a](https://github.com/kaltura/kmc-ng/commit/457bb4a))
+* **content/categories:** refine filters clear custom metadata when clicking on clear all ([991cb68](https://github.com/kaltura/kmc-ng/commit/991cb68))
+* **content/categories:** show tag filter of type categories ([2f69d41](https://github.com/kaltura/kmc-ng/commit/2f69d41))
+* **content/categories:** update additional filters list root nodes when clearing filters ([96039fd](https://github.com/kaltura/kmc-ng/commit/96039fd))
+* fix refresh button positioning across the app ([4be0f0e](https://github.com/kaltura/kmc-ng/commit/4be0f0e))
+* layout fixes for playlists on Safari + user settings popup positioning ([#339](https://github.com/kaltura/kmc-ng/issues/339)) ([5160dcd](https://github.com/kaltura/kmc-ng/commit/5160dcd))
+* remove tooltip for upload monitor panel ([da4221f](https://github.com/kaltura/kmc-ng/commit/da4221f))
+
+
+### Features
+
+* **content/categories:** inherit category entitlement users of parent category ([1cc2844](https://github.com/kaltura/kmc-ng/commit/1cc2844))
+
+
+
 <a name="3.4.0"></a>
 # [3.4.0](https://github.com/kaltura/kmc-ng/compare/v3.3.0...v3.4.0) (2018-01-09)
 
