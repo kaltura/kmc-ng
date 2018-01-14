@@ -35,14 +35,16 @@
     "postinstall": "node ./scripts/fix-tsconfig-paths.js",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "kaltura-libs:upgrade": "npm i @kaltura-ng/mc-{theme,shared}@latest @kaltura-ng/kaltura-{common,logger,primeng-ui,ui}@latest",
-    "checkout-standalone": "kws bookmark standalone",
     "compodoc": "./node_modules/.bin/compodoc -p tsconfig.json --disableGraph --disablePrivateOrInternalSupport --toggleMenuItems",
     "release:prepare": "kws release --publish=false",
-    "release:publish": "kws release --prepare=false"
+    "release:publish": "kws release --prepare=false",
+    "standalone": "kws bookmark standalone",
+    "standalone:update": "npm run kws -- bookmark standalone --update && git commit -am 'chore: update standalone commit' && git push"
   },
   "dependencies": {
     "@angular/animations": "^4.0.0",
