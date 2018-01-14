@@ -1,5 +1,5 @@
 export const environment = {
-    "appVersion": "3.3.0", // will be changed by release script
+    "appVersion": "3.5.0", // will be changed by release script
     "shell": {
         "browser": {
             "errorRoute": "/error",
@@ -177,7 +177,7 @@ export const environment = {
         },
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
-            "bulkActionsLimit": 2
+            "bulkActionsLimit": 50
         },
         "createLive": {
           "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
@@ -212,7 +212,8 @@ export const environment = {
         "MAX_CATEGORIES": 10000,
         "categoriesFilters": {
             "maxChildrenToShow": 500
-        }
+        },
+        "SUB_CATEGORIES_LIMIT": 50
     },
     "rolesShared": {
         "MAX_ROLES": 10000,

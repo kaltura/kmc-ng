@@ -22,6 +22,7 @@ import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppea
 import {AppearInListType} from './components/bulk-change-category-listing/bulk-change-category-listing.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {CategoriesUtilsService} from "../../categories-utils.service";
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -40,14 +41,16 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
 
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
-    private _bulkAddTagsService: CategoriesBulkAddTagsService,
-    private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
-    private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
-    private _bulkDeleteService: CategoriesBulkDeleteService,
-    private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
-    private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
-    private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService) {
+  constructor(private _appLocalization: AppLocalization,
+              private _browserService: BrowserService,
+              private _bulkAddTagsService: CategoriesBulkAddTagsService,
+              private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
+              private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
+              private _bulkDeleteService: CategoriesBulkDeleteService,
+              private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
+              private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
+              private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService,
+              private _categoriesUtilsService: CategoriesUtilsService) {
   }
 
   ngOnInit() {
@@ -62,21 +65,29 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     return [
       {
         label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
-          { label: this._appLocalization.get('applications.content.categories.bActions.addTags'), command: (event) => { this.openBulkActionWindow('addTags', 500, 500) } },
-          { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'), command: (event) => { this.openBulkActionWindow('removeTags', 500, 500) } }]
+          { label: this._appLocalization.get('applications.content.categories.bActions.addTags'),
+            command: () => { this.openBulkActionWindow('addTags', 500, 500) } },
+          { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'),
+            command: () => { this.openBulkActionWindow('removeTags', 500, 500) } }]
       },
-      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'), command: (event) => { this._moveCategories() } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'), command: (event) => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'), command: (event) => { this.openBulkActionWindow('changeOwner', 500, 280) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.delete'), command: (event) => { this.deleteCategories() } }
+      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'),
+        command: () => { this._moveCategories() } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'),
+        command: () => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'),
+        command: () => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'),
+        command: () => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'),
+        command: () => { this.openBulkActionWindow('changeOwner', 500, 280) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.delete'),
+        command: () => { this.deleteCategories() } }
     ];
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
 
-    if (this.hasEditWarnings()) {
+    if (this._categoriesUtilsService.hasEditWarnings(this.selectedCategories)) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.categories.editCategory'),
@@ -153,40 +164,22 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteCategories(): void {
-    let message = '';
-    let deleteMessage = '';
 
-    if (this.hasEditWarnings()) {
-      deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
-    }
-
-    let isSubCategoriesExist = false;
-    this.selectedCategories.forEach(obj => {
-      if (obj.directSubCategoriesCount && obj.directSubCategoriesCount > 0) { isSubCategoriesExist = true; }
-    });
-    if (isSubCategoriesExist) {
-      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
-    }
-    else {
-      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultiple') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteSingle'));
-    }
-
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.content.categories.deleteCategories'),
-        message: message,
-        accept: () => {
+    this._categoriesUtilsService.confirmDeleteMultiple(this.selectedCategories)
+      .cancelOnDestroy(this)
+      .subscribe(result => {
+        if (result.confirmed) {
           setTimeout(() => {
             this.executeService(this._bulkDeleteService, {}, true, false);
             // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
           }, 0);
         }
-      }
-    );
+      }, error => {
+        this._browserService.setAppStatus({
+          errorMessage: this._appLocalization
+            .get('applications.content.categoryDetails.subcategories.errors.categoriesCouldNotBeDeleted')
+        });
+      });
   }
 
   private _moveCategories(): void {
@@ -216,6 +209,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     return editWarningsExists;
   }
 
+
   private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
     this._bulkAction = '';
 
@@ -230,7 +224,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           this.onBulkChange.emit({ reload: reloadCategories });
         },
         error => {
-          this._browserService.setAppStatus({ errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
+          this._browserService.setAppStatus({ errorMessage: this._appLocalization.get('applications.content.bulkActions.errorCategories') });
           this.onBulkChange.emit({ reload: reloadCategories });
         }
       );

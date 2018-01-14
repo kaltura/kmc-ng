@@ -24,7 +24,7 @@ export const routing: Route[] = [
 					{ path: '', redirectTo: 'metadata', pathMatch: 'full' },
 					{ path: 'metadata', component: CategoryMetadataComponent, data: { sectionKey: CategoryWidgetKeys.Metadata } },
 					{ path: 'entitlements', component: CategoryEntitlementsComponent, data: { sectionKey: CategoryWidgetKeys.Entitlements } },
-					{ path: 'subcategories', component: CategorySubcategoriesComponent, data: { CategoryWidgetKeys: CategoryWidgetKeys.SubCategories } },
+					{ path: 'subcategories', component: CategorySubcategoriesComponent, data: { sectionKey: CategoryWidgetKeys.SubCategories } },
 				]
 			}
 		]

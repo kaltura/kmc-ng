@@ -8,14 +8,11 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { PlaylistExecuteAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteAction';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
 import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBaseEntryFilter';
-import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -23,110 +20,112 @@ export interface LoadEntriesStatus {
 }
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
-  selectionId?: string;
+  selectionId: string;
 }
 
 @Injectable()
 export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
-  private _state = new BehaviorSubject<LoadEntriesStatus>({ loading: false, error: false });
+
   private _selectionIdGenerator = new FriendlyHashId();
 
-  public isNewPlaylist = false;
   public entries: PlaylistContentMediaEntry[] = [];
   public entriesTotalCount = 0;
   public entriesDuration = 0;
-  public state$ = this._state.asObservable();
+
 
   constructor(private _kalturaClient: KalturaClient) {
     super(PlaylistWidgetKeys.Content);
   }
 
   ngOnDestroy() {
-    this._state.complete();
   }
 
-  protected onValidate(): Observable<{ isValid: boolean }> {
-    return Observable.of({
-      isValid: !!this.entries.length
-    });
+  protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
+      if (this.wasActivated) {
+          return Observable.of({
+              isValid: !!this.entries.length
+          });
+      } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
+          return Observable.of({isValid: true});
+      } else {
+          return Observable.of({isValid: false});
+      }
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
-    data.playlistContent = this.entries.map(({ id }) => id).join(',');
+      if (this.wasActivated)
+      {
+          data.playlistContent = this.entries.map(({ id }) => id).join(',');
+      } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
+          data.playlistContent = this.data.playlistContent
+      }else {
+          // shouldn't reach this part since 'onValidate' should prevent execution of this function
+          // if data is invalid
+          throw new Error('invalid scenario');
+      }
   }
 
   /**
    * Do some cleanups if needed once the section is removed
    */
   protected onReset(): void {
-  }
-
-  protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
-    this.isNewPlaylist = !this.data.id;
-
-    if (this.isNewPlaylist && !this.data.playlistContent) {
       this.entries = [];
       this.entriesTotalCount = 0;
       this.entriesDuration = 0;
-      return Observable.of({ failed: false });
-    }
+  }
 
+  protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
-    this._state.next({ loading: true, error: false });
 
-    const request = this._getEntriesRequest();
-
-    return this._kalturaClient.request(request)
+    return this._getEntriesRequest()
       .cancelOnDestroy(this, this.widgetReset$)
-      .map(response => {
-        if (request instanceof BaseEntryListAction) {
-          return (<KalturaBaseEntryListResponse>response).objects || [];
-        }
-        return response;
-      })
       .map((entries: KalturaMediaEntry[]) => {
-        this._extendWithSelectionId(entries);
-        this.entries = entries;
+        this.entries = this._extendWithSelectionId(entries);
         this.entriesTotalCount = entries.length;
         this.entriesDuration = this.entries.reduce((acc, val) => acc + val.duration, 0);
         super._hideLoader();
-        this._state.next({ loading: false, error: false });
         return { failed: false };
       })
       .catch(error => {
         super._hideLoader();
         super._showActivationError(error.message);
-        this._state.next({ loading: false, error: true });
         return Observable.of({ failed: true, error });
       });
   }
 
-  private _getEntriesRequest(): KalturaRequest<KalturaBaseEntry[] | KalturaBaseEntryListResponse> {
-    let request;
-    const responseProfile = new KalturaDetachedResponseProfile({
-      type: KalturaResponseProfileType.includeFields,
-      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
-    });
+  private _getEntriesRequest(): Observable<KalturaBaseEntry[]> {
 
-    if (this.data.playlistContent) {
-      request = new BaseEntryListAction({
-        filter: new KalturaBaseEntryFilter({ idIn: this.data.playlistContent }),
-        responseProfile: responseProfile
+      const responseProfile = new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
       });
-    } else {
-      request = new PlaylistExecuteAction({
-        id: this.data.id,
-        acceptedTypes: [KalturaMediaEntry],
-        responseProfile: responseProfile
-      });
-    }
 
-    return request;
+      if (this.isNewData) {
+          if (this.data.playlistContent) {
+              return this._kalturaClient.request(new BaseEntryListAction({
+                  filter: new KalturaBaseEntryFilter({idIn: this.data.playlistContent}),
+                  responseProfile: responseProfile
+              }))
+                  .map(response => {
+                      return response.objects;
+                  });
+          }else {
+              return Observable.of([]);
+          }
+      } else {
+          return this._kalturaClient.request(new PlaylistExecuteAction({
+              id: this.data.id,
+              acceptedTypes: [KalturaMediaEntry],
+              responseProfile: responseProfile
+          }));
+      }
   }
 
-  private _extendWithSelectionId(entries: PlaylistContentMediaEntry[]): void {
-    entries.forEach(entry => {
-      entry.selectionId = this._selectionIdGenerator.generateUnique(entries.map(item => item.selectionId));
+  private _extendWithSelectionId(entries: KalturaMediaEntry[]): PlaylistContentMediaEntry[] {
+    return entries.map(entry => {
+        (<PlaylistContentMediaEntry>entry).selectionId = this._selectionIdGenerator.generateUnique(this.entries.map(item => item.selectionId));
+
+        return (<PlaylistContentMediaEntry>entry);
     });
   }
 
@@ -200,9 +199,8 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
-  public addEntries(entries: PlaylistContentMediaEntry[]): void {
-    this._extendWithSelectionId(entries);
-    this.entries.push(...entries);
+  public addEntries(entries: KalturaMediaEntry[]): void {
+    this.entries.push(...this._extendWithSelectionId(entries));
     this.entriesTotalCount = this.entries.length;
     this._setDirty();
   }

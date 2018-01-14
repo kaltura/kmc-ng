@@ -12,7 +12,7 @@ export interface TagItem {
   tooltip: string
 }
 
-const listTypes: Array<keyof CategoriesFilters> = ['privacyTypes', 'categoryListing', 'contributionPolicy', 'endUserPermissions'];
+const listTypes: Array<keyof CategoriesFilters> = ['privacyTypes', 'categoryListing', 'contributionPolicy', 'endUserPermissions', 'categories'];
 
 @Component({
   selector: 'kCategoriesListTags',
@@ -182,7 +182,7 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
           type: filterName,
           value: item.value,
           label: item.label,
-          tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item.label})
+          tooltip: item.tooltip || this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item.label})
         });
       });
     }
@@ -225,7 +225,7 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
         });
 
         diff.added.forEach(item => {
-          const tooltip = item.payload && item.payload.tooltip ? item.payload.tooltip : item.label;
+          const tooltip = item.tooltip || item.label;
           this._filterTags.push({
             type: `customMetadata|${listId}`,
             value: item.value,

@@ -67,7 +67,8 @@
 				</div>
 				<div class="kRow" *ngIf="_widgetService._showDVRWindow">
 					<span class="kLabels">{{'applications.content.entryDetails.live.dvrWindow' | translate}}</span>
-					<span>{{_widgetService.data?.dvrWindow | kTime}} {{'applications.content.entryDetails.live.hours' | translate}}</span>
+					<span *ngIf="_dvrWindowAvailable">{{_widgetService.data?.dvrWindow | kTime}} {{'applications.content.entryDetails.live.hours' | translate}}</span>
+					<span *ngIf="!_dvrWindowAvailable">{{'app.common.n_a' | translate}}</span>
 				</div>
 				<!--div class="kRow" *ngIf="_widgetService._liveType === 'kaltura'">
 					<span class="kLabels">{{'applications.content.entryDetails.live.activeRec' | translate}}</span>

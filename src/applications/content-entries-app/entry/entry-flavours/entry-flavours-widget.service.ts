@@ -1,33 +1,34 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntryWidgetKeys } from '../entry-widget-keys';
-import { Observable } from 'rxjs/Observable';
-import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
-import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
-import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
-import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
-import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { KalturaWidevineFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaWidevineFlavorAsset';
-import { FlavorAssetDeleteAction } from 'kaltura-ngx-client/api/types/FlavorAssetDeleteAction';
-import { FlavorAssetConvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetConvertAction';
-import { FlavorAssetReconvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetReconvertAction';
-import { FlavorAssetSetContentAction } from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
-import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
-import { KalturaUrlResource } from 'kaltura-ngx-client/api/types/KalturaUrlResource';
-import { KalturaContentResource } from 'kaltura-ngx-client/api/types/KalturaContentResource';
-import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
-import { environment } from 'app-environment';
-import { Flavor } from './flavor';
-import { FlavorAssetGetUrlAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetUrlAction';
-import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
-import { EntryWidget } from '../entry-widget';
-import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {EntryWidgetKeys} from '../entry-widget-keys';
+import {Observable} from 'rxjs/Observable';
+import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
+import {AppLocalization, TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaFlavorAsset} from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
+import {KalturaFlavorAssetWithParams} from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
+import {FlavorAssetGetFlavorAssetsWithParamsAction} from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
+import {KalturaFlavorAssetStatus} from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
+import {KalturaLiveParams} from 'kaltura-ngx-client/api/types/KalturaLiveParams';
+import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import {KalturaWidevineFlavorAsset} from 'kaltura-ngx-client/api/types/KalturaWidevineFlavorAsset';
+import {FlavorAssetDeleteAction} from 'kaltura-ngx-client/api/types/FlavorAssetDeleteAction';
+import {FlavorAssetConvertAction} from 'kaltura-ngx-client/api/types/FlavorAssetConvertAction';
+import {FlavorAssetReconvertAction} from 'kaltura-ngx-client/api/types/FlavorAssetReconvertAction';
+import {FlavorAssetSetContentAction} from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
+import {FlavorAssetAddAction} from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
+import {KalturaUrlResource} from 'kaltura-ngx-client/api/types/KalturaUrlResource';
+import {KalturaContentResource} from 'kaltura-ngx-client/api/types/KalturaContentResource';
+import {UploadManagement} from '@kaltura-ng/kaltura-common/upload-management';
+import {Flavor} from './flavor';
+import {FlavorAssetGetUrlAction} from 'kaltura-ngx-client/api/types/FlavorAssetGetUrlAction';
+import {KalturaUploadedFileTokenResource} from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
+import {EntryWidget} from '../entry-widget';
+import {NewEntryFlavourFile} from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
@@ -41,7 +42,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     public sourceAvailabale: boolean = false;
 
     constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
-                private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement: UploadManagement) {
+                private _appAuthentication: AppAuthentication, private _browserService: BrowserService,
+                private _uploadManagement: UploadManagement, private _appEvents: AppEventsService) {
         super(EntryWidgetKeys.Flavours);
     }
 
@@ -63,7 +65,6 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         super._showLoader();
 
         return this._loadFlavors()
-            .cancelOnDestroy(this, this.widgetReset$)
             .map(() => {
                 super._hideLoader();
                 return { failed: false };
@@ -435,6 +436,10 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .cancelOnDestroy(this, this.widgetReset$)
             .subscribe(() => {
                     super._hideLoader();
+                    const entryId = this.data ? this.data.id : null;
+                    if (entryId) {
+                        this._appEvents.publish(new PreviewMetadataChangedEvent(entryId));
+                    }
                 },
                 (error) => {
                     super._hideLoader();

@@ -1,101 +1,28 @@
 @import 'app-theme/_variables.scss';
 
-.kCategoryDetails {
-	font-size: 15px;
-	background-color: $appBkgColor;
-	height: $contentArea;
-	padding-top: 30px;
-	width: 100%;
-	button{
-		cursor: pointer;
-	}
-	.kCategoryDetailsWrapper{
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		.kCategoryDetailsHeader{
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			.kBackToCategoriesBtn{
-				position: absolute;
-				margin-top: 2px;
-				margin-left: -56px;
-				border: none;
-				outline: none;
-				background-color: $appBkgColor;
-				color: $kGrayscale3;
-				height: 20px;
-				font-size: 16px;
-				&:active{
-					box-shadow: none;
-				}
-				&:hover{
-					color: $kPrimary;
-				}
-			}
-			.kCategoryTitle{
-				color: $kGrayscale1;
-				font-size: 24px;
-				font-weight: 700;
-				margin-right: 100px;
-			}
-			.kSaveBtn{
-				margin-left: auto;
-				width: 100px;
-				height: 34px;
-				font-weight: 400;
-			}
-			.kNavigationBtn{
-				margin-left: auto;
-				width: 40px;
-				height: 34px;
-				margin-left: 12px;
-				font-weight: 400;
-			}
-		}
-		.kCategoryDetailsPreview{
-				margin-bottom: 24px;
-				margin-top: 14px;
-				color: #999999;
-			}
-		.kCategoryDetailsMain{
-			display: flex;
-			flex-direction: row;
-			height: 100%;
-			min-height: 0;
-			.kCategoryDetailsSections{
-				overflow-y: auto;
-				width: 176px;
-				background-color: #ffffff;
-				border-top-left-radius: 3px;
-				flex: 0 0 auto;
-			}
-			.kCategoryDetailsContent{
-				overflow-y: hidden;
-				background-color: #ffffff;
-				border-top-right-radius: 3px;
-				flex: 1 1 auto;
-				margin-left: 28px;
-				padding: 8px;
-			}
-		}
-	}
-	.kSpacer{
-		display: block;
-		height: 40px;
-	}
+.kSectionsWrapper{
+  min-width: 178px;
+  border: 0px solid white;
+  border-top-left-radius: 3px;
+  flex: 0 0 auto;
 }
 :host /deep/ span.ui-button-icon-left.fa.kIconarrow_forward, :host /deep/ span.ui-button-icon-left.fa.kIconarrow_backward{
-	margin-left: -.5em;
+  margin-left: -.5em;
 }
+
 :host /deep/ .stickyHeader{
-	background-color: white;
-	height: 55px;
-	z-index: 500;
-	left: 0px;
-	right: 0px;
-	padding-top: 11px;
-	box-sizing: border-box;
-	box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
+  background-color: white;
+  height: auto;
+  z-index: 500;
+  left: 0px;
+  right: 0px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
+  width: 100% !important;
+}
+
+.kTitle {
+  margin-left: 0 !important;
 }

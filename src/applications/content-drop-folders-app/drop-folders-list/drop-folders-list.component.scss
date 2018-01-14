@@ -71,7 +71,7 @@
     font-size: 24px;
     border: none;
     min-width: inherit;
-    margin-right: 16px;
+    margin-right: 8px;
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
@@ -257,7 +257,7 @@
   margin-left: -.5em;
 }
 
-/deep/ .kActionsMenu .ui-menuitem-text {
+:host /deep/ .kActionsMenu .ui-menuitem-text {
   color: $kDandger;
 }
 
