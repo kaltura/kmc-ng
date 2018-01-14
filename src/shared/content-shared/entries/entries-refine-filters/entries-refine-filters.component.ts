@@ -55,6 +55,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
+    @Input() enforcedFilters: {
+        [P in keyof EntriesFilters]: EntriesFilters[P];
+        } = null;
+
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
 
@@ -224,7 +228,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
         });
     }
 
-    _buildComponentLists(groups: RefineGroup[]):void {
+    _buildComponentLists(groups: RefineGroup[]): void {
         this._primeListsMap = {};
         this._primeListsGroups = [];
 
@@ -238,29 +242,32 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                 if (list.items.length > 0) {
                     const primeList = {items: [], selections: [], group: list.group};
 
-                    this._primeListsMap[list.name] = primeList;
-                    filtersGroup.lists.push(primeList);
+                    const shouldAllowFilter = (!this.enforcedFilters || !this.enforcedFilters[list.name]);
 
-                    const listRootNode: PrimeListItem = {
-                        label: list.label,
-                        value: null,
-                        listName: list.name,
-                        parent: null,
-                        children: []
-                    };
+                    if (shouldAllowFilter) {
+                        this._primeListsMap[list.name] = primeList;
+                        filtersGroup.lists.push(primeList);
 
-                    list.items.forEach(item =>
-                    {
-                        listRootNode.children.push({
-                            label: item.label,
-                            value: item.value,
-                            children: [],
-                            listName: <any>list.name,
-                            parent: listRootNode
-                        })
-                    });
+                        const listRootNode: PrimeListItem = {
+                            label: list.label,
+                            value: null,
+                            listName: list.name,
+                            parent: null,
+                            children: []
+                        };
 
-                    primeList.items.push(listRootNode);
+                        list.items.forEach(item => {
+                            listRootNode.children.push({
+                                label: item.label,
+                                value: item.value,
+                                children: [],
+                                listName: <any>list.name,
+                                parent: listRootNode
+                            })
+                        });
+
+                        primeList.items.push(listRootNode);
+                    }
                 }
             });
 
