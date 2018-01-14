@@ -29,7 +29,12 @@ export class AppMenuComponent implements OnInit, OnDestroy{
             }
         });
         this._userContext = userAuthentication.appUser;
+        this.menuConfig = this.appMenuService.getMenuConfig();
 
+        if (router.navigated)
+        {
+            this.setSelectedRoute(router.routerState.snapshot.url);
+        }
     }
 
     ngOnInit() {
@@ -41,7 +46,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     setSelectedRoute(path) {
         this.menuConfig = this.appMenuService.getMenuConfig();
-        let item = R.find(R.propEq('routePath', path.split("/")[1]))(this.menuConfig);
         if (item) {
             this.selectedMenuItem = item;
             this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
