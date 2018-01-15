@@ -12,16 +12,16 @@ import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUploa
 import { BulkUploadAbortAction } from 'kaltura-ngx-client/api/types/BulkUploadAbortAction';
 import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters';
-import { ListAdapter, ListType } from '@kaltura-ng/mc-shared/filters';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters';
+import {
+  DatesRangeAdapter, DatesRangeType, FiltersStoreBase, ListAdapter, ListType, NumberTypeAdapter,
+  TypeAdaptersMapping
+} from '@kaltura-ng/mc-shared/filters';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters';
-import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters';
+import { BulkUploadService } from 'app-shared/kmc-shell/bulk-upload/bulk-upload.service';
+import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client/api/types/KalturaBulkUploadListResponse';
 
 const localStoragePageSizeKey = 'bulklog.list.pageSize';
 
@@ -55,6 +55,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
+              private _bulkUploadService: BulkUploadService,
               _logger: KalturaLogger) {
     super(_logger);
     this._prepare();
@@ -68,7 +69,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   private _prepare(): void {
     if (!this._isReady) {
       this._isReady = true;
-      
+
       const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
         if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
             this.filter({
@@ -113,6 +114,15 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     this._bulkLog.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .cancelOnDestroy(this)
+      .map(response => {
+        const { objects, totalCount } = response;
+        const updatedNewBulkUploads = this._bulkUploadService.getNewBulkUploads(objects);
+
+        return {
+          objects: [...updatedNewBulkUploads, ...objects],
+          totalCount
+        }
+      })
       .subscribe(
         response => {
           this._querySubscription = null;
@@ -133,7 +143,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
   }
 
-  private _buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
+  private _buildQueryRequest(): Observable<KalturaBulkUploadListResponse> {
     try {
 
       // create request items

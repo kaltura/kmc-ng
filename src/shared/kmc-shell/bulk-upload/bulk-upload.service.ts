@@ -21,6 +21,8 @@ export enum BulkUploadTypes {
 
 @Injectable()
 export class BulkUploadService {
+  private _newBulkUploads: KalturaBulkUpload[] = [];
+
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
@@ -80,6 +82,16 @@ export class BulkUploadService {
     const actions = this._getAction(Array.from(files), type);
 
     return Observable.from(actions)
-      .flatMap(action => this._kalturaServerClient.request(action));
+      .flatMap(action => this._kalturaServerClient.request(action))
+      .do(response => {
+        this._newBulkUploads = [...this._newBulkUploads, response];
+      });
+  }
+
+  public getNewBulkUploads(bulkUploads: KalturaBulkUpload[]): KalturaBulkUpload[] {
+    const ids = bulkUploads.map(({ id }) => id);
+    this._newBulkUploads = this._newBulkUploads.filter(item => !ids.includes(item.id));
+
+    return this._newBulkUploads;
   }
 }
