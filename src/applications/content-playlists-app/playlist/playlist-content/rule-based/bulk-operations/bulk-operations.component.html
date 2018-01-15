@@ -15,15 +15,17 @@
                   icon="kIcondropdown_arrow_bottom"
                   (click)="_moveRules('down')"></button>
           <button pButton class="kButtonDanger kBulkDeleteBtn"
-                  label="{{'applications.content.playlists.remove' | translate}}"
+                  [label]="'applications.content.playlists.remove' | translate"
                   (click)="deleteRules.emit(selectedRules)"></button>
         </div>
         <ng-template #addRuleWrap>
           <button
             pButton
             type="button"
-            label="{{'applications.content.playlistDetails.content.addRule' | translate}}"
-            class="kButtonBranded kAddRuleBtn"
+            icon="kIconplus"
+            iconPos="left"
+            [label]="'applications.content.playlistDetails.content.addRule' | translate"
+            class="kButtonDefault kAddRuleBtn"
             (click)="addRule.emit()">
           </button>
         </ng-template>
