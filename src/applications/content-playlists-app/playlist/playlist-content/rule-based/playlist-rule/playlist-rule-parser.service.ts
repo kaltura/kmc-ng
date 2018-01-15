@@ -61,7 +61,7 @@ export class PlaylistRuleParserService implements OnDestroy {
   * 5) Create customMetadata: GroupedListType
   *    [{value, label, parentId, tooltip}, ...] => {parentId: [value, label, tooltip}], ...}
   */
-  private _mapCustomMetadata(advancedSearch: KalturaMetadataSearchItem): Observable<GroupedListType> {
+  private _mapCustomMetadata(advancedSearch: KalturaSearchOperator): Observable<GroupedListType> {
     // Step 1 handler
     const assignMetadataProfileId = (obj, metadataProfileId = null) => {
       if (obj && obj.items) {
@@ -191,7 +191,7 @@ export class PlaylistRuleParserService implements OnDestroy {
     const sortBy = rule.orderBy ? rule.orderBy.toString().substr(1) : null;
     const sortDirection = sortBy ? getSortDirection(rule.orderBy.toString().charAt(0)) : null;
 
-    return this._mapCustomMetadata(<KalturaMetadataSearchItem>originalFilter.advancedSearch)
+    return this._mapCustomMetadata(<KalturaSearchOperator>originalFilter.advancedSearch)
       .map(customMetadata => {
         return {
           customMetadata: customMetadata,
