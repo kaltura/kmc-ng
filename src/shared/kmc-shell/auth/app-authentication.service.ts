@@ -23,7 +23,7 @@ import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminU
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { BrowserService } from '../providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-
+import { environment } from 'app-config/index';
 
 
 export enum AppAuthStatusTypes {
@@ -133,29 +133,33 @@ export class AppAuthentication {
     const permissionFilter = new KalturaPermissionFilter();
     permissionFilter.nameEqual = 'FEATURE_DISABLE_REMEMBER_ME';
 
-
+    const partnerId = environment.core.kaltura.limitToParentId || undefined;
     const request = new KalturaMultiRequest(
       new UserLoginByLoginIdAction(
         {
           loginId,
           password,
+          partnerId,
           expiry: expiry,
           privileges: privileges
         }),
-      new UserGetByLoginIdAction({loginId, ks: '{1:result}'}),
+      new UserGetByLoginIdAction({loginId, partnerId,
+          ks: '{1:result}'}),
       new PermissionListAction(
         {
           filter: permissionFilter,
-          ks: '{1:result}'
+            partnerId,
+            ks: '{1:result}'
         }
       ),
       new PartnerGetInfoAction({
-        ks: '{1:result}'
+          partnerId,
+          ks: '{1:result}'
       })
         .setDependency(['id', 1, 'partnerId'])
       ,
-
       <any>new PermissionGetCurrentPermissionsAction({
+          partnerId,
         ks: '{1:result}'
       })
     );
@@ -215,26 +219,32 @@ export class AppAuthentication {
   public loginAutomatically(): Observable<boolean> {
     return Observable.create((observer: any) => {
       if (this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedOut) {
-        const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
+          const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
         if (loginToken) {
-          const requests = [
+            const partnerId = environment.core.kaltura.limitToParentId || undefined;
+
+            const requests = [
             new UserGetAction({
-              ks: loginToken
+              ks: loginToken,
+                partnerId
             }),
             new PermissionListAction(
               {
                 ks: loginToken,
+                partnerId,
                 filter: new KalturaPermissionFilter({
                   nameEqual: 'FEATURE_DISABLE_REMEMBER_ME'
                 })
               }
             ),
             new PartnerGetInfoAction({
-              ks: loginToken
+              ks: loginToken,
+                partnerId
             })
               .setDependency(['id', 0, 'partnerId']),
             <any>new PermissionGetCurrentPermissionsAction({
-              ks: loginToken // we must set the ks manually, only upon successful result we will update the global module
+                partnerId,
+                ks: loginToken // we must set the ks manually, only upon successful result we will update the global module
             })
           ];
 

@@ -15,6 +15,7 @@ export const environment = {
             "cdnUrl": "http://cdnapi.kaltura.com",
             "legacyKmcUrl": "kmc.kaltura.com",
             "expiry": "86400",
+            "limitToParentId" : null,
             "privileges": "disableentitlement",
             "previewUIConf": "38524931",
             "liveAnalyticsVersion": "v2.6",
