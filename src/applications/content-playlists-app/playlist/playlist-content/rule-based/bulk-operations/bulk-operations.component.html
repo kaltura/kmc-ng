@@ -28,7 +28,7 @@
           </button>
         </ng-template>
         <span class="kSelectedRulesNum" *ngIf="rulesTotalCount">
-          {{'applications.content.playlistDetails.content.rules'| translate: [rulesTotalCount]}}
+          {{'applications.content.playlistDetails.content.entriesInRules'| translate: [entriesTotalCount, rulesTotalCount]}}
       </span>
         <div *ngIf="selectedRules.length" class="kSelected">
         <span class="kSelectedRulesLabel">

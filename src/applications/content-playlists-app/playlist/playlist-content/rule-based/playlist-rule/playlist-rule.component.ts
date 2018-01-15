@@ -7,6 +7,7 @@ import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/Kaltur
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { environment } from 'app-environment';
 import { PlaylistRuleParserService } from './playlist-rule-parser.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kPlaylistRule',
@@ -46,6 +47,7 @@ export class PlaylistRuleComponent {
 
   public _title: string;
   public _saveBtnLabel: string;
+  public _nameRequiredError = false;
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -81,21 +83,32 @@ export class PlaylistRuleComponent {
   public _orderBy = KalturaPlayableEntryOrderBy.playsDesc; // default
 
   constructor(public _entriesStore: EntriesStore,
+              private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _playlistRuleParser: PlaylistRuleParserService) {
     this._entriesStore.paginationCacheToken = 'entries-list';
   }
 
   public _save(): void {
-    this._playlistRuleParser.toPlaylistRule({
-      name: this._ruleName,
-      limit: this._resultsLimit,
-      orderBy: this._orderBy,
-      rule: this._rule
-    }).subscribe(updatedRule => {
-      this.onSaveRule.emit(updatedRule);
-      this.onClosePopupWidget.emit();
-    });
+    const ruleName = this._ruleName.trim();
+
+    if (ruleName) {
+      this._playlistRuleParser.toPlaylistRule({
+        name: this._ruleName,
+        limit: this._resultsLimit,
+        orderBy: this._orderBy,
+        rule: this._rule
+      }).subscribe(updatedRule => {
+        this.onSaveRule.emit(updatedRule);
+        this.onClosePopupWidget.emit();
+      });
+    } else {
+      this._nameRequiredError = true;
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.playlistDetails.errors.invalidInput'),
+        message: this._appLocalization.get('applications.content.playlistDetails.errors.nameRequired')
+      });
+    }
   }
 
   public _onOrderByChange(): void {

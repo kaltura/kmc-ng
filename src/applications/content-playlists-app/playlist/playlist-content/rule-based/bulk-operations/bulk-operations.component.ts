@@ -10,6 +10,7 @@ export class RuleBasedBulkOperationsComponent {
   @Input() selectedRules: PlaylistRule[] = [];
   @Input() rulesTotalCount = 0;
   @Input() duration = 0;
+  @Input() entriesTotalCount = 0;
 
   @Output() addRule = new EventEmitter<void>();
   @Output() clearSelection = new EventEmitter<void>();

@@ -21,6 +21,7 @@
                  id="ruleNameInput"
                  pInputText
                  class="kRuleNameInput"
+                 [class.hasError]="_nameRequiredError"
                  [(ngModel)]="_ruleName"
                  [placeholder]="'applications.content.entries.ruleNamePlaceholder' | translate">
           <div #resultsLimitBtn class="kResultsLimit">

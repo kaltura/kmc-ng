@@ -236,6 +236,7 @@ export class PlaylistRuleParserService implements OnDestroy {
       moderationStatusIn: '2,5,6,1', // default
       typeIn: '1,7', // default
       statusIn: '2,1', // default
+      name: payload.name,
       freeText: convertedFilters.freetext,
       limit: convertedFilters.limits || environment.modules.contentPlaylists.ruleBasedTotalResults,
       mediaTypeIn: convertedFilters.mediaTypes,
@@ -252,8 +253,6 @@ export class PlaylistRuleParserService implements OnDestroy {
     } else {
       originalFilter.categoriesIdsMatchOr = convertedFilters.categories;
     }
-
-    (<any>originalFilter).name = payload.name; // TODO [kmcng] add to the constructor after client lib update
 
     const entriesDuration = entries.reduce((duration, entry) => duration + entry.duration, 0) || 0;
     const entriesCount = entries.length || 0;

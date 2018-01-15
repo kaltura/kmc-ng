@@ -91,6 +91,10 @@
           width: 298px;
           margin-right: 16px;
           padding-left: 10px;
+
+          &.hasError {
+            border-color: $kDandger;
+          }
         }
 
         .kRuleNameLabel {

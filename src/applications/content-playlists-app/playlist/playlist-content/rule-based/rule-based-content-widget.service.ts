@@ -30,6 +30,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   public rules: PlaylistRule[] = [];
   public rulesTotalCount = 0;
   public entriesDuration = 0;
+  public entriesTotalCount = 0;
   public state$ = this._state.asObservable();
   public selectedRule$ = this._selectedRule.asObservable();
 
@@ -66,6 +67,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     this._state.next({ loading: true, error: false });
     this.rules = [];
     this.rulesTotalCount = 0;
+    this.entriesTotalCount = 0;
 
     const rules = this.data.filters.map(filter => {
       return new PlaylistExecuteFromFiltersAction({
@@ -81,10 +83,9 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     return this._kalturaClient.multiRequest(rules)
       .cancelOnDestroy(this, this.widgetReset$)
       .map(responses => {
-        responses.forEach(({result = []}, index) => {
+        responses.forEach(({ result = [] }, index) => {
           const filter = this.data.filters[index];
           const entriesDuration = result.reduce((duration, entry) => duration + entry.duration, 0);
-          this.entriesDuration += entriesDuration;
 
           this.rules.push({
             name: (<any>filter).name,
@@ -95,9 +96,8 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
             originalFilter: filter,
             entriesDuration
           });
-
-          this.rulesTotalCount = this.rules.length;
         });
+        this._updateDurationAndCount();
         super._hideLoader();
         this._state.next({ loading: false, error: false });
         return { failed: false };
@@ -114,13 +114,24 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     this.updateState({ isDirty: true });
   }
 
+  private _updateDurationAndCount(): void {
+    const { duration, count } = this.rules.reduce((acc, val) => {
+      return {
+        duration: acc.duration + val.entriesDuration,
+        count: acc.count + val.entriesCount
+      };
+    }, { duration: 0, count: 0 });
+    this.entriesDuration = duration;
+    this.entriesTotalCount = count;
+    this.rulesTotalCount = this.rules.length;
+  }
+
   private _deleteRuleFromPlaylist(rule: PlaylistRule): void {
     const ruleIndex = this.rules.indexOf(rule);
 
     if (ruleIndex !== -1) {
       this.rules.splice(ruleIndex, 1);
-      this.rulesTotalCount = this.rules.length;
-      this.entriesDuration = this.rules.reduce((duration, rule) => duration + rule.entriesDuration, 0);
+      this._updateDurationAndCount();
 
       this._setDirty();
     }
@@ -178,6 +189,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
       this.rules.push(rule);
     }
 
+    this._updateDurationAndCount();
     this._setDirty();
   }
 }
