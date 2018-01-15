@@ -363,7 +363,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                   newFilterValue = this._entriesStore.cloneFilter('customMetadata', {});
                   newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
-              }else {
+              }else if  {
                   newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
                   newFilterName = node.listName;
               }

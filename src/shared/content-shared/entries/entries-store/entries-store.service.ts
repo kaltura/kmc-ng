@@ -37,8 +37,8 @@ import {
     DatesRangeAdapter, DatesRangeType,
     StringTypeAdapter,
     ListAdapter, ListType,
-    NumberTypeAdapter,
-    GroupedListType, EnumTypeAdapter
+    NumberTypeAdapter, SetOfEnumsTypeAdapter,
+    GroupedListType
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
@@ -48,6 +48,7 @@ import {
     CategoriesModeAdapter, CategoriesModes,
     CategoriesModeType
 } from 'app-shared/content-shared/categories/categories-mode-type';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 
 export enum SortDirection {
     Desc,
@@ -64,7 +65,7 @@ export interface EntriesFilters {
     scheduledAt: DatesRangeType,
     mediaTypes: ListType,
     timeScheduling: ListType,
-    ingestionStatuses: ListType,
+    ingestionStatuses: Set<KalturaEntryStatus>,
     durations: ListType,
     originalClippedEntries: ListType,
     moderationStatuses: ListType,
@@ -260,7 +261,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
             // filters of joined list
             this._updateFilterWithJoinedList(data.mediaTypes, filter, 'mediaTypeIn');
-            this._updateFilterWithJoinedList(data.ingestionStatuses, filter, 'statusIn');
+            this._updateFilterWithJoinedSet(data.ingestionStatuses, filter, 'statusIn');
             this._updateFilterWithJoinedList(data.durations, filter, 'durationTypeMatchOr');
             this._updateFilterWithJoinedList(data.moderationStatuses, filter, 'moderationStatusIn');
             this._updateFilterWithJoinedList(data.replacementStatuses, filter, 'replacementStatusIn');
@@ -474,6 +475,14 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         }
     }
 
+    private _updateFilterWithJoinedSet(set: Set<any>, requestFilter: KalturaMediaEntryFilter, requestFilterProperty: keyof KalturaMediaEntryFilter): void {
+        const value = set ? Array.from(set).map(item => item.value).join(',') : '';
+
+        if (value) {
+            requestFilter[requestFilterProperty] = value;
+        }
+    }
+
     public deleteEntry(entryId: string): Observable<void> {
 
         return Observable.create(observer => {
@@ -518,7 +527,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             scheduledAt: {fromDate: null, toDate: null},
             mediaTypes: [],
             timeScheduling: [],
-            ingestionStatuses: [],
+            ingestionStatuses: new Set<KalturaEntryStatus>(),
             durations: [],
             originalClippedEntries: [],
             moderationStatuses: [],
@@ -543,7 +552,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             scheduledAt: new DatesRangeAdapter(),
             mediaTypes: new ListAdapter(),
             timeScheduling: new ListAdapter(),
-            ingestionStatuses: new ListAdapter(),
+            ingestionStatuses: new SetOfEnumsTypeAdapter<KalturaEntryStatus>(),
             durations: new ListAdapter(),
             originalClippedEntries: new ListAdapter(),
             moderationStatuses: new ListAdapter(),
