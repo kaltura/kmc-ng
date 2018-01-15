@@ -15,6 +15,7 @@ import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSear
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { MetadataProfile } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import * as Immutable from 'seamless-immutable';
+import { KalturaEntryType } from 'kaltura-ngx-client/api/types/KalturaEntryType';
 
 @Injectable()
 export class PlaylistRuleParserService implements OnDestroy {
@@ -233,9 +234,9 @@ export class PlaylistRuleParserService implements OnDestroy {
 
     const originalFilter = new KalturaMediaEntryFilterForPlaylist({
       isRoot: 1, // default
-      moderationStatusIn: '2,5,6,1', // default
-      typeIn: '1,7', // default
-      statusIn: '2,1', // default
+      typeIn: [KalturaEntryType.mediaClip.toString(), KalturaEntryType.liveStream.toString()].join(','), // default
+      moderationStatusIn: convertedFilters.moderationStatuses, // default, defined in _enforcedFilters
+      statusIn: convertedFilters.ingestionStatuses, // default, defined in _enforcedFilters
       name: payload.name,
       freeText: convertedFilters.freetext,
       limit: convertedFilters.limits || environment.modules.contentPlaylists.ruleBasedTotalResults,

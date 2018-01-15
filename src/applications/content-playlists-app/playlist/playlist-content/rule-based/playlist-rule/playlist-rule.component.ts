@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
@@ -8,6 +8,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { environment } from 'app-environment';
 import { PlaylistRuleParserService } from './playlist-rule-parser.service';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KalturaEntryModerationStatus } from 'kaltura-ngx-client/api/types/KalturaEntryModerationStatus';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 
 @Component({
   selector: 'kPlaylistRule',
@@ -48,6 +50,20 @@ export class PlaylistRuleComponent {
   public _title: string;
   public _saveBtnLabel: string;
   public _nameRequiredError = false;
+  public _enforcedFilters: Partial<EntriesFilters> = {
+    'moderationStatuses': [
+      { value: KalturaEntryModerationStatus.pendingModeration.toString(), label: '' },
+      { value: KalturaEntryModerationStatus.approved.toString(), label: '' },
+      { value: KalturaEntryModerationStatus.flaggedForReview.toString(), label: '' },
+      { value: KalturaEntryModerationStatus.autoApproved.toString(), label: '' }
+    ],
+    'ingestionStatuses': [
+      { value: KalturaEntryStatus.preconvert.toString(), label: '' },
+      { value: KalturaEntryStatus.ready.toString(), label: '' }
+    ],
+    'accessControlProfiles': [],
+    'timeScheduling': []
+  };
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
