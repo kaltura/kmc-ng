@@ -62,8 +62,8 @@
         <span class="kFieldsTableActions">
           <i class="kIconarrow_up kActionMoveDown"
              [kTooltip]="'applications.settings.metadata.table.moveDown' | translate"
-             [class.kActionDisabled]="i + 1 === fields?.length"
-             (click)="i + 1 !== fields?.length && _moveField(field, 'down')"></i>
+             [class.kActionDisabled]="i + 1 === _fields?.length"
+             (click)="i + 1 !== _fields?.length && _moveField(field, 'down')"></i>
 
           <i class="kIconarrow_up"
              [kTooltip]="'applications.settings.metadata.table.moveUp' | translate"
