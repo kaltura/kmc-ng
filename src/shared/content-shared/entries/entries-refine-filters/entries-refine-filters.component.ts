@@ -55,9 +55,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
-    @Input() enforcedFilters: {
-        [P in keyof EntriesFilters]: EntriesFilters[P];
-        } = null;
+    @Input() enforcedFilters: Partial<EntriesFilters>;
 
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
