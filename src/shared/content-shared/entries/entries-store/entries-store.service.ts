@@ -25,6 +25,7 @@ import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry'
 import * as Immutable from 'seamless-immutable';
 import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-shared/categories/categories-list-type';
 import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-shared/content-shared/categories/categories-mode-type';
+import { Subject } from 'rxjs/Subject';
 
 export enum SortDirection {
   Desc,
@@ -77,10 +78,12 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
 
-  private _paginationCacheToken = 'default';
-  private _isReady = false;
-  private _metadataProfiles: MetadataProfileData[];
-  private _querySubscription: ISubscription;
+    private _paginationCacheToken = 'default';
+    private _isReady = false;
+    private _metadataProfiles: MetadataProfileData[];
+    private _querySubscription: ISubscription;
+    private _preFilterSubject = new Subject<Partial<EntriesFilters>>();
+    public preFilter$ = this._preFilterSubject.asObservable();
 
   public readonly entries = {
     data$: this._entries.data.asObservable(),
@@ -111,8 +114,11 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     if (typeof updates.categoriesMode !== 'undefined') {
       this._browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', updates.categoriesMode);
     }
+
+    this._preFilterSubject.next(updates);
+
     return updates;
-  }
+    }
 
   private _prepare(): void {
     if (!this._isReady) {
@@ -212,8 +218,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
           this._entries.state.next({ loading: false, errorMessage });
         });
-
-
   }
 
   public deleteEntry(entryId: string): Observable<void> {

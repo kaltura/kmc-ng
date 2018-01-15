@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
@@ -15,13 +15,15 @@ import { CategoriesListItem } from 'app-shared/content-shared/categories/categor
   styleUrls: ['./entries-list.component.scss']
 
 })
-export class EntriesListComponent implements OnInit, OnDestroy {
-  @Input() showReload = true;
-  @Input() isBusy = false;
-  @Input() blockerMessage: AreaBlockerMessage = null;
-  @Input() selectedEntries: any[] = [];
-  @Input() columns: EntriesTableColumns | null;
-  @Input() rowActions: { label: string, commandName: string }[];
+export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
+    @Input() showReload = true;
+    @Input() isBusy = false;
+    @Input() blockerMessage: AreaBlockerMessage = null;
+    @Input() selectedEntries: any[] = [];
+    @Input() columns: EntriesTableColumns | null;
+    @Input() rowActions: { label: string, commandName: string }[];
+    @Input() enforcedFilters: Partial<EntriesFilters>;
+    @Input() defaultFilters: Partial<EntriesFilters>;
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
@@ -43,10 +45,40 @@ export class EntriesListComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService) {
   }
 
-  ngOnInit() {
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
-  }
+    ngOnInit() {
+        this._prepare();
+    }
+
+    ngOnChanges(changes)
+    {
+        if (typeof changes.enforcedFilters !== 'undefined' && changes.enforcedFilters.currentValue)
+        {
+            this._entriesStore.filter(changes.enforcedFilters.currentValue);
+        }
+
+        if (typeof changes.defaultFilters !== 'undefined' && changes.defaultFilters.currentValue)
+        {
+            this._entriesStore.filter(changes.defaultFilters.currentValue);
+        }
+    }
+
+    private _prepare(): void {
+
+        this._entriesStore.preFilter$
+            .cancelOnDestroy(this)
+            .subscribe(
+                filters => {
+                    if (this.enforcedFilters) {
+                        Object.keys(this.enforcedFilters).forEach(filterName => {
+                            delete filters[filterName];
+                        });
+                    }
+                }
+            );
+
+        this._restoreFiltersState();
+        this._registerToFilterStoreDataChanges();
+    }
 
   private _restoreFiltersState(): void {
     this._updateComponentState(this._entriesStore.cloneFilters([
@@ -191,5 +223,4 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
   }
 }
-
 
