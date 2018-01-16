@@ -95,7 +95,7 @@ export class CategoriesStatusMonitorService implements OnDestroy {
             });
         }
         this._log('info', `got categories status: locked: ${lockFlagFound}, update: ${updateFlagFound}`);
-        this._status.next({lock: lockFlagFound, update: true});
+        this._status.next({lock: lockFlagFound, update: updateFlagFound});
 
     }
 
