@@ -161,7 +161,7 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
   }
 
   private _update(): MetadataItem {
-    const formValue = this._fieldForm.value;
+    const formValue = this._fieldForm.getRawValue();
     const { label, shortDescription, description, searchable, includeTime, listValues } = formValue;
 
     if (this._field.label !== label) {
