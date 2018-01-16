@@ -30,14 +30,13 @@ import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLive
 import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { KalturaUtils, XmlParser } from '@kaltura-ng/kaltura-common';
 import {
     FiltersStoreBase, TypeAdaptersMapping,
     GroupedListAdapter,
     DatesRangeAdapter, DatesRangeType,
     StringTypeAdapter,
-    ListAdapter, ListType,
-    NumberTypeAdapter, SetOfEnumsTypeAdapter,
+    NumberTypeAdapter, NewListTypeAdapter,
     GroupedListType
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
@@ -63,16 +62,16 @@ export interface EntriesFilters {
     sortDirection: number,
     createdAt: DatesRangeType,
     scheduledAt: DatesRangeType,
-    mediaTypes: ListType,
-    timeScheduling: ListType,
-    ingestionStatuses: Set<KalturaEntryStatus>,
-    durations: ListType,
-    originalClippedEntries: ListType,
-    moderationStatuses: ListType,
-    replacementStatuses: ListType,
-    accessControlProfiles: ListType,
-    flavors: ListType,
-    distributions: ListType,
+    mediaTypes: string[],
+    timeScheduling: string[],
+    ingestionStatuses: KalturaEntryStatus[],
+    durations: string[],
+    originalClippedEntries: string[],
+    moderationStatuses: string[],
+    replacementStatuses: string[],
+    accessControlProfiles: string[],
+    flavors: string[],
+    distributions: string[],
     categories: CategoriesListType,
     categoriesMode: CategoriesModeType,
     customMetadata: GroupedListType
@@ -261,7 +260,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
             // filters of joined list
             this._updateFilterWithJoinedList(data.mediaTypes, filter, 'mediaTypeIn');
-            this._updateFilterWithJoinedSet(data.ingestionStatuses, filter, 'statusIn');
+            this._updateFilterWithJoinedList(data.ingestionStatuses, filter, 'statusIn');
             this._updateFilterWithJoinedList(data.durations, filter, 'durationTypeMatchOr');
             this._updateFilterWithJoinedList(data.moderationStatuses, filter, 'moderationStatusIn');
             this._updateFilterWithJoinedList(data.replacementStatuses, filter, 'replacementStatusIn');
@@ -278,10 +277,10 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
                 data.distributions.forEach(item => {
                     // very complex way to make sure the value is number (an also bypass both typescript and tslink checks)
-                    if (isFinite(+item.value) && parseInt(item.value) == <any>item.value) { // tslint:disable-line
+                    if (isFinite(+item) && parseInt(item) == <any>item) { // tslint:disable-line
                         const newItem = new KalturaContentDistributionSearchItem(
                             {
-                                distributionProfileId: +item.value,
+                                distributionProfileId: +item,
                                 hasEntryDistributionValidationErrors: false,
                                 noDistributionProfiles: false
                             }
@@ -289,7 +288,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
                         distributionItem.items.push(newItem)
                     } else {
-                        this._logger.warn(`cannot convert distribution value '${item.value}' into number. ignoring value`);
+                        this._logger.warn(`cannot convert distribution value '${item}' into number. ignoring value`);
                     }
                 });
             }
@@ -299,7 +298,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                 let originalClippedEntriesValue: KalturaNullableBoolean = null;
 
                 data.originalClippedEntries.forEach(item => {
-                    switch (item.value) {
+                    switch (item) {
                         case '0':
                             if (originalClippedEntriesValue == null) {
                                 originalClippedEntriesValue = KalturaNullableBoolean.falseValue;
@@ -325,7 +324,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             // filter 'timeScheduling'
             if (data.timeScheduling && data.timeScheduling.length > 0) {
                 data.timeScheduling.forEach(item => {
-                    switch (item.value) {
+                    switch (item) {
                         case 'past':
                             if (filter.endDateLessThanOrEqual === undefined || filter.endDateLessThanOrEqual < (new Date())) {
                                 filter.endDateLessThanOrEqual = (new Date());
@@ -369,45 +368,45 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             }
 
             // filters of custom metadata lists
-            if (this._metadataProfiles && this._metadataProfiles.length > 0) {
-
-                this._metadataProfiles.forEach(metadataProfile => {
-                    // create advanced item for all metadata profiles regardless if the user filtered by them or not.
-                    // this is needed so freetext will include all metadata profiles while searching.
-                    const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
-                        {
-                            metadataProfileId: metadataProfile.id,
-                            type: KalturaSearchOperatorType.searchAnd,
-                            items: []
-                        }
-                    );
-                    advancedSearch.items.push(metadataItem);
-
-                    metadataProfile.lists.forEach(list => {
-                        const metadataProfileFilters = data.customMetadata[list.id];
-                        if (metadataProfileFilters && metadataProfileFilters.length > 0) {
-                            const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
-                                metadataProfileId: metadataProfile.id,
-                                type: KalturaSearchOperatorType.searchOr,
-                                items: []
-                            });
-                            metadataItem.items.push(innerMetadataItem);
-
-                            metadataProfileFilters.forEach(filterItem => {
-                                const searchItem = new KalturaSearchCondition({
-                                    field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                                    value: filterItem.value
-                                });
-
-                                innerMetadataItem.items.push(searchItem);
-                            });
-                        }
-                    });
-                });
-            }
+            // if (this._metadataProfiles && this._metadataProfiles.length > 0) {
+            //
+            //     this._metadataProfiles.forEach(metadataProfile => {
+            //         // create advanced item for all metadata profiles regardless if the user filtered by them or not.
+            //         // this is needed so freetext will include all metadata profiles while searching.
+            //         const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
+            //             {
+            //                 metadataProfileId: metadataProfile.id,
+            //                 type: KalturaSearchOperatorType.searchAnd,
+            //                 items: []
+            //             }
+            //         );
+            //         advancedSearch.items.push(metadataItem);
+            //
+            //         metadataProfile.lists.forEach(list => {
+            //             const metadataProfileFilters = data.customMetadata[list.id];
+            //             if (metadataProfileFilters && metadataProfileFilters.length > 0) {
+            //                 const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
+            //                     metadataProfileId: metadataProfile.id,
+            //                     type: KalturaSearchOperatorType.searchOr,
+            //                     items: []
+            //                 });
+            //                 metadataItem.items.push(innerMetadataItem);
+            //
+            //                 metadataProfileFilters.forEach(filterItem => {
+            //                     const searchItem = new KalturaSearchCondition({
+            //                         field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
+            //                         value: filterItem
+            //                     });
+            //
+            //                     innerMetadataItem.items.push(searchItem);
+            //                 });
+            //             }
+            //         });
+            //     });
+            // }
 
             if (data.categories && data.categories.length) {
-                const categoriesValue = data.categories.map(item => item.value).join(',');
+                const categoriesValue = data.categories.map(item => item).join(',');
                 if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
                     filter.categoryAncestorIdIn = categoriesValue;
                 } else {
@@ -467,21 +466,15 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
     }
 
-    private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaMediaEntryFilter, requestFilterProperty: keyof KalturaMediaEntryFilter): void {
-        const value = (list || []).map(item => item.value).join(',');
+
+    private _updateFilterWithJoinedList(list: any[], requestFilter: KalturaMediaEntryFilter, requestFilterProperty: keyof KalturaMediaEntryFilter): void {
+        const value = (list || []).join(',');
 
         if (value) {
             requestFilter[requestFilterProperty] = value;
         }
     }
 
-    private _updateFilterWithJoinedSet(set: Set<any>, requestFilter: KalturaMediaEntryFilter, requestFilterProperty: keyof KalturaMediaEntryFilter): void {
-        const value = set ? Array.from(set).map(item => item.value).join(',') : '';
-
-        if (value) {
-            requestFilter[requestFilterProperty] = value;
-        }
-    }
 
     public deleteEntry(entryId: string): Observable<void> {
 
@@ -527,7 +520,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             scheduledAt: {fromDate: null, toDate: null},
             mediaTypes: [],
             timeScheduling: [],
-            ingestionStatuses: new Set<KalturaEntryStatus>(),
+            ingestionStatuses: [],
             durations: [],
             originalClippedEntries: [],
             moderationStatuses: [],
@@ -550,16 +543,16 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             sortDirection: new NumberTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
             scheduledAt: new DatesRangeAdapter(),
-            mediaTypes: new ListAdapter(),
-            timeScheduling: new ListAdapter(),
-            ingestionStatuses: new SetOfEnumsTypeAdapter<KalturaEntryStatus>(),
-            durations: new ListAdapter(),
-            originalClippedEntries: new ListAdapter(),
-            moderationStatuses: new ListAdapter(),
-            replacementStatuses: new ListAdapter(),
-            accessControlProfiles: new ListAdapter(),
-            flavors: new ListAdapter(),
-            distributions: new ListAdapter(),
+            mediaTypes: new NewListTypeAdapter<string>(),
+            timeScheduling: new NewListTypeAdapter<string>(),
+            ingestionStatuses: new NewListTypeAdapter<KalturaEntryStatus>(),
+            durations: new NewListTypeAdapter<string>(),
+            originalClippedEntries: new NewListTypeAdapter<string>(),
+            moderationStatuses: new NewListTypeAdapter<string>(),
+            replacementStatuses: new NewListTypeAdapter<string>(),
+            accessControlProfiles: new NewListTypeAdapter<string>(),
+            flavors: new NewListTypeAdapter<string>(),
+            distributions: new NewListTypeAdapter<string>(),
             categories: new CategoriesListAdapter(),
             categoriesMode: new CategoriesModeAdapter(),
             customMetadata: new GroupedListAdapter()

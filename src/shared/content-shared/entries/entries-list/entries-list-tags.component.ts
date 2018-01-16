@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 
 import * as moment from 'moment';
-import {GroupedListType, ListType} from '@kaltura-ng/mc-shared/filters';
+import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
 import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
@@ -30,7 +30,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         if (listTypes.indexOf(tag.type) > -1) {
             // remove tag of type list from filters
             const previousData = this._entriesStore.cloneFilter(tag.type, []);
-            const previousDataItemIndex = previousData.findIndex(item => item.value === tag.value);
+            const previousDataItemIndex = previousData.findIndex(item => item === tag.value);
             if (previousDataItemIndex > -1) {
                 previousData.splice(
                     previousDataItemIndex
@@ -46,7 +46,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             const previousData = this._entriesStore.cloneFilter('customMetadata', {});
             const [, listId] = tag.type.split('|');
             const list = previousData[listId] || [];
-            const listItemIndex = list.findIndex(item => item.value === tag.value);
+            const listItemIndex = list.findIndex(item => item === tag.value);
 
             if (listItemIndex > -1) {
                 list.splice(
@@ -159,14 +159,14 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     private _syncTagsOfList(filterName: keyof EntriesFilters): void {
-        const currentValue =  <ListType>this._entriesStore.cloneFilter(filterName, []);
+        const currentValue = this._entriesStore.cloneFilter(filterName, []);
 
         if (currentValue instanceof Array) {
           // Developer notice: we must make sure the type at runtime is an array. this is a safe check only we don't expect the value to be different
           const tagsFilters = this._filterTags.filter(item => item.type === filterName);
 
           const tagsFiltersMap = this._entriesStore.filtersUtils.toMap(tagsFilters, 'value');
-          const currentValueMap = this._entriesStore.filtersUtils.toMap(currentValue, 'value');
+          const currentValueMap = this._entriesStore.filtersUtils.toMap(<string[]>currentValue, null);
           const diff = this._entriesStore.filtersUtils.getDiff(tagsFiltersMap, currentValueMap);
 
           diff.deleted.forEach(item => {
@@ -178,9 +178,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
           diff.added.forEach(item => {
             this._filterTags.push({
               type: filterName,
-              value: item.value,
-              label: item.label,
-              tooltip: item.tooltip || this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item.label})
+              value: item,
+              label: item,
+              tooltip:  this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item})
             });
           });
         }

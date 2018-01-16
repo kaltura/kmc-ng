@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { GroupedListItem, ListItem, RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
+import { GroupedListItem, RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -110,7 +110,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
       let updatedPrimeTreeSelections = false;
       Object.keys(this._primeListsMap).forEach(listName => {
           const listData = this._primeListsMap[listName];
-          let listFilter: { value: string, label: string }[];
+          let listFilter: any[];
           if (listData.group === 'customMetadata')
           {
               const customMetadataFilter = updates['customMetadata'];
@@ -122,12 +122,12 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
           if (typeof listFilter !== 'undefined') {
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
-              const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, 'value');
+              const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, null);
               const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
 
               diff.added.forEach(addedItem => {
                   const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-                  const matchingItem = listItems.find(item => item.value === addedItem.value);
+                  const matchingItem = listItems.find(item => item.value === addedItem);
                   if (!matchingItem) {
                       console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
                   } else {
@@ -173,7 +173,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
     private _syncScheduleDatesMode() {
         const timeScheduling = this._entriesStore.cloneFilter('timeScheduling', []);
-        this._scheduledSelected = !!timeScheduling.find(item => item.value === 'scheduled');
+        this._scheduledSelected = !!timeScheduling.find(item => item === 'scheduled');
 
         if (!this._scheduledSelected) {
             this._scheduledAfter = null;
@@ -354,7 +354,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
-              let newFilterItems: (GroupedListItem | ListItem)[];
+              let newFilterItems: any[]; // TODO SAKAL
               let newFilterValue;
               let newFilterName: string;
 
@@ -363,7 +363,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                   newFilterValue = this._entriesStore.cloneFilter('customMetadata', {});
                   newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
-              }else if  {
+              } else {
                   newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
                   newFilterName = node.listName;
               }
@@ -376,12 +376,12 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      if (!newFilterItems.find(item => item.value === selectedNode.value)) {
+                      if (!newFilterItems.find(item => item === selectedNode.value)) {
 
                           if (listData.group === 'customMetadata') {
-                              newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label,  tooltip: `${listData.items[0].label}: ${selectedNode.value}`  });
+                              // newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label,  tooltip: `${listData.items[0].label}: ${selectedNode.value}`  });
                           } else {
-                              newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label });
+                              newFilterItems.push(selectedNode.value);
                           }
                       }
                   });
@@ -398,7 +398,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
-              let newFilterItems: { value: string, label: string }[];
+              let newFilterItems: any[];
               let newFilterValue;
               let newFilterName: string;
 
@@ -420,7 +420,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      const itemIndex = newFilterItems.findIndex(item => item.value === selectedNode.value);
+                      const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
                       if (itemIndex > -1) {
                           newFilterItems.splice(itemIndex, 1);
 
