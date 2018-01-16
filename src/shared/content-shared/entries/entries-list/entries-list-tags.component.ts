@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import * as moment from 'moment';
 import {GroupedListType, ListType} from '@kaltura-ng/mc-shared/filters';
@@ -19,6 +19,7 @@ const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 
 export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     @Output() onTagsChange = new EventEmitter<void>();
+    @Input() enforcedFilters: Partial<EntriesFilters>;
 
     public _filterTags: TagItem[] = [];
 
@@ -88,6 +89,13 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     private _updateComponentState(updates: Partial<EntriesFilters>): void {
+
+        if (this.enforcedFilters) {
+            Object.keys(this.enforcedFilters).forEach(enforcedFilter => {
+                delete updates[enforcedFilter];
+            });
+        }
+
         if (typeof updates.freetext !== 'undefined') {
             this._syncTagOfFreetext();
         }

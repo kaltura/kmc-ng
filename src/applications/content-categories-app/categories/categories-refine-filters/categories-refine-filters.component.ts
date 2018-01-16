@@ -15,6 +15,7 @@ const listOfFilterNames: (keyof CategoriesFilters)[] = [
   'categoryListing',
   'contributionPolicy',
   'endUserPermissions',
+    'customMetadata'
 ];
 
 export interface PrimeListItem {

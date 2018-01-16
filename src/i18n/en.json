@@ -1313,6 +1313,7 @@
           },
           "permittedUsers": {
             "label": "Permitted Users",
+            "loading": "Loading...",
             "none": "None",
             "manageUsers": "Manage Users",
             "viewUsers": "View Users",

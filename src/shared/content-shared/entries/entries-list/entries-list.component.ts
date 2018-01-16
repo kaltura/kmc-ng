@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categories-status/categories-status-monitor.service';
 
@@ -13,19 +13,23 @@ import { CategoriesModes } from 'app-shared/content-shared/categories/categories
 
 import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
+
+
 @Component({
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',
   styleUrls: ['./entries-list.component.scss']
 
 })
-export class EntriesListComponent implements OnInit, OnDestroy {
+export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() showReload = true;
     @Input() isBusy = false;
     @Input() blockerMessage: AreaBlockerMessage = null;
     @Input() selectedEntries: any[] = [];
     @Input() columns: EntriesTableColumns | null;
     @Input() rowActions: { label: string, commandName: string }[];
+    @Input() enforcedFilters: Partial<EntriesFilters>;
+    @Input() defaultFilters: Partial<EntriesFilters>;
 
     @ViewChild('tags') private tags: StickyComponent;
 
@@ -57,7 +61,33 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         this._prepare();
     }
 
-    private _prepare(): void{
+    ngOnChanges(changes)
+    {
+        if (typeof changes.enforcedFilters !== 'undefined' && changes.enforcedFilters.currentValue)
+        {
+            this._entriesStore.filter(changes.enforcedFilters.currentValue);
+        }
+
+        if (typeof changes.defaultFilters !== 'undefined' && changes.defaultFilters.currentValue)
+        {
+            this._entriesStore.filter(changes.defaultFilters.currentValue);
+        }
+    }
+
+    private _prepare(): void {
+
+        this._entriesStore.preFilter$
+            .cancelOnDestroy(this)
+            .subscribe(
+                filters => {
+                    if (this.enforcedFilters) {
+                        Object.keys(this.enforcedFilters).forEach(filterName => {
+                            delete filters[filterName];
+                        });
+                    }
+                }
+            );
+
         this._restoreFiltersState();
         this._registerToFilterStoreDataChanges();
     }

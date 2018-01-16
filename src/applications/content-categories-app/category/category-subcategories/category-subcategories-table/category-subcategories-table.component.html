@@ -8,7 +8,7 @@
                  [immutable]="false"
                  [value]="_subcategories"
                  [emptyMessage]="_emptyMessage"
-                 [class.noResults]="!_subcategories.length"
+                 [class.noResults]="!_subcategories?.length"
                  (selectionChange)="_onSelectionChange($event)"
                  [rowTrackBy]="rowTrackBy"
                  [(selection)]="selectedSubcategories">

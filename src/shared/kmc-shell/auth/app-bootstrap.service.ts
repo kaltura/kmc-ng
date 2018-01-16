@@ -18,11 +18,6 @@ export interface BootstrapAdapter{
     execute() : void
 }
 
-export interface AppBootstrapConfig
-{
-    errorRoute? : string;
-}
-
 export enum BoostrappingStatus
 {
     Bootstrapping,
@@ -30,11 +25,9 @@ export enum BoostrappingStatus
     Bootstrapped
 }
 
-
 @Injectable()
 export class AppBootstrap implements CanActivate {
 
-    private _bootstrapConfig: AppBootstrapConfig;
     private _initialized = false;
 
     private _bootstrapStatusSource = new BehaviorSubject<BoostrappingStatus>(BoostrappingStatus.Bootstrapping);
@@ -42,9 +35,9 @@ export class AppBootstrap implements CanActivate {
 
     constructor(private appLocalization: AppLocalization,
                 private auth: AppAuthentication,
+
                 private appStorage: AppStorage,
                 @Inject(BootstrapAdapterToken) @Optional() private bootstrapAdapters: BootstrapAdapter[]) {
-
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -60,10 +53,11 @@ export class AppBootstrap implements CanActivate {
                         if (status === BoostrappingStatus.Error) {
                             observer.next(false);
                             observer.complete();
-                            if (!!this._bootstrapConfig.errorRoute) {
-                                // we don't use the router here as Angular can't inject the Router before any component was initialized
-                                document.location.href = this._bootstrapConfig.errorRoute;
-                            }
+
+                            // we must modify document.location instead of using Angular router because
+                            // router is not supported until at least once component
+                            // was initialized
+                                document.location.href = environment.shell.browser.errorRoute;
                             if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
                         }
                     }
@@ -72,53 +66,55 @@ export class AppBootstrap implements CanActivate {
                     // error with configuration
                     observer.next(false);
                     observer.complete();
+                    // we must modify document.location instead of using Angular router because
+                    // router is not supported until at least once component
+                    // was initialized
+                    document.location.href = environment.shell.browser.errorRoute;
                     if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
                 }
             );
         });
     }
 
-    initApp(appBootstrapConfig: AppBootstrapConfig): void {
-        if (this._initialized) {
-            throw "App already initialized!";
-        }
-        const bootstrapFailure = (error: any) => {
-            console.log("Bootstrap Error::" + error); // TODO [kmc-infra] - move to log
-            this._bootstrapStatusSource.next(BoostrappingStatus.Error);
-        }
+    public bootstrap(): void {
 
-
-        this._initialized = true;
-        // save config localy
-        this._bootstrapConfig = appBootstrapConfig;
-
-        // init localization, wait for localization to load before continuing
-        this.appLocalization.setFilesHash(environment.appVersion);
-        const language = this.getCurrentLanguage();
-        this.appLocalization.load(language,'en').subscribe(
-            () => {
-                // Start authentication process
-                if (!this.executeAdapter(BootstrapAdapterType.preAuth)) {
-                    bootstrapFailure("preAuth adapter execution failure");
-                    return;
-                }
-                this.auth.loginAutomatically().subscribe(
-                    () => {
-                        if (!this.executeAdapter(BootstrapAdapterType.postAuth)) {
-                            bootstrapFailure("postAuth adapter execution failure");
-                            return;
-                        }
-                        this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
-                    },
-                    () => {
-                        bootstrapFailure("Authentication process failed");
-                    }
-                );
-            },
-            (error) => {
-                bootstrapFailure(error);
+        if (!this._initialized) {
+            const bootstrapFailure = (error: any) => {
+                console.log("Bootstrap Error::" + error); // TODO [kmc-infra] - move to log
+                this._bootstrapStatusSource.next(BoostrappingStatus.Error);
             }
-        );
+
+
+            this._initialized = true;
+
+            // init localization, wait for localization to load before continuing
+            this.appLocalization.setFilesHash(environment.appVersion);
+            const language = this.getCurrentLanguage();
+            this.appLocalization.load(language, 'en').subscribe(
+                () => {
+                    // Start authentication process
+                    if (!this.executeAdapter(BootstrapAdapterType.preAuth)) {
+                        bootstrapFailure("preAuth adapter execution failure");
+                        return;
+                    }
+                    this.auth.loginAutomatically().subscribe(
+                        () => {
+                            if (!this.executeAdapter(BootstrapAdapterType.postAuth)) {
+                                bootstrapFailure("postAuth adapter execution failure");
+                                return;
+                            }
+                            this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
+                        },
+                        () => {
+                            bootstrapFailure("Authentication process failed");
+                        }
+                    );
+                },
+                (error) => {
+                    bootstrapFailure(error);
+                }
+            );
+        }
     }
 
 

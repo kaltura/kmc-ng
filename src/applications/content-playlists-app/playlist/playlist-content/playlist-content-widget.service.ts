@@ -8,14 +8,11 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { PlaylistExecuteAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteAction';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
 import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBaseEntryFilter';
-import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -23,7 +20,7 @@ export interface LoadEntriesStatus {
 }
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
-  selectionId?: string;
+  selectionId: string;
 }
 
 @Injectable()
@@ -83,8 +80,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     return this._getEntriesRequest()
       .cancelOnDestroy(this, this.widgetReset$)
       .map((entries: KalturaMediaEntry[]) => {
-        this._extendWithSelectionId(entries);
-        this.entries = entries;
+        this.entries = this._extendWithSelectionId(entries);
         this.entriesTotalCount = entries.length;
         this.entriesDuration = this.entries.reduce((acc, val) => acc + val.duration, 0);
         super._hideLoader();
@@ -125,9 +121,11 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       }
   }
 
-  private _extendWithSelectionId(entries: PlaylistContentMediaEntry[]): void {
-    entries.forEach(entry => {
-      entry.selectionId = this._selectionIdGenerator.generateUnique(entries.map(item => item.selectionId));
+  private _extendWithSelectionId(entries: KalturaMediaEntry[]): PlaylistContentMediaEntry[] {
+    return entries.map(entry => {
+        (<PlaylistContentMediaEntry>entry).selectionId = this._selectionIdGenerator.generateUnique(this.entries.map(item => item.selectionId));
+
+        return (<PlaylistContentMediaEntry>entry);
     });
   }
 
@@ -201,9 +199,8 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
-  public addEntries(entries: PlaylistContentMediaEntry[]): void {
-    this._extendWithSelectionId(entries);
-    this.entries.push(...entries);
+  public addEntries(entries: KalturaMediaEntry[]): void {
+    this.entries.push(...this._extendWithSelectionId(entries));
     this.entriesTotalCount = this.entries.length;
     this._setDirty();
   }

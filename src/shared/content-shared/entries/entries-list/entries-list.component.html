@@ -51,6 +51,7 @@
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
             <k-entries-list-tags
+                [enforcedFilters] = "enforcedFilters"
             (onTagsChange)="onTagsChange()"></k-entries-list-tags>
         </div>
       </kSticky>
@@ -106,6 +107,6 @@
               [targetOffset]="{'x':-200, 'y': -15}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'refinePopup'" [scrollOffset]="80">
   <ng-template>
-    <k-entries-refine-filters [parentPopupWidget]="refinePopup"></k-entries-refine-filters>
+    <k-entries-refine-filters [enforcedFilters] = "enforcedFilters" [parentPopupWidget]="refinePopup"></k-entries-refine-filters>
   </ng-template>
 </kPopupWidget>

@@ -244,11 +244,12 @@ export class PlaylistStore implements OnDestroy {
         .cancelOnDestroy(this)
         .monitor('playlist store: prepare playlist for save')
         .tag('block-shell')
-        .flatMap((response: { ready: boolean, reason?: OnDataSavingReasons, errors?: Error[] }) => {
+        .switchMap((response: { ready: boolean, reason?: OnDataSavingReasons, errors?: Error[] }) => {
             if (response.ready) {
               this._savePlaylistInvoked = true;
 
               return this._kalturaServerClient.multiRequest(request)
+                  .tag('block-shell')
                 .monitor('playlist store: save playlist')
                 .map(([res]) => {
                     if (res.error) {
