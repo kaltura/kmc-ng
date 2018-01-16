@@ -30,6 +30,7 @@ export class CustomSchemaComponent {
       schema.isNew = true;
       schema.profileDisabled = false;
       schema.applyTo = this._appLocalization.get('applications.settings.metadata.applyTo.entries');
+      (<any>schema).parsedProfile = { items: [] };
 
       this._schema = schema;
       this._profileFields = [];
@@ -109,9 +110,7 @@ export class CustomSchemaComponent {
 
   public _saveSchema(): void {
     if (this._validateSchema()) {
-      if (this._schema.parsedProfile && this._schema.parsedProfile.items) {
-        this._schema.parsedProfile.items = this._profileFields;
-      }
+      this._schema.parsedProfile.items = this._profileFields;
 
       if (this._isFieldsOrderChanged) {
         this._browserService.confirm({
