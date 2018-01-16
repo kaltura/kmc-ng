@@ -21,12 +21,12 @@
               type="button"
               label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.addUsers' | translate}}"
               (click)="addUser.open()"
-              [disabled]="categoryInheritUserPermissions">
+              [disabled]="!_actualUsersCount.updated || categoryInheritUserPermissions">
       </button>
 
       <div class="kItemsNum" [class.kSelected]="_selectedUsers.length">
-          <span *ngIf="_usersTotalCount">
-              {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.usersCount' | translate: {'0': _usersTotalCount } }}
+          <span *ngIf="_usersCount">
+              {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.usersCount' | translate: {'0': _usersCount } }}
           </span>
       </div>
 
@@ -68,16 +68,16 @@
     <div class="kManageEndUserPermissionsTable">
       <kManageEndUserPermissionsTable
         [(selectedUsers)]="_selectedUsers"
-        [users]="(_manageEndUsersPermissionsService.users.data$ | async)?.items"
+        [users]="_users"
         (onActionSelected)="_onActionSelected($event)"
         [categoryInheritUserPermissions]="categoryInheritUserPermissions"
         (closeParentPopup)="parentPopupWidget?.close()">
       </kManageEndUserPermissionsTable>
     </div>
-    <div class="kTableFooter" #footer *ngIf="_usersTotalCount">
+    <div class="kTableFooter" #footer *ngIf="_usersCount">
       <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
                    [first]="_query.pageIndex * _query.pageSize"
-                   [totalRecords]="_usersTotalCount" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+                   [totalRecords]="_usersCount" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
       <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
     </div>
   </div>
@@ -89,7 +89,7 @@
     <kAddUsers [parentPopupWidget]="addUser"
                [category]="category"
                [parentCategoryMembersCount]="parentCategory?.membersCount"
-               [usersCount]="_usersTotalCount"
+               [usersCount]="_actualUsersCount.total"
                (usersAdded)="_onUsersAdded()"
     ></kAddUsers>
   </ng-template>

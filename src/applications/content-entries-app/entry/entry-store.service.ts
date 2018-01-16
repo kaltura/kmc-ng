@@ -198,7 +198,8 @@ export class EntryStore implements  OnDestroy {
 
 		this._widgetsManager.notifyDataSaving(newEntry, request, this.entry)
             .cancelOnDestroy(this)
-            .monitor('entry store: prepare entry for save')
+            .tag('block-shell')
+			.monitor('entry store: prepare entry for save')
             .flatMap(
 				(response) => {
 					if (response.ready) {

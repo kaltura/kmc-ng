@@ -48,6 +48,7 @@ import {
     CategoriesModeAdapter, CategoriesModes,
     CategoriesModeType
 } from 'app-shared/content-shared/categories/categories-mode-type';
+import { Subject } from 'rxjs/Subject';
 
 export enum SortDirection {
     Desc,
@@ -89,6 +90,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     private _isReady = false;
     private _metadataProfiles: { id: number, name: string, lists: { id: string, name: string }[] }[];
     private _querySubscription: ISubscription;
+    private _preFilterSubject = new Subject<Partial<EntriesFilters>>();
+    public preFilter$ = this._preFilterSubject.asObservable();
 
     public readonly entries =
         {
@@ -122,6 +125,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         {
             this.browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', updates.categoriesMode);
         }
+
+        this._preFilterSubject.next(updates);
 
         return updates;
     }

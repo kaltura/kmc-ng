@@ -1,10 +1,10 @@
 export const environment = {
-    "appVersion": "3.4.0", // will be changed by release script
+    "appVersion": "3.5.0", // will be changed by release script
     "shell": {
-        "defaultRoute": "/content/entries",
-        "loginRoute" : "/login",
-        "errorRoute" : "/error",
         "browser": {
+            "errorRoute": "/error",
+            appRoute: "/content/entries/list",
+            "loginRoute": "/login",
             "storageNamespace": "kmc-ng"
         }
     },
@@ -15,6 +15,7 @@ export const environment = {
             "cdnUrl": "http://cdnapi.kaltura.com",
             "legacyKmcUrl": "kmc.kaltura.com",
             "expiry": "86400",
+            "limitToParentId" : null,
             "privileges": "disableentitlement",
             "previewUIConf": "38524931",
             "liveAnalyticsVersion": "v2.6",
@@ -165,6 +166,9 @@ export const environment = {
         ]
     },
     "modules": {
+        "analyticsLive" : {
+            "url" : "http://localhost:9090/"
+        },
         "studio": {
             "api_url": "http://www.kaltura.com",
             "path": "./studio/index.html",
@@ -179,7 +183,7 @@ export const environment = {
         },
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
-            "bulkActionsLimit": 2
+            "bulkActionsLimit": 50
         },
         "createLive": {
           "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"

@@ -1,4 +1,4 @@
-<div class="kEntriesTable" [class.noResults]="!_entries.length">
+<div class="kEntriesTable" [class.noResults]="!_entries?.length">
   <k-area-blocker [showLoader]="(entriesStore.entries.state$ | async)?.loading || this._deferredLoading"
                   [message]="_blockerMessage"
                   [bodyScroll]="true">

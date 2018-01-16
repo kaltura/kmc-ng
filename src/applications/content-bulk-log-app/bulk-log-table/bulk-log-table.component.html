@@ -1,6 +1,6 @@
 <k-area-blocker [showLoader]="(_store.bulkLog.state$ | async)?.loading || this._deferredLoading"
                 [message]="_blockerMessage">
-  <div class="kBulkLogTable" [class.noResults]="!_bulkLog.length">
+  <div class="kBulkLogTable" [class.noResults]="!_bulkLog?.length">
     <p-dataTable #dataTable
                  dataKey="id"
                  scrollable="true"

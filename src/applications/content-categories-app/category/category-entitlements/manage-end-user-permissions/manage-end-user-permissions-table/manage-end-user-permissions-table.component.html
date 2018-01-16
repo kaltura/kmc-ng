@@ -7,7 +7,7 @@
                [immutable]="false"
                [value]="_users"
                [emptyMessage]="_emptyMessage"
-               [class.noResults]="!_users.length"
+               [class.noResults]="!_users?.length"
                (selectionChange)="_onSelectionChange($event)"
                [rowTrackBy]="rowTrackBy"
                [(selection)]="selectedUsers"

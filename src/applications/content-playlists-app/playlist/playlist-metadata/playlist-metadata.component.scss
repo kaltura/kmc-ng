@@ -8,7 +8,7 @@
 }
 
 .kMetadataDetails {
-  padding: 26px 8px 8px 20px;
+  padding: 26px 20px 20px 20px;
   width: 100%;
   position: relative;
 
@@ -30,6 +30,7 @@
         word-wrap: break-word;
         padding-right: 12px;
       }
+
 
       input {
         width: 100%;
@@ -55,26 +56,12 @@
     padding-bottom: 21px;
   }
 
-  .hidden {
-    visibility: hidden;
-    width: 0px;
-    height: 0px;
-  }
 
-  .invalid {
-    color: $kDandger;
-    visibility: visible;
-    padding-top: 5px;
-  }
 
   /*********************/
   /* PrimeNG overrides */
   /*********************/
-
-  .ui-inputtext.ng-invalid {
-    border-bottom-color: #cd0a0a;
-  }
-
+  
   textarea.threeRows {
     background: $kGrayscale6;
     border-radius: 3px;
@@ -93,6 +80,16 @@
   }
 }
 
+:host /deep/ {
+  .kControl, k-prime-control
+  {
+    width:100%;
+    .kHasError {
+      border: 1px solid $kDandger;
+      background: initial;
+    }
+  }
+}
 :host /deep/ kautocomplete input{
   height: auto !important;
   width: 100%;
