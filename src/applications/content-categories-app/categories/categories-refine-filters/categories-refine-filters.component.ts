@@ -316,6 +316,13 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy {
     }
   }
 
+  public doSomething(bla: string[]){
+      (bla || []).forEach(item =>
+    {
+
+    });
+  }
+
   public _onTreeNodeUnselect({node}: { node: PrimeListItem }) {
     // find group data by filter name
     if (node.listName) {

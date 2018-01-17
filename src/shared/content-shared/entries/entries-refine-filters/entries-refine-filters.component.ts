@@ -1,10 +1,10 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { GroupedListItem, RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filters.service';
+import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
@@ -51,9 +51,10 @@ export interface PrimeListsGroup {
   templateUrl: './entries-refine-filters.component.html',
   styleUrls: ['./entries-refine-filters.component.scss']
 })
-export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
+export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
+    @Input() filters: RefineGroup[];
 
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
@@ -75,13 +76,19 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   public _createdBefore: Date;
 
 
-  constructor(private _entriesRefineFilters: EntriesRefineFiltersService,
-              private _entriesStore: EntriesStore,
+  constructor(private _entriesStore: EntriesStore,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
-      this._prepare();
+      this._registerToFilterStoreDataChanges();
+      this._handleFiltersChange();
+  }
+
+  ngOnChanges(changes) {
+      if (typeof changes.filters !== 'undefined') {
+          this._handleFiltersChange();
+      }
   }
 
   ngOnDestroy() {
@@ -97,6 +104,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
     }
 
   private _updateComponentState(updates: Partial<EntriesFilters>): void {
+      if (!this.filters) {
+          return;
+      }
+
       if (typeof updates.createdAt  !== 'undefined') {
           this._createdAfter = updates.createdAt.fromDate || null;
           this._createdBefore = updates.createdAt.toDate || null;
@@ -182,32 +193,14 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
         }
     }
 
-    private _prepare(): void {
-        this._showLoader = true;
-        this._entriesRefineFilters.getFilters()
-            .cancelOnDestroy(this)
-            .first() // only handle it once, no need to handle changes over time
-            .subscribe(
-                groups => {
-                    this._showLoader = false;
-                    this._buildComponentLists(groups);
-                    this._restoreFiltersState();
-                    this._registerToFilterStoreDataChanges();
-                },
-                error => {
-                    this._showLoader = false;
-                    this._blockerMessage = new AreaBlockerMessage({
-                        message: error.message || this._appLocalization.get('applications.content.filters.errorLoading'),
-                        buttons: [{
-                            label: this._appLocalization.get('app.common.retry'),
-                            action: () => {
-                                this._blockerMessage = null;
-                                this._prepare();
-                            }
-                        }
-                        ]
-                    })
-                });
+    private _handleFiltersChange(): void {
+        if (this.filters) {
+            this._showLoader = false;
+            this._buildComponentLists();
+            this._restoreFiltersState();
+        } else {
+            this._showLoader = true;
+        }
     }
 
     private _fixPrimeTreePropagation()
@@ -224,12 +217,12 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
         });
     }
 
-    _buildComponentLists(groups: RefineGroup[]):void {
+    _buildComponentLists(): void {
         this._primeListsMap = {};
         this._primeListsGroups = [];
 
         // create root nodes
-        groups.forEach(group => {
+        (this.filters || []).forEach(group => {
             const filtersGroup = {label: group.label, lists: []};
             this._primeListsGroups.push(filtersGroup);
 

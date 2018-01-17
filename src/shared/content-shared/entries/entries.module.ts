@@ -25,7 +25,6 @@ import { EntryDurationPipe } from './pipes/entry-duration.pipe';
 import { MaxEntriesPipe } from './pipes/max-entries.pipe';
 import { PrimeTableSortDirectionPipe } from './pipes/prime-table-sort-direction.pipe';
 import { EntriesRefineFiltersComponent } from './entries-refine-filters/entries-refine-filters.component';
-import { EntriesRefineFiltersService } from './entries-refine-filters/entries-refine-filters.service';
 import { EntriesTableComponent } from './entries-table/entries-table.component';
 import { EntriesListComponent } from './entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
@@ -98,7 +97,6 @@ export class EntriesModule {
         return {
             ngModule: EntriesModule,
             providers: <any[]>[
-                EntriesRefineFiltersService
             ]
         };
     }

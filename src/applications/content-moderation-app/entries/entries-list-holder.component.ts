@@ -9,7 +9,7 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-t
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { DefaultFiltersList } from 'app-shared/content-shared/entries/entries-refine-filters/default-filters-list';
+import { DefaultFiltersList } from 'app-shared/content-shared/entries/entries-store/default-filters-list';
 
 @Component({
   selector: 'kModerationEntriesListHolder',

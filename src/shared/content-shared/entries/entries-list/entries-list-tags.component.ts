@@ -1,9 +1,13 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import * as moment from 'moment';
 import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
 import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import {
+    RefineGroup,
+    RefineGroupList
+} from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
 export interface TagItem
 { type: string, value: any, label: string, tooltip: string}
@@ -20,9 +24,22 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     @Output() onTagsChange = new EventEmitter<void>();
 
+    @Input() set refineFilters(groups: RefineGroup[]) {
+        this._refineFiltersMap.clear();
+
+        (groups || []).forEach(group => {
+            (group.lists || []).forEach(list => {
+                this._refineFiltersMap.set(list.name, list);
+            });
+        });
+
+        this._handleFiltersChange();
+    }
+
     public _filterTags: TagItem[] = [];
+    private _refineFiltersMap: Map<string, RefineGroupList> = new Map<string, RefineGroupList>();
 
-
+    public _showTags = false;
     constructor(private _entriesStore: EntriesStore, private _appLocalization: AppLocalization) {
     }
 
@@ -74,6 +91,21 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this._restoreFiltersState();
         this._registerToFilterStoreDataChanges();
+        this._handleFiltersChange();
+    }
+
+    private _handleFiltersChange(): void {
+        if (this._refineFiltersMap.size > 0) {
+            this._showTags = true;
+
+            (this._filterTags || []).forEach(tag => {
+                if ((<string[]>listTypes).indexOf(tag.type) !== -1) {
+                    tag.tooltip = tag.label = this._getRefineLabel(tag.type, tag.value);
+                }
+            });
+        } else {
+            this._showTags = false;
+        }
     }
 
     private _restoreFiltersState(): void
@@ -176,14 +208,29 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
           });
 
           diff.added.forEach(item => {
+              const label = this._getRefineLabel(filterName, item);
             this._filterTags.push({
               type: filterName,
               value: item,
-              label: item,
-              tooltip:  this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item})
+              label: label,
+              tooltip:  this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': label})
             });
           });
         }
+    }
+
+    private _getRefineLabel(listName: string, value: any): string {
+        let result = String(value);
+        if (this._refineFiltersMap.size > 0) {
+            const list = this._refineFiltersMap.get(listName);
+            if (list) {
+                const item = list.items.find(listItem => String(listItem.value) === String(value));
+
+                result = item ? item.label : result;
+            }
+
+        }
+        return result;
     }
 
     private _syncTagsOfCustomMetadata(customMetadataFilters: GroupedListType): void {

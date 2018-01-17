@@ -1,4 +1,4 @@
-<kTags [title]="'applications.content.filters.activeFilters' | translate"
+<kTags *ngIf="_showTags" [title]="'applications.content.filters.activeFilters' | translate"
        [data]="_filterTags"
        [labelField]="'label'"
        [tooltipField]="'tooltip'"
