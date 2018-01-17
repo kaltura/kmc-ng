@@ -12,7 +12,6 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
 
@@ -25,9 +24,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     @Input() public parentPopupWidget: PopupWidgetComponent;
     @Input() public selectionMode: CategoriesModes;
     @Output() public selectionModeChange = new EventEmitter<CategoriesModes>();
-    @Input() public selection: CategoriesListItem[];
-    @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
-    @Output() onCategoriesUnselected: EventEmitter<CategoriesListItem[]> = new EventEmitter();
+    @Input() public selection: number[];
+    @Output() onCategorySelected: EventEmitter<number> = new EventEmitter();
+    @Output() onCategoriesUnselected: EventEmitter<number[]> = new EventEmitter();
 
     @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
     @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
@@ -74,8 +73,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     public _clearAll() {
-        if (this.selection && this.selection.length)
-        {
+        if (this.selection && this.selection.length) {
             this.onCategoriesUnselected.emit(this.selection);
         }
     }
@@ -113,16 +111,8 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         if (selectedItem) {
             const data = selectedItem.data;
-            this.onCategorySelected.emit(
-                {
-                    value: data.id,
-                    label: data.name,
-                    fullIdPath: data.fullIdPath,
-                    tooltip: (data.fullNamePath || []).join(' > ')
-                }
-            );
-
-            this._categoriesTree.expandNode(data.fullIdPath);
+            this.onCategorySelected.emit(data.id);
+            this._categoriesTree.expandNode(data.id);
         }
     }
 
@@ -146,11 +136,11 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                     if (this.selectionMode === CategoriesModes.SelfAndChildren) {
                       let alreadySelected = false;
                       for (let length = item.fullIdPath.length, i = length - 1; i >= 0 && !alreadySelected; i--) {
-                        alreadySelected = item.fullIdPath[i] === categoryFilter.value;
+                        alreadySelected = item.fullIdPath[i] === categoryFilter;
                       }
                       return alreadySelected;
                     } else {
-                      return categoryFilter.value === item.id;
+                      return categoryFilter === item.id;
                     }
                   });
                   suggestions.push({ data: item, label: label, isSelectable: isSelectable });

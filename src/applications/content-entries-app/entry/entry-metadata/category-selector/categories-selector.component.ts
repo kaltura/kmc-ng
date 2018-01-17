@@ -20,7 +20,6 @@ import { EntryCategoryItem } from '../entry-metadata-widget.service';
 
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import {  TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';import {CategoriesSearchService} from "app-shared/content-shared/categories/categories-search.service";
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 
 @Component({
@@ -35,24 +34,16 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('autoComplete') private _autoComplete: AutoComplete;
 
     public _categoriesLoaded = false;
-    public _treeSelection: CategoriesListItem[] = [];
+    public _treeSelection: number[] = [];
 
     private _searchCategoriesSubscription: ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     @Input() buttonLabel = '';
-    @Input() set value(value: EntryCategoryItem[])
-    {
-        this._selectedCategories = value  ? [...value] : [];
-        this._treeSelection = value ? [ ...value.map(item =>
-        {
-            return {
-                value: item.id,
-                label: item.name,
-                fullIdPath: item.fullIdPath,
-                tooltip: item.tooltip
-            };
+    @Input() set value(value: EntryCategoryItem[]) {
+        this._selectedCategories = value ? [...value] : [];
+        this._treeSelection = value ? [...value.map(item => {
+            return item.id;
         })] : [];
-
     }
 
     @Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
@@ -109,7 +100,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
                 this._selectedCategories.splice(tagIndex, 1);
             }
 
-            this._treeSelection = this._treeSelection.filter(item => item.value + '' !== tag.id + '');
+            this._treeSelection = this._treeSelection.filter(item => item + '' !== tag.id + '');
         }
     }
 
@@ -179,17 +170,12 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
                 });
             }
 
-            const treeSelectionIndex = this._treeSelection.findIndex(item => item.value + '' === selectedItem.id + '');
+            const treeSelectionIndex = this._treeSelection.findIndex(item => item + '' === selectedItem.id + '');
 
             if (treeSelectionIndex === -1) {
-                this._treeSelection = [...this._treeSelection, {
-                    value: selectedItem.id,
-                    fullIdPath: selectedItem.fullIdPath,
-                    label: selectedItem.name,
-                    tooltip: selectedItem.tooltip
-                }];
+                this._treeSelection = [...this._treeSelection, selectedItem.id];
 
-                this._categoriesTree.expandNode(selectedItem.fullIdPath);
+                this._categoriesTree.expandNode(selectedItem.id);
             }
         }
 
@@ -198,25 +184,21 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
-    public _onTreeNodeUnselected(node: CategoriesListItem) {
-        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
+    public _onTreeNodeUnselected(node: number) {
+        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node);
 
         if (autoCompleteItemIndex > -1) {
             this._selectedCategories.splice(autoCompleteItemIndex, 1);
         }
     }
 
-    public _onTreeNodeSelected(node: CategoriesListItem) {
-        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
+    public _onTreeNodeSelected(node: number) {
+        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node);
 
 
         if (autoCompleteItemIndex === -1) {
-            this._selectedCategories.push({
-                id: node.value,
-                fullIdPath: node.fullIdPath,
-                name: node.label,
-                tooltip: node.tooltip
-            });
+            // TODO sakal
+            //this._selectedCategories.push(node.value);
         }
     }
 }

@@ -9,7 +9,6 @@ import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
 import { CategoriesModes } from "app-shared/content-shared/categories/categories-mode-type";
-import { CategoriesListItem } from "app-shared/content-shared/categories/categories-list-type";
 
 @Component({
   selector: 'kCategoriesList',
@@ -125,11 +124,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
         })
     }
 
-    onCategoriesUnselected(categoriesToRemove: CategoriesListItem[]) {
+    onCategoriesUnselected(categoriesToRemove: number[]) {
         const categories = this._categoriesService.cloneFilter('categories', []);
 
         categoriesToRemove.forEach(categoryToRemove => {
-            const categoryIndex = categories.findIndex(item => item.value === categoryToRemove.value);
+            const categoryIndex = categories.findIndex(item => item === categoryToRemove);
             if (categoryIndex !== -1) {
                 categories.splice(
                     categoryIndex,
@@ -140,18 +139,19 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
         this._categoriesService.filter({categories});
     }
 
-    onCategorySelected(category: CategoriesListItem){
+    onCategorySelected(category: number){
         const categories = this._categoriesService.cloneFilter('categories', []);
-        if (!categories.find(item => item.value === category.value)) {
+        if (!categories.find(item => item === category)) {
             if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
                 // when this component is running with SelfAndChildren mode, we need to manually unselect
                 // the first nested child (if any) that is currently selected
                 const childrenToRemove = categories.filter(item => {
                     // check if this item is a parent of another item (don't validate last item which is the node itself)
                     let result = false;
-                    for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
-                        result = item.fullIdPath[i] === category.value;
-                    }
+                    // TODO sakal
+                    // for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
+                    //     result = item.fullIdPath[i] === category.value;
+                    // }
                     return result;
                 });
 

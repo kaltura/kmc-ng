@@ -338,7 +338,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
 
 
         if (data.categories && data.categories.length) {
-            const categoriesValue = data.categories.map(item => item.value).join(',');
+            const categoriesValue = data.categories.join(',');
             if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
                 filter.ancestorIdIn = categoriesValue;
             } else {

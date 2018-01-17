@@ -10,7 +10,6 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 import {
     EntriesRefineFiltersService,
     RefineGroup
@@ -197,11 +196,11 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         })
     }
 
-    onCategoriesUnselected(categoriesToRemove: CategoriesListItem[]) {
+    onCategoriesUnselected(categoriesToRemove: number[]) {
         const categories = this._entriesStore.cloneFilter('categories', []);
 
         categoriesToRemove.forEach(categoryToRemove => {
-            const categoryIndex = categories.findIndex(item => item.value === categoryToRemove.value);
+            const categoryIndex = categories.findIndex(item => item === categoryToRemove);
             if (categoryIndex !== -1) {
                 categories.splice(
                     categoryIndex,
@@ -212,18 +211,20 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         this._entriesStore.filter({categories});
     }
 
-    onCategorySelected(category: CategoriesListItem){
+    onCategorySelected(category: number){
         const categories = this._entriesStore.cloneFilter('categories', []);
-        if (!categories.find(item => item.value === category.value)) {
+        if (!categories.find(item => item === category)) {
             if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
                 // when this component is running with SelfAndChildren mode, we need to manually unselect
                 // the first nested child (if any) that is currently selected
                 const childrenToRemove = categories.filter(item => {
                     // check if this item is a parent of another item (don't validate last item which is the node itself)
                     let result = false;
-                    for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
-                        result = item.fullIdPath[i] === category.value;
-                    }
+
+                    // TODO sakal
+                    // for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
+                    //     result = item.fullIdPath[i] === category.value;
+                    // }
                     return result;
                 });
 

@@ -14,7 +14,6 @@ import {
 } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 @Component({
   selector: 'kCategoryParentSelector',
@@ -23,14 +22,14 @@ import { CategoriesListItem } from 'app-shared/content-shared/categories/categor
 })
 export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
 
-  @Output() onCategorySelected = new EventEmitter<CategoriesListItem>();
+  @Output() onCategorySelected = new EventEmitter<number>();
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
 
 
   public _categoriesLoaded = false;
-  public _selectedCategory: CategoriesListItem = null;
+  public _selectedCategory: number = null;
   public _selectionTooltip = '';
 
   private _searchCategoriesSubscription: ISubscription;
@@ -54,7 +53,9 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
   }
 
   private _updateSelectionTooltip(): void {
-      const tooltip = this._selectedCategory ? this._selectedCategory.tooltip : this._appLocalization.get('applications.content.addNewCategory.noParent');
+      // TODO sakal
+      // const tooltip = this._selectedCategory ? this._selectedCategory.tooltip : this._appLocalization.get('applications.content.addNewCategory.noParent');
+      const tooltip = '';
       this._selectionTooltip = this._appLocalization.get(
           'applications.content.categories.selectedCategory',
           {0: tooltip}
@@ -72,7 +73,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
 
     this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query).subscribe(data => {
         const suggestions = [];
-        const selectedCategoryValue = this._selectedCategory ? this._selectedCategory.value : null;
+        const selectedCategoryValue = this._selectedCategory ? this._selectedCategory : null;
 
         (data || []).forEach(suggestedCategory => {
           const label = suggestedCategory.fullNamePath.join(' > ') +
@@ -96,21 +97,16 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
       // clear user text from component
       this._autoComplete.clearValue();
 
-      if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
-          this._selectedCategory = {
-              value: selectedItem.id,
-              label: selectedItem.name,
-              fullIdPath: selectedItem.fullIdPath,
-              tooltip: (selectedItem.fullNamePath || []).join(' > ')
-          };
+      if (selectedItem && selectedItem.id) {
+          this._selectedCategory = selectedItem.id;
           this.onCategorySelected.emit(this._selectedCategory);
 
-          this._categoriesTree.expandNode(selectedItem.fullIdPath);
+          this._categoriesTree.expandNode(selectedItem.id);
           this._updateSelectionTooltip();
       }
   }
 
-  public _onCategorySelected(category: CategoriesListItem) {
+  public _onCategorySelected(category: number) {
       this._selectedCategory = category;
       this._updateSelectionTooltip();
       this.onCategorySelected.emit(this._selectedCategory);
