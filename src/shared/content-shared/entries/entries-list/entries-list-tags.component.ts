@@ -23,6 +23,7 @@ const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 
 export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     @Output() onTagsChange = new EventEmitter<void>();
+    @Input() enforcedFilters: Partial<EntriesFilters>;
 
     @Input() set refineFilters(groups: RefineGroup[]) {
         this._refineFiltersMap.clear();
@@ -100,11 +101,15 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
             (this._filterTags || []).forEach(tag => {
                 if ((<string[]>listTypes).indexOf(tag.type) !== -1) {
-                    tag.tooltip = tag.label = this._getRefineLabel(tag.type, tag.value);
+                    tag.label = this._getRefineLabel(tag.type, tag.value);
+                    tag.tooltip = this._appLocalization.get(`applications.content.filters.${tag.type}`, {'0': tag.label});
                 }
             });
+
+            this.onTagsChange.emit();
         } else {
             this._showTags = false;
+            this.onTagsChange.emit();
         }
     }
 
@@ -120,6 +125,13 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     private _updateComponentState(updates: Partial<EntriesFilters>): void {
+
+        if (this.enforcedFilters) {
+            Object.keys(this.enforcedFilters).forEach(enforcedFilter => {
+                delete updates[enforcedFilter];
+            });
+        }
+
         if (typeof updates.freetext !== 'undefined') {
             this._syncTagOfFreetext();
         }

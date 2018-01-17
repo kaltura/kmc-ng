@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import {
@@ -17,19 +17,23 @@ import {
 } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
+
+
 @Component({
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',
   styleUrls: ['./entries-list.component.scss'],
     providers: [EntriesRefineFiltersService]
 })
-export class EntriesListComponent implements OnInit, OnDestroy {
+export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() showReload = true;
     @Input() isBusy = false;
     @Input() blockerMessage: AreaBlockerMessage = null;
     @Input() selectedEntries: any[] = [];
     @Input() columns: EntriesTableColumns | null;
     @Input() rowActions: { label: string, commandName: string }[];
+    @Input() enforcedFilters: Partial<EntriesFilters>;
+    @Input() defaultFilters: Partial<EntriesFilters>;
 
     @ViewChild('tags') private tags: StickyComponent;
 
@@ -59,7 +63,33 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         this._prepare();
     }
 
+    ngOnChanges(changes)
+    {
+        if (typeof changes.enforcedFilters !== 'undefined' && changes.enforcedFilters.currentValue)
+        {
+            this._entriesStore.filter(changes.enforcedFilters.currentValue);
+        }
+
+        if (typeof changes.defaultFilters !== 'undefined' && changes.defaultFilters.currentValue)
+        {
+            this._entriesStore.filter(changes.defaultFilters.currentValue);
+        }
+    }
+
     private _prepare(): void {
+
+        this._entriesStore.preFilter$
+            .cancelOnDestroy(this)
+            .subscribe(
+                filters => {
+                    if (this.enforcedFilters) {
+                        Object.keys(this.enforcedFilters).forEach(filterName => {
+                            delete filters[filterName];
+                        });
+                    }
+                }
+            );
+
         this.isBusy = true;
         this._entriesRefineFilters.getFilters()
             .cancelOnDestroy(this)
@@ -226,8 +256,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
         onTagsChange() {
-        this.tags.updateLayout();
-    }
+            this.tags.updateLayout();
+        }
 
 
     onBulkChange(event): void {

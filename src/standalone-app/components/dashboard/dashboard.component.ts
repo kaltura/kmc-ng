@@ -11,17 +11,10 @@ import * as $ from 'jquery';
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('appMenu',true) private _appMenuRef : any;
   private onResize : () => void;
-  private _isLoggedin = false;
 
 
   constructor(private appShellService : AppShellService, appAuthentication: AppAuthentication) {
       this.onResize = this._resizeContent.bind(this);
-
-      appAuthentication.appEvents$
-          .cancelOnDestroy(this)
-          .subscribe(value => {
-              this._isLoggedin = value === AppAuthStatusTypes.UserLoggedIn;
-          })
   }
 
   private _resizeContent() : void
