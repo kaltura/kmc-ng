@@ -27,7 +27,10 @@ import {
   StringTypeAdapter,
   TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
-import {MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes} from 'app-shared/kmc-shared';
+import {
+    AppEventsService, MetadataProfileCreateModes, MetadataProfileStore,
+    MetadataProfileTypes
+} from 'app-shared/kmc-shared';
 import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
 import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
@@ -47,6 +50,7 @@ import {
   CategoriesModes,
   CategoriesModeType
 } from 'app-shared/content-shared/categories/categories-mode-type';
+import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -117,6 +121,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
     constructor(private _kalturaClient: KalturaClient,
                 private browserService: BrowserService,
                 private metadataProfileService: MetadataProfileStore,
+                private _appEvents: AppEventsService,
                 private _appLocalization: AppLocalization,
                 _logger: KalturaLogger) {
         super(_logger);
@@ -442,6 +447,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             if (categoryId && categoryId > 0) {
                 subscription = this._kalturaClient.request(new CategoryDeleteAction({id: categoryId})).subscribe(
                     result => {
+                        this._appEvents.publish(new CategoriesGraphUpdatedEvent());
                         observer.next();
                         observer.complete();
                     },

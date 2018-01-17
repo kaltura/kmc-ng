@@ -17,8 +17,6 @@ import {
 } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
-
-
 @Component({
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',

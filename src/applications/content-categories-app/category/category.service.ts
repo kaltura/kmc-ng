@@ -19,6 +19,7 @@ import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
 import {AppEventsService} from 'app-shared/kmc-shared';
+import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -74,6 +75,7 @@ export class CategoryService implements OnDestroy {
                 @Host() private _widgetsManager: CategoryWidgetsManager,
                 private _categoryRoute: ActivatedRoute,
                 private _appLocalization: AppLocalization,
+                private _appEvents: AppEventsService,
                 private _pageExitVerificationService: PageExitVerificationService,
                 appEvents: AppEventsService) {
 
@@ -173,6 +175,8 @@ export class CategoryService implements OnDestroy {
 			})
 		);
 
+
+
 		this._widgetsManager.notifyDataSaving(newCategory, request, this.category)
 			.cancelOnDestroy(this)
 			.monitor('category store: prepare category for save')
@@ -182,11 +186,18 @@ export class CategoryService implements OnDestroy {
 				if (response.ready) {
 					this._saveCategoryInvoked = true;
 
+                    const userModifiedName = this.category.name !== newCategory.name;
+
 					return this._kalturaServerClient.multiRequest(request)
 						.monitor('category store: save category')
                         .tag('block-shell')
                         .map(
 						categorySavedResponse => {
+
+							if (userModifiedName) {
+                                this._appEvents.publish(new CategoriesGraphUpdatedEvent());
+                            }
+
 							if (categorySavedResponse.hasErrors()) {
 								this._state.next({ action: ActionTypes.CategorySavingFailed });
 							} else {

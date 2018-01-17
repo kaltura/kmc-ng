@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/multicast';
 import 'rxjs/add/operator/publishReplay';
@@ -16,6 +16,9 @@ import { KalturaPrivacyType } from 'kaltura-ngx-client/api/types/KalturaPrivacyT
 import { KalturaAppearInListType } from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
 import { KalturaContributionPolicyType } from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { CategoriesGraphUpdatedEvent } from "app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export interface CategoryData {
   parentId?: number,
@@ -34,10 +37,24 @@ export interface CategoriesQuery {
 
 
 @Injectable()
-export class CategoriesSearchService {
+export class CategoriesSearchService implements OnDestroy {
   private _categoriesCache: { [key: string]: Observable<{ items: CategoryData[] }> } = {};
+  private _logger: KalturaLogger;
+  constructor(private kalturaServerClient: KalturaClient, logger: KalturaLogger, private _appLocalization: AppLocalization, private _appEvents: AppEventsService) {
+      this._logger = logger.subLogger('CategoriesSearchService');
 
-  constructor(private kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization) {
+      this._appEvents.event(CategoriesGraphUpdatedEvent)
+          .cancelOnDestroy(this)
+          .subscribe(() => {
+              this._logger.info(`reset categories cache (triggered by categories graph updated event)`);
+              this._categoriesCache = {};
+          });
+  }
+
+  ngOnDestroy()
+  {
+
+
   }
 
   public getAllCategories(): Observable<CategoriesQuery> {
@@ -116,9 +133,9 @@ export class CategoriesSearchService {
     if (!cachedResponse) {
       const categoryListRequest = this.buildCategoryListRequest({ parentId, categoriesList });
 
-      // 'multicast' function will share the observable if concurrent requests to the same parent will be executed).
-      // we don't use 'share' function since it is more relevant to hot/persist origin.
-      cachedResponse = categoryListRequest
+
+        this._logger.info(`caching categories for '${requestToken}'`);
+        this._categoriesCache[requestToken] = cachedResponse = categoryListRequest
         .map(response => {
           // parse response into categories items
           return { items: this.parseCategoriesItems(response) };
