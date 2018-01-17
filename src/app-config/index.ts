@@ -105,6 +105,11 @@ export const environment = {
                         "routePath": "settings/accountUpgrade",
                         "titleToken": "Account Upgrade",
                         "enabled": true
+                    },
+                    {
+                        "routePath": "settings/accessControl",
+                        "titleToken": "AccessControl",
+                        "enabled": true
                     }
                 ]
             }, {

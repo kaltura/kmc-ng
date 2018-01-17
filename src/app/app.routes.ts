@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ErrorComponent } from './components/error/error.component';
 import { environment } from 'app-environment';
+import { SettingsAccessControlAppModule } from '../applications/settings-access-control-app/settings-access-control-app.module';
 
 
 const routes: Routes = <Routes>[
@@ -62,6 +63,10 @@ const routes: Routes = <Routes>[
           {
             path: 'accountUpgrade',
             loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
+          },
+          {
+            path: 'accessControl',
+            loadChildren: '../applications/settings-access-control-app/settings-access-control-app.module#SettingsAccessControlAppModule'
           }
         ]
         },
