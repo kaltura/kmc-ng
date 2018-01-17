@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="isBusy" [message]="blockerMessage" [bodyScroll]="true">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
       <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
@@ -54,6 +54,10 @@
         </div>
       </kSticky>
 
+
+        <k-area-blocker [showLoader]="_tableIsBusy"
+                        [message]="_tableBlockerMessage"
+                        [bodyScroll]="true">
       <kEntriesTable class="kEntriesTable"
                      scrollHeight="100%"
                      [entries]="(_entriesStore.entries.data$ | async)?.items"
@@ -65,6 +69,9 @@
                      (sortChanged)="onSortChanged($event)"
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>
+        </k-area-blocker>
+
+
 
       <div class="kEntriesTableFooter kContent" #footer *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">
         <p-paginator

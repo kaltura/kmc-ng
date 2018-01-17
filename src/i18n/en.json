@@ -599,7 +599,7 @@
         }
       },
       "filters": {
-        "errorLoading": "Error loading filters",
+        "errorLoading": "Failed to prepare view, please try again",
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
         "close": "Close",

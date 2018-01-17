@@ -1,7 +1,4 @@
 <div class="kEntriesTable" [class.noResults]="!_entries?.length">
-  <k-area-blocker [showLoader]="(entriesStore.entries.state$ | async)?.loading || this._deferredLoading"
-                  [message]="_blockerMessage"
-                  [bodyScroll]="true">
     <p-dataTable #dataTable
                  dataKey="id"
                  scrollable="true"
@@ -146,5 +143,4 @@
     </p-dataTable>
 
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
-  </k-area-blocker>
 </div>

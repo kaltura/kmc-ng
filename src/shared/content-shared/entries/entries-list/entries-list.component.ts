@@ -27,19 +27,19 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 })
 export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() showReload = true;
-    @Input() isBusy = false;
-    @Input() blockerMessage: AreaBlockerMessage = null;
     @Input() selectedEntries: any[] = [];
     @Input() columns: EntriesTableColumns | null;
     @Input() rowActions: { label: string, commandName: string }[];
     @Input() enforcedFilters: Partial<EntriesFilters>;
     @Input() defaultFilters: Partial<EntriesFilters>;
-
     @ViewChild('tags') private tags: StickyComponent;
+    @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
-  @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
-
-  public _refineFilters: RefineGroup[];
+    public _isBusy = false;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _tableIsBusy = false;
+    public _tableBlockerMessage: AreaBlockerMessage = null;
+    public _refineFilters: RefineGroup[];
 
     public _query = {
         freetext: '',
@@ -90,30 +90,61 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
 
-        this.isBusy = true;
+        this._isBusy = true;
         this._entriesRefineFilters.getFilters()
             .cancelOnDestroy(this)
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 groups => {
-                    this.isBusy = false;
+                    this._isBusy = false;
                     this._refineFilters = groups;
                     this._restoreFiltersState();
                     this._registerToFilterStoreDataChanges();
+                    this._registerToDataChanges();
                 },
                 error => {
-                    this.isBusy = false;
-                    this.blockerMessage = new AreaBlockerMessage({
-                        message: error.message || this._appLocalization.get('applications.content.filters.errorLoading'),
+                    this._isBusy = false;
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: this._appLocalization.get('applications.content.filters.errorLoading'),
                         buttons: [{
                             label: this._appLocalization.get('app.common.retry'),
                             action: () => {
-                                this.blockerMessage = null;
+                                this._blockerMessage = null;
                                 this._prepare();
                             }
                         }
                         ]
                     })
+                });
+    }
+
+    private _registerToDataChanges(): void {
+        this._entriesStore.entries.state$
+            .cancelOnDestroy(this)
+            .subscribe(
+                result => {
+
+                    this._tableIsBusy = result.loading;
+
+                    if (result.errorMessage) {
+                        this._tableBlockerMessage = new AreaBlockerMessage({
+                            message: result.errorMessage || 'Error loading entries',
+                            buttons: [{
+                                label: 'Retry',
+                                action: () => {
+                                    this._tableBlockerMessage = null;
+                                    this._entriesStore.reload();
+                                }
+                            }
+                            ]
+                        })
+                    } else {
+                        this._tableBlockerMessage = null;
+                    }
+                },
+                error => {
+                    console.warn('[kmcng] -> could not load entries'); // navigate to error page
+                    throw error;
                 });
     }
 
