@@ -1622,6 +1622,33 @@
           "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
           "sendFailed": "An error occurred during account upgrade"
         }
+      },
+      "accessControl": {
+        "selected": "{{0}} Selected",
+        "cancel": "Cancel",
+        "deleteProfile": {
+          "header": "Delete Access Control Profile(s)",
+          "message": "After delete of Access Control Profile, all entries using it will go back to use the default profile. Are you sure you want to delete the following Access Control Profile(s): {{0}}?"
+        },
+        "table": {
+          "header": "{{0}} Profiles",
+          "name": "Name",
+          "id": "ID",
+          "createdOn": "Created On",
+          "domain": "Domain",
+          "countries": "Countries",
+          "ips": "IPs",
+          "flavors": "Flavors",
+          "advancedSecurity": "Advanced Security",
+          "actions": {
+            "delete": "Delete",
+            "edit": "Edit"
+          }
+        },
+        "errors": {
+          "loading": "Could not load Access Control Profiles",
+          "delete": ""
+        }
       }
     }
   },
