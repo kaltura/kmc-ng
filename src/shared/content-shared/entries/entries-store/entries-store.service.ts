@@ -15,7 +15,6 @@ import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
@@ -30,18 +29,16 @@ import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLive
 import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaUtils, XmlParser } from '@kaltura-ng/kaltura-common';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import {
     FiltersStoreBase, TypeAdaptersMapping,
-    GroupedListAdapter,
     DatesRangeAdapter, DatesRangeType,
     StringTypeAdapter,
     NumberTypeAdapter, NewListTypeAdapter,
-    GroupedListType
+    NewGroupedListAdapter, NewGroupedListType
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
-import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
 import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-shared/categories/categories-list-type';
 import {
     CategoriesModeAdapter, CategoriesModes,
@@ -49,6 +46,8 @@ import {
 } from 'app-shared/content-shared/categories/categories-mode-type';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { Subject } from 'rxjs/Subject';
+import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
+import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
 
 export enum SortDirection {
     Desc,
@@ -75,7 +74,7 @@ export interface EntriesFilters {
     distributions: string[],
     categories: CategoriesListType,
     categoriesMode: CategoriesModeType,
-    customMetadata: GroupedListType
+    customMetadata: NewGroupedListType<string>
 }
 
 
@@ -373,42 +372,42 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             }
 
             // filters of custom metadata lists
-            // if (this._metadataProfiles && this._metadataProfiles.length > 0) {
-            //
-            //     this._metadataProfiles.forEach(metadataProfile => {
-            //         // create advanced item for all metadata profiles regardless if the user filtered by them or not.
-            //         // this is needed so freetext will include all metadata profiles while searching.
-            //         const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
-            //             {
-            //                 metadataProfileId: metadataProfile.id,
-            //                 type: KalturaSearchOperatorType.searchAnd,
-            //                 items: []
-            //             }
-            //         );
-            //         advancedSearch.items.push(metadataItem);
-            //
-            //         metadataProfile.lists.forEach(list => {
-            //             const metadataProfileFilters = data.customMetadata[list.id];
-            //             if (metadataProfileFilters && metadataProfileFilters.length > 0) {
-            //                 const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
-            //                     metadataProfileId: metadataProfile.id,
-            //                     type: KalturaSearchOperatorType.searchOr,
-            //                     items: []
-            //                 });
-            //                 metadataItem.items.push(innerMetadataItem);
-            //
-            //                 metadataProfileFilters.forEach(filterItem => {
-            //                     const searchItem = new KalturaSearchCondition({
-            //                         field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-            //                         value: filterItem
-            //                     });
-            //
-            //                     innerMetadataItem.items.push(searchItem);
-            //                 });
-            //             }
-            //         });
-            //     });
-            // }
+            if (this._metadataProfiles && this._metadataProfiles.length > 0) {
+
+                this._metadataProfiles.forEach(metadataProfile => {
+                    // create advanced item for all metadata profiles regardless if the user filtered by them or not.
+                    // this is needed so freetext will include all metadata profiles while searching.
+                    const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
+                        {
+                            metadataProfileId: metadataProfile.id,
+                            type: KalturaSearchOperatorType.searchAnd,
+                            items: []
+                        }
+                    );
+                    advancedSearch.items.push(metadataItem);
+
+                    metadataProfile.lists.forEach(list => {
+                        const metadataProfileFilters = data.customMetadata[list.id];
+                        if (metadataProfileFilters && metadataProfileFilters.length > 0) {
+                            const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
+                                metadataProfileId: metadataProfile.id,
+                                type: KalturaSearchOperatorType.searchOr,
+                                items: []
+                            });
+                            metadataItem.items.push(innerMetadataItem);
+
+                            metadataProfileFilters.forEach(filterItem => {
+                                const searchItem = new KalturaSearchCondition({
+                                    field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
+                                    value: filterItem
+                                });
+
+                                innerMetadataItem.items.push(searchItem);
+                            });
+                        }
+                    });
+                });
+            }
 
             if (data.categories && data.categories.length) {
                 const categoriesValue = data.categories.map(item => item).join(',');
@@ -560,7 +559,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             distributions: new NewListTypeAdapter<string>(),
             categories: new CategoriesListAdapter(),
             categoriesMode: new CategoriesModeAdapter(),
-            customMetadata: new GroupedListAdapter()
+            customMetadata: new NewGroupedListAdapter<string>()
         };
     }
 }

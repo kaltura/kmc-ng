@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { GroupedListItem, RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
+import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -375,12 +375,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                   })
                   .forEach(selectedNode => {
                       if (!newFilterItems.find(item => item === selectedNode.value)) {
-
-                          if (listData.group === 'customMetadata') {
-                              // newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label,  tooltip: `${listData.items[0].label}: ${selectedNode.value}`  });
-                          } else {
-                              newFilterItems.push(selectedNode.value);
-                          }
+                          newFilterItems.push(selectedNode.value);
                       }
                   });
               this._entriesStore.filter({[newFilterName]: newFilterValue});

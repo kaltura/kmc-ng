@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import * as moment from 'moment';
-import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
+import { NewGroupedListType } from '@kaltura-ng/mc-shared/filters';
 import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import {
@@ -103,6 +103,11 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 if ((<string[]>listTypes).indexOf(tag.type) !== -1) {
                     tag.label = this._getRefineLabel(tag.type, tag.value);
                     tag.tooltip = this._appLocalization.get(`applications.content.filters.${tag.type}`, {'0': tag.label});
+                }else if (tag.type.indexOf('customMetadata|') === 0)
+                {
+                    const [, listId] = tag.type.split('|');
+                    const listLabel = this._getRefineCustomMetadataListName(listId);
+                    tag.tooltip = `${listLabel}${listLabel ? ' : ' : ''}${tag.value}`;
                 }
             });
 
@@ -245,57 +250,64 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    private _syncTagsOfCustomMetadata(customMetadataFilters: GroupedListType): void {
+    private _getRefineCustomMetadataListName(listName: string): string {
+        let result = '';
+        if (this._refineFiltersMap.size > 0) {
+            const list = this._refineFiltersMap.get(listName);
+            result = list ? list.label : result;
+
+        }
+        return result;
+    }
+
+    private _syncTagsOfCustomMetadata(customMetadataFilters: NewGroupedListType<string>): void {
 
         const customMetadataTagsMap: { [key: string]: TagItem[] } = this._filterTags.filter(item => item.type.indexOf('customMetadata|') === 0)
-            .reduce((acc, item) =>
-            {
+            .reduce((acc, item) => {
                 const [, listId] = item.type.split('|');
                 const listItems = acc[listId] = acc[listId] || [];
                 listItems.push(item);
                 return acc;
             }, {});
 
-            const uniqueListIds = new Set([...Object.keys(customMetadataTagsMap), ...Object.keys(customMetadataFilters)]);
+        const uniqueListIds = new Set([...Object.keys(customMetadataTagsMap), ...Object.keys(customMetadataFilters)]);
 
-            uniqueListIds.forEach(listId =>
-            {
-                const filtersListItems =  customMetadataFilters[listId];
-                const existsInFilters = filtersListItems && filtersListItems.length > 0;
-                const tagsListItems = customMetadataTagsMap[listId];
-                const existsInTags = tagsListItems && tagsListItems.length > 0;
+        uniqueListIds.forEach(listId => {
+            const filtersListItems = customMetadataFilters[listId];
+            const existsInFilters = filtersListItems && filtersListItems.length > 0;
+            const tagsListItems = customMetadataTagsMap[listId];
+            const existsInTags = tagsListItems && tagsListItems.length > 0;
 
-               if (existsInTags && !existsInFilters)
-               {
-                   tagsListItems.forEach(item =>
-                   {
-                       this._filterTags.splice(
-                           this._filterTags.indexOf(item),
-                           1
-                       )
-                   });
-               }else {
-                   const tagsListItemsMap = this._entriesStore.filtersUtils.toMap(tagsListItems, 'value');
-                   const filtersListItemsMap = this._entriesStore.filtersUtils.toMap(filtersListItems, 'value');
-                   const diff = this._entriesStore.filtersUtils.getDiff(tagsListItemsMap, filtersListItemsMap);
+            if (existsInTags && !existsInFilters) {
+                tagsListItems.forEach(item => {
+                    this._filterTags.splice(
+                        this._filterTags.indexOf(item),
+                        1
+                    )
+                });
+            } else {
+                const tagsListItemsMap = this._entriesStore.filtersUtils.toMap(tagsListItems, 'value');
+                const filtersListItemsMap = this._entriesStore.filtersUtils.toMap(filtersListItems);
+                const diff = this._entriesStore.filtersUtils.getDiff(tagsListItemsMap, filtersListItemsMap);
 
-                   diff.deleted.forEach(item => {
-                       this._filterTags.splice(
-                           this._filterTags.indexOf(item),
-                           1);
-                   });
+                diff.deleted.forEach(item => {
+                    this._filterTags.splice(
+                        this._filterTags.indexOf(item),
+                        1);
+                });
 
-                   diff.added.forEach(item => {
-                       const tooltip = item.tooltip  || item.label;
-                       this._filterTags.push({
-                           type: `customMetadata|${listId}`,
-                           value: item.value,
-                           label: item.label,
-                           tooltip
-                       });
-                   });
-               }
-            });
+                diff.added.forEach(item => {
+                    const listLabel = this._getRefineCustomMetadataListName(listId);
+                    const tooltip = `${listLabel}${listLabel ? ' : ' : ''}${item}`;
+                    this._filterTags.push({
+                        type: `customMetadata|${listId}`,
+                        value: item,
+                        label: item,
+                        tooltip
+                    });
+                });
+            }
+        });
     }
 
     ngOnDestroy() {
