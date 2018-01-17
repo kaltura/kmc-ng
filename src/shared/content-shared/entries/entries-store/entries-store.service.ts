@@ -39,7 +39,6 @@ import {
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
-import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-shared/categories/categories-list-type';
 import {
     CategoriesModeAdapter, CategoriesModes,
     CategoriesModeType
@@ -72,7 +71,7 @@ export interface EntriesFilters {
     accessControlProfiles: string[],
     flavors: string[],
     distributions: string[],
-    categories: CategoriesListType,
+    categories: number[],
     categoriesMode: CategoriesModeType,
     customMetadata: NewGroupedListType<string>
 }
@@ -557,7 +556,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             accessControlProfiles: new NewListTypeAdapter<string>(),
             flavors: new NewListTypeAdapter<string>(),
             distributions: new NewListTypeAdapter<string>(),
-            categories: new CategoriesListAdapter(),
+            categories: new NewListTypeAdapter<number>(),
             categoriesMode: new CategoriesModeAdapter(),
             customMetadata: new NewGroupedListAdapter<string>()
         };

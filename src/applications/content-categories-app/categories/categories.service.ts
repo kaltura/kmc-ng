@@ -16,16 +16,16 @@ import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaC
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
 import {
-  DatesRangeAdapter,
-  DatesRangeType,
-  FiltersStoreBase,
-  GroupedListAdapter,
-  GroupedListType,
-  ListAdapter,
-  ListType,
-  NumberTypeAdapter,
-  StringTypeAdapter,
-  TypeAdaptersMapping
+    DatesRangeAdapter,
+    DatesRangeType,
+    FiltersStoreBase,
+    GroupedListAdapter,
+    GroupedListType,
+    ListAdapter,
+    ListType, NewListTypeAdapter,
+    NumberTypeAdapter,
+    StringTypeAdapter,
+    TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
 import {
     AppEventsService, MetadataProfileCreateModes, MetadataProfileStore,
@@ -44,7 +44,7 @@ import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppea
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
 import {KalturaCategoryEntry} from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
 import {CategoryEntryAddAction} from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
-import {CategoriesListAdapter, CategoriesListType} from "app-shared/content-shared/categories/categories-list-type";
+
 import {
   CategoriesModeAdapter,
   CategoriesModes,
@@ -89,7 +89,7 @@ export interface CategoriesFilters {
   categoryListing: ListType,
   contributionPolicy: ListType,
   endUserPermissions: ListType,
-    categories: CategoriesListType,
+    categories: number[],
     categoriesMode: CategoriesModeType,
   customMetadata: GroupedListType
 }
@@ -517,7 +517,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             categoryListing: new ListAdapter(),
             contributionPolicy: new ListAdapter(),
             endUserPermissions: new ListAdapter(),
-            categories: new CategoriesListAdapter(),
+            categories: new NewListTypeAdapter<number>(),
             categoriesMode: new CategoriesModeAdapter(),
             customMetadata: new GroupedListAdapter()
         };
