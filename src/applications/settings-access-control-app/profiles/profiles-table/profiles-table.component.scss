@@ -57,6 +57,65 @@
       outline: 0;
     }
   }
+
+  .kAccessControlRestriction {
+    span, i {
+      vertical-align: middle;
+    }
+
+    .kAccessControlRestrictionIcon {
+      font-size: 15px;
+      margin-right: 10px;
+
+      &.authorized {
+        color: $kSuccess;
+      }
+
+      &.blocked {
+        color: $kDandger;
+      }
+    }
+  }
+
+  .kAccessControlProfilesDetailRow {
+    max-height: 164px;
+    margin: -.25em -.5em;
+    padding: 16px 0;
+    background-color: $kGrayscale7;
+    border-left: 4px solid $kGrayscale4;
+    font-size: 15px;
+    color: $kGrayscale3;
+    overflow-y: auto;
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+
+      td {
+        padding: .25em .5em;
+        vertical-align: top;
+
+        &:not(.kDescription) {
+          white-space: pre;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        &.kCountryList {
+          white-space: normal;
+        }
+      }
+    }
+
+    .kStub1 {
+      width: 44px;
+    }
+
+    .kStub2 {
+      width: 80px;
+    }
+  }
 }
 
 :host {
@@ -65,10 +124,33 @@
   margin: 0;
   flex-direction: column;
 }
-:host /deep/ p-datatable .ui-datatable-scrollable-body{
-  margin-bottom: 34px;
-}
-:host /deep/ p-datatable .stickyHeader{
-  z-index: 10;
-  display: table;
+
+:host /deep/ .kAccessControlProfilesTable p-datatable {
+  .ui-datatable-scrollable-body {
+    margin-bottom: 34px;
+  }
+  .stickyHeader {
+    z-index: 10;
+    display: table;
+  }
+
+  // TODO move to the theme repo
+  .fa-chevron-circle-right {
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-left: 12px solid $kGrayscale4;
+    border-bottom: 8px solid transparent;
+  }
+
+  .fa-chevron-circle-down {
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 12px solid $kGrayscale4;
+    margin-left: -3px;
+  }
 }

@@ -63,7 +63,7 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
         result => {
           if (result.errorMessage) {
             this._blockerMessage = new AreaBlockerMessage({
-              message: result.errorMessage || this._appLocalization.get('application.settings.accessControl.errors.loading'),
+              message: result.errorMessage || this._appLocalization.get('applications.settings.accessControl.errors.loading'),
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => this._store.reload()
@@ -106,13 +106,13 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   private _buildMenu(): void {
     this._items = [
       {
-        label: this._appLocalization.get('application.settings.accessControl.table.actions.delete'),
-        command: (event) => this._onActionSelected('delete', this._profile)
+        label: this._appLocalization.get('applications.settings.accessControl.table.actions.edit'),
+        command: () => this._onActionSelected('edit', this._profile)
       },
       {
-        label: this._appLocalization.get('application.settings.accessControl.table.actions.edit'),
-        command: (event) => this._onActionSelected('edit', this._profile)
-      }
+        label: this._appLocalization.get('applications.settings.accessControl.table.actions.delete'),
+        command: () => this._onActionSelected('delete', this._profile)
+      },
     ];
   }
 

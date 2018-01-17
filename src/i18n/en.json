@@ -1630,6 +1630,14 @@
           "header": "Delete Access Control Profile(s)",
           "message": "After delete of Access Control Profile, all entries using it will go back to use the default profile. Are you sure you want to delete the following Access Control Profile(s): {{0}}?"
         },
+        "restrictions": {
+          "authorized": "{{0}} Authorized",
+          "blocked": "{{0}} Blocked",
+          "flavors": "{{0}} Flavors",
+          "ks": "KS",
+          "freePreview": ", Free Preview",
+          "freePreviewDetails": "Free Preview\nFrom ({{0}}m:{{1}}s)"
+        },
         "table": {
           "header": "{{0}} Profiles",
           "name": "Name",

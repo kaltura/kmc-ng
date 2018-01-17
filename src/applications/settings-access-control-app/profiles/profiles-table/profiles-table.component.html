@@ -5,6 +5,7 @@
                  kStickyHeader
                  dataKey="id"
                  scrollable="true"
+                 expandableRows="true"
                  scrollHeight="100%"
                  sticksTo="profilesFilters"
                  stickyClass="stickyHeader"
@@ -16,53 +17,91 @@
                  (selectionChange)="_onSelectionChange($event)"
                  (onSort)="_onSortChanged($event)"
                  [(selection)]="selectedProfiles">
-      <p-column [style]="{'width':'44px', 'padding-left': '14px'}"
-                selectionMode="multiple"></p-column>
+      <p-column selectionMode="multiple" [style]="{'width':'44px', 'padding-left': '14px'}"></p-column>
+
+      <p-column expander="true" [style]="{'width':'44px'}"></p-column>
 
       <p-column field="name"
-                [header]="'applications.settings.accessControl.table.name' | translate">
+                [header]="'applications.settings.accessControl.table.name' | translate"
+                [style]="{'min-width': '134px'}">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span class="kAccessControlProfileTableName">{{ profile[col.field] }}</span>
+          <span class="kAccessControlProfileTableName"
+                [kTooltip]="profile?.description"
+                [maxWidth]="228">
+            {{ profile[col.field] }}
+          </span>
         </ng-template>
       </p-column>
 
       <p-column field="id"
                 [header]="'applications.settings.accessControl.table.id' | translate"></p-column>
 
-      <p-column field="createdOn"
+      <p-column field="createdAt"
                 [header]="'applications.settings.accessControl.table.createdOn' | translate"
                 [sortable]="'custom'">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span>{{ profile[col.field] | kDate }}</span>
+          <span>{{ profile[col.field] | kDate:'MM/DD/YYYY' }}</span>
         </ng-template>
       </p-column>
 
       <p-column field="domain"
                 [header]="'applications.settings.accessControl.table.domain' | translate">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span>{{ profile[col.field] }}</span>
+          <span class="kAccessControlRestriction" *ngIf="profile[col.field]">
+            <i class="kAccessControlRestrictionIcon" [ngClass]="{
+            'kIconconfirmation authorized': profile[col.field]?.isAuthorized,
+            'kIconerror blocked': !profile[col.field]?.isAuthorized
+            }"></i>
+            <span>{{ profile[col.field]?.label }}</span>
+          </span>
         </ng-template>
       </p-column>
 
       <p-column field="countries"
                 [header]="'applications.settings.accessControl.table.countries' | translate">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span>{{ profile[col.field] }}</span>
+          <span class="kAccessControlRestriction" *ngIf="profile[col.field]">
+            <i class="kAccessControlRestrictionIcon" [ngClass]="{
+            'kIconconfirmation authorized': profile[col.field]?.isAuthorized,
+            'kIconerror blocked': !profile[col.field]?.isAuthorized
+            }"></i>
+            <span>{{ profile[col.field]?.label }}</span>
+          </span>
         </ng-template>
       </p-column>
 
       <p-column field="ips"
                 [header]="'applications.settings.accessControl.table.ips' | translate">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span>{{ profile[col.field] }}</span>
+          <span class="kAccessControlRestriction" *ngIf="profile[col.field]">
+            <i class="kAccessControlRestrictionIcon" [ngClass]="{
+            'kIconconfirmation authorized': profile[col.field]?.isAuthorized,
+            'kIconerror blocked': !profile[col.field]?.isAuthorized
+            }"></i>
+            <span>{{ profile[col.field]?.label }}</span>
+          </span>
         </ng-template>
       </p-column>
 
       <p-column field="flavors"
-                [header]="'applications.settings.accessControl.table.flavors' | translate"></p-column>
+                [header]="'applications.settings.accessControl.table.flavors' | translate">
+        <ng-template let-col let-profile="rowData" pTemplate="body">
+          <span class="kAccessControlRestriction" *ngIf="profile[col.field]">
+            <i class="kAccessControlRestrictionIcon" [ngClass]="{
+            'kIconconfirmation authorized': profile[col.field]?.isAuthorized,
+            'kIconerror blocked': !profile[col.field]?.isAuthorized
+            }"></i>
+            <span>{{ profile[col.field]?.label }}</span>
+          </span>
+        </ng-template>
+      </p-column>
 
       <p-column field="advancedSecurity"
-                [header]="'applications.settings.accessControl.table.advancedSecurity' | translate"></p-column>
+                [header]="'applications.settings.accessControl.table.advancedSecurity' | translate">
+        <ng-template let-col let-profile="rowData" pTemplate="body">
+          <span>{{ profile[col.field]?.label }}</span>
+        </ng-template>
+      </p-column>
 
       <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
         <ng-template let-col let-profile="rowData" pTemplate="body">
@@ -71,8 +110,26 @@
           </div>
         </ng-template>
       </p-column>
-      <ng-template let-car pTemplate="rowexpansion">
-        <h1>IT WORKS!</h1>
+      <ng-template let-profile pTemplate="rowexpansion">
+        <div class="kAccessControlProfilesDetailRow">
+          <table>
+            <tr>
+              <td class="kStub1"></td>
+              <td class="kStub1"></td>
+              <td colspan="3" class="kDescription">{{profile?.description}}</td>
+              <td>{{profile?.domain?.details}}</td>
+              <td class="kCountryList">
+                <span *ngFor="let country of profile?.countries?.details">
+                  {{country | kCountryFromCode:'label'}}
+                </span>
+              </td>
+              <td>{{profile?.ips?.details}}</td>
+              <td>{{profile?.flavors?.details}}</td>
+              <td>{{profile?.advancedSecurity?.details}}</td>
+              <td class="kStub2"></td>
+            </tr>
+          </table>
+        </div>
       </ng-template>
     </p-dataTable>
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>

@@ -3,6 +3,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AccessControlProfilesFilters, AccessControlProfilesStore } from '../profiles-store/profiles-store.service';
+import { SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 
 @Component({
   selector: 'kAccessControlProfilesList',
@@ -124,6 +125,13 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
   public _clearSelection(): void {
     this._selectedProfiles = [];
+  }
+
+  public _onSortChanged(event: any): void {
+    this._store.filter({
+      sortBy: event.field,
+      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+    });
   }
 
   public _deleteProfiles(profiles = this._selectedProfiles): void {

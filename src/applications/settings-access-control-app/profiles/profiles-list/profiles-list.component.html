@@ -20,12 +20,14 @@
         </div>
       </kSticky>
       <kAccessControlProfilesTable class="kAccessControlProfilesTable"
-                     [list]="(_store.profiles.data$ | async)?.items"
-                     [filter]="_query"
-                     (actionSelected)="_onActionSelected($event)"
-                     [(selectedProfiles)]="_selectedProfiles"></kAccessControlProfilesTable>
+                                   [list]="(_store.profiles.data$ | async)?.items"
+                                   [filter]="_query"
+                                   (actionSelected)="_onActionSelected($event)"
+                                   (sortChanged)="_onSortChanged($event)"
+                                   [(selectedProfiles)]="_selectedProfiles"></kAccessControlProfilesTable>
 
-      <div class="kAccessControlProfilesTableFooter kContent" #footer *ngIf="(_store.profiles.data$ | async)?.totalCount">
+      <div class="kAccessControlProfilesTableFooter kContent" #footer
+           *ngIf="(_store.profiles.data$ | async)?.totalCount">
         <p-paginator
           [rows]="_query.pageSize"
           [first]="_query.pageIndex * _query.pageSize"
