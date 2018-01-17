@@ -19,6 +19,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { CategoriesGraphUpdatedEvent } from "app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated";
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
 
 export interface CategoryData {
   parentId?: number,
@@ -46,15 +47,13 @@ export class CategoriesSearchService implements OnDestroy {
       this._appEvents.event(CategoriesGraphUpdatedEvent)
           .cancelOnDestroy(this)
           .subscribe(() => {
-              this._logger.info(`reset categories cache (triggered by categories graph updated event)`);
+              this._logger.info(`clear categories cache (triggered by categories graph updated event)`);
               this._categoriesCache = {};
           });
   }
 
   ngOnDestroy()
   {
-
-
   }
 
   public getAllCategories(): Observable<CategoriesQuery> {
@@ -63,6 +62,17 @@ export class CategoriesSearchService implements OnDestroy {
 
   public getRootCategories(): Observable<CategoriesQuery> {
     return this._getCategoriesWithCache({ requestToken: 'root_categories', parentId: 0 });
+  }
+
+  public getCategory(categoryId: number): Observable<{id:number, name: string, fulleName: string}> {
+      const responseProfile = new KalturaDetachedResponseProfile({
+          fields: 'id,name,fullName',
+          type: KalturaResponseProfileType.includeFields
+      });
+
+      return <any>this.kalturaServerClient.request(
+          new CategoryGetAction({id: categoryId, responseProfile})
+      )
   }
 
   public getCategoriesFromList(categoriesList: number[]): Observable<CategoriesQuery> {
@@ -134,7 +144,7 @@ export class CategoriesSearchService implements OnDestroy {
       const categoryListRequest = this.buildCategoryListRequest({ parentId, categoriesList });
 
 
-        this._logger.info(`caching categories for '${requestToken}'`);
+        this._logger.info(`caching categories for token '${requestToken}'`);
         this._categoriesCache[requestToken] = cachedResponse = categoryListRequest
         .map(response => {
           // parse response into categories items

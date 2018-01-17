@@ -8,6 +8,7 @@ import {
     RefineGroup,
     RefineGroupList
 } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
+import { CategoriesSearchService } from 'app-shared/content-shared/categories/categories-search.service';
 
 export interface TagItem
 { type: string, value: any, label: string, tooltip: string}
@@ -41,7 +42,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     private _refineFiltersMap: Map<string, RefineGroupList> = new Map<string, RefineGroupList>();
 
     public _showTags = false;
-    constructor(private _entriesStore: EntriesStore, private _appLocalization: AppLocalization) {
+    constructor(private _entriesStore: EntriesStore, private _appLocalization: AppLocalization, private _categoriesSearch: CategoriesSearchService) {
     }
 
     removeTag(tag: any) {
@@ -225,13 +226,33 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
           });
 
           diff.added.forEach(item => {
-              const label = this._getRefineLabel(filterName, item);
-            this._filterTags.push({
-              type: filterName,
-              value: item,
-              label: label,
-              tooltip:  this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': label})
-            });
+              let label = item;
+              if (filterName === 'categories')
+              {
+                  label = '(loading...)';
+                  // this._categoriesSearch.getCategory(Number(item))
+                  //     .cancelOnDestroy(this)
+                  //     .subscribe(
+                  //         result =>
+                  //         {
+                  //
+                  //         },
+                  //         error =>
+                  //         {
+                  //
+                  //         }
+                  //     );
+              }else {
+                  label = this._getRefineLabel(filterName, item);
+              }
+
+              const newTag = {
+                  type: filterName,
+                  value: item,
+                  label: label,
+                  tooltip:  this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': label})
+              };
+            this._filterTags.push(newTag);
           });
         }
     }
