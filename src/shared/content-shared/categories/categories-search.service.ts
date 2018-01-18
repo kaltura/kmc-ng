@@ -39,8 +39,10 @@ export interface CategoriesQuery {
 
 @Injectable()
 export class CategoriesSearchService implements OnDestroy {
-  private _categoriesCache: { [key: string]: Observable<{ items: CategoryData[] }> } = {};
+  private _groupedCategoriesCache: { [key: string]: Observable<{ items: CategoryData[] }> } = {};
+  private _categoriesMap: Map<number, CategoryData> = new Map<number, CategoryData>();
   private _logger: KalturaLogger;
+
   constructor(private kalturaServerClient: KalturaClient, logger: KalturaLogger, private _appLocalization: AppLocalization, private _appEvents: AppEventsService) {
       this._logger = logger.subLogger('CategoriesSearchService');
 
@@ -48,7 +50,8 @@ export class CategoriesSearchService implements OnDestroy {
           .cancelOnDestroy(this)
           .subscribe(() => {
               this._logger.info(`clear categories cache (triggered by categories graph updated event)`);
-              this._categoriesCache = {};
+              this._groupedCategoriesCache = {};
+              this._categoriesMap.clear();
           });
   }
 
@@ -57,27 +60,34 @@ export class CategoriesSearchService implements OnDestroy {
   }
 
   public getAllCategories(): Observable<CategoriesQuery> {
-    return this._getCategoriesWithCache({ requestToken: 'all_categories_token' });
+    return this._getCategoriesWithCache({ cacheToken: 'all_categories_token' });
   }
 
   public getRootCategories(): Observable<CategoriesQuery> {
-    return this._getCategoriesWithCache({ requestToken: 'root_categories', parentId: 0 });
+    return this._getCategoriesWithCache({ cacheToken: 'root_categories', parentId: 0 });
   }
 
-  public getCategory(categoryId: number): Observable<{id:number, name: string, fulleName: string}> {
-      const responseProfile = new KalturaDetachedResponseProfile({
-          fields: 'id,name,fullName',
-          type: KalturaResponseProfileType.includeFields
-      });
+  public getCachedCategory(categoryId: number): CategoryData{
+    return this._categoriesMap.get(categoryId);
+  }
+
+  public getCategory(categoryId: number): Observable<CategoryData> {
+      const responseProfile = this._createResponseProfile();
 
       return <any>this.kalturaServerClient.request(
           new CategoryGetAction({id: categoryId, responseProfile})
-      )
+      ).map(category => {
+          return this.parseAndCacheCategories([category])[0];
+      })
   }
 
-  public getCategoriesFromList(categoriesList: number[]): Observable<CategoriesQuery> {
+  public getCategories(categoriesList: number[]): Observable<CategoriesQuery> {
     if (categoriesList && categoriesList.length) {
-      return this._getCategories({ categoriesList });
+        return this.buildCategoryListRequest({ categoriesList })
+            .map(response => {
+                // parse response into categories items
+                return { items: this.parseAndCacheCategories(response.objects) };
+            });
     } else {
       return Observable.throw({ message: 'missing categoriesList argument' });
     }
@@ -89,7 +99,7 @@ export class CategoriesSearchService implements OnDestroy {
       return Observable.throw({ message: 'missing parentId argument' });
     }
 
-    return this._getCategoriesWithCache({ requestToken: parentId + '', parentId });
+    return this._getCategoriesWithCache({ cacheToken: parentId + '', parentId });
   }
 
   public getSuggestions(text: string): Observable<CategoryData[]> {
@@ -108,7 +118,7 @@ export class CategoriesSearchService implements OnDestroy {
         const requestSubscription = this.kalturaServerClient.request(
           new CategoryListAction({ filter })
         ).subscribe(result => {
-            const items = this.parseCategoriesItems(result);
+            const items = this.parseAndCacheCategories(result.objects);
 
             observer.next(items);
             observer.complete();
@@ -128,29 +138,18 @@ export class CategoriesSearchService implements OnDestroy {
     }
   }
 
-  private _getCategories({ parentId, categoriesList }: { parentId?: number, categoriesList?: number[] }): Observable<CategoriesQuery> {
-    return this.buildCategoryListRequest({ parentId, categoriesList })
-      .map(response => {
-        // parse response into categories items
-        return { items: this.parseCategoriesItems(response) };
-      });
-  }
-
-  private _getCategoriesWithCache({ requestToken, parentId, categoriesList }: { requestToken: string, parentId?: number, categoriesList?: number[] }): Observable<CategoriesQuery> {
+  private _getCategoriesWithCache({ cacheToken, parentId, categoriesList }: { cacheToken: string, parentId?: number, categoriesList?: number[] }): Observable<CategoriesQuery> {
     // no request found in queue - get from cache if already queried those categories
-    let cachedResponse = this._categoriesCache[requestToken];
+    let cachedResponse = this._groupedCategoriesCache[cacheToken];
 
     if (!cachedResponse) {
-      const categoryListRequest = this.buildCategoryListRequest({ parentId, categoriesList });
-
-
-        this._logger.info(`caching categories for token '${requestToken}'`);
-        this._categoriesCache[requestToken] = cachedResponse = categoryListRequest
+        this._logger.info(`caching categories for token '${cacheToken}'`);
+        this._groupedCategoriesCache[cacheToken] = cachedResponse = this.buildCategoryListRequest({ parentId, categoriesList })
         .map(response => {
           // parse response into categories items
-          return { items: this.parseCategoriesItems(response) };
+          return { items: this.parseAndCacheCategories(response.objects) };
         }).catch(error => {
-          this._categoriesCache[requestToken] = null;
+          this._groupedCategoriesCache[cacheToken] = null;
 
           // re-throw the provided error
           return Observable.throw(error);
@@ -162,29 +161,33 @@ export class CategoriesSearchService implements OnDestroy {
     return cachedResponse;
   }
 
-  private parseCategoriesItems(response: KalturaCategoryListResponse): CategoryData[] {
+  private parseAndCacheCategories(kalturaCategories: KalturaCategory[]): CategoryData[] {
     const result = [];
 
-    if (response && response.objects) {
-      response.objects.forEach((category: KalturaCategory) => {
+    if (kalturaCategories) {
+        kalturaCategories.map((category) => {
         const fullIdPath = (category.fullIds ? category.fullIds.split('>') : []).map((item: any) => Number(item));
-        result.push({
-          id: category.id,
-          name: category.name,
-          fullIdPath: fullIdPath,
-          referenceId: category.referenceId,
-          parentId: category.parentId !== 0 ? category.parentId : null,
-          sortValue: category.partnerSortValue,
-          fullNamePath: category.fullName ? category.fullName.split('>') : [],
-          childrenCount: category.directSubCategoriesCount,
-          tooltip: this._buildTooltip(category)
-        });
+        const newCategoryData = {
+            id: category.id,
+            name: category.name,
+            fullIdPath: fullIdPath,
+            referenceId: category.referenceId,
+            parentId: category.parentId !== 0 ? category.parentId : null,
+            sortValue: category.partnerSortValue,
+            fullNamePath: category.fullName ? category.fullName.split('>') : [],
+            childrenCount: category.directSubCategoriesCount,
+            tooltip: this._buildTooltip(category)
+        };
+
+        this._categoriesMap.set(newCategoryData.id, newCategoryData);
+        result.push(newCategoryData);
       });
     }
 
     return result;
   }
 
+  // TODO Sakal move to relevant place
   private _buildTooltip(category: KalturaCategory): string {
     if (!category.privacyContexts) {
       return category.fullName;
@@ -273,13 +276,17 @@ export class CategoriesSearchService implements OnDestroy {
       filter.idIn = categoriesList.join(',');
     }
 
-    const responseProfile = new KalturaDetachedResponseProfile({
-      fields: 'id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount,contributionPolicy,privacyContext,privacyContexts,appearInList,privacy,membersCount',
-      type: KalturaResponseProfileType.includeFields
-    });
+    const responseProfile = this._createResponseProfile();
 
     return <any>this.kalturaServerClient.request(
       new CategoryListAction({ filter, responseProfile })
     )
+  }
+
+  private _createResponseProfile(): KalturaDetachedResponseProfile {
+      return new KalturaDetachedResponseProfile({
+          fields: 'id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount,contributionPolicy,privacyContext,privacyContexts,appearInList,privacy,membersCount',
+          type: KalturaResponseProfileType.includeFields
+      });
   }
 }

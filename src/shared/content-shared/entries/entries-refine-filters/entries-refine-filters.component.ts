@@ -352,7 +352,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
-              let newFilterItems: any[]; // TODO SAKAL
+              let newFilterItems: string[];
               let newFilterValue;
               let newFilterName: string;
 

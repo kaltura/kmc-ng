@@ -185,20 +185,19 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public _onTreeNodeUnselected(node: number) {
-        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node);
+        const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
 
-        if (autoCompleteItemIndex > -1) {
-            this._selectedCategories.splice(autoCompleteItemIndex, 1);
+        if (requestedCategoryIndex > -1) {
+            this._selectedCategories.splice(requestedCategoryIndex, 1);
         }
     }
 
     public _onTreeNodeSelected(node: number) {
-        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node);
+        const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
 
 
-        if (autoCompleteItemIndex === -1) {
-            // TODO sakal
-            //this._selectedCategories.push(node.value);
+        if (requestedCategoryIndex === -1) {
+            //this._selectedCategories.push(node);
         }
     }
 }

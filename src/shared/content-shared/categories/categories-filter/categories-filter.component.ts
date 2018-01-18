@@ -13,6 +13,7 @@ import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/ca
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
+import { CategoriesTreeNode } from 'app-shared/content-shared/categories/categories-tree/categories-tree-node';
 
 
 @Component({
@@ -111,9 +112,36 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         if (selectedItem) {
             const data = selectedItem.data;
-            this.onCategorySelected.emit(data.id);
+            this._onCategorySelected(data.id);
             this._categoriesTree.expandNode(data.id);
         }
+    }
+
+    _onCategorySelected(categoryId: number):void {
+        if (this.selectionMode === CategoriesModes.SelfAndChildren) {
+            // when this component is running with SelfAndChildren mode, we need to manually unselect
+            // the first nested child (if any) that is currently selected
+            const categoriesToRemove = this.selection
+                .map(selectedCategoryId => {
+                    return this._categoriesSearch.getCachedCategory(selectedCategoryId);
+                })
+                .filter(selectedCategory => {
+                    // check if this item is a parent of another item (don't validate last item which is the node itself)
+                    let result = false;
+                    if (selectedCategory) {
+                        for (let i = 0, length = selectedCategory.fullIdPath.length; i < length - 1 && !result; i++) {
+                            result = selectedCategory.fullIdPath[i] === categoryId;
+                        }
+                    }
+                    return result;
+                }).map(selectedCategory => selectedCategory.id);
+
+            if (categoriesToRemove.length) {
+                this.onCategoriesUnselected.emit(categoriesToRemove);
+            }
+        }
+
+        this.onCategorySelected.emit(categoryId);
     }
 
     _searchSuggestions(event): void {

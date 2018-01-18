@@ -26,6 +26,7 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     @Output() onCategoriesLoaded = new EventEmitter<{ totalCategories: number }>();
 
     @Output() onCategorySelected: EventEmitter<number> = new EventEmitter();
+    @Output() onTreeNodeSelected: EventEmitter<CategoriesTreeNode> = new EventEmitter();
     @Output() onCategoryUnselected: EventEmitter<number> = new EventEmitter();
 
     @Output() selectedCategoryChange = new EventEmitter<number>();
@@ -45,9 +46,10 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     private _selectedCategory: number;
     private _selectedCategories: number[] = [];
 
-    public get categories(): CategoriesTreeNode[] {
-        return this._categories;
-    }
+    // TODO sakal
+    // public get categories(): CategoriesTreeNode[] {
+    //     return this._categories;
+    // }
 
     constructor(private _categoriesTreeService: CategoriesTreeService,
                 private _appAuthentication: AppAuthentication,
@@ -127,6 +129,7 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
             this.selectedCategoriesChange.emit(this._selectedCategories);
         }
         this.onCategorySelected.emit(category);
+        this.onTreeNodeSelected.emit(category);
     }
 
     public _onNodeUnselect({node}) {
@@ -152,9 +155,13 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
         this._blockerMessage = null;
         this._categoriesTreeService.getCategories()
             .subscribe(result => {
-                    this._categories = result.categories;
                     this._loading = false;
-
+                    this._categories = result.categories;
+                    this._categoriesMap.clear();
+                    this._categories.forEach(category =>
+                    {
+                       this._addCategoryToMap(category);
+                    });
                     this._syncTreeSelections();
                     this._syncSelectedTreeNode();
 
@@ -173,12 +180,24 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     }
 
 
+    private _addCategoryToMap(category: CategoriesTreeNode): void {
+        if (category) {
+            this._categoriesMap.set(category.value, category);
+
+            if (category.children) {
+                category.children.forEach((child) => {
+                    this._addCategoryToMap(child);
+                });
+            }
+        }
+    }
+
     public _onNodeExpand(event: any): void {
         const node: CategoriesTreeNode = event && event.node instanceof CategoriesTreeNode ? event.node : null;
 
         if (node && this.inLazyMode) {
-            this._categoriesTreeService.loadNodeChildren(node, (children) => {
-                if (node instanceof CategoriesTreeNode && node.children) {
+            this._categoriesTreeService.loadNodeChildren(node, () => {
+                if (node.children) {
                     node.children.forEach(nodeChild => {
 
                         if (this.selectionMode === 'single')
@@ -201,8 +220,6 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
 
                     });
                 }
-
-                return children;
             });
         }
     }

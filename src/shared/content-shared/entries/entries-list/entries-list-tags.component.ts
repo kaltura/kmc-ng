@@ -229,7 +229,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
               let label = item;
               if (filterName === 'categories')
               {
-                  label = '(loading...)';
+                  label = '(loading...)' + item;
                   // this._categoriesSearch.getCategory(Number(item))
                   //     .cancelOnDestroy(this)
                   //     .subscribe(

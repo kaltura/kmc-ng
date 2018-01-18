@@ -40,7 +40,7 @@ export class CategoriesTreeService {
     });
   }
 
-  public loadNodeChildren(node: CategoriesTreeNode, childrenResolver?: (children: CategoriesTreeNode[]) => CategoriesTreeNode[]): void {
+  public loadNodeChildren(node: CategoriesTreeNode, onPostLoad?: (node: CategoriesTreeNode) => void): void {
     // load node children, relevant only if 'inLazyMode' and node children weren't loaded already
     if (this._inLazyMode && node && node instanceof CategoriesTreeNode) {
 
@@ -61,15 +61,16 @@ export class CategoriesTreeService {
 
           this._categoriesSearchService.getChildrenCategories(node.value).subscribe(result => {
               // add children to the node
-              let nodeChildren = this.createNode(result.items, node);
+              const nodeChildren = this.createNode(result.items, node);
 
-              if (childrenResolver) {
-                nodeChildren = childrenResolver.call(this, nodeChildren);
+              if (onPostLoad) {
+                onPostLoad.call(this, node);
               }
 
-              if (nodeChildren) {
-                node.setChildren(nodeChildren);
-              }
+              // TODO sakal
+              // if (nodeChildren) {
+              //   node.setChildren(nodeChildren);
+              // }
             },
             error => {
               node.setChildrenLoadStatus(NodeChildrenStatuses.error,

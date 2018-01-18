@@ -240,7 +240,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 const categoriesList = response.objects.map(category => category.categoryId);
 
                 if (categoriesList.length) {
-                    return this._categoriesSearchService.getCategoriesFromList(categoriesList);
+                    return this._categoriesSearchService.getCategories(categoriesList);
                 } else {
                     return Observable.of({items: []});
                 }
