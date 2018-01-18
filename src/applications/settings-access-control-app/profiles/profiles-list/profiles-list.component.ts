@@ -74,25 +74,38 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
           this._store.reload();
           this._clearSelection();
         },
-        () => {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: this._appLocalization.get('applications.settings.accessControl.errors.delete'),
-            buttons: [
-              {
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => {
-                  this._blockerMessage = null;
-                  this._executeDeleteProfiles(profiles);
-                }
-              },
-              {
-                label: this._appLocalization.get('app.common.cancel'),
-                action: () => {
-                  this._blockerMessage = null;
-                }
+        (err) => {
+          const error = err.error ? err.error : err;
+          const message = error.message || this._appLocalization.get('applications.settings.accessControl.errors.delete');
+          let buttons = [
+            {
+              label: this._appLocalization.get('app.common.retry'),
+              action: () => {
+                this._blockerMessage = null;
+                this._executeDeleteProfiles(profiles);
               }
-            ]
-          });
+            },
+            {
+              label: this._appLocalization.get('app.common.cancel'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }
+          ];
+
+          // do not provide retry button in case user tries to delete default profile
+          if (error.code === 'CANNOT_DELETE_DEFAULT_ACCESS_CONTROL') {
+            buttons = [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+                this._store.reload();
+                this._clearSelection();
+              }
+            }];
+          }
+
+          this._blockerMessage = new AreaBlockerMessage({ message, buttons });
         }
       );
   }

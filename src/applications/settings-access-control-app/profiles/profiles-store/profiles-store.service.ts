@@ -28,6 +28,7 @@ import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaP
 import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import { AccessControlDeleteAction } from 'kaltura-ngx-client/api/types/AccessControlDeleteAction';
+import { KalturaMultiResponse } from 'kaltura-ngx-client/api/kaltura-multi-response';
 
 const localStoragePageSizeKey = 'accessControlProfiles.list.pageSize';
 
@@ -294,8 +295,14 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     const actions = profiles.map(({ id }) => new AccessControlDeleteAction({ id }));
     return this._kalturaServerClient
       .multiRequest(new KalturaMultiRequest(...actions))
-      .map(() => {
-    })
+      .map((response) => {
+        if (response && response.length) {
+          const failedResponse = response.find(res => !!res.error);
+          if (failedResponse) {
+            throw Observable.throw(failedResponse.error);
+          }
+        }
+      });
   }
 }
 
