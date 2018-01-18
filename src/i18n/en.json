@@ -611,6 +611,8 @@
         "dates": "Dates",
         "after": "After",
         "before": "Before",
+        "loading_lbl": "Loading",
+        "categoryId_tt": "Category Id: {{0}}",
         "createdBetween": "Created Between",
         "mediaTypes": "Media Type: {{0}}",
         "ingestionStatuses": "Status: {{0}}",
