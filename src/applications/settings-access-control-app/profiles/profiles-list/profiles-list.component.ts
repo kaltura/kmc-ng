@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AccessControlProfilesFilters, AccessControlProfilesStore } from '../profiles-store/profiles-store.service';
 import { SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kAccessControlProfilesList',
@@ -12,8 +13,10 @@ import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccess
   styleUrls: ['./profiles-list.component.scss']
 })
 export class ProfilesListComponent implements OnInit, OnDestroy {
+  @ViewChild('editProfile') _editProfilePopup: PopupWidgetComponent;
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedProfiles: KalturaAccessControl[] = [];
+  public _selectedProfile: KalturaAccessControl;
 
   public _query = {
     pageIndex: 0,
@@ -130,7 +133,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
         this._deleteProfiles([event.profile]);
         break;
       case 'edit':
-        // TODO TBD
+        this._editProfile(event.profile);
         break;
       default:
         break;
@@ -158,6 +161,12 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
       this._browserService.confirm({ header, message, accept: () => this._executeDeleteProfiles(profiles) });
     }
+  }
+
+  public _editProfile(profile = null): void {
+    this._selectedProfile = profile;
+
+    this._editProfilePopup.open();
   }
 }
 

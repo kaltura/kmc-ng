@@ -35,7 +35,7 @@
       color: $kPrimary;
     }
   }
-  .kSelectedEntriesNum{
+  .kSelectedEntriesNum {
     padding-left: 16px;
   }
   .kAccessControlProfileTableFilters {
@@ -49,8 +49,15 @@
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     display: flex;
+
     .kSelectedEntriesNum {
       padding-left: 16px;
+    }
+
+    .kAddProfileBtn {
+      margin-left: 14px;
+      height: 36px;
+      border: none;
     }
   }
   .kBulkLogTableTags {
@@ -214,6 +221,6 @@
   margin-left: -.5em;
 }
 
-:host /deep/ .kStickyClass{
+:host /deep/ .kStickyClass {
   border-bottom: 1px solid $kGrayscale5;
 }
