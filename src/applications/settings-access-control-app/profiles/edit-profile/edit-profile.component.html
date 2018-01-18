@@ -1,0 +1,17 @@
+<div class="kEditAccessControlProfile">
+  <div class="kHeader">
+    <span class="kTitle">{{_headerTitle}}</span>
+    <div class="kButtons">
+      <a class="kCancel" (click)="parentPopup.close()">
+        {{'applications.settings.accessControl.cancel' | translate}}
+      </a>
+      <button pButton type="button" class="kButtonBranded kSaveButton"
+              [disabled]="true"
+              [label]="'applications.settings.accessControl.save' | translate"
+              (click)="_save()"></button>
+    </div>
+  </div>
+  <div class="kContainer">
+
+  </div>
+</div>

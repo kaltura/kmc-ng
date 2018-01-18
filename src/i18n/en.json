@@ -1626,7 +1626,10 @@
       "accessControl": {
         "selected": "{{0}} Selected",
         "cancel": "Cancel",
+        "save": "Save",
         "addProfile": "Add Profile",
+        "addAccessControlProfile": "Add Access Control Profile",
+        "editAccessControlProfile": "Edit Access Control Profile",
         "deleteProfile": {
           "header": "Delete Access Control Profile(s)",
           "messageWithNames": "After delete of Access Control Profile, all entries using it will go back to use the default profile. Are you sure you want to delete the following Access Control Profile(s):\n{{0}}?",
