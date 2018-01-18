@@ -1628,7 +1628,8 @@
         "cancel": "Cancel",
         "deleteProfile": {
           "header": "Delete Access Control Profile(s)",
-          "message": "After delete of Access Control Profile, all entries using it will go back to use the default profile. Are you sure you want to delete the following Access Control Profile(s): {{0}}?"
+          "messageWithNames": "After delete of Access Control Profile, all entries using it will go back to use the default profile. Are you sure you want to delete the following Access Control Profile(s):\n{{0}}?",
+          "message": "After delete of Access Control Profile, all entries using it will go back to use the default profile. Are you sure you want to delete the selected Access Control Profiles?"
         },
         "restrictions": {
           "authorized": "{{0}} Authorized",

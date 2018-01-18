@@ -3,6 +3,7 @@ import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AccessControlProfilesStore } from '../profiles-store/profiles-store.service';
+import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 
 @Component({
   selector: 'kAccessControlProfilesTable',
@@ -11,11 +12,11 @@ import { AccessControlProfilesStore } from '../profiles-store/profiles-store.ser
 })
 export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
-  public _profiles: any[] = [];
-  private _deferredProfiles: any[];
+  public _profiles: KalturaAccessControl[] = [];
+  private _deferredProfiles: KalturaAccessControl[];
 
   @Input()
-  set list(data: any[]) {
+  set list(data: KalturaAccessControl[]) {
     if (!this._deferredLoading) {
       // the table profiles 'rowTrackBy' to track changes by id. To be able to reflect changes of profiles
       // (ie when returning from profiles list page) - we should force detect changes on an empty list
@@ -28,17 +29,17 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  @Input() filter: any = {};
-  @Input() selectedProfiles: any[] = [];
+  @Input() filter: { sortBy?: string, sortDirection?: number } = {};
+  @Input() selectedProfiles: KalturaAccessControl[] = [];
 
-  @Output() actionSelected = new EventEmitter<{ action: string, profile: any }>();
-  @Output() selectedProfilesChange = new EventEmitter<any>();
-  @Output() sortChanged = new EventEmitter<any>();
+  @Output() actionSelected = new EventEmitter<{ action: string, profile: KalturaAccessControl }>();
+  @Output() selectedProfilesChange = new EventEmitter<KalturaAccessControl[]>();
+  @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
-  private _profile: any;
+  private _profile: KalturaAccessControl;
 
   public _deferredLoading = true;
   public _emptyMessage = '';
@@ -116,11 +117,11 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
     ];
   }
 
-  private _onActionSelected(action: string, profile: any): void {
+  private _onActionSelected(action: string, profile: KalturaAccessControl): void {
     this.actionSelected.emit({ action, profile });
   }
 
-  public _openActionsMenu(event: any, profile: any): void {
+  public _openActionsMenu(event: Event, profile: KalturaAccessControl): void {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
       if (!this._profile || this._profile.id !== profile.id) {
@@ -131,11 +132,11 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  public _onSelectionChange(event: any): void {
+  public _onSelectionChange(event: KalturaAccessControl[]): void {
     this.selectedProfilesChange.emit(event);
   }
 
-  public _onSortChanged(event: any): void {
+  public _onSortChanged(event: { field: string, order: number }): void {
     this.sortChanged.emit(event);
   }
 }

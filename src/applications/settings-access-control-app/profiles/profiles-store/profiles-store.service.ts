@@ -25,6 +25,9 @@ import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/Kalt
 import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
 import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
+import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
+import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
+import { AccessControlDeleteAction } from 'kaltura-ngx-client/api/types/AccessControlDeleteAction';
 
 const localStoragePageSizeKey = 'accessControlProfiles.list.pageSize';
 
@@ -38,7 +41,7 @@ export interface AccessControlProfilesFilters {
 @Injectable()
 export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlProfilesFilters> implements OnDestroy {
   private _profiles = {
-    data: new BehaviorSubject<{ items: any[], totalCount: number }>({ items: [], totalCount: 0 }),
+    data: new BehaviorSubject<{ items: KalturaAccessControl[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
 
@@ -133,7 +136,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
 
   }
 
-  private _buildQueryRequest(): Observable<any> {
+  private _buildQueryRequest(): Observable<KalturaAccessControlListResponse> {
     try {
       // create request items
       const filter = new KalturaAccessControlFilter({});
@@ -154,7 +157,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
       }
 
       // build the request
-      return <any>this._kalturaServerClient.multiRequest(new KalturaMultiRequest(
+      return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(
         new AccessControlListAction({ filter, pager }),
         new FlavorParamsListAction({
           pager: new KalturaFilterPager({ pageSize: 500 }),
@@ -287,8 +290,12 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     }
   }
 
-  public deleteProfiles(profiles: any[]): Observable<any> {
-    return Observable.of(null);
+  public deleteProfiles(profiles: KalturaAccessControl[]): Observable<void> {
+    const actions = profiles.map(({ id }) => new AccessControlDeleteAction({ id }));
+    return this._kalturaServerClient
+      .multiRequest(new KalturaMultiRequest(...actions))
+      .map(() => {
+    })
   }
 }
 

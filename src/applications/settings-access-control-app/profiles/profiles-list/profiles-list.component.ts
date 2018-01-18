@@ -4,6 +4,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AccessControlProfilesFilters, AccessControlProfilesStore } from '../profiles-store/profiles-store.service';
 import { SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 
 @Component({
   selector: 'kAccessControlProfilesList',
@@ -12,7 +13,7 @@ import { SortDirection } from 'app-shared/content-shared/entries/entries-store/e
 })
 export class ProfilesListComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedProfiles: any[] = [];
+  public _selectedProfiles: KalturaAccessControl[] = [];
 
   public _query = {
     pageIndex: 0,
@@ -62,7 +63,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _executeDeleteProfiles(profiles: any[]): void {
+  private _executeDeleteProfiles(profiles: KalturaAccessControl[]): void {
     this._blockerMessage = null;
 
     this._store.deleteProfiles(profiles)
@@ -96,7 +97,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
       );
   }
 
-  public _onPaginationChanged(state: any): void {
+  public _onPaginationChanged(state: { page: number, rows: number }): void {
     if (state.page !== this._query.pageIndex || state.rows !== this._query.pageSize) {
       this._store.filter({
         pageIndex: state.page,
@@ -110,7 +111,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
     this._store.reload();
   }
 
-  public _onActionSelected(event: { action: string, profile: any }): void {
+  public _onActionSelected(event: { action: string, profile: KalturaAccessControl }): void {
     switch (event.action) {
       case 'delete':
         this._deleteProfiles([event.profile]);
@@ -127,7 +128,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
     this._selectedProfiles = [];
   }
 
-  public _onSortChanged(event: any): void {
+  public _onSortChanged(event: { field: string, order: number }): void {
     this._store.filter({
       sortBy: event.field,
       sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
@@ -135,15 +136,15 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   }
 
   public _deleteProfiles(profiles = this._selectedProfiles): void {
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.settings.accessControl.deleteProfile.header'),
-        message: this._appLocalization.get('applications.settings.accessControl.deleteProfile.message'),
-        accept: () => {
-          this._executeDeleteProfiles(profiles);
-        }
-      }
-    );
+    if (Array.isArray(profiles) && profiles.length) {
+      const header = this._appLocalization.get('applications.settings.accessControl.deleteProfile.header');
+      const profilesNames = profiles.map(({ name }) => name).join('\n');
+      const message = profiles.length > 5
+        ? this._appLocalization.get('applications.settings.accessControl.deleteProfile.message')
+        : this._appLocalization.get('applications.settings.accessControl.deleteProfile.messageWithNames', [profilesNames]);
+
+      this._browserService.confirm({ header, message, accept: () => this._executeDeleteProfiles(profiles) });
+    }
   }
 }
 
