@@ -103,7 +103,11 @@
         }
 
         &.kCountryList {
-          white-space: normal;
+          white-space: nowrap;
+
+          .kCountryListFlag {
+            margin-right: 6px;
+          }
         }
       }
     }

@@ -13,6 +13,10 @@ export class CountryFromCodePipe implements PipeTransform {
       return value;
     }
 
-    return type === 'icon' ? value : this._appLocalization.get(`countries.${value.toLowerCase()}`);
+    const countryCode = value.toLowerCase();
+
+    return type === 'icon'
+      ? `/assets/flags/${countryCode}.gif`
+      : this._appLocalization.get(`countries.${countryCode}`);
   }
 }

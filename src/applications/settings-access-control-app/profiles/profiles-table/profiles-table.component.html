@@ -119,9 +119,10 @@
               <td colspan="3" class="kDescription">{{profile?.description}}</td>
               <td>{{profile?.domain?.details}}</td>
               <td class="kCountryList">
-                <span *ngFor="let country of profile?.countries?.details">
+                <div *ngFor="let country of profile?.countries?.details">
+                  <img class="kCountryListFlag" [src]="country | kCountryFromCode:'icon'" [alt]="country">
                   {{country | kCountryFromCode:'label'}}
-                </span>
+                </div>
               </td>
               <td>{{profile?.ips?.details}}</td>
               <td>{{profile?.flavors?.details}}</td>
