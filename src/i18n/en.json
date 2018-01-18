@@ -1626,6 +1626,7 @@
       "accessControl": {
         "selected": "{{0}} Selected",
         "cancel": "Cancel",
+        "addProfile": "Add Profile",
         "deleteProfile": {
           "header": "Delete Access Control Profile(s)",
           "messageWithNames": "After delete of Access Control Profile, all entries using it will go back to use the default profile. Are you sure you want to delete the following Access Control Profile(s):\n{{0}}?",
@@ -1641,6 +1642,7 @@
         },
         "table": {
           "header": "{{0}} Profiles",
+          "allowAll": "Allow All",
           "name": "Name",
           "id": "ID",
           "createdOn": "Created On",

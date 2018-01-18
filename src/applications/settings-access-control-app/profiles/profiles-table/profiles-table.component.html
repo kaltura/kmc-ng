@@ -22,12 +22,12 @@
       <p-column expander="true" [style]="{'width':'44px'}"></p-column>
 
       <p-column field="name"
-                [header]="'applications.settings.accessControl.table.name' | translate"
-                [style]="{'min-width': '134px'}">
+                [header]="'applications.settings.accessControl.table.name' | translate">
         <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlProfileTableName"
                 [kTooltip]="profile?.description"
-                [maxWidth]="228">
+                [maxWidth]="228"
+                (click)="_onActionSelected('edit', profile)">
             {{ profile[col.field] }}
           </span>
         </ng-template>
@@ -47,12 +47,12 @@
       <p-column field="domain"
                 [header]="'applications.settings.accessControl.table.domain' | translate">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span class="kAccessControlRestriction" *ngIf="profile[col.field]">
+          <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile[col.field]?.isAuthorized,
-            'kIconerror blocked': !profile[col.field]?.isAuthorized
+            'kIconconfirmation authorized': profile[col.field]?.isAuthorized || !profile[col.field],
+            'kIconerror blocked': profile[col.field]?.isAuthorized === false
             }"></i>
-            <span>{{ profile[col.field]?.label }}</span>
+            <span>{{ profile[col.field]?.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
         </ng-template>
       </p-column>
@@ -60,12 +60,12 @@
       <p-column field="countries"
                 [header]="'applications.settings.accessControl.table.countries' | translate">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span class="kAccessControlRestriction" *ngIf="profile[col.field]">
+          <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile[col.field]?.isAuthorized,
-            'kIconerror blocked': !profile[col.field]?.isAuthorized
+            'kIconconfirmation authorized': profile[col.field]?.isAuthorized || !profile[col.field],
+            'kIconerror blocked': profile[col.field]?.isAuthorized === false
             }"></i>
-            <span>{{ profile[col.field]?.label }}</span>
+            <span>{{ profile[col.field]?.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
         </ng-template>
       </p-column>
@@ -73,12 +73,12 @@
       <p-column field="ips"
                 [header]="'applications.settings.accessControl.table.ips' | translate">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span class="kAccessControlRestriction" *ngIf="profile[col.field]">
+          <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile[col.field]?.isAuthorized,
-            'kIconerror blocked': !profile[col.field]?.isAuthorized
+            'kIconconfirmation authorized': profile[col.field]?.isAuthorized || !profile[col.field],
+            'kIconerror blocked': profile[col.field]?.isAuthorized === false
             }"></i>
-            <span>{{ profile[col.field]?.label }}</span>
+            <span>{{ profile[col.field]?.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
         </ng-template>
       </p-column>
@@ -86,12 +86,12 @@
       <p-column field="flavors"
                 [header]="'applications.settings.accessControl.table.flavors' | translate">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span class="kAccessControlRestriction" *ngIf="profile[col.field]">
+          <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile[col.field]?.isAuthorized,
-            'kIconerror blocked': !profile[col.field]?.isAuthorized
+            'kIconconfirmation authorized': profile[col.field]?.isAuthorized || !profile[col.field],
+            'kIconerror blocked': profile[col.field]?.isAuthorized === false
             }"></i>
-            <span>{{ profile[col.field]?.label }}</span>
+            <span>{{ profile[col.field]?.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
         </ng-template>
       </p-column>
