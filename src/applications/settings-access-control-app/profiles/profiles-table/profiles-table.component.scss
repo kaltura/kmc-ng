@@ -79,9 +79,7 @@
   }
 
   .kAccessControlProfilesDetailRow {
-    max-height: 144px;
     margin: -.25em -.5em;
-    padding: 16px 0;
     background-color: $kGrayscale6;
     border-left: 4px solid $kGrayscale3;
     font-size: 15px;
@@ -93,21 +91,18 @@
       width: 100%;
       table-layout: fixed;
 
-      td {
-        padding: .25em .5em;
-        vertical-align: top;
+      tr {
+        height: 70px;
 
-        &:not(.kDescription) {
-          white-space: pre;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
+        td {
+          padding: .25em .5em;
 
-        &.kCountryList {
-          white-space: nowrap;
+          &.kCountryList {
+            white-space: nowrap;
 
-          .kCountryListFlag {
-            margin-right: 6px;
+            .kCountryListFlag {
+              margin-right: 6px;
+            }
           }
         }
       }
@@ -133,6 +128,10 @@
 :host /deep/ .kAccessControlProfilesTable p-datatable {
   .ui-datatable-scrollable-body {
     margin-bottom: 34px;
+  }
+
+  tr.hide-expandable-row + tr:not(.ui-widget-content) {
+    display: none;
   }
   .stickyHeader {
     z-index: 10;

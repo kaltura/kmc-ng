@@ -139,5 +139,9 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   public _onSortChanged(event: { field: string, order: number }): void {
     this.sortChanged.emit(event);
   }
+
+  public _profilesTableRowStyle(rowData: { details: object }): string {
+    return !rowData.details ? 'hide-expandable-row' : '';
+  }
 }
 

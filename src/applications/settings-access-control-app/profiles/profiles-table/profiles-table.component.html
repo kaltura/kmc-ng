@@ -14,6 +14,7 @@
                  [emptyMessage]="_emptyMessage"
                  [rowTrackBy]="rowTrackBy"
                  [sortField]="filter.sortBy"
+                 [rowStyleClass]="_profilesTableRowStyle"
                  (selectionChange)="_onSelectionChange($event)"
                  (onSort)="_onSortChanged($event)"
                  [(selection)]="selectedProfiles">
@@ -112,21 +113,21 @@
       </p-column>
       <ng-template let-profile pTemplate="rowexpansion">
         <div class="kAccessControlProfilesDetailRow">
-          <table>
-            <tr>
+          <table *ngIf="profile?.details?.length">
+            <tr *ngFor="let detail of profile.details">
               <td class="kStub1"></td>
               <td class="kStub1"></td>
-              <td colspan="3" class="kDescription">{{profile?.description}}</td>
-              <td>{{profile?.domain?.details}}</td>
+              <td colspan="3"></td>
+              <td>{{detail.domain}}</td>
               <td class="kCountryList">
-                <div *ngFor="let country of profile?.countries?.details">
-                  <img class="kCountryListFlag" [src]="country | kCountryFromCode:'icon'" [alt]="country">
-                  {{country | kCountryFromCode:'label'}}
+                <div *ngIf="detail.country">
+                  <img class="kCountryListFlag" [src]="detail.country | kCountryFromCode:'icon'" [alt]="detail.country">
+                  {{detail.country | kCountryFromCode:'label'}}
                 </div>
               </td>
-              <td>{{profile?.ips?.details}}</td>
-              <td>{{profile?.flavors?.details}}</td>
-              <td>{{profile?.advancedSecurity?.details}}</td>
+              <td>{{detail.ip}}</td>
+              <td>{{detail.flavor}}</td>
+              <td>{{detail.advancedSecurity}}</td>
               <td class="kStub2"></td>
             </tr>
           </table>
