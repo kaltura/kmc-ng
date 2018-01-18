@@ -214,7 +214,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                 this._primeTreesActions.forEach(item =>
                 {
                     item.fixPropagation();
-                })
+                });
             }
         });
     }

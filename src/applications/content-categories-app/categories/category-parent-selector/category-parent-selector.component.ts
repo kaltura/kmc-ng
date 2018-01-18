@@ -53,13 +53,17 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
   }
 
   private _updateSelectionTooltip(): void {
-      // TODO sakal
-      // const tooltip = this._selectedCategory ? this._selectedCategory.tooltip : this._appLocalization.get('applications.content.addNewCategory.noParent');
-      const tooltip = '';
-      this._selectionTooltip = this._appLocalization.get(
+      let tooltip = '';
+      if (this._selectedCategory) {
+          const selectedCategory = this._categoriesSearchService.getCachedCategory(this._selectedCategory);
+          tooltip = this._selectedCategory ? selectedCategory.fullNamePath.join(' > ') : '';
+      } else {
+          tooltip = this._appLocalization.get('applications.content.addNewCategory.noParent');
+      }
+
+      this._selectionTooltip = tooltip ? this._appLocalization.get(
           'applications.content.categories.selectedCategory',
-          {0: tooltip}
-      );
+          {0: tooltip}) : null;
   }
 
   public _onAutoCompleteSearch(event): void {

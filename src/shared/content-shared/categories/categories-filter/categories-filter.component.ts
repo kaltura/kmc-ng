@@ -13,7 +13,6 @@ import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/ca
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
-import { CategoriesTreeNode } from 'app-shared/content-shared/categories/categories-tree/categories-tree-node';
 
 
 @Component({

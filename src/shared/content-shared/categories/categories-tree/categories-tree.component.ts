@@ -46,11 +46,6 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     private _selectedCategory: number;
     private _selectedCategories: number[] = [];
 
-    // TODO sakal
-    // public get categories(): CategoriesTreeNode[] {
-    //     return this._categories;
-    // }
-
     constructor(private _categoriesTreeService: CategoriesTreeService,
                 private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization) {
@@ -165,7 +160,10 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
                     this._syncTreeSelections();
                     this._syncSelectedTreeNode();
 
-                    this.onCategoriesLoaded.emit({totalCategories: (this._categories || []).length});
+                    setTimeout(() =>
+                    {
+                        this.onCategoriesLoaded.emit({totalCategories: (this._categories || []).length});
+                    });
                 },
                 error => {
                     this._blockerMessage = new AreaBlockerMessage({

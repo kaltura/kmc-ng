@@ -211,30 +211,9 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         this._entriesStore.filter({categories});
     }
 
-    onCategorySelected(category: number){
+    onCategorySelected(category: number) {
         const categories = this._entriesStore.cloneFilter('categories', []);
         if (!categories.find(item => item === category)) {
-            if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
-                // when this component is running with SelfAndChildren mode, we need to manually unselect
-                // the first nested child (if any) that is currently selected
-                const childrenToRemove = categories.filter(item => {
-                    // check if this item is a parent of another item (don't validate last item which is the node itself)
-                    let result = false;
-
-                    // TODO sakal
-                    // for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
-                    //     result = item.fullIdPath[i] === category.value;
-                    // }
-                    return result;
-                });
-
-                childrenToRemove.forEach(childToRemove => {
-                    categories.splice(
-                        categories.indexOf(childToRemove),
-                        1);
-                });
-            }
-
             categories.push(category);
             this._entriesStore.filter({'categories': categories});
         }

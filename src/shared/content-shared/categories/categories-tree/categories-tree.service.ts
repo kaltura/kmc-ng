@@ -66,11 +66,6 @@ export class CategoriesTreeService {
               if (onPostLoad) {
                 onPostLoad.call(this, node);
               }
-
-              // TODO sakal
-              // if (nodeChildren) {
-              //   node.setChildren(nodeChildren);
-              // }
             },
             error => {
               node.setChildrenLoadStatus(NodeChildrenStatuses.error,
