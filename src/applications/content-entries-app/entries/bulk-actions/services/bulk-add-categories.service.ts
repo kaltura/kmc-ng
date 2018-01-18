@@ -9,12 +9,12 @@ import { CategoryEntryAddAction } from "kaltura-ngx-client/api/types/CategoryEnt
 import { CategoryEntryListAction } from 'kaltura-ngx-client/api/types/CategoryEntryListAction';
 import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
 
+// TODO sakal
 export interface EntryCategoryItem
 {
   id : number,
   fullIdPath : number[],
-  name : string,
-  fullNamePath : string[]
+  name : string
 }
 
 @Injectable()

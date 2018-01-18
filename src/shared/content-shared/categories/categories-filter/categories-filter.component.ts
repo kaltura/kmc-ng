@@ -156,7 +156,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                 const suggestions = [];
 
                 (data || []).forEach(item => {
-                  const label = item.fullNamePath.join(' > ') + (item.referenceId ? ` (${item.referenceId})` : '');
+                  const label = item.fullName + (item.referenceId ? ` (${item.referenceId})` : '');
 
                   const isSelectable = !this.selection.find(categoryFilter => {
 

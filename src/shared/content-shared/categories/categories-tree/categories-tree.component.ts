@@ -26,7 +26,6 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     @Output() onCategoriesLoaded = new EventEmitter<{ totalCategories: number }>();
 
     @Output() onCategorySelected: EventEmitter<number> = new EventEmitter();
-    @Output() onTreeNodeSelected: EventEmitter<CategoriesTreeNode> = new EventEmitter();
     @Output() onCategoryUnselected: EventEmitter<number> = new EventEmitter();
 
     @Output() selectedCategoryChange = new EventEmitter<number>();
@@ -124,7 +123,6 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
             this.selectedCategoriesChange.emit(this._selectedCategories);
         }
         this.onCategorySelected.emit(category);
-        this.onTreeNodeSelected.emit(category);
     }
 
     public _onNodeUnselect({node}) {

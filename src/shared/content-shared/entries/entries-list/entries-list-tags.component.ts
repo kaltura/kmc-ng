@@ -52,13 +52,13 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     removeTag(tag: any) {
-        
+
         if (tag.dataFetchSubscription)
         {
             tag.dataFetchSubscription.unsubscribe();
             tag.dataFetchSubscription = null;
         }
-        
+
         if (listTypes.indexOf(tag.type) > -1) {
             // remove tag of type list from filters
             const previousData = this._entriesStore.cloneFilter(tag.type, []);
@@ -252,7 +252,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
                     if (category) {
                         newTag.label = category.name;
-                        newTag.tooltip = category.fullNamePath.join(' > ');
+                        newTag.tooltip = category.fullName;
                     } else {
                         newTag.label = `(${this._appLocalization.get('applications.content.filters.loading_lbl')})`;
                         newTag.tooltip = this._appLocalization.get('applications.content.filters.categoryId_tt', {'0': item});
@@ -261,7 +261,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                             .subscribe(
                                 result => {
                                     newTag.label = result.name;
-                                    newTag.tooltip = result.fullNamePath.join(' > ');
+                                    newTag.tooltip = result.fullName;
                                 },
                                 error => {
                                     newTag.label = item;

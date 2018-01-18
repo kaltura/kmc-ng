@@ -16,11 +16,11 @@ import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCateg
 import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { CategoryEntryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryEntryDeleteAction';
 
+// TODO sakal
 export interface EntryCategoryItem {
 	id: number,
 	fullIdPath: number[],
-	name: string,
-	fullNamePath: string[]
+	name: string
 }
 
 @Injectable()

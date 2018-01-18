@@ -12,24 +12,30 @@ import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaCategoryListResponse } from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
-import { KalturaPrivacyType } from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import { KalturaAppearInListType } from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
-import { KalturaContributionPolicyType } from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { CategoriesGraphUpdatedEvent } from "app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated";
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
+import { KalturaAppearInListType } from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import { KalturaPrivacyType } from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
+import { KalturaContributionPolicyType } from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 
 export interface CategoryData {
-  parentId?: number,
-  id: number,
-  fullIdPath: number[],
-  name: string,
-  referenceId: string,
-  sortValue: number,
-  fullNamePath: string[],
-  childrenCount: number
+    parentId?: number,
+    id: number,
+    fullIdPath: number[],
+    name: string,
+    referenceId: string,
+    sortValue: number,
+    fullName: string,
+    childrenCount: number,
+    membersCount: number,
+    appearInList: KalturaAppearInListType,
+    contributionPolicy: KalturaContributionPolicyType,
+    privacy: KalturaPrivacyType;
+    privacyContexts: string;
+    privacyContext: string;
 }
 
 export interface CategoriesQuery {
@@ -43,7 +49,7 @@ export class CategoriesSearchService implements OnDestroy {
   private _categoriesMap: Map<number, CategoryData> = new Map<number, CategoryData>();
   private _logger: KalturaLogger;
 
-  constructor(private kalturaServerClient: KalturaClient, logger: KalturaLogger, private _appLocalization: AppLocalization, private _appEvents: AppEventsService) {
+  constructor(private kalturaServerClient: KalturaClient, logger: KalturaLogger, private _appEvents: AppEventsService) {
       this._logger = logger.subLogger('CategoriesSearchService');
 
       this._appEvents.event(CategoriesGraphUpdatedEvent)
@@ -174,92 +180,19 @@ export class CategoriesSearchService implements OnDestroy {
             referenceId: category.referenceId,
             parentId: category.parentId !== 0 ? category.parentId : null,
             sortValue: category.partnerSortValue,
-            fullNamePath: category.fullName ? category.fullName.split('>') : [],
+            fullName: category.fullName,
             childrenCount: category.directSubCategoriesCount,
-            tooltip: this._buildTooltip(category)
+            membersCount: category.membersCount,
+            appearInList: category.appearInList,
+            privacy: category.privacy,
+            privacyContext: category.privacyContext,
+            privacyContexts: category.privacyContexts,
+            contributionPolicy: category.contributionPolicy
         };
 
         this._categoriesMap.set(newCategoryData.id, newCategoryData);
         result.push(newCategoryData);
       });
-    }
-
-    return result;
-  }
-
-  // TODO Sakal move to relevant place
-  private _buildTooltip(category: KalturaCategory): string {
-    if (!category.privacyContexts) {
-      return category.fullName;
-    }
-
-    let result = `${category.fullName}\n`;
-
-    if (category.privacyContext) {
-      const title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.privacyContext');
-      result += `${title}: ${category.privacyContext}\n`;
-    }
-
-    if (category.privacy) {
-      const title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.contentPrivacy');
-      let value = '';
-      switch (category.privacy) {
-        case KalturaPrivacyType.all:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noRestriction');
-          break;
-        case KalturaPrivacyType.authenticatedUsers:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.requiresAuth');
-          break;
-        case KalturaPrivacyType.membersOnly:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noMembers');
-          break;
-        default:
-          break;
-      }
-
-      if (!!value) {
-        result += `${title}: ${value}\n`;
-      }
-    }
-
-    if (category.appearInList) {
-      let value = '';
-      let title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.categoryListing');
-      switch (category.appearInList) {
-        case KalturaAppearInListType.categoryMembersOnly:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.private');
-          break;
-        case KalturaAppearInListType.partnerOnly:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noRestriction');
-          break;
-        default:
-          break
-      }
-
-      if (!!value) {
-        result += `${title}: ${value}\n`;
-      }
-
-      value = '';
-      title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.contributionPolicy');
-      switch (<any>category.appearInList) {
-        case KalturaContributionPolicyType.all:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noRestriction');
-          break;
-        case KalturaContributionPolicyType.membersWithContributionPermission:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.private');
-          break;
-        default:
-          break;
-      }
-
-      if (!!value) {
-        result += `${title}: ${value}\n`;
-      }
-
-      if (category.membersCount > 0) {
-        result += this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.specificEndUserPermissions');
-      }
     }
 
     return result;

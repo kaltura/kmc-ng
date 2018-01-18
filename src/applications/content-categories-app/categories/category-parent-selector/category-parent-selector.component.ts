@@ -56,7 +56,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
       let tooltip = '';
       if (this._selectedCategory) {
           const selectedCategory = this._categoriesSearchService.getCachedCategory(this._selectedCategory);
-          tooltip = this._selectedCategory ? selectedCategory.fullNamePath.join(' > ') : '';
+          tooltip = this._selectedCategory ? selectedCategory.fullName : '';
       } else {
           tooltip = this._appLocalization.get('applications.content.addNewCategory.noParent');
       }
@@ -80,7 +80,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
         const selectedCategoryValue = this._selectedCategory ? this._selectedCategory : null;
 
         (data || []).forEach(suggestedCategory => {
-          const label = suggestedCategory.fullNamePath.join(' > ') +
+          const label = suggestedCategory.fullName +
               (suggestedCategory.referenceId ?
               ` (${suggestedCategory.referenceId})` : '');
 

@@ -34,20 +34,13 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 import { EntryWidget } from '../entry-widget';
 
-export interface EntryCategoryItem
-{
-    id : number,
-    fullIdPath : number[],
-    name : string,
-    tooltip?: string
-}
 
 @Injectable()
 export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 {
-    private _entryCategoriesDiffers : IterableDiffer<EntryCategoryItem>;
-    public _entryCategories : EntryCategoryItem[]  = [];
-    private _entryMetadata : KalturaMetadata[] = [];
+    private _entryCategoriesDiffers : IterableDiffer<CategoryData>;
+    public _entryCategories: CategoryData[]  = [];
+    private _entryMetadata: KalturaMetadata[] = [];
 
     public isLiveEntry : boolean;
     public metadataForm : FormGroup;
@@ -174,7 +167,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             }
         );
 
-        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create<EntryCategoryItem>((index, item) =>
+        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create<CategoryData>((index, item) =>
         {
             // use track by function to identify category by its' id. this will prevent sending add/remove of the same item once
             // a user remove a category and then re-select it before he clicks the save button.
@@ -299,7 +292,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
             if (changes)
             {
-                changes.forEachAddedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
+                changes.forEachAddedItem((change : IterableChangeRecord<CategoryData>) =>
                 {
                     request.requests.push(new CategoryEntryAddAction({
                         categoryEntry : new KalturaCategoryEntry({
@@ -309,7 +302,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     }));
                 });
 
-                changes.forEachRemovedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
+                changes.forEachRemovedItem((change : IterableChangeRecord<CategoryData>) =>
                 {
                     request.requests.push(new CategoryEntryDeleteAction({
                         entryId : this.data.id,

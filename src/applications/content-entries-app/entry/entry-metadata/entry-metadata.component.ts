@@ -11,8 +11,10 @@ import { EntryMetadataWidget } from './entry-metadata-widget.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/category-tooltip.pipe';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
-
+let bla = 0;
 @Component({
     selector: 'kEntryMetadata',
     templateUrl: './entry-metadata.component.html',
@@ -30,13 +32,20 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     @ViewChildren(JumpToSection) private _jumpToSectionQuery : QueryList<JumpToSection> = null;
 
 	@ViewChild('metadataContainer')
-	public _container : ElementRef;
+	public _container: ElementRef;
 
     @ViewChild('nameField') private nameField: ElementRef;
 
+    private _categoriesTooltipPipe: CategoryTooltipPipe;
+    public _categoriesTooltipResolver = (value: any) => {
+        return this._categoriesTooltipPipe.transform(value);
+    };
+
     constructor(public _widgetService: EntryMetadataWidget,
                 private _pageScrollService: PageScrollService,
+                private _appLocalization: AppLocalization,
                 @Inject(DOCUMENT) private document: any) {
+        this._categoriesTooltipPipe  = new CategoryTooltipPipe(this._appLocalization);
     }
 
     ngOnInit() {
@@ -99,7 +108,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
 
                 (data|| []).forEach(suggestedCategory => {
-                    const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
+                    const label = suggestedCategory.fullName + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
 
                     const isSelectable = !entryCategories.find(category => {
                         return category.id === suggestedCategory.id;
