@@ -96,6 +96,8 @@
 
         td {
           padding: .25em .5em;
+          overflow: hidden;
+          text-overflow: ellipsis;
 
           &.kCountryList {
             white-space: nowrap;

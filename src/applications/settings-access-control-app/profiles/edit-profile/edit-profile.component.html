@@ -193,7 +193,7 @@
                          [formControl]="_flavorsTypeField"
                          [label]="'applications.settings.accessControl.editForm.selectedFlavorsOnly' | translate"></p-radioButton>
         </span>
-        <p-multiSelect [options]="[]"
+        <p-multiSelect [options]="_store.flavors"
                        [formControl]="_allowedFlavorsField"
                        [showToggleAll]="false"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>
@@ -205,7 +205,7 @@
                          [formControl]="_flavorsTypeField"
                          [label]="'applications.settings.accessControl.editForm.blockSelectedFlavors' | translate"></p-radioButton>
         </span>
-        <p-multiSelect [options]="[]"
+        <p-multiSelect [options]="_store.flavors"
                        [showToggleAll]="false"
                        [formControl]="_restrictedFlavorsField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>

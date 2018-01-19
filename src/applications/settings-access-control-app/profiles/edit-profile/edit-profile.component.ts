@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -7,6 +6,7 @@ import { KalturaSiteRestrictionType } from 'kaltura-ngx-client/api/types/Kaltura
 import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/KalturaCountryRestrictionType';
 import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
+import { AccessControlProfilesStore, ExtendedKalturaAccessControl } from '../profiles-store/profiles-store.service';
 
 @Component({
   selector: 'kAccessControlProfilesEditProfile',
@@ -16,16 +16,17 @@ import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types
 export class EditProfileComponent {
   @Input() parentPopup: PopupWidgetComponent;
 
-  @Input() set profile(value: KalturaAccessControl) {
+  @Input() set profile(value: ExtendedKalturaAccessControl) {
     if (value) {
       this._profile = value;
+      this._setInitialValue(this._profile);
       this._headerTitle = this._appLocalization.get('applications.settings.accessControl.editAccessControlProfile');
     } else {
       this._headerTitle = this._appLocalization.get('applications.settings.accessControl.addAccessControlProfile');
     }
   }
 
-  private _profile: KalturaAccessControl = null;
+  private _profile: ExtendedKalturaAccessControl = null;
   private _headerTitle: string;
 
   public _testOptions = [
@@ -75,8 +76,86 @@ export class EditProfileComponent {
   public _ipAddressRestrictionType = KalturaIpAddressRestrictionType;
   public _flavorsRestrictionType = KalturaLimitFlavorsRestrictionType;
 
-  constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder) {
+  constructor(private _appLocalization: AppLocalization,
+              private _fb: FormBuilder,
+              public _store: AccessControlProfilesStore) {
     this._buildForm();
+  }
+
+  private _setInitialValue(profile: ExtendedKalturaAccessControl): void {
+    let domainsType = null;
+    let allowedDomains = [];
+    let restrictedDomains = [];
+    if (profile.domain) {
+      const domain = profile.domain;
+      const isAuthorized = domain.isAuthorized;
+      domainsType = isAuthorized ? KalturaSiteRestrictionType.allowSiteList : KalturaSiteRestrictionType.restrictSiteList;
+      allowedDomains = isAuthorized ? domain.details : [];
+      restrictedDomains = !isAuthorized ? domain.details : [];
+    }
+
+    let countriesType = null;
+    let allowedCountries = [];
+    let restrictedCountries = [];
+    if (profile.countries) {
+      const countries = profile.countries;
+      const isAuthorized = countries.isAuthorized;
+      countriesType = isAuthorized ? KalturaCountryRestrictionType.allowCountryList : KalturaCountryRestrictionType.restrictCountryList;
+      allowedCountries = isAuthorized ? countries.details : [];
+      restrictedCountries = !isAuthorized ? countries.details : [];
+    }
+
+    let ipsType = null;
+    let allowedIps = [];
+    let restrictedIps = [];
+    if (profile.ips) {
+      const ips = profile.ips;
+      const isAuthorized = ips.isAuthorized;
+      ipsType = isAuthorized ? KalturaIpAddressRestrictionType.allowList : KalturaIpAddressRestrictionType.restrictList;
+      allowedIps = isAuthorized ? ips.details : [];
+      restrictedIps = !isAuthorized ? ips.details : [];
+    }
+
+    let flavorsType = null;
+    let allowedFlavors = [];
+    let restrictedFlavors = [];
+    if (profile.flavors) {
+      const flavors = profile.flavors;
+      const isAuthorized = flavors.isAuthorized;
+      flavorsType = isAuthorized ? KalturaLimitFlavorsRestrictionType.allowList : KalturaLimitFlavorsRestrictionType.restrictList;
+      allowedFlavors = isAuthorized ? flavors.details : [];
+      restrictedFlavors = !isAuthorized ? flavors.details : [];
+    }
+
+    let secureVideo = false;
+    let allowPreview = false;
+    let preview = 0;
+    if (profile.advancedSecurity) {
+      const advancedSecurity = profile.advancedSecurity;
+      secureVideo = advancedSecurity.details.secureVideo;
+      preview = advancedSecurity.details.preview;
+      allowPreview = !!preview;
+    }
+
+    this._profileForm.setValue({
+      name: profile.name,
+      description: profile.description,
+      domainsType,
+      allowedDomains,
+      restrictedDomains,
+      countriesType,
+      allowedCountries,
+      restrictedCountries,
+      ipsType,
+      allowedIps,
+      restrictedIps,
+      flavorsType,
+      allowedFlavors,
+      restrictedFlavors,
+      secureVideo,
+      allowPreview,
+      preview
+    });
   }
 
   private _buildForm(): void {
