@@ -8,11 +8,11 @@ import {
   ButtonModule,
   CalendarModule,
   CheckboxModule,
-  DataTableModule,
+  DataTableModule, InputSwitchModule,
   InputTextModule,
-  MenuModule,
-  PaginatorModule,
-  SharedModule,
+  MenuModule, MultiSelectModule,
+  PaginatorModule, RadioButtonModule,
+  SharedModule, SpinnerModule,
   TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
@@ -50,7 +50,11 @@ import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.m
     RouterModule.forChild(routing),
     TreeModule,
     StickyModule,
-    FiltersModule
+    FiltersModule,
+    RadioButtonModule,
+    MultiSelectModule,
+    SpinnerModule,
+    InputSwitchModule
   ],
   declarations: [
     SettingsAccessControlComponent,

@@ -12,6 +12,179 @@
     </div>
   </div>
   <div class="kContainer">
+    <div class="kFormSection kMainInfo">
+      <div class="kRow">
+        <span class="kLabel">{{'applications.settings.accessControl.editForm.profileName' | translate}}</span>
+        <div class="kRequired">*</div>
+        <input class="kControl" pInputText>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">{{'applications.settings.accessControl.editForm.description' | translate}}</span>
+        <textarea class="kControl" pInputText></textarea>
+      </div>
+    </div>
 
+    <div class="kFormSection">
+      <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedDomains' | translate}}</div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="null"
+                         [label]="'applications.settings.accessControl.editForm.allDomains' | translate"></p-radioButton>
+        </span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="false"
+                         [label]="'applications.settings.accessControl.editForm.selectedDomainsOnly' | translate"></p-radioButton>
+        </span>
+        <textarea pInputText class="kControl"
+                  [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate"></textarea>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="false"
+                         [label]="'applications.settings.accessControl.editForm.blockSelectedDomains' | translate"></p-radioButton>
+        </span>
+        <textarea pInputText class="kControl"
+                  [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate"></textarea>
+      </div>
+    </div>
+
+    <div class="kFormSection">
+      <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedCountries' | translate}}</div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="null"
+                         [label]="'applications.settings.accessControl.editForm.allCountries' | translate"></p-radioButton>
+        </span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="false"
+                         [label]="'applications.settings.accessControl.editForm.selectedCountriesOnly' | translate"></p-radioButton>
+        </span>
+        <p-multiSelect class="kControl"
+                       [options]="_testOptions"
+                       [showToggleAll]="false"
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
+          <ng-template let-country pTemplate="item">
+            <span class="kCountryList">
+              <img class="kCountryListFlag" [src]="country.value | kCountryFromCode:'icon'" [alt]="country">
+              {{country.value | kCountryFromCode:'label'}}
+              </span>
+          </ng-template>
+        </p-multiSelect>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="false"
+                         [label]="'applications.settings.accessControl.editForm.blockSelectedCountries' | translate"></p-radioButton>
+        </span>
+        <p-multiSelect class="kControl"
+                       [options]="_testOptions"
+                       [showToggleAll]="false"
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
+          <ng-template let-country pTemplate="item">
+            <span class="kCountryList">
+              <img class="kCountryListFlag" [src]="country.value | kCountryFromCode:'icon'" [alt]="country">
+              {{country.value | kCountryFromCode:'label'}}
+              </span>
+          </ng-template>
+        </p-multiSelect>
+      </div>
+    </div>
+
+    <div class="kFormSection">
+      <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedIps' | translate}}</div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="null"
+                         [label]="'applications.settings.accessControl.editForm.allIps' | translate"></p-radioButton>
+        </span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="false"
+                         [label]="'applications.settings.accessControl.editForm.selectedIpsOnly' | translate"></p-radioButton>
+        </span>
+        <textarea pInputText class="kControl"
+                  [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate"></textarea>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="false"
+                         [label]="'applications.settings.accessControl.editForm.blockSelectedIps' | translate"></p-radioButton>
+        </span>
+        <textarea pInputText class="kControl"
+                  [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate"></textarea>
+      </div>
+    </div>
+
+    <div class="kFormSection">
+      <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedFlavors' | translate}}</div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="null"
+                         [label]="'applications.settings.accessControl.editForm.allFlavors' | translate"></p-radioButton>
+        </span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="false"
+                         [label]="'applications.settings.accessControl.editForm.selectedFlavorsOnly' | translate"></p-radioButton>
+        </span>
+        <p-multiSelect [options]="[]"
+                       [showToggleAll]="false"
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="false"
+                         [label]="'applications.settings.accessControl.editForm.blockSelectedFlavors' | translate"></p-radioButton>
+        </span>
+        <p-multiSelect [options]="[]"
+                       [showToggleAll]="false"
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>
+      </div>
+    </div>
+
+    <div class="kFormSection">
+      <div class="kTitle">
+        {{'applications.settings.accessControl.editForm.advancedSecurity' | translate}}
+        <i class="kIconhelp_full kAdvancedSecurityIcon"
+           [kTooltip]="'applications.settings.accessControl.editForm.advancedSecurityHelp' | translate"></i>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <span
+            class="kSecureVideoLabel">{{'applications.settings.accessControl.editForm.secureVideo' | translate}}</span>
+        </span>
+        <p-inputSwitch class="kControl"></p-inputSwitch>
+        <span *ngIf="false"
+              class="kSwitchValue">{{'applications.settings.accessControl.editForm.yes' | translate}}</span>
+        <span *ngIf="true" class="kSwitchValue">{{'applications.settings.accessControl.editForm.no' | translate}}</span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-checkbox [binary]="true"
+                      [label]="'applications.settings.accessControl.editForm.allowFreePreviewOf' | translate"></p-checkbox>
+        </span>
+        <p-spinner></p-spinner>
+        <span
+          class="kFollowedByPrompt">{{'applications.settings.accessControl.editForm.followedByPrompt' | translate}}</span>
+      </div>
+    </div>
   </div>
 </div>

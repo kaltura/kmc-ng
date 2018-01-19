@@ -1659,6 +1659,38 @@
             "edit": "Edit"
           }
         },
+        "editForm": {
+          "profileName": "Profile Name",
+          "description": "Description",
+          "authorizedDomains": "Authorized Domains",
+          "allDomains": "All Domains",
+          "selectedDomainsOnly": "Selected Domains Only",
+          "blockSelectedDomains": "Block Selected Domains",
+          "authorizedCountries": "Authorized Countries",
+          "allCountries": "All Countries",
+          "selectedCountriesOnly": "Selected Countries Only",
+          "blockSelectedCountries": "Block Selected Countries",
+          "authorizedIps": "Authorized IPs",
+          "allIps": "All IPs",
+          "selectedIpsOnly": "Selected IPs Only",
+          "blockSelectedIps": "Block Selected IPs",
+          "authorizedFlavors": "Authorized Flavors",
+          "allFlavors": "All Flavors",
+          "selectedFlavorsOnly": "Selected Flavors Only",
+          "blockSelectedFlavors": "Block Selected Flavors",
+          "advancedSecurity": "Advanced Security and Pay per-view",
+          "advancedSecurityHelp": "Provides a higher level of security, relevant for pay-per view models and premium content",
+          "secureVideo": "Secure this video with server side secret",
+          "yes": "Yes",
+          "no": "No",
+          "allowFreePreviewOf": "Allow Free Preview of",
+          "followedByPrompt": "Followed by a prompt to pay for continued viewing",
+          "ipsPlaceholder": "For example: 198.124.60.12",
+          "domainsPlaceholder": "For example: kaltura.com",
+          "selectFlavors": "Select Flavors",
+          "selectCountry": "Select Country",
+          "findCountry": "Find Country"
+        },
         "errors": {
           "loading": "Could not load Access Control Profiles",
           "delete": ""
