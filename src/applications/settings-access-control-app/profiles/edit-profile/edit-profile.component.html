@@ -45,6 +45,7 @@
                          [multiple]="true"
                          [limitToSuggestions]="false"
                          [minLength]="3"
+                         [validatorFn]="_validateDomain"
                          [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate">
           </kAutoComplete>
         </div>
@@ -61,6 +62,7 @@
                          [multiple]="true"
                          [limitToSuggestions]="false"
                          [minLength]="3"
+                         [validatorFn]="_validateDomain"
                          [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate">
           </kAutoComplete>
         </div>
@@ -135,6 +137,7 @@
                          [multiple]="true"
                          [limitToSuggestions]="false"
                          [minLength]="3"
+                         [validatorFn]="_validateIp"
                          [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
           </kAutoComplete>
         </div>
@@ -151,6 +154,7 @@
                          [multiple]="true"
                          [limitToSuggestions]="false"
                          [minLength]="3"
+                         [validatorFn]="_validateIp"
                          [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
           </kAutoComplete>
         </div>
