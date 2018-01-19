@@ -11,16 +11,16 @@
               (click)="_save()"></button>
     </div>
   </div>
-  <div class="kContainer">
+  <form class="kContainer" [formGroup]="_profileForm">
     <div class="kFormSection kMainInfo">
       <div class="kRow">
         <span class="kLabel">{{'applications.settings.accessControl.editForm.profileName' | translate}}</span>
         <div class="kRequired">*</div>
-        <input class="kControl" pInputText>
+        <input class="kControl" pInputText [formControl]="_nameField">
       </div>
       <div class="kRow">
         <span class="kLabel">{{'applications.settings.accessControl.editForm.description' | translate}}</span>
-        <textarea class="kControl" pInputText></textarea>
+        <textarea class="kControl" pInputText [formControl]="_descriptionField"></textarea>
       </div>
     </div>
 
@@ -30,18 +30,21 @@
         <span class="kLabel">
           <p-radioButton name="authorizedDomains"
                          [value]="null"
+                         [formControl]="_domainsTypeField"
                          [label]="'applications.settings.accessControl.editForm.allDomains' | translate"></p-radioButton>
         </span>
       </div>
       <div class="kRow">
         <span class="kLabel">
           <p-radioButton name="authorizedDomains"
-                         [value]="false"
+                         [value]="_siteRestrictionType.allowSiteList"
+                         [formControl]="_domainsTypeField"
                          [label]="'applications.settings.accessControl.editForm.selectedDomainsOnly' | translate"></p-radioButton>
         </span>
         <div class="kControl kAutoComplete">
           <kAutoComplete suggestionItemField="item"
                          suggestionSelectableField="isSelectable"
+                         [formControl]="_allowedDomainsField"
                          [multiple]="true"
                          [limitToSuggestions]="false"
                          [minLength]="3"
@@ -53,13 +56,15 @@
       <div class="kRow">
         <span class="kLabel">
           <p-radioButton name="authorizedDomains"
-                         [value]="false"
+                         [value]="_siteRestrictionType.restrictSiteList"
+                         [formControl]="_domainsTypeField"
                          [label]="'applications.settings.accessControl.editForm.blockSelectedDomains' | translate"></p-radioButton>
         </span>
         <div class="kControl kAutoComplete">
           <kAutoComplete suggestionItemField="item"
                          suggestionSelectableField="isSelectable"
                          [multiple]="true"
+                         [formControl]="_restrictedDomainsField"
                          [limitToSuggestions]="false"
                          [minLength]="3"
                          [validatorFn]="_validateDomain"
@@ -73,20 +78,23 @@
       <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedCountries' | translate}}</div>
       <div class="kRow">
         <span class="kLabel">
-          <p-radioButton name="authorizedDomains"
+          <p-radioButton name="authorizedCountries"
                          [value]="null"
+                         [formControl]="_countriesTypeField"
                          [label]="'applications.settings.accessControl.editForm.allCountries' | translate"></p-radioButton>
         </span>
       </div>
       <div class="kRow">
         <span class="kLabel">
-          <p-radioButton name="authorizedDomains"
-                         [value]="false"
+          <p-radioButton name="authorizedCountries"
+                         [value]="_countryRestrictionType.allowCountryList"
+                         [formControl]="_countriesTypeField"
                          [label]="'applications.settings.accessControl.editForm.selectedCountriesOnly' | translate"></p-radioButton>
         </span>
         <p-multiSelect class="kControl"
                        [options]="_testOptions"
                        [showToggleAll]="false"
+                       [formControl]="_allowedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
           <ng-template let-country pTemplate="item">
             <span class="kCountryList">
@@ -98,13 +106,15 @@
       </div>
       <div class="kRow">
         <span class="kLabel">
-          <p-radioButton name="authorizedDomains"
-                         [value]="false"
+          <p-radioButton name="authorizedCountries"
+                         [value]="_countryRestrictionType.restrictCountryList"
+                         [formControl]="_countriesTypeField"
                          [label]="'applications.settings.accessControl.editForm.blockSelectedCountries' | translate"></p-radioButton>
         </span>
         <p-multiSelect class="kControl"
                        [options]="_testOptions"
                        [showToggleAll]="false"
+                       [formControl]="_restrictedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
           <ng-template let-country pTemplate="item">
             <span class="kCountryList">
@@ -120,15 +130,17 @@
       <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedIps' | translate}}</div>
       <div class="kRow">
         <span class="kLabel">
-          <p-radioButton name="authorizedDomains"
+          <p-radioButton name="authorizedIps"
                          [value]="null"
+                         [formControl]="_ipsTypeField"
                          [label]="'applications.settings.accessControl.editForm.allIps' | translate"></p-radioButton>
         </span>
       </div>
       <div class="kRow">
         <span class="kLabel">
-          <p-radioButton name="authorizedDomains"
-                         [value]="false"
+          <p-radioButton name="authorizedIps"
+                         [value]="_ipAddressRestrictionType.allowList"
+                         [formControl]="_ipsTypeField"
                          [label]="'applications.settings.accessControl.editForm.selectedIpsOnly' | translate"></p-radioButton>
         </span>
         <div class="kControl kAutoComplete">
@@ -136,6 +148,7 @@
                          suggestionSelectableField="isSelectable"
                          [multiple]="true"
                          [limitToSuggestions]="false"
+                         [formControl]="_allowedIpsField"
                          [minLength]="3"
                          [validatorFn]="_validateIp"
                          [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
@@ -144,8 +157,9 @@
       </div>
       <div class="kRow">
         <span class="kLabel">
-          <p-radioButton name="authorizedDomains"
-                         [value]="false"
+          <p-radioButton name="authorizedIps"
+                         [value]="_ipAddressRestrictionType.restrictList"
+                         [formControl]="_ipsTypeField"
                          [label]="'applications.settings.accessControl.editForm.blockSelectedIps' | translate"></p-radioButton>
         </span>
         <div class="kControl kAutoComplete">
@@ -153,6 +167,7 @@
                          suggestionSelectableField="isSelectable"
                          [multiple]="true"
                          [limitToSuggestions]="false"
+                         [formControl]="_restrictedIpsField"
                          [minLength]="3"
                          [validatorFn]="_validateIp"
                          [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
@@ -165,29 +180,34 @@
       <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedFlavors' | translate}}</div>
       <div class="kRow">
         <span class="kLabel">
-          <p-radioButton name="authorizedDomains"
+          <p-radioButton name="authorizedFlavors"
                          [value]="null"
+                         [formControl]="_flavorsTypeField"
                          [label]="'applications.settings.accessControl.editForm.allFlavors' | translate"></p-radioButton>
         </span>
       </div>
       <div class="kRow">
         <span class="kLabel">
-          <p-radioButton name="authorizedDomains"
-                         [value]="false"
+          <p-radioButton name="authorizedFlavors"
+                         [value]="_flavorsRestrictionType.allowList"
+                         [formControl]="_flavorsTypeField"
                          [label]="'applications.settings.accessControl.editForm.selectedFlavorsOnly' | translate"></p-radioButton>
         </span>
         <p-multiSelect [options]="[]"
+                       [formControl]="_allowedFlavorsField"
                        [showToggleAll]="false"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>
       </div>
       <div class="kRow">
         <span class="kLabel">
-          <p-radioButton name="authorizedDomains"
-                         [value]="false"
+          <p-radioButton name="authorizedFlavors"
+                         [value]="_flavorsRestrictionType.restrictList"
+                         [formControl]="_flavorsTypeField"
                          [label]="'applications.settings.accessControl.editForm.blockSelectedFlavors' | translate"></p-radioButton>
         </span>
         <p-multiSelect [options]="[]"
                        [showToggleAll]="false"
+                       [formControl]="_restrictedFlavorsField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>
       </div>
     </div>
@@ -204,21 +224,22 @@
             {{'applications.settings.accessControl.editForm.secureVideo' | translate}}
           </span>
         </span>
-        <p-inputSwitch class="kControl"></p-inputSwitch>
-        <span *ngIf="false" class="kSwitchValue">
+        <p-inputSwitch class="kControl" [formControl]="_secureVideoField"></p-inputSwitch>
+        <span *ngIf="_secureVideoField.value" class="kSwitchValue">
           {{'applications.settings.accessControl.editForm.yes' | translate}}
         </span>
-        <span *ngIf="true" class="kSwitchValue">{{'applications.settings.accessControl.editForm.no' | translate}}</span>
+        <span *ngIf="!_secureVideoField.value" class="kSwitchValue">{{'applications.settings.accessControl.editForm.no' | translate}}</span>
       </div>
       <div class="kRow">
         <span class="kLabel">
           <p-checkbox [binary]="true"
+                      [formControl]="_allowPreviewField"
                       [label]="'applications.settings.accessControl.editForm.allowFreePreviewOf' | translate"></p-checkbox>
         </span>
-        <p-spinner></p-spinner>
+        <p-spinner [formControl]="_previewField"></p-spinner>
         <span
           class="kFollowedByPrompt">{{'applications.settings.accessControl.editForm.followedByPrompt' | translate}}</span>
       </div>
     </div>
-  </div>
+  </form>
 </div>
