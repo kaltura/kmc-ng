@@ -39,8 +39,15 @@
                          [value]="false"
                          [label]="'applications.settings.accessControl.editForm.selectedDomainsOnly' | translate"></p-radioButton>
         </span>
-        <textarea pInputText class="kControl"
-                  [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate"></textarea>
+        <div class="kControl kAutoComplete">
+          <kAutoComplete suggestionItemField="item"
+                         suggestionSelectableField="isSelectable"
+                         [multiple]="true"
+                         [limitToSuggestions]="false"
+                         [minLength]="3"
+                         [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate">
+          </kAutoComplete>
+        </div>
       </div>
       <div class="kRow">
         <span class="kLabel">
@@ -48,8 +55,15 @@
                          [value]="false"
                          [label]="'applications.settings.accessControl.editForm.blockSelectedDomains' | translate"></p-radioButton>
         </span>
-        <textarea pInputText class="kControl"
-                  [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate"></textarea>
+        <div class="kControl kAutoComplete">
+          <kAutoComplete suggestionItemField="item"
+                         suggestionSelectableField="isSelectable"
+                         [multiple]="true"
+                         [limitToSuggestions]="false"
+                         [minLength]="3"
+                         [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate">
+          </kAutoComplete>
+        </div>
       </div>
     </div>
 
@@ -115,8 +129,15 @@
                          [value]="false"
                          [label]="'applications.settings.accessControl.editForm.selectedIpsOnly' | translate"></p-radioButton>
         </span>
-        <textarea pInputText class="kControl"
-                  [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate"></textarea>
+        <div class="kControl kAutoComplete">
+          <kAutoComplete suggestionItemField="item"
+                         suggestionSelectableField="isSelectable"
+                         [multiple]="true"
+                         [limitToSuggestions]="false"
+                         [minLength]="3"
+                         [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
+          </kAutoComplete>
+        </div>
       </div>
       <div class="kRow">
         <span class="kLabel">
@@ -124,8 +145,15 @@
                          [value]="false"
                          [label]="'applications.settings.accessControl.editForm.blockSelectedIps' | translate"></p-radioButton>
         </span>
-        <textarea pInputText class="kControl"
-                  [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate"></textarea>
+        <div class="kControl kAutoComplete">
+          <kAutoComplete suggestionItemField="item"
+                         suggestionSelectableField="isSelectable"
+                         [multiple]="true"
+                         [limitToSuggestions]="false"
+                         [minLength]="3"
+                         [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
+          </kAutoComplete>
+        </div>
       </div>
     </div>
 
@@ -168,12 +196,14 @@
       </div>
       <div class="kRow">
         <span class="kLabel">
-          <span
-            class="kSecureVideoLabel">{{'applications.settings.accessControl.editForm.secureVideo' | translate}}</span>
+          <span class="kSecureVideoLabel">
+            {{'applications.settings.accessControl.editForm.secureVideo' | translate}}
+          </span>
         </span>
         <p-inputSwitch class="kControl"></p-inputSwitch>
-        <span *ngIf="false"
-              class="kSwitchValue">{{'applications.settings.accessControl.editForm.yes' | translate}}</span>
+        <span *ngIf="false" class="kSwitchValue">
+          {{'applications.settings.accessControl.editForm.yes' | translate}}
+        </span>
         <span *ngIf="true" class="kSwitchValue">{{'applications.settings.accessControl.editForm.no' | translate}}</span>
       </div>
       <div class="kRow">
