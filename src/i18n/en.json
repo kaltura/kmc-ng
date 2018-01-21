@@ -590,7 +590,17 @@
           "moreThan5": "Are you sure you want to delete the selected feeds?"
         },
         "errors": {
-          "deleteFailed": "Unable to delete selected feeds, please review your selection"
+          "loadFailed": "An error occurred during Syndication Feeds loading",
+          "deleteAttemptSelectedFailed": "Unable to delete selected feeds, please review your selection before trying again",
+          "deleteAttemptFailed": "Unable to delete feed, please review the mentioned feed before trying again",
+          "deleteError": {
+            "header": "Delete action failed",
+            "message": "An unexpected error has occurred while trying to delete feed."
+          },
+          "deleteErrorMultiple": {
+            "header": "Delete action failed",
+            "message": "An unexpected error has occurred while trying to delete selected feeds."
+          }
         }
       },
       "moderation": {

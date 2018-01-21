@@ -97,71 +97,107 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private _deleteFeed(feed: KalturaBaseSyndicationFeed): void {
-    this._browserService.confirm({
-      header: this._appLocalization.get('applications.content.syndication.deleteConfirmation.title'),
-      message: this._appLocalization.get('applications.content.syndication.deleteConfirmation.singleFeed',
-        {0: feed.name}),
-      accept: () => {
-        this._blockerMessage = null;
-        this._feedsService.deleteFeeds([feed.id])
-          .cancelOnDestroy(this)
-          .tag('block-shell')
-          .subscribe(
-            result => {
-            },
-            error => {
-              this._browserService.alert({
-                header: this._appLocalization.get('applications.content.feeds.errors.deleteError.header'),
-                message: this._appLocalization.get('applications.content.feeds.errors.deleteError.message')
-              });
+    const executeDelete = () => {
+      this._blockerMessage = null;
+      this._feedsService.deleteFeeds([feed.id])
+        .cancelOnDestroy(this)
+        .tag('block-shell')
+        .subscribe(
+          result => {}, // reload is handled by service
+          error => {
+            this._blockerMessage = new AreaBlockerMessage({
+              title: this._appLocalization.get('applications.content.syndication.errors.deleteError.header'),
+              message: this._appLocalization.get('applications.content.syndication.errors.deleteError.message'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this._blockerMessage = null;
+                    executeDelete();
+                  }
+                }, {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            });
+          }
+        );
+    };
+
+    this._feedsService.confirmDelete([feed])
+      .cancelOnDestroy(this)
+      .subscribe(result => {
+        if (result.confirmed) {
+          executeDelete();
+        }
+      }, error => {
+        this._blockerMessage = new AreaBlockerMessage({
+          message: error.message,
+          buttons: [
+            {
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+              }
             }
-          );
-      }
-    });
+          ]
+        });
+      });
   }
 
   public _deleteSelectedFeeds(): void {
-    if (!this._selectedFeeds.length) {
-      this._blockerMessage = new AreaBlockerMessage({
-        message: this._appLocalization.get('applications.content.syndication.errors.deleteFailed'),
-        buttons: [
-          {
-            label: this._appLocalization.get('app.common.ok'),
-            action: () => {
-              this._blockerMessage = null;
-            }
+    const executeDelete = () => {
+      this._blockerMessage = null;
+      this._feedsService.deleteFeeds(this._selectedFeeds.map(feed => feed.id))
+        .cancelOnDestroy(this)
+        .tag('block-shell')
+        .subscribe(
+          result => {}, // reload is handled by service
+          error => {
+            this._blockerMessage = new AreaBlockerMessage({
+              title: this._appLocalization.get('applications.content.syndication.errors.deleteErrorMultiple.header'),
+              message: this._appLocalization.get('applications.content.syndication.errors.deleteErrorMultiple.message'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this._blockerMessage = null;
+                    executeDelete();
+                  }
+                }, {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            });
           }
-        ]
-      });
-    }
+        );
+    };
 
-    const message: string = this._selectedFeeds.length < 5 ?
-      (this._selectedFeeds.length === 1 ? this._appLocalization.get('applications.content.syndication.deleteConfirmation.singleFeed',
-        {0: this._selectedFeeds[0].name}) :
-        this._appLocalization.get('applications.content.syndication.deleteConfirmation.upTo5Feed',
-          {0: this._selectedFeeds.map(feed => feed.name).join(', ')})) :
-      this._appLocalization.get('applications.content.syndication.deleteConfirmation.moreThan5');
-
-    this._browserService.confirm({
-      header: this._appLocalization.get('applications.content.syndication.deleteConfirmation.title'),
-      message: this._appLocalization.get(message),
-      accept: () => {
-        this._blockerMessage = null;
-        this._feedsService.deleteFeeds(this._selectedFeeds.map(feed => feed.id))
-          .cancelOnDestroy(this)
-          .tag('block-shell')
-          .subscribe(
-            result => {
-            },
-            error => {
-              this._browserService.alert({
-                header: this._appLocalization.get('applications.content.feeds.errors.deleteError.header'),
-                message: this._appLocalization.get('applications.content.feeds.errors.deleteError.message')
-              });
+    this._feedsService.confirmDelete(this._selectedFeeds)
+      .cancelOnDestroy(this)
+      .subscribe(result => {
+        if (result.confirmed) {
+          executeDelete();
+        }
+      }, error => {
+        this._blockerMessage = new AreaBlockerMessage({
+          message: error.message,
+          buttons: [
+            {
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+              }
             }
-          );
-      }
-    });
+          ]
+        });
+      });
   }
 
   private _prepare() {
@@ -181,7 +217,7 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
         error => {
           this._isBusy = false;
           this._blockerMessage = new AreaBlockerMessage({
-            message: this._appLocalization.get('applications.content.dropFolders.errors.errorDropFoldersFiles'),
+            message: this._appLocalization.get('applications.content.syndication.errors.loadFailed'),
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
@@ -235,16 +271,5 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-  }
-
-
-  onFeedAdded({feedId}: { feedId: number }): void {
-    if (!feedId) {
-      console.log('[FeedsListComponent.onFeedAdded] invalid parameters')
-    } else {
-      this._feedsService.reload();
-      // use a flag so the feeds will be refreshed upon clicking 'back' from the feed page
-      this.router.navigate(['/content/feeds/feed', feedId]);
-    }
   }
 }

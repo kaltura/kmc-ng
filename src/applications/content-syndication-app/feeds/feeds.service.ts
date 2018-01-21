@@ -29,6 +29,7 @@ import {KalturaPlaylistOrderBy} from 'kaltura-ngx-client/api/types/KalturaPlayli
 import {KalturaPlaylistListResponse} from 'kaltura-ngx-client/api/types/KalturaPlaylistListResponse';
 import {SyndicationFeedDeleteAction} from 'kaltura-ngx-client/api/types/SyndicationFeedDeleteAction';
 import {environment} from 'app-environment';
+import {AppLocalization} from "@kaltura-ng/kaltura-common";
 
 export interface UpdateStatus {
   loading: boolean;
@@ -76,7 +77,8 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
 
   constructor(private _kalturaClient: KalturaClient,
-              private browserService: BrowserService,
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization,
               _logger: KalturaLogger) {
     super(_logger);
     this._prepare();
@@ -84,7 +86,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
   private _prepare(): void {
     if (!this._isReady) {
-      const defaultPageSize = this.browserService.getFromLocalStorage(this._pageSizeCacheKey);
+      const defaultPageSize = this._browserService.getFromLocalStorage(this._pageSizeCacheKey);
       if (defaultPageSize !== null) {
         this.filter({
           pageSize: defaultPageSize
@@ -319,7 +321,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     }
 
     if (typeof updates.pageSize !== 'undefined') {
-      this.browserService.setInLocalStorage(this._pageSizeCacheKey, updates.pageSize);
+      this._browserService.setInLocalStorage(this._pageSizeCacheKey, updates.pageSize);
     }
 
     return updates;
@@ -341,6 +343,36 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
       sortBy: new StringTypeAdapter(),
       sortDirection: new NumberTypeAdapter()
     };
+  }
+
+  public confirmDelete(feeds: KalturaBaseSyndicationFeed[]): Observable<{ confirmed: boolean, error?: Error}> {
+    if (!feeds || !feeds.length) {
+      return Observable.throw(new Error(this._appLocalization.get('applications.content.syndication.errors.deleteAttemptFailed')))
+    }
+
+    return Observable.create(observer => {
+        const message: string = feeds.length < 5 ?
+          (feeds.length === 1 ? this._appLocalization.get('applications.content.syndication.deleteConfirmation.singleFeed',
+            {0: feeds[0].name}) :
+            this._appLocalization.get('applications.content.syndication.deleteConfirmation.upTo5Feed',
+              {0: feeds.map(feed => feed.name).join(', ')})) :
+          this._appLocalization.get('applications.content.syndication.deleteConfirmation.moreThan5');
+
+        this._browserService.confirm({
+          header: this._appLocalization.get('applications.content.syndication.deleteConfirmation.title'),
+          message: this._appLocalization.get(message),
+            accept: () => {
+              observer.next({failed: false, confirmed: true});
+              observer.complete();
+            }, reject: () => {
+            observer.next({failed: false, confirmed: false});
+            observer.complete();
+          }
+          }
+        );
+      return () => {
+      }
+    });
   }
 
 }
