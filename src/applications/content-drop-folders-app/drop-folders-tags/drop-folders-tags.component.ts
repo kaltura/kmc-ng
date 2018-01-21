@@ -1,8 +1,8 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
-import { ListType } from '@kaltura-ng/mc-shared/filters';
 import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
 
 export interface TagItem {
   type: string,
@@ -22,7 +22,19 @@ const listTypes: (keyof DropFoldersFilters)[] = ['status'];
 export class DropFoldersTagsComponent implements OnInit, OnDestroy {
   @Output() onTagsChange = new EventEmitter<void>();
 
-  public _filterTags: TagItem[] = [];
+    @Input() set refineFilters(lists: RefineList[]) {
+        this._refineFiltersMap.clear();
+
+        (lists || []).forEach(list => {
+            this._refineFiltersMap.set(list.name, list);
+        });
+
+        this._handleFiltersChange();
+    }
+
+    public _tags: TagItem[] = [];
+    private _refineFiltersMap: Map<string, RefineList> = new Map<string, RefineList>();
+    public _showTags = false;
 
   constructor(private _store: DropFoldersStoreService, private _appLocalization: AppLocalization) {
   }
@@ -30,7 +42,26 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
+      this._handleFiltersChange();
   }
+
+    private _handleFiltersChange(): void {
+        if (this._refineFiltersMap.size > 0) {
+            this._showTags = true;
+
+            (this._tags || []).forEach(tag => {
+                if ((<string[]>listTypes).indexOf(tag.type) !== -1) {
+                    tag.label = this._getRefineLabel(tag.type, tag.value);
+                    tag.tooltip = this._appLocalization.get(`applications.content.filters.${tag.type}`, {'0': tag.label});
+                }
+            });
+
+            this.onTagsChange.emit();
+        } else {
+            this._showTags = false;
+            this.onTagsChange.emit();
+        }
+    }
 
   ngOnDestroy() {
   }
@@ -69,15 +100,15 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
   }
 
   private _syncTagOfFreetext(): void {
-    const previousItem = this._filterTags.findIndex(item => item.type === 'freetext');
+    const previousItem = this._tags.findIndex(item => item.type === 'freetext');
     if (previousItem !== -1) {
-      this._filterTags.splice(previousItem, 1);
+      this._tags.splice(previousItem, 1);
     }
 
     const currentFreetextValue = this._store.cloneFilter('freeText', null);
 
     if (currentFreetextValue) {
-      this._filterTags.push({
+      this._tags.push({
         type: 'freetext',
         value: currentFreetextValue,
         label: currentFreetextValue,
@@ -87,9 +118,9 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
   }
 
   private _syncTagOfCreatedAt(): void {
-    const previousItem = this._filterTags.findIndex(item => item.type === 'createdAt');
+    const previousItem = this._tags.findIndex(item => item.type === 'createdAt');
     if (previousItem !== -1) {
-      this._filterTags.splice(previousItem, 1);
+      this._tags.splice(previousItem, 1);
     }
 
     const { fromDate, toDate } = this._store.cloneFilter('createdAt', { fromDate: null, toDate: null });
@@ -102,29 +133,30 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
       } else if (toDate) {
         tooltip = `Until ${moment(toDate).format('LL')}`;
       }
-      this._filterTags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip });
+      this._tags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip });
     }
   }
 
   private _syncTagsOfList(filterName: keyof DropFoldersFilters): void {
 
-    const currentValue = <ListType>this._store.cloneFilter(filterName, []);
-    const tagsFilters = this._filterTags.filter(item => item.type === filterName);
+    const currentValue = this._store.cloneFilter(filterName, []);
+    const tagsFilters = this._tags.filter(item => item.type === filterName);
 
     const tagsFiltersMap = this._store.filtersUtils.toMap(tagsFilters, 'value');
-    const currentValueMap = this._store.filtersUtils.toMap(currentValue, 'value');
+    const currentValueMap = this._store.filtersUtils.toMap(<any[]>currentValue);
     const diff = this._store.filtersUtils.getDiff(tagsFiltersMap, currentValueMap);
 
     diff.deleted.forEach(item => {
-      this._filterTags.splice(this._filterTags.indexOf(item), 1);
+      this._tags.splice(this._tags.indexOf(item), 1);
     });
 
     diff.added.forEach(item => {
-      this._filterTags.push({
+        const label = this._getRefineLabel(filterName, item);
+      this._tags.push({
         type: filterName,
-        value: (<any>item).value,
-        label: (<any>item).label,
-        tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, { '0': (<any>item).label })
+        value: item,
+        label: label,
+        tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, { '0': label })
       });
     });
   }
@@ -133,7 +165,7 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
     if (listTypes.indexOf(tag.type) > -1) {
       // remove tag of type list from filters
       const previousData = this._store.cloneFilter(tag.type, []);
-      const previousDataItemIndex = previousData.findIndex(item => item.value === tag.value);
+      const previousDataItemIndex = previousData.findIndex(item => item === tag.value);
       if (previousDataItemIndex > -1) {
         previousData.splice(previousDataItemIndex, 1);
 
@@ -155,7 +187,21 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public removeAllTags(): void {
+    private _getRefineLabel(listName: string, value: any): string {
+        let result = String(value);
+        if (this._refineFiltersMap.size > 0) {
+            const list = this._refineFiltersMap.get(listName);
+            if (list) {
+                const item = list.items.find(listItem => String(listItem.value) === String(value));
+
+                result = item ? item.label : result;
+            }
+
+        }
+        return result;
+    }
+
+    public removeAllTags(): void {
     this._store.resetFilters();
   }
 }

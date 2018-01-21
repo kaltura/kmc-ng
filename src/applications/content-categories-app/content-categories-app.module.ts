@@ -64,7 +64,7 @@ import {CategoriesUtilsService} from './categories-utils.service';
 import {CategoryParentSelectorComponent} from './categories/category-parent-selector/category-parent-selector.component';
 import {NewCategoryComponent} from './categories/new-category/new-category.component';
 import {MoveCategoryComponent} from './categories/move-category/move-category.component';
-import {CategoriesRefineFiltersService} from './categories/categories-refine-filters/categories-refine-filters.service';
+import {CategoriesRefineFiltersService} from './categories/categories-refine-filters.service';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 
 @NgModule({
@@ -128,7 +128,6 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
         CategoriesBulkChangeContentPrivacyService,
         CategoriesBulkChangeContributionPolicyService,
         CategoriesBulkChangeCategoryListingService,
-        CategoriesRefineFiltersService,
         CategoriesUtilsService]
 })
 export class ContentCategoriesAppModule {

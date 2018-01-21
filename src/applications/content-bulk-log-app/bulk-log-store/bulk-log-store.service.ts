@@ -13,7 +13,7 @@ import { BulkUploadAbortAction } from 'kaltura-ngx-client/api/types/BulkUploadAb
 import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters';
-import { ListAdapter, ListType } from '@kaltura-ng/mc-shared/filters';
+import { NewListTypeAdapter } from '@kaltura-ng/mc-shared/filters';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
@@ -29,8 +29,8 @@ export interface BulkLogFilters {
     pageSize: number,
     pageIndex: number,
     createdAt: DatesRangeType,
-    uploadedItem: ListType,
-    status: ListType
+    uploadedItem: string[],
+    status: string[]
 }
 
 @Injectable()
@@ -200,8 +200,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
   }
 
-  private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaBulkUploadFilter, requestFilterProperty: keyof KalturaBulkUploadFilter): void {
-    const value = (list || []).map(item => item.value).join(',');
+  private _updateFilterWithJoinedList(list: string[], requestFilter: KalturaBulkUploadFilter, requestFilterProperty: keyof KalturaBulkUploadFilter): void {
+    const value = (list || []).map(item => item).join(',');
 
     if (value) {
       requestFilter[requestFilterProperty] = value;
@@ -223,8 +223,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
-        uploadedItem: new ListAdapter(),
-      status: new ListAdapter()
+        uploadedItem: new NewListTypeAdapter<string>(),
+      status: new NewListTypeAdapter<string>()
     };
   }
 

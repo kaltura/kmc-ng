@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="(categoriesService.categories.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage"	[bodyScroll]="true">
+
   <div class="kCategoriesTable" [class.noResults]="!_categories?.length">
     <p-dataTable [value]="_categories" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
       scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy" (selectionChange)="_onSelectionChange($event)"
@@ -29,4 +29,3 @@
     </p-dataTable>
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
   </div>
-</k-area-blocker>

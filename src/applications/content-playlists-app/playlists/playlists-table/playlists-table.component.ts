@@ -1,9 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { PlaylistsStore } from '../playlists-store/playlists-store.service';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 @Component({
@@ -39,7 +37,6 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
   public _deferredLoading = true;
   public _emptyMessage = '';
-  public _blockerMessage: AreaBlockerMessage = null;
   public _playlists: KalturaPlaylist[] = [];
   public _items: MenuItem[];
 
@@ -48,45 +45,11 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   };
 
   constructor(private _appLocalization: AppLocalization,
-              public playlistsStore: PlaylistsStore,
               private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this.playlistsStore.playlists.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        result => {
-          if (result.errorMessage) {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: result.errorMessage || 'Error loading entries',
-              buttons: [{
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => {
-                  this.playlistsStore.reload();
-                }
-              }
-              ]
-            })
-          } else {
-            this._blockerMessage = null;
-            if (result.loading) {
-              this._emptyMessage = '';
-              loadedOnce = true;
-            } else {
-              if (loadedOnce) {
-                this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-              }
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load playlists'); // navigate to error page
-          throw error;
-        });
+      this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngAfterViewInit() {

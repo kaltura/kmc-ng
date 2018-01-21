@@ -7,18 +7,23 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-
+import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
 
 @Component({
   selector: 'kDropFoldersList',
   templateUrl: './drop-folders-list.component.html',
-  styleUrls: ['./drop-folders-list.component.scss']
+  styleUrls: ['./drop-folders-list.component.scss'],
+    providers: [DropFoldersRefineFiltersService]
 })
 
 export class DropFoldersListComponent implements OnInit, OnDestroy {
   @ViewChild('tags') private _tags: StickyComponent;
 
-  public _blockerMessage: AreaBlockerMessage = null;
+    public _isBusy = false;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _tableIsBusy = false;
+    public _tableBlockerMessage: AreaBlockerMessage = null;
+    public _refineFilters: RefineList[];
   public _selectedDropFolders: KalturaDropFolderFile[] = [];
   public _query = {
     freeText: '',
@@ -27,6 +32,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   };
 
   constructor(public _dropFoldersStore: DropFoldersStoreService,
+              private _refineFiltersService: DropFoldersRefineFiltersService,
               private _appLocalization: AppLocalization,
               private _router: Router,
               private _browserService: BrowserService) {
@@ -39,10 +45,64 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  private _prepare(): void {
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
-  }
+    private _prepare(): void {
+        this._isBusy = true;
+        this._refineFiltersService.getFilters()
+            .cancelOnDestroy(this)
+            .first() // only handle it once, no need to handle changes over time
+            .subscribe(
+                lists => {
+                    this._isBusy = false;
+                    this._refineFilters = lists;
+                    this._restoreFiltersState();
+                    this._registerToFilterStoreDataChanges();
+                    this._registerToDataChanges();
+                },
+                error => {
+                    this._isBusy = false;
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: this._appLocalization.get('applications.content.filters.errorLoading'),
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.retry'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._prepare();
+                            }
+                        }
+                        ]
+                    })
+                });
+    }
+
+    private _registerToDataChanges(): void {
+        this._dropFoldersStore.dropFolders.state$
+            .cancelOnDestroy(this)
+            .subscribe(
+                result => {
+
+                    this._tableIsBusy = result.loading;
+
+                    if (result.errorMessage) {
+                        this._tableBlockerMessage = new AreaBlockerMessage({
+                            message: result.errorMessage || 'Error loading drop folders',
+                            buttons: [{
+                                label: 'Retry',
+                                action: () => {
+                                    this._tableBlockerMessage = null;
+                                    this._dropFoldersStore.reload();
+                                }
+                            }
+                            ]
+                        })
+                    } else {
+                        this._tableBlockerMessage = null;
+                    }
+                },
+                error => {
+                    console.warn('[kmcng] -> could not load drop folders'); // navigate to error page
+                    throw error;
+                });
+    }
 
   private _restoreFiltersState(): void {
     this._updateComponentState(this._dropFoldersStore.cloneFilters(

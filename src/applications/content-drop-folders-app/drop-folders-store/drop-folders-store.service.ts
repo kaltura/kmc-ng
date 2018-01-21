@@ -18,8 +18,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { DropFolderFileListAction } from 'kaltura-ngx-client/api/types/DropFolderFileListAction';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { ListAdapter, ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
-import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters/filter-types/dates-range-type';
+import { DatesRangeAdapter, DatesRangeType, NewListTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { ISubscription } from 'rxjs/Subscription';
@@ -39,7 +38,7 @@ export interface DropFoldersFilters {
   pageIndex: number,
   freeText: string,
   createdAt: DatesRangeType,
-  status: ListType
+  status: string[]
 }
 
 @Injectable()
@@ -228,8 +227,8 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
   }
 
-  private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaDropFolderFileFilter, requestFilterProperty: keyof KalturaDropFolderFileFilter): void {
-    const value = (list || []).map(item => item.value).join(',');
+  private _updateFilterWithJoinedList(list: string[], requestFilter: KalturaDropFolderFileFilter, requestFilterProperty: keyof KalturaDropFolderFileFilter): void {
+    const value = (list || []).map(item => item).join(',');
 
     if (value) {
       requestFilter[requestFilterProperty] = value;
@@ -309,7 +308,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       pageIndex: new NumberTypeAdapter(),
       freeText: new StringTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
-      status: new ListAdapter()
+      status: new NewListTypeAdapter<string>()
     };
   }
 

@@ -19,10 +19,8 @@ import {
     DatesRangeAdapter,
     DatesRangeType,
     FiltersStoreBase,
-    GroupedListAdapter,
-    GroupedListType,
-    ListAdapter,
-    ListType, NewListTypeAdapter,
+     NewListTypeAdapter,
+    NewGroupedListAdapter, NewGroupedListType,
     NumberTypeAdapter,
     StringTypeAdapter,
     TypeAdaptersMapping
@@ -85,13 +83,13 @@ export interface CategoriesFilters {
   sortBy: string,
   sortDirection: number,
   createdAt: DatesRangeType,
-  privacyTypes: ListType,
-  categoryListing: ListType,
-  contributionPolicy: ListType,
-  endUserPermissions: ListType,
+  privacyTypes: string[],
+  categoryListing: string[],
+  contributionPolicy: string[],
+  endUserPermissions: string[],
     categories: number[],
     categoriesMode: CategoriesModeType,
-  customMetadata: GroupedListType
+  customMetadata: NewGroupedListType<string>
 }
 
 
@@ -326,7 +324,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
               metadataProfileFilters.forEach(filterItem => {
                 const searchItem = new KalturaSearchCondition({
                   field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                  value: filterItem.value
+                  value: filterItem
                 });
 
                 innerMetadataItem.items.push(searchItem);
@@ -364,13 +362,13 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
 
       // filter 'privacyTypes'
       if (data.privacyTypes && data.privacyTypes.length > 0) {
-        filter.privacyIn = data.privacyTypes.map(e => e.value).join(',');
+        filter.privacyIn = data.privacyTypes.map(e => e).join(',');
       }
 
       // filter 'categoryListing', set filter if only one option selected
       if (data.categoryListing) {
         if (data.categoryListing.length === 1) {
-          switch (data.categoryListing[0].value) {
+          switch (data.categoryListing[0]) {
             case KalturaAppearInListType.categoryMembersOnly.toString():
               filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
               break;
@@ -387,7 +385,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       if (data.contributionPolicy) {
         if (data.contributionPolicy.length === 1) {
           data.contributionPolicy.forEach(item => {
-            switch (item.value) {
+            switch (item) {
               case KalturaContributionPolicyType.all.toString():
                 filter.contributionPolicyEqual = KalturaContributionPolicyType.all;
                 break;
@@ -405,7 +403,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       if (data.endUserPermissions) {
         if (data.endUserPermissions.length === 1) {
           data.endUserPermissions.forEach(item => {
-            switch (item.value) {
+            switch (item) {
               case 'has':
                 filter.membersCountGreaterThanOrEqual = 1;
                 filter.membersCountLessThanOrEqual = undefined;
@@ -513,13 +511,13 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             sortBy: new StringTypeAdapter(),
             sortDirection: new NumberTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
-            privacyTypes: new ListAdapter(),
-            categoryListing: new ListAdapter(),
-            contributionPolicy: new ListAdapter(),
-            endUserPermissions: new ListAdapter(),
+            privacyTypes: new NewListTypeAdapter<string>(),
+            categoryListing: new NewListTypeAdapter<string>(),
+            contributionPolicy: new NewListTypeAdapter<string>(),
+            endUserPermissions: new NewListTypeAdapter<string>(),
             categories: new NewListTypeAdapter<number>(),
             categoriesMode: new CategoriesModeAdapter(),
-            customMetadata: new GroupedListAdapter()
+            customMetadata: new NewGroupedListAdapter<string>()
         };
     }
 

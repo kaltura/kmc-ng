@@ -24,9 +24,8 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {
   BooleanTypeAdapter,
   FiltersStoreBase,
-  ListAdapter,
-  ListType,
   NumberTypeAdapter,
+    NewListTypeAdapter,
   StringTypeAdapter,
   TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
@@ -61,9 +60,9 @@ export interface UsersFilters {
   freetext: string,
   pageSize: number,
   pageIndex: number,
-  permissionLevels: ListType,
-  status: ListType,
-  updateMethod: ListType,
+  permissionLevels: string[],
+  status: string[],
+  updateMethod: string[],
 }
 
 
@@ -208,17 +207,17 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
           // filter 'status'
           if (data.status && data.status.length > 0) {
-              filter.statusIn = data.status.map(e => e.value).join(',');
+              filter.statusIn = data.status.map(e => e).join(',');
           }
 
           // filter 'updateMethod'
           if (data.updateMethod && data.updateMethod.length > 0) {
-              filter.updateMethodIn = data.updateMethod.map(e => e.value).join(',');
+              filter.updateMethodIn = data.updateMethod.map(e => e).join(',');
           }
 
           // filter 'permissionLevels'
           if (data.permissionLevels && data.permissionLevels.length > 0) {
-              filter.permissionLevelIn = data.permissionLevels.map(e => e.value).join(',');
+              filter.permissionLevelIn = data.permissionLevels.map(e => e).join(',');
           }
 
           // remove advanced search arg if it is empty
@@ -493,9 +492,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       freetext: new StringTypeAdapter(),
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
-      permissionLevels: new ListAdapter(),
-      status: new ListAdapter(),
-      updateMethod: new ListAdapter(),
+      permissionLevels: new NewListTypeAdapter<string>(),
+      status: new NewListTypeAdapter<string>(),
+      updateMethod: new NewListTypeAdapter<string>(),
     };
   }
 }
