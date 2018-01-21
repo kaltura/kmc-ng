@@ -49,7 +49,7 @@ export const environment = {
                   {
                     "routePath": "content/syndication",
                     "titleToken": "Syndication",
-                    "enabled": false,
+                    "enabled": true,
                     "position": "left"
                   },
                   {

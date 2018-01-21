@@ -1,0 +1,161 @@
+@import 'app-theme/_variables.scss';
+
+%kDestinationIcon {
+  width: 64px;
+  height: 32px;
+  background-position-x: 0;
+  background: url(../../../../../src/app/styles/assets/destination_sprite.png);
+  text-indent: -9999px;
+}
+
+.kFeedsTable {
+  background-color: white;
+  height: auto;
+  padding: 0px;
+  width: 100%;
+  .kTitle {
+    color: $kGrayscale1;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    max-height: 45px;
+    &:hover {
+      color: #000000;
+    }
+    &.disable {
+      color: $kGrayscale4;
+      cursor: auto;
+    }
+  }
+  .kFeedsTableActions {
+    width: 100%;
+    text-align: center;
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
+
+  /deep/ {
+    .kElipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+    }
+
+    .kColFeedIcon {
+      .kIconfeed {
+        font-size: 24px;
+      }
+    }
+
+    .kColName {
+      cursor: pointer;
+      color: $kGrayscale1;
+    }
+
+    .kColDestination {
+      .kColDestinationIcon {
+
+        &.kIconYahoo {
+          @extend %kDestinationIcon;
+          background-position-y: 0;
+        }
+
+        &.kIconGoogle {
+          @extend %kDestinationIcon;
+          background-position-y: 32px;
+        }
+
+        &.kIconITunes {
+          @extend %kDestinationIcon;
+          background-position-y: 64px;
+        }
+
+        &.kIconOpera {
+          @extend %kDestinationIcon;
+          background-position-y: 96px;
+        }
+
+        &.kIconRoku {
+          @extend %kDestinationIcon;
+          background-position-y: 128px;
+        }
+      }
+
+      .kColDestinationText {
+      }
+    }
+
+    .kColSource {
+      display: flex;
+      line-height: 18px;
+      align-items: center;
+      .kPlaylistIcon {
+        flex: 0 0 auto;
+        font-size: 18px;
+        vertical-align: top;
+      }
+      .kIconPlaylist_RuleBased, .kIconPlaylist_Manual {
+        padding-right: 5px;
+      }
+      .kElipsis {
+        flex: 1 1 auto;
+      }
+    }
+
+    .kColUrl {
+      line-height: 18px;
+      display: flex;
+      align-items: center;
+      .kIcon {
+        flex: 0 0 auto;
+        vertical-align: middle;
+        color: $kGrayscale3;
+        height: 24px;
+        width: 24px;
+        display: inline-block;
+      }
+      .kUrl {
+        border: none;
+        color: $kGrayscale3;
+        flex: 1 1 auto;
+        &:hover {
+          cursor: text;
+        }
+      }
+    }
+  }
+
+  .kColActions {
+    width: 100%;
+    text-align: center;
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0px;
+  flex-direction: column;
+}
+
+:host /deep/ p-datatable .ui-datatable-scrollable-body {
+  margin-bottom: 34px;
+}
+
+:host /deep/ p-datatable .stickyHeader {
+  z-index: 10;
+  display: table;
+}

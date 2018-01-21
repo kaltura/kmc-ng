@@ -1,0 +1,346 @@
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {Injectable, OnDestroy} from '@angular/core';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import {ISubscription} from 'rxjs/Subscription';
+import 'rxjs/add/operator/map';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequest} from 'kaltura-ngx-client';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {
+  FiltersStoreBase,
+  NumberTypeAdapter,
+  StringTypeAdapter,
+  TypeAdaptersMapping
+} from '@kaltura-ng/mc-shared/filters';
+import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
+import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
+import {SyndicationFeedListAction} from 'kaltura-ngx-client/api/types/SyndicationFeedListAction';
+import {KalturaBaseSyndicationFeedFilter} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeedFilter';
+import {KalturaTubeMogulSyndicationFeedOrderBy} from 'kaltura-ngx-client/api/types/KalturaTubeMogulSyndicationFeedOrderBy';
+import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
+import {KalturaGenericSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGenericSyndicationFeed';
+import {KalturaGenericXsltSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGenericXsltSyndicationFeed';
+import {KalturaBaseSyndicationFeedListResponse} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeedListResponse';
+import {KalturaPlaylistFilter} from 'kaltura-ngx-client/api/types/KalturaPlaylistFilter';
+import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import {PlaylistListAction} from 'kaltura-ngx-client/api/types/PlaylistListAction';
+import {KalturaPlaylistOrderBy} from 'kaltura-ngx-client/api/types/KalturaPlaylistOrderBy';
+import {KalturaPlaylistListResponse} from 'kaltura-ngx-client/api/types/KalturaPlaylistListResponse';
+import {SyndicationFeedDeleteAction} from 'kaltura-ngx-client/api/types/SyndicationFeedDeleteAction';
+import {environment} from 'app-environment';
+
+export interface UpdateStatus {
+  loading: boolean;
+  errorMessage: string;
+}
+
+export interface Feeds {
+  items: KalturaBaseSyndicationFeed[],
+  totalCount: number
+}
+
+export enum SortDirection {
+  Desc,
+  Asc
+}
+
+export interface FeedsFilters {
+  pageSize: number,
+  pageIndex: number,
+  sortBy: string,
+  sortDirection: number,
+}
+
+
+@Injectable()
+export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDestroy {
+
+  private _feeds = {
+    data: new BehaviorSubject<Feeds>({items: [], totalCount: 0}),
+    state: new BehaviorSubject<UpdateStatus>({loading: false, errorMessage: null})
+  };
+
+  public readonly feeds =
+    {
+      data$: this._feeds.data.asObservable(),
+      state$: this._feeds.state.asObservable(),
+      data: () => {
+        return this._feeds.data.getValue().items;
+      }
+    };
+
+  private _isReady = false;
+  private _querySubscription: ISubscription;
+  private readonly _pageSizeCacheKey = 'feeds.list.pageSize';
+
+
+  constructor(private _kalturaClient: KalturaClient,
+              private browserService: BrowserService,
+              _logger: KalturaLogger) {
+    super(_logger);
+    this._prepare();
+  }
+
+  private _prepare(): void {
+    if (!this._isReady) {
+      const defaultPageSize = this.browserService.getFromLocalStorage(this._pageSizeCacheKey);
+      if (defaultPageSize !== null) {
+        this.filter({
+          pageSize: defaultPageSize
+        });
+      }
+
+      this._registerToFilterStoreDataChanges();
+      this._isReady = true;
+    }
+  }
+
+  private _registerToFilterStoreDataChanges(): void {
+    this.filtersChange$
+      .cancelOnDestroy(this)
+      .subscribe(() => {
+        this._executeQuery();
+      });
+
+  }
+
+  ngOnDestroy() {
+    this._feeds.state.complete();
+    this._feeds.data.complete();
+  }
+
+  public reload(): void {
+    if (this._feeds.state.getValue().loading) {
+      return;
+    }
+
+    if (this._isReady) {
+      this._executeQuery();
+    } else {
+      this._prepare();
+    }
+  }
+
+  private _executeQuery(): void {
+
+    if (this._querySubscription) {
+      this._querySubscription.unsubscribe();
+      this._querySubscription = null;
+    }
+
+    this._feeds.state.next({loading: true, errorMessage: null});
+
+    this._querySubscription = this.buildQueryRequest()
+      .cancelOnDestroy(this)
+      .subscribe((response: Feeds) => {
+          this._querySubscription = null;
+
+          this._feeds.state.next({loading: false, errorMessage: null});
+
+          this._feeds.data.next({
+            items: response.items,
+            totalCount: response.totalCount
+          });
+        },
+        error => {
+          this._querySubscription = null;
+          const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          this._feeds.state.next({loading: false, errorMessage});
+        });
+  }
+
+  private buildQueryRequest(): Observable<Feeds> {
+    try {
+      // create request items
+      const filter: KalturaBaseSyndicationFeedFilter = new KalturaBaseSyndicationFeedFilter({
+        orderBy: KalturaTubeMogulSyndicationFeedOrderBy.createdAtDesc.toString()
+      });
+      let pagination: KalturaFilterPager = null;
+
+      const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
+      advancedSearch.type = KalturaSearchOperatorType.searchAnd;
+
+      const data: FeedsFilters = this._getFiltersAsReadonly();
+
+
+      // update the sort by args
+      if (data.sortBy) {
+        filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
+      }
+
+      // update pagination args
+      if (data.pageIndex || data.pageSize) {
+        pagination = new KalturaFilterPager(
+          {
+            pageSize: data.pageSize,
+            pageIndex: data.pageIndex + 1
+          }
+        );
+      }
+
+      // remove advanced search arg if it is empty
+      if (advancedSearch.items && advancedSearch.items.length === 0) {
+        delete filter.advancedSearch;
+      }
+
+      // build the request
+      return this._kalturaClient.request(
+        new SyndicationFeedListAction({
+          filter,
+          pager: pagination
+        })
+      ).map((response: KalturaBaseSyndicationFeedListResponse) => {
+        const feedsArray: KalturaBaseSyndicationFeed[] = [];
+        response.objects.forEach(feed => {
+          if (feed instanceof KalturaBaseSyndicationFeed) {
+            if (feed instanceof KalturaGenericSyndicationFeed && !(feed instanceof KalturaGenericXsltSyndicationFeed)) {
+              return undefined; // stop processing this iteration if it's a generic syndication feed with XSLT type which is not generic
+            } else {
+              feedsArray.push(feed);
+            }
+          }
+        });
+        return {items: feedsArray, totalCount: response.totalCount};
+      })
+    } catch (err) {
+      return Observable.throw(err);
+    }
+
+  }
+
+  public getPlaylists(): Observable<KalturaPlaylist[]> {
+    const filter = new KalturaPlaylistFilter({orderBy: KalturaPlaylistOrderBy.createdAtDesc.toString()});
+    const pager = new KalturaFilterPager({pageSize: 500});
+
+    return this._kalturaClient.request(
+      new PlaylistListAction({filter, pager})
+    )
+      .map((response: KalturaPlaylistListResponse) => {
+        return response.objects;
+      });
+
+  }
+
+  // bulk delete
+  public deleteFeeds(ids: string[]): Observable<void> {
+    if (!ids || !ids.length) {
+      return Observable.throw(new Error('An error occurred while trying to delete feeds, please review your selection'));
+    }
+
+    return Observable.create(observer => {
+
+      const requests: SyndicationFeedDeleteAction[] = [];
+
+      ids.forEach(id => {
+        requests.push(new SyndicationFeedDeleteAction({id}));
+      });
+
+      this._transmit(requests, true).subscribe(
+        result => {
+          observer.next({});
+          observer.complete();
+        },
+        error => {
+          observer.error(error);
+        }
+      );
+    })
+      .do(result => {
+        this.reload();
+      });
+  }
+
+  private _transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<{}> {
+    let maxRequestsPerMultiRequest = requests.length;
+    if (chunk) {
+      maxRequestsPerMultiRequest = environment.modules.contentEntries.bulkActionsLimit;
+    }
+
+    const multiRequests: Observable<KalturaMultiResponse>[] = [];
+    let mr: KalturaMultiRequest = new KalturaMultiRequest();
+
+    let counter = 0;
+    for (let i = 0; i < requests.length; i++) {
+      if (counter === maxRequestsPerMultiRequest) {
+        multiRequests.push(this._kalturaClient.multiRequest(mr));
+        mr = new KalturaMultiRequest();
+        counter = 0;
+      }
+      mr.requests.push(requests[i]);
+      counter++;
+    }
+    multiRequests.push(this._kalturaClient.multiRequest(mr));
+
+    return Observable.forkJoin(multiRequests)
+      .map(responses => {
+        const mergedResponses = [].concat.apply([], responses);
+        const hasFailure = mergedResponses.filter(function (response) {
+          return response.error
+        }).length > 0;
+        if (hasFailure) {
+          throw new Error('error');
+        } else {
+          return {};
+        }
+      });
+  }
+
+
+  // public deleteFeed(feedId: number): Observable<void> {
+  //
+  //   return Observable.create(observer => {
+  //     let subscription: ISubscription;
+  //     if (feedId && feedId > 0) {
+  //       subscription = this._kalturaClient.request(new FeedDeleteAction({id: feedId})).subscribe(
+  //         result => {
+  //           observer.next();
+  //           observer.complete();
+  //         },
+  //         error => {
+  //           observer.error(error);
+  //         }
+  //       );
+  //     } else {
+  //       observer.error(new Error('missing feedId argument'));
+  //     }
+  //     return () => {
+  //       if (subscription) {
+  //         subscription.unsubscribe();
+  //       }
+  //     }
+  //   });
+  // }
+
+  protected _preFilter(updates: Partial<FeedsFilters>): Partial<FeedsFilters> {
+    if (typeof updates.pageIndex === 'undefined') {
+      // reset page index to first page everytime filtering the list by any filter that is not page index
+      updates.pageIndex = 0;
+    }
+
+    if (typeof updates.pageSize !== 'undefined') {
+      this.browserService.setInLocalStorage(this._pageSizeCacheKey, updates.pageSize);
+    }
+
+    return updates;
+  }
+
+  protected _createDefaultFiltersValue(): FeedsFilters {
+    return {
+      pageSize: 50,
+      pageIndex: 0,
+      sortBy: 'createdAt',
+      sortDirection: SortDirection.Desc
+    };
+  }
+
+  protected _getTypeAdaptersMapping(): TypeAdaptersMapping<FeedsFilters> {
+    return {
+      pageSize: new NumberTypeAdapter(),
+      pageIndex: new NumberTypeAdapter(),
+      sortBy: new StringTypeAdapter(),
+      sortDirection: new NumberTypeAdapter()
+    };
+  }
+
+}

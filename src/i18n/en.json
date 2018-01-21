@@ -556,6 +556,43 @@
         "confirmDeleteEntry": "Are you sure you want to delete the selected entry?",
         "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
       },
+      "syndication": {
+        "addFeed": "Add Feed",
+        "feeds": "{{0}} Feeds",
+        "selected": "{{0}} Selected",
+        "table": {
+          "noResults": "No Results",
+          "allContent": "All Content",
+          "flexibleFormatFeed": "Flexible Format Feed",
+          "copyToClipboardTooltip": {
+            "success": "Copied",
+            "failure": "Failed to Copy to Clipboard",
+            "idle": "Copy to Clipboard",
+            "notSupported": "Copy to Clipboard not supported"
+          },
+          "columns": {
+            "name": "Name",
+            "id": "ID",
+            "destination": "Destination",
+            "source": "Source",
+            "url": "URL"
+          },
+          "actions": {
+            "edit": "Edit",
+            "instructions": "Instructions",
+            "delete": "Delete"
+          }
+        },
+        "deleteConfirmation": {
+          "title": "Confirm Delete",
+          "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
+          "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+          "moreThan5": "Are you sure you want to delete the selected feeds?"
+        },
+        "errors": {
+          "deleteFailed": "Unable to delete selected feeds, please review your selection"
+        }
+      },
       "moderation": {
         "entryReports": "Entry Reports",
         "approveEntry": "Approve Entry",

@@ -1,9 +1,9 @@
-import { RouterModule, Routes } from '@angular/router';
-import { AppBootstrap, AuthCanActivate } from 'app-shared/kmc-shell';
+import {RouterModule, Routes} from '@angular/router';
+import {AppBootstrap, AuthCanActivate} from 'app-shared/kmc-shell';
 
-import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ErrorComponent } from './components/error/error.component';
+import {LoginComponent} from './components/login/login.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
+import {ErrorComponent} from './components/error/error.component';
 
 
 const routes: Routes = <Routes>[
@@ -33,6 +33,10 @@ const routes: Routes = <Routes>[
           {
             path: 'categories',
             loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule'
+          },
+          {
+            path: 'syndication',
+            loadChildren: '../applications/content-syndication-app/content-syndication-app.module#ContentSyndicationAppModule'
           },
           {
             path: 'upload-control',
