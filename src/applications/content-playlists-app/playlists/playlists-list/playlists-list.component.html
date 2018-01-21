@@ -1,4 +1,4 @@
-<k-area-blocker [bodyScroll]="true" [message]="_blockerMessage">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kPlaylists kOverrideFAIcons">
     <div #playlistsTableHolder class="kPlaylistsHolder kContent">
       <kSticky stickyId="playlistsFilters" [scrollOffset]="80" [sticksTo]="'header'">
@@ -43,9 +43,14 @@
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="playlistsTags" [sticksTo]="'playlistsFilters'">
         <div class="kTagsWrapper kContent">
-          <k-playlists-tags (onTagsChange)="_onTagsChange()"></k-playlists-tags>
+          <k-playlists-tags   [refineFilters]="_refineFilters"
+                              (onTagsChange)="_onTagsChange()"></k-playlists-tags>
         </div>
       </kSticky>
+
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
       <kPlaylistsTable
         class="kPlaylistsTable"
         [playlists]="(_playlistsStore.playlists.data$ | async)?.items"
@@ -53,6 +58,7 @@
         [filter]="_query"
         (actionSelected)="_onActionSelected($event)"
         [(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
+      </k-area-blocker>
 
       <div class="kPlaylistsTableFooter kContent" #footer *ngIf="(_playlistsStore.playlists.data$ | async)?.totalCount">
         <p-paginator
@@ -81,7 +87,9 @@
   stickyId="playlistsAdditionalFilter"
   [scrollOffset]="80">
   <ng-template>
-    <k-playlists-refine-filters [parentPopupWidget]="refinePopup"></k-playlists-refine-filters>
+    <k-playlists-refine-filters
+            [refineFilters]="_refineFilters"
+            [parentPopupWidget]="refinePopup"></k-playlists-refine-filters>
   </ng-template>
 </kPopupWidget>
 

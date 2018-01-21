@@ -1,4 +1,4 @@
-<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kCategories kOverrideFAIcons">
     <div #categoriesTableHolder class="kCategoriesHolder kContent">
       <kSticky stickyId="categoriesListFilters" [scrollOffset]="80"
@@ -41,9 +41,14 @@
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="categoriesTags" [sticksTo]="'categoriesListFilters'">
         <div class="kContent">
           <kCategoriesListTags
+                  [refineFilters]="_refineFilters"
             (onTagsChange)="onTagsChange()"></kCategoriesListTags>
         </div>
       </kSticky>
+
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
       <kCategoriesTable class="kCategoriesTable"
                         [categories]="(_categoriesService.categories.data$ | async)?.items"
                         [filter]="_query"
@@ -51,6 +56,7 @@
                         (actionSelected)="_onActionSelected($event)"
                         [(selectedCategories)]="_selectedCategories">
       </kCategoriesTable>
+      </k-area-blocker>
       <div class="kCategoriesTableFooter kContent" #footer *ngIf="_categoriesTotalCount">
         <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
                      [first]="_query.pageIndex * _query.pageSize"

@@ -315,7 +315,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
   public _onTreeNodeUnselect({node}: { node: PrimeListItem }) {
     // find group data by filter name
     if (node.listName) {

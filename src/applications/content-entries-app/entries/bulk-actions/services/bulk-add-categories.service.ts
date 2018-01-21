@@ -24,12 +24,12 @@ export class BulkAddCategoriesService extends BulkActionBaseService<EntryCategor
     super(_kalturaServerClient);
   }
 
-  public execute(selectedEntries: KalturaMediaEntry[], categories : EntryCategoryItem[]) : Observable<{}>{
+  public execute(selectedEntries: number[], categories : EntryCategoryItem[]) : Observable<{}>{
     return Observable.create(observer =>{
 
       // load all category entries so we can check if an entry category already exists and prevent sending it
       const filter: KalturaCategoryEntryFilter = new KalturaCategoryEntryFilter();
-      let entriesIds = "";
+      let entriesIds = selectedEntries.map(entry => entry.id)
       selectedEntries.forEach((entry, index) => {
         entriesIds += entry.id;
         if (index < selectedEntries.length -1){
