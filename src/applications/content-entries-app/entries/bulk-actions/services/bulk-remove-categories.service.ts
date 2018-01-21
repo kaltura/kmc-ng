@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -6,135 +6,127 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaCategoryEntry } from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
 import { BulkActionBaseService } from './bulk-action-base.service';
-import { CategoryEntryAddAction } from "kaltura-ngx-client/api/types/CategoryEntryAddAction";
 import { CategoryEntryListAction } from 'kaltura-ngx-client/api/types/CategoryEntryListAction';
 
 import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { CategoryListAction } from 'kaltura-ngx-client/api/types/CategoryListAction';
-import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { CategoryEntryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryEntryDeleteAction';
-
-// TODO sakal
-export interface EntryCategoryItem {
-	id: number,
-	fullIdPath: number[],
-	name: string
-}
+import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Injectable()
-export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]> {
+export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]> implements OnDestroy {
 
-	private entryCategories: KalturaCategoryEntry[] = [];
+    constructor(public _kalturaServerClient: KalturaClient,
+                private _categoriesSearch: CategoriesSearchService,
+                private _appLocalization: AppLocalization) {
+        super(_kalturaServerClient);
+    }
 
-	constructor(
-	  _kalturaServerClient: KalturaClient,
-    private _appLocalization: AppLocalization
-  ) {
-		super(_kalturaServerClient);
-	}
+    private _getCategoryEntryMapping(entries: string[]): Observable<KalturaCategoryEntry[]> {
 
-	public getCategories(selectedEntries: KalturaMediaEntry[]): Observable<KalturaCategory[]> {
-		return Observable.create(observer => {
-			// load all category entries
-			const filter: KalturaCategoryEntryFilter = new KalturaCategoryEntryFilter();
-			let entriesIds = "";
-			selectedEntries.forEach((entry, index) => {
-				entriesIds += entry.id;
-				if (index < selectedEntries.length - 1) {
-					entriesIds += ",";
-				}
-			});
-			filter.entryIdIn = entriesIds;
-
-			const pager: KalturaFilterPager = new KalturaFilterPager();
-			pager.pageIndex = 1;
-			pager.pageSize = 1000;
-
-			this._kalturaServerClient.request(new CategoryEntryListAction({
-				filter: filter,
-				pager: pager
-			})).subscribe(
-				response => {
-				  if(response.totalCount) {
-            // got all entry categories - load category details for each entry category
-            this.entryCategories = response.objects;
-            let categoriesIds = "";
-            this.entryCategories.forEach(category => {
-              if (categoriesIds.indexOf(category.categoryId.toString()) === -1) {
-                categoriesIds += category.categoryId + ",";
-              }
-            });
-            if (categoriesIds.lastIndexOf(",") === categoriesIds.length - 1) {
-              categoriesIds = categoriesIds.substr(0, categoriesIds.length - 1); // remove last comma
+        if (entries.length === 0) {
+            return Observable.throw(new Error('no entries were selected'));
+        }
+        // load all category entries
+        const filter: KalturaCategoryEntryFilter = new KalturaCategoryEntryFilter(
+            {
+                entryIdIn: entries.join(',')
             }
-            const categoriesFilter: KalturaCategoryFilter = new KalturaCategoryFilter();
-            categoriesFilter.idIn = categoriesIds;
-            this._kalturaServerClient.request(new CategoryListAction({
-              filter: categoriesFilter,
-              pager: pager
-            })).subscribe(
-              response => {
-                observer.next(response.objects);
-                observer.complete();
-              },
-              error => {
-                observer.error(error);
-              }
-            );
-          } else {
-            observer.error(new Error(this._appLocalization.get('applications.content.bulkActions.removeCategoriesNone')));
-          }
-				},
-				error => {
-					observer.error(error);
-				}
-			);
+        );
 
-		});
+        const pager: KalturaFilterPager = new KalturaFilterPager();
+        pager.pageIndex = 1;
+        pager.pageSize = 1000;
 
-	}
+        return this._kalturaServerClient.request(new CategoryEntryListAction({
+            filter: filter,
+            pager: pager
+        }))
+            .map(item => item.objects);
+    }
 
-	public execute(selectedEntries: KalturaMediaEntry[], categories: number[]): Observable<{}> {
-		return Observable.create(observer => {
+    public getCategoriesOfEntries(entries: string[]): Observable<CategoryData[]> {
+        return this._getCategoryEntryMapping(entries)
+            .cancelOnDestroy(this)
+            .switchMap(items => {
+                // got all entry categories - load category details for each entry category
+                if (items && items.length) {
+                    const categoriesIds = Object.keys(items.reduce((acc, category) => {
+                        acc[category.categoryId] = true; // remove duplications using hash map
+                        return acc;
+                    }, {})).map(Number);
 
-			let requests: CategoryEntryDeleteAction[] = [];
+                    return this._categoriesSearch.getCategories(categoriesIds)
+                        .cancelOnDestroy(this)
+                        .map(categoryListResponse => categoryListResponse.items)
+                } else {
+                    return Observable.of([]);
+                }
+            })
+    }
 
-			// send only categories that are set to each entry
-			selectedEntries.forEach(entry  => {
-				categories.forEach(category => {
-					if (typeof this.entryCategories.find( (entryCategory: KalturaCategoryEntry) => {return entryCategory.entryId === entry.id && entryCategory.categoryId === category;} ) !== "undefined"){
-						requests.push(new CategoryEntryDeleteAction({
-							entryId: entry.id,
-							categoryId: category
-						}));
-					}
-				});
-			});
+    public execute(entries: KalturaMediaEntry[], categoriesId: number[]): Observable<{}> {
+        return Observable.create(observer => {
 
-			this.transmit(requests, true).subscribe(
-				result => {
-					observer.next({})
-					observer.complete();
-				},
-				error => {
-					observer.error(error);
-				}
-			);
+            const entriesId = entries ? entries.map(entry => entry.id) : [];
 
-		});
-	}
+            if (entriesId.length && categoriesId && categoriesId.length) {
+                this._getCategoryEntryMapping(entriesId)
+                    .cancelOnDestroy(this)
+                    .subscribe(
+                        categoriesOfEntries => {
 
-	private categoryEntryExists(entry: KalturaMediaEntry, category: EntryCategoryItem, entryCategories: KalturaCategoryEntry[]): boolean {
-		let found = false;
-		for (let i = 0; i < entryCategories.length; i++) {
-			if (entryCategories[i].categoryId === category.id && entryCategories[i].entryId === entry.id) {
-				found = true;
-				break;
-			}
-		}
-		return found;
-	}
+                            if (categoriesOfEntries.length) {
+                                const requests: CategoryEntryDeleteAction[] = [];
 
+                                // send only categories that are set to each entry
+                                entriesId.forEach(entryId => {
+                                    categoriesId.forEach(categoryId => {
+                                        if (this.categoryEntryExists(entryId, categoryId, categoriesOfEntries)) {
+                                            requests.push(new CategoryEntryDeleteAction({
+                                                entryId: entryId,
+                                                categoryId: categoryId
+                                            }));
+                                        }
+                                    });
+                                });
+
+                                this.transmit(requests, true).subscribe(
+                                    result => {
+                                        observer.next({})
+                                        observer.complete();
+                                    },
+                                    error => {
+                                        observer.error(error);
+                                    }
+                                );
+                            } else {
+                                observer.error(new Error('no categories found to be removed'));
+                            }
+                        },
+                        error => {
+                            observer.error(error);
+                        }
+                    );
+
+            } else {
+                observer.error(new Error('no categories or entries were selected'));
+            }
+        });
+    }
+
+    private categoryEntryExists(entryId: string, categoryId: number, entryCategories: KalturaCategoryEntry[]): boolean {
+        let found = false;
+        for (let i = 0; i < entryCategories.length; i++) {
+            if (entryCategories[i].categoryId === categoryId && entryCategories[i].entryId === entryId) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+    }
+
+    ngOnDestroy() {
+    }
 }

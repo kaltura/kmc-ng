@@ -9,80 +9,79 @@ import { CategoryEntryAddAction } from "kaltura-ngx-client/api/types/CategoryEnt
 import { CategoryEntryListAction } from 'kaltura-ngx-client/api/types/CategoryEntryListAction';
 import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
 
-// TODO sakal
-export interface EntryCategoryItem
-{
-  id : number,
-  fullIdPath : number[],
-  name : string
-}
-
 @Injectable()
-export class BulkAddCategoriesService extends BulkActionBaseService<EntryCategoryItem[]> {
+export class BulkAddCategoriesService extends BulkActionBaseService<number[]> {
 
   constructor(_kalturaServerClient: KalturaClient) {
     super(_kalturaServerClient);
   }
 
-  public execute(selectedEntries: KalturaMediaEntry[], categories : EntryCategoryItem[]) : Observable<{}>{
-    return Observable.create(observer =>{
+  public execute(entries: KalturaMediaEntry[], categoriesId : number[]) : Observable<{}> {
+      return Observable.create(observer => {
 
-      // load all category entries so we can check if an entry category already exists and prevent sending it
-      const filter: KalturaCategoryEntryFilter = new KalturaCategoryEntryFilter();
-      let entriesIds = "";
-      selectedEntries.forEach((entry, index) => {
-        entriesIds += entry.id;
-        if (index < selectedEntries.length -1){
-          entriesIds += ",";
-        }
+        const entriesId = entries ? entries.map(entry => entry.id) : [];
+          if (entriesId && entriesId.length && categoriesId && categoriesId.length) {
+              // load all category entries so we can check if an entry category already exists and prevent sending it
+              const filter: KalturaCategoryEntryFilter = new KalturaCategoryEntryFilter(
+                  {
+                      entryIdIn: entriesId.join(',')
+                  }
+              );
+
+              this._kalturaServerClient.request(new CategoryEntryListAction({
+                  filter: filter
+              })).subscribe(
+                  response => {
+                      // got all entry categoriesId - continue with execution
+                      const entryCategories: KalturaCategoryEntry[] = response.objects;
+                      const requests: CategoryEntryAddAction[] = [];
+
+                      entriesId.forEach(entryId => {
+                          // add selected categories
+                          categoriesId.forEach(categoryId => {
+                              // add the request only if the category entry doesn't exist yet
+                              if (!this.categoryEntryExists(entryId, categoryId, entryCategories)) {
+                                  requests.push(new CategoryEntryAddAction({
+                                      categoryEntry: new KalturaCategoryEntry({
+                                          entryId: entryId,
+                                          categoryId: categoryId
+                                      })
+                                  }));
+                              }
+                          });
+                      });
+
+                      if (requests && requests.length) {
+                          this.transmit(requests, true).subscribe(
+                              result => {
+                                  observer.next({})
+                                  observer.complete();
+                              },
+                              error => {
+                                  observer.error(error);
+                              }
+                          );
+                      }else
+                      {
+                          observer.next({})
+                          observer.complete();
+                      }
+
+                  },
+                  error => {
+                      observer.error(error);
+                  }
+              );
+          } else {
+              observer.error(new Error('no categories or entries were selected'));
+          }
       });
-      filter.entryIdIn = entriesIds;
-      this._kalturaServerClient.request(new CategoryEntryListAction({
-        filter: filter
-      })).subscribe(
-        response => {
-          // got all entry categories - continue with execution
-          const entryCategories: KalturaCategoryEntry[] = response.objects;
-          let requests: CategoryEntryAddAction[] = [];
-
-          selectedEntries.forEach(entry => {
-            // add selected categories
-            categories.forEach(category => {
-              // add the request only if the category entry doesn't exist yet
-              if (!this.categoryEntryExists(entry, category, entryCategories)) {
-                requests.push(new CategoryEntryAddAction({
-                  categoryEntry: new KalturaCategoryEntry({
-                    entryId: entry.id,
-                    categoryId: category.id
-                  })
-                }));
-              }
-            });
-          });
-
-          this.transmit(requests, true).subscribe(
-            result => {
-              observer.next({})
-              observer.complete();
-            },
-            error => {
-              observer.error(error);
-            }
-          );
-
-        },
-        error => {
-          observer.error(error);
-        }
-      );
-
-    });
   }
 
-  private categoryEntryExists(entry: KalturaMediaEntry, category: EntryCategoryItem, entryCategories: KalturaCategoryEntry[]): boolean{
+  private categoryEntryExists(entryId: string, categoryId: number, entryCategories: KalturaCategoryEntry[]): boolean{
     let found = false;
     for (let i = 0;  i < entryCategories.length; i++){
-      if (entryCategories[i].categoryId === category.id && entryCategories[i].entryId === entry.id){
+      if (entryCategories[i].categoryId === categoryId && entryCategories[i].entryId === entryId){
         found = true;
         break;
       }
