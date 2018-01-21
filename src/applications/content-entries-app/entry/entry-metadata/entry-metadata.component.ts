@@ -14,7 +14,6 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/category-tooltip.pipe';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
-let bla = 0;
 @Component({
     selector: 'kEntryMetadata',
     templateUrl: './entry-metadata.component.html',
