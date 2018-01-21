@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output, Input} from '@angular/core';
 
 import * as moment from 'moment';
-import {NewGroupedListType} from '@kaltura-ng/mc-shared/filters';
+import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
 import {CategoriesFilters, CategoriesService} from '../categories.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {
@@ -296,7 +296,7 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
         return result;
     }
 
-  private _syncTagsOfCustomMetadata(customMetadataFilters: NewGroupedListType<string>): void {
+  private _syncTagsOfCustomMetadata(customMetadataFilters: GroupedListType<string>): void {
 
     const customMetadataTagsMap: { [key: string]: TagItem[] } = this._tags.filter(item => item.type.indexOf('customMetadata|') === 0)
       .reduce((acc, item) => {

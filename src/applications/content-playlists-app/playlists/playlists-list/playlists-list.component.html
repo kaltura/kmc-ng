@@ -43,8 +43,7 @@
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="playlistsTags" [sticksTo]="'playlistsFilters'">
         <div class="kTagsWrapper kContent">
-          <k-playlists-tags   [refineFilters]="_refineFilters"
-                              (onTagsChange)="_onTagsChange()"></k-playlists-tags>
+          <k-playlists-tags   (onTagsChange)="_onTagsChange()"></k-playlists-tags>
         </div>
       </kSticky>
 
@@ -88,7 +87,6 @@
   [scrollOffset]="80">
   <ng-template>
     <k-playlists-refine-filters
-            [refineFilters]="_refineFilters"
             [parentPopupWidget]="refinePopup"></k-playlists-refine-filters>
   </ng-template>
 </kPopupWidget>

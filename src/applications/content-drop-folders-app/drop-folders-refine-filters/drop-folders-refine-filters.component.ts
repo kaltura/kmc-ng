@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
@@ -38,14 +37,13 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
   @ViewChildren(RefinePrimeTree) public _primeTreesActions: RefinePrimeTree[];
-    @Input() filters: RefineList[];
+    @Input() refineFilters: RefineList[];
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
   // properties that are exposed to the template
   public _primeLists: PrimeList[];
 
-  public _showLoader = false;
-  public _blockerMessage: AreaBlockerMessage = null;
+  public _showLoader = true;
   public _createdAfter: Date;
   public _createdBefore: Date;
   public _createdAtFilterError: string = null;
@@ -76,7 +74,7 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
   }
 
   private _updateComponentState(updates: Partial<DropFoldersFilters>): void {
-      if (!this.filters) {
+      if (!this.refineFilters) {
           return;
       }
 
@@ -132,7 +130,7 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
   }
 
     private _handleFiltersChange(): void {
-        if (this.filters) {
+        if (this.refineFilters) {
             this._showLoader = false;
             this._buildComponentLists();
             this._restoreFiltersState();
@@ -157,7 +155,7 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
 
     // create root nodes
 
-      (this.filters || []).forEach(list => {
+      (this.refineFilters || []).forEach(list => {
       if (list.items.length > 0) {
         const primeList = { items: [], selections: [] };
         this._primeListsMap[list.name] = primeList;

@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -42,14 +41,13 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
   @ViewChildren(RefinePrimeTree) public _primeTreesActions: RefinePrimeTree[];
-    @Input() filters: RefineList[];
+    @Input() refineFilters: RefineList[];
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
   // properties that are exposed to the template
   public _primeLists: PrimeList[];
 
-  public _showLoader = false;
-  public _blockerMessage: AreaBlockerMessage = null;
+  public _showLoader = true;
   public _uploadedAfter: Date;
   public _uploadedBefore: Date;
   public _createdAtFilterError: string = null;
@@ -82,7 +80,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
   }
 
   private _updateComponentState(updates: Partial<BulkLogFilters>): void {
-      if (!this.filters) {
+      if (!this.refineFilters) {
           return;
       }
 
@@ -143,7 +141,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
   }
 
     private _handleFiltersChange(): void {
-        if (this.filters) {
+        if (this.refineFilters) {
             this._showLoader = false;
             this._buildComponentLists();
             this._restoreFiltersState();
@@ -168,7 +166,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
 
       // create root nodes
 
-      (this.filters || []).forEach(list => {
+      (this.refineFilters || []).forEach(list => {
           if (list.items.length > 0) {
               const primeList = {items: [], selections: []};
               this._primeListsMap[list.name] = primeList;

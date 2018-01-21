@@ -34,8 +34,8 @@ import {
     FiltersStoreBase, TypeAdaptersMapping,
     DatesRangeAdapter, DatesRangeType,
     StringTypeAdapter,
-    NumberTypeAdapter, NewListTypeAdapter,
-    NewGroupedListAdapter, NewGroupedListType
+    NumberTypeAdapter, ListTypeAdapter,
+    GroupedListAdapter, GroupedListType
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
@@ -73,7 +73,7 @@ export interface EntriesFilters {
     distributions: string[],
     categories: number[],
     categoriesMode: CategoriesModeType,
-    customMetadata: NewGroupedListType<string>
+    customMetadata: GroupedListType<string>
 }
 
 
@@ -546,19 +546,19 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             sortDirection: new NumberTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
             scheduledAt: new DatesRangeAdapter(),
-            mediaTypes: new NewListTypeAdapter<string>(),
-            timeScheduling: new NewListTypeAdapter<string>(),
-            ingestionStatuses: new NewListTypeAdapter<KalturaEntryStatus>(),
-            durations: new NewListTypeAdapter<string>(),
-            originalClippedEntries: new NewListTypeAdapter<string>(),
-            moderationStatuses: new NewListTypeAdapter<string>(),
-            replacementStatuses: new NewListTypeAdapter<string>(),
-            accessControlProfiles: new NewListTypeAdapter<string>(),
-            flavors: new NewListTypeAdapter<string>(),
-            distributions: new NewListTypeAdapter<string>(),
-            categories: new NewListTypeAdapter<number>(),
+            mediaTypes: new ListTypeAdapter<string>(),
+            timeScheduling: new ListTypeAdapter<string>(),
+            ingestionStatuses: new ListTypeAdapter<KalturaEntryStatus>(),
+            durations: new ListTypeAdapter<string>(),
+            originalClippedEntries: new ListTypeAdapter<string>(),
+            moderationStatuses: new ListTypeAdapter<string>(),
+            replacementStatuses: new ListTypeAdapter<string>(),
+            accessControlProfiles: new ListTypeAdapter<string>(),
+            flavors: new ListTypeAdapter<string>(),
+            distributions: new ListTypeAdapter<string>(),
+            categories: new ListTypeAdapter<number>(),
             categoriesMode: new CategoriesModeAdapter(),
-            customMetadata: new NewGroupedListAdapter<string>()
+            customMetadata: new GroupedListAdapter<string>()
         };
     }
 }

@@ -13,7 +13,7 @@ import { BulkUploadAbortAction } from 'kaltura-ngx-client/api/types/BulkUploadAb
 import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters';
-import { NewListTypeAdapter } from '@kaltura-ng/mc-shared/filters';
+import { ListTypeAdapter } from '@kaltura-ng/mc-shared/filters';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
@@ -21,7 +21,6 @@ import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaS
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters';
-import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters';
 
 const localStoragePageSizeKey = 'bulklog.list.pageSize';
 
@@ -223,8 +222,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
-        uploadedItem: new NewListTypeAdapter<string>(),
-      status: new NewListTypeAdapter<string>()
+        uploadedItem: new ListTypeAdapter<string>(),
+      status: new ListTypeAdapter<string>()
     };
   }
 

@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
@@ -54,7 +53,7 @@ export interface PrimeListsGroup {
 export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
-    @Input() filters: RefineGroup[];
+    @Input() refineFilters: RefineGroup[];
 
     @Input() enforcedFilters: Partial<EntriesFilters>;
 
@@ -66,8 +65,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   // properties that are exposed to the template
   public _primeListsGroups: PrimeListsGroup[] = [];
 
-  public _showLoader = false;
-  public _blockerMessage: AreaBlockerMessage = null;
+  public _showLoader = true;
   public _createdFilterError: string = null;
   public _scheduledAfter: Date;
   public _scheduledBefore: Date;
@@ -106,7 +104,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
     }
 
   private _updateComponentState(updates: Partial<EntriesFilters>): void {
-      if (!this.filters) {
+      if (!this.refineFilters) {
           return;
       }
 
@@ -196,7 +194,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
     }
 
     private _handleFiltersChange(): void {
-        if (this.filters) {
+        if (this.refineFilters) {
             this._showLoader = false;
             this._buildComponentLists();
             this._restoreFiltersState();
@@ -224,7 +222,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
         this._primeListsGroups = [];
 
         // create root nodes
-        (this.filters || []).forEach(group => {
+        (this.refineFilters || []).forEach(group => {
             const filtersGroup = {label: group.label, lists: []};
             this._primeListsGroups.push(filtersGroup);
 

@@ -18,7 +18,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { DropFolderFileListAction } from 'kaltura-ngx-client/api/types/DropFolderFileListAction';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { DatesRangeAdapter, DatesRangeType, NewListTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types';
+import { DatesRangeAdapter, DatesRangeType, ListTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { ISubscription } from 'rxjs/Subscription';
@@ -308,7 +308,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       pageIndex: new NumberTypeAdapter(),
       freeText: new StringTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
-      status: new NewListTypeAdapter<string>()
+      status: new ListTypeAdapter<string>()
     };
   }
 

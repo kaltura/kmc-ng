@@ -19,8 +19,8 @@ import {
     DatesRangeAdapter,
     DatesRangeType,
     FiltersStoreBase,
-     NewListTypeAdapter,
-    NewGroupedListAdapter, NewGroupedListType,
+     ListTypeAdapter,
+    GroupedListAdapter, GroupedListType,
     NumberTypeAdapter,
     StringTypeAdapter,
     TypeAdaptersMapping
@@ -89,7 +89,7 @@ export interface CategoriesFilters {
   endUserPermissions: string[],
     categories: number[],
     categoriesMode: CategoriesModeType,
-  customMetadata: NewGroupedListType<string>
+  customMetadata: GroupedListType<string>
 }
 
 
@@ -511,13 +511,13 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             sortBy: new StringTypeAdapter(),
             sortDirection: new NumberTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
-            privacyTypes: new NewListTypeAdapter<string>(),
-            categoryListing: new NewListTypeAdapter<string>(),
-            contributionPolicy: new NewListTypeAdapter<string>(),
-            endUserPermissions: new NewListTypeAdapter<string>(),
-            categories: new NewListTypeAdapter<number>(),
+            privacyTypes: new ListTypeAdapter<string>(),
+            categoryListing: new ListTypeAdapter<string>(),
+            contributionPolicy: new ListTypeAdapter<string>(),
+            endUserPermissions: new ListTypeAdapter<string>(),
+            categories: new ListTypeAdapter<number>(),
             categoriesMode: new CategoriesModeAdapter(),
-            customMetadata: new NewGroupedListAdapter<string>()
+            customMetadata: new GroupedListAdapter<string>()
         };
     }
 

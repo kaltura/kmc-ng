@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import * as moment from 'moment';
-import { NewGroupedListType } from '@kaltura-ng/mc-shared/filters';
+import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
 import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import {
@@ -304,7 +304,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    private _syncTagsOfCustomMetadata(customMetadataFilters: NewGroupedListType<string>): void {
+    private _syncTagsOfCustomMetadata(customMetadataFilters: GroupedListType<string>): void {
 
         const customMetadataTagsMap: { [key: string]: TagItem[] } = this._tags.filter(item => item.type.indexOf('customMetadata|') === 0)
             .reduce((acc, item) => {

@@ -1,6 +1,5 @@
 import { Component, Input, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
-import { NewGroupedListType } from '@kaltura-ng/mc-shared/filters';
 import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { RefineList } from '../bulk-log-store/bulk-log-refine-filters.service';

@@ -1,7 +1,5 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren} from '@angular/core';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {RefinePrimeTree} from '@kaltura-ng/mc-shared/filters'
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {environment} from 'app-environment';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
@@ -39,7 +37,7 @@ export interface PrimeList {
 export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
-    @Input() filters: RefineList[];
+    @Input() refineFilters: RefineList[];
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
 
@@ -48,16 +46,9 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
   // properties that are exposed to the template
     public _primeLists: PrimeList[];
 
-  public _showLoader = false;
-  public _blockerMessage: AreaBlockerMessage = null;
-  public _createdFilterError: string = null;
-  public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
-  public _createdAfter: Date;
-  public _createdBefore: Date;
+  public _showLoader = true;
 
-
-  constructor(private manageEndUserPermissionsService: ManageEndUserPermissionsService,
-              private _appLocalization: AppLocalization) {
+  constructor(private manageEndUserPermissionsService: ManageEndUserPermissionsService) {
   }
 
     ngOnInit() {
@@ -83,7 +74,7 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
   }
 
   private _updateComponentState(updates: Partial<UsersFilters>): void {
-      if (!this.filters) {
+      if (!this.refineFilters) {
           return;
       }
 
@@ -136,7 +127,7 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
   }
 
     private _handleFiltersChange(): void {
-        if (this.filters) {
+        if (this.refineFilters) {
             this._showLoader = false;
             this._buildComponentLists();
             this._restoreFiltersState();
@@ -161,7 +152,7 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
 
       // create root nodes
 
-      (this.filters || []).forEach(list => {
+      (this.refineFilters || []).forEach(list => {
           if (list.items.length > 0) {
               const primeList = { items: [], selections: [] };
               this._primeListsMap[list.name] = primeList;

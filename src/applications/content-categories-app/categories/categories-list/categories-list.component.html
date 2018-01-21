@@ -108,6 +108,6 @@
               [targetOffset]="{'x':-200, 'y': -15}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'refinePopup'" [scrollOffset]="80">
   <ng-template>
-    <kCategoriesRefineFilters [parentPopupWidget]="refinePopup"></kCategoriesRefineFilters>
+    <kCategoriesRefineFilters   [refineFilters]="_refineFilters" [parentPopupWidget]="refinePopup"></kCategoriesRefineFilters>
   </ng-template>
 </kPopupWidget>

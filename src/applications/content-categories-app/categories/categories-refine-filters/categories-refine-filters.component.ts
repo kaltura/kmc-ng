@@ -1,7 +1,6 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren} from '@angular/core';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {environment} from 'app-environment';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
@@ -46,7 +45,7 @@ export interface PrimeListsGroup {
 export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
-  @Input() filters: RefineGroup[];
+  @Input() refineFilters: RefineGroup[];
 
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
@@ -56,8 +55,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
   // properties that are exposed to the template
   public _primeListsGroups: PrimeListsGroup[] = [];
 
-  public _showLoader = false;
-  public _blockerMessage: AreaBlockerMessage = null;
+  public _showLoader = true;
   public _createdFilterError: string = null;
   public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
   public _createdAfter: Date;
@@ -92,7 +90,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
   }
 
   private _updateComponentState(updates: Partial<CategoriesFilters>): void {
-      if (!this.filters) {
+      if (!this.refineFilters) {
           return;
       }
 
@@ -159,7 +157,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
   }
 
     private _handleFiltersChange(): void {
-        if (this.filters) {
+        if (this.refineFilters) {
             this._showLoader = false;
             this._buildComponentLists();
             this._restoreFiltersState();
@@ -183,7 +181,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
     this._primeListsGroups = [];
 
     // create root nodes
-      (this.filters || []).forEach(group => {
+      (this.refineFilters || []).forEach(group => {
       const filtersGroup = {label: group.label, lists: []};
       this._primeListsGroups.push(filtersGroup);
 

@@ -25,7 +25,7 @@ import {
   BooleanTypeAdapter,
   FiltersStoreBase,
   NumberTypeAdapter,
-    NewListTypeAdapter,
+    ListTypeAdapter,
   StringTypeAdapter,
   TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
@@ -492,9 +492,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       freetext: new StringTypeAdapter(),
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
-      permissionLevels: new NewListTypeAdapter<string>(),
-      status: new NewListTypeAdapter<string>(),
-      updateMethod: new NewListTypeAdapter<string>(),
+      permissionLevels: new ListTypeAdapter<string>(),
+      status: new ListTypeAdapter<string>(),
+      updateMethod: new ListTypeAdapter<string>(),
     };
   }
 }
