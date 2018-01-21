@@ -248,7 +248,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
                 if (filterName === 'categories') {
 
-                    const category = null; //this._categoriesSearch.getCachedCategory(Number(item));
+                    const category = this._categoriesSearch.getCachedCategory(Number(item));
 
                     if (category) {
                         newTag.label = category.name;
