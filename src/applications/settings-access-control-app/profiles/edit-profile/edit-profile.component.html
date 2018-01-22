@@ -101,7 +101,7 @@
           <ng-template let-country pTemplate="item">
             <span class="kCountryList">
               <img class="kCountryListFlag" [src]="country.value | kCountryFromCode:'icon'" [alt]="country">
-              {{country.value | kCountryFromCode:'label'}}
+              {{country.label}}
               </span>
           </ng-template>
         </p-multiSelect>
@@ -202,7 +202,13 @@
                        [formControl]="_allowedFlavorsField"
                        [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
                        [showToggleAll]="false"
-                       [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate">
+          <ng-template let-flavor pTemplate="item">
+            <span class="kFlavorList">
+              {{flavor.label}}
+              </span>
+          </ng-template>
+        </p-multiSelect>
       </div>
       <div class="kRow">
         <span class="kLabel">
@@ -216,7 +222,13 @@
                        [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
                        [showToggleAll]="false"
                        [formControl]="_restrictedFlavorsField"
-                       [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate">
+          <ng-template let-flavor pTemplate="item">
+            <span class="kFlavorList">
+              {{flavor.label}}
+              </span>
+          </ng-template>
+        </p-multiSelect>
       </div>
     </div>
 

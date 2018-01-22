@@ -109,7 +109,7 @@
             height: 60px;
           }
         }
-        .kCountryList {
+        .kCountryList, .kFlavorList {
           vertical-align: middle;
 
           .kCountryListFlag {
@@ -148,6 +148,15 @@
 
   .ui-multiselect-label {
     font-weight: normal;
+    padding: .5em;
+  }
+
+  .ui-multiselect-trigger {
+    padding: .5em 1em;
+
+    .fa-caret-down {
+      margin-left: -.25em;
+    }
   }
 
   .ui-spinner-button {

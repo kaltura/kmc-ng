@@ -30,7 +30,11 @@ export class EditProfileComponent {
   private _profile: ExtendedKalturaAccessControl = null;
   private _headerTitle: string;
 
-  public _countryCodes: { value: string }[] = countryCodes.map(code => ({ value: code }));
+  public _countryCodes: { value: string }[] = countryCodes.map(code => {
+    return {
+      value: code, label: this._appLocalization.get(`countries.${code}`)
+    }
+  });
 
   public _profileForm: FormGroup;
   public _nameField: AbstractControl;
@@ -204,11 +208,15 @@ export class EditProfileComponent {
     this._countriesTypeField.valueChanges.subscribe(value => {
       if (value === KalturaCountryRestrictionType.allowCountryList) {
         this._allowedCountriesField.enable();
+        this._restrictedCountriesField.setValue([]);
         this._restrictedCountriesField.disable();
       } else if (value === KalturaCountryRestrictionType.restrictCountryList) {
         this._restrictedCountriesField.enable();
+        this._allowedCountriesField.setValue([]);
         this._allowedCountriesField.disable();
       } else {
+        this._restrictedCountriesField.setValue([]);
+        this._allowedCountriesField.setValue([]);
         this._restrictedCountriesField.disable();
         this._allowedCountriesField.disable();
       }
@@ -230,11 +238,15 @@ export class EditProfileComponent {
     this._flavorsTypeField.valueChanges.subscribe(value => {
       if (value === KalturaLimitFlavorsRestrictionType.allowList) {
         this._allowedFlavorsField.enable();
+        this._restrictedFlavorsField.setValue([]);
         this._restrictedFlavorsField.disable();
       } else if (value === KalturaLimitFlavorsRestrictionType.restrictList) {
         this._restrictedFlavorsField.enable();
+        this._allowedFlavorsField.setValue([]);
         this._allowedFlavorsField.disable();
       } else {
+        this._restrictedFlavorsField.setValue([]);
+        this._allowedFlavorsField.setValue([]);
         this._allowedFlavorsField.disable();
         this._restrictedFlavorsField.disable();
       }
