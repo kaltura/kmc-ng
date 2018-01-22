@@ -32,6 +32,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import {
     FiltersStoreBase, TypeAdaptersMapping,
+    EnumTypeAdapter,
     DatesRangeAdapter, DatesRangeType,
     StringTypeAdapter,
     NumberTypeAdapter, ListTypeAdapter,
@@ -58,7 +59,7 @@ export interface EntriesFilters {
     pageSize: number,
     pageIndex: number,
     sortBy: string,
-    sortDirection: number,
+    sortDirection: SortDirection,
     createdAt: DatesRangeType,
     scheduledAt: DatesRangeType,
     mediaTypes: string[],
@@ -548,7 +549,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             pageSize: new NumberTypeAdapter(),
             pageIndex: new NumberTypeAdapter(),
             sortBy: new StringTypeAdapter(),
-            sortDirection: new NumberTypeAdapter(),
+            sortDirection: new EnumTypeAdapter<SortDirection>(),
             createdAt: new DatesRangeAdapter(),
             scheduledAt: new DatesRangeAdapter(),
             mediaTypes: new ListTypeAdapter<string>(),
