@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -9,6 +9,7 @@ import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types
 import { AccessControlProfilesStore, ExtendedKalturaAccessControl } from '../profiles-store/profiles-store.service';
 import { countryCodes } from 'app-config/country-codes';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 
 @Component({
   selector: 'kAccessControlProfilesEditProfile',
@@ -27,6 +28,8 @@ export class EditProfileComponent implements OnDestroy {
       this._headerTitle = this._appLocalization.get('applications.settings.accessControl.addAccessControlProfile');
     }
   }
+
+  @Output() onSave = new EventEmitter<KalturaAccessControl>();
 
   private _profile: ExtendedKalturaAccessControl = null;
   private _headerTitle: string;
@@ -362,7 +365,16 @@ export class EditProfileComponent implements OnDestroy {
   }
 
   private _proceedSave(): void {
+    const formValue = this._profileForm.getRawValue();
+    const accessControlProfile = this._profile || new KalturaAccessControl();
 
+    accessControlProfile.name = formValue.name;
+    accessControlProfile.description = formValue.description;
+    accessControlProfile.restrictions = [];
+
+    console.warn(accessControlProfile);
+
+    this.onSave.emit(accessControlProfile);
   }
 
   public _save(): void {
