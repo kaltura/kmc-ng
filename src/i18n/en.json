@@ -1691,7 +1691,17 @@
           "selectCountry": "Select Country",
           "findCountry": "Find Country",
           "countriesSelected": "{0} Countries Selected",
-          "flavorsSelected": "{0} Flavors Selected"
+          "flavorsSelected": "{0} Flavors Selected",
+          "invalidValue": "Invalid Value",
+          "validationMessage": {
+            "validationFailed": "Validation Failed",
+            "profileNameRequired": "Profile name is required",
+            "authorizedDomains": "No domains added to the approved or restricted lists. The domain restriction will be: allow all domains.",
+            "authorizedCountries": "No countries added to the approved or restricted lists. The country restriction will be: allow all countries.",
+            "authorizedIps": "No IPs added to the approved or restricted lists. The IP restriction will be: allow all IPs.",
+            "authorizedFlavors": "No flavors added to the approved or restricted lists. The flavors restriction will be: allow all flavors.",
+            "confirmSaving": "Are you sure you want to save this Access Control Profile?"
+          }
         },
         "errors": {
           "loading": "Could not load Access Control Profiles",

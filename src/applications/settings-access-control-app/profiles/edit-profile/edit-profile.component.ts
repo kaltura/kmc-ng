@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,13 +8,14 @@ import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/Ka
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
 import { AccessControlProfilesStore, ExtendedKalturaAccessControl } from '../profiles-store/profiles-store.service';
 import { countryCodes } from 'app-config/country-codes';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kAccessControlProfilesEditProfile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
-export class EditProfileComponent {
+export class EditProfileComponent implements OnDestroy {
   @Input() parentPopup: PopupWidgetComponent;
 
   @Input() set profile(value: ExtendedKalturaAccessControl) {
@@ -29,6 +30,13 @@ export class EditProfileComponent {
 
   private _profile: ExtendedKalturaAccessControl = null;
   private _headerTitle: string;
+
+  public _ipsFormatError = false;
+  public _domainsFormatError = false;
+
+  public get _saveBtnDisabled(): boolean {
+    return this._domainsFormatError || this._ipsFormatError || this._nameField.invalid;
+  }
 
   public _countryCodes: { value: string }[] = countryCodes.map(code => {
     return {
@@ -61,9 +69,14 @@ export class EditProfileComponent {
   public _flavorsRestrictionType = KalturaLimitFlavorsRestrictionType;
 
   constructor(private _appLocalization: AppLocalization,
+              private _browserService: BrowserService,
               private _fb: FormBuilder,
               public _store: AccessControlProfilesStore) {
     this._buildForm();
+  }
+
+  ngOnDestroy() {
+
   }
 
   private _setInitialValue(profile: ExtendedKalturaAccessControl): void {
@@ -192,93 +205,192 @@ export class EditProfileComponent {
     this._allowPreviewField.disable();
     this._previewField.disable();
 
-    this._domainsTypeField.valueChanges.subscribe(value => {
-      if (value === KalturaSiteRestrictionType.allowSiteList) {
-        this._allowedDomainsField.enable();
-        this._restrictedDomainsField.disable();
-      } else if (value === KalturaSiteRestrictionType.restrictSiteList) {
-        this._restrictedDomainsField.enable();
-        this._allowedDomainsField.disable();
-      } else {
-        this._allowedDomainsField.disable();
-        this._restrictedDomainsField.disable();
-      }
-    });
+    this._domainsTypeField.valueChanges
+      .cancelOnDestroy(this)
+      .subscribe(value => {
+        if (value === KalturaSiteRestrictionType.allowSiteList) {
+          this._allowedDomainsField.enable();
+          this._restrictedDomainsField.disable();
+        } else if (value === KalturaSiteRestrictionType.restrictSiteList) {
+          this._restrictedDomainsField.enable();
+          this._allowedDomainsField.disable();
+        } else {
+          this._allowedDomainsField.disable();
+          this._restrictedDomainsField.disable();
+        }
+      });
 
-    this._countriesTypeField.valueChanges.subscribe(value => {
-      if (value === KalturaCountryRestrictionType.allowCountryList) {
-        this._allowedCountriesField.enable();
-        this._restrictedCountriesField.setValue([]);
-        this._restrictedCountriesField.disable();
-      } else if (value === KalturaCountryRestrictionType.restrictCountryList) {
-        this._restrictedCountriesField.enable();
-        this._allowedCountriesField.setValue([]);
-        this._allowedCountriesField.disable();
-      } else {
-        this._restrictedCountriesField.setValue([]);
-        this._allowedCountriesField.setValue([]);
-        this._restrictedCountriesField.disable();
-        this._allowedCountriesField.disable();
-      }
-    });
+    this._countriesTypeField.valueChanges
+      .cancelOnDestroy(this)
+      .subscribe(value => {
+        if (value === KalturaCountryRestrictionType.allowCountryList) {
+          this._allowedCountriesField.enable();
+          this._restrictedCountriesField.setValue([]);
+          this._restrictedCountriesField.disable();
+        } else if (value === KalturaCountryRestrictionType.restrictCountryList) {
+          this._restrictedCountriesField.enable();
+          this._allowedCountriesField.setValue([]);
+          this._allowedCountriesField.disable();
+        } else {
+          this._restrictedCountriesField.setValue([]);
+          this._allowedCountriesField.setValue([]);
+          this._restrictedCountriesField.disable();
+          this._allowedCountriesField.disable();
+        }
+      });
 
-    this._ipsTypeField.valueChanges.subscribe(value => {
-      if (value === KalturaIpAddressRestrictionType.allowList) {
-        this._allowedIpsField.enable();
-        this._restrictedIpsField.disable();
-      } else if (value === KalturaIpAddressRestrictionType.restrictList) {
-        this._restrictedIpsField.enable();
-        this._allowedIpsField.disable();
-      } else {
-        this._allowedIpsField.disable();
-        this._restrictedIpsField.disable();
-      }
-    });
+    this._ipsTypeField.valueChanges
+      .cancelOnDestroy(this)
+      .subscribe(value => {
+        if (value === KalturaIpAddressRestrictionType.allowList) {
+          this._allowedIpsField.enable();
+          this._restrictedIpsField.disable();
+        } else if (value === KalturaIpAddressRestrictionType.restrictList) {
+          this._restrictedIpsField.enable();
+          this._allowedIpsField.disable();
+        } else {
+          this._allowedIpsField.disable();
+          this._restrictedIpsField.disable();
+        }
+      });
 
-    this._flavorsTypeField.valueChanges.subscribe(value => {
-      if (value === KalturaLimitFlavorsRestrictionType.allowList) {
-        this._allowedFlavorsField.enable();
-        this._restrictedFlavorsField.setValue([]);
-        this._restrictedFlavorsField.disable();
-      } else if (value === KalturaLimitFlavorsRestrictionType.restrictList) {
-        this._restrictedFlavorsField.enable();
-        this._allowedFlavorsField.setValue([]);
-        this._allowedFlavorsField.disable();
-      } else {
-        this._restrictedFlavorsField.setValue([]);
-        this._allowedFlavorsField.setValue([]);
-        this._allowedFlavorsField.disable();
-        this._restrictedFlavorsField.disable();
-      }
-    });
+    this._flavorsTypeField.valueChanges
+      .cancelOnDestroy(this)
+      .subscribe(value => {
+        if (value === KalturaLimitFlavorsRestrictionType.allowList) {
+          this._allowedFlavorsField.enable();
+          this._restrictedFlavorsField.setValue([]);
+          this._restrictedFlavorsField.disable();
+        } else if (value === KalturaLimitFlavorsRestrictionType.restrictList) {
+          this._restrictedFlavorsField.enable();
+          this._allowedFlavorsField.setValue([]);
+          this._allowedFlavorsField.disable();
+        } else {
+          this._restrictedFlavorsField.setValue([]);
+          this._allowedFlavorsField.setValue([]);
+          this._allowedFlavorsField.disable();
+          this._restrictedFlavorsField.disable();
+        }
+      });
 
-    this._secureVideoField.valueChanges.subscribe(value => {
-      if (value) {
-        this._allowPreviewField.enable();
-        this._previewField.disable();
-      } else {
-        this._allowPreviewField.setValue(false);
-        this._allowPreviewField.disable();
-        this._previewField.disable();
-      }
-    });
+    this._secureVideoField.valueChanges
+      .cancelOnDestroy(this)
+      .subscribe(value => {
+        if (value) {
+          this._allowPreviewField.enable();
+          this._previewField.disable();
+        } else {
+          this._allowPreviewField.setValue(false);
+          this._allowPreviewField.disable();
+          this._previewField.disable();
+        }
+      });
 
-    this._allowPreviewField.valueChanges.subscribe(value => {
-      if (value) {
-        this._previewField.enable();
-      } else {
-        this._previewField.setValue(0);
-        this._previewField.disable();
-      }
-    });
+    this._allowPreviewField.valueChanges
+      .cancelOnDestroy(this)
+      .subscribe(value => {
+        if (value) {
+          this._previewField.enable();
+        } else {
+          this._previewField.setValue(0);
+          this._previewField.disable();
+        }
+      });
+
+    this._allowedIpsField.valueChanges
+      .cancelOnDestroy(this)
+      .filter(value => value && this._allowedIpsField.enabled)
+      .subscribe(value => {
+        this._ipsFormatError = value.some(ip => ip && !this._validateIp(ip));
+      });
+
+    this._restrictedIpsField.valueChanges
+      .cancelOnDestroy(this)
+      .filter(value => value && this._restrictedIpsField.enabled)
+      .subscribe(value => {
+        this._ipsFormatError = value.some(ip => ip && !this._validateIp(ip));
+      });
+
+    this._allowedDomainsField.valueChanges
+      .cancelOnDestroy(this)
+      .filter(value => value && this._allowedDomainsField.enabled)
+      .subscribe(value => {
+        this._domainsFormatError = value.some(domain => domain && !this._validateDomain(domain));
+      });
+
+    this._restrictedDomainsField.valueChanges
+      .cancelOnDestroy(this)
+      .filter(value => value && this._restrictedDomainsField.enabled)
+      .subscribe(value => {
+        this._domainsFormatError = value.some(domain => domain && !this._validateDomain(domain));
+      });
+  }
+
+  private _getConfirmationMessage(): string {
+    const formValue = this._profileForm.getRawValue();
+    let message = '';
+
+    const { domainsType, allowedDomains, restrictedDomains } = formValue;
+    if (domainsType === KalturaSiteRestrictionType.allowSiteList && (!allowedDomains || !allowedDomains.length)
+      || domainsType === KalturaSiteRestrictionType.restrictSiteList && (!restrictedDomains || !restrictedDomains.length)) {
+      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedDomains') + '\n'
+    }
+
+    const { countriesType, allowedCountries, restrictedCountries } = formValue;
+    if (countriesType === KalturaCountryRestrictionType.allowCountryList && (!allowedCountries || !allowedCountries.length)
+      || countriesType === KalturaCountryRestrictionType.restrictCountryList && (!restrictedCountries || !restrictedCountries.length)) {
+      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedCountries') + '\n'
+    }
+
+    const { ipsType, allowedIps, restrictedIps } = formValue;
+    if (ipsType === KalturaIpAddressRestrictionType.allowList && (!allowedIps || !allowedIps.length)
+      || ipsType === KalturaIpAddressRestrictionType.restrictList && (!restrictedIps || !restrictedIps.length)) {
+      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedIps') + '\n'
+    }
+
+    const { flavorsType, allowedFlavors, restrictedFlavors } = formValue;
+    if (flavorsType === KalturaLimitFlavorsRestrictionType.allowList && (!allowedFlavors || !allowedFlavors.length)
+      || flavorsType === KalturaLimitFlavorsRestrictionType.restrictList && (!restrictedFlavors || !restrictedFlavors.length)) {
+      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedFlavors') + '\n'
+    }
+
+    if (message) {
+      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.confirmSaving');
+    }
+
+    return message;
+  }
+
+  private _proceedSave(): void {
+
   }
 
   public _save(): void {
+    if (!this._nameField.value.trim()) {
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.validationFailed'),
+        message: this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.profileNameRequired'),
+      });
+      return;
+    }
 
+    const confirmationMessage = this._getConfirmationMessage();
+    if (confirmationMessage) {
+      this._browserService.confirm({
+        message: confirmationMessage,
+        accept: () => this._proceedSave()
+      });
+    } else {
+      this._proceedSave();
+    }
   }
 
   public _validateDomain(item: string): boolean {
-    return /^([a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+.*)$/.test(item);
+    return item
+      && !(item.lastIndexOf('.') === -1
+        || item.lastIndexOf('..') !== -1
+        || item.charAt(0) === '.'
+        || item.charAt(item.length - 1) === '.')
   }
 
   public _validateIp(item: string): boolean {
