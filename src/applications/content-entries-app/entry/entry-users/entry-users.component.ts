@@ -20,8 +20,8 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	private _searchUsersSubscription : ISubscription;
 	public _usersProvider = new Subject<SuggestionsProviderData>();
 
-
 	constructor(public _widgetService: EntryUsersWidget, private _appLocalization: AppLocalization) {
+		this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this); // fix scope issues when binding to a property
     }
 
 
@@ -49,14 +49,14 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
 	public _convertUserInputToValidValue(value : string) : any {
 		let result = null;
-		let tt = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
+		const tooltip = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
 		if (value) {
 			result =
 				{
 					id : value,
 					screenName: value,
-					userAdded: true,
-					tooltip: tt
+					__tooltip: tooltip,
+					__class: 'userAdded'
 				};
 
 		}

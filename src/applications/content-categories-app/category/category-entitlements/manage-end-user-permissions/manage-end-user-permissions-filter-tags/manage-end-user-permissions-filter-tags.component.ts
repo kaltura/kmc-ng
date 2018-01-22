@@ -1,7 +1,6 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, Input, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 
-
-import {ListType} from '@kaltura-ng/mc-shared/filters';
+import { RefineList } from '../manage-end-user-permissions-refine-filters.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {ManageEndUserPermissionsService, UsersFilters} from '../manage-end-user-permissions.service';
 
@@ -24,9 +23,20 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
 
   @Output() onTagsChange = new EventEmitter<void>();
 
-  public _filterTags: TagItem[] = [];
+    @Input() set refineFilters(lists: RefineList[]) {
+        this._refineFiltersMap.clear();
 
+        (lists || []).forEach(list => {
+            this._refineFiltersMap.set(list.name, list);
+        });
 
+        this._handleFiltersChange();
+    }
+
+    public _tags: TagItem[] = [];
+    private _refineFiltersMap: Map<string, RefineList> = new Map<string, RefineList>();
+    public _showTags = false;
+  
   constructor(private _manageEndUserPermissionsService: ManageEndUserPermissionsService, private _appLocalization: AppLocalization) {
   }
 
@@ -34,7 +44,7 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
     if (listTypes.indexOf(tag.type) > -1) {
       // remove tag of type list from filters
       const previousData = this._manageEndUserPermissionsService.cloneFilter(tag.type, []);
-      const previousDataItemIndex = previousData.findIndex(item => item.value === tag.value);
+      const previousDataItemIndex = previousData.findIndex(item => item === tag.value);
       if (previousDataItemIndex > -1) {
         previousData.splice(
           previousDataItemIndex
@@ -61,7 +71,26 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
   ngOnInit() {
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
+      this._handleFiltersChange();
   }
+
+    private _handleFiltersChange(): void {
+        if (this._refineFiltersMap.size > 0) {
+            this._showTags = true;
+
+            (this._tags || []).forEach(tag => {
+                if ((<string[]>listTypes).indexOf(tag.type) !== -1) {
+                    tag.label = this._getRefineLabel(tag.type, tag.value);
+                    tag.tooltip = this._appLocalization.get(`applications.content.filters.${tag.type}`, {'0': tag.label});
+                }
+            });
+
+            this.onTagsChange.emit();
+        } else {
+            this._showTags = false;
+            this.onTagsChange.emit();
+        }
+    }
 
   private _restoreFiltersState(): void {
     this._updateComponentState(this._manageEndUserPermissionsService.cloneFilters(
@@ -93,9 +122,9 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
   }
 
   private _syncTagOfFreetext(): void {
-    const previousItem = this._filterTags.findIndex(item => item.type === 'freetext');
+    const previousItem = this._tags.findIndex(item => item.type === 'freetext');
     if (previousItem !== -1) {
-      this._filterTags.splice(
+      this._tags.splice(
         previousItem,
         1);
     }
@@ -103,7 +132,7 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
     const currentFreetextValue = this._manageEndUserPermissionsService.cloneFilter('freetext', null);
 
     if (currentFreetextValue) {
-      this._filterTags.push({
+      this._tags.push({
         type: 'freetext',
         value: currentFreetextValue,
         label: currentFreetextValue,
@@ -113,34 +142,49 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
   }
 
   private _syncTagsOfList(filterName: keyof UsersFilters): void {
-    const currentValue = <ListType>this._manageEndUserPermissionsService.cloneFilter(filterName, []);
+    const currentValue = this._manageEndUserPermissionsService.cloneFilter(filterName, []);
 
     if (currentValue instanceof Array) {
       // Developer notice: we must make sure the type at runtime is an array. this is a safe check only we don't expect the value to be different
-      const tagsFilters = this._filterTags.filter(item => item.type === filterName);
+      const tagsFilters = this._tags.filter(item => item.type === filterName);
 
       const tagsFiltersMap = this._manageEndUserPermissionsService.filtersUtils.toMap(tagsFilters, 'value');
-      const currentValueMap = this._manageEndUserPermissionsService.filtersUtils.toMap(currentValue, 'value');
+      const currentValueMap = this._manageEndUserPermissionsService.filtersUtils.toMap(currentValue);
       const diff = this._manageEndUserPermissionsService.filtersUtils.getDiff(tagsFiltersMap, currentValueMap);
 
       diff.deleted.forEach(item => {
-        this._filterTags.splice(
-          this._filterTags.indexOf(item),
+        this._tags.splice(
+          this._tags.indexOf(item),
           1);
       });
 
       diff.added.forEach(item => {
-        this._filterTags.push({
+        const label = this._getRefineLabel(filterName, item);
+        this._tags.push({
           type: filterName,
-          value: item.value,
-          label: item.label,
-          tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': item.label})
+          value: item,
+          label: label,
+          tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': label})
         });
       });
     }
   }
 
-  ngOnDestroy() {
+    private _getRefineLabel(listName: string, value: any): string {
+        let result = String(value);
+        if (this._refineFiltersMap.size > 0) {
+            const list = this._refineFiltersMap.get(listName);
+            if (list) {
+                const item = list.items.find(listItem => String(listItem.value) === String(value));
+
+                result = item ? item.label : result;
+            }
+
+        }
+        return result;
+    }
+
+    ngOnDestroy() {
   }
 }
 

@@ -163,8 +163,12 @@
     height: 0px;
   }
 
+
 }
 
+:host{
+  width: 100%;
+}
 :host /deep/ .kStickyClass{
   border-bottom: 1px solid $kGrayscale5;
 }

@@ -8,14 +8,12 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {ISubscription} from 'rxjs/Subscription';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {EndUserPermissionsUser, ManageEndUserPermissionsService} from '../manage-end-user-permissions.service';
+import {EndUserPermissionsUser} from '../manage-end-user-permissions.service';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
 import {UserActionData} from '../manage-end-user-permissions.component';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kManageEndUserPermissionsTable',
@@ -24,7 +22,6 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 })
 export class ManageEndUserPermissionsTableComponent implements OnInit, AfterViewInit, OnDestroy {
   public _users: EndUserPermissionsUser[] = [];
-  public _blockerMessage: AreaBlockerMessage = null;
   private _deferredUsers: any[];
   public _deferredLoading = true;
 
@@ -55,7 +52,6 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   @Output()
   closeParentPopup = new EventEmitter<void>();
 
-  private _usersServiceStatusSubscription: ISubscription;
   public _permissionLevelOptions: { value: number, label: string }[] = [];
   public _updateMethodOptions: { value: number, label: string }[] = [];
   public _kalturaCategoryUserStatus = KalturaCategoryUserStatus;
@@ -66,52 +62,13 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   };
 
   constructor(private _appLocalization: AppLocalization,
-              public manageEndUserPermissionsService: ManageEndUserPermissionsService,
               private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this._fillPermissionLevelOptions();
+      this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
+      this._fillPermissionLevelOptions();
     this._fillUpdateMethodOptions();
-
-    this._usersServiceStatusSubscription = this.manageEndUserPermissionsService.users.state$.subscribe(
-      result => {
-        if (result.errorMessage) {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage ||
-            this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.errors.loadEndUserPermissions'),
-            buttons: [{
-              label: this._appLocalization
-                .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.backToEntitlements'),
-              action: () => {
-                this._blockerMessage = null;
-                this.closeParentPopup.emit();
-              }
-            }, {
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => this.manageEndUserPermissionsService.reload()
-              }
-            ]
-          });
-        } else {
-          this._blockerMessage = null;
-          if (result.loading) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-            }
-          }
-        }
-      },
-      error => {
-        console.warn('[kmcng] -> could not load end users permissions'); // navigate to error page
-        throw error;
-      });
   }
 
   private _fillPermissionLevelOptions() {
@@ -143,8 +100,6 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   }
 
   ngOnDestroy() {
-    this._usersServiceStatusSubscription.unsubscribe();
-    this._usersServiceStatusSubscription = null;
   }
 
   ngAfterViewInit() {

@@ -34,37 +34,55 @@ export class BulkRemoveCategories implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    let categories = [];
-    // load categories
-    this._loading = true;
-    this._sectionBlockerMessage = null;
-    this._bulkRemoveCategoriesService.getCategories(this.selectedEntries).subscribe(
-        (response : KalturaCategory[]) => {
-          this._loading = false;
-          this.categories = [];
-          response.forEach(category => {
-            this.categories.push({selected: false, id: category.id, label: category.fullName});
-          });
-          this.categories.sort(function(a, b) {return (a.label.toLowerCase() > b.label.toLowerCase()) ? 1 : ((b.label.toLowerCase() > a.label.toLowerCase()) ? -1 : 0);} );
-        },
-        error => {
-          this._loading = false;
-          this._sectionBlockerMessage = new AreaBlockerMessage(
-              {
-                message: error.message,
-                buttons: [
-                  {
-                    label: this._appLocalization.get('app.common.close'),
-                    action: () => {
-                      this._confirmClose = false;
-                      this.parentPopupWidget.close();
-                    }
+      // load categories
+      this._sectionBlockerMessage = null;
+
+      const entries = this.selectedEntries ? this.selectedEntries.map(entry => entry.id) : [];
+
+      if (entries.length === 0) {
+          this._showErrorMessage(this._appLocalization.get('applications.content.bulkActions.removeCategoriesNone'));
+      } else {
+
+          this._loading = true;
+
+          this._bulkRemoveCategoriesService.getCategoriesOfEntries(this.selectedEntries.map(entry => entry.id)).subscribe(
+              (response) => {
+                  this._loading = false;
+                  if (response && response.length) {
+                      this.categories = [];
+                      response.forEach(category => {
+                          this.categories.push({selected: false, id: category.id, label: category.fullName});
+                      });
+                      this.categories.sort(function (a, b) {
+                          return (a.label.toLowerCase() > b.label.toLowerCase()) ? 1 : ((b.label.toLowerCase() > a.label.toLowerCase()) ? -1 : 0);
+                      });
+                  } else {
+                      this._showErrorMessage(this._appLocalization.get('applications.content.bulkActions.removeCategoriesNone'));
                   }
-                ]
+              },
+              error => {
+                  this._loading = false;
+                  this._showErrorMessage(error.message);
               }
           );
-        }
-    );
+      }
+  }
+
+  private _showErrorMessage(message: string): void{
+      this._sectionBlockerMessage = new AreaBlockerMessage(
+          {
+              message: message,
+              buttons: [
+                  {
+                      label: this._appLocalization.get('app.common.close'),
+                      action: () => {
+                          this._confirmClose = false;
+                          this.parentPopupWidget.close();
+                      }
+                  }
+              ]
+          }
+      );
   }
 
   ngAfterViewInit(){

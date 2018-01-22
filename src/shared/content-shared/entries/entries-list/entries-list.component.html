@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="isBusy" [message]="blockerMessage" [bodyScroll]="true">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
       <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
@@ -48,10 +48,16 @@
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
             <k-entries-list-tags
+                    [refineFilters]="_refineFilters"
                 [enforcedFilters] = "enforcedFilters"
             (onTagsChange)="onTagsChange()"></k-entries-list-tags>
         </div>
       </kSticky>
+
+
+        <k-area-blocker [showLoader]="_tableIsBusy"
+                        [message]="_tableBlockerMessage"
+                        [bodyScroll]="true">
       <kEntriesTable class="kEntriesTable"
                      scrollHeight="100%"
                      [entries]="(_entriesStore.entries.data$ | async)?.items"
@@ -63,6 +69,9 @@
                      (sortChanged)="onSortChanged($event)"
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>
+        </k-area-blocker>
+
+
 
       <div class="kEntriesTableFooter kContent" #footer *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">
         <p-paginator
@@ -104,6 +113,6 @@
               [targetOffset]="{'x':-200, 'y': -15}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'refinePopup'" [scrollOffset]="80">
   <ng-template>
-    <k-entries-refine-filters [enforcedFilters] = "enforcedFilters" [parentPopupWidget]="refinePopup"></k-entries-refine-filters>
+    <k-entries-refine-filters [refineFilters]="_refineFilters" [enforcedFilters] = "enforcedFilters" [parentPopupWidget]="refinePopup"></k-entries-refine-filters>
   </ng-template>
 </kPopupWidget>

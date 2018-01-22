@@ -1,3 +1,5 @@
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+
 export interface DefaultFilterList {
     label: string;
     name: string;
@@ -18,12 +20,12 @@ export const DefaultFiltersList: DefaultFilterList[] = [
     {
         name: 'ingestionStatuses', label: 'Ingestion Statuses',
         items: [
-            { value: '2', label: 'Ready' },
-            { value: '7', label: 'No Media' },
-            { value: '4', label: 'Pending' },
-            { value: '0', label: 'Uploading' },
-            { value: '1', label: 'Transcoding' },
-            { value: '-1,-2', label: 'Error' }
+            { value: KalturaEntryStatus.ready.toString(), label: 'Ready' },
+            { value: KalturaEntryStatus.noContent.toString(), label: 'No Media' },
+            { value: KalturaEntryStatus.pending.toString(), label: 'Pending' },
+            { value: KalturaEntryStatus.import.toString(), label: 'Uploading' },
+            { value: KalturaEntryStatus.preconvert.toString(), label: 'Transcoding' },
+            { value: [KalturaEntryStatus.errorConverting.toString(), KalturaEntryStatus.errorImporting.toString()].join(','), label: 'Error' }
         ]
     },
     {

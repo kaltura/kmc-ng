@@ -24,9 +24,8 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {
   BooleanTypeAdapter,
   FiltersStoreBase,
-  ListAdapter,
-  ListType,
   NumberTypeAdapter,
+    ListTypeAdapter,
   StringTypeAdapter,
   TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
@@ -61,9 +60,9 @@ export interface UsersFilters {
   freetext: string,
   pageSize: number,
   pageIndex: number,
-  permissionLevels: ListType,
-  status: ListType,
-  updateMethod: ListType,
+  permissionLevels: string[],
+  status: string[],
+  updateMethod: string[],
 }
 
 
@@ -100,6 +99,11 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
 
   private _prepare(): void {
+
+      // NOTICE: do not execute here any logic that should run only once.
+      // this function will re-run if preparation failed. execute your logic
+      // only after the line where we set isReady to true
+
     if (!this._isReady) {
       const defaultPageSize = this.browserService.getFromLocalStorage(this._pageSizeCacheKey);
       if (defaultPageSize !== null) {
@@ -208,17 +212,17 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
           // filter 'status'
           if (data.status && data.status.length > 0) {
-              filter.statusIn = data.status.map(e => e.value).join(',');
+              filter.statusIn = data.status.map(e => e).join(',');
           }
 
           // filter 'updateMethod'
           if (data.updateMethod && data.updateMethod.length > 0) {
-              filter.updateMethodIn = data.updateMethod.map(e => e.value).join(',');
+              filter.updateMethodIn = data.updateMethod.map(e => e).join(',');
           }
 
           // filter 'permissionLevels'
           if (data.permissionLevels && data.permissionLevels.length > 0) {
-              filter.permissionLevelIn = data.permissionLevels.map(e => e.value).join(',');
+              filter.permissionLevelIn = data.permissionLevels.map(e => e).join(',');
           }
 
           // remove advanced search arg if it is empty
@@ -493,9 +497,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
       freetext: new StringTypeAdapter(),
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
-      permissionLevels: new ListAdapter(),
-      status: new ListAdapter(),
-      updateMethod: new ListAdapter(),
+      permissionLevels: new ListTypeAdapter<string>(),
+      status: new ListTypeAdapter<string>(),
+      updateMethod: new ListTypeAdapter<string>(),
     };
   }
 }
