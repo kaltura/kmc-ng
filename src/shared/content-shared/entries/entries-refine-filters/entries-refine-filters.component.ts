@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
@@ -54,7 +53,7 @@ export interface PrimeListsGroup {
 export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
-    @Input() filters: RefineGroup[];
+    @Input() refineFilters: RefineGroup[];
 
     @Input() enforcedFilters: Partial<EntriesFilters>;
 
@@ -66,8 +65,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   // properties that are exposed to the template
   public _primeListsGroups: PrimeListsGroup[] = [];
 
-  public _showLoader = false;
-  public _blockerMessage: AreaBlockerMessage = null;
+  public _showLoader = true;
   public _createdFilterError: string = null;
   public _scheduledAfter: Date;
   public _scheduledBefore: Date;
@@ -106,13 +104,14 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
     }
 
   private _updateComponentState(updates: Partial<EntriesFilters>): void {
-      if (!this.filters) {
+      if (!this.refineFilters) {
           return;
       }
 
       if (typeof updates.createdAt  !== 'undefined') {
           this._createdAfter = updates.createdAt.fromDate || null;
           this._createdBefore = updates.createdAt.toDate || null;
+          this._createdFilterError = null;
       }
 
       if (typeof updates.scheduledAt  !== 'undefined') {
@@ -120,20 +119,27 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
           this._scheduledBefore = updates.scheduledAt.toDate || null;
       }
 
+      const customMetadataFilter = updates['customMetadata'];
+      const shouldClearCustomMetadata = customMetadataFilter ? Object.keys(customMetadataFilter).length === 0 : false;
       let updatedPrimeTreeSelections = false;
+
       Object.keys(this._primeListsMap).forEach(listName => {
           const listData = this._primeListsMap[listName];
           let listFilter: any[];
-          if (listData.group === 'customMetadata')
-          {
-              const customMetadataFilter = updates['customMetadata'];
-              listFilter = customMetadataFilter ? customMetadataFilter[listName] : null;
+          if (listData.group === 'customMetadata') {
+              if (shouldClearCustomMetadata) {
+                  listFilter = [];
+              } else {
+                  listFilter = customMetadataFilter ? customMetadataFilter[listName] : undefined; // important: must set 'undefined' and not null because null is valid value
+              }
           }else
           {
               listFilter = updates[listName] ;
           }
 
           if (typeof listFilter !== 'undefined') {
+              // important: the above condition doesn't filter out 'null' because 'null' is valid value.
+
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
               const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, null);
               const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
@@ -196,7 +202,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
     }
 
     private _handleFiltersChange(): void {
-        if (this.filters) {
+        if (this.refineFilters) {
             this._showLoader = false;
             this._buildComponentLists();
             this._restoreFiltersState();
@@ -224,7 +230,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
         this._primeListsGroups = [];
 
         // create root nodes
-        (this.filters || []).forEach(group => {
+        (this.refineFilters || []).forEach(group => {
             const filtersGroup = {label: group.label, lists: []};
             this._primeListsGroups.push(filtersGroup);
 
@@ -300,7 +306,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       });
 
       if (updateResult.createdAt && updateResult.createdAt.failed) {
-          this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+          this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
 
           setTimeout(() => {
               const createdAt = this._entriesStore.cloneFilter('createdAt', null);
@@ -327,7 +333,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       });
 
       if (updateResult.scheduledAt && updateResult.scheduledAt.failed) {
-          this._scheduledFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+          this._scheduledFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
 
           setTimeout(() => {
               const scheduledAt = this._entriesStore.cloneFilter('scheduledAt', null);

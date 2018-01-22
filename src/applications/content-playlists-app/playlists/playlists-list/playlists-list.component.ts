@@ -13,6 +13,7 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 
+
 @Component({
   selector: 'kPlaylistsList',
   templateUrl: './playlists-list.component.html',
@@ -24,7 +25,10 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
   @ViewChild('tags') private tags: StickyComponent;
 
-  public _blockerMessage: AreaBlockerMessage = null;
+    public _isBusy = false;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _tableIsBusy = false;
+    public _tableBlockerMessage: AreaBlockerMessage = null;
 
   public _query = {
     freetext: '',
@@ -49,6 +53,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
+      this._registerToDataChanges();
   }
 
   ngOnDestroy() {
@@ -168,6 +173,36 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         this._browserService.scrollToTop();
       });
   }
+
+    private _registerToDataChanges(): void {
+        this._playlistsStore.playlists.state$
+            .cancelOnDestroy(this)
+            .subscribe(
+                result => {
+
+                    this._tableIsBusy = result.loading;
+
+                    if (result.errorMessage) {
+                        this._tableBlockerMessage = new AreaBlockerMessage({
+                            message: result.errorMessage || 'Error loading playlists',
+                            buttons: [{
+                                label: 'Retry',
+                                action: () => {
+                                    this._tableBlockerMessage = null;
+                                    this._playlistsStore.reload();
+                                }
+                            }
+                            ]
+                        })
+                    } else {
+                        this._tableBlockerMessage = null;
+                    }
+                },
+                error => {
+                    console.warn('[kmcng] -> could not load playlists'); // navigate to error page
+                    throw error;
+                });
+    }
 
   public _onTagsChange(): void {
     this.tags.updateLayout();

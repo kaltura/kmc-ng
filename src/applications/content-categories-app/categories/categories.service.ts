@@ -19,10 +19,8 @@ import {
     DatesRangeAdapter,
     DatesRangeType,
     FiltersStoreBase,
-    GroupedListAdapter,
-    GroupedListType,
-    ListAdapter,
-    ListType, NewListTypeAdapter,
+     ListTypeAdapter,
+    GroupedListAdapter, GroupedListType,
     NumberTypeAdapter,
     StringTypeAdapter,
     TypeAdaptersMapping
@@ -85,13 +83,13 @@ export interface CategoriesFilters {
   sortBy: string,
   sortDirection: number,
   createdAt: DatesRangeType,
-  privacyTypes: ListType,
-  categoryListing: ListType,
-  contributionPolicy: ListType,
-  endUserPermissions: ListType,
+  privacyTypes: string[],
+  categoryListing: string[],
+  contributionPolicy: string[],
+  endUserPermissions: string[],
     categories: number[],
     categoriesMode: CategoriesModeType,
-  customMetadata: GroupedListType
+  customMetadata: GroupedListType<string>
 }
 
 
@@ -129,6 +127,10 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
     }
 
     private _prepare(): void {
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only after the line where we set isReady to true
+
         if (!this._isReady) {
             this._categories.state.next({loading: true, errorMessage: null});
             this.metadataProfileService.get(
@@ -326,7 +328,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
               metadataProfileFilters.forEach(filterItem => {
                 const searchItem = new KalturaSearchCondition({
                   field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                  value: filterItem.value
+                  value: filterItem
                 });
 
                 innerMetadataItem.items.push(searchItem);
@@ -364,13 +366,13 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
 
       // filter 'privacyTypes'
       if (data.privacyTypes && data.privacyTypes.length > 0) {
-        filter.privacyIn = data.privacyTypes.map(e => e.value).join(',');
+        filter.privacyIn = data.privacyTypes.map(e => e).join(',');
       }
 
       // filter 'categoryListing', set filter if only one option selected
       if (data.categoryListing) {
         if (data.categoryListing.length === 1) {
-          switch (data.categoryListing[0].value) {
+          switch (data.categoryListing[0]) {
             case KalturaAppearInListType.categoryMembersOnly.toString():
               filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
               break;
@@ -387,7 +389,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       if (data.contributionPolicy) {
         if (data.contributionPolicy.length === 1) {
           data.contributionPolicy.forEach(item => {
-            switch (item.value) {
+            switch (item) {
               case KalturaContributionPolicyType.all.toString():
                 filter.contributionPolicyEqual = KalturaContributionPolicyType.all;
                 break;
@@ -405,7 +407,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       if (data.endUserPermissions) {
         if (data.endUserPermissions.length === 1) {
           data.endUserPermissions.forEach(item => {
-            switch (item.value) {
+            switch (item) {
               case 'has':
                 filter.membersCountGreaterThanOrEqual = 1;
                 filter.membersCountLessThanOrEqual = undefined;
@@ -513,13 +515,13 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             sortBy: new StringTypeAdapter(),
             sortDirection: new NumberTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
-            privacyTypes: new ListAdapter(),
-            categoryListing: new ListAdapter(),
-            contributionPolicy: new ListAdapter(),
-            endUserPermissions: new ListAdapter(),
-            categories: new NewListTypeAdapter<number>(),
+            privacyTypes: new ListTypeAdapter<string>(),
+            categoryListing: new ListTypeAdapter<string>(),
+            contributionPolicy: new ListTypeAdapter<string>(),
+            endUserPermissions: new ListTypeAdapter<string>(),
+            categories: new ListTypeAdapter<number>(),
             categoriesMode: new CategoriesModeAdapter(),
-            customMetadata: new GroupedListAdapter()
+            customMetadata: new GroupedListAdapter<string>()
         };
     }
 

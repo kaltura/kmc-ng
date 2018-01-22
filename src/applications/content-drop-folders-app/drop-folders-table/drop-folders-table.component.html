@@ -1,5 +1,3 @@
-<k-area-blocker [showLoader]="(_dropFoldersService.dropFolders.state$ | async).loading || _deferredLoading"
-                [message]="_areaBlockerMessage">
   <div class="kDropFoldersTableWrapper">
     <div class="kDropFoldersTable" [class.noResults]="!_dropFolders?.length">
       <p-dataTable #dataTable
@@ -72,4 +70,3 @@
               kMenuCloseOnScroll></p-menu>
     </div>
   </div>
-</k-area-blocker>

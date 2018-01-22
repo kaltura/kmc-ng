@@ -74,18 +74,9 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private _prepare(): void {
-
-        this._entriesStore.preFilter$
-            .cancelOnDestroy(this)
-            .subscribe(
-                filters => {
-                    if (this.enforcedFilters) {
-                        Object.keys(this.enforcedFilters).forEach(filterName => {
-                            delete filters[filterName];
-                        });
-                    }
-                }
-            );
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only once the filters were fetched successfully.
 
         this._isBusy = true;
         this._entriesRefineFilters.getFilters()
@@ -93,6 +84,19 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 groups => {
+
+                    this._entriesStore.preFilter$
+                        .cancelOnDestroy(this)
+                        .subscribe(
+                            filters => {
+                                if (this.enforcedFilters) {
+                                    Object.keys(this.enforcedFilters).forEach(filterName => {
+                                        delete filters[filterName];
+                                    });
+                                }
+                            }
+                        );
+
                     this._isBusy = false;
                     this._refineFilters = groups;
                     this._restoreFiltersState();
@@ -108,6 +112,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                             action: () => {
                                 this._blockerMessage = null;
                                 this._prepare();
+                                this._entriesStore.reload();
                             }
                         }
                         ]
