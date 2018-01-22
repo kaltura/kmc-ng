@@ -1193,7 +1193,7 @@
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
           "clipsLoadError": "Error loading clips",
-          "schedulingError": "Day before can't be earlier than day after"
+          "datesRangeError": "Day before can't be earlier than day after"
         }
       },
       "categoryDetails": {

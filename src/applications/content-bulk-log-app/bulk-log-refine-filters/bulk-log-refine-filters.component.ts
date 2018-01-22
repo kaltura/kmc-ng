@@ -87,6 +87,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
       if (typeof updates.createdAt !== 'undefined') {
           this._uploadedAfter = updates.createdAt.fromDate || null;
           this._uploadedBefore = updates.createdAt.toDate || null;
+          this._createdAtFilterError = null;
       }
 
       let updatedPrimeTreeSelections = false;
@@ -230,7 +231,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
     });
 
     if (updateResult.createdAt && updateResult.createdAt.failed) {
-      this._createdAtFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+      this._createdAtFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
 
       setTimeout(() => {
         const createdAt = this._bulkLogStore.cloneFilter('createdAt', null);

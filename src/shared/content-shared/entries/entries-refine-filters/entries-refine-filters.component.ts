@@ -111,6 +111,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       if (typeof updates.createdAt  !== 'undefined') {
           this._createdAfter = updates.createdAt.fromDate || null;
           this._createdBefore = updates.createdAt.toDate || null;
+          this._createdFilterError = null;
       }
 
       if (typeof updates.scheduledAt  !== 'undefined') {
@@ -305,7 +306,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       });
 
       if (updateResult.createdAt && updateResult.createdAt.failed) {
-          this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+          this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
 
           setTimeout(() => {
               const createdAt = this._entriesStore.cloneFilter('createdAt', null);
@@ -332,7 +333,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       });
 
       if (updateResult.scheduledAt && updateResult.scheduledAt.failed) {
-          this._scheduledFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+          this._scheduledFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
 
           setTimeout(() => {
               const scheduledAt = this._entriesStore.cloneFilter('scheduledAt', null);

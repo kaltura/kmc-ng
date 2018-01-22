@@ -97,6 +97,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
       if (typeof updates.createdAt !== 'undefined') {
       this._createdAfter = updates.createdAt.fromDate || null;
       this._createdBefore = updates.createdAt.toDate || null;
+      this._createdFilterError = null;
     }
 
       const customMetadataFilter = updates['customMetadata'];
@@ -259,7 +260,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
     });
 
     if (updateResult.createdAt && updateResult.createdAt.failed) {
-      this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.createdAtError');
+      this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
 
       setTimeout(() => {
         const createdAt = this._categoriesService.cloneFilter('createdAt', null);
