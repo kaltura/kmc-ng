@@ -118,20 +118,27 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
           this._scheduledBefore = updates.scheduledAt.toDate || null;
       }
 
+      const customMetadataFilter = updates['customMetadata'];
+      const shouldClearCustomMetadata = customMetadataFilter ? Object.keys(customMetadataFilter).length === 0 : false;
       let updatedPrimeTreeSelections = false;
+
       Object.keys(this._primeListsMap).forEach(listName => {
           const listData = this._primeListsMap[listName];
           let listFilter: any[];
-          if (listData.group === 'customMetadata')
-          {
-              const customMetadataFilter = updates['customMetadata'];
-              listFilter = customMetadataFilter ? customMetadataFilter[listName] : null;
+          if (listData.group === 'customMetadata') {
+              if (shouldClearCustomMetadata) {
+                  listFilter = [];
+              } else {
+                  listFilter = customMetadataFilter ? customMetadataFilter[listName] : undefined; // important: must set 'undefined' and not null because null is valid value
+              }
           }else
           {
               listFilter = updates[listName] ;
           }
 
           if (typeof listFilter !== 'undefined') {
+              // important: the above condition doesn't filter out 'null' because 'null' is valid value.
+
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
               const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, null);
               const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );

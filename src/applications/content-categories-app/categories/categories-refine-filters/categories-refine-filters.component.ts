@@ -99,18 +99,25 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
       this._createdBefore = updates.createdAt.toDate || null;
     }
 
-    let updatedPrimeTreeSelections = false;
+      const customMetadataFilter = updates['customMetadata'];
+      const shouldClearCustomMetadata = customMetadataFilter ? Object.keys(customMetadataFilter).length === 0 : false;
+      let updatedPrimeTreeSelections = false;
+
     Object.keys(this._primeListsMap).forEach(listName => {
       const listData = this._primeListsMap[listName];
       let listFilter: any[];
       if (listData.group === 'customMetadata') {
-        const customMetadataFilter = updates['customMetadata'];
-        listFilter = customMetadataFilter ? customMetadataFilter[listName] : null;
+          if (shouldClearCustomMetadata) {
+              listFilter = [];
+          } else {
+              listFilter = customMetadataFilter ? customMetadataFilter[listName] : undefined; // important: must set 'undefined' and not null because null is valid value
+          }
       } else {
         listFilter = updates[listName];
       }
 
       if (typeof listFilter !== 'undefined') {
+          // important: the above condition doesn't filter out 'null' because 'null' is valid value.
         const listSelectionsMap = this._categoriesService.filtersUtils.toMap(listData.selections, 'value');
         const listFilterMap = this._categoriesService.filtersUtils.toMap(listFilter);
         const diff = this._categoriesService.filtersUtils.getDiff(listSelectionsMap, listFilterMap);

@@ -84,6 +84,7 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
           const listFilter: any[] = updates[listName];
 
           if (typeof listFilter !== 'undefined') {
+              // important: the above condition doesn't filter out 'null' because 'null' is valid value.
               const listSelectionsMap = this.manageEndUserPermissionsService.filtersUtils.toMap(listData.selections, 'value');
               const listFilterMap = this.manageEndUserPermissionsService.filtersUtils.toMap(listFilter);
               const diff = this.manageEndUserPermissionsService.filtersUtils.getDiff(listSelectionsMap, listFilterMap);

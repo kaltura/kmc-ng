@@ -95,6 +95,8 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
           const listFilter: any[] = updates[listName];
 
           if (typeof listFilter !== 'undefined') {
+              // important: the above condition doesn't filter out 'null' because 'null' is valid value.
+
               const listSelectionsMap = this._bulkLogStore.filtersUtils.toMap(listData.selections, 'value');
               const listFilterMap = this._bulkLogStore.filtersUtils.toMap(listFilter);
               const diff = this._bulkLogStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
