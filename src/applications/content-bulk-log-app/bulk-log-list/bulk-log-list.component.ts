@@ -53,6 +53,10 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
     private _prepare(): void {
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only once the filters were fetched successfully.
+
         this._isBusy = true;
         this._refineFiltersService.getFilters()
             .cancelOnDestroy(this)
@@ -74,6 +78,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
                             action: () => {
                                 this._blockerMessage = null;
                                 this._prepare();
+                                this._store.reload();
                             }
                         }
                         ]

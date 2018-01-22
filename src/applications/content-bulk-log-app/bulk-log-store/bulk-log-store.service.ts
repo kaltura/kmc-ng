@@ -65,9 +65,14 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   }
 
   private _prepare(): void {
+
+      // NOTICE: do not execute here any logic that should run only once.
+      // this function will re-run if preparation failed. execute your logic
+      // only after the line where we set isReady to true
+
     if (!this._isReady) {
       this._isReady = true;
-      
+
       const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
         if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
             this.filter({
@@ -140,9 +145,6 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       let responseProfile: KalturaDetachedResponseProfile = null;
       let pagination: KalturaFilterPager = null;
 
-      const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-      advancedSearch.type = KalturaSearchOperatorType.searchAnd;
-
       const data: BulkLogFilters = this._getFiltersAsReadonly();
 
       // filter 'createdAt'
@@ -159,16 +161,6 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       // filters of joined list
       this._updateFilterWithJoinedList(data.uploadedItem, filter, 'bulkUploadObjectTypeIn');
       this._updateFilterWithJoinedList(data.status, filter, 'statusIn');
-
-      // handle default value for media types
-      if (!filter.bulkUploadObjectTypeIn) {
-        filter.bulkUploadObjectTypeIn = '1,2,3,4';
-      }
-
-      // handle default value for statuses
-      if (!filter.statusIn) {
-        filter.statusIn = '0,1,2,3,4,5,6,7,8,9,10,11,12';
-      }
 
       responseProfile = new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,

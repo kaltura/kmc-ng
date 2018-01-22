@@ -82,32 +82,36 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
           return undefined;
       }
 
+      this._usersService.filter(
+          {
+              categoryId: this.category.id,
+              inheritUsers: this.categoryInheritUserPermissions
+          });
+
       this._prepare();
   }
 
     private _prepare(): void {
 
-        this._usersService.filter(
-            {
-                categoryId: this.category.id,
-                inheritUsers: this.categoryInheritUserPermissions
-            });
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only once the filters were fetched successfully.
 
-        this._usersService.users.data$
-            .cancelOnDestroy(this)
-            .skip(1) // skip the first emitted value which is the default for '_actualUsersCount' to behave correctly
-            .subscribe(response => {
-                this._users = response.items;
-                this._usersCount = response.totalCount;
-                this._actualUsersCount = { updated: true, total: response.actualUsersCount};
-            });
-        
         this._isBusy = true;
         this._refineFiltersService.getFilters()
             .cancelOnDestroy(this)
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 lists => {
+                    this._usersService.users.data$
+                        .cancelOnDestroy(this)
+                        .skip(1) // skip the first emitted value which is the default for '_actualUsersCount' to behave correctly
+                        .subscribe(response => {
+                            this._users = response.items;
+                            this._usersCount = response.totalCount;
+                            this._actualUsersCount = { updated: true, total: response.actualUsersCount};
+                        });
+
                     this._isBusy = false;
                     this._refineFilters = lists;
                     this._restoreFiltersState();
@@ -123,6 +127,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
                             action: () => {
                                 this._blockerMessage = null;
                                 this._prepare();
+                                this._usersService.reload();
                             }
                         }
                         ]

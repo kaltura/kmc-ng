@@ -64,11 +64,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     private _prepare(): void {
 
-        this._categoriesService.categories.data$
-            .cancelOnDestroy(this)
-            .subscribe(response => {
-                this._categoriesTotalCount = response.totalCount
-            });
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only once the filters were fetched successfully.
 
         this._isBusy = true;
         this._refineFiltersService.getFilters()
@@ -76,6 +74,14 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 groups => {
+
+                    this._categoriesService.categories.data$
+                        .cancelOnDestroy(this)
+                        .subscribe(response => {
+                            this._categoriesTotalCount = response.totalCount
+                        });
+
+
                     this._isBusy = false;
                     this._refineFilters = groups;
                     this._restoreFiltersState();
@@ -91,6 +97,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                             action: () => {
                                 this._blockerMessage = null;
                                 this._prepare();
+                                this._categoriesService.reload();
                             }
                         }
                         ]

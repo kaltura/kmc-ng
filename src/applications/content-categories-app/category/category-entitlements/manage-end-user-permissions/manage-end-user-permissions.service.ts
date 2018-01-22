@@ -99,6 +99,11 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
 
   private _prepare(): void {
+
+      // NOTICE: do not execute here any logic that should run only once.
+      // this function will re-run if preparation failed. execute your logic
+      // only after the line where we set isReady to true
+
     if (!this._isReady) {
       const defaultPageSize = this.browserService.getFromLocalStorage(this._pageSizeCacheKey);
       if (defaultPageSize !== null) {
