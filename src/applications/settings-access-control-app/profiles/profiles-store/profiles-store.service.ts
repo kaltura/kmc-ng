@@ -209,7 +209,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
 
               if (restriction instanceof KalturaCountryRestriction) {
                 const isAuthorized = restriction.countryRestrictionType === KalturaCountryRestrictionType.allowCountryList;
-                const details = restriction.countryList.split(',');
+                const details = restriction.countryList.split(',').map(countryCode => countryCode.toLowerCase());
                 const label = isAuthorized
                   ? this._appLocalization.get('applications.settings.accessControl.restrictions.authorized', [details.length])
                   : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [details.length]);
@@ -237,12 +237,11 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
                   : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [flavorParamsIds.length]);
                 const getFlavorNameById = (flavorId) => {
                   const relevantFlavor = flavorsList.find(({ id }) => Number(flavorId) === id);
-                  return relevantFlavor ? { label: relevantFlavor.name, value: flavorId } : null;
+                  return relevantFlavor ? relevantFlavor.name : null;
                 };
-                const details = flavorParamsIds.map(getFlavorNameById).filter(Boolean);
-                flavors = details.map((flavor) => flavor.label);
+                flavors = flavorParamsIds.map(getFlavorNameById).filter(Boolean);
 
-                item.flavors = Object.assign({}, restriction, { label, isAuthorized, details });
+                item.flavors = Object.assign({}, restriction, { label, isAuthorized, details: flavorParamsIds });
               }
 
               const advancedSecurityItem = {

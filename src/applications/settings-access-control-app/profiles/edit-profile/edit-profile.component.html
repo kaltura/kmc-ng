@@ -92,8 +92,10 @@
                          [label]="'applications.settings.accessControl.editForm.selectedCountriesOnly' | translate"></p-radioButton>
         </span>
         <p-multiSelect class="kControl"
-                       [options]="_testOptions"
+                       [options]="_countryCodes"
                        [showToggleAll]="false"
+                       [maxSelectedLabels]="0"
+                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.countriesSelected' | translate"
                        [formControl]="_allowedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
           <ng-template let-country pTemplate="item">
@@ -112,7 +114,9 @@
                          [label]="'applications.settings.accessControl.editForm.blockSelectedCountries' | translate"></p-radioButton>
         </span>
         <p-multiSelect class="kControl"
-                       [options]="_testOptions"
+                       [options]="_countryCodes"
+                       [maxSelectedLabels]="0"
+                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.countriesSelected' | translate"
                        [showToggleAll]="false"
                        [formControl]="_restrictedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
@@ -194,7 +198,9 @@
                          [label]="'applications.settings.accessControl.editForm.selectedFlavorsOnly' | translate"></p-radioButton>
         </span>
         <p-multiSelect [options]="_store.flavors"
+                       [maxSelectedLabels]="0"
                        [formControl]="_allowedFlavorsField"
+                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
                        [showToggleAll]="false"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>
       </div>
@@ -206,6 +212,8 @@
                          [label]="'applications.settings.accessControl.editForm.blockSelectedFlavors' | translate"></p-radioButton>
         </span>
         <p-multiSelect [options]="_store.flavors"
+                       [maxSelectedLabels]="0"
+                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
                        [showToggleAll]="false"
                        [formControl]="_restrictedFlavorsField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"></p-multiSelect>

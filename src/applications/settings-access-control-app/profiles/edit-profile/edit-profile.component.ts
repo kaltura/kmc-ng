@@ -7,6 +7,7 @@ import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/Kalt
 import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
 import { AccessControlProfilesStore, ExtendedKalturaAccessControl } from '../profiles-store/profiles-store.service';
+import { countryCodes } from 'app-config/country-codes';
 
 @Component({
   selector: 'kAccessControlProfilesEditProfile',
@@ -29,28 +30,7 @@ export class EditProfileComponent {
   private _profile: ExtendedKalturaAccessControl = null;
   private _headerTitle: string;
 
-  public _testOptions = [
-    {
-      label: 'Germany',
-      value: 'de'
-    },
-    {
-      label: 'Spain',
-      value: 'es'
-    },
-    {
-      label: 'France',
-      value: 'fr'
-    },
-    {
-      label: 'Ukraine',
-      value: 'ua'
-    },
-    {
-      label: 'Poland',
-      value: 'pl'
-    }
-  ];
+  public _countryCodes: { value: string }[] = countryCodes.map(code => ({ value: code }));
 
   public _profileForm: FormGroup;
   public _nameField: AbstractControl;

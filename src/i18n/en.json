@@ -1689,7 +1689,9 @@
           "domainsPlaceholder": "For example: kaltura.com",
           "selectFlavors": "Select Flavors",
           "selectCountry": "Select Country",
-          "findCountry": "Find Country"
+          "findCountry": "Find Country",
+          "countriesSelected": "{0} Countries Selected",
+          "flavorsSelected": "{0} Flavors Selected"
         },
         "errors": {
           "loading": "Could not load Access Control Profiles",
