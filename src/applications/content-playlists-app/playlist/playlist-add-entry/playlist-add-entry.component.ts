@@ -17,10 +17,11 @@ export class PlaylistAddEntryComponent {
   public _addButtonLabel = '';
   public _addButtonLabelTranslation = '';
   public _enforcedFilters: Partial<EntriesFilters> = {
-    'ingestionStatuses' : [{ value: KalturaEntryStatus.preconvert.toString(), label: ''},
-        { value: KalturaEntryStatus.ready.toString(), label: ''},
-        { value: KalturaEntryStatus.moderate.toString(), label: ''},
-        { value: KalturaEntryStatus.blocked.toString(), label: ''}]
+    'ingestionStatuses' : [KalturaEntryStatus.preconvert.toString(),
+        KalturaEntryStatus.ready.toString(),
+        KalturaEntryStatus.moderate.toString(),
+        KalturaEntryStatus.blocked.toString()
+        ]
   };
 
   constructor(private _appLocalization: AppLocalization) {

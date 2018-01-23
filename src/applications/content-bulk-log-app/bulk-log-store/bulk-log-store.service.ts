@@ -13,7 +13,7 @@ import { BulkUploadAbortAction } from 'kaltura-ngx-client/api/types/BulkUploadAb
 import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters';
-import { ListAdapter, ListType } from '@kaltura-ng/mc-shared/filters';
+import { ListTypeAdapter } from '@kaltura-ng/mc-shared/filters';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
@@ -21,7 +21,6 @@ import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaS
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters';
-import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters';
 
 const localStoragePageSizeKey = 'bulklog.list.pageSize';
 
@@ -29,8 +28,8 @@ export interface BulkLogFilters {
     pageSize: number,
     pageIndex: number,
     createdAt: DatesRangeType,
-    uploadedItem: ListType,
-    status: ListType
+    uploadedItem: string[],
+    status: string[]
 }
 
 @Injectable()
@@ -66,9 +65,14 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   }
 
   private _prepare(): void {
+
+      // NOTICE: do not execute here any logic that should run only once.
+      // this function will re-run if preparation failed. execute your logic
+      // only after the line where we set isReady to true
+
     if (!this._isReady) {
       this._isReady = true;
-      
+
       const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
         if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
             this.filter({
@@ -141,9 +145,6 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       let responseProfile: KalturaDetachedResponseProfile = null;
       let pagination: KalturaFilterPager = null;
 
-      const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-      advancedSearch.type = KalturaSearchOperatorType.searchAnd;
-
       const data: BulkLogFilters = this._getFiltersAsReadonly();
 
       // filter 'createdAt'
@@ -160,16 +161,6 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       // filters of joined list
       this._updateFilterWithJoinedList(data.uploadedItem, filter, 'bulkUploadObjectTypeIn');
       this._updateFilterWithJoinedList(data.status, filter, 'statusIn');
-
-      // handle default value for media types
-      if (!filter.bulkUploadObjectTypeIn) {
-        filter.bulkUploadObjectTypeIn = '1,2,3,4';
-      }
-
-      // handle default value for statuses
-      if (!filter.statusIn) {
-        filter.statusIn = '0,1,2,3,4,5,6,7,8,9,10,11,12';
-      }
 
       responseProfile = new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
@@ -200,8 +191,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
   }
 
-  private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaBulkUploadFilter, requestFilterProperty: keyof KalturaBulkUploadFilter): void {
-    const value = (list || []).map(item => item.value).join(',');
+  private _updateFilterWithJoinedList(list: string[], requestFilter: KalturaBulkUploadFilter, requestFilterProperty: keyof KalturaBulkUploadFilter): void {
+    const value = (list || []).map(item => item).join(',');
 
     if (value) {
       requestFilter[requestFilterProperty] = value;
@@ -223,8 +214,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
-        uploadedItem: new ListAdapter(),
-      status: new ListAdapter()
+        uploadedItem: new ListTypeAdapter<string>(),
+      status: new ListTypeAdapter<string>()
     };
   }
 

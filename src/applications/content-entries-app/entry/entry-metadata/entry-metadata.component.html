@@ -46,6 +46,7 @@
                                    suggestionLabelField="name"
                                    suggestionSelectableField="isSelectable"
                                    [multiple]="true"
+                                   [tooltipResolver]="_categoriesTooltipResolver"
                                    [minLength]="3"
                                    [suggestionsProvider]="_categoriesProvider"
                                    (completeMethod)="_searchCategories($event)">

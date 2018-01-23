@@ -10,14 +10,11 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -72,8 +69,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private _deferredEntries: any[];
   private _actionsMenuEntry: KalturaMediaEntry = null;
-  private _entriesStoreStatusSubscription: ISubscription;
-  private _defaultColumns: EntriesTableColumns = {
+    private _defaultColumns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
     id: { width: '100px' }
@@ -81,54 +77,21 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _columns?: EntriesTableColumns = this._defaultColumns;
 
-  public _blockerMessage: AreaBlockerMessage = null;
+
   public _entries: any[] = [];
-  public _deferredLoading = true;
+  private _deferredLoading = true;
   public _emptyMessage = '';
   public _items: CustomMenuItem[];
 
-  constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore, private cdRef: ChangeDetectorRef) {
+  constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this._entriesStoreStatusSubscription = this.entriesStore.entries.state$.subscribe(
-      result => {
-        if (result.errorMessage) {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage || 'Error loading entries',
-            buttons: [{
-              label: 'Retry',
-              action: () => {
-                this.entriesStore.reload();
-              }
-            }
-            ]
-          })
-        } else {
-          this._blockerMessage = null;
-          if (result.loading) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
-            }
-          }
-        }
-      },
-      error => {
-        console.warn('[kmcng] -> could not load entries'); // navigate to error page
-        throw error;
-      });
+      this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
   }
 
   ngOnDestroy() {
     this.actionsMenu.hide();
-    this._entriesStoreStatusSubscription.unsubscribe();
-    this._entriesStoreStatusSubscription = null;
   }
 
   ngAfterViewInit() {

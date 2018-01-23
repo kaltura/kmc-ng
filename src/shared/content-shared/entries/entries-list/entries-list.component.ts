@@ -7,42 +7,52 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
+import { EntriesRefineFiltersService,
+    RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
+
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 @Component({
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',
-  styleUrls: ['./entries-list.component.scss']
-
+  styleUrls: ['./entries-list.component.scss'],
+    providers: [EntriesRefineFiltersService]
 })
 export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() showReload = true;
-    @Input() isBusy = false;
-    @Input() blockerMessage: AreaBlockerMessage = null;
     @Input() selectedEntries: any[] = [];
     @Input() columns: EntriesTableColumns | null;
     @Input() rowActions: { label: string, commandName: string }[];
     @Input() enforcedFilters: Partial<EntriesFilters>;
     @Input() defaultFilters: Partial<EntriesFilters>;
 
+    @ViewChild('tags') private tags: StickyComponent;
+
+
   @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
-  @ViewChild('tags') private tags: StickyComponent;
+    public _isBusy = false;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _tableIsBusy = false;
+    public _tableBlockerMessage: AreaBlockerMessage = null;
+    public _refineFilters: RefineGroup[];
 
-  public _query = {
-    freetext: '',
-    createdAfter: null,
-    createdBefore: null,
-    pageIndex: 0,
-    pageSize: null,
-    sortBy: null,
-    sortDirection: null,
-    categories: [],
-    categoriesMode: null
-  };
+    public _query = {
+        freetext: '',
+        createdAfter: null,
+        createdBefore: null,
+        pageIndex: 0,
+        pageSize: null,
+        sortBy: null,
+        sortDirection: null,
+        categories: [],
+        categoriesMode: null
+    };
 
   constructor(public _entriesStore: EntriesStore,
-              private _browserService: BrowserService) {
+              private _entriesRefineFilters: EntriesRefineFiltersService,
+                private _appLocalization: AppLocalization,
+                private _browserService: BrowserService) {
   }
 
     ngOnInit() {
@@ -63,21 +73,80 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private _prepare(): void {
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only once the filters were fetched successfully.
 
-        this._entriesStore.preFilter$
+        this._isBusy = true;
+        this._entriesRefineFilters.getFilters()
+            .cancelOnDestroy(this)
+            .first() // only handle it once, no need to handle changes over time
+            .subscribe(
+                groups => {
+
+                    this._entriesStore.preFilter$
+                        .cancelOnDestroy(this)
+                        .subscribe(
+                            filters => {
+                                if (this.enforcedFilters) {
+                                    Object.keys(this.enforcedFilters).forEach(filterName => {
+                                        delete filters[filterName];
+                                    });
+                                }
+                            }
+                        );
+
+                    this._isBusy = false;
+                    this._refineFilters = groups;
+                    this._restoreFiltersState();
+                    this._registerToFilterStoreDataChanges();
+                    this._registerToDataChanges();
+                },
+                error => {
+                    this._isBusy = false;
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: this._appLocalization.get('applications.content.filters.errorLoading'),
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.retry'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._prepare();
+                                this._entriesStore.reload();
+                            }
+                        }
+                        ]
+                    })
+                });
+    }
+
+    private _registerToDataChanges(): void {
+        this._entriesStore.entries.state$
             .cancelOnDestroy(this)
             .subscribe(
-                filters => {
-                    if (this.enforcedFilters) {
-                        Object.keys(this.enforcedFilters).forEach(filterName => {
-                            delete filters[filterName];
-                        });
-                    }
-                }
-            );
+                result => {
 
-        this._restoreFiltersState();
-        this._registerToFilterStoreDataChanges();
+                    this._tableIsBusy = result.loading;
+
+                    if (result.errorMessage) {
+                        this._tableBlockerMessage = new AreaBlockerMessage({
+                            message: result.errorMessage || 'Error loading entries',
+                            buttons: [{
+                                label: 'Retry',
+                                action: () => {
+                                    this._tableBlockerMessage = null;
+                                    this._entriesStore.reload();
+                                }
+                            }
+                            ]
+                        })
+                    } else {
+                        this._tableBlockerMessage = null;
+                    }
+                },
+                error => {
+                    console.warn('[kmcng] -> could not load entries'); // navigate to error page
+                    throw error;
+                });
     }
 
   private _restoreFiltersState(): void {
@@ -127,11 +196,11 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     })
   }
 
-  onCategoriesUnselected(categoriesToRemove: CategoriesListItem[]) {
+  onCategoriesUnselected(categoriesToRemove: number[]) {
     const categories = this._entriesStore.cloneFilter('categories', []);
 
     categoriesToRemove.forEach(categoryToRemove => {
-      const categoryIndex = categories.findIndex(item => item.value === categoryToRemove.value);
+      const categoryIndex = categories.findIndex(item => item === categoryToRemove);
       if (categoryIndex !== -1) {
         categories.splice(
           categoryIndex,
@@ -142,32 +211,14 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     this._entriesStore.filter({ categories });
   }
 
-  onCategorySelected(category: CategoriesListItem) {
-    const categories = this._entriesStore.cloneFilter('categories', []);
-    if (!categories.find(item => item.value === category.value)) {
-      if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
-        // when this component is running with SelfAndChildren mode, we need to manually unselect
-        // the first nested child (if any) that is currently selected
-        const childrenToRemove = categories.filter(item => {
-          // check if this item is a parent of another item (don't validate last item which is the node itself)
-          let result = false;
-          for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
-            result = item.fullIdPath[i] === category.value;
-          }
-          return result;
-        });
+    onCategorySelected(category: number){
+        const categories = this._entriesStore.cloneFilter('categories', []);
+        if (!categories.find(item => item === category)) {
 
-        childrenToRemove.forEach(childToRemove => {
-          categories.splice(
-            categories.indexOf(childToRemove),
-            1);
-        });
-      }
-
-      categories.push(category);
-      this._entriesStore.filter({ 'categories': categories });
+            categories.push(category);
+            this._entriesStore.filter({'categories': categories});
+        }
     }
-  }
 
   private _registerToFilterStoreDataChanges(): void {
     this._entriesStore.filtersChange$
@@ -212,9 +263,9 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     this.selectedEntries = [];
   }
 
-  onTagsChange() {
-    this.tags.updateLayout();
-  }
+        onTagsChange() {
+        this.tags.updateLayout();
+    }
 
 
   onBulkChange(event): void {

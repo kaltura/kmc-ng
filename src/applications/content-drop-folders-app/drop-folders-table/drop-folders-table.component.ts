@@ -1,10 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { DropFoldersStoreService } from 'applications/content-drop-folders-app/drop-folders-store/drop-folders-store.service';
 import * as moment from 'moment';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 
 @Component({
   selector: 'kDropFoldersListTable',
@@ -38,58 +36,13 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   public _dropFolders: KalturaDropFolderFile[] = [];
   public _items: MenuItem[];
   public _emptyMessage = '';
-  public _areaBlockerMessage: AreaBlockerMessage;
 
   constructor(private _appLocalization: AppLocalization,
-              private cdRef: ChangeDetectorRef,
-              public _dropFoldersService: DropFoldersStoreService) {
+              private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this._dropFoldersService.dropFolders.data$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          if (response.items.length === 0 && loadedOnce === false) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load entries'); // navigate to error page
-          throw error;
-        });
-
-    this._dropFoldersService.dropFolders.state$
-      .cancelOnDestroy(this)
-      .subscribe(status => {
-        if (status.errorMessage) {
-          this._areaBlockerMessage = new AreaBlockerMessage({
-            message: status.errorMessage || this._appLocalization.get('applications.content.dropFolders.errors.errorLoad'),
-            buttons: [
-              {
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => {
-                  this._areaBlockerMessage = null;
-                  this._dropFoldersService.reload();
-                }
-              },
-              {
-                label: this._appLocalization.get('app.common.cancel'),
-                action: () => {
-                  this._areaBlockerMessage = null;
-                }
-              }
-            ]
-          })
-        }
-      });
+      this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngAfterViewInit() {
