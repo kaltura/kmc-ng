@@ -23,6 +23,7 @@ import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
+import { PlaylistsTableSortDirectionPipe } from './playlists/playlists-table/playlists-table-sort-direction.pipe';
 
 @NgModule({
     imports: [
@@ -54,6 +55,7 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
     FiltersModule],
     declarations: [
       ContentPlaylistsComponent,
+        PlaylistsTableSortDirectionPipe,
       PlaylistsComponentsList,
       PlaylistComponentsList
     ],

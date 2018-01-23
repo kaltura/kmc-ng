@@ -65,6 +65,11 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   }
 
   private _prepare(): void {
+
+      // NOTICE: do not execute here any logic that should run only once.
+      // this function will re-run if preparation failed. execute your logic
+      // only after the line where we set isReady to true
+
     if (!this._isReady) {
       this._isReady = true;
 
@@ -180,7 +185,13 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
     }
   }
 
-  protected _preFilter(updates: Partial<PlaylistsFilters>): Partial<PlaylistsFilters> {
+    protected _preFiltersReset(updates: Partial<PlaylistsFilters>): Partial<PlaylistsFilters> {
+        delete updates.sortBy;
+        delete updates.sortDirection;
+        return updates;
+    }
+
+    protected _preFilter(updates: Partial<PlaylistsFilters>): Partial<PlaylistsFilters> {
     if (typeof updates.pageIndex === 'undefined') {
       // reset page index to first page everytime filtering the list by any filter that is not page index
       updates.pageIndex = 0;
