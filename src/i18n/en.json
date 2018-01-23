@@ -1705,7 +1705,8 @@
         },
         "errors": {
           "loading": "Could not load Access Control Profiles",
-          "delete": ""
+          "delete": "Error happened during delete request",
+          "profileWasNotUpdated": "Access Control profile was not updated.\n{{0}}"
         }
       }
     }

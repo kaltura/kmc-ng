@@ -48,6 +48,7 @@
 <kPopupWidget #editProfile [popupWidth]="995" [slider]="true">
   <ng-template>
     <kAccessControlProfilesEditProfile [profile]="_selectedProfile"
-                                       [parentPopup]="editProfile"></kAccessControlProfilesEditProfile>
+                                       [parentPopup]="editProfile"
+                                       (onSave)="_saveProfile($event)"></kAccessControlProfilesEditProfile>
   </ng-template>
 </kPopupWidget>

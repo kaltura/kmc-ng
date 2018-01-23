@@ -168,5 +168,31 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
     this._editProfilePopup.open();
   }
+
+  public _saveProfile(profile: KalturaAccessControl): void {
+    this._store.saveProfile(profile)
+      .cancelOnDestroy(this)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this._store.reload();
+        },
+        (error) => {
+          this._blockerMessage = new AreaBlockerMessage({
+            message: this._appLocalization.get(
+              'applications.settings.accessControl.errors.profileWasNotUpdated',
+              [error.message]
+            ),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+                this._store.reload();
+                this._clearSelection();
+              }
+            }]
+          });
+        })
+  }
 }
 

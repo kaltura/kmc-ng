@@ -30,6 +30,8 @@ import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccess
 import { AccessControlDeleteAction } from 'kaltura-ngx-client/api/types/AccessControlDeleteAction';
 import { KalturaBaseRestriction } from 'kaltura-ngx-client/api/types/KalturaBaseRestriction';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { AccessControlUpdateAction } from 'kaltura-ngx-client/api/types/AccessControlUpdateAction';
+import { AccessControlAddAction } from 'kaltura-ngx-client/api/types/AccessControlAddAction';
 
 const localStoragePageSizeKey = 'accessControlProfiles.list.pageSize';
 
@@ -280,7 +282,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
                     country: typeof countries[index] === 'string' ? countries[index].toLowerCase() : undefined,
                     ip: ips[index],
                     flavor: flavors[index],
-                    advancedSecurity: advancedSecurity[index] ? advancedSecurity[index].label : undefined
+                    advancedSecurity: advancedSecurity[index]
                   }
                 }
               );
@@ -343,6 +345,16 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
             throw Observable.throw(failedResponse.error);
           }
         }
+      });
+  }
+
+  public saveProfile(profile: KalturaAccessControl): Observable<void> {
+    const saveAction = profile.id
+      ? new AccessControlUpdateAction({ id: profile.id, accessControl: profile })
+      : new AccessControlAddAction({ accessControl: profile });
+
+    return this._kalturaServerClient.request(saveAction)
+      .map(() => {
       });
   }
 }

@@ -10,6 +10,12 @@ import { AccessControlProfilesStore, ExtendedKalturaAccessControl } from '../pro
 import { countryCodes } from 'app-config/country-codes';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
+import { KalturaSiteRestriction } from 'kaltura-ngx-client/api/types/KalturaSiteRestriction';
+import { KalturaCountryRestriction } from 'kaltura-ngx-client/api/types/KalturaCountryRestriction';
+import { KalturaIpAddressRestriction } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestriction';
+import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestriction';
+import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
+import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
 
 @Component({
   selector: 'kAccessControlProfilesEditProfile',
@@ -19,7 +25,7 @@ import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccess
 export class EditProfileComponent implements OnDestroy {
   @Input() parentPopup: PopupWidgetComponent;
 
-  @Input() set profile(value: ExtendedKalturaAccessControl) {
+  @Input() set profile(value: ExtendedKalturaAccessControl | null) {
     if (value) {
       this._profile = value;
       this._setInitialValue(this._profile);
@@ -364,6 +370,13 @@ export class EditProfileComponent implements OnDestroy {
     return message;
   }
 
+  private _getList(allowed: string[], restricted: string[]): string {
+    const allowedList = Array.isArray(allowed) ? allowed.join(',') : '';
+    const restrictedList = Array.isArray(restricted) ? restricted.join(',') : '';
+
+    return allowedList || restrictedList;
+  }
+
   private _proceedSave(): void {
     const formValue = this._profileForm.getRawValue();
     const accessControlProfile = this._profile || new KalturaAccessControl();
@@ -372,8 +385,63 @@ export class EditProfileComponent implements OnDestroy {
     accessControlProfile.description = formValue.description;
     accessControlProfile.restrictions = [];
 
-    console.warn(accessControlProfile);
+    const { domainsType, allowedDomains, restrictedDomains } = formValue;
+    if (domainsType !== null) {
+      const siteList = this._getList(allowedDomains, restrictedDomains);
+      if (siteList) {
+        accessControlProfile.restrictions.push(new KalturaSiteRestriction({
+          siteList,
+          siteRestrictionType: domainsType
+        }));
+      }
+    }
 
+    const { countriesType, allowedCountries, restrictedCountries } = formValue;
+    if (countriesType !== null) {
+      const countryList = this._getList(allowedCountries, restrictedCountries);
+      if (countryList) {
+        accessControlProfile.restrictions.push(new KalturaCountryRestriction({
+          countryList,
+          countryRestrictionType: countriesType
+        }));
+      }
+    }
+
+    const { ipsType, allowedIps, restrictedIps } = formValue;
+    if (ipsType !== null) {
+      const ipAddressList = this._getList(allowedIps, restrictedIps);
+      if (ipAddressList) {
+        accessControlProfile.restrictions.push(new KalturaIpAddressRestriction({
+          ipAddressList,
+          ipAddressRestrictionType: ipsType
+        }));
+      }
+    }
+
+    const { flavorsType, allowedFlavors, restrictedFlavors } = formValue;
+    if (flavorsType !== null) {
+      const flavorParamsIds = this._getList(allowedFlavors, restrictedFlavors);
+      if (flavorParamsIds) {
+        accessControlProfile.restrictions.push(new KalturaLimitFlavorsRestriction({
+          flavorParamsIds,
+          limitFlavorsRestrictionType: flavorsType
+        }));
+      }
+    }
+
+    const { secureVideo, allowPreview, preview } = formValue;
+    if (secureVideo) {
+      accessControlProfile.restrictions.push(new KalturaSessionRestriction());
+
+      if (allowPreview && preview >= 0) {
+        accessControlProfile.restrictions.push(new KalturaPreviewRestriction({
+          previewLength: preview // TODO [kmcng] parse preview value
+        }));
+      }
+    }
+
+
+    this.parentPopup.close();
     this.onSave.emit(accessControlProfile);
   }
 
