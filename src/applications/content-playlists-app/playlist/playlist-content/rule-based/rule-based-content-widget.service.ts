@@ -44,11 +44,15 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   }
 
   protected onValidate(wasActivated?: boolean): Observable<{ isValid: boolean }> {
-    return Observable.of({ isValid: !wasActivated || !!this.rules.length });
+    if (this.data.playlistType === KalturaPlaylistType.dynamic) { // validate only rule-based playlist
+      return Observable.of({ isValid: !wasActivated || !!this.rules.length });
+    }
+
+    return Observable.of({ isValid: true });
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
-    if (data.playlistType === KalturaPlaylistType.dynamic) {
+    if (data.playlistType === KalturaPlaylistType.dynamic) { // handle only rule-based playlist
       if (typeof data.totalResults === 'undefined' || data.totalResults <= 0) {
         data.totalResults = environment.modules.contentPlaylists.ruleBasedTotalResults;
       }

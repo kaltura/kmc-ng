@@ -13,6 +13,7 @@ import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListA
 import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBaseEntryFilter';
 import { PlaylistWidget } from '../../playlist-widget';
 import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
   selectionId?: string;
@@ -35,26 +36,32 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
-    if (this.wasActivated) {
-      return Observable.of({
-        isValid: !!this.entries.length
-      });
-    } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
-      return Observable.of({ isValid: true });
-    } else {
+    if (this.data.playlistType === KalturaPlaylistType.staticList) { // validate only manual playlist
+      if (this.wasActivated) {
+        return Observable.of({ isValid: !!this.entries.length });
+      }
+
+      if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
+        return Observable.of({ isValid: true });
+      }
+
       return Observable.of({ isValid: false });
     }
+
+    return Observable.of({ isValid: true });
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
-    if (this.wasActivated) {
-      data.playlistContent = this.entries.map(({ id }) => id).join(',');
-    } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
-      data.playlistContent = this.data.playlistContent
-    } else {
-      // shouldn't reach this part since 'onValidate' should prevent execution of this function
-      // if data is invalid
-      throw new Error('invalid scenario');
+    if (this.data.playlistType === KalturaPlaylistType.staticList) { // handle only manual playlist
+      if (this.wasActivated) {
+        data.playlistContent = this.entries.map(({ id }) => id).join(',');
+      } else if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
+        data.playlistContent = this.data.playlistContent
+      } else {
+        // shouldn't reach this part since 'onValidate' should prevent execution of this function
+        // if data is invalid
+        throw new Error('invalid scenario');
+      }
     }
   }
 
@@ -116,9 +123,9 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
 
   private _extendWithSelectionId(entries: KalturaMediaEntry[]): PlaylistContentMediaEntry[] {
     return entries.map(entry => {
-        (<PlaylistContentMediaEntry>entry).selectionId = this._selectionIdGenerator.generateUnique(this.entries.map(item => item.selectionId));
+      (<PlaylistContentMediaEntry>entry).selectionId = this._selectionIdGenerator.generateUnique(this.entries.map(item => item.selectionId));
 
-        return (<PlaylistContentMediaEntry>entry);
+      return (<PlaylistContentMediaEntry>entry);
     });
   }
 
