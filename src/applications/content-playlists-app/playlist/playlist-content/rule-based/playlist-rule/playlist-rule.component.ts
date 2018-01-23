@@ -29,6 +29,7 @@ export class PlaylistRuleComponent {
       this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.save');
 
       this._playlistRuleParser.toEntriesFilters(value)
+        .filter(Boolean)
         .subscribe(filters => {
           this._entriesStore.filter(filters);
         });
@@ -52,14 +53,14 @@ export class PlaylistRuleComponent {
   public _nameRequiredError = false;
   public _enforcedFilters: Partial<EntriesFilters> = {
     'moderationStatuses': [
-        KalturaEntryModerationStatus.pendingModeration.toString(),
-        KalturaEntryModerationStatus.approved.toString(),
-        KalturaEntryModerationStatus.flaggedForReview.toString(),
-        KalturaEntryModerationStatus.autoApproved.toString()
+      KalturaEntryModerationStatus.pendingModeration.toString(),
+      KalturaEntryModerationStatus.approved.toString(),
+      KalturaEntryModerationStatus.flaggedForReview.toString(),
+      KalturaEntryModerationStatus.autoApproved.toString()
     ],
     'ingestionStatuses': [
-        KalturaEntryStatus.preconvert.toString(),
-        KalturaEntryStatus.ready.toString()
+      KalturaEntryStatus.preconvert.toString(),
+      KalturaEntryStatus.ready.toString()
     ],
     'accessControlProfiles': [],
     'timeScheduling': []
@@ -106,11 +107,11 @@ export class PlaylistRuleComponent {
   }
 
   public _save(): void {
-    const ruleName = this._ruleName.trim();
+    const ruleName = (this._ruleName || '').trim();
 
     if (ruleName) {
       this._playlistRuleParser.toPlaylistRule({
-        name: this._ruleName,
+        name: ruleName,
         limit: this._resultsLimit,
         orderBy: this._orderBy,
         rule: this._rule

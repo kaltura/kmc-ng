@@ -3,7 +3,7 @@ import { Inject, Injectable, InjectionToken, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
+import { MetadataProfileStore } from 'app-shared/kmc-shared';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
@@ -31,6 +31,8 @@ import {
 import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-shared/content-shared/categories/categories-mode-type';
 import { Subject } from 'rxjs/Subject';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
+import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
+import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 
 export enum SortDirection {
   Desc,
@@ -38,10 +40,11 @@ export enum SortDirection {
 }
 
 export interface EntriesDataProvider {
-  executeQuery(filters: EntriesFilters,
-               metadataProfiles: MetadataProfileData[]): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }>;
+  executeQuery(filters: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }>;
 
   getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes): EntriesFilters;
+
+  getServerFilter(filters: EntriesFilters, forRequest?: boolean): Observable<KalturaMediaEntryFilter>
 }
 
 export interface MetadataProfileData {
@@ -85,7 +88,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
   private _paginationCacheToken = 'default';
   private _isReady = false;
-  private _metadataProfiles: MetadataProfileData[];
   private _querySubscription: ISubscription;
   private _preFilterSubject = new Subject<Partial<EntriesFilters>>();
   public preFilter$ = this._preFilterSubject.asObservable();
@@ -135,39 +137,19 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     // this function will re-run if preparation failed. execute your logic
     // only after the line where we set isReady to true    if (!this._isReady) {
     this._entries.state.next({ loading: true, errorMessage: null });
-    this._metadataProfileService.get({
 
-      type: MetadataProfileTypes.Entry,
-      ignoredCreateMode: MetadataProfileCreateModes.App
-    })
-      .cancelOnDestroy(this)
-      .first()
-      .monitor('entries store: get metadata profiles')
-      .subscribe(
-        metadataProfiles => {
-          this._isReady = true;
-          this._metadataProfiles = metadataProfiles.items.map(metadataProfile => (
-            {
-              id: metadataProfile.id,
-              name: metadataProfile.name,
-              lists: (metadataProfile.items || []).map(item => ({ id: item.id, name: item.name }))
-            }));
+    this._isReady = true;
 
-          const defaultPageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey());
-          if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
-            this.filter({
-              pageSize: defaultPageSize
-            });
-          }
+    const defaultPageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey());
+    if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
+      this.filter({
+        pageSize: defaultPageSize
+      });
+    }
 
-          this._registerToFilterStoreDataChanges();
+    this._registerToFilterStoreDataChanges();
 
-          this._executeQuery();
-        },
-        (error) => {
-          this._entries.state.next({ loading: false, errorMessage: error.message });
-        }
-      );
+    this._executeQuery();
   }
 
   private _registerToFilterStoreDataChanges(): void {
@@ -212,7 +194,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     }
 
     this._entries.state.next({ loading: true, errorMessage: null });
-    this._querySubscription = this._dataProvider.executeQuery(this._getFiltersAsReadonly(), this._metadataProfiles)
+    this._querySubscription = this._dataProvider.executeQuery(this._getFiltersAsReadonly())
       .cancelOnDestroy(this)
       .subscribe(
         response => {
@@ -272,8 +254,13 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       flavors: new ListTypeAdapter<string>(),
       distributions: new ListTypeAdapter<string>(),
       categories: new ListTypeAdapter<number>(),
-      categoriesMode: new CategoriesModeAdapter(), customMetadata: new GroupedListAdapter<string>(),
+      categoriesMode: new CategoriesModeAdapter(),
+      customMetadata: new GroupedListAdapter<string>(),
       limits: new NumberTypeAdapter()
     };
+  }
+
+  public convertFiltersToServerStruct(): Observable<KalturaMediaEntryFilterForPlaylist> {
+    return this._dataProvider.getServerFilter(this._getFiltersAsReadonly(), false);
   }
 }
