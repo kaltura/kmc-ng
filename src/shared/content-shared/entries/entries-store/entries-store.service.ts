@@ -113,6 +113,11 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         this._prepare();
     }
 
+    protected _preFiltersReset(updates: Partial<EntriesFilters>): Partial<EntriesFilters> {
+        delete updates.sortBy;
+        delete updates.sortDirection;
+        return updates;
+    }
 
     protected _preFilter(updates: Partial<EntriesFilters>): Partial<EntriesFilters> {
         if (typeof updates.pageIndex === 'undefined') {
