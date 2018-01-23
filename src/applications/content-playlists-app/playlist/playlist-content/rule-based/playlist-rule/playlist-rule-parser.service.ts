@@ -184,7 +184,7 @@ export class PlaylistRuleParserService implements OnDestroy {
     const sortDirection = sortBy ? getSortDirection(rule.orderBy.toString().charAt(0)) : null;
     const categoriesIds = (originalFilter.categoryAncestorIdIn || '').split(',')
         .concat(...((originalFilter.categoriesIdsMatchOr || '').split(',')));
-    const uniqueCategoriesIds = Array.from(new Set<number>(categoriesIds.map(Number)));
+    const uniqueCategoriesIds = Array.from(new Set<number>(categoriesIds.filter(Number).map(Number)));
 
     return this._mapCustomMetadata(<KalturaSearchOperator>originalFilter.advancedSearch)
       .map(customMetadata => {
