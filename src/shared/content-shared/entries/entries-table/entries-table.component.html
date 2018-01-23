@@ -1,14 +1,11 @@
 <div class="kEntriesTable" [class.noResults]="!_entries?.length">
-  <k-area-blocker [showLoader]="(entriesStore.entries.state$ | async)?.loading || this._deferredLoading"
-                  [message]="_blockerMessage"
-                  [bodyScroll]="true">
     <p-dataTable #dataTable
                  dataKey="id"
                  scrollable="true"
                  scrollHeight="100%"
                  [value]="_entries"
                  [sortField]="filter.sortBy"
-                 [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
+                 [sortOrder]="filter.sortDirection | kEntriesTableSortDirection"
                  [emptyMessage]="_emptyMessage"
                  [rowTrackBy]="_rowTrackBy"
                  (selectionChange)="_onSelectionChange($event)"
@@ -88,7 +85,7 @@
           <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | kDate}}</ng-template>
         </ng-container>
         <ng-container *ngIf="_columns.moderationCount">
-          <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | date:'d/M/yy'}}</ng-template>
+          <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | kDate}}</ng-template>
         </ng-container>
       </p-column>
 
@@ -146,5 +143,4 @@
     </p-dataTable>
 
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
-  </k-area-blocker>
 </div>
