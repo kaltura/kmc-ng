@@ -185,7 +185,13 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
     }
   }
 
-  protected _preFilter(updates: Partial<PlaylistsFilters>): Partial<PlaylistsFilters> {
+    protected _preFiltersReset(updates: Partial<PlaylistsFilters>): Partial<PlaylistsFilters> {
+        delete updates.sortBy;
+        delete updates.sortDirection;
+        return updates;
+    }
+
+    protected _preFilter(updates: Partial<PlaylistsFilters>): Partial<PlaylistsFilters> {
     if (typeof updates.pageIndex === 'undefined') {
       // reset page index to first page everytime filtering the list by any filter that is not page index
       updates.pageIndex = 0;

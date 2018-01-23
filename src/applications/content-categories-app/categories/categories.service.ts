@@ -468,6 +468,12 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         });
     }
 
+    protected _preFiltersReset(updates: Partial<CategoriesFilters>): Partial<CategoriesFilters> {
+        delete updates.sortBy;
+        delete updates.sortDirection;
+        return updates;
+    }
+
     protected _preFilter(updates: Partial<CategoriesFilters>): Partial<CategoriesFilters> {
         if (typeof updates.pageIndex === 'undefined') {
             // reset page index to first page everytime filtering the list by any filter that is not page index

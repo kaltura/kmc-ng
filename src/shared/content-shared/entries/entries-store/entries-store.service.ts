@@ -17,18 +17,18 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {
-    FiltersStoreBase, TypeAdaptersMapping,
-    EnumTypeAdapter,
-    DatesRangeAdapter, DatesRangeType,
-    StringTypeAdapter,
-    NumberTypeAdapter, ListTypeAdapter,
-    GroupedListAdapter, GroupedListType
+  DatesRangeAdapter,
+  DatesRangeType,
+  EnumTypeAdapter,
+  FiltersStoreBase,
+  GroupedListAdapter,
+  GroupedListType,
+  ListTypeAdapter,
+  NumberTypeAdapter,
+  StringTypeAdapter,
+  TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
-import {
-    CategoriesModeAdapter, CategoriesModes,
-    CategoriesModeType
-} from 'app-shared/content-shared/categories/categories-mode-type';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-shared/content-shared/categories/categories-mode-type';
 import { Subject } from 'rxjs/Subject';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 
@@ -51,27 +51,27 @@ export interface MetadataProfileData {
 }
 
 export interface EntriesFilters {
-    freetext: string,
-    pageSize: number,
-    pageIndex: number,
-    sortBy: string,
-    sortDirection: SortDirection,
-    createdAt: DatesRangeType,
-    scheduledAt: DatesRangeType,
-    mediaTypes: string[],
-    timeScheduling: string[],
-    ingestionStatuses: string[],
-    durations: string[],
-    originalClippedEntries: string[],
-    moderationStatuses: string[],
-    replacementStatuses: string[],
-    accessControlProfiles: string[],
-    flavors: string[],
-    distributions: string[],
-    categories: number[],
-    categoriesMode: CategoriesModeType,
-    customMetadata: GroupedListType<string>,
-    limits: number
+  freetext: string,
+  pageSize: number,
+  pageIndex: number,
+  sortBy: string,
+  sortDirection: SortDirection,
+  createdAt: DatesRangeType,
+  scheduledAt: DatesRangeType,
+  mediaTypes: string[],
+  timeScheduling: string[],
+  ingestionStatuses: string[],
+  durations: string[],
+  originalClippedEntries: string[],
+  moderationStatuses: string[],
+  replacementStatuses: string[],
+  accessControlProfiles: string[],
+  flavors: string[],
+  distributions: string[],
+  categories: number[],
+  categoriesMode: CategoriesModeType,
+  customMetadata: GroupedListType<string>,
+  limits: number
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
@@ -83,12 +83,12 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
 
-    private _paginationCacheToken = 'default';
-    private _isReady = false;
-    private _metadataProfiles: MetadataProfileData[];
-    private _querySubscription: ISubscription;
-    private _preFilterSubject = new Subject<Partial<EntriesFilters>>();
-    public preFilter$ = this._preFilterSubject.asObservable();
+  private _paginationCacheToken = 'default';
+  private _isReady = false;
+  private _metadataProfiles: MetadataProfileData[];
+  private _querySubscription: ISubscription;
+  private _preFilterSubject = new Subject<Partial<EntriesFilters>>();
+  public preFilter$ = this._preFilterSubject.asObservable();
 
   public readonly entries = {
     data$: this._entries.data.asObservable(),
@@ -109,6 +109,11 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     this._prepare();
   }
 
+  protected _preFiltersReset(updates: Partial<EntriesFilters>): Partial<EntriesFilters> {
+    delete updates.sortBy;
+    delete updates.sortDirection;
+    return updates;
+  }
 
   protected _preFilter(updates: Partial<EntriesFilters>): Partial<EntriesFilters> {
     if (typeof updates.pageIndex === 'undefined') {
@@ -123,47 +128,47 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     this._preFilterSubject.next(updates);
 
     return updates;
-    }
+  }
 
-    private _prepare(): void {
+  private _prepare(): void {
     // NOTICE: do not execute here any logic that should run only once.
-        // this function will re-run if preparation failed. execute your logic
-        // only after the line where we set isReady to true    if (!this._isReady) {
-            this._entries.state.next({loading: true, errorMessage: null});
-            this._metadataProfileService.get({
+    // this function will re-run if preparation failed. execute your logic
+    // only after the line where we set isReady to true    if (!this._isReady) {
+    this._entries.state.next({ loading: true, errorMessage: null });
+    this._metadataProfileService.get({
 
-                    type: MetadataProfileTypes.Entry,
-                    ignoredCreateMode: MetadataProfileCreateModes.App
-                })
-                .cancelOnDestroy(this)
-                .first()
-                .monitor('entries store: get metadata profiles')
-                .subscribe(
-                    metadataProfiles => {
-                        this._isReady = true;
-                        this._metadataProfiles = metadataProfiles.items.map(metadataProfile => (
-                            {
-                                id: metadataProfile.id,
-                                name: metadataProfile.name,
-                                lists: (metadataProfile.items || []).map(item => ({id: item.id, name: item.name}))
-                            }));
+      type: MetadataProfileTypes.Entry,
+      ignoredCreateMode: MetadataProfileCreateModes.App
+    })
+      .cancelOnDestroy(this)
+      .first()
+      .monitor('entries store: get metadata profiles')
+      .subscribe(
+        metadataProfiles => {
+          this._isReady = true;
+          this._metadataProfiles = metadataProfiles.items.map(metadataProfile => (
+            {
+              id: metadataProfile.id,
+              name: metadataProfile.name,
+              lists: (metadataProfile.items || []).map(item => ({ id: item.id, name: item.name }))
+            }));
 
-            const defaultPageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey());
-            if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
-              this.filter({
-                pageSize: defaultPageSize
-              });
-            }
-
-            this._registerToFilterStoreDataChanges();
-
-            this._executeQuery();
-          },
-          (error) => {
-            this._entries.state.next({ loading: false, errorMessage: error.message });
+          const defaultPageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey());
+          if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
+            this.filter({
+              pageSize: defaultPageSize
+            });
           }
-        );
-    }
+
+          this._registerToFilterStoreDataChanges();
+
+          this._executeQuery();
+        },
+        (error) => {
+          this._entries.state.next({ loading: false, errorMessage: error.message });
+        }
+      );
+  }
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
@@ -227,12 +232,12 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         });
   }
 
-    public deleteEntry(entryId: string): Observable<void> {
+  public deleteEntry(entryId: string): Observable<void> {
 
 
-            if (!entryId || ! entryId.length) {
-                return Observable.throw(new Error('missing entryId argument'));
-            }
+    if (!entryId || !entryId.length) {
+      return Observable.throw(new Error('missing entryId argument'));
+    }
 
 
     return this._kalturaServerClient
