@@ -9,8 +9,8 @@ export const DefaultFiltersList: {
     items: [
       { value: '1', label: 'entries' },
       { value: '2', label: 'categories' },
-      { value: '3', label: 'endUsers' },
-      { value: '4', label: 'endUserEntitlements' }
+      { value: '4', label: 'endUserEntitlements' },
+      { value: '3', label: 'endUsers' }
     ]
   },
   {

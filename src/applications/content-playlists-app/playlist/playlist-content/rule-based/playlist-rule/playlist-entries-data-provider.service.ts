@@ -12,7 +12,6 @@ import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPa
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
-import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { EntriesDataProvider, EntriesFilters, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
@@ -25,10 +24,10 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  private _updateFilterWithJoinedList(list: ListType,
+  private _updateFilterWithJoinedList(list: any[],
                                       requestFilter: KalturaMediaEntryFilter,
                                       requestFilterProperty: keyof KalturaMediaEntryFilter): void {
-    const value = (list || []).map(item => item.value).join(',');
+    const value = (list || []).map(item => item).join(',');
 
     if (value) {
       requestFilter[requestFilterProperty] = value;
@@ -77,10 +76,10 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
 
         data.distributions.forEach(item => {
           // very complex way to make sure the value is number (an also bypass both typescript and tslink checks)
-          if (isFinite(+item.value) && parseInt(item.value) == <any>item.value) { // tslint:disable-line
+          if (isFinite(+item) && parseInt(item) == <any>item) { // tslint:disable-line
             const newItem = new KalturaContentDistributionSearchItem(
               {
-                distributionProfileId: +item.value,
+                distributionProfileId: +item,
                 hasEntryDistributionValidationErrors: false,
                 noDistributionProfiles: false
               }
@@ -88,7 +87,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
 
             distributionItem.items.push(newItem)
           } else {
-            // this._logger.warn(`cannot convert distribution value '${item.value}' into number. ignoring value`);
+            // this._logger.warn(`cannot convert distribution value '${item}' into number. ignoring value`);
           }
         });
       }
@@ -98,7 +97,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
         let originalClippedEntriesValue: KalturaNullableBoolean = null;
 
         data.originalClippedEntries.forEach(item => {
-          switch (item.value) {
+          switch (item) {
             case '0':
               if (originalClippedEntriesValue == null) {
                 originalClippedEntriesValue = KalturaNullableBoolean.falseValue;
@@ -149,7 +148,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
               metadataProfileFilters.forEach(filterItem => {
                 const searchItem = new KalturaSearchCondition({
                   field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                  value: filterItem.value
+                  value: filterItem
                 });
 
                 innerMetadataItem.items.push(searchItem);
@@ -160,7 +159,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
       }
 
       if (data.categories && data.categories.length) {
-        const categoriesValue = data.categories.map(item => item.value).join(',');
+        const categoriesValue = data.categories.map(item => item).join(',');
         if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
           filter.categoryAncestorIdIn = categoriesValue;
         } else {

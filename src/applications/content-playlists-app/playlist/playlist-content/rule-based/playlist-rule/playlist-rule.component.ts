@@ -52,14 +52,14 @@ export class PlaylistRuleComponent {
   public _nameRequiredError = false;
   public _enforcedFilters: Partial<EntriesFilters> = {
     'moderationStatuses': [
-      { value: KalturaEntryModerationStatus.pendingModeration.toString(), label: '' },
-      { value: KalturaEntryModerationStatus.approved.toString(), label: '' },
-      { value: KalturaEntryModerationStatus.flaggedForReview.toString(), label: '' },
-      { value: KalturaEntryModerationStatus.autoApproved.toString(), label: '' }
+        KalturaEntryModerationStatus.pendingModeration.toString(),
+        KalturaEntryModerationStatus.approved.toString(),
+        KalturaEntryModerationStatus.flaggedForReview.toString(),
+        KalturaEntryModerationStatus.autoApproved.toString()
     ],
     'ingestionStatuses': [
-      { value: KalturaEntryStatus.preconvert.toString(), label: '' },
-      { value: KalturaEntryStatus.ready.toString(), label: '' }
+        KalturaEntryStatus.preconvert.toString(),
+        KalturaEntryStatus.ready.toString()
     ],
     'accessControlProfiles': [],
     'timeScheduling': []

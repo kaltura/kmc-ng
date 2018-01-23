@@ -9,12 +9,9 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {ISubscription} from 'rxjs/Subscription';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {CategoriesService} from '../categories.service';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 @Component({
@@ -24,7 +21,6 @@ import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 })
 export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
-  public _blockerMessage: AreaBlockerMessage = null;
 
   public _categories: KalturaCategory[] = [];
   private _deferredCategories: any[];
@@ -56,7 +52,6 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
   private _actionsMenuCategory: KalturaCategory;
-  private _categoriesServiceStatusSubscription: ISubscription;
 
   public _emptyMessage = '';
 
@@ -66,47 +61,15 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     return item.id
   };
 
-  constructor(private appLocalization: AppLocalization, public categoriesService: CategoriesService, private cdRef: ChangeDetectorRef, private _browserService: BrowserService) {
+  constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef, private _browserService: BrowserService) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this._categoriesServiceStatusSubscription = this.categoriesService.categories.state$.subscribe(
-      result => {
-        if (result.errorMessage) {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage || 'Error loading categories',
-            buttons: [{
-              label: 'Retry',
-              action: () => {
-                this.categoriesService.reload();
-              }
-            }
-            ]
-          })
-        } else {
-          this._blockerMessage = null;
-          if (result.loading) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
-            }
-          }
-        }
-      },
-      error => {
-        console.warn('[kmcng] -> could not load categories'); // navigate to error page
-        throw error;
-      });
+      this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+
   }
 
   ngOnDestroy() {
-    this._categoriesServiceStatusSubscription.unsubscribe();
-    this._categoriesServiceStatusSubscription = null;
   }
 
   ngAfterViewInit() {

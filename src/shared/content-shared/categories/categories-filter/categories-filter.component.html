@@ -23,7 +23,7 @@
                        [disablePropagation]="selectionMode === _CategoriesModes.Self"
                        [selectedCategories]="selection"
                        (onCategoriesLoaded)="_categoriesLoaded = true"
-                       (onCategorySelected)="onCategorySelected.emit($event)"
+                       (onCategorySelected)="_onCategorySelected($event)"
                        (onCategoryUnselected)="onCategoriesUnselected.emit([$event])"
                        >
     </k-categories-tree>

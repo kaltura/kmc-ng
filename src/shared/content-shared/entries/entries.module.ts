@@ -16,9 +16,8 @@ import { SchedulingComponent } from './scheduling/scheduling.component';
 import { EntryTypePipe } from './pipes/entry-type.pipe';
 import { EntryDurationPipe } from './pipes/entry-duration.pipe';
 import { MaxEntriesPipe } from './pipes/max-entries.pipe';
-import { PrimeTableSortDirectionPipe } from './pipes/prime-table-sort-direction.pipe';
+import { EntriesTableSortDirectionPipe } from './pipes/entries-table-sort-direction.pipe';
 import { EntriesRefineFiltersComponent } from './entries-refine-filters/entries-refine-filters.component';
-import { EntriesRefineFiltersService } from './entries-refine-filters/entries-refine-filters.service';
 import { EntriesTableComponent } from './entries-table/entries-table.component';
 import { EntriesListComponent } from './entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
@@ -67,7 +66,7 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     SchedulingComponent,
     EntryDurationPipe,
     MaxEntriesPipe,
-    PrimeTableSortDirectionPipe,
+      EntriesTableSortDirectionPipe,
     PrimeTableSortTransformPipe,
     ModerationPipe,
     EntriesRefineFiltersComponent,
@@ -84,7 +83,7 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     MaxEntriesPipe,
     SchedulingComponent,
     EntryDurationPipe,
-    PrimeTableSortDirectionPipe,
+      EntriesTableSortDirectionPipe,
     EntriesRefineFiltersComponent,
     EntriesTableComponent,
     EntriesListComponent,
@@ -93,13 +92,12 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
   ]
 })
 export class EntriesModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: EntriesModule,
-      providers: <any[]>[
-        EntriesRefineFiltersService,
-        { provide: EntriesDataProviderToken, useClass: EntriesStoreDataProvider }
-      ]
-    };
-  }
+    static forRoot(): ModuleWithProviders {
+        return {
+            ngModule: EntriesModule,
+            providers: <any[]>[
+                { provide: EntriesDataProviderToken, useClass: EntriesStoreDataProvider }
+            ]
+        };
+    }
 }

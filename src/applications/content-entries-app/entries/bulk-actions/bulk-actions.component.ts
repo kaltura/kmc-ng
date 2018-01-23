@@ -9,7 +9,6 @@ import {
   BulkRemoveCategoriesService,
   BulkRemoveTagsService,
   BulkSchedulingService,
-  EntryCategoryItem,
   SchedulingParams
 } from './services'
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
@@ -24,6 +23,7 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 
 @Component({
   selector: 'kBulkActions',
@@ -162,8 +162,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // add to categories changed
-  onAddToCategoriesChanged(categories: EntryCategoryItem[]): void {
-    this.executeService(this._bulkAddCategoriesService, categories);
+  onAddToCategoriesChanged(categories: CategoryData[]): void {
+    this.executeService(this._bulkAddCategoriesService, (categories || []).map(category => category.id));
   }
 
   // remove categories changed

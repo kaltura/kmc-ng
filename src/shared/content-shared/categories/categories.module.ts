@@ -24,7 +24,8 @@ import { CategoriesFilterComponent } from './categories-filter/categories-filter
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 import { CategoriesTreePropagationDirective } from './categories-tree/categories-tree-propagation.directive';
-import { CategoriesSearchService } from './categories-search.service';
+import { CategoriesSearchService } from 'app-shared/content-shared/categories/categories-search.service';
+import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/category-tooltip.pipe';
 
 @NgModule({
   imports: [
@@ -55,13 +56,15 @@ import { CategoriesSearchService } from './categories-search.service';
   declarations: [
     CategoriesTreeComponent,
     CategoriesFilterPrefsComponent,
-    CategoriesFilterComponent, 
+    CategoriesFilterComponent,
+      CategoryTooltipPipe,
     CategoriesTreePropagationDirective
   ],
   exports: [
     CategoriesTreeComponent,
     CategoriesFilterPrefsComponent,
-    CategoriesFilterComponent
+    CategoriesFilterComponent,
+      CategoryTooltipPipe
   ]
 })
 export class CategoriesModule {
@@ -69,7 +72,7 @@ export class CategoriesModule {
         return {
             ngModule: CategoriesModule,
             providers: <any[]>[
-                CategoriesSearchService
+                CategoriesSearchService // singleton by design: this service sync inner state when needed thus can be shareable/provided by the module
             ]
         };
     }

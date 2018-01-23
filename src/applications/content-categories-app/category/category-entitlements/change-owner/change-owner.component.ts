@@ -37,6 +37,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService,
               private categoriesBulkChangeOwnerService: CategoriesBulkChangeOwnerService) {
+      this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this); // fix scope issues when binding to a property
   }
 
   ngOnInit() {
@@ -142,14 +143,14 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
       result = new KalturaUser(
         {
           id: value,
-          screenName:  value
+          screenName:  value,
         }
       );
 
-      // workaround to 'force' auto complete to show custom tooltip and use custom class
-      Object.assign(<any>result, {
-        userAdded: true,
-        tooltip: tt
+      // override information needed by the ui only
+      Object.assign(result, {
+          __tooltip: tt,
+          __class: 'userAdded'
       });
     }
     return result;

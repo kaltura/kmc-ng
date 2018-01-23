@@ -10,7 +10,6 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 import { BaseEntryDeleteAction } from 'kaltura-ngx-client/api/types/BaseEntryDeleteAction';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-
 import { KalturaClient } from 'kaltura-ngx-client';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
@@ -18,14 +17,20 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {
-  DatesRangeAdapter, DatesRangeType, FiltersStoreBase, GroupedListAdapter, GroupedListType, ListAdapter, ListType, NumberTypeAdapter,
-  StringTypeAdapter, TypeAdaptersMapping
+    FiltersStoreBase, TypeAdaptersMapping,
+    EnumTypeAdapter,
+    DatesRangeAdapter, DatesRangeType,
+    StringTypeAdapter,
+    NumberTypeAdapter, ListTypeAdapter,
+    GroupedListAdapter, GroupedListType
 } from '@kaltura-ng/mc-shared/filters';
-import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
-import * as Immutable from 'seamless-immutable';
-import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-shared/categories/categories-list-type';
-import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-shared/content-shared/categories/categories-mode-type';
+import {
+    CategoriesModeAdapter, CategoriesModes,
+    CategoriesModeType
+} from 'app-shared/content-shared/categories/categories-mode-type';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { Subject } from 'rxjs/Subject';
+import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 
 export enum SortDirection {
   Desc,
@@ -46,27 +51,27 @@ export interface MetadataProfileData {
 }
 
 export interface EntriesFilters {
-  freetext: string,
-  pageSize: number,
-  pageIndex: number,
-  sortBy: string,
-  sortDirection: number,
-  createdAt: DatesRangeType,
-  scheduledAt: DatesRangeType,
-  mediaTypes: ListType,
-  timeScheduling: ListType,
-  ingestionStatuses: ListType,
-  durations: ListType,
-  originalClippedEntries: ListType,
-  moderationStatuses: ListType,
-  replacementStatuses: ListType,
-  accessControlProfiles: ListType,
-  flavors: ListType,
-  distributions: ListType,
-  categories: CategoriesListType,
-  categoriesMode: CategoriesModeType,
-  customMetadata: GroupedListType,
-  limits: number
+    freetext: string,
+    pageSize: number,
+    pageIndex: number,
+    sortBy: string,
+    sortDirection: SortDirection,
+    createdAt: DatesRangeType,
+    scheduledAt: DatesRangeType,
+    mediaTypes: string[],
+    timeScheduling: string[],
+    ingestionStatuses: string[],
+    durations: string[],
+    originalClippedEntries: string[],
+    moderationStatuses: string[],
+    replacementStatuses: string[],
+    accessControlProfiles: string[],
+    flavors: string[],
+    distributions: string[],
+    categories: number[],
+    categoriesMode: CategoriesModeType,
+    customMetadata: GroupedListType<string>,
+    limits: number
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
@@ -120,25 +125,28 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     return updates;
     }
 
-  private _prepare(): void {
-    if (!this._isReady) {
-      this._entries.state.next({ loading: true, errorMessage: null });
-      this._metadataProfileService
-        .get({
-          type: MetadataProfileTypes.Entry,
-          ignoredCreateMode: MetadataProfileCreateModes.App
-        })
-        .cancelOnDestroy(this)
-        .first()
-        .monitor('entries store: get metadata profiles')
-        .subscribe(
-          metadataProfiles => {
-            this._isReady = true;
-            this._metadataProfiles = metadataProfiles.items.map(metadataProfile => ({
-              id: metadataProfile.id,
-              name: metadataProfile.name,
-              lists: (metadataProfile.items || []).map(item => ({ id: item.id, name: item.name }))
-            }));
+    private _prepare(): void {
+    // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only after the line where we set isReady to true    if (!this._isReady) {
+            this._entries.state.next({loading: true, errorMessage: null});
+            this._metadataProfileService.get({
+
+                    type: MetadataProfileTypes.Entry,
+                    ignoredCreateMode: MetadataProfileCreateModes.App
+                })
+                .cancelOnDestroy(this)
+                .first()
+                .monitor('entries store: get metadata profiles')
+                .subscribe(
+                    metadataProfiles => {
+                        this._isReady = true;
+                        this._metadataProfiles = metadataProfiles.items.map(metadataProfile => (
+                            {
+                                id: metadataProfile.id,
+                                name: metadataProfile.name,
+                                lists: (metadataProfile.items || []).map(item => ({id: item.id, name: item.name}))
+                            }));
 
             const defaultPageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey());
             if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
@@ -156,7 +164,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
           }
         );
     }
-  }
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
@@ -220,10 +227,13 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         });
   }
 
-  public deleteEntry(entryId: string): Observable<void> {
-    if (!entryId || !entryId.length) {
-      return Observable.throw(new Error('missing entryId argument'));
-    }
+    public deleteEntry(entryId: string): Observable<void> {
+
+
+            if (!entryId || ! entryId.length) {
+                return Observable.throw(new Error('missing entryId argument'));
+            }
+
 
     return this._kalturaServerClient
       .request(new BaseEntryDeleteAction({ entryId }))
@@ -243,26 +253,22 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
       sortBy: new StringTypeAdapter(),
-      sortDirection: new NumberTypeAdapter(),
+      sortDirection: new EnumTypeAdapter<SortDirection>(),
       createdAt: new DatesRangeAdapter(),
       scheduledAt: new DatesRangeAdapter(),
-      mediaTypes: new ListAdapter(),
-      timeScheduling: new ListAdapter(),
-      ingestionStatuses: new ListAdapter(),
-      durations: new ListAdapter(),
-      originalClippedEntries: new ListAdapter(),
-      moderationStatuses: new ListAdapter(),
-      replacementStatuses: new ListAdapter(),
-      accessControlProfiles: new ListAdapter(),
-      flavors: new ListAdapter(),
-      distributions: new ListAdapter(),
-      categories: new CategoriesListAdapter(),
-      categoriesMode: new CategoriesModeAdapter(), customMetadata: new GroupedListAdapter(),
+      mediaTypes: new ListTypeAdapter<string>(),
+      timeScheduling: new ListTypeAdapter<string>(),
+      ingestionStatuses: new ListTypeAdapter<string>(),
+      durations: new ListTypeAdapter<string>(),
+      originalClippedEntries: new ListTypeAdapter<string>(),
+      moderationStatuses: new ListTypeAdapter<string>(),
+      replacementStatuses: new ListTypeAdapter<string>(),
+      accessControlProfiles: new ListTypeAdapter<string>(),
+      flavors: new ListTypeAdapter<string>(),
+      distributions: new ListTypeAdapter<string>(),
+      categories: new ListTypeAdapter<number>(),
+      categoriesMode: new CategoriesModeAdapter(), customMetadata: new GroupedListAdapter<string>(),
       limits: new NumberTypeAdapter()
     };
-  }
-
-  public getFilters(): Immutable.ImmutableObject<EntriesFilters> {
-    return this._getFiltersAsReadonly();
   }
 }

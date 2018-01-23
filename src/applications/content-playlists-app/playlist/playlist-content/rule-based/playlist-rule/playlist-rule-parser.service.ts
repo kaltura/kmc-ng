@@ -2,14 +2,13 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 import { Observable } from 'rxjs/Observable';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
-import { GroupedListType } from '@kaltura-ng/mc-shared/filters/filter-types/grouped-list-type';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { environment } from 'app-environment';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
+import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
 import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
 import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
@@ -61,7 +60,7 @@ export class PlaylistRuleParserService implements OnDestroy {
   * 5) Create customMetadata: GroupedListType
   *    [{value, label, parentId, tooltip}, ...] => {parentId: [value, label, tooltip}], ...}
   */
-  private _mapCustomMetadata(advancedSearch: KalturaSearchOperator): Observable<GroupedListType> {
+  private _mapCustomMetadata(advancedSearch: KalturaSearchOperator): Observable<GroupedListType<string>> {
     // Step 1 handler
     const assignMetadataProfileId = (obj, metadataProfileId = null) => {
       if (obj && obj.items) {
@@ -78,33 +77,26 @@ export class PlaylistRuleParserService implements OnDestroy {
       const localNameMatch = item.field.match(/\/\*\[local-name\(\)='([\w]*)'\]$/);
       const relevantMetadata = metadata.items.find(({ id }) => id === item.metadataProfileId);
       if (relevantMetadata && localNameMatch && localNameMatch[1]) {
-        const localName = localNameMatch[1];
-        const relevantMetadataItem = relevantMetadata.items.find(({ name }) => name === localName);
-        if (relevantMetadataItem) {
-          return {
-            value: item.value,
-            label: item.value,
-            parentId: relevantMetadataItem.id,
-            tooltip: `${relevantMetadataItem.label}: ${item.value}`
-          };
-        }
+          const localName = localNameMatch[1];
+          const relevantMetadataItem = relevantMetadata.items.find(({name}) => name === localName);
+          if (relevantMetadataItem) {
+              return {
+                  value: item.value,
+                  listName: relevantMetadataItem.id
+              }
+          }
       }
 
       return null;
     };
 
     // Step 5 handler
-    const createGroupedList = (acc, value) => {
-      const currentItemValue = {
-        value: value.value,
-        label: value.label,
-        tooltip: value.tooltip
-      };
-      const currentItem = acc[value.parentId];
-      if (!currentItem) {
-        Object.assign(acc, { [value.parentId]: [currentItemValue] });
+    const createGroupedList = (acc, item) => {
+      const itemList = acc[item.listName];
+      if (!itemList) {
+        acc[item.listName] = [item.value];
       } else {
-        currentItem.push(currentItemValue);
+          itemList.push(item.value);
       }
 
       return acc;
@@ -121,7 +113,7 @@ export class PlaylistRuleParserService implements OnDestroy {
       });
   }
 
-  private _mapAdvancedSearch(customMetadata: GroupedListType): Observable<KalturaSearchOperator> {
+  private _mapAdvancedSearch(customMetadata: GroupedListType<string>): Observable<KalturaSearchOperator> {
     if (!customMetadata) {
       return Observable.of(null);
     }
@@ -164,7 +156,7 @@ export class PlaylistRuleParserService implements OnDestroy {
                 metadataProfileFilters.forEach(filterItem => {
                   const searchItem = new KalturaSearchCondition({
                     field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                    value: filterItem.value
+                    value: filterItem
                   });
 
                   innerMetadataItem.items.push(searchItem);
@@ -180,16 +172,19 @@ export class PlaylistRuleParserService implements OnDestroy {
 
   public toEntriesFilters(rule: PlaylistRule): Observable<Partial<EntriesFilters>> {
     const { originalFilter } = rule;
-    const getListTypeFilterFromRule = (ruleItem: string): ListType => {
+    const getListTypeFilterFromRule = (ruleItem: string): any[] => {
       if (!ruleItem) {
         return null;
       }
-      return ruleItem.split(',').map(item => ({ value: item, label: item })); // TODO [kmcng] fix label
+      return ruleItem.split(',');
     };
 
     const getSortDirection = (value) => value === '+' ? SortDirection.Asc : SortDirection.Desc;
     const sortBy = rule.orderBy ? rule.orderBy.toString().substr(1) : null;
     const sortDirection = sortBy ? getSortDirection(rule.orderBy.toString().charAt(0)) : null;
+    const categoriesIds = (originalFilter.categoryAncestorIdIn || '').split(',')
+        .concat(...((originalFilter.categoriesIdsMatchOr || '').split(',')));
+    const uniqueCategoriesIds = Array.from(new Set<number>(categoriesIds.filter(Number).map(Number)));
 
     return this._mapCustomMetadata(<KalturaSearchOperator>originalFilter.advancedSearch)
       .map(customMetadata => {
@@ -200,6 +195,7 @@ export class PlaylistRuleParserService implements OnDestroy {
           replacementStatuses: getListTypeFilterFromRule(originalFilter.replacementStatusIn),
           flavors: getListTypeFilterFromRule(originalFilter.flavorParamsIdsMatchOr),
           limits: rule.limit,
+          categories: uniqueCategoriesIds,
           freetext: originalFilter.freeText,
           sortBy: sortBy,
           sortDirection: sortDirection,
@@ -212,7 +208,7 @@ export class PlaylistRuleParserService implements OnDestroy {
   }
 
   public toPlaylistRule(payload: { name: string, orderBy: KalturaPlayableEntryOrderBy, limit: number, rule: PlaylistRule }): Observable<PlaylistRule> {
-    const filters = this._entriesStore.getFilters();
+    const filters = {}; // TODO kmc - removed temoprary this._entriesStore.cloneFilters();
     const entries = this._entriesStore.entries.data() || [];
     // TODO [kmcng] find a better way to get customMetadata filter
     const isCustomMetadata = (item) => // not stable way to determine customMetadata filter

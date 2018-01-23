@@ -17,7 +17,6 @@ import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListA
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
 import { KalturaLiveStreamAdminEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamAdminEntry';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
-import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
@@ -27,10 +26,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  private _updateFilterWithJoinedList(list: ListType,
+  private _updateFilterWithJoinedList(list: any[],
                                       requestFilter: KalturaMediaEntryFilter,
                                       requestFilterProperty: keyof KalturaMediaEntryFilter): void {
-    const value = (list || []).map(item => item.value).join(',');
+    const value = (list || []).map(item => item).join(',');
 
     if (value) {
       requestFilter[requestFilterProperty] = value;
@@ -87,10 +86,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider {
 
         data.distributions.forEach(item => {
           // very complex way to make sure the value is number (an also bypass both typescript and tslink checks)
-          if (isFinite(+item.value) && parseInt(item.value) == <any>item.value) { // tslint:disable-line
+          if (isFinite(+item) && parseInt(item) == <any>item) { // tslint:disable-line
             const newItem = new KalturaContentDistributionSearchItem(
               {
-                distributionProfileId: +item.value,
+                distributionProfileId: +item,
                 hasEntryDistributionValidationErrors: false,
                 noDistributionProfiles: false
               }
@@ -106,7 +105,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider {
         let originalClippedEntriesValue: KalturaNullableBoolean = null;
 
         data.originalClippedEntries.forEach(item => {
-          switch (item.value) {
+          switch (item) {
             case '0':
               if (originalClippedEntriesValue == null) {
                 originalClippedEntriesValue = KalturaNullableBoolean.falseValue;
@@ -132,7 +131,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider {
       // filter 'timeScheduling'
       if (data.timeScheduling && data.timeScheduling.length > 0) {
         data.timeScheduling.forEach(item => {
-          switch (item.value) {
+          switch (item) {
             case 'past':
               if (filter.endDateLessThanOrEqual === undefined || filter.endDateLessThanOrEqual < (new Date())) {
                 filter.endDateLessThanOrEqual = (new Date());
@@ -203,7 +202,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider {
               metadataProfileFilters.forEach(filterItem => {
                 const searchItem = new KalturaSearchCondition({
                   field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                  value: filterItem.value
+                  value: filterItem
                 });
 
                 innerMetadataItem.items.push(searchItem);
@@ -214,7 +213,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider {
       }
 
       if (data.categories && data.categories.length) {
-        const categoriesValue = data.categories.map(item => item.value).join(',');
+        const categoriesValue = data.categories.map(item => item).join(',');
         if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
           filter.categoryAncestorIdIn = categoriesValue;
         } else {
