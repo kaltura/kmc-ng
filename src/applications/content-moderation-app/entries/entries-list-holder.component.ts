@@ -5,13 +5,15 @@ import {
     EntriesListComponent
 } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import {
+    EntriesFilters, EntriesStore,
+    SortDirection
+} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { DefaultFiltersList } from 'app-shared/content-shared/entries/entries-refine-filters/default-filters-list';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
@@ -25,7 +27,8 @@ export class EntriesListHolderComponent implements OnDestroy {
   private _shouldConfirmEntryApproval = false; // TODO [kmcng] need to get such permissions from somewhere
   private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
   public _defaultFilters: Partial<EntriesFilters> = {
-    'moderationStatuses': [{ value: '1', label: '1'}, { value: '5', label: '5'}]
+    'moderationStatuses': ['1', '5'],
+      'sortDirection': SortDirection.Asc
   };
 
   public _blockerMessage: AreaBlockerMessage = null;

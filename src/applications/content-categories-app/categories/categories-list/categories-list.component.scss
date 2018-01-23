@@ -206,6 +206,10 @@
   }
 }
 
+:host{
+  width: 100%;
+}
+
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {
   margin-left: -.5em;
 }

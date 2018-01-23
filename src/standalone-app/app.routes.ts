@@ -5,7 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ErrorComponent } from './components/error/error.component';
 
-// TODO sakal load from environment
+// TODO should load the routing from configuration, currently mapped explicitly to analytics app
 
 const routes: Routes = <Routes>[
     {

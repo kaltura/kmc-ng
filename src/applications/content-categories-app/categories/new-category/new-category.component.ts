@@ -5,7 +5,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {CategoriesService} from '../categories.service';
 
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
+
 import {
   CategoriesStatus,
   CategoriesStatusMonitorService
@@ -23,7 +23,7 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
   @Output() onApply = new EventEmitter<{ categoryId: number }>();
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedParentCategory: CategoriesListItem = null;
+  public _selectedParentCategory: number = null;
   public newCategoryForm: FormGroup;
   public _categoriesUpdating = false;
 
@@ -50,7 +50,7 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  public _onCategorySelected(event: CategoriesListItem) {
+  public _onCategorySelected(event: number) {
     this._selectedParentCategory = event;
   }
 
@@ -76,7 +76,7 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
     } else {
       this._categoriesService
         .addNewCategory({
-          categoryParentId: this._selectedParentCategory ? this._selectedParentCategory.value : null,
+          categoryParentId: this._selectedParentCategory ? this._selectedParentCategory : null,
           name: categoryName,
           linkedEntriesIds: this.linkedEntries.map(entry => entry.entryId)
         })

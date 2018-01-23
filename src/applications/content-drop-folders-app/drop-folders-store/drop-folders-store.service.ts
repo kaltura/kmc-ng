@@ -18,8 +18,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { DropFolderFileListAction } from 'kaltura-ngx-client/api/types/DropFolderFileListAction';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { ListAdapter, ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
-import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters/filter-types/dates-range-type';
+import { DatesRangeAdapter, DatesRangeType, ListTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { ISubscription } from 'rxjs/Subscription';
@@ -39,7 +38,7 @@ export interface DropFoldersFilters {
   pageIndex: number,
   freeText: string,
   createdAt: DatesRangeType,
-  status: ListType
+  status: string[]
 }
 
 @Injectable()
@@ -85,6 +84,11 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
   }
 
   private _prepare(): void {
+
+      // NOTICE: do not execute here any logic that should run only once.
+      // this function will re-run if preparation failed. execute your logic
+      // only after the line where we set isReady to true
+
     if (!this._isReady) {
       this._isReady = true;
 
@@ -168,9 +172,6 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         const filter = new KalturaDropFolderFileFilter({});
         let pager: KalturaFilterPager = null;
 
-        const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-        advancedSearch.type = KalturaSearchOperatorType.searchAnd;
-
         const data: DropFoldersFilters = this._getFiltersAsReadonly();
 
         // use selected folders - list of folders ids separated by comma
@@ -228,8 +229,8 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
   }
 
-  private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaDropFolderFileFilter, requestFilterProperty: keyof KalturaDropFolderFileFilter): void {
-    const value = (list || []).map(item => item.value).join(',');
+  private _updateFilterWithJoinedList(list: string[], requestFilter: KalturaDropFolderFileFilter, requestFilterProperty: keyof KalturaDropFolderFileFilter): void {
+    const value = (list || []).map(item => item).join(',');
 
     if (value) {
       requestFilter[requestFilterProperty] = value;
@@ -309,7 +310,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       pageIndex: new NumberTypeAdapter(),
       freeText: new StringTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
-      status: new ListAdapter()
+      status: new ListTypeAdapter<string>()
     };
   }
 

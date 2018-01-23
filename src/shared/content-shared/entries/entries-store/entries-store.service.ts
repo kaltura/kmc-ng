@@ -15,7 +15,6 @@ import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
@@ -33,22 +32,22 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import {
     FiltersStoreBase, TypeAdaptersMapping,
-    GroupedListAdapter,
+    EnumTypeAdapter,
     DatesRangeAdapter, DatesRangeType,
     StringTypeAdapter,
-    ListAdapter, ListType,
-    NumberTypeAdapter,
-    GroupedListType, EnumTypeAdapter
+    NumberTypeAdapter, ListTypeAdapter,
+    GroupedListAdapter, GroupedListType
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
-import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
-import { CategoriesListAdapter, CategoriesListType } from 'app-shared/content-shared/categories/categories-list-type';
 import {
     CategoriesModeAdapter, CategoriesModes,
     CategoriesModeType
 } from 'app-shared/content-shared/categories/categories-mode-type';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { Subject } from 'rxjs/Subject';
+import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
+import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
 
 export enum SortDirection {
     Desc,
@@ -60,22 +59,22 @@ export interface EntriesFilters {
     pageSize: number,
     pageIndex: number,
     sortBy: string,
-    sortDirection: number,
+    sortDirection: SortDirection,
     createdAt: DatesRangeType,
     scheduledAt: DatesRangeType,
-    mediaTypes: ListType,
-    timeScheduling: ListType,
-    ingestionStatuses: ListType,
-    durations: ListType,
-    originalClippedEntries: ListType,
-    moderationStatuses: ListType,
-    replacementStatuses: ListType,
-    accessControlProfiles: ListType,
-    flavors: ListType,
-    distributions: ListType,
-    categories: CategoriesListType,
+    mediaTypes: string[],
+    timeScheduling: string[],
+    ingestionStatuses: KalturaEntryStatus[],
+    durations: string[],
+    originalClippedEntries: string[],
+    moderationStatuses: string[],
+    replacementStatuses: string[],
+    accessControlProfiles: string[],
+    flavors: string[],
+    distributions: string[],
+    categories: number[],
     categoriesMode: CategoriesModeType,
-    customMetadata: GroupedListType
+    customMetadata: GroupedListType<string>
 }
 
 
@@ -114,6 +113,11 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         this._prepare();
     }
 
+    protected _preFiltersReset(updates: Partial<EntriesFilters>): Partial<EntriesFilters> {
+        delete updates.sortBy;
+        delete updates.sortDirection;
+        return updates;
+    }
 
     protected _preFilter(updates: Partial<EntriesFilters>): Partial<EntriesFilters> {
         if (typeof updates.pageIndex === 'undefined') {
@@ -132,6 +136,11 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     }
 
     private _prepare(): void {
+
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only after the line where we set isReady to true
+
         if (!this._isReady) {
             this._entries.state.next({loading: true, errorMessage: null});
             this.metadataProfileService.get(
@@ -282,10 +291,10 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
                 data.distributions.forEach(item => {
                     // very complex way to make sure the value is number (an also bypass both typescript and tslink checks)
-                    if (isFinite(+item.value) && parseInt(item.value) == <any>item.value) { // tslint:disable-line
+                    if (isFinite(+item) && parseInt(item) == <any>item) { // tslint:disable-line
                         const newItem = new KalturaContentDistributionSearchItem(
                             {
-                                distributionProfileId: +item.value,
+                                distributionProfileId: +item,
                                 hasEntryDistributionValidationErrors: false,
                                 noDistributionProfiles: false
                             }
@@ -293,7 +302,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
                         distributionItem.items.push(newItem)
                     } else {
-                        this._logger.warn(`cannot convert distribution value '${item.value}' into number. ignoring value`);
+                        this._logger.warn(`cannot convert distribution value '${item}' into number. ignoring value`);
                     }
                 });
             }
@@ -303,7 +312,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                 let originalClippedEntriesValue: KalturaNullableBoolean = null;
 
                 data.originalClippedEntries.forEach(item => {
-                    switch (item.value) {
+                    switch (item) {
                         case '0':
                             if (originalClippedEntriesValue == null) {
                                 originalClippedEntriesValue = KalturaNullableBoolean.falseValue;
@@ -329,7 +338,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             // filter 'timeScheduling'
             if (data.timeScheduling && data.timeScheduling.length > 0) {
                 data.timeScheduling.forEach(item => {
-                    switch (item.value) {
+                    switch (item) {
                         case 'past':
                             if (filter.endDateLessThanOrEqual === undefined || filter.endDateLessThanOrEqual < (new Date())) {
                                 filter.endDateLessThanOrEqual = (new Date());
@@ -400,7 +409,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                             metadataProfileFilters.forEach(filterItem => {
                                 const searchItem = new KalturaSearchCondition({
                                     field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                                    value: filterItem.value
+                                    value: filterItem
                                 });
 
                                 innerMetadataItem.items.push(searchItem);
@@ -411,7 +420,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             }
 
             if (data.categories && data.categories.length) {
-                const categoriesValue = data.categories.map(item => item.value).join(',');
+                const categoriesValue = data.categories.map(item => item).join(',');
                 if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
                     filter.categoryAncestorIdIn = categoriesValue;
                 } else {
@@ -471,13 +480,15 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
     }
 
-    private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaMediaEntryFilter, requestFilterProperty: keyof KalturaMediaEntryFilter): void {
-        const value = (list || []).map(item => item.value).join(',');
+
+    private _updateFilterWithJoinedList(list: any[], requestFilter: KalturaMediaEntryFilter, requestFilterProperty: keyof KalturaMediaEntryFilter): void {
+        const value = (list || []).join(',');
 
         if (value) {
             requestFilter[requestFilterProperty] = value;
         }
     }
+
 
     public deleteEntry(entryId: string): Observable<void> {
 
@@ -543,22 +554,22 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             pageSize: new NumberTypeAdapter(),
             pageIndex: new NumberTypeAdapter(),
             sortBy: new StringTypeAdapter(),
-            sortDirection: new NumberTypeAdapter(),
+            sortDirection: new EnumTypeAdapter<SortDirection>(),
             createdAt: new DatesRangeAdapter(),
             scheduledAt: new DatesRangeAdapter(),
-            mediaTypes: new ListAdapter(),
-            timeScheduling: new ListAdapter(),
-            ingestionStatuses: new ListAdapter(),
-            durations: new ListAdapter(),
-            originalClippedEntries: new ListAdapter(),
-            moderationStatuses: new ListAdapter(),
-            replacementStatuses: new ListAdapter(),
-            accessControlProfiles: new ListAdapter(),
-            flavors: new ListAdapter(),
-            distributions: new ListAdapter(),
-            categories: new CategoriesListAdapter(),
+            mediaTypes: new ListTypeAdapter<string>(),
+            timeScheduling: new ListTypeAdapter<string>(),
+            ingestionStatuses: new ListTypeAdapter<KalturaEntryStatus>(),
+            durations: new ListTypeAdapter<string>(),
+            originalClippedEntries: new ListTypeAdapter<string>(),
+            moderationStatuses: new ListTypeAdapter<string>(),
+            replacementStatuses: new ListTypeAdapter<string>(),
+            accessControlProfiles: new ListTypeAdapter<string>(),
+            flavors: new ListTypeAdapter<string>(),
+            distributions: new ListTypeAdapter<string>(),
+            categories: new ListTypeAdapter<number>(),
             categoriesMode: new CategoriesModeAdapter(),
-            customMetadata: new GroupedListAdapter()
+            customMetadata: new GroupedListAdapter<string>()
         };
     }
 }

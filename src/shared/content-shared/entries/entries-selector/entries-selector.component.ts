@@ -21,9 +21,6 @@ export class EntriesSelectorComponent {
   @Output() selectedEntriesChange = new EventEmitter<KalturaMediaEntry[]>();
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
-  public _blockerMessage: AreaBlockerMessage = null;
-  public _isBusy = false;
-
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },

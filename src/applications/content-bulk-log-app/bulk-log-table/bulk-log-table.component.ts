@@ -11,9 +11,7 @@ import {
 } from '@angular/core';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
-import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 
 @Component({
   selector: 'kBulkLogTable',
@@ -22,7 +20,6 @@ import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 })
 export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
-  public _blockerMessage: AreaBlockerMessage = null;
 
   public _bulkLog: any[] = [];
   private _deferredEntries: any[];
@@ -63,43 +60,11 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   };
 
   constructor(private _appLocalization: AppLocalization,
-              private _cdRef: ChangeDetectorRef,
-              public _store: BulkLogStoreService) {
+              private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this._store.bulkLog.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-      result => {
-        if (result.errorMessage) {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage || 'Error loading files',
-            buttons: [{
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => this._store.reload()
-            }
-            ]
-          })
-        } else {
-          this._blockerMessage = null;
-          if (result.loading) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-            }
-          }
-        }
-      },
-      error => {
-        console.warn('[kmcng] -> could not load files'); // navigate to error page
-        throw error;
-      });
+      this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngAfterViewInit() {
