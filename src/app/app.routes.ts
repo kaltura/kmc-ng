@@ -54,16 +54,20 @@ const routes: Routes = <Routes>[
         ]},
         {
           path: 'settings', children: [
-          { path: '', redirectTo: 'accountSettings', pathMatch: 'full' },
-          {
-            path: 'accountSettings',
-            loadChildren: '../applications/settings-account-settings-app/settings-account-settings-app.module#SettingsAccountSettingsAppModule'
-          },
-          {
-            path: 'accountUpgrade',
-            loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
-          }
-        ]
+            { path: '', redirectTo: 'accountSettings', pathMatch: 'full' },
+            {
+              path: 'accountSettings',
+              loadChildren: '../applications/settings-account-settings-app/settings-account-settings-app.module#SettingsAccountSettingsAppModule'
+            },
+            {
+              path: 'accountUpgrade',
+              loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
+            },
+            {
+              path: 'myUserSettings',
+              loadChildren: '../applications/settings-my-user-settings-app/settings-my-user-settings-app.module#SettingsMyUserSettingsAppModule'
+            }
+          ]
         },
         {
           path: 'administration', children: [
