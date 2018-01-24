@@ -53,14 +53,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
     categoryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5]);
-    this._categoriesStatusMonitorService.$categoriesStatus
-	    .cancelOnDestroy(this)
-	    .subscribe((status: CategoriesStatus) => {
-          if (status.lock){
-            this._router.navigate(['content/categories']);
-          }
-        });
-    this._categoriesStatusMonitorService.updateCategoriesStatus();
+
   }
 
   ngOnDestroy() {
@@ -69,6 +62,15 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    this._categoriesStatusMonitorService.status$
+	    .cancelOnDestroy(this)
+	    .subscribe((status: CategoriesStatus) => {
+          if (status.lock){
+            this._router.navigate(['content/categories']);
+          }
+        });
+    this._categoriesStatusMonitorService.updateCategoriesStatus(); // invoke check of categories status to immediately redirect to categories list if categories are locked
+
     this._categoryStore.state$
       .cancelOnDestroy(this)
       .subscribe(

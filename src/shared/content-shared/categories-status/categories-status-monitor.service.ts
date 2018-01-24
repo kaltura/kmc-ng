@@ -23,7 +23,7 @@ export class CategoriesStatusMonitorService implements OnDestroy {
     private _pollingInterval: PollInterval = <PollInterval>environment.categoriesShared.categoriesStatusSampleInterval;
 
     private _status = new BehaviorSubject<CategoriesStatus>({ lock: false, update: false });
-    public readonly $categoriesStatus = this._status.asObservable();
+    public readonly status$ = this._status.asObservable();
     private _logger: KalturaLogger;
 
     private _categoriesStatusRequestFactory = new CategoriesStatusRequestFactory();
@@ -57,7 +57,6 @@ export class CategoriesStatusMonitorService implements OnDestroy {
     private _handleResponse(response): void{
         if (response.error) {
             this._logger.warn(`error occurred while trying to get categories status from server. server error: ${response.error.message}`);
-            this._status.next({lock: false, update: false});
             return;
         }
         let lockFlagFound = false;
@@ -69,7 +68,6 @@ export class CategoriesStatusMonitorService implements OnDestroy {
                 switch (kfs.type) {
                     case KalturaFeatureStatusType.lockCategory:
                         lockFlagFound = true;
-                        updateFlagFound = true;
                         break;
                     case KalturaFeatureStatusType.category:
                         updateFlagFound = true;
@@ -77,14 +75,16 @@ export class CategoriesStatusMonitorService implements OnDestroy {
                 }
             });
         }
-        this._logger.info(`got categories status: locked: ${lockFlagFound}, update: ${updateFlagFound}`);
+        const currentStatus = this._status.getValue();
+        if (currentStatus.lock !== lockFlagFound || currentStatus.update !== updateFlagFound) {
+            this._logger.info(`got new categories status: locked: ${lockFlagFound}, update: ${updateFlagFound}`);
+        }
         this._status.next({lock: lockFlagFound, update: updateFlagFound});
-
     }
 
     // API to invoke immediate categories status update
     public updateCategoriesStatus():void{
-        this._kalturaClient.request(new PartnerListFeatureStatusAction({})).cancelOnDestroy(this)
+        this._kalturaClient.request(this._categoriesStatusRequestFactory.create()).cancelOnDestroy(this)
 	        .subscribe(response => {
                 this._handleResponse(response);
             });

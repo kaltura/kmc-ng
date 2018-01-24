@@ -76,14 +76,15 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _appEvents: AppEventsService,
     private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
-    this._categoriesStatusMonitorService.$categoriesStatus
+  }
+
+  ngOnInit() {
+    this._categoriesStatusMonitorService.status$
 	    .cancelOnDestroy(this)
 	    .subscribe((status: CategoriesStatus) => {
           this._categoriesLocked = status.lock;
         });
-  }
 
-  ngOnInit() {
     this._bulkActionsMenu = this.getBulkActionItems();
   }
 

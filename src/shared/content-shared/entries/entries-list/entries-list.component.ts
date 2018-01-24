@@ -56,14 +56,16 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     constructor(public _entriesStore: EntriesStore, private _entriesRefineFilters: EntriesRefineFiltersService,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService, private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
-        this._categoriesStatusMonitorService.$categoriesStatus
+
+    }
+
+    ngOnInit() {
+        this._categoriesStatusMonitorService.status$
 		    .cancelOnDestroy(this)
 		    .subscribe((status: CategoriesStatus) => {
                 this._categoriesUpdating = status.update;
             });
-    }
 
-    ngOnInit() {
         this._prepare();
     }
 

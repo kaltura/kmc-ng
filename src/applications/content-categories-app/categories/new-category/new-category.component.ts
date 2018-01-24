@@ -32,19 +32,17 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
               private _categoriesService: CategoriesService,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
-    this._categoriesStatusMonitorService.$categoriesStatus
-	    .cancelOnDestroy(this)
-	    .subscribe((status: CategoriesStatus) => {
-          this._categoriesUpdating = status.update;
-        });
-
     this.newCategoryForm = this._fb.group({
       name: ['', Validators.required]
     });
   }
 
   ngOnInit() {
-
+    this._categoriesStatusMonitorService.status$
+	    .cancelOnDestroy(this)
+	    .subscribe((status: CategoriesStatus) => {
+          this._categoriesUpdating = status.update;
+        });
   }
 
   ngOnDestroy() {

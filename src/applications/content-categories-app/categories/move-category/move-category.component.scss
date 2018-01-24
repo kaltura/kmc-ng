@@ -27,12 +27,15 @@
       display: -ms-flexbox;
       display: flex;
       padding-bottom: 20px;
+      .kSelectParentMsg{
+        width: 100%;
+        text-align: left;
+      }
       .kSpinnerBkg{
         width: 20px;
         height: 20px;
         position: relative;
         margin-top: -1px;
-        margin-right: 8px;
         .kSpinnerAnim{
           width: 12px;
           height: 12px;

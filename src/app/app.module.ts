@@ -10,7 +10,7 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 import { PreviewAndEmbedModule } from '../applications/preview-and-embed/preview-and-embed.module';
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
-import { CategoriesStatusMonitorService} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
 
 import {
   AppBootstrap,
@@ -134,7 +134,8 @@ export function clientConfigurationFactory() {
     OperationTagModule.forRoot(),
     PlaylistCreationModule.forRoot(),
     CategoryCreationModule.forRoot(),
-    KMCServerPollsModule.forRoot()
+    KMCServerPollsModule.forRoot(),
+    CategoriesStatusModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -174,8 +175,7 @@ export function clientConfigurationFactory() {
       provide: KalturaClientConfiguration,
       useFactory: clientConfigurationFactory
     },
-    ConfirmationService,
-    CategoriesStatusMonitorService
+    ConfirmationService
   ]
 })
 export class AppModule {

@@ -50,7 +50,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
 
     ngOnInit() {
-        this._categoriesStatusMonitorService.$categoriesStatus
+        this._categoriesStatusMonitorService.status$
             .cancelOnDestroy(this)
             .subscribe((status: CategoriesStatus) => {
                 this._categoriesLocked = status.lock;

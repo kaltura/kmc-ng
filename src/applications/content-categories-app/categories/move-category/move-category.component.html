@@ -8,10 +8,10 @@
     </div>
     <div class="kContainer">
       <div class="kRow">
+        <span class="kSelectParentMsg">{{('applications.content.moveCategory.selectCategoryParent') | translate}}</span>
         <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
           <div class="k-spinner-animation kSpinnerAnim"></div>
         </div>
-        <span>{{('applications.content.moveCategory.selectCategoryParent') | translate}}</span>
       </div>
 
         <kCategoryParentSelector (onCategorySelected)="_onCategorySelected($event)"></kCategoryParentSelector>

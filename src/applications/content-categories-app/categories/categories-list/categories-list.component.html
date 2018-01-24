@@ -1,9 +1,8 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kCategories kOverrideFAIcons">
-    <div class="kContent kNotification" *ngIf="_categoriesLocked">
+    <div class="kContent kNotification kSeparator" *ngIf="_categoriesLocked">
       <span>{{'applications.content.categories.categoriesLockMsg' | translate}}</span>
     </div>
-    <div class="kContent kSeparator" *ngIf="_categoriesLocked"></div>
     <div #categoriesTableHolder class="kCategoriesHolder kContent" [class.kLocked]="_categoriesLocked">
       <kSticky stickyId="categoriesListFilters" [scrollOffset]="80"
                [sticksTo]="'header'">

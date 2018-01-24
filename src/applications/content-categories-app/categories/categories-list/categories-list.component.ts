@@ -60,16 +60,20 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private _categoriesUtilsService: CategoriesUtilsService,
                 public _categoryCreationService: CategoryCreationService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
-
-        this._categoriesStatusMonitorService.$categoriesStatus
-		    .cancelOnDestroy(this)
-		    .subscribe((status: CategoriesStatus) => {
-                this._categoriesLocked = status.lock;
-                this._categoriesUpdating = status.update;
-            });
     }
 
     ngOnInit() {
+        this._categoriesStatusMonitorService.status$
+		    .cancelOnDestroy(this)
+		    .subscribe((status: CategoriesStatus) => {
+                if (this._categoriesLocked && status.lock === false){
+                    // categories were locked and now open - reload categories to reflect changes
+                    this._reload();
+                }
+                this._categoriesLocked = status.lock;
+                this._categoriesUpdating = status.update;
+            });
+
         this._prepare();
     }
 

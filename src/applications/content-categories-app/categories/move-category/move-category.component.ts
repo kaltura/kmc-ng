@@ -29,15 +29,15 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+  }
 
-    this._categoriesStatusMonitorService.$categoriesStatus
+  ngOnInit() {
+    this._categoriesStatusMonitorService.status$
 	    .cancelOnDestroy(this)
 	    .subscribe((status: CategoriesStatus) => {
           this._categoriesUpdating = status.update;
         });
-  }
 
-  ngOnInit() {
     if (!this.selectedCategories || !this.selectedCategories.length) {
       this._blockerMessage = new AreaBlockerMessage(
         {
