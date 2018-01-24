@@ -9,6 +9,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaFeatureStatus } from 'kaltura-ngx-client/api/types/KalturaFeatureStatus';
 import { PollInterval } from '@kaltura-ng/kaltura-common';
 import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export interface CategoriesStatus {
     lock: boolean;
@@ -17,51 +18,33 @@ export interface CategoriesStatus {
 
 @Injectable()
 export class CategoriesStatusMonitorService implements OnDestroy {
-
-    // TODO [kmcng] replace this function with log library
-    private _log(level: 'silly' | 'verbose' | 'info' | 'warn' | 'error', message: string, context?: string): void {
-        const messageContext = context || 'general';
-        const origin = 'categories status monitor';
-        const formattedMessage = `log: [${level}] [${origin}] ${messageContext}: ${message}`;
-        switch (level) {
-            case 'silly':
-            case 'verbose':
-            case 'info':
-                console.log(formattedMessage);
-                break;
-            case 'warn':
-                console.warn(formattedMessage);
-                break;
-            case 'error':
-                console.error(formattedMessage);
-                break;
-        }
-    }
-
+    
     private _pollingState: null | 'running' = null;
     private _pollingInterval: PollInterval = <PollInterval>environment.categoriesShared.categoriesStatusSampleInterval;
 
     private _status = new BehaviorSubject<CategoriesStatus>({ lock: false, update: false });
     public readonly $categoriesStatus = this._status.asObservable();
+    private _logger: KalturaLogger;
 
     private _categoriesStatusRequestFactory = new CategoriesStatusRequestFactory();
     
 
-    constructor( private _kmcServerPolls: KmcServerPolls, private _kalturaClient: KalturaClient ) {
-        this._log('silly', 'constructor()');
+    constructor( private _kmcServerPolls: KmcServerPolls, private _kalturaClient: KalturaClient, _logger: KalturaLogger ) {
+        this._logger = _logger.subLogger('categoriesStatusMonitor');
+        this._logger.debug('constructor()');
         this._startPolling();
     }
 
    
     ngOnDestroy() {
-        this._log('silly', 'ngOnDestroy()');
+        this._logger.debug('ngOnDestroy()');
         this._status.complete();
     }
     
     private _startPolling(): void {
         if (this._pollingState !== 'running') {
             this._pollingState = 'running';
-            this._log('info', `start server polling every ${this._pollingInterval} seconds to get categories status`);
+            this._logger.info(`start server polling every ${this._pollingInterval} seconds to get categories status`);
 
             this._kmcServerPolls.register<KalturaFeatureStatusListResponse>(this._pollingInterval , this._categoriesStatusRequestFactory)
                 .cancelOnDestroy(this)
@@ -73,7 +56,7 @@ export class CategoriesStatusMonitorService implements OnDestroy {
 
     private _handleResponse(response): void{
         if (response.error) {
-            this._log('warn', `error occurred while trying to get categories status from server. server error: ${response.error.message}`);
+            this._logger.warn(`error occurred while trying to get categories status from server. server error: ${response.error.message}`);
             this._status.next({lock: false, update: false});
             return;
         }
@@ -94,7 +77,7 @@ export class CategoriesStatusMonitorService implements OnDestroy {
                 }
             });
         }
-        this._log('info', `got categories status: locked: ${lockFlagFound}, update: ${updateFlagFound}`);
+        this._logger.info(`got categories status: locked: ${lockFlagFound}, update: ${updateFlagFound}`);
         this._status.next({lock: lockFlagFound, update: updateFlagFound});
 
     }
