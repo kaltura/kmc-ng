@@ -1,15 +1,15 @@
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
   AfterViewInit,
-  OnInit,
   ChangeDetectorRef,
-  OnDestroy
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
 } from '@angular/core';
-import {MenuItem, DataTable, Menu} from 'primeng/primeng';
+import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {RolesService} from './roles.service';
@@ -21,62 +21,55 @@ import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
   styleUrls: ['./roles-table.component.scss']
 })
 export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-
-  public _blockerMessage: AreaBlockerMessage = null;
-
-  public _roles: KalturaUserRole[] = [];
-  private _deferredRoles: any[];
-
   @Input()
-  set roles(data: any[]) {
+  set roles(data: KalturaUserRole[]) {
     if (!this._deferredLoading) {
-      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
+      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of roles
       // (ie when returning from entry page) - we should force detect changes on an empty list
       this._roles = [];
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
       this._roles = data;
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
     } else {
       this._deferredRoles = data
     }
   }
 
-  @Input() filter: any = {};
-  @Input() selectedRoles: KalturaUserRole[] = [];
   @Output() actionSelected = new EventEmitter<any>();
-  @ViewChild('dataTable') private _dataTable: DataTable;
+
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
+
+  private _deferredRoles: KalturaUserRole[];
   private _actionsMenuRole: KalturaUserRole;
 
+  public _blockerMessage: AreaBlockerMessage = null;
+  public _roles: KalturaUserRole[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
-
   public _items: MenuItem[];
+  public _rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  public rowTrackBy: Function = (index: number, item: any) => item.id;
-
-  constructor(private appLocalization: AppLocalization, public rolesService: RolesService, private cdRef: ChangeDetectorRef) {
+  constructor(private _appLocalization: AppLocalization,
+              private _cdRef: ChangeDetectorRef,
+              public rolesService: RolesService) {
   }
 
   ngOnInit() {
     this._blockerMessage = null;
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this.rolesService.state$
+    this.rolesService.roles.state$
       .cancelOnDestroy(this)
       .subscribe(
         result => {
           if (result.errorMessage) {
             this._blockerMessage = new AreaBlockerMessage({
-              message: result.errorMessage || 'Error loading entries',
+              message: result.errorMessage || this._appLocalization.get('applications.administration.roles.errors.loadError'),
               buttons: [{
-                label: 'Retry',
-                action: () => {
-                  this.rolesService.reload(true);
-                }
-              }
-              ]
-            })
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => this.rolesService.reload(true)
+              }]
+            });
           } else {
             this._blockerMessage = null;
             if (result.loading) {
@@ -84,7 +77,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
               loadedOnce = true;
             } else {
               if (loadedOnce) {
-                this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+                this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
               }
             }
           }
@@ -110,39 +103,36 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  onActionSelected(action: string, role: KalturaUserRole) {
-    this.actionSelected.emit({'action': action, 'role': role});
+  private _onActionSelected(action: string, role: KalturaUserRole): void {
+    this.actionSelected.emit({ 'action': action, 'role': role });
   }
 
-  openActionsMenu(event: any, role: KalturaUserRole) {
+  private _buildMenu(): void {
+    this._items = [
+      {
+        label: this._appLocalization.get('applications.administration.roles.actions.edit'),
+        command: () => this._onActionSelected('edit', this._actionsMenuRole)
+      },
+      {
+        label: this._appLocalization.get('applications.administration.roles.actions.duplicate'),
+        command: () => this._onActionSelected('duplicate', this._actionsMenuRole)
+      },
+      {
+        label: this._appLocalization.get('applications.administration.roles.actions.delete'),
+        command: () => this._onActionSelected('delete', this._actionsMenuRole)
+      }
+    ];
+  }
+
+  public _openActionsMenu(event: any, role: KalturaUserRole): void {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
       if (!this._actionsMenuRole || this._actionsMenuRole.id !== role.id) {
-        this.buildMenu();
+        this._buildMenu();
         this._actionsMenuRole = role;
         this._actionsMenu.show(event);
       }
     }
-  }
-
-  buildMenu(): void {
-    this._items = [
-      {
-        label: this.appLocalization.get('applications.administration.roles.actions.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuRole);
-      }
-      },
-      {
-        label: this.appLocalization.get('applications.administration.roles.actions.duplicate'), command: (event) => {
-        this.onActionSelected('duplicate', this._actionsMenuRole);
-      }
-      },
-      {
-        label: this.appLocalization.get('applications.administration.roles.actions.delete'), command: (event) => {
-        this.onActionSelected('delete', this._actionsMenuRole);
-      }
-      }
-    ];
   }
 }
 

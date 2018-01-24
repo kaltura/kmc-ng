@@ -1,0 +1,182 @@
+@import 'app-theme/_variables.scss';
+
+.kEntryReportWrap {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  min-height: 700px;
+
+  .kHeader {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    height: 78px;
+    width: 100%;
+    padding: 24px 28px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+
+    .kTitle {
+      color: #333333;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .kButtons {
+      display: flex;
+      margin-left: auto;
+      align-items: center;
+
+      .cancelLink {
+        color: #333333;
+        font-size: 15px;
+        margin-right: 28px;
+      }
+
+      .kApproveEntryBtn,
+      .kRejectEntryBtn {
+        width: 140px;
+        height: 34px;
+        font-size: 14px;
+      }
+
+      .kApproveEntryBtn {
+        margin-right: 24px;
+        border: none;
+      }
+
+      .kRejectEntryBtn {
+      }
+    }
+  }
+
+  .kContainer {
+    padding: 24px 28px;
+
+    .kFrame {
+      width: 100%;
+      display: flex;
+      k-player{
+        margin: 0 auto;
+      }
+    }
+
+    .appSubMenu {
+      display: flex;
+      width: 100%;
+      background-color: white;
+      border-bottom: 1px solid $kGrayscale4;
+      margin: 0 -28px;
+      padding: 0 28px;
+
+      a {
+        color: $kGrayscale3;
+        line-height: $appMenuHeight;
+        font-size: 14px;
+        letter-spacing: .5px;
+        cursor: pointer;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      .active {
+        .menuLink {
+          text-decoration: none;
+          color: $kPrimary;
+        }
+      }
+
+      .subMenuContainer {
+        margin-right: 30px;
+        position: relative;
+
+        &.active {
+          > .linkMarker {
+            opacity: 1;
+          }
+        }
+      }
+
+      .linkMarker {
+        width: 100%;
+        height: 4px;
+        position: absolute;
+        background-color: $kPrimary;
+        opacity: 0;
+        bottom: 0px;
+        transition: opacity .3s ease-in-out;
+        -moz-transition: opacity .3s ease-in-out;
+        -webkit-transition: opacity .3s ease-in-out;
+      }
+    }
+  }
+
+  .kEntryDetails {
+    padding-top: 24px;
+
+    .kRow {
+      color: $kGrayscale1;
+      margin-bottom: 20px;
+    }
+
+    .kLabels {
+      font-size: 15px;
+      color: $kGrayscale3;
+      min-width: 170px;
+      display: inline-block;
+    }
+
+    .kBanCreatorBtn {
+      width: 110px;
+      margin-left: 24px;
+      font-size: 14px;
+    }
+  }
+
+  .kEntryReport {
+    margin-top: 24px;
+    max-height: 305px;
+    overflow-y: auto;
+    width: 750px;
+
+    .kFlagsAmount {
+      font-size: 15px;
+      color: $kGrayscale1;
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
+  }
+
+  .kFlagsComment {
+    margin-bottom: 20px;
+
+    .kFlagsCaption {
+      width: 100%;
+      display: flex;
+      color: $kGrayscale1;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .kFlagsText {
+      font-size: 15px;
+    }
+
+    .kIconReport {
+      font-size: 24px;
+      color: $kGrayscale3;
+      margin: -4px 4px 0px -5px;
+    }
+
+    .kFlagsDate,
+    .kFlagsText {
+      font-size: 15px;
+      margin-bottom: 10px;
+      color: $kGrayscale3;
+    }
+  }
+}

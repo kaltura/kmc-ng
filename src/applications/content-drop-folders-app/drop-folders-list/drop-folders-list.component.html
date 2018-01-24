@@ -1,0 +1,87 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
+  <div class="kDropFolders kOverrideFAIcons">
+    <div #dropFoldersTableHolder class="kDropFoldersHolder kContent">
+      <kSticky stickyId="dropFolderFilters" [scrollOffset]="80" [sticksTo]="'header'">
+        <div class="kDropFoldersTableFilters kContent">
+          <span class="kSelectedDropFoldersNum" *ngIf="(_dropFoldersStore.dropFolders.data$ | async)?.totalCount">
+            {{ (_dropFoldersStore.dropFolders.data$ | async)?.totalCount }} {{ 'applications.content.uploadControl.files' | translate }}
+          </span>
+
+          <div [class.kHidden]="!_selectedDropFolders.length" class="kBulkOperations">
+            <span class="kSelectedDropFoldersLabel">
+              • {{_selectedDropFolders.length}} {{'applications.content.uploadControl.selected' | translate}}
+            </span>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                    (click)="_bulkDelete(_selectedDropFolders)"></button>
+            <a class="kBulkCancel" (click)="_clearSelection()">
+              {{'applications.content.uploadControl.cancel' | translate}}
+            </a>
+          </div>
+          <div [class.kHidden]="_selectedDropFolders.length" class="kFilters">
+            <input type="text" pInputText class="kSearchInput"
+                   [(ngModel)]="_query.freeText"
+                   (keyup.enter)="_onFreetextChanged()"
+                   [placeholder]="'applications.content.dropFolders.search' | translate">
+            <div #statusesFilterBtn class="kStatusesFilter">
+              <i class="kIconfilter"></i>
+              <span>{{'applications.content.dropFolders.allStatuses' | translate}}</span>
+              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+            </div>
+          </div>
+          <button pButton
+                  class="kButtonDefault kRefreshBtn small"
+                  type="text"
+                  (click)="_reload()"
+                  icon="kIconrefresh"
+                  [kTooltip]="'applications.content.dropFolders.refresh' | translate"></button>
+        </div>
+      </kSticky>
+
+      <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="dropFoldersTags" [sticksTo]="'dropFolderFilters'">
+        <div class="kContent">
+          <k-drop-folders-tags   [refineFilters]="_refineFilters"
+                                 (onTagsChange)="_onTagsChange()"></k-drop-folders-tags>
+        </div>
+      </kSticky>
+
+
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
+      <kDropFoldersListTable
+        class="kDropFoldersTable"
+        [dropFolders]="(_dropFoldersStore.dropFolders.data$ | async)?.items"
+        (navigateToEntry)="_navigateToEntry($event)"
+        (deleteDropFolderFiles)="_deleteDropFolderFiles($event)"
+        [(selectedDropFolders)]="_selectedDropFolders"></kDropFoldersListTable>
+      </k-area-blocker>
+
+      <div class="kDropFoldersTableFooter kContent" #footer
+           *ngIf="(_dropFoldersStore.dropFolders.data$ | async)?.totalCount">
+        <p-paginator
+          [rows]="_query.pageSize"
+          [first]="_query.pageIndex * _query.pageSize"
+          [rowsPerPageOptions]="[25,50,75,100]"
+          [totalRecords]="(_dropFoldersStore.dropFolders.data$ | async)?.totalCount"
+          (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
+
+<!-- popup widgets section -->
+<kPopupWidget #refinePopup
+              [appendTo]="dropFoldersTableHolder"
+              [popupWidth]="400"
+              [popupHeight]="400"
+              [closeBtn]="false"
+              [targetRef]="statusesFilterBtn"
+              [targetOffset]="{'x':-160, 'y': -15}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'statusesFilterPopup'"
+              [scrollOffset]="80">
+  <ng-template>
+    <k-drop-folders-refine-filters   [refineFilters]="_refineFilters"
+                                     [parentPopupWidget]="refinePopup"></k-drop-folders-refine-filters>
+  </ng-template>
+</kPopupWidget>

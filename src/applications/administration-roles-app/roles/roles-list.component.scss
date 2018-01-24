@@ -1,7 +1,9 @@
 @import 'app-theme/_variables.scss';
-.kTagsWrapper{
+
+.kTagsWrapper {
   z-index: 500;
 }
+
 .kRoles {
   font-size: 15px;
   background-color: $appBkgColor;
@@ -24,7 +26,7 @@
     font-size: 24px;
     border: none;
     min-width: inherit;
-    margin-right: 16px;
+    margin-right: 8px;
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
@@ -38,7 +40,7 @@
       color: $kPrimary;
     }
   }
-  .kFiltersWrapper{
+  .kFiltersWrapper {
     display: block;
     height: 66px;
   }

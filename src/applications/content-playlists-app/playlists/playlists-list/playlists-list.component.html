@@ -1,0 +1,99 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
+  <div class="kPlaylists kOverrideFAIcons">
+    <div #playlistsTableHolder class="kPlaylistsHolder kContent">
+      <kSticky stickyId="playlistsFilters" [scrollOffset]="80" [sticksTo]="'header'">
+        <div class="kContent kFiltersWrapper">
+          <div class="kPlaylistsTableFilters kContent">
+            <button
+              pButton
+              type="button"
+              label="{{'applications.content.playlists.addPlaylist' | translate}}"
+              class="kButtonBranded kAddPlaylistBtn" [class.kHidden]="_selectedPlaylists.length"
+              (click)="_addPlaylist()"></button>
+            <span
+              class="kSelectedPlaylistsNum"
+              *ngIf="(_playlistsStore.playlists.data$ | async)?.totalCount">
+              {{'applications.content.playlists.playlists' | translate : [(_playlistsStore.playlists.data$ | async)?.totalCount] }}
+            </span>
+
+            <div class="kBulkOperations" [class.kHidden]="!_selectedPlaylists.length">
+              <span class="kSelectedPlaylistsLabel">
+                • {{ 'applications.content.playlists.selected' | translate : [_selectedPlaylists.length] }}</span>
+              <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                      (click)="_deletePlaylists(_selectedPlaylists)"></button>
+              <a class="kBulkCancel" (click)="_clearSelection()">
+                {{'applications.content.playlists.cancel' | translate}}
+              </a>
+            </div>
+            <div [class.kHidden]="_selectedPlaylists.length" class="kFilters">
+              <input type="text" pInputText class="kSearchInput"
+                     [(ngModel)]="_query.freetext"
+                     (keyup.enter)="_onFreetextChanged()"
+                     placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
+              <div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
+            </div>
+            <button pButton
+                    class="kButtonDefault kRefreshBtn small"
+                    type="text"
+                    (click)="_reload()"
+                    icon="kIconrefresh"
+                    [kTooltip]="'applications.content.playlists.refresh' | translate"></button>
+          </div>
+        </div>
+      </kSticky>
+      <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="playlistsTags" [sticksTo]="'playlistsFilters'">
+        <div class="kTagsWrapper kContent">
+          <k-playlists-tags   (onTagsChange)="_onTagsChange()"></k-playlists-tags>
+        </div>
+      </kSticky>
+
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
+      <kPlaylistsTable
+        class="kPlaylistsTable"
+        [playlists]="(_playlistsStore.playlists.data$ | async)?.items"
+        (sortChanged)="_onSortChanged($event)"
+        [filter]="_query"
+        (actionSelected)="_onActionSelected($event)"
+        [(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
+      </k-area-blocker>
+
+      <div class="kPlaylistsTableFooter kContent" #footer *ngIf="(_playlistsStore.playlists.data$ | async)?.totalCount">
+        <p-paginator
+          [rows]="_query.pageSize"
+          [first]="_query.pageIndex * _query.pageSize"
+          [rowsPerPageOptions]="[25,50,75,100]"
+          [totalRecords]="(_playlistsStore.playlists.data$ | async)?.totalCount"
+          (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
+
+<kPopupWidget
+  #refinePopup
+  [appendTo]="playlistsTableHolder"
+  [popupWidth]="350"
+  [popupHeight]="169"
+  [closeBtn]="false"
+  [targetRef]="refineBtn"
+  [targetOffset]="{'x':-294, 'y': -20}"
+  kSticky
+  [sticksTo]="'header'"
+  [stickyClass]="'kForceFix'"
+  stickyId="playlistsAdditionalFilter"
+  [scrollOffset]="80">
+  <ng-template>
+    <k-playlists-refine-filters
+            [parentPopupWidget]="refinePopup"></k-playlists-refine-filters>
+  </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #addNewPlaylist [popupWidth]="586" [popupHeight]="453" [modal]="true" [preventPageScroll]="true">
+  <ng-template>
+    <kAddNewPlaylist [parentPopupWidget]="addNewPlaylist"
+                     (showNotSupportedMsg)="_onShowNotSupportedMsg()"></kAddNewPlaylist>
+  </ng-template>
+</kPopupWidget>

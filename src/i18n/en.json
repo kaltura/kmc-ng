@@ -10,7 +10,9 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
+      "Administration": "Administration",
       "Settings": "Settings",
+      "Users": "Users",
       "Account Settings": "Account Settings",
       "Account Upgrade": "Account Upgrade",
       "My User Settings": "My User Settings",
@@ -18,7 +20,8 @@
       "Roles": "Roles",
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
-      "DropFolders": "Drop Folders"
+      "DropFolders": "Drop Folders",
+      "UploadMonitor": "Upload Monitor"
     },
     "userSettings": {
       "changeAccount": "Change Account",
@@ -56,13 +59,15 @@
       "ok": "OK",
       "cancel": "Cancel",
       "retry": "Retry",
+      "reload": "Reload",
       "confirm": "Confirm",
       "close": "Close",
       "note": "Note:",
       "attention": "Attention",
       "yes": "Yes",
       "no": "No",
-      "apply": "Apply"
+      "apply": "Apply",
+      "done": "Done"
     },
     "login": {
       "login": {
@@ -134,6 +139,33 @@
     }
   },
   "applications": {
+    "embed":{
+      "previewShare": "Share & Embed",
+      "embedType": "Embed type",
+      "selectPlayer": "Select player",
+      "embedIframe": "Iframe Embed",
+      "embedDynamic": "Dynamic Embed",
+      "embedAuto": "Auto Embed",
+      "embedThumb": "Thumbnail Embed",
+      "embedCode": "Embed code",
+      "copy": "Copy",
+      "seo": "Include Search Engine Optimization data",
+      "https": "Support for HTTPS embed code",
+      "qr": "Scan Code for Mobile Preview",
+      "view": "Standalone preview",
+      "advanced": "Advanced Settings",
+      "settings": "List Arrangement Settings",
+      "name": "Name",
+      "added": "Date added",
+      "updated": "Date updated",
+      "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
+      "helpTip2": "Read more",
+      "helpTip3": "about the different embed code types.",
+      "helpTip4": "Logic for defining the delivery method is automated by the Kaltura player to ensure the best user experience. Learn more about enforcing",
+      "helpTip5": "specific delivery protocols.",
+      "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
+      "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
+    },
     "entries": {
       "entryMetadata": {
         "searchTagsPH": "Search Tags",
@@ -229,9 +261,9 @@
         "error": "{{0}} error",
         "upToDate": "Up to date",
         "loading": "Loading...",
-        "bulkErrors": {
-          "poll": "Cannot get bulk upload data. Retrying...",
-          "prepare": "Could not connect bulk upload monitor!"
+        "errors": {
+          "poll": "Cannot get upload status. Retrying...",
+          "prepare": "Could not connect upload monitor!"
         }
       },
       "transcodingProfilesSelect": {
@@ -296,8 +328,8 @@
           }
         },
         "confirmEntryNavigation": {
-          "title" : "Stream has been created successfully.",
-          "message": "Live Stream Entry has been created successfully. \n Do you want to view entry details?"
+          "title": "Stream has been created successfully.",
+          "message": "Live Stream Entry has been created successfully.\nStream activation for broadcasting with the CDN may take up to 3 hours.\n Do you want to view entry details?"
         }
       }
     },
@@ -331,13 +363,74 @@
           }
         }
       },
+      "dropFolders": {
+        "search": "Search",
+        "allStatuses": "All Statuses",
+        "refresh" : "Refresh",
+        "deleteFiles": "Delete files",
+        "confirmDelete": "Are you sure you want to permanently delete all selected files? \n {{0}}",
+        "confirmDeleteSingle": "Are you sure you want to permanently delete selected file? \n {{0}}",
+        "table": {
+          "fileName": "File name",
+          "dropFolderName": "Dropfolder name",
+          "createdOn": "Created on",
+          "fileSize": "File size",
+          "entryId": "Entry ID",
+          "status": "Status",
+          "datesTooltip": "Upload start detected on: {{0}}\n Upload completion detected on: {{1}}\n File transfer from drop folder to Kaltura started on: {{2}} \n File transfer of drop folder to Kaltura ended on: {{3}}",
+          "notAvailable": "N/A",
+          "unknown": "Unknown",
+          "delete": "Delete"
+        },
+        "filters": {
+          "additionalFilters": "Additional Filters",
+          "createdBetween": "Created Between",
+          "clearDates": "Clear Dates",
+          "clearAll": "Clear All",
+          "close": "Close"
+        },
+        "dropFolderStatusLabels": {
+          "allStatuses": "All statuses",
+          "uploading": "Uploading",
+          "downloading": "Downloading",
+          "pending": "Pending",
+          "processing": "Processing",
+          "parsedFromXml": "Parsed from XML",
+          "waitingForRelatedFiles": "Waiting for Related Files",
+          "waitingForMatchedEntry": "Waiting for Matched Entry",
+          "error": "Error",
+          "deleteFailed": "Delete Failed",
+          "done": "Done",
+          "downloadFailed": "Download Failed"
+        },
+        "dropFolderStatusTooltips": {
+          "uploading": "File is currently uploading to the drop folder",
+          "downloading": "The file is currently importing from the drop folder to Kaltura",
+          "pending": "File upload is completed - Waiting for drop folder processing to start",
+          "processing": "Drop folder engine is currently processing this file",
+          "parsedFromXml": "File reference was parsed from the XML. File is expected but is not yet available in the drop folder",
+          "waitingForRelatedFiles": "Processing of this file should continue when all related files are available in the drop folder (e.g. XML file, other media files referenced in the same XML or other flavors expected for the same entry).",
+          "waitingForMatchedEntry": "Processing of this file should continue when a matched entry is found",
+          "error": "Drop folder engine processing failed",
+          "deleteFailed": "Failed to delete the file from the drop folder",
+          "done": "Drop folder processing was completed for this file",
+          "downloadFailed": "Failed to import the file from the drop folder to Kaltura"
+        },
+        "errors": {
+          "retry": "Retry",
+          "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>",
+          "errorDropFoldersFiles": "An error occurred during drop folder files update.",
+          "errorLoad": "Failed to load drop folder"
+        }
+      },
       "categories": {
-        "categories": "Categories",
+        "categories": "{{0}} Categories",
         "search": "Search",
         "refresh": "Refresh",
         "addCategory": "Add Category",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
+        "confirmDeleteSingle": "Are you sure you want to delete these categories?",
         "refine": "Refine",
         "filterCategories": "Filter Categories",
         "edit": "Edit",
@@ -379,8 +472,23 @@
         "requiresAuthentication": "Requires Authentication",
         "private": "Private",
         "selectedCategory": "Selected: {{0}}",
-        "errors" : {
-          "categoryCouldNotBeDeleted" : "Category could not be deleted"
+        "deleteAction" : {
+          "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
+          "deleteWarningConfirmation": "This category was created by another application and deleting it will effect this application or site.\nAre you sure you want to delete this category?",
+          "deleteSubcategoriesConfirmation": "This category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
+          "deleteConfirmation": "Are you sure you want to delete this category?"
+        },
+        "deleteActionMultiple" : {
+          "deleteWarningSubcategoriesConfirmation": "Some of the selected categories were created by another application and deleting them will effect this application or site.\nCategories will be deleted with their sub-categories.\nDo you want to continue?",
+          "deleteWarningConfirmation": "Some of the selected categories were created by another application and deleting them will effect this application or site.\nAre you sure you want to delete these categories?",
+          "deleteSubcategoriesConfirmation": "Categories will be deleted with their sub-categories.\nDo you want to continue?",
+          "deleteConfirmation": "Are you sure you want to delete these categories?"
+        },
+        "errors": {
+          "deleteError": {
+            "header": "Error",
+            "message": "An unexpected error has occurred while trying to delete category."
+          }
         }
       },
       "addNewCategory": {
@@ -390,10 +498,27 @@
         "discard": "Discard all changes?",
         "apply": "Apply",
         "cancel": "Cancel",
-        "noParent":"No Parent",
+        "noParent": "No Parent",
         "searchCategories": "Search Categories",
         "selectedParentCategory":"Parent Category Id: {{value}}"
-
+,
+        "name": "Name",
+        "categoryMovedSuccessfully": "Category moved successfully",
+        "errors": {
+          "requiredName": "You must enter name"
+        }
+      },
+      "moveCategory":{
+        "noParent":"No Parent",
+        "selectCategoryParent": "Select the parent category under which the selected category will appear",
+        "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
+        "errors": {
+          "invalidParentSelection": "Category cannot be moved into itself or one of its children categories",
+          "categoryMovedFailure": "An error occurred while trying to move category to selected parent",
+          "unableToMove": "Cannot perform Move Category action since no categories to move were selected",
+          "categoryAlreadyBelongsToParent": "Category is already a child of selected parent",
+          "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together."
+        }
       },
       "entries": {
         "entries": "Entries",
@@ -436,7 +561,50 @@
         "confirmDeleteEntry": "Are you sure you want to delete the selected entry?",
         "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
       },
+      "moderation": {
+        "entryReports": "Entry Reports",
+        "approveEntry": "Approve Entry",
+        "rejectEntry": "Reject Entry",
+        "report": "Report",
+        "details": "Details",
+        "banCreator": "Ban Creator",
+        "flagSingular": "{{0}} Flag",
+        "flagPlural": "{{0}} Flags",
+        "sexualContent": "Sexual Content",
+        "harmfulOrDangerousAct": "Harmful Or Dangerous Act",
+        "spamOrCommercials": "Spam / Commercials",
+        "violentOrRepulsive": "Violent / Repulsive",
+        "errorConnecting": "Error connecting to server",
+        "errorOccured": "An error has occurred",
+        "notificationHasBeenSent": "A notification has been sent to your CMS system to flag this user.",
+        "approveMedia": "Moderation: Approve media",
+        "sureToApprove": "Are you sure you want to approve the following entry? \n {{0}}",
+        "sureToApproveMultiple": "Are you sure you want to approve the following entries? \n {{0}}",
+        "rejectMedia": "Moderation: Reject media",
+        "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
+        "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
+        "selectAction": "Select Action",
+        "errors": {
+          "missingIds": "Missing entryIds argument",
+          "bulkApproveEntry": "An error occurred while approving entry. \n Please try again.",
+          "bulkRejectEntry": "An error occurred while rejecting entry. \n Please try again."
+        }
+      },
+      "moderationDetails": {
+        "name": "Name",
+        "entryId": "Entry ID",
+        "duration": "Duration",
+        "plays": "Plays",
+        "moderationStatus": "Moderation Status",
+        "clippedFrom": "Clipped from",
+        "creator": "Creator",
+        "errors": {
+          "entryDetails": "Unable to load the entry moderation details",
+          "ban": "Unable to ban the Creator"
+        }
+      },
       "filters": {
+        "errorLoading": "Failed to prepare view, please try again",
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
         "close": "Close",
@@ -448,20 +616,24 @@
         "dates": "Dates",
         "after": "After",
         "before": "Before",
+        "loading_lbl": "Loading",
+        "categoryId_tt": "Category Id: {{0}}",
         "createdBetween": "Created Between",
-        "mediaType": "Media Type: {{0}}",
-        "status": "Status: {{0}}",
-        "duration": "Duration: {{0}}",
+        "mediaTypes": "Media Type: {{0}}",
+        "ingestionStatuses": "Status: {{0}}",
+        "durations": "Duration: {{0}}",
         "replacementStatuses": "Replacement Statuses: {{0}}",
-        "moderation": "Moderation: {{0}}",
-        "originalClipped": "Original & Clipped: {{0}}",
-        "scheduling": "Scheduling: {{0}}",
-        "accessControl": "Access Control: {{0}}",
-        "flavor": "Flavor: {{0}}",
-        "distribution": "Distribution: {{0}}",
+        "moderationStatuses": "Moderation: {{0}}",
+        "originalClippedEntries": "Original & Clipped: {{0}}",
+        "timeScheduling": "Scheduling: {{0}}",
+        "accessControlProfiles": "Access Control: {{0}}",
+        "flavors": "Flavor: {{0}}",
+        "distributions": "Distribution: {{0}}",
         "freeText": "Free text search",
         "metaData": "{{0}}: {{1}}",
         "uploadedItem": "Uploaded item: {{0}}",
+        "status": "Status: {{0}}",
+        "permissionLevels": "Permission level: {{0}}",
         "preferences": {
           "preferences": "Preferences",
           "filterPreferences": "Filter Preferences",
@@ -471,7 +643,11 @@
         "dateFilter": {
           "until": "Until {{0}}",
           "from": "From {{0}}"
-        }
+        },
+        "privacyTypes": "Content Privacy: {{0}}",
+        "categoryListing": "Category Listing: {{0}}",
+        "contributionPolicy": "Contribution Policy: {{0}}",
+        "endUserPermissions": "End-User Permission: {{0}}"
       },
       "table": {
         "thumbnail": "Thumbnail",
@@ -484,11 +660,25 @@
         "createdOn": "Created On",
         "duration": "Duration",
         "status": "Status",
-        "previewAndEmbed": "Preview & Embed",
+        "previewAndEmbed": "Share & Embed",
         "delete": "Delete",
         "view": "View Details",
+        "entries": "Entries",
+        "subcategories": "Sub - Categories",
         "loading": "Loading...",
-        "noResults": "No Results"
+        "noResults": "No Results",
+        "flags": "Flags",
+        "moderationStatus": "Moderation Status",
+        "reportsAndDetails": "Reports & Details",
+        "approve": "Approve",
+        "reject": "Reject",
+        "userName": "User name",
+        "userId": "User ID",
+        "emailAddress": "Email Address",
+        "role": "Role",
+        "lastLogin": "Last Login",
+        "edit": "Edit",
+        "blockUnblock": "Block / Unblock"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -566,7 +756,17 @@
           "close": "Close",
           "clearDates": "Clear Dates",
           "createdBetween": "Created Between",
-          "additionalFilters": "Additional Filters"
+          "additionalFilters": "Additional Filters",
+          "uploadedItems": "Uploaded items",
+          "entries": "Entries",
+          "categories": "Categories",
+          "endUsers": "End Users",
+          "endUserEntitlements": "End-User Entitlements",
+          "statuses": "Statuses",
+          "successFinish": "Finished successfully",
+          "errorFinish": "Finished with errors",
+          "failed": "Failed",
+          "otherStatuses": "All other statuses"
         }
       },
       "entryStatus": {
@@ -604,6 +804,11 @@
         "external": "External RSS",
         "staticList": "Manual",
         "unknown": "Unknown"
+      },
+      "userStatus": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "deleted": "Deleted"
       },
       "addNewPlaylist": {
         "addNewPlaylist": "Add New Playlist",
@@ -650,10 +855,12 @@
         "apply": "Apply to all selected entries",
         "error": "An error occurred during entries update.",
         "errorPlaylists": "An error occurred during playlists update.",
+        "errorCategories": "An error occurred during categories update.",
         "updated": "Entries updated successfully",
         "note": "Update Note",
         "confirm": "Are you sure you want to update {{0}} entries? It could take a while...",
-        "confirmPlaylists": "Are you sure you want to update {{0}} playlists? It could take a while...",
+        "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
+        "confirmDropFolders": "Are you sure you want to update {{0}} drop folders files? It could take a while...",
         "deleteEntries": "Delete Entries",
         "deleteConfirm": "Are you sure you want to delete the selected entries?",
         "deleteNote": "Please note: the selected entries will be permanently deleted from your account.",
@@ -662,6 +869,8 @@
         "moveDown": "Move Down",
         "duplicate": "Duplicate",
         "removeCategoriesNone": "No categories to remove",
+        "approve": "Approve",
+        "reject": "Reject",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
         "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries"
@@ -680,7 +889,7 @@
           "users": "Users"
         },
         "preview": {
-          "pande": "Preview & Embed",
+          "pande": "Share & Embed",
           "details": "Details",
           "entryID": "ID:",
           "creator": "Created by:",
@@ -706,7 +915,7 @@
           "categories": "Categories",
           "browse": "Browse categories",
           "selectCategories": "Select Categories",
-          "addCategories": "Add Categories",
+          "addCategories": "Change Categories",
           "catSelect": "Select one or several categories",
           "offlineMsg": "Offline Message",
           "refId": "Reference ID",
@@ -724,6 +933,12 @@
         "thumbnails": {
           "thumbnails": "Thumbnails",
           "upload": "Upload",
+          "capture": {
+            "choose": "Choose frame",
+            "title": "Choose frame from video",
+            "label": "Pause the video on the appropriate frame and hit the capture button to save your thumbnail.",
+            "save": "Capture and Save"
+          },
           "thumbnail": "Thumbnail",
           "dimensions": "Dimensions",
           "size": "Size",
@@ -983,19 +1198,21 @@
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
           "clipsLoadError": "Error loading clips",
-          "schedulingError": "Day before can't be earlier than day after"
+          "datesRangeError": "Day before can't be earlier than day after"
         }
       },
       "categoryDetails": {
-        "header": "Category - {{0}}",
+        "header": "{{0}}",
+        "backToCategories": "Back to Categories",
         "headerProps": {
-          "id": "ID: {{0}} |",
-          "subCategories": " Sub-Categories: {{0}} |",
-          "entries": " Entries: {{0}} |",
-          "creationDate": " Creation Date {{0}} |",
-          "lastUpdate": " Last Update {{0}} |",
-          "createdBy": " Created by: {{0}} |",
-          "privacyContextLabel": " Privacy Context Label: {{0}}"
+          "parent": "Parent:",
+          "id": "ID:",
+          "subCategories": " Sub-Categories:",
+          "entries": " Entries:",
+          "creationDate": " Creation Date:",
+          "lastUpdate": " Last Update:",
+          "createdBy": " Created by:",
+          "privacyContextLabel": " Privacy Context Label:"
         },
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
@@ -1027,6 +1244,193 @@
           "addGroup": "Add Group",
           "deleteGroup": "Delete Group"
         },
+        "entitlements": {
+          "title": "Entitlements",
+          "description": "Manage your entitlements settings and specific end-user permissions to content in your applications.",
+          "privacyContentLabel": {
+            "label" : "Privacy Content Label"
+          },
+          "manageUsersPermissionsEditMessage": {
+            "title": "Error",
+            "description": "You must save the category before setting its user permissions"
+          },
+          "contentPrivacy": {
+            "label": "Content Privacy",
+            "help": "The content privacy option that you select will define the visibility of content in this category, including its related metadata. This setting will apply to the application's content search results, content lists or specific content item retrieved.\n\nFor content associated with more than one category, the privacy will be determined based on the category with the lowest restriction level.\n\nAdditional playback restrictions may apply through each entry's access control settings.",
+            "noRestrictions": "No Restrictions",
+            "noRestrictions_explanation": "Visible to everyone with access to the application page",
+            "requiresAuthentication": "Requires Authentication",
+            "requiresAuthentication_explanation": "Visible only to authenticated end users",
+            "private": "Private",
+            "private_explanation": "Visible only to users with specific permissions to access this category content"
+          },
+          "categoryListing": {
+            "label": "Category Listing",
+            "help": "The category listing option that you select will define who can see this category's name and metadata in the application's category menus & listing.",
+            "noRestrictions": "No Restrictions",
+            "noRestrictions_explanation": "Visible to everyone with access to the application page",
+            "private": "Private",
+            "private_explanation": "Visible only to users with specific permissions to access this category content"
+          },
+          "contentPublishPermissions": {
+            "label": "Content Publish Permissions",
+            "help": "Which end-users can add content to this category through your applications?",
+            "noRestrictions": "No Restrictions",
+            "noRestrictions_explanation": "Any authorized end-user",
+            "private": "Private",
+            "private_explanation": "Only end-users with specific permission can add content to this category"
+          },
+          "moderateContent": {
+            "label": "Moderate Content"
+          },
+          "inheritUsersPermissions": {
+            "label": "Inherit Users Permissions",
+            "help": "Inherit Specific End-User Permissions from Parent Category?",
+            "parentCategory": "Inherit Specific End-User Permissions from Parent Category:",
+            "errors" : {
+              "categoryLoadError": "Error loading parent category information"
+            }
+          },
+          "defaultPermissionLevel": {
+            "label": "Default Permission Level",
+            "member": "Member",
+            "contributor": "Contributor",
+            "moderator": "Moderator",
+            "manager": "Manager"
+          },
+          "owner": {
+            "label": "Owner",
+            "notSpecified": "Not Specified",
+            "changeOwner": "Change Owner",
+            "changeOwnerLabel": "Set a new owner for this category",
+            "changeOwnerPlaceholder": "Enter Username/Id",
+            "cancelEdit": "Cancel Edit",
+            "discard": "Discard all changes?",
+            "tooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier",
+            "errors": {
+              "changeOwnerFailed" : "An error occurred while changing owner",
+              "unableToChange": "Unable to change owner for current category",
+              "selectUser" : "Unable to change owner since no user was selected",
+              "invalidOwner": "Cannot set owner field with user id\n\"{{0}}\"\nuser id is invalid",
+              "ownerRequired": "Cannot set owner field,\nuser id is invalid"
+            }
+          },
+          "permittedUsers": {
+            "label": "Permitted Users",
+            "loading": "Loading...",
+            "none": "None",
+            "manageUsers": "Manage Users",
+            "viewUsers": "View Users",
+            "count": "{{0}} end-users"
+          },
+          "usersPermissions": {
+            "title":"Manage End-user Permissions",
+            "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",
+            "close": "Close",
+            "table": {
+              "userNameId": "User Name / ID",
+              "permissionLevel": "Permission",
+              "updateMethod": "Update",
+              "updatedOn": "Updated at",
+              "active": "Active",
+              "pendingApproval": "Pending Approval",
+              "updateMethodOptions": {
+                "automatic": "Automatic",
+                "manual" : "Manual"
+              }
+            },
+            "bulkOperations": {
+              "addUsers": "Add Users",
+              "usersCount": "{{0}} Users",
+              "selectedUsersCount": "{{0}} Selected",
+              "cancel": "Cancel",
+              "remove": "Delete",
+              "search": "Search",
+              "refine": "Refine",
+              "moreActions": "More Actions",
+              "active": "Active",
+              "activeOptions": {
+                "activate": "Activate",
+                "deactivate": "Deactivate"
+              },
+              "setPermissionLevel": "Set permission level",
+              "setPermissionLevelOptions": {
+                "member": "Member",
+                "contributor": "Contributor",
+                "moderator": "Moderator",
+                "manager": "Manager"
+              },
+              "updateMethod": "Update",
+              "updateMethodOptions": {
+                "automatic": "Automatic",
+                "manual" : "Manual"
+              },
+              "removeUsers": "Delete Users"
+            },
+            "addUsers": {
+              "title": "Add Users",
+              "setUserPermissions":"Set end-user permissions for this category",
+              "inheritUser": "Inherit users from parent category",
+              "selectEndUsers": "Select End-Users",
+              "permissionLevel": "Permission Level",
+              "updateMethod": "Update method",
+              "addUsers": "Add {{0}} Users",
+              "save": "Save",
+              "cancel": "Cancel",
+              "retry": "Retry",
+              "copyUsersFromParentConfirmationTitle": "Add End-User Permissions",
+              "copyUsersFromParentConfirmation": "All specific end-user permissions assigned to parent category will be saved immediately to this category.\nPlease note that this is a one-time operation and not an automatic inheritance.\n\nDo you want to continue?",
+              "permissionsLevelOptions": {
+                "member": "Member",
+                "contributor": "Contributor",
+                "moderator": "Moderator",
+                "manager": "Manager"
+              },
+              "updateMethodOptions": {
+                "manual": "Manual",
+                "automatic": "Automatic"
+              },
+              "errors" : {
+                "actionFailed": "An error occurred while trying to perform action",
+                "loadFailed": "Could not load End-Users Permissions",
+                "missingUsers": "Please enter at least one user",
+                "addUsersFailed": "An error occurred while trying to add end-users",
+                "invalidAction": "Please select a valid action for selected users",
+                "backToEntitlements": "Back to Entitlements",
+                "duplicateUsers": "Some of the added users were already set with permissions for this category",
+                "error": "Error",
+                "deleteOwner": "The category owner can not be deleted.\nPlease adjust or reset the category's ownership first"
+              }
+            },
+            "errors" : {
+              "loadEndUserPermissions": "An error occurred while trying to load Manage End-Users Permissions",
+              "setUpdateMethod": "Unable to set update method for selected users",
+              "setPermissionLevel": "Unable to set Permission Level for selected users",
+              "deleteUsers": "Unable to delete selected users",
+              "deactivateUsers": "Unable to deactivate selected users",
+              "activateUsers": "Unable to activate selected users"
+            }
+          }
+        },
+        "subcategories": {
+          "tableHeaderDetails": {
+            "total": "{{0}} Sub - Categories",
+            "addSubcategory": "Add Sub-Category",
+            "remove": "Delete",
+            "selected": "{{0}} Selected",
+            "cancel": "Cancel"
+          },
+          "actions": {
+            "moveUp": "Move Up",
+            "moveDown": "Move Down",
+            "delete": "Delete"
+          },
+          "errors": {
+            "subcategoriesLoadError": "Error loading sub-categories",
+            "categoryCouldNotBeDeleted": "Category could not be deleted",
+            "categoriesCouldNotBeDeleted": "At least one of selected categories could not be deleted.\nPlease retry with different categories selection."
+          }
+        },
         "errors": {
           "reload": "Reload",
           "dismiss": "Dismiss",
@@ -1040,7 +1444,26 @@
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
-          "clipsLoadError": "Error loading clips"
+          "clipsLoadError": "Error loading clips",
+          "fieldRequired": "This field is required"
+        }
+      },
+      "addNewCategory": {
+        "newCategory": "New Category",
+        "newSubcategory": "New Sub-Category",
+        "selectCategoryParent": "Select the parent category under which the new category will appear",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "apply": "Apply",
+        "cancel": "Cancel",
+        "noParent":"No Parent",
+        "searchCategories": "Search Categories",
+        "selectedParentCategory":"Parent Category Id: {{value}}",
+        "name": "Name",
+        "categoryMovedSuccessfully": "Category moved successfully",
+        "errors": {
+          "requiredName": "You must enter name",
+          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
         }
       },
       "playlistDetails": {
@@ -1104,8 +1527,51 @@
           "delete": "Delete"
         },
         "errors": {
-          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users."
+          "loadError": "Can't load entries",
+          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users.",
+          "cantDeleteRole": "Can't delete role",
+          "cantDeleteAdminRole": "Can't delete Administrator role",
+          "cantDuplicateRole": "Can't duplicate role",
+          "duplicationError": "Error occurred while trying to duplicate role"
         }
+      },
+      "users": {
+        "user": "user",
+        "users": "users",
+        "moreUsers": "Need more KMC users?",
+        "clickHere": "Click here",
+        "usersUpgrade": "to upgrade your account!",
+        "you": "You",
+        "accountOwner": "Account Owner",
+        "deleteUser": "Delete User",
+        "confirmDelete": "Are you sure you want to delete the selected user? \n ({{0}})",
+        "save": "Save",
+        "editUser": "Edit User",
+        "loginEmailAddress": "Login Email address",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "publisherUserId": "Publisher User ID",
+        "userRole": "User role",
+        "addRole": "Add role",
+        "addUser": "Add User",
+        "currentStatus": "Current status:",
+        "usersInfo": "{{0}} KMC {{1}} in use, {{2}} additional available.",
+        "failedLoading": "Failed to load users data",
+        "cantPerform": "You don't have access to perform this action",
+        "successSavingUser": "Changes will take effect immediately. \nPlease instruct the user to refresh their browser.",
+        "personalDetails": "Personal Details",
+        "accountSpecificDetails": "Account Specific Details",
+        "required": "This field is required",
+        "emailFormat": "This Email format is not valid",
+        "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
+        "alreadyExist": "User already exist",
+        "alreadyExistError": "Login e-mail {{0}} is already listed in the system as an authorized user in your account.",
+        "userAssociatedCaption": "Associated user",
+        "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?",
+        "refresh": "Refresh",
+        "commonError": "Error happened during server request",
+        "addUserError": "Missing one of mandatory fields",
+        "invalidUserId": "Invalid user id"
       },
       "role": {
         "titleEdit": "Edit Role",
@@ -1594,5 +2060,14 @@
     "YO": "Yoruba",
     "ZH": "Chinese",
     "ZU": "Zulu"
+  },
+  "shared": {
+    "contentShared": {
+      "categoriesTree": {
+        "errors": {
+          "categoriesLoadError": "Error loading categories"
+        }
+      }
+    }
   }
 }

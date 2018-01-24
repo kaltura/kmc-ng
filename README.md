@@ -1,16 +1,24 @@
 # KMCng Application
-
+![Current phase](https://img.shields.io/badge/Current_Phase-Heavy_Development-red.svg)
 [![Gitter chat](https://badges.gitter.im/kaltura-ng/kmc-ng.png)](https://gitter.im/kaltura-ng/kmc-ng)
 
 
 > Kaltura Management Console HTML5 based application (a.k.a KMCng). Should replace the existing [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
-  
-KMCng application uses the following technologies and conventions:
-* [Angular CLI](https://cli.angular.io/) to manage the application (dev)ops.
-* [TypeScript](http://www.typescriptlang.org/) language (superset of Javascript).
-* Stylesheets with [SASS](http://sass-lang.com/) (not required, it supports regular css too).
-* Error reported with [TSLint](http://palantir.github.io/tslint/) and [Codelyzer](https://github.com/mgechev/codelyzer).
-* Best practices in file and application organization for [Angular 2]({https://angular.io/).
+
+Thank you for your interest in the kmc-ng project. The project is currently under **Heavy Development**. Every month we add many features and bug fixes, part of them break previous versions code.
+
+In the coming months we plan to complete adding all the features we have in the legacy kmc as well as some new shiny features.
+
+The following list contains some major features in our roadmap:
+- [ ] upgrade to Angular 5
+- [ ] add on-prem server configuration provided at run-time
+- [ ] embed permission support across views
+- [ ] add multi language translations
+- [ ] add missing views (like settings > custom data, content > syndication etc)
+- [ ] add missing tools like thumbnail grab from video
+- [ ] add external app integration (like studio, analytics, usage dashboard, entry Clip&Trim etc)
+
+
 
 ## Quick start
 
@@ -21,7 +29,7 @@ KMCng application uses the following technologies and conventions:
 - [x] Ensure you have npm installed, version 5.0.0 or above.
 
 ### Project build options
-> KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages and [mc-theme](https://github.com/kaltura/kaltura-ng-mc-theme) package. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
+> KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
 
 You have two development options as described below.
 
@@ -43,16 +51,14 @@ $ cd kmc-ng
 $ npm install
 
 # checkout latest standalone code
-$ npm run checkout-standalone
+$ npm run standalone
 
 # sync dependencies to the new branch
 $ npm install
 
-# run a local server
-$ npm start
 ```
 
-> Note - if you need to [edit the application configuration](#config), change the environment.ts file only after running all of the commands above 
+> Note - if you need to [edit the application configuration](#config), change file [src/app-config/index.ts](https://github.com/kaltura/kmc-ng/blob/master/src/app-config/index.ts#L13)
 
 #### Option II (the red pill)- Develop kmc-ng complete solution (multiple repos)
 > In this option you will clone all the relevant repos to your machine and bind them together. Use this option to develop and create pull requests.
@@ -69,13 +75,13 @@ navigate to [http://localhost:4200](http://localhost:4200) in your browser.
 
 ## <a name="config"></a>Configuring the application endpoints
 The Github version configures server endpoints against the Kaltura production server.
-If you need to configure these enpoint, edit the [environment.ts](https://github.com/kaltura/kmc-ng/blob/33c3f177bf4437092b4ba46d3f9e9a470463a481/src/environments/environment.ts#L15-L24) file.
+If you need to configure these enpoint, edit file [src/app-config/index.ts](https://github.com/kaltura/kmc-ng/blob/master/src/app-config/index.ts#L13).
 
 ## Deploy standalone application
 
 To create a standalone application you will need to build the application:
 ```
-$ ng build --prod
+$ ng build:prod
 ```
 
 A distrubted standalone application will be created in the `dist/` folder.

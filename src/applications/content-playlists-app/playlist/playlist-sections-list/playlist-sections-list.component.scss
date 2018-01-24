@@ -7,6 +7,7 @@
 	background-color: #ffffff;
 	border: 1px solid #ffffff;
 	border-radius: 3px;
+	display: block;
 	ul {
 		list-style-type: none;
 		padding-left: 0px;
@@ -18,10 +19,10 @@
 			font-weight: 700;
 			padding-left: 12px;
 			&:hover{
-				color: $kTertiary;
+				color: $kGrayscale1;
 			}
 			&.active{
-				color: $kTertiary;
+				color: $kGrayscale1;
 				cursor: default;
 			}
 		}

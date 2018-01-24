@@ -1,12 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
+import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { ContentEntriesAppService } from '../content-entries-app.service';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -45,24 +47,28 @@ export class EntriesListHolderComponent {
 
   constructor(private _router: Router,
               private _browserService: BrowserService,
+              private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               public _entriesStore: EntriesStore,
               private _contentEntriesAppService: ContentEntriesAppService) {
     this._entriesStore.paginationCacheToken = 'entries-list';
   }
 
-  public _onActionSelected({ action, entryId }) {
+  public _onActionSelected({ action, entry }) {
     switch (action) {
+      case 'preview':
+        this._appEvents.publish(new PreviewAndEmbedEvent(entry));
+        break;
       case 'view':
-        this._viewEntry(entryId);
+        this._viewEntry(entry.id);
         break;
       case 'delete':
         this._browserService.confirm(
-          {
-            header: this._appLocalization.get('applications.content.entries.deleteEntry'),
-            message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entryId }),
-            accept: () => this._deleteEntry(entryId)
-          }
+            {
+              header: this._appLocalization.get('applications.content.entries.deleteEntry'),
+              message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entry.id }),
+              accept: () => this._deleteEntry(entry.id)
+            }
         );
         break;
       default:
@@ -89,7 +95,7 @@ export class EntriesListHolderComponent {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._entriesStore.reload(true);
+          this._entriesStore.reload();
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({

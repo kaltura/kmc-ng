@@ -26,7 +26,7 @@ import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes 
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { DynamicMetadataForm, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
-import { CategoriesStore } from 'app-shared/content-shared/categories-store.service';
+import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
@@ -34,28 +34,20 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 import { EntryWidget } from '../entry-widget';
 
-export interface EntryCategoryItem
-{
-    id : number,
-    fullIdPath : number[],
-    name : string,
-    fullNamePath : string[],
-    tooltip?: string
-}
 
 @Injectable()
 export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 {
-    private _entryCategoriesDiffers : IterableDiffer<EntryCategoryItem>;
-    public _entryCategories : EntryCategoryItem[]  = [];
-    private _entryMetadata : KalturaMetadata[] = [];
+    private _entryCategoriesDiffers : IterableDiffer<CategoryData>;
+    public _entryCategories: CategoryData[]  = [];
+    private _entryMetadata: KalturaMetadata[] = [];
 
     public isLiveEntry : boolean;
     public metadataForm : FormGroup;
     public customDataForms : DynamicMetadataForm[] = [];
 
     constructor(private _kalturaServerClient: KalturaClient,
-                private _categoriesStore : CategoriesStore,
+                private _categoriesSearchService : CategoriesSearchService,
                 private _formBuilder : FormBuilder,
                 private _iterableDiffers : IterableDiffers,
                 private _dynamicMetadataFormFactory : DynamicMetadataFormFactory,
@@ -175,7 +167,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             }
         );
 
-        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create<EntryCategoryItem>((index, item) =>
+        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create<CategoryData>((index, item) =>
         {
             // use track by function to identify category by its' id. this will prevent sending add/remove of the same item once
             // a user remove a category and then re-select it before he clicks the save button.
@@ -241,7 +233,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 const categoriesList = response.objects.map(category => category.categoryId);
 
                 if (categoriesList.length) {
-                    return this._categoriesStore.getCategoriesFromList(categoriesList);
+                    return this._categoriesSearchService.getCategories(categoriesList);
                 } else {
                     return Observable.of({items: []});
                 }
@@ -300,21 +292,21 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
             if (changes)
             {
-                changes.forEachAddedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
+                changes.forEachAddedItem((change : IterableChangeRecord<CategoryData>) =>
                 {
                     request.requests.push(new CategoryEntryAddAction({
                         categoryEntry : new KalturaCategoryEntry({
                             entryId : this.data.id,
-                            categoryId : change.item.id
+                            categoryId : Number(change.item.id)
                         })
                     }));
                 });
 
-                changes.forEachRemovedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
+                changes.forEachRemovedItem((change : IterableChangeRecord<CategoryData>) =>
                 {
                     request.requests.push(new CategoryEntryDeleteAction({
                         entryId : this.data.id,
-                        categoryId : change.item.id
+                        categoryId : Number(change.item.id)
                     }));
                 });
             }
@@ -402,13 +394,13 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         return Observable.create(
             observer => {
 
-                const requestSubscription = this._categoriesStore.getSuggestions(text)
+                const requestSubscription = this._categoriesSearchService.getSuggestions(text)
                     .cancelOnDestroy(this, this.widgetReset$)
                     .monitor('search categories')
                     .subscribe(
                         result =>
                         {
-                            observer.next(result.items);
+                            observer.next(result);
                             observer.complete();
                         },
                         err =>

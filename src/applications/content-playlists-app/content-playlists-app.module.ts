@@ -6,25 +6,13 @@ import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 
 import { routing } from './content-playlists-app.routes';
 
-import { AreaBlockerModule, StickyModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
-	DataTableModule,
-	PaginatorModule,
-	ButtonModule,
-	TieredMenuModule,
-	CheckboxModule,
-	InputTextModule,
-	CalendarModule,
-	MenuModule,
-  RadioButtonModule,
-	SharedModule
+  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, InputTextModule, MenuModule, PaginatorModule, RadioButtonModule,
+  SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import {
-	KalturaUIModule,
-	TooltipModule
-} from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -33,8 +21,9 @@ import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
-import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
+import { PlaylistsTableSortDirectionPipe } from './playlists/playlists-table/playlists-table-sort-direction.pipe';
 
 @NgModule({
     imports: [
@@ -62,10 +51,11 @@ import { PlaylistsStore } from './playlists/playlists-store/playlists-store.serv
 	  DetailsBarModule,
       RouterModule.forChild(routing),
 	  StickyModule,
-      ContentSharedModule
-    ],
+        EntriesModule,
+    FiltersModule],
     declarations: [
       ContentPlaylistsComponent,
+        PlaylistsTableSortDirectionPipe,
       PlaylistsComponentsList,
       PlaylistComponentsList
     ],

@@ -17,7 +17,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryWidgetsManager } from './entry-widgets-manager';
 import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 export enum ActionTypes
@@ -124,7 +124,9 @@ export class EntryStore implements  OnDestroy {
     if (this._entryIsDirty) {
       this._pageExitVerificationToken = this._pageExitVerificationService.add();
     } else {
-      this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+    	if (this._pageExitVerificationToken) {
+            this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+        }
       this._pageExitVerificationToken = null;
     }
 	}
@@ -134,11 +136,13 @@ export class EntryStore implements  OnDestroy {
 		this._state.complete();
 		this._entry.complete();
 
-    this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+		if (this._pageExitVerificationToken) {
+            this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+        }
 
 		if (this._saveEntryInvoked)
 		{
-			this._entriesStore.reload(true);
+			this._entriesStore.reload();
 		}
 	}
 
@@ -194,7 +198,8 @@ export class EntryStore implements  OnDestroy {
 
 		this._widgetsManager.notifyDataSaving(newEntry, request, this.entry)
             .cancelOnDestroy(this)
-            .monitor('entry store: prepare entry for save')
+            .tag('block-shell')
+			.monitor('entry store: prepare entry for save')
             .flatMap(
 				(response) => {
 					if (response.ready) {

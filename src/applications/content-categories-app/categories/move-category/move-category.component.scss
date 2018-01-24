@@ -1,0 +1,62 @@
+@import "app-theme/_variables.scss";
+
+.kTreeContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .kHeader {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid $kGrayscale4;
+    height: 78px;
+    padding-top: 24px;
+    box-sizing: border-box;
+    .kTitle {
+      color: $kGrayscale1;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer {
+    width: 520px;
+    margin: 0 auto;
+    height: 437px;
+
+    .kRow {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      padding-bottom: 20px;
+
+      &:first-child {
+        padding-top: 20px;
+      }
+    }
+
+    .kRow.kNoParentOption {
+      padding-bottom: 0;
+    }
+  }
+  .kFooter {
+    border-top: 1px solid $kGrayscale4;
+    padding-top: 15px;
+    box-sizing: border-box;
+    text-align: center;
+    height: 66px;
+    .kButtonBranded {
+      height: 34px;
+      width: 100px;
+    }
+    .kLink {
+      padding-left: 24px;
+    }
+  }
+}
+
+:host /deep/ .ui-autocomplete.ui-widget{
+  ul.ui-autocomplete-multiple-container {
+    width:100%;
+    height: 36px;
+    overflow: hidden;
+  }
+}

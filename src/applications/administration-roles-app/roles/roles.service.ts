@@ -1,22 +1,21 @@
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaUserRoleFilter} from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
-import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {ISubscription} from 'rxjs/Subscription';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { KalturaUserRoleFilter } from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaClient} from 'kaltura-ngx-client';
-import {KalturaUserRoleListResponse} from 'kaltura-ngx-client/api/types/KalturaUserRoleListResponse';
-import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import {UserRoleListAction} from 'kaltura-ngx-client/api/types/UserRoleListAction';
-import {KalturaUserRoleStatus} from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
-import {KalturaUserRoleOrderBy} from 'kaltura-ngx-client/api/types/KalturaUserRoleOrderBy';
-import {UserRoleDeleteAction} from 'kaltura-ngx-client/api/types/UserRoleDeleteAction';
-import {UserRoleUpdateAction} from 'kaltura-ngx-client/api/types/UserRoleUpdateAction';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {UserRoleCloneAction} from 'kaltura-ngx-client/api/types/UserRoleCloneAction';
-import {KalturaMultiRequest} from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaUserRoleListResponse } from 'kaltura-ngx-client/api/types/KalturaUserRoleListResponse';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { UserRoleListAction } from 'kaltura-ngx-client/api/types/UserRoleListAction';
+import { KalturaUserRoleStatus } from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
+import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client/api/types/KalturaUserRoleOrderBy';
+import { UserRoleDeleteAction } from 'kaltura-ngx-client/api/types/UserRoleDeleteAction';
+import { UserRoleUpdateAction } from 'kaltura-ngx-client/api/types/UserRoleUpdateAction';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { UserRoleCloneAction } from 'kaltura-ngx-client/api/types/UserRoleCloneAction';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -43,9 +42,10 @@ export interface QueryData {
 
 @Injectable()
 export class RolesService implements OnDestroy {
-
-  private _roles = new BehaviorSubject<Roles>({items: [], totalCount: 0});
-  private _state = new BehaviorSubject<UpdateStatus>({loading: false, errorMessage: null});
+  private _roles = {
+    data: new BehaviorSubject<Roles>({ items: [], totalCount: 0 }),
+    state: new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null })
+  };
   private _rolesExecuteSubscription: ISubscription;
   private _queryData = new BehaviorSubject<QueryData>({
     pageIndex: 0,
@@ -55,8 +55,7 @@ export class RolesService implements OnDestroy {
     fields: 'id,name, updatedAt, description'
   });
 
-  public state$ = this._state.asObservable();
-  public roles$ = this._roles.asObservable();
+  public readonly roles = { data$: this._roles.data.asObservable(), state$: this._roles.state.asObservable() };
   public queryData$ = this._queryData.asObservable();
 
   constructor(private _kalturaClient: KalturaClient,
@@ -72,25 +71,12 @@ export class RolesService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this._state.complete();
     this._queryData.complete();
-    this._roles.complete();
+    this._roles.data.complete();
+    this._roles.state.complete();
     if (this._rolesExecuteSubscription) {
       this._rolesExecuteSubscription.unsubscribe();
       this._rolesExecuteSubscription = null;
-    }
-  }
-
-  public reload(force: boolean): void;
-  public reload(query: Partial<QueryData>): void;
-  public reload(query: boolean | Partial<QueryData>): void {
-    const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
-
-    if (forceReload || this._roles.getValue().totalCount === 0) {
-      if (typeof query === 'object') {
-        this._updateQueryData(query);
-      }
-      this._executeQuery();
     }
   }
 
@@ -110,16 +96,16 @@ export class RolesService implements OnDestroy {
     }
 
     this._browserService.scrollToTop();
-    this._state.next({loading: true, errorMessage: null});
+    this._roles.state.next({ loading: true, errorMessage: null });
 
     // execute the request
-    this._rolesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(
+    this._rolesExecuteSubscription = this._buildQueryRequest(this._queryData.getValue()).subscribe(
       response => {
         this._rolesExecuteSubscription = null;
 
-        this._state.next({loading: false, errorMessage: null});
+        this._roles.state.next({ loading: false, errorMessage: null });
 
-        this._roles.next({
+        this._roles.data.next({
           items: response.objects,
           totalCount: <number>response.totalCount
         });
@@ -127,11 +113,25 @@ export class RolesService implements OnDestroy {
       error => {
         this._rolesExecuteSubscription = null;
         const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-        this._state.next({loading: false, errorMessage});
+        this._roles.state.next({ loading: false, errorMessage });
       });
   }
 
-  private buildQueryRequest(queryData: QueryData): Observable<KalturaUserRoleListResponse> {
+
+  private _getDuplicatedRole(role: KalturaUserRole) {
+    const duplicateName = this._appLocalization.get('applications.administration.roles.copyOf') + ' ' + role.name;
+    role.tags = 'kmc';
+
+    const duplicatedRole = new KalturaUserRole();
+    duplicatedRole.name = this._isNameExist(duplicateName) ? undefined : duplicateName;
+    return duplicatedRole;
+  }
+
+  private _isNameExist(name: string): boolean {
+    return this._roles.data.value.items.find(item => item['name'] === name) !== undefined;
+  }
+
+  private _buildQueryRequest(queryData: QueryData): Observable<KalturaUserRoleListResponse> {
     try {
       const filter: KalturaUserRoleFilter = new KalturaUserRoleFilter({
         statusEqual: KalturaUserRoleStatus.active,
@@ -168,20 +168,20 @@ export class RolesService implements OnDestroy {
 
   }
 
-  public deleteRole(role: KalturaUserRole): Observable<KalturaUserRole> {
+  public deleteRole(role: KalturaUserRole): Observable<void> {
     if (!role) {
-      return Observable.throw(new Error('Unable to delete role'));
+      return Observable.throw(new Error(this._appLocalization.get('applications.administration.roles.errors.cantDeleteRole')));
     }
     if (role.partnerId === 0) {
-      return Observable.throw(new Error('Unable to delete Administrator role'));
+      return Observable.throw(new Error(this._appLocalization.get('applications.administration.roles.errors.cantDeleteAdminRole')));
     }
 
     return this._kalturaClient.request(new UserRoleDeleteAction({
       userRoleId: role.id
     }))
       .do(() => this.reload(true))
-      .map((deletedRole) => {
-        return deletedRole;
+      .map(() => {
+        return undefined;
       })
       .catch(error => {
         if (error.code === 'ROLE_IS_BEING_USED') {
@@ -193,11 +193,11 @@ export class RolesService implements OnDestroy {
 
   public duplicateRole(role: KalturaUserRole): Observable<KalturaUserRole> {
     if (!role) {
-      return Observable.throw(new Error('Unable to duplicate role'));
+      return Observable.throw(new Error(this._appLocalization.get('applications.administration.roles.errors.cantDuplicateRole')));
     }
 
     const multiRequest = new KalturaMultiRequest(
-      new UserRoleCloneAction({userRoleId: role.id}),
+      new UserRoleCloneAction({ userRoleId: role.id }),
       new UserRoleUpdateAction({
         userRoleId: 0,
         userRole: this._getDuplicatedRole(role),
@@ -208,26 +208,26 @@ export class RolesService implements OnDestroy {
       .map(
         data => {
           if (data.hasErrors()) {
-            throw new Error('error occurred while trying to duplicate role');
+            throw new Error(this._appLocalization.get('applications.administration.roles.errors.duplicationError'));
           }
           return data[1].result;
         })
       .catch(error => {
-        throw new Error('error occurred while trying to duplicate role');
+        throw new Error(this._appLocalization.get('applications.administration.roles.errors.duplicationError'));
       });
   }
 
-  private _getDuplicatedRole(role: KalturaUserRole) {
-    const duplicateName = this._appLocalization.get('applications.administration.roles.copyOf') + ' ' + role.name;
-    role.tags = 'kmc';
+  public reload(force: boolean): void;
+  public reload(query: Partial<QueryData>): void;
+  public reload(query: boolean | Partial<QueryData>): void {
+    const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
 
-    const duplicatedRole = new KalturaUserRole();
-    duplicatedRole.name = this._isNameExist(duplicateName) ? undefined : duplicateName;
-    return duplicatedRole;
-  }
-
-  private _isNameExist(name: string): boolean {
-    return this._roles.getValue().items.find(item => item['name'] === name) !== undefined;
+    if (forceReload || this._roles.data.value.totalCount === 0) {
+      if (typeof query === 'object') {
+        this._updateQueryData(query);
+      }
+      this._executeQuery();
+    }
   }
 }
 

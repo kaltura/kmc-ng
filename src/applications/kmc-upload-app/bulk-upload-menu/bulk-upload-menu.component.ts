@@ -7,7 +7,7 @@ import { KalturaAPIException } from 'kaltura-ngx-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-upload';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
+import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 
 @Component({
@@ -64,7 +64,6 @@ export class BulkUploadMenuComponent {
       ));
     } else if (error.code === 'INVALID_KS') {
       this._userAuthentication.logout();
-      this._appNavigator.navigateToLogout();
     } else {
       this._showErrorAlert(error.message);
     }

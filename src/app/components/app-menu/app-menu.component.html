@@ -2,11 +2,11 @@
     <div class="kMainMenuWrapper">
         <div #appmenu class="appMenu">
 
-          <div class="k-logo"></div>
+            <div class="k-logo"></div>
 
-              <div *ngFor="let item of menuConfig">
+            <div *ngFor="let item of menuConfig">
                 <a *ngIf="item.titleToken.length" [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.enabled">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
-              </div>
+            </div>
 
             <div class="kMenu-right">
                 <kUploadButton></kUploadButton>
@@ -25,14 +25,14 @@
 
 
 <div class="appSubMenu" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
-  <div class="kContent kSubMenuHolder">
-      <kKMCAppContentMenu class="kSubMenu"
-                          position="left"
-                          [menuItems]="selectedMenuItem.children"></kKMCAppContentMenu>
-      <kKMCAppContentMenu class="kSubMenu"
-                          position="right"
-                          [menuItems]="selectedMenuItem.children"></kKMCAppContentMenu>
-  </div>
+    <div class="kContent kSubMenuHolder">
+        <kKMCAppContentMenu class="kSubMenu"
+                            position="left"
+                            [menuItems]="selectedMenuItem.children"></kKMCAppContentMenu>
+        <kKMCAppContentMenu class="kSubMenu"
+                            position="right"
+                            [menuItems]="selectedMenuItem.children"></kKMCAppContentMenu>
+    </div>
 </div>
 
 <kPopupWidget #usersettings
@@ -40,11 +40,12 @@
               [popupHeight]="232"
               [closeBtn]="false"
               [targetRef]="username"
-              [targetOffset]="{'x':-50, 'y': 30}"
+              [targetOffset]="{'x': 0, 'y': 30}"
+              [placement]="{'x':'right', 'y': 'top'}"
               (onOpen)="username.className='kUserName open'"
               (onClose)="username.className='kUserName'"
               kSticky [sticksTo]="'header'" [stickyId]="'usersettingsPopup'" [stickyClass]="'kForceFix'">
-    <kKMCUserSettings></kKMCUserSettings>
+    <kKMCUserSettings [parentPopup]="usersettings"></kKMCUserSettings>
 </kPopupWidget>
 
 <kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">

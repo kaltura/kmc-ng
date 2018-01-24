@@ -6,7 +6,7 @@ import { KalturaBulkUploadFilter } from 'kaltura-ngx-client/api/types/KalturaBul
 import { Observable } from 'rxjs/Observable';
 import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client/api/types/KalturaBulkUploadListResponse';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
-import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
+import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
@@ -16,6 +16,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
 import { BulkUploadRequestFactory } from './bulk-upload-request-factory';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 interface BulkUploadFile
 {
@@ -31,27 +32,6 @@ interface TrackedBulkUploadFile extends BulkUploadFile
 
 @Injectable()
 export class BulkUploadMonitorService implements OnDestroy {
-
-    // TODO [kmcng] replace this function with log library
-    private _log(level: 'silly' | 'verbose' | 'info' | 'warn' | 'error', message: string, context?: string): void {
-        const messageContext = context || 'general';
-        const origin = 'bulk upload monitor';
-        const formattedMessage = `log: [${level}] [${origin}] ${messageContext}: ${message}`;
-        switch (level) {
-            case 'silly':
-            case 'verbose':
-            case 'info':
-                console.log(formattedMessage);
-                break;
-            case 'warn':
-                console.warn(formattedMessage);
-                break;
-            case 'error':
-                console.error(formattedMessage);
-                break;
-        }
-    }
-
     private _bulkUploadFiles: { [key: string]: TrackedBulkUploadFile } = {};
 
     private _initializeState: null | 'busy' | 'succeeded' | 'failed' = null;
@@ -86,14 +66,15 @@ export class BulkUploadMonitorService implements OnDestroy {
     constructor(private _kalturaClient: KalturaClient,
                 private _kmcServerPolls: KmcServerPolls,
                 private _appEvents: AppEventsService,
-                private _browserService: BrowserService) {
-        this._log('silly', 'constructor()');
-        this._log('verbose', `registering to app event 'BulkLogUploadingStartedEvent'`);
+                private _browserService: BrowserService,
+                private _logger: KalturaLogger) {
+        this._logger.debug('constructor()');
+        this._logger.debug(`registering to app event 'BulkLogUploadingStartedEvent'`);
         this._appEvents
             .event(BulkLogUploadingStartedEvent)
             .cancelOnDestroy(this)
             .subscribe(({id, status, uploadedOn}) => {
-                this._log('verbose', `handling app event 'BulkLogUploadingStartedEvent. { id: '${id}' }`);
+                this._logger.debug(`handling app event 'BulkLogUploadingStartedEvent. { id: '${id}' }`);
                 this._trackNewFile({id, status, uploadedOn});
                 this._totals.data.next(this._calculateTotalsFromState());
             });
@@ -102,9 +83,9 @@ export class BulkUploadMonitorService implements OnDestroy {
     }
 
     private _trackNewFile(file: BulkUploadFile) {
-        this._log('verbose', `tracking new file with id: '${file.id}'`);
+        this._logger.debug(`tracking new file with id: '${file.id}'`);
         if (this._bulkUploadFiles[file.id]) {
-            this._log('warn', `cannot track new file with id: '${file.id}'. a file with such id already exists`);
+            this._logger.warn(`cannot track new file with id: '${file.id}'. a file with such id already exists`);
         } else {
             this._bulkUploadFiles[file.id] = {id: file.id, status: file.status, uploadedOn: file.uploadedOn, allowPurging: false};
         }
@@ -115,7 +96,7 @@ export class BulkUploadMonitorService implements OnDestroy {
     }
 
     ngOnDestroy() {
-        this._log('silly', 'ngOnDestroy()');
+        this._logger.debug('ngOnDestroy()');
         this._totals.data.complete();
         this._totals.state.complete();
     }
@@ -177,7 +158,7 @@ export class BulkUploadMonitorService implements OnDestroy {
         this._getTrackedFiles().forEach(file => {
             const trackedUploadIsNotInResponse = uploadIds.indexOf(Number(file.id)) === -1;
             if (file.allowPurging && trackedUploadIsNotInResponse) {
-                this._log('info', `server poll returned without upload with id '${file.id}'. removing file from tracking list`);
+                this._logger.info(`server poll returned without upload with id '${file.id}'. removing file from tracking list`);
                 delete this._bulkUploadFiles[file.id];
             }
         })
@@ -186,14 +167,14 @@ export class BulkUploadMonitorService implements OnDestroy {
     private _initTracking(): void {
 
         if (this._initializeState === 'failed' || this._initializeState === null) {
-            this._log('info', `getting active uploads status from server`);
+            this._logger.info(`getting active uploads status from server`);
             this._initializeState = 'busy';
             this._totals.state.next({loading: true, error: false});
 
             this._getActiveUploadsList()
                 .subscribe(
                     response => {
-                        this._log('verbose', `syncing tracking file list from server. got ${response.objects.length} files to track`);
+                        this._logger.debug(`syncing tracking file list from server. got ${response.objects.length} files to track`);
                         response.objects.forEach(upload => {
                             this._trackNewFile(upload);
                         });
@@ -210,7 +191,7 @@ export class BulkUploadMonitorService implements OnDestroy {
                     }
                 );
         } else {
-            this._log('info', `everything is operating normally, no need to re-initialize`);
+            this._logger.info( `everything is operating normally, no need to re-initialize`);
         }
     }
 
@@ -218,7 +199,7 @@ export class BulkUploadMonitorService implements OnDestroy {
         const oldestUploadedOnFile = this._getTrackedFiles().reduce((acc, item) => !acc || item.uploadedOn < acc.uploadedOn ?  item : acc, null);
         const uploadedOnFrom = oldestUploadedOnFile ? oldestUploadedOnFile.uploadedOn : this._browserService.sessionStartedAt;
         if (this._bulkUploadChangesFactory.uploadedOn !== uploadedOnFrom) {
-            this._log('verbose', `updating poll server query request with uploadedOn from ${uploadedOnFrom && uploadedOnFrom.toString()}`);
+            this._logger.debug(`updating poll server query request with uploadedOn from ${uploadedOnFrom && uploadedOnFrom.toString()}`);
             this._bulkUploadChangesFactory.uploadedOn = uploadedOnFrom;
         }
     }
@@ -227,14 +208,14 @@ export class BulkUploadMonitorService implements OnDestroy {
 
         if (this._poolingState !== 'running') {
             this._poolingState = 'running';
-            this._log('info', `start server polling every 10 seconds to sync bulk upload status`);
+            this._logger.info(`start server polling every 10 seconds to sync bulk upload status`);
 
 
             this._kmcServerPolls.register<KalturaBulkUploadListResponse>(10, this._bulkUploadChangesFactory)
                 .cancelOnDestroy(this)
                 .subscribe((response) => {
                     if (response.error) {
-                        this._log('warn', `error occurred while trying to sync bulk upload status from server. server error: ${response.error.message}`);
+                        this._logger.warn(`error occurred while trying to sync bulk upload status from server. server error: ${response.error.message}`);
                         this._totals.state.next({loading: false, error: true, isErrorRecoverable: false});
                         return;
                     }
@@ -264,7 +245,7 @@ export class BulkUploadMonitorService implements OnDestroy {
 
     private _updateAllowPurgingMode(): void{
         this._getTrackedFiles().filter(item => !item.allowPurging).forEach(file => {
-            this._log('verbose', `update file '${file.id} to allow purging next time syncing from the server`);
+            this._logger.debug(`update file '${file.id} to allow purging next time syncing from the server`);
             file.allowPurging = true;
         });
     }
@@ -276,7 +257,7 @@ export class BulkUploadMonitorService implements OnDestroy {
 
             if (relevantUpload) { // update status for existing upload
                 if (relevantUpload.status !== upload.status) {
-                    this._log('info', `sync upload file '${upload.id} with status '${upload.status}'`);
+                    this._logger.info(`sync upload file '${upload.id} with status '${upload.status}'`);
                     relevantUpload.status = upload.status;
                 }
             } else if (currentUploadIsActive) { // track new active upload
@@ -291,7 +272,7 @@ export class BulkUploadMonitorService implements OnDestroy {
     }
 
     public retryTracking(): void {
-        this._log('silly', `retryTracking()`);
+        this._logger.debug(`retryTracking()`);
 
         this._initTracking();
     }

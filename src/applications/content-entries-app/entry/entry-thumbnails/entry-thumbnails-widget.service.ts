@@ -24,6 +24,8 @@ import { environment } from 'app-environment';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { EntryWidget } from '../entry-widget';
+import { KalturaThumbParams } from 'kaltura-ngx-client/api/types/KalturaThumbParams';
+import { ThumbAssetGenerateAction } from 'kaltura-ngx-client/api/types/ThumbAssetGenerateAction';
 
 export interface ThumbnailRow {
 	id: string,
@@ -257,25 +259,73 @@ export class EntryThumbnailsWidget extends EntryWidget
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
       const fileData: File = selectedFiles[0];
-
-      this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({ entryId: this.data.id, fileData: fileData }))
-        .tag('block-shell')
-        .cancelOnDestroy(this, this.widgetReset$)
-        .monitor('add thumb')
-        .subscribe(
-          () => this.reloadThumbnails(),
-          () => {
-            this._showBlockerMessage(new AreaBlockerMessage({
-              message: this._appLocalization.get('applications.content.entryDetails.errors.thumbnailsUploadError'),
-              buttons: [{
-                label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
-                action: () => super._removeBlockerMessage()
-              }]
-            }), true);
-          }
-        );
+      const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+	  const fileSize = fileData.size / 1024 / 1024; // convert to Mb
+	    if (fileSize > maxFileSize) {
+		    this._browserService.alert({
+			    header: this._appLocalization.get('app.common.attention'),
+			    message: this._appLocalization.get('applications.upload.validation.fileSizeExceeded')
+		    });
+	    }else {
+		    this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({
+			    entryId: this.data.id,
+			    fileData: fileData
+		    }))
+		    .tag('block-shell')
+		    .cancelOnDestroy(this, this.widgetReset$)
+		    .monitor('add thumb')
+		    .subscribe(
+			    () => this.reloadThumbnails(),
+			    () => {
+				    this._showBlockerMessage(new AreaBlockerMessage({
+					    message: this._appLocalization.get('applications.content.entryDetails.errors.thumbnailsUploadError'),
+					    buttons: [{
+						    label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+						    action: () => super._removeBlockerMessage()
+					    }]
+				    }), true);
+			    }
+		    );
+	    }
     }
   }
+
+
+	public captureThumbnail(position: number):void{
+		super._showLoader();
+		let params: KalturaThumbParams = new KalturaThumbParams();
+		params.videoOffset = position;
+		params.quality = 75;
+		params.stripProfiles = false;
+
+		this._kalturaServerClient.request(new ThumbAssetGenerateAction({entryId: this.data.id, thumbParams: params}))
+			.cancelOnDestroy(this,this.widgetReset$)
+			.monitor('capture thumb from video')
+			.subscribe(
+				() =>
+				{
+					super._hideLoader();
+					this.reloadThumbnails();
+				},
+				error =>
+				{
+					super._hideLoader();
+					this._showBlockerMessage(new AreaBlockerMessage(
+						{
+							message: 'Error capturing thumb',
+							buttons: [
+								{
+									label: 'Retry',
+									action: () => {
+										this.captureThumbnail(position);
+									}
+								}
+							]
+						}
+					), true);
+				}
+			);
+	}
 
 
     ngOnDestroy()

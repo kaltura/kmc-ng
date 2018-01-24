@@ -1,6 +1,4 @@
-<k-area-blocker [showLoader]="(_store.state$ | async)?.loading || this._deferredLoading"
-                [message]="_blockerMessage">
-  <div class="kBulkLogTable" [class.noResults]="!_bulkLog.length">
+  <div class="kBulkLogTable" [class.noResults]="!_bulkLog?.length">
     <p-dataTable #dataTable
                  dataKey="id"
                  scrollable="true"
@@ -70,4 +68,3 @@
     </p-dataTable>
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
   </div>
-</k-area-blocker>

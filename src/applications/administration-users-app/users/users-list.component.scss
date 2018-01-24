@@ -1,0 +1,152 @@
+@import 'app-theme/_variables.scss';
+
+.kUsers {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  height: $contentArea;
+  padding-top: 30px;
+  width: 100%;
+  min-width: $minAppWidth;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0px;
+
+  .kUsersHolder {
+    height: 100%;
+    border: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kRefreshBtn {
+    font-size: 24px;
+    border: none;
+    min-width: inherit;
+    margin-right: 8px;
+    width: 40px;
+    outline: 0;
+    color: $kGrayscale3;
+    right: 0;
+    position: absolute;
+    &:active {
+      box-shadow: none;
+      transform: rotate(45deg);
+    }
+    &:hover {
+      background-color: #ffffff;
+      color: $kPrimary;
+    }
+  }
+
+  .kUsersTableFilters {
+    color: $kGrayscale1;
+    border-bottom: 1px solid $kGrayscale5;
+    z-index: 500;
+    height: 66px;
+    background-color: white;
+    flex: 0 0 auto;
+    align-items: center;
+    margin-left: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    .kSelectedUsersNum {
+      padding-left: 16px;
+    }
+  }
+
+  .kUsersTableFooter {
+    bottom: 0px;
+    height: 34px;
+    background-color: white;
+    border-top: 1px solid $kGrayscale6;
+    position: fixed;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    padding: 0 14px 28px;
+    display: block;
+  }
+
+  .kUsersTable {
+    border: none;
+    position: relative;
+    background-color: white;
+    flex: 1 1 auto;
+  }
+
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
+  }
+
+  .kAddUserBtn {
+    width: 100px;
+    height: 36px;
+    margin-left: 14px;
+    border: none;
+
+    &:disabled {
+      border: 1px solid $kGrayscale4;
+    }
+  }
+
+  .kUsersHeader {
+    color: $kGrayscale1;
+  }
+
+  .kUsersTitle {
+    color: $kGrayscale1;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .kUsersExplanatory,
+  .kUsersStatus {
+    font-size: 13px;
+    color: #999;
+  }
+
+  .kUsersExplanatory {
+    margin-bottom: 10px;
+  }
+
+  .kDivider {
+    margin: 0 5px;
+  }
+
+  .kUsersNeedMore {
+    height: 66px;
+    border-radius: 3px;
+    background-color: #D9D9D9;
+    margin-bottom: 20px;
+    color: #222;
+    display: flex;
+    align-items: center;
+    padding: 0 21px;
+    font-size: 15px;
+
+    .kCurrentStatus,
+    .kMoreUsers {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .kMoreUsers {
+      font-weight: bold;
+      margin-left: 5px;
+    }
+
+    .kClickHere {
+      color: #01accd;
+      margin: 0 5px;
+    }
+  }
+}
+:host /deep/ .ui-button-icon-only .fa {
+  margin-left: -.5em;
+}

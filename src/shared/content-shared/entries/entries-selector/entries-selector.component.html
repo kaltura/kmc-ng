@@ -1,0 +1,20 @@
+<div class="kEntrySelector">
+  <div class="kEntrySelectorTable" [class.kEntriesSelectorBucketOpened]="selectedEntries.length">
+    <kEntriesList
+      [showReload]="false"
+      [columns]="_columns"
+      [defaultFilters]="defaultFilters"
+      [enforcedFilters]="enforcedFilters"
+      (onActionsSelected)="_onActionSelected($event)">
+    </kEntriesList>
+  </div>
+  <div class="kEntrySelectorBucket" *ngIf="selectedEntries.length">
+    <div class="KEntrySelectorSelectedItemsWrapper">
+      <div class="KEntrySelectorSelectedItem" *ngFor="let entry of selectedEntries">
+        <img [src]="entry.thumbnailUrl" [alt]="entry.name" onError="this.onerror=null;this.style.display='none'">
+        <span>{{ entry.name }}</span>
+        <i class="kIcontrash" (click)="_removeSelected(entry)"></i>
+      </div>
+    </div>
+  </div>
+</div>

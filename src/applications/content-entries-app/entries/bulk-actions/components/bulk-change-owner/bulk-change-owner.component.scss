@@ -34,7 +34,7 @@
 }
 
 
-/deep/ .ui-autocomplete.ui-widget{
+:host /deep/ .ui-autocomplete.ui-widget{
   width: 100%;
   input{
     width: 100%;
@@ -42,4 +42,9 @@
   .ui-autocomplete-input-token{
     width: 200px;
   }
+
+  li.userAdded{
+    background-color: transparentize($kPrimary, 0.5) !important;
+  }
+
 }

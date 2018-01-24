@@ -1,10 +1,10 @@
 export const environment = {
-    "appVersion": "3.3.0", // will be changed by release script
+    "appVersion": "3.5.0", // will be changed by release script
     "shell": {
-        "defaultRoute": "/content/entries",
-        "loginRoute" : "/login",
-        "errorRoute" : "/error",
         "browser": {
+            "errorRoute": "/error",
+            appRoute: "/content/entries/list",
+            "loginRoute": "/login",
             "storageNamespace": "kmc-ng"
         }
     },
@@ -15,9 +15,11 @@ export const environment = {
             "cdnUrl": "http://cdnapi.kaltura.com",
             "legacyKmcUrl": "kmc.kaltura.com",
             "expiry": "86400",
+            "limitToParentId" : null,
             "privileges": "disableentitlement",
             "previewUIConf": "38524931",
             "liveAnalyticsVersion": "v2.6",
+            "securedCdnUrl": "https://cdnapisec.kaltura.com",
             "contactsalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
         },
         "menuConfig": [
@@ -36,7 +38,7 @@ export const environment = {
                   {
                     "routePath": "content/moderation",
                     "titleToken": "Moderation",
-                    "enabled": false,
+                    "enabled": true,
                     "position": "left"
                   },
                   {
@@ -72,7 +74,7 @@ export const environment = {
                   {
                     "routePath": "content/drop-folders",
                     "titleToken": "DropFolders",
-                    "enabled": false,
+                    "enabled": true,
                     "position": "right"
                   }
                 ]
@@ -117,6 +119,11 @@ export const environment = {
                 "enabled": true,
                 "children": [
                     {
+                      "routePath": "administration/users",
+                      "titleToken": "Users",
+                      "enabled": true
+                    },
+                    {
                         "routePath": "administration/roles",
                         "titleToken": "Roles",
                         "enabled": true
@@ -130,6 +137,9 @@ export const environment = {
             "SIGNUP": "https://corp.kaltura.com/free-trial",
             "CONTACT_US": "https://corp.kaltura.com/company/contact-us",
             "HIGH_SPEED_UPLOAD": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
+            "UPGRADE_ACCOUNT":"https://site.kaltura.com/Request-Users.html",
+            "EMBED_HELP1": "http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/embedcodetypes.htm",
+            "EMBED_HELP2": "https://knowledge.kaltura.com/how-enforce-delivery-type-each-player-using-ui-variables",
             "BULK_UPLOAD_SAMPLES": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
         },
         "locales": [
@@ -156,6 +166,9 @@ export const environment = {
         ]
     },
     "modules": {
+        "analyticsLive" : {
+            "url" : "http://localhost:9090/"
+        },
         "studio": {
             "api_url": "http://www.kaltura.com",
             "path": "./studio/index.html",
@@ -170,7 +183,7 @@ export const environment = {
         },
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
-            "bulkActionsLimit": 2
+            "bulkActionsLimit": 50
         },
         "createLive": {
           "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
@@ -178,6 +191,20 @@ export const environment = {
         "contentCategories": {
             "createdAtDateRange": "2005:2030",
             "bulkActionsLimit": 50
+        },
+        "contentModeration" : {
+          "createdAtDateRange" : "2005:2030",
+          "bulkActionsLimit": 50
+        },
+        "previewEmbed":{
+            "includeKalturaLinks": false,
+            "secureEmbed": true,
+            "includeSeoMetadata": false,
+            "embedType": "dynamic"
+        },
+        "dropFolders" : {
+          "createdAtDateRange" : "2005:2030",
+          "bulkActionsLimit": 50
         }
     },
     "entriesShared": {
@@ -191,7 +218,8 @@ export const environment = {
         "MAX_CATEGORIES": 10000,
         "categoriesFilters": {
             "maxChildrenToShow": 500
-        }
+        },
+        "SUB_CATEGORIES_LIMIT": 50
     },
     "rolesShared": {
         "MAX_ROLES": 10000,

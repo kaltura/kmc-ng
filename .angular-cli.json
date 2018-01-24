@@ -5,6 +5,7 @@
   },
   "apps": [
     {
+      "name": "kmc",
       "root": "src",
       "outDir": "dist",
       "assets": [
@@ -22,11 +23,44 @@
       "styles": [
         "styles/app-theme/styles.scss"
       ],
-      "scripts": [],
+      "scripts": [
+        "./assets/js/KalturaEmbedCodeGenerator.min.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
+      },
+      "stylePreprocessorOptions" : {
+        "includePaths" : ["styles"]
+      }
+    },
+    {
+      "name": "analytics",
+      "root": "src",
+      "outDir": "dist",
+      "assets": [
+        "assets",
+        "i18n",
+        "favicon.ico"
+      ],
+      "index": "index.html",
+      "main": "standalone-app/main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "kmc",
+      "styles": [
+        "styles/app-theme/styles.scss"
+      ],
+      "scripts": [
+        "./assets/js/KalturaEmbedCodeGenerator.min.js"
+      ],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "analytics-app/environments/environment.ts",
+        "prod": "analytics-app/environments/environment.prod.ts"
       },
       "stylePreprocessorOptions" : {
         "includePaths" : ["styles"]
