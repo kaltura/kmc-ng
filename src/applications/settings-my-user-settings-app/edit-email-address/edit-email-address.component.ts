@@ -37,10 +37,6 @@ export class EditEmailAddressComponent implements OnInit, OnDestroy {
     });
   }
 
-  public _closePopup(): void {
-    this.parentPopupWidget.close();
-  }
-
   public _updateLoginData(): void {
     if (this._editEmailAddressForm.valid) {
       const formData = this._editEmailAddressForm.value;

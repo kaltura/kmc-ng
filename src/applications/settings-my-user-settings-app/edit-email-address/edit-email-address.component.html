@@ -37,7 +37,7 @@
       </div>
 
       <div class="kFooter">
-        <button pButton class="kButtonDefault kButton" (click)="_closePopup()"
+        <button pButton class="kButtonDefault kButton" (click)="parentPopupWidget.close()"
                 [label]="'applications.settings.myUserSettings.cancel' | translate"></button>
         <button
           pButton class="kButtonBranded kButton"

@@ -9,10 +9,10 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.myUserSettings.firstName' | translate}}</span>
           <div>
-            <input class="kControl" formControlName="firstName" pInputText
-                   [ngClass]="{'kHasError':!_editUserNameForm.controls['firstName'].valid && _editUserNameForm.controls['firstName'].touched}">
-            <div *ngIf="_editUserNameForm.controls['firstName'].touched && _editUserNameForm.controls['firstName'].hasError('required')"
-              class="error">
+            <input class="kControl" pInputText
+                   [formControl]="_firstNameField"
+                   [ngClass]="{'kHasError': _firstNameField.invalid && _firstNameField.touched}">
+            <div *ngIf="_firstNameField.touched && _firstNameField.hasError('required')" class="error">
               {{'applications.settings.myUserSettings.errors.required' | translate}}
             </div>
           </div>
@@ -20,10 +20,11 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.myUserSettings.lastName' | translate}}</span>
           <div>
-            <input class="kControl" formControlName="lastName" pInputText
-                   [ngClass]="{'kHasError':!_editUserNameForm.controls['lastName'].valid && _editUserNameForm.controls['lastName'].touched}">
-            <div *ngIf="_editUserNameForm.controls['lastName'].touched && _editUserNameForm.controls['lastName'].hasError('required')"
-              class="error">
+            <input class="kControl" pInputText
+                   [formControl]="_lastNameField"
+                   [ngClass]="{'kHasError': _lastNameField.invalid && _lastNameField.touched}">
+            <div
+              *ngIf="_lastNameField.touched && _lastNameField.hasError('required')" class="error">
               {{'applications.settings.myUserSettings.errors.required' | translate}}
             </div>
           </div>
@@ -31,13 +32,11 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</span>
           <div>
-            <input type="password"
-                   class="kControl"
-                   formControlName="password"
-                   pInputText
-                   [ngClass]="{'kHasError':!_editUserNameForm.controls['password'].valid && _editUserNameForm.controls['password'].touched}">
-            <div *ngIf="_editUserNameForm.controls['password'].touched && _editUserNameForm.controls['password'].hasError('required')"
-              class="error">
+            <input type="password" pInputText class="kControl"
+                   [formControl]="_passwordField"
+                   [ngClass]="{'kHasError': _passwordField.invalid && (_passwordField.touched || _showPasswordError)}">
+            <div class="error"
+                 *ngIf="_passwordField.hasError('required') && (_passwordField.touched || _showPasswordError)">
               {{'applications.settings.myUserSettings.errors.required' | translate}}
             </div>
             <div class="kPasswordRequired">{{'applications.settings.myUserSettings.passwordRequiredName' | translate}}
@@ -47,8 +46,9 @@
       </div>
 
       <div class="kFooter">
-        <button pButton class="kButtonDefault kButton" (click)="_closePopup()"
-                [label]="'applications.settings.myUserSettings.cancel' | translate"></button>
+        <button pButton class="kButtonDefault kButton"
+                [label]="'applications.settings.myUserSettings.cancel' | translate"
+                (click)="parentPopupWidget.close()"></button>
         <button
           pButton class="kButtonBranded kButton"
           [label]="'applications.settings.myUserSettings.save' | translate"

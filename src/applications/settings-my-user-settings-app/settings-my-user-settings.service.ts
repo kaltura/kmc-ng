@@ -8,10 +8,12 @@ import { UserUpdateLoginDataAction, UserUpdateLoginDataActionArgs } from 'kaltur
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { AppAuthentication } from 'app-shared/kmc-shell';
 
 @Injectable()
 export class SettingsMyUserSettingsService {
   constructor(private _kalturaServerClient: KalturaClient,
+              private _appAuth: AppAuthentication,
               private _appLocalization: AppLocalization) {
   }
 
@@ -44,9 +46,17 @@ export class SettingsMyUserSettingsService {
       .request(new UserUpdateLoginDataAction(userData))
       .catch(error => {
         const message = error && error.message
-          ? error.message
+          ? error.code === 'PASSWORD_STRUCTURE_INVALID'
+            ? this._appLocalization.get('applications.settings.myUserSettings.errors.passwordStructure')
+            : error.message
           : this._appLocalization.get('applications.settings.myUserSettings.errors.updateUser');
         return Observable.throw(new Error(message));
       })
+  }
+
+  public updateUserNameManually(user: KalturaUser): void {
+    if (user && user.firstName && user.lastName && user.fullName) {
+      this._appAuth._updateNameManually(user.firstName, user.lastName, user.fullName);
+    }
   }
 }

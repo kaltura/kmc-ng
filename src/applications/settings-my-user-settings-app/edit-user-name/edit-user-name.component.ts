@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
@@ -18,6 +18,10 @@ export class EditUserNameComponent implements OnInit, OnDestroy {
   @Output() updateLoginData = new EventEmitter<UserUpdateLoginDataActionArgs>();
 
   public _editUserNameForm: FormGroup;
+  public _firstNameField: AbstractControl;
+  public _lastNameField: AbstractControl;
+  public _passwordField: AbstractControl;
+  public _showPasswordError = false;
 
   constructor(private _fb: FormBuilder) {
   }
@@ -36,10 +40,10 @@ export class EditUserNameComponent implements OnInit, OnDestroy {
       lastName: [this.user ? this.user.lastName : '', Validators.required],
       password: ['', Validators.required]
     });
-  }
 
-  public _closePopup() {
-    this.parentPopupWidget.close();
+    this._firstNameField = this._editUserNameForm.controls['firstName'];
+    this._lastNameField = this._editUserNameForm.controls['lastName'];
+    this._passwordField = this._editUserNameForm.controls['password'];
   }
 
   public _updateLoginData(): void {
@@ -51,6 +55,8 @@ export class EditUserNameComponent implements OnInit, OnDestroy {
         newFirstName: formData.firstName,
         newLastName: formData.lastName
       });
+    } else {
+      this._showPasswordError = true;
     }
   }
 }

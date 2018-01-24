@@ -8,17 +8,20 @@ import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
 
+export type UserSettingsPopup = 'editUserNamePopup' | 'editEmailAddressPopup' | 'changePasswordPopup'
+
 @Component({
   selector: 'kmc-settings-my-user-settings',
   templateUrl: './settings-my-user-settings.component.html',
   styleUrls: ['./settings-my-user-settings.component.scss'],
   providers: [SettingsMyUserSettingsService]
 })
-
 export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   @ViewChild('editUserNamePopup') public editUserNamePopup: PopupWidgetComponent;
   @ViewChild('editEmailAddressPopup') public editEmailAddressPopup: PopupWidgetComponent;
   @ViewChild('changePasswordPopup') public changePasswordPopup: PopupWidgetComponent;
+
+  private _updateUserName = false;
 
   public _areaBlockerMessage: AreaBlockerMessage = null;
   public _updateBlockerMessage: AreaBlockerMessage = null;
@@ -37,6 +40,13 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
+  private _isAllowedPopup(popupName: UserSettingsPopup): boolean {
+    const allowedPopups = ['editUserNamePopup', 'editEmailAddressPopup', 'changePasswordPopup'];
+    const isAllowed = allowedPopups.indexOf(popupName) !== -1;
+
+    return isAllowed;
+  }
+
   private _getUserData(): void {
     this._isBusy = true;
     this._areaBlockerMessage = null;
@@ -49,32 +59,32 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
           this._areaBlockerMessage = null;
           this._user = user;
           this._role = role;
+
+          if (this._updateUserName) {
+            this._updateUserName = false;
+            this._myUserSettingsStore.updateUserNameManually(user);
+          }
         },
         error => {
           this._areaBlockerMessage = new AreaBlockerMessage({
             message: error.message,
-            buttons: [
-              {
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => {
-                  this._isBusy = false;
-                  this._areaBlockerMessage = null;
-                  this._getUserData();
-                }
-              },
-              {
-                label: this._appLocalization.get('app.common.cancel'),
-                action: () => {
-                  this._isBusy = false;
-                  this._areaBlockerMessage = null;
-                }
+            buttons: [{
+              label: this._appLocalization.get('app.common.retry'),
+              action: () => {
+                this._isBusy = false;
+                this._areaBlockerMessage = null;
+                this._getUserData();
               }
-            ]
+            }]
           });
         });
   }
 
-  public _updateLoginData(userData: UserUpdateLoginDataActionArgs, popup: string): void {
+  public _updateLoginData(userData: UserUpdateLoginDataActionArgs, popup: UserSettingsPopup): void {
+    if (!this._isAllowedPopup(popup)) {
+      throw Error(`Popup name "${popup}" is not allowed, the name have to be 'UserSettingsPopup' type`)
+    }
+
     this._updateBlockerMessage = null;
     this._myUserSettingsStore
       .updateLoginData(userData)
@@ -83,6 +93,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this._updateBlockerMessage = null;
+          this._updateUserName = true;
           this[popup].close();
           this._getUserData();
         },
@@ -98,12 +109,9 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
             })
           }
 
-          this._updateBlockerMessage = new AreaBlockerMessage({
-            message: error.message,
-            buttons: buttons
-          });
+          this._updateBlockerMessage = new AreaBlockerMessage({ message: error.message, buttons });
         }
-      )
+      );
   }
 
   public _editUserName(): void {

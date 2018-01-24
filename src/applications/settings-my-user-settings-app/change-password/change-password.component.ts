@@ -43,10 +43,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     });
   }
 
-  public _closePopup(): void {
-    this.parentPopupWidget.close();
-  }
-
   public _updateLoginData(): void {
     if (this._changePasswordForm.valid) {
       const formData = this._changePasswordForm.value;
