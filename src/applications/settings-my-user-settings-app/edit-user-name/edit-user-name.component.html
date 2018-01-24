@@ -44,18 +44,18 @@
           </div>
         </div>
       </div>
-
-      <div class="kFooter">
-        <button pButton class="kButtonDefault kButton"
-                [label]="'applications.settings.myUserSettings.cancel' | translate"
-                (click)="parentPopupWidget.close()"></button>
-        <button
-          pButton class="kButtonBranded kButton"
-          [label]="'applications.settings.myUserSettings.save' | translate"
-          [disabled]="_editUserNameForm.pristine"
-          (click)="_updateLoginData()"></button>
-      </div>
     </form>
+
+    <div class="kFooter">
+      <button pButton class="kButtonDefault kButton"
+              [label]="'applications.settings.myUserSettings.cancel' | translate"
+              (click)="parentPopupWidget.close()"></button>
+      <button
+              pButton class="kButtonBranded kButton"
+              [label]="'applications.settings.myUserSettings.save' | translate"
+              [disabled]="_editUserNameForm.pristine"
+              (click)="_updateLoginData()"></button>
+    </div>
   </div>
 
 </k-area-blocker>
