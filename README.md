@@ -1,16 +1,24 @@
 # KMCng Application
-
+![Current phase](https://img.shields.io/badge/Current_Phase-Heavy_Development-red.svg)
 [![Gitter chat](https://badges.gitter.im/kaltura-ng/kmc-ng.png)](https://gitter.im/kaltura-ng/kmc-ng)
 
 
 > Kaltura Management Console HTML5 based application (a.k.a KMCng). Should replace the existing [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
-  
-KMCng application uses the following technologies and conventions:
-* [Angular CLI](https://cli.angular.io/) to manage the application (dev)ops.
-* [TypeScript](http://www.typescriptlang.org/) language (superset of Javascript).
-* Stylesheets with [SASS](http://sass-lang.com/) (not required, it supports regular css too).
-* Error reported with [TSLint](http://palantir.github.io/tslint/) and [Codelyzer](https://github.com/mgechev/codelyzer).
-* Best practices in file and application organization for [Angular 2]({https://angular.io/).
+
+Thank you for your interest in the kmc-ng project. The project is currently under **Heavy Development**. Every month we add many features and bug fixes, part of them break previous versions code.
+
+In the coming months we plan to complete adding all the features we have in the legacy kmc as well as some new shiny features.
+
+The following list contains some major features in our roadmap:
+- [ ] upgrade to Angular 5
+- [ ] add on-prem server configuration provided at run-time
+- [ ] embed permission support across views
+- [ ] add multi language translations
+- [ ] add missing views (like settings > custom data, content > syndication etc)
+- [ ] add missing tools like thumbnail grab from video
+- [ ] add external app integration (like studio, analytics, usage dashboard, entry Clip&Trim etc)
+
+
 
 ## Quick start
 
@@ -43,7 +51,7 @@ $ cd kmc-ng
 $ npm install
 
 # checkout latest standalone code
-$ npm run checkout-standalone
+$ npm run standalone
 
 # sync dependencies to the new branch
 $ npm install
@@ -73,7 +81,7 @@ If you need to configure these enpoint, edit file [src/app-config/index.ts](http
 
 To create a standalone application you will need to build the application:
 ```
-$ ng build --prod
+$ ng build:prod
 ```
 
 A distrubted standalone application will be created in the `dist/` folder.

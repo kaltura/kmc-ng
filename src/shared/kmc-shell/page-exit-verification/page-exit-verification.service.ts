@@ -63,7 +63,7 @@ export class PageExitVerificationService implements OnDestroy{
       }
   }
 
-  public disable(): void {
+  public removeAll(): void {
     this._tokens = [];
   }
 }

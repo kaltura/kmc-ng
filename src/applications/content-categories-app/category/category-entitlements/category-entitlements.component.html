@@ -20,10 +20,10 @@
       <div class="kRow">
         <span class="kLabel">
           <span class="kLabelText">{{'applications.content.categoryDetails.entitlements.contentPrivacy.label' | translate}}</span>
-         <i class="kHelp kIconhelp_full"
-            [kTooltip]="'applications.content.categoryDetails.entitlements.contentPrivacy.help' | translate"
-            [maxWidth]="350">
-          </i>
+           <kInputHelper icon="kIconlife_donut"
+                         [title]="'applications.content.categoryDetails.entitlements.contentPrivacy.label' | translate" class="kHelp">
+             <span>{{'applications.content.categoryDetails.entitlements.contentPrivacy.help' | translate}}</span>
+          </kInputHelper>
         </span>
         <div class="kControl">
           <!--No Restrictions-->
@@ -62,10 +62,10 @@
       <div class="kRow">
         <span class="kLabel">
          <span class="kLabelText"> {{'applications.content.categoryDetails.entitlements.categoryListing.label' | translate}}</span>
-          <i class="kHelp kIconhelp_full"
-             [kTooltip]="'applications.content.categoryDetails.entitlements.categoryListing.help' | translate"
-             [maxWidth]="350">
-          </i>
+         <kInputHelper icon="kIconlife_donut"
+                       [title]="'applications.content.categoryDetails.entitlements.categoryListing.label' | translate" class="kHelp">
+             <span>{{'applications.content.categoryDetails.entitlements.categoryListing.help' | translate}}</span>
+          </kInputHelper>
         </span>
         <div class="kControl">
           <!--No Restrictions-->
@@ -95,10 +95,10 @@
       <div class="kRow">
         <span class="kLabel">
           <span class="kLabelText">{{'applications.content.categoryDetails.entitlements.contentPublishPermissions.label' | translate}}</span>
-         <i class="kHelp kIconhelp_full"
-            [kTooltip]="'applications.content.categoryDetails.entitlements.contentPublishPermissions.help' | translate"
-            [maxWidth]="350">
-          </i>
+          <kInputHelper icon="kIconlife_donut"
+                        [title]="'applications.content.categoryDetails.entitlements.contentPublishPermissions.label' | translate" class="kHelp">
+             <span>{{'applications.content.categoryDetails.entitlements.contentPublishPermissions.help' | translate}}</span>
+          </kInputHelper>
         </span>
         <div class="kControl">
           <!--No Restrictions-->
@@ -141,10 +141,10 @@
       <div class="kRow" *ngIf="_widgetService.data?.parentId > 0">
         <span class="kLabel">
           <span class="kLabelText">{{'applications.content.categoryDetails.entitlements.inheritUsersPermissions.label' | translate}}</span>
-          <i class="kHelp kIconhelp_full"
-             [kTooltip]="'applications.content.categoryDetails.entitlements.inheritUsersPermissions.help' | translate"
-             [maxWidth]="350">
-          </i>
+           <kInputHelper icon="kIconlife_donut"
+                         [title]="'applications.content.categoryDetails.entitlements.inheritUsersPermissions.label' | translate" class="kHelp">
+             <span>{{'applications.content.categoryDetails.entitlements.inheritUsersPermissions.help' | translate}}</span>
+          </kInputHelper>
         </span>
         <div class="kControl">
           <p-inputSwitch class="kInputSwitch" formControlName="inheritUsersPermissions"
@@ -190,10 +190,12 @@
         <span
           class="kLabel"><span class="kLabelText">{{'applications.content.categoryDetails.entitlements.permittedUsers.label' | translate}}</span></span>
         <div class="kControl">
-          <span *ngIf="_widgetService.membersTotalCount">
-        {{ 'applications.content.categoryDetails.entitlements.permittedUsers.count' | translate: {'0': _widgetService.membersTotalCount } }}
+          <span *ngIf="!_membersCount.loading && !_membersCount.hasError && _membersCount.value">
+        {{ 'applications.content.categoryDetails.entitlements.permittedUsers.count' | translate: {'0': _membersCount.value } }}
       </span>
-          <span *ngIf="!_widgetService.membersTotalCount">
+          <span *ngIf="_membersCount.loading && !_membersCount.hasError">
+        {{'applications.content.categoryDetails.entitlements.permittedUsers.loading' | translate}} </span>
+          <span *ngIf="!_membersCount.loading && !_membersCount.hasError && !_membersCount.value">
         {{'applications.content.categoryDetails.entitlements.permittedUsers.none' | translate}} </span>
           <a class="kActionLink" (click)="mananageUsersPermissions()">
             <span *ngIf="!_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value">{{'applications.content.categoryDetails.entitlements.permittedUsers.manageUsers' | translate}}</span>
@@ -218,6 +220,6 @@
   <ng-template>
     <kManageEndUsers
       [categoryInheritUserPermissions]="_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value"
-      [category]="_widgetService.data" [parentCategory]="_widgetService.parentCategory" [parentPopupWidget]="manageUsersPopup" (usersNumberChanged)="_onUsersNumberChanged($event)"></kManageEndUsers>
+      [category]="_widgetService.data" [parentCategory]="_widgetService.parentCategory" [parentPopupWidget]="manageUsersPopup" ></kManageEndUsers>
   </ng-template>
 </kPopupWidget>

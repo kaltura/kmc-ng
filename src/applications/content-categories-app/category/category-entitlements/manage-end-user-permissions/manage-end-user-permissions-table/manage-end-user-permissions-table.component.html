@@ -1,5 +1,4 @@
 <div class="kTable">
-  <k-area-blocker  [showLoader]="(manageEndUserPermissionsService.users.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
     <p-dataTable #dataTable
                dataKey="id"
                scrollable="true"
@@ -7,7 +6,7 @@
                [immutable]="false"
                [value]="_users"
                [emptyMessage]="_emptyMessage"
-               [class.noResults]="!_users.length"
+               [class.noResults]="!_users?.length"
                (selectionChange)="_onSelectionChange($event)"
                [rowTrackBy]="rowTrackBy"
                [(selection)]="selectedUsers"
@@ -83,5 +82,4 @@
     </p-column>
 
   </p-dataTable>
-  </k-area-blocker>
 </div>

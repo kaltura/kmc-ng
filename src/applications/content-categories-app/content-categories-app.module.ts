@@ -45,7 +45,13 @@ import {DynamicMetadataFormModule, MetadataProfileModule} from 'app-shared/kmc-s
 
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
-import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
+import {
+  AreaBlockerModule,
+  InputHelperModule,
+  KalturaUIModule,
+  StickyModule,
+  TooltipModule
+} from '@kaltura-ng/kaltura-ui';
 import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
@@ -57,10 +63,12 @@ import {DetailsBarModule} from '@kaltura-ng/kaltura-ui/details-bar';
 import {CategoriesUtilsService} from './categories-utils.service';
 import {NewCategoryComponent} from './categories/new-category/new-category.component';
 import {MoveCategoryComponent} from './categories/move-category/move-category.component';
-import {CategoriesRefineFiltersService} from './categories/categories-refine-filters/categories-refine-filters.service';
+import {CategoriesRefineFiltersService} from './categories/categories-refine-filters.service';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 
 @NgModule({
     imports: [
+        FiltersModule,
         AccordionModule,
         AreaBlockerModule,
         AutoCompleteModule,
@@ -98,6 +106,7 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         TreeModule,
         DetailsBarModule,
         StickyModule,
+        InputHelperModule,
         InputSwitchModule
     ],
     declarations: [
@@ -117,7 +126,6 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         CategoriesBulkChangeContentPrivacyService,
         CategoriesBulkChangeContributionPolicyService,
         CategoriesBulkChangeCategoryListingService,
-        CategoriesRefineFiltersService,
         CategoriesUtilsService]
 })
 export class ContentCategoriesAppModule {

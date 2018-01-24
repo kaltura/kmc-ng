@@ -5,7 +5,6 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesTreePropagationDirective } from './categories-tree-propagation.directive';
 import { CategoriesTreeService } from './categories-tree.service';
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 import { FiltersUtils } from '@kaltura-ng/mc-shared/filters/filters-utils';
 
 export type TreeSelectionMode = 'single' | 'multiple';
@@ -20,17 +19,17 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
 
     @Input() public disablePropagation = true;
 
-    @Input() public selectedCategories: CategoriesListItem[];
-    @Input() public selectedCategory: CategoriesListItem;
+    @Input() public selectedCategories: number[];
+    @Input() public selectedCategory: number;
     @Input() selectionMode: TreeSelectionMode = 'multiple';
 
     @Output() onCategoriesLoaded = new EventEmitter<{ totalCategories: number }>();
 
-    @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
-    @Output() onCategoryUnselected: EventEmitter<CategoriesListItem> = new EventEmitter();
+    @Output() onCategorySelected: EventEmitter<number> = new EventEmitter();
+    @Output() onCategoryUnselected: EventEmitter<number> = new EventEmitter();
 
-    @Output() selectedCategoryChange = new EventEmitter<CategoriesListItem>();
-    @Output() selectedCategoriesChange = new EventEmitter<CategoriesListItem[]>();
+    @Output() selectedCategoryChange = new EventEmitter<number>();
+    @Output() selectedCategoriesChange = new EventEmitter<number[]>();
 
     @ViewChild(CategoriesTreePropagationDirective) public _categoriesTreePropagation: CategoriesTreePropagationDirective;
     @ViewChild(CategoriesTreePropagationDirective) _CategoriesTreeNodesState: CategoriesTreePropagationDirective;
@@ -41,13 +40,10 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     public _loading = false;
     public _blockerMessage: AreaBlockerMessage = null;
 
+    private _categoriesMap: Map<number, CategoriesTreeNode> = new Map<number, CategoriesTreeNode>();
     private inLazyMode = false;
-    private _selectedCategory: CategoriesListItem;
-    private _selectedCategories: CategoriesListItem[] = [];
-
-    public get categories(): CategoriesTreeNode[] {
-        return this._categories;
-    }
+    private _selectedCategory: number;
+    private _selectedCategories: number[] = [];
 
     constructor(private _categoriesTreeService: CategoriesTreeService,
                 private _appAuthentication: AppAuthentication,
@@ -80,11 +76,11 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     private _syncSelectedTreeNode() {
         if (this.selectionMode === 'single') {
             if (this._selectedTreeNode && this._selectedCategory) {
-                if (this._selectedTreeNode.value !== this._selectedCategory.value) {
-                    this._selectedTreeNode = this._findNodeByFullIdPath(this._selectedCategory.fullIdPath) || null;
+                if (this._selectedTreeNode.value !== this._selectedCategory) {
+                    this._selectedTreeNode = this._categoriesMap.get(this._selectedCategory) || null;
                 }
             } else if (!this._selectedTreeNode && this._selectedCategory) {
-                this._selectedTreeNode = this._findNodeByFullIdPath(this._selectedCategory.fullIdPath) || null;
+                this._selectedTreeNode = this._categoriesMap.get(this._selectedCategory) || null;
             } else if (this._selectedTreeNode && !this._selectedCategory) {
                 this._selectedTreeNode = null;
             }
@@ -94,11 +90,11 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     private _syncTreeSelections() {
         if (this.selectionMode === 'multiple') {
             const listSelectionsMap = FiltersUtils.toMap(this._selectedTreeNodes, 'value');
-            const listFilterMap = FiltersUtils.toMap(this._selectedCategories || [], 'value');
+            const listFilterMap = FiltersUtils.toMap(this._selectedCategories || []);
             const diff = FiltersUtils.getDiff(listSelectionsMap, listFilterMap);
 
             diff.added.forEach(item => {
-                const nodeOfFilter = this._findNodeByFullIdPath(item.fullIdPath);
+                const nodeOfFilter = this._categoriesMap.get(item);
 
                 if (nodeOfFilter) {
                     // update selection of tree - handle situation when the node was added by auto-complete
@@ -115,18 +111,8 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
         }
     }
 
-    private _convertToCategory(node: CategoriesTreeNode): CategoriesListItem {
-
-        return {
-            value: node.value, label: node.label,
-            fullIdPath: node.origin.fullIdPath,
-            tooltip: (node.origin.fullNamePath || []).join(' > ')
-        };
-    }
-
-
     public _onNodeSelect(node) {
-        const category = this._convertToCategory(node);
+        const category = node.value;
 
         if (this.selectionMode === 'single') {
             this._selectedTreeNode = node;
@@ -142,7 +128,7 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     public _onNodeUnselect({node}) {
 
         if (this.selectionMode === 'multiple') {
-            const nodeIndex = (this._selectedCategories || []).findIndex(item => item.value === node.value);
+            const nodeIndex = (this._selectedCategories || []).findIndex(item => item === node.value);
             if (nodeIndex !== -1) {
                 const category = this._selectedCategories.splice(
                     nodeIndex,
@@ -162,13 +148,20 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
         this._blockerMessage = null;
         this._categoriesTreeService.getCategories()
             .subscribe(result => {
-                    this._categories = result.categories;
                     this._loading = false;
-
+                    this._categories = result.categories;
+                    this._categoriesMap.clear();
+                    this._categories.forEach(category =>
+                    {
+                       this._addCategoryToMap(category);
+                    });
                     this._syncTreeSelections();
                     this._syncSelectedTreeNode();
 
-                    this.onCategoriesLoaded.emit({totalCategories: (this._categories || []).length});
+                    setTimeout(() =>
+                    {
+                        this.onCategoriesLoaded.emit({totalCategories: (this._categories || []).length});
+                    });
                 },
                 error => {
                     this._blockerMessage = new AreaBlockerMessage({
@@ -183,22 +176,34 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     }
 
 
+    private _addCategoryToMap(category: CategoriesTreeNode): void {
+        if (category) {
+            this._categoriesMap.set(category.value, category);
+
+            if (category.children) {
+                category.children.forEach((child) => {
+                    this._addCategoryToMap(child);
+                });
+            }
+        }
+    }
+
     public _onNodeExpand(event: any): void {
         const node: CategoriesTreeNode = event && event.node instanceof CategoriesTreeNode ? event.node : null;
 
         if (node && this.inLazyMode) {
-            this._categoriesTreeService.loadNodeChildren(node, (children) => {
-                if (node instanceof CategoriesTreeNode && node.children) {
+            this._categoriesTreeService.loadNodeChildren(node, () => {
+                if (node.children) {
                     node.children.forEach(nodeChild => {
 
                         if (this.selectionMode === 'single')
                         {
-                            if (this.selectedCategory && this.selectedCategory.value === nodeChild.value)
+                            if (this.selectedCategory && this.selectedCategory === nodeChild.value)
                             {
                                 this._selectedTreeNode = nodeChild;
                             }
                         }else {
-                            const isNodeChildSelected = !!this._selectedCategories.find(categoryFilter => categoryFilter.value === nodeChild.value);
+                            const isNodeChildSelected = !!this._selectedCategories.find(categoryFilter => categoryFilter === nodeChild.value);
 
                             if (this._CategoriesTreeNodesState) {
                                 this._CategoriesTreeNodesState.updateNodeState(nodeChild, isNodeChildSelected);
@@ -211,8 +216,6 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
 
                     });
                 }
-
-                return children;
             });
         }
     }
@@ -232,30 +235,13 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
         e.stopPropagation();
     }
 
-    public expandNode(fullIdPath: number[]): void {
+    public expandNode(categoryId: number): void {
         setTimeout(() => {
-            const result = this._findNodeByFullIdPath(fullIdPath);
+            const result = this._categoriesMap.get(categoryId);
             if (result) {
                 result.expand();
             }
         });
-    }
-
-    private _findNodeByFullIdPath(fullIdPath: (number | string)[]): CategoriesTreeNode {
-        let result: CategoriesTreeNode = null;
-        if (fullIdPath && Array.isArray(fullIdPath)) {
-            for (let i = 0, length = fullIdPath.length; i < length; i++) {
-                const itemIdToSearchFor = fullIdPath[i];
-                result = ((result ? result.children : this._categories) || []).find(child => child.value === itemIdToSearchFor);
-
-                if (!result) {
-                    break;
-                }
-            }
-        } else {
-            console.warn(`[categories-tree]: trying to find node without providing full id path`);
-        }
-        return result;
     }
 }
 

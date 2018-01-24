@@ -8,17 +8,27 @@ import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUploa
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
+import {
+    BulkLogRefineFiltersService,
+    RefineList
+} from '../bulk-log-store/bulk-log-refine-filters.service';
+
 
 @Component({
   selector: 'kBulkLogList',
   templateUrl: './bulk-log-list.component.html',
-  styleUrls: ['./bulk-log-list.component.scss']
+  styleUrls: ['./bulk-log-list.component.scss'],
+    providers: [BulkLogStoreService]
 })
 export class BulkLogListComponent implements OnInit, OnDestroy {
   @Input() selectedBulkLogItems: Array<any> = [];
   @ViewChild('tags') private tags: StickyComponent;
 
-  public _blockerMessage: AreaBlockerMessage = null;
+    public _isBusy = false;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _tableIsBusy = false;
+    public _tableBlockerMessage: AreaBlockerMessage = null;
+    public _refineFilters: RefineList[];
 
   public _query = {
     uploadedAfter: null,
@@ -28,6 +38,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   };
 
   constructor(private _appLocalization: AppLocalization,
+              private _refineFiltersService: BulkLogRefineFiltersService,
               private _browserService: BrowserService,
               public _store: BulkLogStoreService,
               appEvents: AppEventsService) {
@@ -38,10 +49,72 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
+      this._prepare();
   }
 
+    private _prepare(): void {
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only once the filters were fetched successfully.
+
+        this._isBusy = true;
+        this._refineFiltersService.getFilters()
+            .cancelOnDestroy(this)
+            .first() // only handle it once, no need to handle changes over time
+            .subscribe(
+                lists => {
+                    this._isBusy = false;
+                    this._refineFilters = lists;
+                    this._restoreFiltersState();
+                    this._registerToFilterStoreDataChanges();
+                    this._registerToDataChanges();
+                },
+                error => {
+                    this._isBusy = false;
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: this._appLocalization.get('applications.content.filters.errorLoading'),
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.retry'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._prepare();
+                                this._store.reload();
+                            }
+                        }
+                        ]
+                    })
+                });
+    }
+
+    private _registerToDataChanges(): void {
+        this._store.bulkLog.state$
+            .cancelOnDestroy(this)
+            .subscribe(
+                result => {
+
+                    this._tableIsBusy = result.loading;
+
+                    if (result.errorMessage) {
+                        this._tableBlockerMessage = new AreaBlockerMessage({
+                            message: result.errorMessage || 'Error loading bulk logs',
+                            buttons: [{
+                                label: 'Retry',
+                                action: () => {
+                                    this._tableBlockerMessage = null;
+                                    this._store.reload();
+                                }
+                            }
+                            ]
+                        })
+                    } else {
+                        this._tableBlockerMessage = null;
+                    }
+                },
+                error => {
+                    console.warn('[kmcng] -> could not load bulk logs'); // navigate to error page
+                    throw error;
+                });
+    }
   ngOnDestroy() {
   }
 

@@ -14,7 +14,6 @@ import {
 } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 
 @Component({
     selector: 'kCategorySelector',
@@ -23,14 +22,14 @@ import { CategoriesListItem } from 'app-shared/content-shared/categories/categor
 })
 export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
 
-  @Output() onCategorySelected = new EventEmitter<CategoriesListItem>();
+  @Output() onCategorySelected = new EventEmitter<number>();
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
     @Input() enableNoParentSelection: boolean = true;
 
   public _categoriesLoaded = false;
-  public _selectedCategory: CategoriesListItem = null;
+  public _selectedCategory: number = null;
   public _selectionTooltip = '';
 
   private _searchCategoriesSubscription: ISubscription;
@@ -61,10 +60,15 @@ export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
     }
   }
 
-  private _updateSelectionTooltip(): void
-  {
-      const defaultTooltip =  this._appLocalization.get(`applications.content.addNewCategory.${this.enableNoParentSelection ? 'noParent' : 'noSelection'}`);
-      const tooltip = this._selectedCategory ? this._selectedCategory.tooltip : defaultTooltip;
+  private _updateSelectionTooltip(): void {
+      let tooltip = '';
+      if (this._selectedCategory) {
+          const selectedCategory = this._categoriesSearchService.getCachedCategory(this._selectedCategory);
+          tooltip = this._selectedCategory ? selectedCategory.fullName : '';
+      } else {
+          tooltip = this._appLocalization.get(`applications.content.addNewCategory.${this.enableNoParentSelection ? 'noParent' : 'noSelection'}`);
+      }
+
       this._selectionTooltip = tooltip ? this._appLocalization.get(
           'applications.content.categories.selectedCategory',
           {0: tooltip}
@@ -82,10 +86,10 @@ export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
 
     this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query).subscribe(data => {
         const suggestions = [];
-        const selectedCategoryValue = this._selectedCategory ? this._selectedCategory.value : null;
+        const selectedCategoryValue = this._selectedCategory ? this._selectedCategory : null;
 
         (data || []).forEach(suggestedCategory => {
-          const label = suggestedCategory.fullNamePath.join(' > ') +
+          const label = suggestedCategory.fullName +
               (suggestedCategory.referenceId ?
               ` (${suggestedCategory.referenceId})` : '');
 
@@ -106,21 +110,16 @@ export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
       // clear user text from component
       this._autoComplete.clearValue();
 
-      if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
-          this._selectedCategory = {
-              value: selectedItem.id,
-              label: selectedItem.name,
-              fullIdPath: selectedItem.fullIdPath,
-              tooltip: (selectedItem.fullNamePath || []).join(' > ')
-          };
+      if (selectedItem && selectedItem.id) {
+          this._selectedCategory = selectedItem.id;
           this.onCategorySelected.emit(this._selectedCategory);
 
-          this._categoriesTree.expandNode(selectedItem.fullIdPath);
+          this._categoriesTree.expandNode(selectedItem.id);
           this._updateSelectionTooltip();
       }
   }
 
-  public _onCategorySelected(category: CategoriesListItem) {
+  public _onCategorySelected(category: number) {
       this._selectedCategory = category;
       this._updateSelectionTooltip();
       this.onCategorySelected.emit(this._selectedCategory);

@@ -1,0 +1,76 @@
+@import 'app-theme/_variables.scss';
+
+.kChangeAccountWin {
+  width: 100%;
+  height: 100%;
+
+  >form{
+    width: 100%;
+    height: 100%;
+  }
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer {
+    margin: 28px;
+    min-height: 169px;
+    .kPartnersList{
+      max-height: 128px;
+      overflow: auto;
+      margin-top:24px;
+
+      .kRow:first-child{
+        margin-top: 0;
+      }
+    }
+  }
+  .kFooter {
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      height: 34px;
+    }
+  }
+
+  .kRow {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 24px;
+    font-size: 15px;
+    .kLabel {
+      flex: 0 0 auto;
+      color: $kGrayscale1;
+    }
+  }
+}
+
+.ui-radiobutton-label {
+  margin-left: 10px;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 18px;
+  color: $kGrayscale1;
+}
+
+:host /deep/ .ui-radiobutton-label {
+  margin-left: 10px;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 18px;
+  color: $kGrayscale1;
+}
+

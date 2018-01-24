@@ -603,7 +603,7 @@
         }
       },
       "filters": {
-        "errorLoading": "Error loading filters",
+        "errorLoading": "Failed to prepare view, please try again",
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
         "close": "Close",
@@ -615,6 +615,8 @@
         "dates": "Dates",
         "after": "After",
         "before": "Before",
+        "loading_lbl": "Loading",
+        "categoryId_tt": "Category Id: {{0}}",
         "createdBetween": "Created Between",
         "mediaTypes": "Media Type: {{0}}",
         "ingestionStatuses": "Status: {{0}}",
@@ -657,7 +659,7 @@
         "createdOn": "Created On",
         "duration": "Duration",
         "status": "Status",
-        "previewAndEmbed": "Preview & Embed",
+        "previewAndEmbed": "Share & Embed",
         "delete": "Delete",
         "view": "View Details",
         "entries": "Entries",
@@ -886,7 +888,7 @@
           "users": "Users"
         },
         "preview": {
-          "pande": "Preview & Embed",
+          "pande": "Share & Embed",
           "details": "Details",
           "entryID": "ID:",
           "creator": "Created by:",
@@ -1195,7 +1197,7 @@
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
           "clipsLoadError": "Error loading clips",
-          "schedulingError": "Day before can't be earlier than day after"
+          "datesRangeError": "Day before can't be earlier than day after"
         }
       },
       "categoryDetails": {
@@ -1301,14 +1303,20 @@
             "changeOwner": "Change Owner",
             "changeOwnerLabel": "Set a new owner for this category",
             "changeOwnerPlaceholder": "Enter Username/Id",
+            "cancelEdit": "Cancel Edit",
+            "discard": "Discard all changes?",
+            "tooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier",
             "errors": {
               "changeOwnerFailed" : "An error occurred while changing owner",
               "unableToChange": "Unable to change owner for current category",
-              "selectUser" : "Unable to change owner since no user was selected"
+              "selectUser" : "Unable to change owner since no user was selected",
+              "invalidOwner": "Cannot set owner field with user id\n\"{{0}}\"\nuser id is invalid",
+              "ownerRequired": "Cannot set owner field,\nuser id is invalid"
             }
           },
           "permittedUsers": {
             "label": "Permitted Users",
+            "loading": "Loading...",
             "none": "None",
             "manageUsers": "Manage Users",
             "viewUsers": "View Users",

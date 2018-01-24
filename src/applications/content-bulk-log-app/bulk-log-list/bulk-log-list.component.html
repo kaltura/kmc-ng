@@ -1,4 +1,4 @@
-<k-area-blocker [message]="_blockerMessage">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kBulkLog kOverrideFAIcons">
     <div #entriesTableHolder class="kBulkLogHolder kContent">
       <kSticky [stickyClass]="'kStickyClass'" stickyId="bulklogFilters" [scrollOffset]="80" [sticksTo]="'header'">
@@ -34,15 +34,21 @@
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="bulklogTags" [sticksTo]="'bulklogFilters'">
         <div class="kContent">
-          <k-bulk-log-tags (onTagsChange)="_onTagsChange()"></k-bulk-log-tags>
+          <k-bulk-log-tags   [refineFilters]="_refineFilters"
+                             (onTagsChange)="_onTagsChange()"></k-bulk-log-tags>
         </div>
       </kSticky>
+
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
       <kBulkLogTable class="kBulkLogTable"
                      [list]="(_store.bulkLog.data$ | async)?.items"
                      [filter]="_query"
                      (actionSelected)="_onActionSelected($event)"
                      [(selectedBulkLogItems)]="selectedBulkLogItems"
       ></kBulkLogTable>
+      </k-area-blocker>
 
       <div class="kBulkLogTableFooter kContent" #footer *ngIf="(_store.bulkLog.data$ | async)?.totalCount">
         <p-paginator
@@ -67,7 +73,8 @@
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'bulklogFilterPopup'"
               [scrollOffset]="80">
   <ng-template>
-    <k-bulk-log-refine-filters [parentPopupWidget]="refinePopup"></k-bulk-log-refine-filters>
+    <k-bulk-log-refine-filters   [refineFilters]="_refineFilters"
+                                 [parentPopupWidget]="refinePopup"></k-bulk-log-refine-filters>
   </ng-template>
 </kPopupWidget>
 

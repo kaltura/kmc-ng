@@ -1,4 +1,4 @@
-<k-area-blocker [message]="_blockerMessage">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kDropFolders kOverrideFAIcons">
     <div #dropFoldersTableHolder class="kDropFoldersHolder kContent">
       <kSticky stickyId="dropFolderFilters" [scrollOffset]="80" [sticksTo]="'header'">
@@ -39,16 +39,22 @@
 
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="dropFoldersTags" [sticksTo]="'dropFolderFilters'">
         <div class="kContent">
-          <k-drop-folders-tags (onTagsChange)="_onTagsChange()"></k-drop-folders-tags>
+          <k-drop-folders-tags   [refineFilters]="_refineFilters"
+                                 (onTagsChange)="_onTagsChange()"></k-drop-folders-tags>
         </div>
       </kSticky>
 
+
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
       <kDropFoldersListTable
         class="kDropFoldersTable"
         [dropFolders]="(_dropFoldersStore.dropFolders.data$ | async)?.items"
         (navigateToEntry)="_navigateToEntry($event)"
         (deleteDropFolderFiles)="_deleteDropFolderFiles($event)"
         [(selectedDropFolders)]="_selectedDropFolders"></kDropFoldersListTable>
+      </k-area-blocker>
 
       <div class="kDropFoldersTableFooter kContent" #footer
            *ngIf="(_dropFoldersStore.dropFolders.data$ | async)?.totalCount">
@@ -75,6 +81,7 @@
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'statusesFilterPopup'"
               [scrollOffset]="80">
   <ng-template>
-    <k-drop-folders-refine-filters [parentPopupWidget]="refinePopup"></k-drop-folders-refine-filters>
+    <k-drop-folders-refine-filters   [refineFilters]="_refineFilters"
+                                     [parentPopupWidget]="refinePopup"></k-drop-folders-refine-filters>
   </ng-template>
 </kPopupWidget>

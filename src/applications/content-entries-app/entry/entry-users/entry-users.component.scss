@@ -84,6 +84,10 @@ form{
       width: 100%;
     }
 
+    li.userAdded{
+      background-color: transparentize($kPrimary, 0.5) !important;
+    }
+
     ul.ui-autocomplete-multiple-container {
       height: auto;
     }
@@ -106,6 +110,10 @@ form{
 
 :host /deep/ kAutoComplete{
 	width: 100%;
+
+  li.userAdded{
+    background-color: transparentize($kPrimary, 0.5) !important;
+  }
 }
 
 /deep/ kPopupWidget .kPopupWidget {

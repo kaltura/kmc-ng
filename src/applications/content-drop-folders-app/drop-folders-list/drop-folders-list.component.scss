@@ -71,7 +71,7 @@
     font-size: 24px;
     border: none;
     min-width: inherit;
-    margin-right: 16px;
+    margin-right: 8px;
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
@@ -229,6 +229,10 @@
     top: 7px;
     right: 80px;
   }
+}
+
+:host{
+  width: 100%;
 }
 
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {

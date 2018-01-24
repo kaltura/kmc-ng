@@ -4,7 +4,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {EntitlementService} from '../entitlement.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {CategoriesListItem} from 'app-shared/content-shared/categories/categories-list-type';
+
 
 @Component({
   selector: 'kNewEntitlement',
@@ -17,7 +17,7 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
   @Output() onApply = new EventEmitter<void>();
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedCategory: CategoriesListItem = null;
+  public _selectedCategory: number = null;
   public addEntitlementForm: FormGroup;
 
   constructor(private _appLocalization: AppLocalization,
@@ -35,7 +35,7 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  public _onCategorySelected(event: CategoriesListItem) {
+  public _onCategorySelected(event: number) {
     this._selectedCategory = event;
   }
 
@@ -60,10 +60,10 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _addEntitlment(category: CategoriesListItem, privacyContext: string): void {
+  private _addEntitlment(category: number, privacyContext: string): void {
     this._entitlementService
       .addEntitlement({
-        id: category && category.value,
+        id: category && category,
         privacyContext,
       })
       .cancelOnDestroy(this)

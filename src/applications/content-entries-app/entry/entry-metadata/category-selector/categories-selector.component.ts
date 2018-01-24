@@ -12,15 +12,15 @@ import {
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 
-
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { EntryCategoryItem } from '../entry-metadata-widget.service';
+
 
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
-import {  TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';import {CategoriesSearchService} from "app-shared/content-shared/categories/categories-search.service";
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
+import {  TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';
+import { CategoriesSearchService, CategoryData } from "app-shared/content-shared/categories/categories-search.service";
 
 
 @Component({
@@ -35,34 +35,26 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('autoComplete') private _autoComplete: AutoComplete;
 
     public _categoriesLoaded = false;
-    public _treeSelection: CategoriesListItem[] = [];
+    public _treeSelection: number[] = [];
 
     private _searchCategoriesSubscription: ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     @Input() buttonLabel = '';
-    @Input() set value(value: EntryCategoryItem[])
-    {
-        this._selectedCategories = value  ? [...value] : [];
-        this._treeSelection = value ? [ ...value.map(item =>
-        {
-            return {
-                value: item.id,
-                label: item.name,
-                fullIdPath: item.fullIdPath,
-                tooltip: item.tooltip
-            };
+    @Input() set value(value: CategoryData[]) {
+        this._selectedCategories = value ? [...value] : [];
+        this._treeSelection = value ? [...value.map(item => {
+            return item.id;
         })] : [];
-
     }
 
-    @Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
+    @Output() valueChange = new EventEmitter<CategoryData[]>();
 
-    public _selectedCategories: EntryCategoryItem[] = [];
+    public _selectedCategories: CategoryData[] = [];
 
     private parentPopupStateChangeSubscription: ISubscription;
     @Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(private _categoriesSearchService: CategoriesSearchService, private cdRef: ChangeDetectorRef) {
+    constructor(private _categoriesSearchService: CategoriesSearchService, private cdRef: ChangeDetectorRef, private _appLocalization: AppLocalization) {
     }
 
 
@@ -109,7 +101,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
                 this._selectedCategories.splice(tagIndex, 1);
             }
 
-            this._treeSelection = this._treeSelection.filter(item => item.value + '' !== tag.id + '');
+            this._treeSelection = this._treeSelection.filter(item => item + '' !== tag.id + '');
         }
     }
 
@@ -142,7 +134,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
 
                 (data || []).forEach(suggestedCategory => {
-                    const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
+                    const label = suggestedCategory.fullName + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
 
                     const isSelectable = !entryCategories.find(category => {
                         return category.id === suggestedCategory.id;
@@ -162,34 +154,23 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
-
     public _onAutoCompleteSelected(event: any) {
 
-        const selectedItem = this._autoComplete.getValue();
+        const selectedItem: CategoryData = this._autoComplete.getValue();
 
         if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
             const selectedCategoryIndex = this._selectedCategories.findIndex(item => item.id + '' === selectedItem.id + '');
 
             if (selectedCategoryIndex === -1) {
-                this._selectedCategories.push({
-                    id: selectedItem.id,
-                    fullIdPath: selectedItem.fullIdPath,
-                    name: selectedItem.name,
-                    tooltip: selectedItem.tooltip
-                });
+                this._selectedCategories.push(selectedItem);
             }
 
-            const treeSelectionIndex = this._treeSelection.findIndex(item => item.value + '' === selectedItem.id + '');
+            const treeSelectionIndex = this._treeSelection.findIndex(item => item + '' === selectedItem.id + '');
 
             if (treeSelectionIndex === -1) {
-                this._treeSelection = [...this._treeSelection, {
-                    value: selectedItem.id,
-                    fullIdPath: selectedItem.fullIdPath,
-                    label: selectedItem.name,
-                    tooltip: selectedItem.tooltip
-                }];
+                this._treeSelection = [...this._treeSelection, selectedItem.id];
 
-                this._categoriesTree.expandNode(selectedItem.fullIdPath);
+                this._categoriesTree.expandNode(selectedItem.id);
             }
         }
 
@@ -198,25 +179,25 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
-    public _onTreeNodeUnselected(node: CategoriesListItem) {
-        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
+    public _onCategoryUnselected(node: number) {
+        const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
 
-        if (autoCompleteItemIndex > -1) {
-            this._selectedCategories.splice(autoCompleteItemIndex, 1);
+        if (requestedCategoryIndex > -1) {
+            this._selectedCategories.splice(requestedCategoryIndex, 1);
         }
     }
 
-    public _onTreeNodeSelected(node: CategoriesListItem) {
-        const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id === node.value);
+    public _onCategorySelected(node: number) {
+        const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
 
+        if (requestedCategoryIndex === -1) {
+            const categoryData = this._categoriesSearchService.getCachedCategory(node);
 
-        if (autoCompleteItemIndex === -1) {
-            this._selectedCategories.push({
-                id: node.value,
-                fullIdPath: node.fullIdPath,
-                name: node.label,
-                tooltip: node.tooltip
-            });
+            if (categoryData) {
+                this._selectedCategories.push(categoryData);
+            }else {
+                // TODO sakal
+            }
         }
     }
 }

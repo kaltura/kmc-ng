@@ -3,13 +3,14 @@ import { DropFoldersStoreService } from './drop-folders-store/drop-folders-store
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 
+
 @Component({
   selector: 'kDropFolders',
   templateUrl: './content-drop-folders.component.html',
   styleUrls: ['./content-drop-folders.component.scss'],
   providers: [
     DropFoldersStoreService,
-    KalturaLogger,
+      KalturaLogger,
     {
       provide: KalturaLoggerName, useValue: 'drop-folders-store.service'
     }

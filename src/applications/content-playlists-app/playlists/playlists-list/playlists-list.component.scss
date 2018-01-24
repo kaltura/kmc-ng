@@ -67,7 +67,7 @@
 		font-size: 24px;
 		border: none;
 		min-width: inherit;
-		margin-right: 16px;
+		margin-right: 8px;
 		width: 40px;
 		outline: 0px;
 		color: $kGrayscale3;
@@ -168,6 +168,10 @@
 			}
 		}
 	}
+}
+
+:host{
+	width: 100%;
 }
 
 :host /deep/ k-area-blocker>.kAreaBlockerContainer {

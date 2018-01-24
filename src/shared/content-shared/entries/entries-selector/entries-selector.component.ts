@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaTypesFactory } from 'kaltura-ngx-client';
 
 
 @Component({
@@ -14,16 +15,11 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 })
 export class EntriesSelectorComponent {
   @Input() selectedEntries: KalturaMediaEntry[] = [];
-  @Input() set filterByStatus(statuses: number[]) {
-    // this._entriesStore.filter({
-    //     ingestionStatuses: statuses
-    // })
-  }
+    @Input() enforcedFilters: Partial<EntriesFilters>;
+    @Input() defaultFilters: Partial<EntriesFilters>;
+
   @Output() selectedEntriesChange = new EventEmitter<KalturaMediaEntry[]>();
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
-
-  public _blockerMessage: AreaBlockerMessage = null;
-  public _isBusy = false;
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -41,7 +37,8 @@ export class EntriesSelectorComponent {
   public _onActionSelected({ action, entry }: { action: string, entry: KalturaMediaEntry }): void {
     switch (action) {
       case 'addToBucket':
-        this.selectedEntries.push(entry);
+          const clonedEntry = <KalturaMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
+        this.selectedEntries.push(clonedEntry);
         this.selectedEntriesChange.emit(this.selectedEntries);
         break;
       default:
