@@ -25,7 +25,7 @@
                  [(ngModel)]="_ruleName"
                  [placeholder]="'applications.content.entries.ruleNamePlaceholder' | translate">
           <div #resultsLimitBtn class="kResultsLimit">
-            <span>{{'applications.content.entries.resultsLimit' | translate}}</span>
+            <span *ngIf="_resultsLimit">{{'applications.content.entries.resultsLimit' | translate:[_resultsLimit]}}</span>
             <i class="kIcondropdown_arrow_bottom dropdown"></i>
           </div>
           <div class="kOrderBy">

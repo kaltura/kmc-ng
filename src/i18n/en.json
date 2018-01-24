@@ -532,7 +532,7 @@
         "deleteNote": "Please note: the entry will be permanently deleted from your account.",
         "ruleName": "Rule name",
         "ruleNamePlaceholder": "Top videos of past week",
-        "resultsLimit": "Results limit",
+        "resultsLimit": "Results limit ({{0}})",
         "orderBy": "Order by",
         "totalDuration": "Total duration {{0}}",
         "resultsLimitRange": "1 - 200 Entries",
