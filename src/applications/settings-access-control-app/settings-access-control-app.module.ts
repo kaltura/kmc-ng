@@ -24,6 +24,7 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete/auto-complete.module';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui/kaltura-primeng-ui.module';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.module';
+import { TimeSpinnerModule } from '@kaltura-ng/kaltura-primeng-ui/time-spinner/time-spinner.module';
 
 @NgModule({
   imports: [
@@ -54,7 +55,8 @@ import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.m
     RadioButtonModule,
     MultiSelectModule,
     SpinnerModule,
-    InputSwitchModule
+    InputSwitchModule,
+    TimeSpinnerModule
   ],
   declarations: [
     SettingsAccessControlComponent,

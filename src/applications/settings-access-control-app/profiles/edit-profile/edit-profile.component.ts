@@ -435,11 +435,10 @@ export class EditProfileComponent implements OnDestroy {
 
       if (allowPreview && preview >= 0) {
         accessControlProfile.restrictions.push(new KalturaPreviewRestriction({
-          previewLength: preview // TODO [kmcng] parse preview value
+          previewLength: preview
         }));
       }
     }
-
 
     this.parentPopup.close();
     this.onSave.emit(accessControlProfile);
