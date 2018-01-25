@@ -886,7 +886,8 @@
           "live": "Live Stream",
           "relatedFiles": "Related Files",
           "clips": "Clips",
-          "users": "Users"
+          "users": "Users",
+          "distribution": "Export"
         },
         "preview": {
           "pande": "Share & Embed",
