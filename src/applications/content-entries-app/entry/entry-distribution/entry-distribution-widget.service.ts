@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -25,17 +25,30 @@ import { KalturaEntryDistribution } from 'kaltura-ngx-client/api/types/KalturaEn
 import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
+  name: string;
+}
+
 export interface DistributionWidgetData {
-  partnerDistribution: KalturaDistributionProfile[];
-  entryDistribution: KalturaEntryDistribution[];
-  entryFlavors: Flavor[];
-  entryThumbnails: KalturaThumbAsset[];
+  distributedProfiles: ExtendedKalturaEntryDistribution[],
+  undistributedProfiles: KalturaDistributionProfile[],
+  flavors: Flavor[];
+  thumbnails: KalturaThumbAsset[];
 }
 
 @Injectable()
 export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
+  private _distributedProfiles = new BehaviorSubject<{ items: KalturaEntryDistribution[] }>({ items: [] });
+  private _undistributedProfiles = new BehaviorSubject<{ items: KalturaDistributionProfile[] }>({ items: [] });
   private _flavors = new BehaviorSubject<{ items: Flavor[] }>({ items: [] });
   private _thumbnails = new BehaviorSubject<{ items: KalturaThumbAsset[] }>({ items: [] });
+
+  public flavors$ = this._flavors.asObservable();
+  public thumbnails$ = this._thumbnails.asObservable();
+  public distributionProfiles$ = {
+    distributed: this._distributedProfiles.asObservable(),
+    undistributed: this._undistributedProfiles.asObservable()
+  };
 
   constructor(private _appLocalization: AppLocalization,
               private _kalturaClient: KalturaClient) {
@@ -54,18 +67,25 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     this._thumbnails.next({ items: [] });
   }
 
-  protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean, error?: Error }> | void {
+  protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
 
     return this._loadDistributionData()
       .do((response: DistributionWidgetData) => {
-        console.warn(response);
+        console.warn(response.distributedProfiles);
+        console.warn(response.undistributedProfiles);
+        this._flavors.next({ items: response.flavors });
+        this._thumbnails.next({ items: response.thumbnails });
+        this._distributedProfiles.next({ items: response.distributedProfiles });
+        this._undistributedProfiles.next({ items: response.undistributedProfiles });
+
         super._hideLoader();
       })
+      .map(() => ({ failed: false }))
       .catch(error => {
           super._hideLoader();
           super._showActivationError();
-          return Observable.throw(error);
+          return Observable.of({ failed: true, error });
         }
       );
   }
@@ -212,12 +232,30 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       ))
       .cancelOnDestroy(this, this.widgetReset$)
       .map(([partnerDistribution, entryDistribution, entryFlavors, entryThumbnails]) => {
-        // TODO [kmcng] what if some of responses has error?
+        // TODO [kmcng] what if some of responses have error?
+        const flavors = this._mapEntryFlavorsResponse(entryFlavors.result);
+        const thumbnails = this._mapThumbnailsResponse(entryThumbnails.result);
+        const undistributedProfiles = this._mapPartnerDistributionResponse(partnerDistribution.result);
+        const entryProfiles = this._mapEntryDistributionResponse(entryDistribution.result);
+        const distributedProfiles = [];
+
+        entryProfiles.forEach((profile) => {
+          const relevantPartnerProfile = undistributedProfiles.find(({ id }) => id === profile.distributionProfileId);
+          if (relevantPartnerProfile) {
+            const distributedProfile = <ExtendedKalturaEntryDistribution>Object.assign(
+              KalturaTypesFactory.createObject(profile),
+              profile,
+              { name: relevantPartnerProfile.name }
+            );
+            distributedProfiles.push(distributedProfile);
+          }
+        });
+
         return {
-          partnerDistribution: this._mapPartnerDistributionResponse(partnerDistribution.result),
-          entryDistribution: this._mapEntryDistributionResponse(entryDistribution.result),
-          entryFlavors: this._mapEntryFlavorsResponse(entryFlavors.result),
-          entryThumbnails: this._mapThumbnailsResponse(entryThumbnails.result)
+          flavors,
+          thumbnails,
+          distributedProfiles,
+          undistributedProfiles
         };
       });
   }
