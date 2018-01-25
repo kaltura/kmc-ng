@@ -1185,7 +1185,25 @@
           "tooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier"
         },
         "distribution": {
-          "export": "Export"
+          "export": "Export",
+          "upToDate": "Up To Date",
+          "update": "Update",
+          "lastUpdate": "Last Update {{0}}",
+          "moreDetails": "More Details",
+          "status": {
+            "readyForDistribution": "Ready for Distribution",
+            "scheduledForDistribution": "Scheduled for Distribution",
+            "queued": "Approved for Distribution",
+            "ready": "Distributed",
+            "readyUpdateRequired": "Distributed, Update Required",
+            "deleted": "Deleted",
+            "submitting": "Distributing",
+            "updating": "Updating",
+            "deleting": "Removing",
+            "errorSubmitting": "Distribution Failed",
+            "errorDeleting": "Removal Failed",
+            "removed": "Removed"
+          }
         },
         "errors": {
           "reload": "Reload",

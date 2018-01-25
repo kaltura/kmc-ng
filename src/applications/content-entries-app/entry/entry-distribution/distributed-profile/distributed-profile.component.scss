@@ -1,0 +1,95 @@
+@import 'app-theme/_variables.scss';
+
+.kDistributedProfile {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid $kGrayscale4;
+
+  .kDistributedProfileIcon {
+    height: 52px;
+    font-size: 24px;
+    color: $kGrayscale2;
+    margin-left: 28px;
+  }
+
+  .kDistributedProfileContent {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 52px;
+    margin-left: 16px;
+
+    .kTitle {
+      font-size: 15px;
+      font-weight: bold;
+      line-height: 18px;
+    }
+
+    .kMetadata {
+      color: $kGrayscale1;
+
+      .kDelimiter {
+        margin: 0 10px;
+
+        &:after {
+          content: '|';
+          font-size: 12px;
+          color: $kGrayscale4;
+          top: -2px;
+          position: relative;
+        }
+      }
+      .kStatus {
+        .kStatusIcon {
+          font-size: 16px;
+          position: relative;
+          top: 1px;
+          margin-right: 5px;
+        }
+
+        .kIconhelp_full { // TODO [kmcng] replace with relevant icon
+          color: $kOrange;
+        }
+
+        .kIconcomplete {
+          color: $kSuccess;
+        }
+
+        .kIconsync {
+          color: $kSecondary;
+        }
+
+        .kIconerror {
+          color: $kDandger;
+        }
+      }
+    }
+  }
+
+  .kControls {
+    display: flex;
+    margin-right: 28px;
+
+    .kDeleteBtn {
+      height: 34px;
+      width: 42px;
+      font-size: 24px;
+      margin-right: 16px;
+    }
+
+    .kUpdateBtn {
+      height: 34px;
+      width: 100px;
+    }
+  }
+}
+
+:host /deep/ .kDistributedProfile {
+  .kDeleteBtn {
+    .kIcontrash {
+      margin-left: -.5em;
+    }
+  }
+}

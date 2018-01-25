@@ -1,8 +1,13 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
-	<div class="kDistribution">
+  <div class="kDistribution">
     <div class="kDistributionHeader">{{'applications.content.entryDetails.distribution.export' | translate}}</div>
     <div class="kDistributionList">
-
+      <kEntryDistributedProfile
+        *ngFor="let profile of (_widgetService.distributionProfiles$.distributed | async).items"
+        [profile]="profile"></kEntryDistributedProfile>
+      <kEntryUndistributedProfile
+        *ngFor="let profile of (_widgetService.distributionProfiles$.undistributed | async).items"
+        [profile]="profile"></kEntryUndistributedProfile>
     </div>
   </div>
 </k-area-blocker>
