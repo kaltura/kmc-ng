@@ -1184,6 +1184,9 @@
           "co-publishers": "Co-Publishers",
           "tooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier"
         },
+        "distribution": {
+          "export": "Export"
+        },
         "errors": {
           "reload": "Reload",
           "dismiss": "Dismiss",

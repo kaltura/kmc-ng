@@ -1,5 +1,19 @@
 @import 'app-theme/_variables.scss';
 
 .kDistribution {
+  width: 100%;
+
+  .kDistributionHeader {
+    border-bottom: 1px solid $kGrayscale4;
+    padding: 26px 28px;
+    font-size: 20px;
+    color: $kGrayscale1;
+    font-weight: bold;
+    line-height: 24px;
+  }
+
+  .kDistributionList {
+
+  }
 
 }
