@@ -1190,6 +1190,7 @@
           "update": "Update",
           "lastUpdate": "Last Update {{0}}",
           "moreDetails": "More Details",
+          "modified": "Modified",
           "status": {
             "readyForDistribution": "Ready for Distribution",
             "scheduledForDistribution": "Scheduled for Distribution",

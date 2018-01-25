@@ -30,6 +30,21 @@
     .kMetadata {
       color: $kGrayscale1;
 
+      .kModified {
+        border-radius: 9px;
+        color: #ffffff;
+        background-color: $kOrange;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 1px 8px;
+        position: relative;
+        bottom: 2px;
+      }
+
+      .kMoreDetails, .kLastUpdate {
+        white-space: nowrap;
+      }
+
       .kDelimiter {
         margin: 0 10px;
 
