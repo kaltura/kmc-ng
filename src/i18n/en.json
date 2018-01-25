@@ -1654,7 +1654,9 @@
             "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
             "errors": {
               "privacyContextLabelRequired": "Please enter Privacy Context Label",
-              "privacyContextLabelRegex": "Privacy Context labels must include at least 4 characters"
+              "privacyContextLabelExists": "Category is already set with a Privacy Context Label.",
+              "privacyContextLabelTooShort": "Privacy Context labels must include at least 4 characters",
+              "privacyContextLabelRegex": "Privacy Context labels must include only alphanumeric characters"
             }
           },
           "deleteEntitlement": {

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Observable} from 'rxjs/Observable';
@@ -9,6 +9,7 @@ import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyTyp
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
 import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
+import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
 
 export interface EntitlementSectionData {
   categories: KalturaCategory[];
@@ -16,7 +17,7 @@ export interface EntitlementSectionData {
 }
 
 @Injectable()
-export class EntitlementService {
+export class EntitlementService implements OnDestroy{
 
   constructor(private _kalturaServerClient: KalturaClient) {
   }
@@ -32,7 +33,7 @@ export class EntitlementService {
       })
     );
 
-    return this._kalturaServerClient.multiRequest(request).map(
+    return this._kalturaServerClient.multiRequest(request).cancelOnDestroy(this).map(
       response => {
         if (response.hasErrors()) {
           throw new Error('error occurred in action \'getEntitlementsSectionData\'');
@@ -53,12 +54,20 @@ export class EntitlementService {
     const category = new KalturaCategory();
     category.privacyContext = null;
 
-    if (privacyContextData) {
+    if (privacyContextData !== null && typeof privacyContextData !== "undefined") {
       const context = (privacyContextData && privacyContextData.privacyContext.split(',')) || [];
       const contexts = (privacyContextData && privacyContextData.privacyContexts.split(',')) || [];
 
       // Subtract privacyContext from privacyContexts and if no contexts left so set the following properties
-      if (contexts.length && contexts.filter(c => (context.indexOf(c) < 0)).length) {
+      context.forEach( ctx => {
+        for (let i = contexts.length - 1; i >= 0; i--) {
+          if(contexts[i] === ctx) {
+            contexts.splice(i, 1);
+          }
+        }
+      });
+
+      if (contexts.length) {
         category.privacy = KalturaPrivacyType.all;
         category.appearInList = KalturaAppearInListType.partnerOnly;
         category.contributionPolicy = KalturaContributionPolicyType.all;
@@ -87,4 +96,12 @@ export class EntitlementService {
     }))
       .map(_ => (undefined));
   }
+
+  public getCategoryById(id: number): Observable<KalturaCategory>{
+    return this._kalturaServerClient.request(new CategoryGetAction({id}));
+  }
+
+  ngOnDestroy() {
+  }
+
 }

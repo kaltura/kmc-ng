@@ -33,6 +33,13 @@
             {{'applications.settings.integrationSettings.entitlement.addEntitlement.errors.requiredPrivacyContextLabel'
             | translate}}
           </div>
+          <div *ngIf="addEntitlementForm.controls['privacyContextLabel'].touched &&
+                        addEntitlementForm.controls['privacyContextLabel'].hasError('privacyContextLabelPattern')"
+               class="error">
+            {{addEntitlementForm.controls['privacyContextLabel'].hasError('privacyContextTooShort') ?
+            ('applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelTooShort' | translate) :
+            'applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelRegex' | translate }}
+          </div>
         </div>
       </form>
     </div>

@@ -5,6 +5,9 @@
   padding-top: 32px;
   height: $minTableHeight;
   box-sizing: border-box;
+  .kLeftColumn{
+    margin-right: 30px;
+  }
   .kColumn {
     flex: 1 1 auto;
     display: flex;

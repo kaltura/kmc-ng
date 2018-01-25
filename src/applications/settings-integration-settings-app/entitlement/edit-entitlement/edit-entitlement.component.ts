@@ -12,8 +12,8 @@ function privacyContextLabelValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
     if (control.value) {
       // validate that value contains only characters with commas and at least 4 characters
-      if (!(/^([A-Za-z0-9]{4,}|[A-Za-z0-9]{4,},(?=[A-Za-z0-9]{4,}))+$/.test(control.value)) || !(control.value.length >= 4)) {
-        return {'privacyContextLabelPattern': true};
+      if (!(/^([A-Za-z0-9]{4,}|[A-Za-z0-9]{4,},(?=[A-Za-z0-9]{4,}))+$/.test(control.value))) {
+        return {'privacyContextLabelPattern': true, 'privacyContextTooShort': control.value.length < 4};
       }
     }
     return null;

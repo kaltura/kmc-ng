@@ -25,8 +25,9 @@
             <div *ngIf="editEntitlementForm.controls['privacyContextLabel'].touched &&
                         editEntitlementForm.controls['privacyContextLabel'].hasError('privacyContextLabelPattern')"
                  class="error">
-              {{'applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelRegex'
-              | translate}}
+              {{editEntitlementForm.controls['privacyContextLabel'].hasError('privacyContextTooShort') ?
+                ('applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelTooShort' | translate) :
+                'applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelRegex' | translate }}
             </div>
           </div>
         </div>
