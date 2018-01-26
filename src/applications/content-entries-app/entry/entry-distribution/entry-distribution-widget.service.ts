@@ -248,6 +248,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
               { name: relevantPartnerProfile.name }
             );
             distributedProfiles.push(distributedProfile);
+            undistributedProfiles.splice(undistributedProfiles.indexOf(relevantPartnerProfile), 1);
           }
         });
 

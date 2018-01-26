@@ -1,16 +1,15 @@
 @import 'app-theme/_variables.scss';
 
 .kDistributedProfile {
-  height: 110px;
+  min-height: 52px;
   display: flex;
-  align-items: center;
   border-bottom: 1px solid $kGrayscale4;
+  padding: 30px 28px 28px 28px;
 
   .kDistributedProfileIcon {
     height: 52px;
     font-size: 24px;
-    color: $kGrayscale2;
-    margin-left: 28px;
+    color: $kGrayscale3;
   }
 
   .kDistributedProfileContent {
@@ -18,13 +17,27 @@
     flex-grow: 1;
     flex-direction: column;
     justify-content: space-between;
-    height: 52px;
+    min-height: 52px;
     margin-left: 16px;
 
     .kTitle {
-      font-size: 15px;
-      font-weight: bold;
-      line-height: 18px;
+      margin-bottom: 16px;
+      cursor: pointer;
+
+      .kTitleLabel {
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 18px;
+      }
+
+      .kTitleIcon {
+        color: $kGrayscale3;
+        margin-left: 5px;
+        font-size: 24px;
+        position: relative;
+        top: 4px;
+        line-height: 12px;
+      }
     }
 
     .kMetadata {
@@ -56,6 +69,15 @@
           position: relative;
         }
       }
+
+      .kStatusUpdateFailed {
+        font-size: 16px;
+        position: relative;
+        top: 1px;
+        margin-right: 5px;
+        color: $kDandger;
+      }
+
       .kStatus {
         .kStatusIcon {
           font-size: 16px;
@@ -81,11 +103,17 @@
         }
       }
     }
+
+    .kValidationErrors {
+      margin-top: 16px;
+      color: $kDandger;
+    }
   }
 
   .kControls {
     display: flex;
-    margin-right: 28px;
+    position: relative;
+    top: -6px;
 
     .kDeleteBtn {
       height: 34px;

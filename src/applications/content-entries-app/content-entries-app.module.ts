@@ -16,7 +16,7 @@ import {
   InputTextareaModule,
   InputTextModule,
   MenuModule,
-  MultiSelectModule,
+  MultiSelectModule, OverlayPanelModule,
   PaginatorModule,
   RadioButtonModule,
   SharedModule,
@@ -85,7 +85,8 @@ import { CategoriesModule } from 'app-shared/content-shared/categories/categorie
     TreeModule,
     DetailsBarModule,
       EntriesModule,
-    StickyModule
+    StickyModule,
+    OverlayPanelModule
   ],
   declarations: [
     ContentEntriesComponent,

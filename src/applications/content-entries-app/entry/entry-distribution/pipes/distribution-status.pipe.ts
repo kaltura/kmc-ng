@@ -16,11 +16,15 @@ export class DistributionStatusPipe implements PipeTransform {
       label: ''
     };
 
+    if (!profile) {
+      return '';
+    }
+
     switch (profile.status) {
       case KalturaEntryDistributionStatus.pending:
         if (!profile.validationErrors || profile.validationErrors.length === 0) {
           result.label = this._appLocalization.get('applications.content.entryDetails.distribution.status.readyForDistribution');
-        } else  if (profile.dirtyStatus === KalturaEntryDistributionFlag.submitRequired) {
+        } else if (profile.dirtyStatus === KalturaEntryDistributionFlag.submitRequired) {
           result.label = this._appLocalization.get('applications.content.entryDetails.distribution.status.scheduledForDistribution');
         }
         result.icon = 'kIconhelp_full'; // TODO [kmcng] replace with relevant icon

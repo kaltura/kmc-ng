@@ -1190,7 +1190,9 @@
           "update": "Update",
           "lastUpdate": "Last Update {{0}}",
           "moreDetails": "More Details",
+          "moreInfo": "More Info",
           "modified": "Modified",
+          "retry": "Retry",
           "status": {
             "readyForDistribution": "Ready for Distribution",
             "scheduledForDistribution": "Scheduled for Distribution",
@@ -1204,7 +1206,32 @@
             "errorSubmitting": "Distribution Failed",
             "errorDeleting": "Removal Failed",
             "removed": "Removed",
-            "notDistributed": "Not distributed"
+            "notDistributed": "Not distributed",
+            "updateFailed": "Update Failed",
+            "exportFailed": "Export Failed"
+          },
+          "errors": {
+            "metadataError": "Metadata Error.",
+            "missingMetadata": "Missing Metadata.",
+            "missingFlavor": "Missing Flavor.",
+            "missingThumbnail": "Missing Thumbnail.",
+            "autoDistributionMetadataMissing": "Auto-distribution Metadata is Missing."
+          },
+          "errorsInfo": {
+            "goToMetadataTab": "Go to Metadata Tab",
+            "goToThumbnailsTab": "Go to Thumbnails Tab",
+            "goToFlavorsTab": "Go to Flavors Tab",
+            "metadataError": "The selected entry's metadata doesn't conform with the required specifications:\n{{0}}In order to finalize this distribution, you must fix this error in the relevant tabs:\n",
+            "missingMetadata": "The selected entry is missing content for the following metadata fields:\n{{0}}In order to finalize this distribution, you must go to the relevant tabs and add metadata for each of the fields listed above:\n",
+            "missingFlavor": "The selected entry is missing the following transcoding flavors:\n{{0}}In order to finalize this distribution, you must go to the Flavors tab and select convert for each of the flavors listed above:\n",
+            "missingThumbnail": "The selected entry is missing the following thumbnail dimensions:\n{{0}}In order to finalize this distribution, you must go to the Thumbnails tab and create thumbnails for each of the dimensions listed above:\n",
+            "autoDistributionMetadataMissing": "This entry was set with auto-distribution when certain metadata is filled. the following metadata is currently missing:\n{{0}}In order to finalize this distribution you must add this content in the relevant tab:\n"
+          },
+          "errorTypes": {
+            "stringEmpty": "- {{0}} is a required field\n",
+            "stringTooLong": "- {{0}} field exceeds the maximum length of {{1}} characters\n",
+            "stringTooShort": "- {{0}} field must be at least {{1}} characters long\n",
+            "invalidFormat": "- {{0}} field must be in a {{1}} format\n"
           }
         },
         "errors": {

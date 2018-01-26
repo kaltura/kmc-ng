@@ -1,32 +1,44 @@
 <div class="kDistributedProfile">
   <div class="kDistributedProfileIcon">
-    <i class="kIconfeed"></i>
+    <!--TODO [kmcng] replace with icon that depends on profile.providerType, waiting for icons-->
+    <i class="kIconhelp_full"></i>
   </div>
 
   <div class="kDistributedProfileContent">
-    <span class="kTitle">{{profile?.name}}</span>
+    <span class="kTitle">
+      <span class="kTitleLabel">{{_profile?.name}}</span>
+      <i class="kIconexternal_link kTitleIcon"></i>
+    </span>
     <div class="kMetadata">
-      <span class="kStatus">
-        <i class="kStatusIcon" [ngClass]="profile | kEntriesDistributionStatus:'icon'"></i>
-        {{profile | kEntriesDistributionStatus:'label'}}
-      </span>
-      <span *ngIf="false">
+      <span class="kStatus" *ngIf="!_profile?.validationErrors?.length">
+        <i class="kStatusIcon" [ngClass]="_profile | kEntriesDistributionStatus:'icon'"></i>
+        {{_profile | kEntriesDistributionStatus:'label'}}
         <span class="kDelimiter"></span>
-        <span class="kModified">{{'applications.content.entryDetails.distribution.modified' | translate}}</span>
       </span>
-      <span class="kDelimiter"></span>
+      <span *ngIf="_profile?.validationErrors?.length">
+        <i class="kStatusUpdateFailed kIconerror"></i>
+        {{'applications.content.entryDetails.distribution.status.exportFailed' | translate}}
+        <span class="kDelimiter"></span>
+      </span>
+      <span *ngIf="_isModified">
+        <span class="kModified">{{'applications.content.entryDetails.distribution.modified' | translate}}</span>
+        <span class="kDelimiter"></span>
+      </span>
       <span class="kLastUpdate">
-        {{'applications.content.entryDetails.distribution.lastUpdate' | translate:[(profile?.updatedAt | kDate:'MM/DD/YYYY')]}}
+        {{'applications.content.entryDetails.distribution.lastUpdate' | translate:[(_profile?.updatedAt | kDate:'MM/DD/YYYY')]}}
       </span>
       <span class="kDelimiter"></span>
       <a class="kMoreDetails">{{'applications.content.entryDetails.distribution.moreDetails' | translate}}</a>
     </div>
+    <div class="kValidationErrors" *ngIf="_profile?.validationErrors?.length">
+      <kEntryDistributedProfileErrors [errors]="_profile?.validationErrors"></kEntryDistributedProfileErrors>
+    </div>
   </div>
 
   <div class="kControls">
-    <button pButton icon="kIcontrash" class="kButtonDanger kDeleteBtn"></button>
-    <button pButton class="kButtonDefault kUpdateBtn"
-            [disabled]="true"
-            [label]="'applications.content.entryDetails.distribution.upToDate' | translate"></button>
+    <button *ngIf="!_deleteButtonHidden" pButton icon="kIcontrash" class="kButtonDanger kDeleteBtn"></button>
+    <button *ngIf="!_actionButtonHidden" pButton class="kButtonDefault kUpdateBtn"
+            [disabled]="!_isModified && _actionButtonDisabled"
+            [label]="_actionButtonLabel"></button>
   </div>
 </div>
