@@ -1,5 +1,73 @@
 @import 'app-theme/_variables.scss';
 
 .kUndistributedProfile {
-  height: 110px;
+  min-height: 52px;
+  display: flex;
+  border-bottom: 1px solid $kGrayscale4;
+  padding: 30px 28px 28px 28px;
+
+  .kUndistributedProfileIcon {
+    height: 52px;
+    font-size: 24px;
+    color: $kGrayscale3;
+  }
+
+  .kUndistributedProfileContent {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 52px;
+    margin-left: 16px;
+
+    .kTitle {
+      margin-bottom: 16px;
+      cursor: pointer;
+
+      .kTitleLabel {
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 18px;
+      }
+
+      .kTitleIcon {
+        color: $kGrayscale3;
+        margin-left: 5px;
+        font-size: 24px;
+        position: relative;
+        top: 4px;
+        line-height: 12px;
+      }
+    }
+
+    .kMetadata {
+      color: $kGrayscale1;
+
+      .kStatus {
+        .kUndistributedStatusIcon {
+          font-size: 16px;
+          position: relative;
+          top: 3px;
+          margin-right: 5px;
+          border: 2px solid;
+          border-radius: 50%;
+          height: 12px;
+          width: 12px;
+          display: inline-block;
+          color: $kGrayscale3;
+        }
+      }
+    }
+  }
+
+  .kControls {
+    display: flex;
+    position: relative;
+    top: -6px;
+
+    .kExportBtn {
+      height: 34px;
+      width: 100px;
+    }
+  }
 }

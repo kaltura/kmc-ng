@@ -1,0 +1,24 @@
+<div class="kUndistributedProfile">
+  <div class="kUndistributedProfileIcon">
+    <!--TODO [kmcng] replace with icon that depends on profile.providerType, waiting for icons-->
+    <i class="kIconhelp_full"></i>
+  </div>
+
+  <div class="kUndistributedProfileContent">
+    <span class="kTitle">
+      <span class="kTitleLabel">{{profile?.name}}</span>
+      <i class="kIconexternal_link kTitleIcon"></i>
+    </span>
+    <div class="kMetadata">
+      <span class="kStatus">
+        <i class="kUndistributedStatusIcon"></i>
+        {{'applications.content.entryDetails.distribution.status.notDistributed' | translate}}
+      </span>
+    </div>
+  </div>
+
+  <div class="kControls">
+    <button pButton class="kButtonDefault kExportBtn"
+            [label]="'applications.content.entryDetails.distribution.export' | translate"></button>
+  </div>
+</div>

@@ -1203,7 +1203,8 @@
             "deleting": "Removing",
             "errorSubmitting": "Distribution Failed",
             "errorDeleting": "Removal Failed",
-            "removed": "Removed"
+            "removed": "Removed",
+            "notDistributed": "Not distributed"
           }
         },
         "errors": {
