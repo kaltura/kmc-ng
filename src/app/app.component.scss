@@ -2,3 +2,7 @@
   position: fixed;
   z-index: 1200;
 }
+
+:host /deep/ .ui-confirmdialog{
+  top: 200px !important;
+}

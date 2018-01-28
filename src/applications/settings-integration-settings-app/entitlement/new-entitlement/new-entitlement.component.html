@@ -1,0 +1,54 @@
+<k-area-blocker kFillHeight [showLoader]="false" [message]="_blockerMessage" style="height: 100%">
+
+  <div class="kTreeContainer kOverrideFAIcons">
+
+    <div class="kHeader">
+    <span class="kTitle">
+      <span>{{('applications.settings.integrationSettings.entitlement.addEntitlement.title') | translate}}</span>
+    </span>
+    </div>
+    <div class="kContainer">
+      <div class="kRow">
+        <div class="kExplanation">
+          {{('applications.settings.integrationSettings.entitlement.addEntitlement.explanation') | translate}}
+        </div>
+      </div>
+      <div class="kRow">
+        <kCategorySelector (onCategorySelected)="_onCategorySelected($event)"
+                           [enableNoParentSelection]="false">
+        </kCategorySelector>
+      </div>
+      <form class="kRow" [formGroup]="addEntitlementForm" novalidate>
+        <span class="kLabel">{{'applications.settings.integrationSettings.entitlement.addEntitlement.addPrivacyContextLabel' | translate}}</span>
+        <div class="kRequired" [ngClass]="{'kHasError':!addEntitlementForm.get('privacyContextLabel').valid &&
+                   addEntitlementForm.get('privacyContextLabel').touched}">*
+        </div>
+        <div>
+          <input class="kControl" formControlName="privacyContextLabel" pInputText
+                 [ngClass]="{'kHasError':!addEntitlementForm.get('privacyContextLabel').valid &&
+                   addEntitlementForm.get('privacyContextLabel').touched}">
+          <div *ngIf="addEntitlementForm.get('privacyContextLabel').touched &&
+                 addEntitlementForm.get('privacyContextLabel').hasError('required')"
+               class="error">
+            {{'applications.settings.integrationSettings.entitlement.addEntitlement.errors.requiredPrivacyContextLabel'
+            | translate}}
+          </div>
+          <div *ngIf="addEntitlementForm.controls['privacyContextLabel'].touched &&
+                        addEntitlementForm.controls['privacyContextLabel'].hasError('privacyContextLabelPattern')"
+               class="error">
+            {{addEntitlementForm.controls['privacyContextLabel'].hasError('privacyContextTooShort') ?
+            ('applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelTooShort' | translate) :
+            'applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelRegex' | translate }}
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton
+              label="{{'applications.content.addNewCategory.apply' | translate}}"
+              (click)="_apply()"
+              [disabled]="!addEntitlementForm.get('privacyContextLabel').valid || !this._selectedCategory"></button>
+      <a class="kLink" (click)="_cancel()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
+    </div>
+  </div>
+</k-area-blocker>

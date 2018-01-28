@@ -236,7 +236,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
-          message: this._appLocalization.get('applications.content.bulkActions.confirm', { '0': this.selectedCategories.length }),
+          message: this._appLocalization.get('applications.content.bulkActions.confirmCategories', { '0': this.selectedCategories.length }),
           accept: () => {
             execute();
           }

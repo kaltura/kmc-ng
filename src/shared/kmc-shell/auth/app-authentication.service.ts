@@ -331,4 +331,15 @@ export class AppAuthentication {
     this._pageExitVerificationService.removeAll();
     this.reload();
   }
+
+  // Hack to update user name in the header
+  public _updateNameManually(firstName: string, lastName: string, fullName: string): void {
+    if (firstName && lastName) {
+      this._appUser.firstName = firstName;
+      this._appUser.lastName = lastName;
+      this._appUser.fullName = fullName;
+    } else {
+      throw Error('Cannot update the current user. The first, the last name or the fullName is not provided');
+    }
+  }
 }
