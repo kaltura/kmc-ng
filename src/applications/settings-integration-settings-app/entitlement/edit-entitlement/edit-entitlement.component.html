@@ -1,0 +1,42 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <form [formGroup]="editEntitlementForm" novalidate class="kAccountUpgradeWrapper kContent">
+    <div class="kContent kOverrideFAIcons">
+      <span
+        class="kTitle">{{'applications.settings.integrationSettings.entitlement.editEntitlement.title' | translate}}</span>
+      <div class="kContainer">
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.integrationSettings.entitlement.editEntitlement.categoryName' | translate}}</span>
+          <span class="kControl">
+          {{entitlement.name}}
+        </span>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.integrationSettings.entitlement.editEntitlement.privacyContextLabel' | translate}}</span>
+          <div>
+            <input class="kControl" formControlName="privacyContextLabel" pInputText
+                   [ngClass]="{'kHasError':!editEntitlementForm.controls['privacyContextLabel'].valid &&
+                   editEntitlementForm.controls['privacyContextLabel'].touched}">
+            <div *ngIf="editEntitlementForm.controls['privacyContextLabel'].touched &&
+                 editEntitlementForm.controls['privacyContextLabel'].hasError('required')"
+                 class="error">
+              {{'applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelRequired'
+              | translate}}
+            </div>
+            <div *ngIf="editEntitlementForm.controls['privacyContextLabel'].touched &&
+                        editEntitlementForm.controls['privacyContextLabel'].hasError('privacyContextLabelPattern')"
+                 class="error">
+              {{editEntitlementForm.controls['privacyContextLabel'].hasError('privacyContextTooShort') ?
+                ('applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelTooShort' | translate) :
+                'applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelRegex' | translate }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="kFooter">
+        <button type="button" class="kButtonDefault" [disabled]="false" (click)="ownerPopup?.close()" pButton label="{{'app.common.cancel' | translate}}"></button>
+        <button type="button" class="kButtonBranded" pButton label="{{'app.common.apply' | translate}}" (click)="_apply()"  [disabled]="!editEntitlementForm.valid || editEntitlementForm.pristine"></button>
+      </div>
+    </div>
+  </form>
+</k-area-blocker>

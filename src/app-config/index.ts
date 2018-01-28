@@ -102,6 +102,11 @@ export const environment = {
                         "enabled": true
                     },
                     {
+                      "routePath": "settings/integrationSettings",
+                      "titleToken": "Integration Settings",
+                      "enabled": true
+                    },
+                    {
                         "routePath": "settings/accountUpgrade",
                         "titleToken": "Account Upgrade",
                         "enabled": true

@@ -24,7 +24,8 @@ import { CategoriesFilterComponent } from './categories-filter/categories-filter
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 import { CategoriesTreePropagationDirective } from './categories-tree/categories-tree-propagation.directive';
-import { CategoriesSearchService } from 'app-shared/content-shared/categories/categories-search.service';
+import { CategoriesSearchService } from './categories-search.service';
+import { CategorySelectorComponent } from './category-selector/category-selector.component';
 import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/category-tooltip.pipe';
 
 @NgModule({
@@ -54,6 +55,7 @@ import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/catego
     FiltersModule
   ],
   declarations: [
+      CategorySelectorComponent,
     CategoriesTreeComponent,
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
@@ -61,6 +63,7 @@ import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/catego
     CategoriesTreePropagationDirective
   ],
   exports: [
+      CategorySelectorComponent,
     CategoriesTreeComponent,
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,

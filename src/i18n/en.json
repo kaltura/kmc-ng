@@ -14,6 +14,7 @@
       "Settings": "Settings",
       "Users": "Users",
       "Account Settings": "Account Settings",
+      "Integration Settings": "Integration Settings",
       "Account Upgrade": "Account Upgrade",
       "My User Settings": "My User Settings",
       "Administration": "Administration",
@@ -493,19 +494,22 @@
       },
       "addNewCategory": {
         "newCategory": "New Category",
+        "newSubcategory": "New Sub-Category",
         "selectCategoryParent": "Select the parent category under which the new category will appear",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "apply": "Apply",
         "cancel": "Cancel",
-        "noParent": "No Parent",
+        "noParent":"No Parent",
+        "noSelection": "No Selection",
+
         "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}"
-,
+        "selectedParentCategory":"Parent Category Id: {{value}}",
         "name": "Name",
         "categoryMovedSuccessfully": "Category moved successfully",
         "errors": {
-          "requiredName": "You must enter name"
+          "requiredName": "You must enter name",
+          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
         }
       },
       "moveCategory":{
@@ -1450,24 +1454,7 @@
           "fieldRequired": "This field is required"
         }
       },
-      "addNewCategory": {
-        "newCategory": "New Category",
-        "newSubcategory": "New Sub-Category",
-        "selectCategoryParent": "Select the parent category under which the new category will appear",
-        "cancelEdit": "Cancel Edit",
-        "discard": "Discard all changes?",
-        "apply": "Apply",
-        "cancel": "Cancel",
-        "noParent":"No Parent",
-        "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}",
-        "name": "Name",
-        "categoryMovedSuccessfully": "Category moved successfully",
-        "errors": {
-          "requiredName": "You must enter name",
-          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
-        }
-      },
+
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",
@@ -1629,6 +1616,71 @@
           "required": "This field is required.",
           "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
           "sendFailed": "An error occurred during account upgrade"
+        }
+      },
+      "integrationSettings": {
+        "accountInfo": {
+          "title": "Account Info",
+          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges. <a href=\"http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/entitlementsettings.htm\">Read More.</a>",
+          "readMore": "Read More.",
+          "partnerId": "Partner ID",
+          "subPartnerId": "Sub Partner ID",
+          "adminSecret": "Administrator Secret",
+          "userSecret": "User Secret",
+          "errors": {
+            "loadFailed": "An error occurred during account info loading"
+          },
+          "notifications": {
+            "title": "Notifications",
+            "message": "For notification setting please contact your PM"
+          }
+        },
+        "entitlement": {
+          "title": "Entitlement",
+          "helpTip": "",
+          "explanation": "To add entitlement settings for categories click ‘Add Entitlement’ select the root category integrated with your application and label it below.",
+          "apiDefault": "API default",
+          "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
+          "entitlementEnforcementEnabled": "Entitlement enforcement enabled",
+          "addEntitlement": {
+            "buttonText": "Add Entitlement",
+            "title": "Add Entitlement",
+            "explanation": "Select the root category integrated with your application and label it below.",
+            "addPrivacyContextLabel": "Add privacy context label",
+            "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+            "apply": "Apply",
+            "errors": {
+              "requiredPrivacyContextLabel": "You must enter privacy context label"
+            }
+          },
+          "editEntitlement": {
+            "title": "Edit Entitlement",
+            "categoryName": "Category Name",
+            "privacyContextLabel": "Privacy context label",
+            "confirmationTitle": "Confirm Edit",
+            "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+            "errors": {
+              "privacyContextLabelRequired": "Please enter Privacy Context Label",
+              "privacyContextLabelExists": "Category is already set with a Privacy Context Label.",
+              "privacyContextLabelTooShort": "Privacy Context labels must include at least 4 characters",
+              "privacyContextLabelRegex": "Privacy Context labels must include only alphanumeric characters"
+            }
+          },
+          "deleteEntitlement": {
+            "title": "Delete Entitlement",
+            "confirmation": "Entitlement settings will be removed from all sub-categories in an asynchronous process. This operation may take a few minutes. \n\nNote: Any previous privacy settings defined for the {{0}} category (including all sub-categories) will be lost.\n\nAre you sure you want to continue?"
+          },
+          "table": {
+            "applicationRootCategory": "Application Root Category",
+            "privacyContextLabel": "Privacy Context Label",
+            "actions": {
+              "edit": "Edit",
+              "delete": "Delete"
+            }
+          },
+          "errors": {
+            "loadError": "An error occurred while loading Entitlement."
+          }
         }
       },
       "myUserSettings": {
