@@ -1326,6 +1326,7 @@
           },
           "usersPermissions": {
             "title":"Manage End-user Permissions",
+            "titleView":"View End-user Permissions",
             "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",
             "close": "Close",
             "table": {
@@ -1345,7 +1346,7 @@
               "usersCount": "{{0}} Users",
               "selectedUsersCount": "{{0}} Selected",
               "cancel": "Cancel",
-              "remove": "Delete",
+              "remove": "Remove",
               "search": "Search",
               "refine": "Refine",
               "moreActions": "More Actions",
