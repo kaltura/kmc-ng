@@ -1249,7 +1249,7 @@
           "title": "Entitlements",
           "description": "Manage your entitlements settings and specific end-user permissions to content in your applications.",
           "privacyContentLabel": {
-            "label" : "Privacy Content Label"
+            "label" : "Privacy Context Label"
           },
           "manageUsersPermissionsEditMessage": {
             "title": "Error",
