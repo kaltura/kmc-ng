@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, Optional, Self } from '@angular/core';
 import { CategoriesStatusMonitorService } from './categories-status-monitor.service';
 
 @NgModule({
@@ -9,6 +9,9 @@ import { CategoriesStatusMonitorService } from './categories-status-monitor.serv
   ]
 })
 export class CategoriesStatusModule {
+    constructor(@Optional() @Self() private _categoriesStatusMonitorService: CategoriesStatusMonitorService){
+
+    }
     static forRoot(): ModuleWithProviders {
         return {
             ngModule: CategoriesStatusModule,

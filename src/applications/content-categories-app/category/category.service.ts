@@ -351,7 +351,13 @@ export class CategoryService implements OnDestroy {
 		}).monitor('category store: check if can leave section without saving');
 	}
 
-	public returnToCategories() {
+	public returnToCategories(force = false) {
+
+    	if (force)
+	    {
+		    this._categoryIsDirty = false;
+		    this._updatePageExitVerification();
+	    }
 		this._router.navigate(['content/categories']);
 	}
 }

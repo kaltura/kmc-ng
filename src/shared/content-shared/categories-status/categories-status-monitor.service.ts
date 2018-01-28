@@ -5,7 +5,7 @@ import { KalturaFeatureStatusType } from 'kaltura-ngx-client/api/types/KalturaFe
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { environment } from 'app-environment';
 import { CategoriesStatusRequestFactory } from './categories-status-request-factory';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { KalturaFeatureStatus } from 'kaltura-ngx-client/api/types/KalturaFeatureStatus';
 import { PollInterval } from '@kaltura-ng/kaltura-common';
 import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-ngx-client';
@@ -21,8 +21,9 @@ export class CategoriesStatusMonitorService implements OnDestroy {
     
     private _pollingState: null | 'running' = null;
     private _pollingInterval: PollInterval = <PollInterval>environment.categoriesShared.categoriesStatusSampleInterval;
+    private _currentStatus = { lock: null, update: null };
 
-    private _status = new BehaviorSubject<CategoriesStatus>({ lock: false, update: false });
+    private _status = new ReplaySubject<CategoriesStatus>(1);
     public readonly status$ = this._status.asObservable();
     private _logger: KalturaLogger;
 
@@ -75,11 +76,12 @@ export class CategoriesStatusMonitorService implements OnDestroy {
                 }
             });
         }
-        const currentStatus = this._status.getValue();
-        if (currentStatus.lock !== lockFlagFound || currentStatus.update !== updateFlagFound) {
+
+        if (this._currentStatus.lock !== lockFlagFound || this._currentStatus.update !== updateFlagFound) {
+            this._currentStatus =  { lock: lockFlagFound, update: updateFlagFound };
+            this._status.next({lock: lockFlagFound, update: updateFlagFound});
             this._logger.info(`got new categories status: locked: ${lockFlagFound}, update: ${updateFlagFound}`);
         }
-        this._status.next({lock: lockFlagFound, update: updateFlagFound});
     }
 
     // API to invoke immediate categories status update
