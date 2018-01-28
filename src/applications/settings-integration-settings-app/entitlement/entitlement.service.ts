@@ -59,15 +59,7 @@ export class EntitlementService implements OnDestroy{
       const contexts = (privacyContextData && privacyContextData.privacyContexts.split(',')) || [];
 
       // Subtract privacyContext from privacyContexts and if no contexts left so set the following properties
-      context.forEach( ctx => {
-        for (let i = contexts.length - 1; i >= 0; i--) {
-          if(contexts[i] === ctx) {
-            contexts.splice(i, 1);
-          }
-        }
-      });
-
-      if (contexts.length) {
+      if (contexts.length && contexts.filter(c => (context.indexOf(c) < 0)).length) {
         category.privacy = KalturaPrivacyType.all;
         category.appearInList = KalturaAppearInListType.partnerOnly;
         category.contributionPolicy = KalturaContributionPolicyType.all;
