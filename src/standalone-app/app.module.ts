@@ -12,7 +12,6 @@ import { PreviewAndEmbedModule } from '../applications/preview-and-embed/preview
 import {
   AppBootstrap,
   AuthModule,
-  BootstrapAdapterToken,
   BrowserService,
   KMCShellModule,
   NewEntryUploadModule
@@ -45,7 +44,6 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {AppMenuComponent} from './components/app-menu/app-menu.component';
 import {ErrorComponent} from './components/error/error.component';
 import {UserSettingsComponent} from './components/user-settings/user-settings.component';
-import {KalturaHttpConfigurationAdapter} from './services/kaltura-http-configuration-adapter.service';
 
 import {
   ButtonModule,
@@ -158,11 +156,6 @@ export function clientConfigurationFactory() {
           provide: KalturaLoggerName, useValue: 'analytics'
       },
     AppMenuService,
-    {
-      provide: BootstrapAdapterToken,
-      useClass: KalturaHttpConfigurationAdapter,
-      multi: true
-    },
     { provide: AppStorage, useExisting: BrowserService },
     KalturaClient,
     {
