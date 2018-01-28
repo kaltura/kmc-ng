@@ -73,70 +73,33 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
   }
 
   private _addEntitlment(categoryId: number, privacyContext: string): void {
-    // validate the selected category do not have privacy context
-    this._entitlementService.getCategoryById(categoryId)
-        .cancelOnDestroy(this)
-	    .tag('block-shell')
-        .subscribe(
-        (category: KalturaCategory)=>{
-          if (category.privacyContext && category.privacyContext.length){
-            this._blockerMessage = new AreaBlockerMessage(
-                {
-                  message: this._appLocalization.get('applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelExists'),
-                  buttons: [
-                    {
-                      label: this._appLocalization.get('app.common.ok'),
-                      action: () => {
-                        this._blockerMessage = null;
-                      }
-                    }
-                  ]
-                });
-          }else{
-            this._entitlementService
-	            .addEntitlement({
-                  id: categoryId,
-                  privacyContext,
-                })
-	            .cancelOnDestroy(this)
-	            .tag('block-shell')
-	            .subscribe(() => {
-                      this.onApply.emit();
-                      if (this.parentPopupWidget) {
-                        this.parentPopupWidget.close();
-                      }
-                    },
-                    error => {
-                      this._blockerMessage = new AreaBlockerMessage(
-                          {
-                            message: error.message,
-                            buttons: [
-                              {
-                                label: this._appLocalization.get('app.common.ok'),
-                                action: () => {
-                                  this._blockerMessage = null;
-                                }
-                              }
-                            ]
-                          });
-                    });
-          }
-        },
-        error => {
-          this._blockerMessage = new AreaBlockerMessage(
-              {
-                message: error.message,
-                buttons: [
-                  {
-                    label: this._appLocalization.get('app.common.ok'),
-                    action: () => {
-                      this._blockerMessage = null;
-                    }
+      this._entitlementService
+          .addEntitlement({
+              id: categoryId,
+              privacyContext,
+          })
+          .cancelOnDestroy(this)
+          .tag('block-shell')
+          .subscribe(() => {
+                  this.onApply.emit();
+                  if (this.parentPopupWidget) {
+                      this.parentPopupWidget.close();
                   }
-                ]
+              },
+              error => {
+                  this._blockerMessage = new AreaBlockerMessage(
+                      {
+                          message: error.message,
+                          buttons: [
+                              {
+                                  label: this._appLocalization.get('app.common.ok'),
+                                  action: () => {
+                                      this._blockerMessage = null;
+                                  }
+                              }
+                          ]
+                      });
               });
-        }
-    );
   }
 
   public _cancel(): void {
