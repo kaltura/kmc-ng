@@ -88,12 +88,12 @@ To create a standalone application, do the following:
 # make sure you are working with latest standalone code
 $ npm run standalone
 
-# re-fetch all dependencies. not mandatory but recommended
+# re-fetch all dependencies. this is a mandatory step
 $ rm -rf node_modules
 $ npm install
 
 # create a deployable version
-$ npm run build:prod
+$ npm run build -- --prod
 ```
 
 A distrubted standalone application will be created in the `dist/` folder.
