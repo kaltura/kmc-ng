@@ -14,6 +14,7 @@ import {
     RefineGroup
 } from '../categories-refine-filters.service';
 
+import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
   selector: 'kCategoriesList',
@@ -30,6 +31,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     public _linkedEntries: { entryId: string }[] = [];
     @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
     @ViewChild('addNewCategory') addNewCategory: PopupWidgetComponent;
+    public _categoriesLocked = false;
+    public _categoriesUpdating = false;
 
     @ViewChild('tags') private tags: StickyComponent;
 
@@ -55,10 +58,22 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _categoriesUtilsService: CategoriesUtilsService,
-                public _categoryCreationService: CategoryCreationService) {
+                public _categoryCreationService: CategoryCreationService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
     }
 
     ngOnInit() {
+        this._categoriesStatusMonitorService.status$
+		    .cancelOnDestroy(this)
+		    .subscribe((status: CategoriesStatus) => {
+                if (this._categoriesLocked && status.lock === false){
+                    // categories were locked and now open - reload categories to reflect changes
+                    this._reload();
+                }
+                this._categoriesLocked = status.lock;
+                this._categoriesUpdating = status.update;
+            });
+
         this._prepare();
     }
 
@@ -324,6 +339,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                                         severity: 'success',
                                         detail: this._appLocalization.get('applications.content.categories.deleted')
                                     });
+                                    this._categoriesStatusMonitorService.updateCategoriesStatus();
                                     this._categoriesService.reload();
                                 },
                                 error => {

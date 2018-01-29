@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
+import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categories-status/categories-status-monitor.service';
 
 import {
     EntriesFilters, EntriesStore,
@@ -38,6 +39,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineGroup[];
 
+    public _categoriesUpdating = false;
+
     public _query = {
         freetext: '',
         createdAfter: null,
@@ -50,13 +53,19 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         categoriesMode: null
     };
 
-    constructor(public _entriesStore: EntriesStore,
-                private _entriesRefineFilters: EntriesRefineFiltersService,
+    constructor(public _entriesStore: EntriesStore, private _entriesRefineFilters: EntriesRefineFiltersService,
                 private _appLocalization: AppLocalization,
-                private _browserService: BrowserService) {
+                private _browserService: BrowserService, private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+
     }
 
     ngOnInit() {
+        this._categoriesStatusMonitorService.status$
+		    .cancelOnDestroy(this)
+		    .subscribe((status: CategoriesStatus) => {
+                this._categoriesUpdating = status.update;
+            });
+
         this._prepare();
     }
 

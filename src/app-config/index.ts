@@ -221,6 +221,7 @@ export const environment = {
     },
     "categoriesShared": {
         "MAX_CATEGORIES": 10000,
+        "categoriesStatusSampleInterval": 30,
         "categoriesFilters": {
             "maxChildrenToShow": 500
         },
