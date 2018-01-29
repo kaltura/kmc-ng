@@ -1,4 +1,4 @@
-<div class="kEntriesTable" [class.noResults]="!_entries?.length">
+<div class="kEntriesTable" [class.noResults]="!_entries?.length" [class.kTagsVisible]="isTagsBarVisible">
     <p-dataTable #dataTable
                  dataKey="id"
                  scrollable="true"

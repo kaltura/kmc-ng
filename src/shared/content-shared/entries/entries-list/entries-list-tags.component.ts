@@ -28,7 +28,7 @@ const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 
 
 })
 export class EntriesListTagsComponent implements OnInit, OnDestroy {
-
+    @Output() onTagsBarVisible = new EventEmitter<boolean>();
     @Output() onTagsChange = new EventEmitter<void>();
     @Input() enforcedFilters: Partial<EntriesFilters>;
 
@@ -175,6 +175,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(({changes}) => {
                 this._updateComponentState(changes);
+
+                const isTagsVisible = !!(this._tags && this._tags.length);
+                this.onTagsBarVisible.emit(isTagsVisible);
             });
     }
 

@@ -38,6 +38,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     public _tableIsBusy = false;
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineGroup[];
+    public _isTagsBarVisible = false;
 
     public _categoriesUpdating = false;
 
