@@ -23,6 +23,7 @@ import {AppearInListType} from './components/bulk-change-category-listing/bulk-c
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import {CategoriesUtilsService} from "../../categories-utils.service";
+import { CategoriesStatusMonitorService } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -50,7 +51,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
               private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
               private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
               private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService,
-              private _categoriesUtilsService: CategoriesUtilsService) {
+              private _categoriesUtilsService: CategoriesUtilsService,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
   }
 
   ngOnInit() {
@@ -170,7 +172,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (result.confirmed) {
           setTimeout(() => {
-            this.executeService(this._bulkDeleteService, {}, true, false);
+            this.executeService(this._bulkDeleteService, {}, true, false, () => {this._categoriesStatusMonitorService.updateCategoriesStatus();});
             // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
           }, 0);
         }

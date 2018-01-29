@@ -20,6 +20,8 @@ import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
+import { CategoriesStatusMonitorService } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { CategoryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -77,7 +79,8 @@ export class CategoryService implements OnDestroy {
                 private _appLocalization: AppLocalization,
                 private _appEvents: AppEventsService,
                 private _pageExitVerificationService: PageExitVerificationService,
-                appEvents: AppEventsService) {
+                appEvents: AppEventsService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
         this._widgetsManager.categoryStore = this;
 
@@ -197,6 +200,15 @@ export class CategoryService implements OnDestroy {
 							if (userModifiedName) {
                                 this._appEvents.publish(new CategoriesGraphUpdatedEvent());
                             }
+
+
+							// if categories were deleted during the save operation (sub-categories window) - invoke immediate polling of categories status
+							const deletedCategories = request.requests.find((req, index) => {
+								return (req instanceof CategoryDeleteAction && !categorySavedResponse[index].error)
+							});
+							if (deletedCategories){
+								this._categoriesStatusMonitorService.updateCategoriesStatus();
+							}
 
 							if (categorySavedResponse.hasErrors()) {
 								this._state.next({ action: ActionTypes.CategorySavingFailed });
@@ -339,7 +351,13 @@ export class CategoryService implements OnDestroy {
 		}).monitor('category store: check if can leave section without saving');
 	}
 
-	public returnToCategories() {
+	public returnToCategories(force = false) {
+
+    	if (force)
+	    {
+		    this._categoryIsDirty = false;
+		    this._updatePageExitVerification();
+	    }
 		this._router.navigate(['content/categories']);
 	}
 }

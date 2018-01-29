@@ -6,6 +6,10 @@ import {CategoriesService} from '../categories.service';
 
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
+import {
+  CategoriesStatus,
+  CategoriesStatusMonitorService
+} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
   selector: 'kNewCategory',
@@ -21,17 +25,24 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedParentCategory: number = null;
   public newCategoryForm: FormGroup;
+  public _categoriesUpdating = false;
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
-              private _categoriesService: CategoriesService) {
+              private _categoriesService: CategoriesService,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+
     this.newCategoryForm = this._fb.group({
       name: ['', Validators.required]
     });
   }
 
   ngOnInit() {
-
+    this._categoriesStatusMonitorService.status$
+	    .cancelOnDestroy(this)
+	    .subscribe((status: CategoriesStatus) => {
+          this._categoriesUpdating = status.update;
+        });
   }
 
   ngOnDestroy() {
