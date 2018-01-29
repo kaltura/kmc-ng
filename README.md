@@ -67,8 +67,12 @@ Please read [docs/develop kmc-ng solution guide](./docs/develop-kmc-ng-solution.
 
 
 ### Run the application
-Run the following command
+To run a standalone application, do the following:
 ```
+# make sure you are working with latest standalone code
+$ npm run standalone
+
+# run the application
 $ npm start
 ```
 navigate to [http://localhost:4200](http://localhost:4200) in your browser.
@@ -79,9 +83,17 @@ If you need to configure these enpoint, edit file [src/app-config/index.ts](http
 
 ## Deploy standalone application
 
-To create a standalone application you will need to build the application:
+To create a standalone application, do the following:
 ```
-$ ng build:prod
+# make sure you are working with latest standalone code
+$ npm run standalone
+
+# re-fetch all dependencies. not mandatory but recommended
+$ rm -rf node_modules
+$ npm install
+
+# create a deployable version
+$ npm run build:prod
 ```
 
 A distrubted standalone application will be created in the `dist/` folder.
