@@ -34,6 +34,6 @@ exec('git status', function(err) {
     console.log('successfully checkout standalone commit "' + commitLabel  + '". to complete the operation:');
     console.log('- delete "node_modules" folder');
     console.log('- run "npm install"');
-    console.log('- run "npm run build:prod to build production application');
+    console.log('- run "npm run build -- --prod" to build production application');
   });
 });
