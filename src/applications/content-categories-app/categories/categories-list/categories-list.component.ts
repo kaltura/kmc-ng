@@ -7,7 +7,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
+import {CategoryCreationService} from 'app-shared/kmc-shared/events/category-creation';
 import { CategoriesModes } from "app-shared/content-shared/categories/categories-mode-type";
 import {
     CategoriesRefineFiltersService,
@@ -16,7 +16,7 @@ import {
 
 import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries.event';
+import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 
 @Component({
   selector: 'kCategoriesList',
@@ -323,10 +323,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 }
                 break;
             case 'viewEntries':
-              this.router.navigate(['/entries/list'])
-                .then(() => {
-                  this._appEvents.publish(new ViewCategoryEntriesEvent(category.id));
-                });
+              this._appEvents.publish(new ViewCategoryEntriesEvent(category.id));
               break;
             default:
                 break;

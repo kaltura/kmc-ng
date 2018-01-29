@@ -16,8 +16,7 @@ import {
     RefineGroup
 } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries.event';
+import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 
 @Component({
   selector: 'kEntriesList',
@@ -60,12 +59,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
-                _appEvents: AppEventsService) {
-      _appEvents.event(ViewCategoryEntriesEvent)
-        .cancelOnDestroy(this)
-        .subscribe(({ id }) => {
-          this.onCategorySelected(id);
-        });
+                private _viewCategoryEntries: ViewCategoryEntriesService) {
     }
 
     ngOnInit() {
@@ -120,6 +114,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                     this._restoreFiltersState();
                     this._registerToFilterStoreDataChanges();
                     this._registerToDataChanges();
+                    this._applyCategoryFilter();
                 },
                 error => {
                     this._isBusy = false;
@@ -136,6 +131,15 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                         ]
                     })
                 });
+    }
+
+    private _applyCategoryFilter(): void {
+      setTimeout(() => { // run code in the next event loop to show actual value of the filter in the tags
+        const categoryId = this._viewCategoryEntries.popCategoryId();
+        if (categoryId) {
+          this.onCategorySelected(categoryId);
+        }
+      }, 0);
     }
 
     private _registerToDataChanges(): void {

@@ -16,7 +16,7 @@ import { PlaylistAddAction } from 'kaltura-ngx-client/api/types/PlaylistAddActio
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
+import { PlaylistCreationService } from 'app-shared/kmc-shared/events/playlist-creation';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 export enum ActionTypes {
@@ -189,11 +189,9 @@ export class PlaylistStore implements OnDestroy {
 
           if (currentPlaylistId !== this._playlistId) {
             if (currentPlaylistId === 'new') {
-              const newData = this._playlistCreationService.getNewPlaylistData();
+              const newData = this._playlistCreationService.popNewPlaylistData();
 
               if (newData) {
-                this._playlistCreationService.clearNewPlaylistData();
-
                 this._playlistId = currentPlaylistId;
 
                 this._playlist.next({
@@ -356,7 +354,6 @@ export class PlaylistStore implements OnDestroy {
       .filter(({ allowed }) => allowed)
       .monitor('playlist store: return to playlists list')
       .subscribe(() => {
-        this._playlistCreationService.clearNewPlaylistData();
         this._router.navigate(['content/playlists'])
       });
   }
