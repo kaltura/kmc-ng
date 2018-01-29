@@ -15,6 +15,8 @@ import {
 } from '../categories-refine-filters.service';
 
 import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries.event';
 
 @Component({
   selector: 'kCategoriesList',
@@ -59,7 +61,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private _appLocalization: AppLocalization,
                 private _categoriesUtilsService: CategoriesUtilsService,
                 public _categoryCreationService: CategoryCreationService,
-                private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+                private _appEvents: AppEventsService) {
     }
 
     ngOnInit() {
@@ -319,6 +322,12 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                     this.moveCategoryPopup.open();
                 }
                 break;
+            case 'viewEntries':
+              this.router.navigate(['/entries/list'])
+                .then(() => {
+                  this._appEvents.publish(new ViewCategoryEntriesEvent(category.id));
+                });
+              break;
             default:
                 break;
         }

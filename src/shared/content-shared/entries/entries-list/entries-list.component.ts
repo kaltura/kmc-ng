@@ -16,6 +16,8 @@ import {
     RefineGroup
 } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries.event';
 
 @Component({
   selector: 'kEntriesList',
@@ -53,10 +55,12 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         categoriesMode: null
     };
 
-    constructor(public _entriesStore: EntriesStore, private _entriesRefineFilters: EntriesRefineFiltersService,
+    constructor(public _entriesStore: EntriesStore,
+                private _entriesRefineFilters: EntriesRefineFiltersService,
                 private _appLocalization: AppLocalization,
-                private _browserService: BrowserService, private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
-
+                private _browserService: BrowserService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+                private _appEvents: AppEventsService) {
     }
 
     ngOnInit() {
@@ -65,6 +69,11 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 		    .subscribe((status: CategoriesStatus) => {
                 this._categoriesUpdating = status.update;
             });
+
+        this._appEvents.event(ViewCategoryEntriesEvent)
+          .subscribe(({ id }) => {
+             this.onCategorySelected(id);
+        });
 
         this._prepare();
     }
