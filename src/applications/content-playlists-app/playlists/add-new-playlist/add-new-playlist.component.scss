@@ -74,11 +74,12 @@
       input,
       textarea {
         width: 100%;
-        padding: 11px 15px;
+        padding: .5em 15px;
       }
 
       textarea {
         min-height: 74px;
+        padding: 11px 15px;
       }
     }
 
