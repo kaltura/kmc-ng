@@ -17,6 +17,12 @@ export class PlaylistContentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._widgetService.attachForm();
+    this._widgetService.data$
+      .cancelOnDestroy(this)
+      .filter(Boolean)
+      .subscribe(() => {
+      this._clearSelection();
+    });
   };
 
   ngOnDestroy() {
