@@ -261,7 +261,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
           response.objects.forEach(object => {
             if (object instanceof KalturaDropFolder) {
               df = object;
-              if (df.fileHandlerType.toString() === KalturaDropFolderFileHandlerType.content.toString()) {
+              if (df.fileHandlerType.equals(KalturaDropFolderFileHandlerType.content)) {
                 const cfg: KalturaDropFolderContentFileHandlerConfig = df.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
                 if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
                   dropFoldersList.push(df);
@@ -270,7 +270,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
                 } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrAddAsNew) {
                   dropFoldersList.push(df);
                 }
-              } else if (df.fileHandlerType === KalturaDropFolderFileHandlerType.xml) {
+              } else if (df.fileHandlerType.equals(KalturaDropFolderFileHandlerType.xml)) {
                 dropFoldersList.push(df);
               }
             } else {
