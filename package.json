@@ -43,7 +43,7 @@
     "compodoc": "./node_modules/.bin/compodoc -p tsconfig.json --disableGraph --disablePrivateOrInternalSupport --toggleMenuItems",
     "release:prepare": "kws release --publish=false",
     "release:publish": "kws release --prepare=false",
-    "standalone": "kws bookmark standalone",
+    "standalone": "node ./scripts/checkout-standalone.js",
     "standalone:update": "npm run kws -- bookmark standalone --update && git commit -am 'chore: update standalone commit' && git push"
   },
   "dependencies": {
