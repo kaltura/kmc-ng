@@ -1,8 +1,8 @@
 <k-details-bar #detailsBar [data]="_currentPlaylist">
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.id' | translate" [valueField]="'id'"></kDetailInfo>
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.creator' | translate" [valueField]="'creatorId'" [tooltip]="_currentPlaylist?.creatorId"></kDetailInfo>
-	<kDetailInfo [label]="'applications.content.playlistDetails.details.creationDate' | translate" [value]="_currentPlaylist?.createdAt | kDate"></kDetailInfo>
-	<kDetailInfo [label]="'applications.content.playlistDetails.details.updatedAt' | translate" [value]="_currentPlaylist?.updatedAt | kDate"></kDetailInfo>
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.creationDate' | translate" [value]="_currentPlaylist?.createdAt | kDate:'MM/DD/YY'" [tooltip]="_currentPlaylist?.createdAt | kDate:'MM/DD/YY hh:mm'"></kDetailInfo>
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.updatedAt' | translate" [value]="_currentPlaylist?.updatedAt | kDate:'MM/DD/YY'" [tooltip]="_currentPlaylist?.updatedAt | kDate:'MM/DD/YY hh:mm'"></kDetailInfo>
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.type' | translate" [value]="_currentPlaylist?.playlistType | playlistType"></kDetailInfo>
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.moderation' | translate" [value]="_currentPlaylist?.moderationStatus | kModerationStatus"></kDetailInfo>
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.plays' | translate" [valueField]="'plays'"></kDetailInfo>
