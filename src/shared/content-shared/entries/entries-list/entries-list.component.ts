@@ -60,7 +60,12 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
-                private _appEvents: AppEventsService) {
+                _appEvents: AppEventsService) {
+      _appEvents.event(ViewCategoryEntriesEvent)
+        .cancelOnDestroy(this)
+        .subscribe(({ id }) => {
+          this.onCategorySelected(id);
+        });
     }
 
     ngOnInit() {
@@ -69,11 +74,6 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 		    .subscribe((status: CategoriesStatus) => {
                 this._categoriesUpdating = status.update;
             });
-
-        this._appEvents.event(ViewCategoryEntriesEvent)
-          .subscribe(({ id }) => {
-             this.onCategorySelected(id);
-        });
 
         this._prepare();
     }
