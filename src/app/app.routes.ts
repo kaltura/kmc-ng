@@ -1,9 +1,9 @@
-import { RouterModule, Routes } from '@angular/router';
-import { AppBootstrap, AuthCanActivate } from 'app-shared/kmc-shell';
+import {RouterModule, Routes} from '@angular/router';
+import {AppBootstrap, AuthCanActivate} from 'app-shared/kmc-shell';
 
-import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ErrorComponent } from './components/error/error.component';
+import {LoginComponent} from './components/login/login.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
+import {ErrorComponent} from './components/error/error.component';
 import { environment } from 'app-environment';
 
 
@@ -60,7 +60,11 @@ const routes: Routes = <Routes>[
               loadChildren: '../applications/settings-account-settings-app/settings-account-settings-app.module#SettingsAccountSettingsAppModule'
             },
             {
-              path: 'accountUpgrade',
+              path: 'integrationSettings',
+            loadChildren: '../applications/settings-integration-settings-app/settings-integration-settings-app.module#SettingsIntegrationSettingsAppModule'
+          },
+          {
+            path: 'accountUpgrade',
               loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
             },
             {

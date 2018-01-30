@@ -102,6 +102,11 @@ export const environment = {
                         "enabled": true
                     },
                     {
+                      "routePath": "settings/integrationSettings",
+                      "titleToken": "Integration Settings",
+                      "enabled": true
+                    },
+                    {
                         "routePath": "settings/accountUpgrade",
                         "titleToken": "Account Upgrade",
                         "enabled": true
@@ -216,6 +221,7 @@ export const environment = {
     },
     "categoriesShared": {
         "MAX_CATEGORIES": 10000,
+        "categoriesStatusSampleInterval": 30,
         "categoriesFilters": {
             "maxChildrenToShow": 500
         },
