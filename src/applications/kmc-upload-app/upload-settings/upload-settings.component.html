@@ -76,8 +76,7 @@
               <i *ngIf="file.hasError"
                  class="kIconerror kIconError"
                  [kTooltip]="file.errorToken | translate"
-                 placement="top"
-                 (click)="_removeFile(file)"></i>
+                 placement="top"></i>
             </ng-template>
           </p-column>
           <p-column [style]="{ 'width': '45px', 'text-align': 'center'}">
