@@ -1,19 +1,12 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {KalturaUiConf} from 'kaltura-ngx-client/api/types/KalturaUiConf';
 import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import {KalturaGoogleVideoSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGoogleVideoSyndicationFeed';
 import {AppAuthentication} from 'app-shared/kmc-shell';
 import {KalturaGoogleSyndicationFeedAdultValues} from 'kaltura-ngx-client/api/types/KalturaGoogleSyndicationFeedAdultValues';
 import {DestinationComponentBase} from '../../feed-details.component';
-
-function urlValidator(control: AbstractControl): { [key: string]: boolean } | null {
-  const v: string = control.value;
-  if (!v) {
-    return null;
-  }
-  return /^(?:(?:(?:https?):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(v) ? null : {'url': true};
-};
+import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kGoogleDestinationForm',
@@ -102,7 +95,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
     this._form = this._fb.group({
       contentFlavor: [null],
       addToDefaultTranscodingProfile: [true],
-      landingPage: [null, [urlValidator, Validators.required] ],
+      landingPage: [null, [KalturaValidators.urlHttp, Validators.required] ],
       playback: ['fromGoogle'],
       selectedPlayer: [null],
       adultContent: [false]
