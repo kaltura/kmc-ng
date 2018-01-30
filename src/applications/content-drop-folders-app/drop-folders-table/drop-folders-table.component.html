@@ -6,6 +6,7 @@
                    dataKey="id"
                    [emptyMessage]="_emptyMessage"
                    [value]="_dropFolders"
+                   (onSort)="sortChanged.emit($event)"
                    (selectionChange)="selectedDropFoldersChange.emit($event)"
                    [(selection)]="selectedDropFolders"
                    kStickyHeader [sticksTo]="'dropFoldersTags'" stickyClass="stickyHeader"
@@ -13,35 +14,35 @@
         <p-column styleClass="kSelectionColumn" selectionMode="multiple"></p-column>
         <p-column styleClass="kFileNameColumn" field="fileName"
                   [header]="'applications.content.dropFolders.table.fileName' | translate"
-                  [sortable]="true">
+                  [sortable]="'custom'">
           <ng-template let-col let-folder="rowData" pTemplate="body">
             {{ folder[col.field] }}
           </ng-template>
         </p-column>
         <p-column field="dropFolderId"
                   [header]="'applications.content.dropFolders.table.dropFolderName' | translate"
-                  [sortable]="true">
+                  [sortable]="'custom'">
           <ng-template let-col let-folder="rowData" pTemplate="body">
             {{ folder[col.field] }}
           </ng-template>
         </p-column>
         <p-column field="createdAt"
                   [header]="'applications.content.dropFolders.table.createdOn' | translate"
-                  [sortable]="true">
+                  [sortable]="'custom'">
           <ng-template let-col let-folder="rowData" pTemplate="body">
             <span [kTooltip]="_dateTooltip(folder)">{{ folder[col.field] | kDate }}</span>
           </ng-template>
         </p-column>
         <p-column field="fileSize"
                   [header]="'applications.content.dropFolders.table.fileSize' | translate"
-                  [sortable]="true">
+                  [sortable]="'custom'">
           <ng-template let-col let-folder="rowData" pTemplate="body">
             {{ folder[col.field] | kFileSize }}
           </ng-template>
         </p-column>
         <p-column field="entryId"
                   [header]="'applications.content.dropFolders.table.entryId' | translate"
-                  [sortable]="true">
+                  [sortable]="'custom'">
           <ng-template let-col let-folder="rowData" pTemplate="body">
             <a (click)="navigateToEntry.emit(folder.entryId)">{{ folder[col.field] }}</a>
           </ng-template>
