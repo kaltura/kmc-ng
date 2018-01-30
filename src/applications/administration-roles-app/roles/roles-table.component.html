@@ -29,7 +29,7 @@
       <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}" [sortable]="false">
         <ng-template let-col let-role="rowData" pTemplate="body">
           <div class="kRolesTableActions">
-            <button type="button" pButton icon="kIconmore" [disabled]="role.partnerId === 0"
+            <button type="button" pButton icon="kIconmore" [disabled]="role.partnerId === 0" class="kMoreActionsButton"
                     (click)="_openActionsMenu($event, role)"></button>
           </div>
         </ng-template>

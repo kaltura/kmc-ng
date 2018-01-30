@@ -46,7 +46,7 @@
       <p-column header="" styleClass="kTableActions">
         <ng-template let-col let-user="rowData" pTemplate="body">
           <div class="kUsersTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, user)"></button>
+            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, user)"></button>
           </div>
         </ng-template>
       </p-column>

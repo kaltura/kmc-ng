@@ -215,6 +215,16 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   display: flex;
   align-items: center;
 }
+.kMoreActionsButton {
+  color: $kGrayscale3 !important;
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: none !important;
+  font-size: 24px !important;
+  outline: 0;
+  &:active, &:hover{
+    color: $kGrayscale1 !important;
+  }
+}
 @media screen and (max-width: 1090px) {
   .kmcDetailsLayout .kDetailsWrapper .kDetailsHeader .kBackBtn {
     margin-left: 0px;
