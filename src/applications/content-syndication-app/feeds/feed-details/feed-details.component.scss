@@ -75,10 +75,20 @@
     }
 
     .kEntriesCount {
-      .kIconwarning {
-        font-size: 20px;
-        vertical-align: middle;
-        padding-right: 5px;
+      .error {
+          display: flex;
+          align-items: center;
+
+        .kIconwarning {
+          font-size: 20px;
+          vertical-align: middle;
+          padding-right: 5px;
+        }
+
+        .kMoreInfo{
+          padding-left: 4px;
+          color: $kDandger;
+        }
       }
     }
   }

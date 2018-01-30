@@ -82,11 +82,6 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   private _fillAvailableDestinations(): void {
     this._availableDestinations = [
       {
-        value: null,
-        label: this._appLocalization
-          .get('applications.content.syndication.details.availableDestinations.promptText')
-      },
-      {
         value: KalturaSyndicationFeedType.googleVideo,
         label: this._appLocalization
           .get('applications.content.syndication.details.availableDestinations.google')
@@ -205,7 +200,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       contentType: ['allContent'],
       selectedPlaylist: [null],
-      destination: [{value: '', disabled: false}, [Validators.required]],
+      destination: [{value: null, disabled: false}, [Validators.required]],
     });
   }
 

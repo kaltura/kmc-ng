@@ -80,7 +80,7 @@
             <div [class.kHidden]="!_entriesCountData.showWarning" class="error" #warning>
               <i class="kIconwarning"></i>
               <span>{{'applications.content.syndication.details.entriesCountData.warning' | translate: {'0': _entriesCountData.warningCount} }}</span>
-              <a #moreInfo>{{'applications.content.syndication.details.entriesCountData.moreInfo' | translate}}</a>
+              <a class="kMoreInfo" #moreInfo>{{'applications.content.syndication.details.entriesCountData.moreInfo' | translate}}</a>
             </div>
           </div>
         </div>
@@ -94,9 +94,13 @@
             *
           </div>
           <div class="kControlContainer">
-            <p-dropdown class="kControl" [options]="_availableDestinations" formControlName="destination"
-                        [autoWidth]="false"
-                        [ngClass]="{'kHasError':!_form.get('destination').valid && _form.get('destination').touched}">
+            <p-dropdown
+              placeholder="{{'applications.content.syndication.details.availableDestinations.promptText' | translate}}"
+              class="kControl"
+              [options]="_availableDestinations"
+              formControlName="destination"
+              [autoWidth]="false"
+              [ngClass]="{'kHasError':!_form.get('destination').valid && _form.get('destination').touched}">
             </p-dropdown>
             <div *ngIf="_form.get('destination').touched && _form.get('destination').hasError('required')"
                  class="error">

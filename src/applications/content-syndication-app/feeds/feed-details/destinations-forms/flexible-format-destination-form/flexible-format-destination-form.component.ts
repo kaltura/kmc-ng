@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {DestinationComponentBase} from '../../feed-details.component';
 import {KalturaGenericXsltSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGenericXsltSyndicationFeed';
-import {FormBuilder} from '@angular/forms';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
 @Component({
@@ -23,8 +22,7 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
   public _loading = false;
   private _fileReader: FileReader = new FileReader();
 
-  constructor(private _fb: FormBuilder,
-              private _appLocalization: AppLocalization) {
+  constructor(private _appLocalization: AppLocalization) {
     super()
   }
 
@@ -33,6 +31,10 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
       isValid: false,
       isDirty: false
     });
+
+    if (this.feed) {
+      this._xslCode = this.feed.xslt;
+    }
   }
 
   ngOnDestroy() {

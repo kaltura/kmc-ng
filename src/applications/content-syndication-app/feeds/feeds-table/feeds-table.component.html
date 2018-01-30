@@ -38,11 +38,11 @@
       <!--Destination-->
       <p-column field="type" [header]="'applications.content.syndication.table.columns.destination' | translate"
                 [sortable]="'custom'"
-                [style]="{'width':'130px'}">
+                [style]="{'width':'155px'}">
         <ng-template let-col let-feed="rowData" pTemplate="body">
           <div class="kColDestination">
             <div class="kColDestinationIcon" [ngClass]="feed[col.field] | kDestinationIcon"></div>
-            <div class="kColDestinationText" [ngClass]="feed[col.field] | kDestinationLabel"></div>
+            <div class="kColDestinationText">{{feed[col.field] | kDestinationLabel}}</div>
           </div>
         </ng-template>
       </p-column>

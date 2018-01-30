@@ -11,6 +11,6 @@ export class DestinationLabelPipe implements PipeTransform {
     if (value === KalturaSyndicationFeedType.kalturaXslt) {
       return this.appLocalization.get('applications.content.syndication.table.flexibleFormatFeed');
     }
-    return '';
+    return null;
   }
 }
