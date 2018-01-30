@@ -344,8 +344,8 @@
           "header": "Cancel uploads",
           "message": "Are you sure you want to cancel those uploads?"
         },
-        "files": "Files",
-        "selected": "Selected",
+        "files": "{{0}} Files",
+        "selected": "{{0}} Selected",
         "cancel": "Cancel",
         "table": {
           "fileName": "File Name",
