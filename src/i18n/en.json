@@ -836,7 +836,6 @@
         "selectPlaylistType": "Select playlist type",
         "manualPlaylist": "Manual playlist",
         "ruleBasedPlaylist": "Rule based playlist",
-        "addRuleBasedSubPlaylist": "Add rule based sub playlist",
         "nameIsMandatory": "You must enter a playlist name",
         "next": "Next",
         "playlistName": "Playlist Name",

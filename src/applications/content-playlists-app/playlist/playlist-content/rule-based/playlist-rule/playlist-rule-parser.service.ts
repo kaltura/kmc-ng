@@ -100,8 +100,7 @@ export class PlaylistRuleParserService implements OnDestroy {
             .reduce(createGroupedList, {}); // Step 5
         });
     } catch (error) {
-      console.warn(error);
-      return Observable.of(null);
+      return Observable.throw(error);
     }
   }
 

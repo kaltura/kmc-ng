@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
@@ -10,6 +10,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaEntryModerationStatus } from 'kaltura-ngx-client/api/types/KalturaEntryModerationStatus';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { PlaylistRule } from './playlist-rule.interface';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 
 @Component({
   selector: 'kPlaylistRule',
@@ -17,27 +18,10 @@ import { PlaylistRule } from './playlist-rule.interface';
   styleUrls: ['./playlist-rule.component.scss'],
   providers: [PlaylistRuleParserService]
 })
-export class PlaylistRuleComponent {
+export class PlaylistRuleComponent implements OnInit {
   @Input() set rule(value: PlaylistRule) {  // rule-based playlist specific
     if (value) {
-      this._resultsLimit = value.limit;
-      this._ruleName = value.name;
-      this._orderBy = value.orderBy;
-      this._rule = value;
-
-      this._title = this._appLocalization.get('applications.content.playlists.updateRule');
-      this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.save');
-
-      this._playlistRuleParser.toEntriesFilters(value)
-        .filter(Boolean)
-        .subscribe(filters => {
-          this._entriesStore.filter(filters);
-        });
-    } else {
-      this._title = this._appLocalization.get('applications.content.playlists.addRule');
-      this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.addToPlaylist');
-
-      this._entriesStore.resetFilters();
+      this._setPlaylistData(value);
     }
   }
 
@@ -48,6 +32,7 @@ export class PlaylistRuleComponent {
 
   private _rule: PlaylistRule;
 
+  public _blockerMessage: AreaBlockerMessage;
   public _title: string;
   public _saveBtnLabel: string;
   public _nameRequiredError = false;
@@ -106,6 +91,61 @@ export class PlaylistRuleComponent {
     this._entriesStore.paginationCacheToken = 'entries-list';
   }
 
+  ngOnInit() {
+    this._prepare();
+  }
+
+  private _prepare(): void {
+    this._title = this._appLocalization.get('applications.content.playlists.addRule');
+    this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.addToPlaylist');
+
+    this._entriesStore.resetFilters();
+  }
+
+  private _applyFilters(playlist: PlaylistRule): void {
+    this._playlistRuleParser.toEntriesFilters(playlist)
+      .filter(Boolean)
+      .subscribe(
+        filters => {
+          this._entriesStore.filter(filters);
+        },
+        error => {
+          this._blockerMessage = this._createErrorMessage(error.message, () => this._applyFilters());
+        });
+  }
+
+  private _setPlaylistData(playlist: PlaylistRule): void {
+    this._resultsLimit = playlist.limit;
+    this._ruleName = playlist.name;
+    this._orderBy = playlist.orderBy;
+    this._rule = playlist;
+
+    this._title = this._appLocalization.get('applications.content.playlists.updateRule');
+    this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.save');
+    this._applyFilters(playlist);
+  }
+
+  private _createErrorMessage(message: string, retryFn: Function): AreaBlockerMessage {
+    return new AreaBlockerMessage({
+      message,
+      buttons: [
+        {
+          label: this._appLocalization.get('app.common.retry'),
+          action: () => {
+            this._blockerMessage = null;
+            retryFn();
+          }
+        },
+        {
+          label: this._appLocalization.get('app.common.ok'),
+          action: () => {
+            this._blockerMessage = null;
+          }
+        },
+      ]
+    });
+  }
+
   public _save(): void {
     const ruleName = (this._ruleName || '').trim();
 
@@ -115,10 +155,14 @@ export class PlaylistRuleComponent {
         limit: this._resultsLimit,
         orderBy: this._orderBy,
         rule: this._rule
-      }).subscribe(updatedRule => {
-        this.onSaveRule.emit(updatedRule);
-        this.onClosePopupWidget.emit();
-      });
+      }).subscribe(
+        updatedRule => {
+          this.onSaveRule.emit(updatedRule);
+          this.onClosePopupWidget.emit();
+        },
+        error => {
+          this._blockerMessage = this._createErrorMessage(error.message, () => this._save());
+        });
     } else {
       this._nameRequiredError = true;
       this._browserService.alert({

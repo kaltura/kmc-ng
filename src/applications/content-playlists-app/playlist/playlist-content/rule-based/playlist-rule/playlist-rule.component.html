@@ -1,46 +1,48 @@
-<div class="kPlaylistRuleWrap">
-  <div class="kFloater">
-    <div class="kHeader">
-      <span class="kTitle">{{_title}}</span>
-      <div class="kButtons">
-        <a class="kCancel" (click)="onClosePopupWidget.emit()">Cancel</a>
-        <button type="button"
-                class="kButtonBranded KAddRule"
-                pButton
-                [label]="_saveBtnLabel"
-                (click)="_save()"></button>
+<k-area-blocker [message]="_blockerMessage">
+  <div class="kPlaylistRuleWrap">
+    <div class="kFloater">
+      <div class="kHeader">
+        <span class="kTitle">{{_title}}</span>
+        <div class="kButtons">
+          <a class="kCancel" (click)="onClosePopupWidget.emit()">Cancel</a>
+          <button type="button"
+                  class="kButtonBranded KAddRule"
+                  pButton
+                  [label]="_saveBtnLabel"
+                  (click)="_save()"></button>
+        </div>
+      </div>
+      <div class="kContainer">
+        <kEntriesList [columns]="_columns" [enforcedFilters]="_enforcedFilters" [showReload]="false">
+          <div class="additional-filters kFilters">
+            <label for="ruleNameInput" class="kRuleNameLabel">
+              {{'applications.content.entries.ruleName' | translate}}
+            </label>
+            <input type="text"
+                   id="ruleNameInput"
+                   pInputText
+                   class="kRuleNameInput"
+                   [class.hasError]="_nameRequiredError"
+                   [(ngModel)]="_ruleName"
+                   [placeholder]="'applications.content.entries.ruleNamePlaceholder' | translate">
+            <div #resultsLimitBtn class="kResultsLimit">
+              <span
+                *ngIf="_resultsLimit">{{'applications.content.entries.resultsLimit' | translate:[_resultsLimit]}}</span>
+              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+            </div>
+            <div class="kOrderBy">
+              <p-dropdown [options]="_orderByOptions"
+                          [autoWidth]="false"
+                          [placeholder]="'applications.content.entries.orderBy' | translate"
+                          (onChange)="_onOrderByChange()"
+                          [(ngModel)]="_orderBy"></p-dropdown>
+            </div>
+          </div>
+        </kEntriesList>
       </div>
     </div>
-    <div class="kContainer">
-      <kEntriesList [columns]="_columns" [enforcedFilters]="_enforcedFilters" [showReload]="false">
-        <div class="additional-filters kFilters">
-          <label for="ruleNameInput" class="kRuleNameLabel">
-            {{'applications.content.entries.ruleName' | translate}}
-          </label>
-          <input type="text"
-                 id="ruleNameInput"
-                 pInputText
-                 class="kRuleNameInput"
-                 [class.hasError]="_nameRequiredError"
-                 [(ngModel)]="_ruleName"
-                 [placeholder]="'applications.content.entries.ruleNamePlaceholder' | translate">
-          <div #resultsLimitBtn class="kResultsLimit">
-            <span *ngIf="_resultsLimit">{{'applications.content.entries.resultsLimit' | translate:[_resultsLimit]}}</span>
-            <i class="kIcondropdown_arrow_bottom dropdown"></i>
-          </div>
-          <div class="kOrderBy">
-            <p-dropdown [options]="_orderByOptions"
-                        [autoWidth]="false"
-                        [placeholder]="'applications.content.entries.orderBy' | translate"
-                        (onChange)="_onOrderByChange()"
-                        [(ngModel)]="_orderBy"></p-dropdown>
-          </div>
-        </div>
-      </kEntriesList>
-    </div>
   </div>
-</div>
-
+</k-area-blocker>
 <kPopupWidget #resultsLimitPopup
               [popupWidth]="260"
               [popupHeight]="101"
