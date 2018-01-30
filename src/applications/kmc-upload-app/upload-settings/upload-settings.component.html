@@ -11,6 +11,9 @@
                     [autoWidth]="false"
                     [placeholder]="'applications.upload.uploadSettings.profilePlaceholder' | translate"
                     [formControl]="_transcodingProfileField">
+          <ng-template let-profile pTemplate="item">
+            <span class="kTranscodingProfileItem">{{profile.label}}</span>
+          </ng-template>
         </p-dropdown>
       </form>
 
@@ -54,7 +57,8 @@
                     [style]="{ 'width': '150px', 'overflow':'visible' }"
                     [header]="'applications.upload.uploadSettings.table.header.mediaType' | translate">
             <ng-template let-col let-file="rowData" pTemplate="body">
-              <p-dropdown [options]="_fileTypes"
+              <p-dropdown class="kFileType"
+                          [options]="_fileTypes"
                           [autoWidth]="false"
                           appendTo="body"
                           kDropdownCloseOnScroll
