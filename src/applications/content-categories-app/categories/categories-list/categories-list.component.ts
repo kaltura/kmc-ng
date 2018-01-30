@@ -9,25 +9,38 @@ import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
 import { CategoriesModes } from "app-shared/content-shared/categories/categories-mode-type";
-import { CategoriesListItem } from "app-shared/content-shared/categories/categories-list-type";
+import {
+    CategoriesRefineFiltersService,
+    RefineGroup
+} from '../categories-refine-filters.service';
+
+import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
   selector: 'kCategoriesList',
   templateUrl: './categories-list.component.html',
-  styleUrls: ['./categories-list.component.scss']
+  styleUrls: ['./categories-list.component.scss'],
+    providers: [CategoriesRefineFiltersService]
 })
 
 export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    public _blockerMessage: AreaBlockerMessage = null;
     public _selectedCategories: KalturaCategory[] = [];
     public _selectedCategoryToMove: KalturaCategory;
     public _categoriesTotalCount: number = null;
     public _linkedEntries: { entryId: string }[] = [];
     @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
     @ViewChild('addNewCategory') addNewCategory: PopupWidgetComponent;
+    public _categoriesLocked = false;
+    public _categoriesUpdating = false;
 
     @ViewChild('tags') private tags: StickyComponent;
+
+    public _isBusy = false;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _tableIsBusy = false;
+    public _tableBlockerMessage: AreaBlockerMessage = null;
+    public _refineFilters: RefineGroup[];
 
     public _query = {
         freetext: '',
@@ -41,20 +54,100 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     constructor(public _categoriesService: CategoriesService,
                 private router: Router,
+                private _refineFiltersService: CategoriesRefineFiltersService,
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _categoriesUtilsService: CategoriesUtilsService,
-                public _categoryCreationService: CategoryCreationService) {
+                public _categoryCreationService: CategoryCreationService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
     }
 
     ngOnInit() {
-        this._restoreFiltersState();
-        this._registerToFilterStoreDataChanges();
-        this._categoriesService.categories.data$
-        .cancelOnDestroy(this)
-        .subscribe(response => {
-          this._categoriesTotalCount = response.totalCount
-        });
+        this._categoriesStatusMonitorService.status$
+		    .cancelOnDestroy(this)
+		    .subscribe((status: CategoriesStatus) => {
+                if (this._categoriesLocked && status.lock === false){
+                    // categories were locked and now open - reload categories to reflect changes
+                    this._reload();
+                }
+                this._categoriesLocked = status.lock;
+                this._categoriesUpdating = status.update;
+            });
+
+        this._prepare();
+    }
+
+    private _prepare(): void {
+
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only once the filters were fetched successfully.
+
+        this._isBusy = true;
+        this._refineFiltersService.getFilters()
+            .cancelOnDestroy(this)
+            .first() // only handle it once, no need to handle changes over time
+            .subscribe(
+                groups => {
+
+                    this._categoriesService.categories.data$
+                        .cancelOnDestroy(this)
+                        .subscribe(response => {
+                            this._categoriesTotalCount = response.totalCount
+                        });
+
+
+                    this._isBusy = false;
+                    this._refineFilters = groups;
+                    this._restoreFiltersState();
+                    this._registerToFilterStoreDataChanges();
+                    this._registerToDataChanges();
+                },
+                error => {
+                    this._isBusy = false;
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: this._appLocalization.get('applications.content.filters.errorLoading'),
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.retry'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._prepare();
+                                this._categoriesService.reload();
+                            }
+                        }
+                        ]
+                    })
+                });
+    }
+
+    private _registerToDataChanges(): void {
+        this._categoriesService.categories.state$
+            .cancelOnDestroy(this)
+            .subscribe(
+                result => {
+
+                    this._tableIsBusy = result.loading;
+
+                    if (result.errorMessage) {
+                        this._tableBlockerMessage = new AreaBlockerMessage({
+                            message: result.errorMessage || 'Error loading categories',
+                            buttons: [{
+                                label: 'Retry',
+                                action: () => {
+                                    this._tableBlockerMessage = null;
+                                    this._categoriesService.reload();
+                                }
+                            }
+                            ]
+                        })
+                    } else {
+                        this._tableBlockerMessage = null;
+                    }
+                },
+                error => {
+                    console.warn('[kmcng] -> could not load categories'); // navigate to error page
+                    throw error;
+                });
     }
 
     ngAfterViewInit() {
@@ -125,11 +218,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
         })
     }
 
-    onCategoriesUnselected(categoriesToRemove: CategoriesListItem[]) {
+    onCategoriesUnselected(categoriesToRemove: number[]) {
         const categories = this._categoriesService.cloneFilter('categories', []);
 
         categoriesToRemove.forEach(categoryToRemove => {
-            const categoryIndex = categories.findIndex(item => item.value === categoryToRemove.value);
+            const categoryIndex = categories.findIndex(item => item === categoryToRemove);
             if (categoryIndex !== -1) {
                 categories.splice(
                     categoryIndex,
@@ -140,28 +233,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
         this._categoriesService.filter({categories});
     }
 
-    onCategorySelected(category: CategoriesListItem){
+    onCategorySelected(category: number){
         const categories = this._categoriesService.cloneFilter('categories', []);
-        if (!categories.find(item => item.value === category.value)) {
-            if (this._query.categoriesMode === CategoriesModes.SelfAndChildren) {
-                // when this component is running with SelfAndChildren mode, we need to manually unselect
-                // the first nested child (if any) that is currently selected
-                const childrenToRemove = categories.filter(item => {
-                    // check if this item is a parent of another item (don't validate last item which is the node itself)
-                    let result = false;
-                    for (let i = 0, length = item.fullIdPath.length; i < length - 1 && !result; i++) {
-                        result = item.fullIdPath[i] === category.value;
-                    }
-                    return result;
-                });
-
-                childrenToRemove.forEach(childToRemove => {
-                    categories.splice(
-                        categories.indexOf(childToRemove),
-                        1);
-                });
-            }
-
+        if (!categories.find(item => item === category)) {
             categories.push(category);
             this._categoriesService.filter({'categories': categories});
         }
@@ -265,6 +339,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                                         severity: 'success',
                                         detail: this._appLocalization.get('applications.content.categories.deleted')
                                     });
+                                    this._categoriesStatusMonitorService.updateCategoriesStatus();
                                     this._categoriesService.reload();
                                 },
                                 error => {

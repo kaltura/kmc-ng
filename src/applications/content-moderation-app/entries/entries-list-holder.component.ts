@@ -1,15 +1,19 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
+import {
+    EntriesListComponent
+} from 'app-shared/content-shared/entries/entries-list/entries-list.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import {
+    EntriesFilters, EntriesStore,
+    SortDirection
+} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { DefaultFiltersList } from 'app-shared/content-shared/entries/entries-refine-filters/default-filters-list';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
@@ -22,6 +26,10 @@ export class EntriesListHolderComponent implements OnDestroy {
 
   private _shouldConfirmEntryApproval = false; // TODO [kmcng] need to get such permissions from somewhere
   private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
+  public _defaultFilters: Partial<EntriesFilters> = {
+    'moderationStatuses': ['1', '5'],
+      'sortDirection': SortDirection.Asc
+  };
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _currentEntryId = '';
@@ -65,22 +73,11 @@ export class EntriesListHolderComponent implements OnDestroy {
               private _entriesStore: EntriesStore,
               private _bulkService: BulkService) {
     this._entriesStore.paginationCacheToken = 'moderation-entries-list';
-
-    this._setDefaultFilters();
   }
 
   ngOnDestroy() {
   }
 
-  private _setDefaultFilters(): void {
-    const moderationStatuses = DefaultFiltersList.find(filter => filter.name === 'moderationStatuses');
-    let filters = [];
-    if (moderationStatuses) {
-      filters = moderationStatuses.items.filter(filter => filter.value === '1' || filter.value === '5');
-    }
-
-    this._entriesStore.filter({ moderationStatuses: filters });
-  }
 
   private _openModerationDetails(entryId): void {
     this._currentEntryId = entryId;

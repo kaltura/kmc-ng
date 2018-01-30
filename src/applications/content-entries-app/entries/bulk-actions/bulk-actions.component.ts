@@ -3,13 +3,13 @@ import {MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 import {
  BulkAccessControlService,  BulkAddCategoriesService, BulkAddTagsService, BulkChangeOwnerService,  BulkDeleteService, BulkDownloadService ,
   BulkRemoveCategoriesService,
   BulkRemoveTagsService,
   BulkSchedulingService,
-  EntryCategoryItem,
   SchedulingParams
 } from './services'
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
@@ -24,6 +24,7 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 
 @Component({
   selector: 'kBulkActions',
@@ -54,6 +55,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   public _bulkWindowHeight = 500;
   public _bulkAction = '';
 
+  private _categoriesLocked = false;
+
   @Input() selectedEntries: KalturaMediaEntry[];
 
   @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
@@ -70,11 +73,18 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
     private _bulkDownloadService: BulkDownloadService,
     private _bulkDeleteService: BulkDeleteService,
-    private _appEvents: AppEventsService) {
+    private _appEvents: AppEventsService,
+    private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
   }
 
   ngOnInit() {
+    this._categoriesStatusMonitorService.status$
+	    .cancelOnDestroy(this)
+	    .subscribe((status: CategoriesStatus) => {
+          this._categoriesLocked = status.lock;
+        });
+
     this._bulkActionsMenu = this.getBulkActionItems();
   }
 
@@ -122,13 +132,20 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
-    this._bulkAction = action;
-    this._bulkWindowWidth = popupWidth;
-    this._bulkWindowHeight = popupHeight;
-    // use timeout to allow data binding of popup dimensions to update before opening the popup
-    setTimeout(() => {
-      this.bulkActionsPopup.open();
-    }, 0);
+    if (this._categoriesLocked && (action === "addToNewCategory" || action === "addToCategories")){
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.categories.categoriesLockTitle'),
+        message: this._appLocalization.get('applications.content.categories.categoriesLockMsg')
+      });
+    }else {
+      this._bulkAction = action;
+      this._bulkWindowWidth = popupWidth;
+      this._bulkWindowHeight = popupHeight;
+      // use timeout to allow data binding of popup dimensions to update before opening the popup
+      setTimeout(() => {
+        this.bulkActionsPopup.open();
+      }, 0);
+    }
   }
 
   performBulkAction(action: string): void {
@@ -162,8 +179,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // add to categories changed
-  onAddToCategoriesChanged(categories: EntryCategoryItem[]): void {
-    this.executeService(this._bulkAddCategoriesService, categories);
+  onAddToCategoriesChanged(categories: CategoryData[]): void {
+    this.executeService(this._bulkAddCategoriesService, (categories || []).map(category => category.id));
   }
 
   // remove categories changed
@@ -258,9 +275,16 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private _addSelectedEntriesToNewCategory() {
-    if (this.selectedEntries.length > 0) {
-      const creationEvent = new CreateNewCategoryEvent({entries: this.selectedEntries});
-      this._appEvents.publish(creationEvent);
+    if (this._categoriesLocked){
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.categories.categoriesLockTitle'),
+        message: this._appLocalization.get('applications.content.categories.categoriesLockMsg')
+      });
+    }else {
+      if (this.selectedEntries.length > 0) {
+        const creationEvent = new CreateNewCategoryEvent({entries: this.selectedEntries});
+        this._appEvents.publish(creationEvent);
+      }
     }
   }
 

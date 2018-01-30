@@ -13,7 +13,8 @@
       </div>
     </div>
     <div class="kContainer">
-      <kEntriesSelector [filterByStatus]="_addPlaylistEntriesStatuses"
+      <kEntriesSelector
+                        [enforcedFilters]="_enforcedFilters"
                         [(selectedEntries)]="_selectedEntries"
                         (selectedEntriesChange)="_selectionChanged($event)"></kEntriesSelector>
     </div>

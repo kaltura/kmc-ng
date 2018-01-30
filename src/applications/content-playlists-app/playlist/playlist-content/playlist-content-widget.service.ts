@@ -13,6 +13,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
 import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBaseEntryFilter';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -104,6 +105,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
           if (this.data.playlistContent) {
               return this._kalturaClient.request(new BaseEntryListAction({
                   filter: new KalturaBaseEntryFilter({idIn: this.data.playlistContent}),
+                  pager: new KalturaFilterPager({pageSize: 500}),
                   responseProfile: responseProfile
               }))
                   .map(response => {

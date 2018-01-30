@@ -34,7 +34,8 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 	private _confirmClose: boolean = true;
 
 	constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
-	}
+        this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this); // fix scope issues when binding to a property
+    }
 
 	ngOnInit() {
 
@@ -128,8 +129,8 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 				{
 					id: value,
 					screenName: value,
-					userAdded: true,
-					tooltip: tt
+					__tooltip: tt,
+					__class: 'userAdded'
 				}
 		}
 		return result;

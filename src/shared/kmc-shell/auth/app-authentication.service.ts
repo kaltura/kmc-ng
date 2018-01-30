@@ -19,7 +19,9 @@ import {PartnerInfo} from './partner-info';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
-import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { environment } from 'app-config/index';
+import { KmcServerPolls } from 'app-shared/kmc-shared';
 
 
 export enum AppAuthStatusTypes {
@@ -54,14 +56,10 @@ export class AppAuthentication {
 
   appEvents$ = this._appAuthStatus.asObservable();
 
-  defaultRoutes = {
-    loginRoute: '',
-    defaultRoute: '',
-    errorRoute: ''
-  };
 
   constructor(private kalturaServerClient: KalturaClient,
               private appStorage: AppStorage,
+              private _serverPolls: KmcServerPolls,
               private _pageExitVerificationService: PageExitVerificationService) {
     this._appUser = new AppUser();
   }
@@ -134,29 +132,33 @@ export class AppAuthentication {
     const permissionFilter = new KalturaPermissionFilter();
     permissionFilter.nameEqual = 'FEATURE_DISABLE_REMEMBER_ME';
 
-
+    const partnerId = environment.core.kaltura.limitToParentId || undefined;
     const request = new KalturaMultiRequest(
       new UserLoginByLoginIdAction(
         {
           loginId,
           password,
+          partnerId,
           expiry: expiry,
           privileges: privileges
         }),
-      new UserGetByLoginIdAction({loginId, ks: '{1:result}'}),
+      new UserGetByLoginIdAction({loginId, partnerId,
+          ks: '{1:result}'}),
       new PermissionListAction(
         {
           filter: permissionFilter,
-          ks: '{1:result}'
+            partnerId,
+            ks: '{1:result}'
         }
       ),
       new PartnerGetInfoAction({
-        ks: '{1:result}'
+          partnerId,
+          ks: '{1:result}'
       })
         .setDependency(['id', 1, 'partnerId'])
       ,
-
       <any>new PermissionGetCurrentPermissionsAction({
+          partnerId,
         ks: '{1:result}'
       })
     );
@@ -189,7 +191,7 @@ export class AppAuthentication {
           const value = `${ks}`;
           this.appStorage.setInSessionStorage('auth.login.ks', value);  // save ks in session storage
 
-          this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
+          this.onUserLoggedIn();
 
           return {success: true, error: null};
         }
@@ -217,26 +219,32 @@ export class AppAuthentication {
   public loginAutomatically(): Observable<boolean> {
     return Observable.create((observer: any) => {
       if (this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedOut) {
-        const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
+          const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
         if (loginToken) {
-          const requests = [
+            const partnerId = environment.core.kaltura.limitToParentId || undefined;
+
+            const requests = [
             new UserGetAction({
-              ks: loginToken
+              ks: loginToken,
+                partnerId
             }),
             new PermissionListAction(
               {
                 ks: loginToken,
+                partnerId,
                 filter: new KalturaPermissionFilter({
                   nameEqual: 'FEATURE_DISABLE_REMEMBER_ME'
                 })
               }
             ),
             new PartnerGetInfoAction({
-              ks: loginToken
+              ks: loginToken,
+                partnerId
             })
               .setDependency(['id', 0, 'partnerId']),
             <any>new PermissionGetCurrentPermissionsAction({
-              ks: loginToken // we must set the ks manually, only upon successful result we will update the global module
+                partnerId,
+                ks: loginToken // we must set the ks manually, only upon successful result we will update the global module
             })
           ];
 
@@ -266,7 +274,7 @@ export class AppAuthentication {
               return true;
             }).subscribe(
             () => {
-              this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
+              this.onUserLoggedIn();
               observer.next(true);
               observer.complete();
             },
@@ -283,6 +291,14 @@ export class AppAuthentication {
         }
       }
     });
+  }
+
+  private onUserLoggedIn()
+  {
+      this.kalturaServerClient.ks = this.appUser.ks;
+      this.kalturaServerClient.partnerId = this.appUser.partnerId;
+      this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
+      this._serverPolls.forcePolling();
   }
 
   public loginByKs(requestedPartnerId: number): Observable<void> {
@@ -311,7 +327,18 @@ export class AppAuthentication {
 
   // Prevents the browser to verify page exit before reload
   private forceReload() {
-    this._pageExitVerificationService.disable();
+    this._pageExitVerificationService.removeAll();
     this.reload();
+  }
+
+  // Hack to update user name in the header
+  public _updateNameManually(firstName: string, lastName: string, fullName: string): void {
+    if (firstName && lastName) {
+      this._appUser.firstName = firstName;
+      this._appUser.lastName = lastName;
+      this._appUser.fullName = fullName;
+    } else {
+      throw Error('Cannot update the current user. The first, the last name or the fullName is not provided');
+    }
   }
 }

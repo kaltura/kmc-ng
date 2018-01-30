@@ -1,9 +1,10 @@
+<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
 <kEntriesList [columns]="_columns"
               [rowActions]="_rowActions"
-              [blockerMessage]="_blockerMessage"
               (onActionsSelected)="_onActionSelected($event)">
   <div class="bulk-actions">
     <kBulkActions [selectedEntries]="_entriesList.selectedEntries"
                   (onBulkChange)="_entriesList.onBulkChange($event)"></kBulkActions>
   </div>
 </kEntriesList>
+</k-area-blocker>

@@ -46,6 +46,7 @@
                                    suggestionLabelField="name"
                                    suggestionSelectableField="isSelectable"
                                    [multiple]="true"
+                                   [tooltipResolver]="_categoriesTooltipResolver"
                                    [minLength]="3"
                                    [suggestionsProvider]="_categoriesProvider"
                                    (completeMethod)="_searchCategories($event)">
@@ -54,7 +55,7 @@
             </div>
 			<div class="kRow kValign">
 				<span class="kLabel"></span>
-				<a (click)="categoriesPopup.open()" class="kLink">{{'applications.content.entryDetails.metadata.browse' | translate}}</a>
+				<a (click)="openCategoriesBrowser()" class="kLink">{{'applications.content.entryDetails.metadata.browse' | translate}}</a>
 			</div>
             <div class="kRow" *ngIf="_widgetService.isLiveEntry">
                 <span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>

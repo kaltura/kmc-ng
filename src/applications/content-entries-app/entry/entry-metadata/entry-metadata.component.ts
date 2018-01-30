@@ -11,7 +11,10 @@ import { EntryMetadataWidget } from './entry-metadata-widget.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-
+import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/category-tooltip.pipe';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
     selector: 'kEntryMetadata',
@@ -20,6 +23,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 })
 export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
+    private _categoriesLocked = false;
     private _searchCategoriesSubscription : ISubscription;
     private _searchTagsSubscription : ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
@@ -30,13 +34,22 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     @ViewChildren(JumpToSection) private _jumpToSectionQuery : QueryList<JumpToSection> = null;
 
 	@ViewChild('metadataContainer')
-	public _container : ElementRef;
+	public _container: ElementRef;
 
     @ViewChild('nameField') private nameField: ElementRef;
 
+    private _categoriesTooltipPipe: CategoryTooltipPipe;
+    public _categoriesTooltipResolver = (value: any) => {
+        return this._categoriesTooltipPipe.transform(value);
+    };
+
     constructor(public _widgetService: EntryMetadataWidget,
                 private _pageScrollService: PageScrollService,
+                private _appLocalization: AppLocalization,
+                private _browserService: BrowserService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
                 @Inject(DOCUMENT) private document: any) {
+        this._categoriesTooltipPipe  = new CategoryTooltipPipe(this._appLocalization);
     }
 
     ngOnInit() {
@@ -54,6 +67,12 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
                 }
             }
         );
+
+        this._categoriesStatusMonitorService.status$
+		    .cancelOnDestroy(this)
+		    .subscribe((status: CategoriesStatus) => {
+                this._categoriesLocked = status.lock;
+            });
     }
 
     _searchTags(event) : void {
@@ -99,7 +118,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
 
                 (data|| []).forEach(suggestedCategory => {
-                    const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
+                    const label = suggestedCategory.fullName + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
 
                     const isSelectable = !entryCategories.find(category => {
                         return category.id === suggestedCategory.id;
@@ -182,6 +201,17 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
             pageScrollOffset: 105
         });
         this._pageScrollService.start(pageScrollInstance);
+    }
+
+    openCategoriesBrowser(){
+        if (this._categoriesLocked){
+            this._browserService.alert({
+                header: this._appLocalization.get('applications.content.categories.categoriesLockTitle'),
+                message: this._appLocalization.get('applications.content.categories.categoriesLockMsg')
+            });
+        }else{
+            this.categoriesPopup.open();
+        }
     }
 
 

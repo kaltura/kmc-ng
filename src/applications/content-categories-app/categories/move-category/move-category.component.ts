@@ -5,7 +5,10 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
+import {
+  CategoriesStatus,
+  CategoriesStatusMonitorService
+} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
   selector: 'kMoveCategory',
@@ -19,14 +22,22 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   @Output() onMovedCategories = new EventEmitter<null>();
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedParentCategory: CategoriesListItem = null;
+  public _selectedParentCategory: number = null;
+  public _categoriesUpdating = false;
 
   constructor(private _categoriesService: CategoriesService,
               private _appLocalization: AppLocalization,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
   }
 
   ngOnInit() {
+    this._categoriesStatusMonitorService.status$
+	    .cancelOnDestroy(this)
+	    .subscribe((status: CategoriesStatus) => {
+          this._categoriesUpdating = status.update;
+        });
+
     if (!this.selectedCategories || !this.selectedCategories.length) {
       this._blockerMessage = new AreaBlockerMessage(
         {
@@ -50,7 +61,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  public _onCategorySelected(event: CategoriesListItem) {
+  public _onCategorySelected(event: number) {
     this._selectedParentCategory = event;
   }
 
@@ -73,8 +84,9 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   }
 
   private _moveCategory() {
+    // TODO sakal - this._selectedParentCategory.fullIdPath
     const categoryParent = this._selectedParentCategory ?
-      {id: this._selectedParentCategory.value, fullIds: this._selectedParentCategory.fullIdPath} :
+      {id: this._selectedParentCategory, fullIds: null} :
       {id: 0, fullIds: []};
     this._categoriesService
       .moveCategory({categories: this.selectedCategories, categoryParent})
@@ -82,6 +94,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(() => {
           this.onMovedCategories.emit();
+          this._categoriesStatusMonitorService.updateCategoriesStatus();
           if (this.parentPopupWidget) {
             this.parentPopupWidget.close();
           }
@@ -110,7 +123,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   private _validateCategoryMove(categoryToMove: KalturaCategory) {
     // if category moved to the same parent or to 'no parent' as it was before
     if ((!this._selectedParentCategory && !categoryToMove.parentId) ||
-        (this._selectedParentCategory && categoryToMove.parentId === this._selectedParentCategory.value)) {
+        (this._selectedParentCategory && categoryToMove.parentId === this._selectedParentCategory)) {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.moveCategory.errors.categoryAlreadyBelongsToParent'),
         buttons: [
@@ -123,10 +136,11 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
         ]
       });
       return false;
+      // TODO sakal - this._selectedParentCategory.fullIdPath
     } else if (this._selectedParentCategory && !this._categoriesService.isParentCategorySelectionValid(
         {
           categories: this.selectedCategories,
-          categoryParent: {id: this._selectedParentCategory.value, fullIds: this._selectedParentCategory.fullIdPath}
+          categoryParent: {id: this._selectedParentCategory, fullIds: null}
         })) {
       // if trying to move category be a child of itself or one of its children show error message
       this._blockerMessage = new AreaBlockerMessage({

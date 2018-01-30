@@ -30,6 +30,7 @@
   }
 
   .kDropFoldersHolder {
+    min-height: $minTableHeight;
     height: 100%;
     border: none;
     position: relative;
@@ -229,6 +230,14 @@
     top: 7px;
     right: 80px;
   }
+}
+
+:host{
+  width: 100%;
+}
+
+:host /deep/ p-datatable .ui-datatable-scrollable-body{
+  margin-bottom: 34px;
 }
 
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {

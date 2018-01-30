@@ -40,6 +40,7 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
     if (typeof updates.createdAt !== 'undefined') {
       this._createdAfter = updates.createdAt.fromDate || null;
       this._createdBefore = updates.createdAt.toDate || null;
+      this._createdAtFilterError = null;
     }
   }
 
@@ -77,7 +78,7 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
     });
 
     if (updateResult.createdAt && updateResult.createdAt.failed) {
-      this._createdAtFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+      this._createdAtFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
 
       setTimeout(() => {
         const createdAt = this._store.cloneFilter('createdAt', null);

@@ -1,0 +1,78 @@
+@import "app-theme/_variables.scss";
+
+.kTitle{
+  color: $kGrayscale1;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 1px solid $kGrayscale4;
+  height: 78px;
+  line-height: 78px;
+}
+.kContent{
+  display: flex;
+  flex-direction: column;
+  height: 323px;  width: 586px;
+
+  .kRow {
+
+    &:first-child {
+      padding-top: 30px;
+    }
+
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding-top: 20px;
+    margin: 0 auto;
+    width: 455px;
+
+    .kLabel {
+      width: 180px;
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+      flex: 0 0 auto;
+      height: 18px;
+      color: $kGrayscale1;
+      font-size: 15px;
+      line-height: 18px;
+      margin-right: 20px;
+    }
+
+    .kLabel {
+      padding: 8px 0px 8px 4px;
+      height: 18px;
+    }
+    .kControl {
+      height: 34px;
+      color: $kGrayscale2;
+      width: 258px;
+      border-radius: 3px;
+      &.kHasError {
+        border: 1px solid $kDandger;
+        background: initial;
+      }
+    }
+    .error {
+      padding-top: 8px;
+    }
+
+  }
+}
+.kFooter{
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  width: 100%;
+  height: 66px;
+  border-top: 1px solid $kGrayscale4;
+  align-items: center;
+  justify-content: center;
+
+  button{
+    width: 130px;
+    height: 34px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}

@@ -1,4 +1,4 @@
-import { NgModule,SkipSelf, Optional, ModuleWithProviders } from '@angular/core';
+import { NgModule, SkipSelf, Optional, ModuleWithProviders, Self } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -36,12 +36,12 @@ import { PageExitVerificationService, UploadPageExitVerificationService } from '
     ]
 })
 export class KMCShellModule {
-    // constructor(@Optional() @SkipSelf() module : KMCShellModule, private appBootstrap : AppBootstrap)
-    // {
-    //     if (module) {
-    //         throw new Error("KMCShellModule module imported twice.");
-    //     }
-    // }
+    constructor(@Optional() @Self()  _uploadPageExitVerificationService: UploadPageExitVerificationService)
+    {
+        if (_uploadPageExitVerificationService) {
+            _uploadPageExitVerificationService.init();
+        }
+    }
 
     static forRoot(): ModuleWithProviders {
         return {

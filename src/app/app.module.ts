@@ -10,11 +10,12 @@ import {KalturaLogger, KalturaLoggerName} from '@kaltura-ng/kaltura-logger';
 import {PreviewAndEmbedModule} from '../applications/preview-and-embed/preview-and-embed.module';
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
+import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
+import { environment as buildEnvironment } from 'environments/environment'
 
 import {
   AppBootstrap,
   AuthModule,
-  BootstrapAdapterToken,
   BrowserService,
   KMCShellModule,
   NewEntryUploadModule
@@ -41,14 +42,12 @@ import {
 import {AppComponent} from './app.component';
 import {routing} from './app.routes';
 
-import {KalturaAuthConfigAdapter} from './services/kaltura-auth-config-adapter.service';
 
 import {AppMenuService} from './services/app-menu.service';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {AppMenuComponent} from './components/app-menu/app-menu.component';
 import {ErrorComponent} from './components/error/error.component';
 import {UserSettingsComponent} from './components/user-settings/user-settings.component';
-import {KalturaHttpConfigurationAdapter} from './services/kaltura-http-configuration-adapter.service';
 
 import {
   ButtonModule,
@@ -135,7 +134,8 @@ export function clientConfigurationFactory() {
     OperationTagModule.forRoot(),
     PlaylistCreationModule.forRoot(),
     CategoryCreationModule.forRoot(),
-    KMCServerPollsModule.forRoot()
+    KMCServerPollsModule.forRoot(),
+    CategoriesStatusModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -164,16 +164,6 @@ export function clientConfigurationFactory() {
           provide: KalturaLoggerName, useValue: 'kmc'
       },
     AppMenuService,
-    {
-      provide: BootstrapAdapterToken,
-      useClass: KalturaAuthConfigAdapter,
-      multi: true
-    },
-    {
-      provide: BootstrapAdapterToken,
-      useClass: KalturaHttpConfigurationAdapter,
-      multi: true
-    },
     { provide: AppStorage, useExisting: BrowserService },
     KalturaClient,
     {
@@ -184,15 +174,20 @@ export function clientConfigurationFactory() {
   ]
 })
 export class AppModule {
-  constructor(appBootstrap: AppBootstrap,
-              appLocalization: AppLocalization,
-              uploadManagement: UploadManagement) {
+    constructor(appBootstrap: AppBootstrap,
+                kalturaLogger: KalturaLogger,
+                uploadManagement: UploadManagement) {
 
-    // TODO [kmcng] move to a relevant location
-    // TODO [kmcng] get max upload request
-    // appLocalization.supportedLocales = environment.core.locales;
-    uploadManagement.setMaxUploadRequests(2/*environment.uploadsShared.MAX_CONCURENT_UPLOADS*/);
+        if (buildEnvironment.production) {
+            kalturaLogger.setOptions({level: 'Warn'})
+        } else {
+            kalturaLogger.setOptions({level: 'All'})
+        }
 
-    appBootstrap.initApp({ errorRoute: '/error' });
-  }
+        // TODO [kmcng] move to a relevant location
+        uploadManagement.setMaxUploadRequests(environment.uploadsShared.MAX_CONCURENT_UPLOADS);
+
+        appBootstrap.bootstrap();
+
+    }
 }

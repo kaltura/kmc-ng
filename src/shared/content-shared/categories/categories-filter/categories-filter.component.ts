@@ -12,7 +12,6 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
-import { CategoriesListItem } from 'app-shared/content-shared/categories/categories-list-type';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
 
@@ -25,9 +24,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     @Input() public parentPopupWidget: PopupWidgetComponent;
     @Input() public selectionMode: CategoriesModes;
     @Output() public selectionModeChange = new EventEmitter<CategoriesModes>();
-    @Input() public selection: CategoriesListItem[];
-    @Output() onCategorySelected: EventEmitter<CategoriesListItem> = new EventEmitter();
-    @Output() onCategoriesUnselected: EventEmitter<CategoriesListItem[]> = new EventEmitter();
+    @Input() public selection: number[];
+    @Output() onCategorySelected: EventEmitter<number> = new EventEmitter();
+    @Output() onCategoriesUnselected: EventEmitter<number[]> = new EventEmitter();
 
     @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
     @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
@@ -74,8 +73,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     public _clearAll() {
-        if (this.selection && this.selection.length)
-        {
+        if (this.selection && this.selection.length) {
             this.onCategoriesUnselected.emit(this.selection);
         }
     }
@@ -113,17 +111,36 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         if (selectedItem) {
             const data = selectedItem.data;
-            this.onCategorySelected.emit(
-                {
-                    value: data.id,
-                    label: data.name,
-                    fullIdPath: data.fullIdPath,
-                    tooltip: (data.fullNamePath || []).join(' > ')
-                }
-            );
-
-            this._categoriesTree.expandNode(data.fullIdPath);
+            this._onCategorySelected(data.id);
+            this._categoriesTree.expandNode(data.id);
         }
+    }
+
+    _onCategorySelected(categoryId: number):void {
+        if (this.selectionMode === CategoriesModes.SelfAndChildren) {
+            // when this component is running with SelfAndChildren mode, we need to manually unselect
+            // the first nested child (if any) that is currently selected
+            const categoriesToRemove = this.selection
+                .map(selectedCategoryId => {
+                    return this._categoriesSearch.getCachedCategory(selectedCategoryId);
+                })
+                .filter(selectedCategory => {
+                    // check if this item is a parent of another item (don't validate last item which is the node itself)
+                    let result = false;
+                    if (selectedCategory) {
+                        for (let i = 0, length = selectedCategory.fullIdPath.length; i < length - 1 && !result; i++) {
+                            result = selectedCategory.fullIdPath[i] === categoryId;
+                        }
+                    }
+                    return result;
+                }).map(selectedCategory => selectedCategory.id);
+
+            if (categoriesToRemove.length) {
+                this.onCategoriesUnselected.emit(categoriesToRemove);
+            }
+        }
+
+        this.onCategorySelected.emit(categoryId);
     }
 
     _searchSuggestions(event): void {
@@ -139,18 +156,18 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                 const suggestions = [];
 
                 (data || []).forEach(item => {
-                  const label = item.fullNamePath.join(' > ') + (item.referenceId ? ` (${item.referenceId})` : '');
+                  const label = item.fullName + (item.referenceId ? ` (${item.referenceId})` : '');
 
                   const isSelectable = !this.selection.find(categoryFilter => {
 
                     if (this.selectionMode === CategoriesModes.SelfAndChildren) {
                       let alreadySelected = false;
                       for (let length = item.fullIdPath.length, i = length - 1; i >= 0 && !alreadySelected; i--) {
-                        alreadySelected = item.fullIdPath[i] === categoryFilter.value;
+                        alreadySelected = item.fullIdPath[i] === categoryFilter;
                       }
                       return alreadySelected;
                     } else {
-                      return categoryFilter.value === item.id;
+                      return categoryFilter === item.id;
                     }
                   });
                   suggestions.push({ data: item, label: label, isSelectable: isSelectable });

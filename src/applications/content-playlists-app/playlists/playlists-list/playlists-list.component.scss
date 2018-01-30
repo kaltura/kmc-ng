@@ -170,6 +170,10 @@
 	}
 }
 
+:host{
+	width: 100%;
+}
+
 :host /deep/ k-area-blocker>.kAreaBlockerContainer {
   z-index: 203;
 }

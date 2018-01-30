@@ -1,10 +1,9 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { GroupedListItem, ListItem, RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filters.service';
+import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
@@ -51,9 +50,12 @@ export interface PrimeListsGroup {
   templateUrl: './entries-refine-filters.component.html',
   styleUrls: ['./entries-refine-filters.component.scss']
 })
-export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
+export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
+    @Input() refineFilters: RefineGroup[];
+
+    @Input() enforcedFilters: Partial<EntriesFilters>;
 
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
@@ -63,8 +65,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   // properties that are exposed to the template
   public _primeListsGroups: PrimeListsGroup[] = [];
 
-  public _showLoader = false;
-  public _blockerMessage: AreaBlockerMessage = null;
+  public _showLoader = true;
   public _createdFilterError: string = null;
   public _scheduledAfter: Date;
   public _scheduledBefore: Date;
@@ -75,13 +76,19 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   public _createdBefore: Date;
 
 
-  constructor(private _entriesRefineFilters: EntriesRefineFiltersService,
-              private _entriesStore: EntriesStore,
+  constructor(private _entriesStore: EntriesStore,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
-      this._prepare();
+      this._registerToFilterStoreDataChanges();
+      this._handleFiltersChange();
+  }
+
+  ngOnChanges(changes) {
+      if (typeof changes.filters !== 'undefined') {
+          this._handleFiltersChange();
+      }
   }
 
   ngOnDestroy() {
@@ -97,9 +104,14 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
     }
 
   private _updateComponentState(updates: Partial<EntriesFilters>): void {
+      if (!this.refineFilters) {
+          return;
+      }
+
       if (typeof updates.createdAt  !== 'undefined') {
           this._createdAfter = updates.createdAt.fromDate || null;
           this._createdBefore = updates.createdAt.toDate || null;
+          this._createdFilterError = null;
       }
 
       if (typeof updates.scheduledAt  !== 'undefined') {
@@ -107,27 +119,34 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           this._scheduledBefore = updates.scheduledAt.toDate || null;
       }
 
+      const customMetadataFilter = updates['customMetadata'];
+      const shouldClearCustomMetadata = customMetadataFilter ? Object.keys(customMetadataFilter).length === 0 : false;
       let updatedPrimeTreeSelections = false;
+
       Object.keys(this._primeListsMap).forEach(listName => {
           const listData = this._primeListsMap[listName];
-          let listFilter: { value: string, label: string }[];
-          if (listData.group === 'customMetadata')
-          {
-              const customMetadataFilter = updates['customMetadata'];
-              listFilter = customMetadataFilter ? customMetadataFilter[listName] : null;
+          let listFilter: any[];
+          if (listData.group === 'customMetadata') {
+              if (shouldClearCustomMetadata) {
+                  listFilter = [];
+              } else {
+                  listFilter = customMetadataFilter ? customMetadataFilter[listName] : undefined; // important: must set 'undefined' and not null because null is valid value
+              }
           }else
           {
               listFilter = updates[listName] ;
           }
 
           if (typeof listFilter !== 'undefined') {
+              // important: the above condition doesn't filter out 'null' because 'null' is valid value.
+
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
-              const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, 'value');
+              const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, null);
               const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
 
               diff.added.forEach(addedItem => {
                   const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-                  const matchingItem = listItems.find(item => item.value === addedItem.value);
+                  const matchingItem = listItems.find(item => item.value === addedItem);
                   if (!matchingItem) {
                       console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
                   } else {
@@ -173,7 +192,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
     private _syncScheduleDatesMode() {
         const timeScheduling = this._entriesStore.cloneFilter('timeScheduling', []);
-        this._scheduledSelected = !!timeScheduling.find(item => item.value === 'scheduled');
+        this._scheduledSelected = !!timeScheduling.find(item => item === 'scheduled');
 
         if (!this._scheduledSelected) {
             this._scheduledAfter = null;
@@ -182,32 +201,14 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
         }
     }
 
-    private _prepare(): void {
-        this._showLoader = true;
-        this._entriesRefineFilters.getFilters()
-            .cancelOnDestroy(this)
-            .first() // only handle it once, no need to handle changes over time
-            .subscribe(
-                groups => {
-                    this._showLoader = false;
-                    this._buildComponentLists(groups);
-                    this._restoreFiltersState();
-                    this._registerToFilterStoreDataChanges();
-                },
-                error => {
-                    this._showLoader = false;
-                    this._blockerMessage = new AreaBlockerMessage({
-                        message: error.message || this._appLocalization.get('applications.content.filters.errorLoading'),
-                        buttons: [{
-                            label: this._appLocalization.get('app.common.retry'),
-                            action: () => {
-                                this._blockerMessage = null;
-                                this._prepare();
-                            }
-                        }
-                        ]
-                    })
-                });
+    private _handleFiltersChange(): void {
+        if (this.refineFilters) {
+            this._showLoader = false;
+            this._buildComponentLists();
+            this._restoreFiltersState();
+        } else {
+            this._showLoader = true;
+        }
     }
 
     private _fixPrimeTreePropagation()
@@ -219,17 +220,17 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                 this._primeTreesActions.forEach(item =>
                 {
                     item.fixPropagation();
-                })
+                });
             }
         });
     }
 
-    _buildComponentLists(groups: RefineGroup[]):void {
+    _buildComponentLists(): void {
         this._primeListsMap = {};
         this._primeListsGroups = [];
 
         // create root nodes
-        groups.forEach(group => {
+        (this.refineFilters || []).forEach(group => {
             const filtersGroup = {label: group.label, lists: []};
             this._primeListsGroups.push(filtersGroup);
 
@@ -238,29 +239,32 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                 if (list.items.length > 0) {
                     const primeList = {items: [], selections: [], group: list.group};
 
-                    this._primeListsMap[list.name] = primeList;
-                    filtersGroup.lists.push(primeList);
+                    const shouldAllowFilter = (!this.enforcedFilters || !this.enforcedFilters[list.name]);
 
-                    const listRootNode: PrimeListItem = {
-                        label: list.label,
-                        value: null,
-                        listName: list.name,
-                        parent: null,
-                        children: []
-                    };
+                    if (shouldAllowFilter) {
+                        this._primeListsMap[list.name] = primeList;
+                        filtersGroup.lists.push(primeList);
 
-                    list.items.forEach(item =>
-                    {
-                        listRootNode.children.push({
-                            label: item.label,
-                            value: item.value,
-                            children: [],
-                            listName: <any>list.name,
-                            parent: listRootNode
-                        })
-                    });
+                        const listRootNode: PrimeListItem = {
+                            label: list.label,
+                            value: null,
+                            listName: list.name,
+                            parent: null,
+                            children: []
+                        };
 
-                    primeList.items.push(listRootNode);
+                        list.items.forEach(item => {
+                            listRootNode.children.push({
+                                label: item.label,
+                                value: item.value,
+                                children: [],
+                                listName: <any>list.name,
+                                parent: listRootNode
+                            })
+                        });
+
+                        primeList.items.push(listRootNode);
+                    }
                 }
             });
 
@@ -302,7 +306,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
       });
 
       if (updateResult.createdAt && updateResult.createdAt.failed) {
-          this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+          this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
 
           setTimeout(() => {
               const createdAt = this._entriesStore.cloneFilter('createdAt', null);
@@ -329,7 +333,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
       });
 
       if (updateResult.scheduledAt && updateResult.scheduledAt.failed) {
-          this._scheduledFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+          this._scheduledFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
 
           setTimeout(() => {
               const scheduledAt = this._entriesStore.cloneFilter('scheduledAt', null);
@@ -354,7 +358,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
-              let newFilterItems: (GroupedListItem | ListItem)[];
+              let newFilterItems: string[];
               let newFilterValue;
               let newFilterName: string;
 
@@ -363,7 +367,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                   newFilterValue = this._entriesStore.cloneFilter('customMetadata', {});
                   newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
-              }else {
+              } else {
                   newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
                   newFilterName = node.listName;
               }
@@ -376,13 +380,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      if (!newFilterItems.find(item => item.value === selectedNode.value)) {
-
-                          if (listData.group === 'customMetadata') {
-                              newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label,  tooltip: `${listData.items[0].label}: ${selectedNode.value}`  });
-                          } else {
-                              newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label });
-                          }
+                      if (!newFilterItems.find(item => item === selectedNode.value)) {
+                          newFilterItems.push(selectedNode.value);
                       }
                   });
               this._entriesStore.filter({[newFilterName]: newFilterValue});
@@ -398,7 +397,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
-              let newFilterItems: { value: string, label: string }[];
+              let newFilterItems: any[];
               let newFilterValue;
               let newFilterName: string;
 
@@ -420,7 +419,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      const itemIndex = newFilterItems.findIndex(item => item.value === selectedNode.value);
+                      const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
                       if (itemIndex > -1) {
                           newFilterItems.splice(itemIndex, 1);
 

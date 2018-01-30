@@ -1,5 +1,4 @@
 <div class="kTable">
-  <k-area-blocker  [showLoader]="(manageEndUserPermissionsService.users.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
     <p-dataTable #dataTable
                dataKey="id"
                scrollable="true"
@@ -83,5 +82,4 @@
     </p-column>
 
   </p-dataTable>
-  </k-area-blocker>
 </div>

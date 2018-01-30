@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/multicast';
 import 'rxjs/add/operator/publishReplay';
@@ -12,20 +12,30 @@ import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaCategoryListResponse } from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
-import { KalturaPrivacyType } from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
+
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { CategoriesGraphUpdatedEvent } from "app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
 import { KalturaAppearInListType } from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import { KalturaPrivacyType } from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
 import { KalturaContributionPolicyType } from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export interface CategoryData {
-  parentId?: number,
-  id: number,
-  fullIdPath: number[],
-  name: string,
-  referenceId: string,
-  sortValue: number,
-  fullNamePath: string[],
-  childrenCount: number
+    parentId?: number,
+    id: number,
+    fullIdPath: number[],
+    name: string,
+    referenceId: string,
+    sortValue: number,
+    fullName: string,
+    childrenCount: number,
+    membersCount: number,
+    appearInList: KalturaAppearInListType,
+    contributionPolicy: KalturaContributionPolicyType,
+    privacy: KalturaPrivacyType;
+    privacyContexts: string;
+    privacyContext: string;
 }
 
 export interface CategoriesQuery {
@@ -34,23 +44,62 @@ export interface CategoriesQuery {
 
 
 @Injectable()
-export class CategoriesSearchService {
-  private _categoriesCache: { [key: string]: Observable<{ items: CategoryData[] }> } = {};
+export class CategoriesSearchService implements OnDestroy {
+  private _groupedCategoriesCache: { [key: string]: Observable<{ items: CategoryData[] }> } = {};
+  private _categoriesMap: Map<number, CategoryData> = new Map<number, CategoryData>();
+  private _logger: KalturaLogger;
 
-  constructor(private kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization) {
+  constructor(private kalturaServerClient: KalturaClient, logger: KalturaLogger, private _appEvents: AppEventsService) {
+      this._logger = logger.subLogger('CategoriesSearchService');
+
+      this._appEvents.event(CategoriesGraphUpdatedEvent)
+          .cancelOnDestroy(this)
+          .subscribe(() => {
+              this._logger.info(`clear categories cache (triggered by categories graph updated event)`);
+              this._groupedCategoriesCache = {};
+              this._categoriesMap.clear();
+          });
   }
 
+  ngOnDestroy()
+  {
+  }
+
+
   public getAllCategories(): Observable<CategoriesQuery> {
-    return this._getCategoriesWithCache({ requestToken: 'all_categories_token' });
+    return this._getCategoriesWithCache({ cacheToken: 'all_categories_token' });
   }
 
   public getRootCategories(): Observable<CategoriesQuery> {
-    return this._getCategoriesWithCache({ requestToken: 'root_categories', parentId: 0 });
+    return this._getCategoriesWithCache({ cacheToken: 'root_categories', parentId: 0 });
   }
 
-  public getCategoriesFromList(categoriesList: number[]): Observable<CategoriesQuery> {
+  public getCachedCategory(categoryId: number): CategoryData{
+    return this._categoriesMap.get(categoryId);
+  }
+
+  public getCategory(categoryId: number): Observable<CategoryData> {
+      // DEVELOPER NOTICE: this method always query the server bypassing the cache. this is by design.
+      // changing it prioritize cache will require refactoring places that are using this method.
+
+      const responseProfile = this._createResponseProfile();
+
+      return <any>this.kalturaServerClient.request(
+          new CategoryGetAction({id: categoryId, responseProfile})
+      ).map(category => {
+          return this.parseAndCacheCategories([category])[0];
+      })
+  }
+
+  public getCategories(categoriesList: number[]): Observable<CategoriesQuery> {
+      // DEVELOPER NOTICE: this method always query the server bypassing the cache. this is by design.
+      // changing it prioritize cache will require refactoring places that are using this method.
     if (categoriesList && categoriesList.length) {
-      return this._getCategories({ categoriesList });
+        return this.buildCategoryListRequest({ categoriesList })
+            .map(response => {
+                // parse response into categories items
+                return { items: this.parseAndCacheCategories(response.objects) };
+            });
     } else {
       return Observable.throw({ message: 'missing categoriesList argument' });
     }
@@ -62,10 +111,12 @@ export class CategoriesSearchService {
       return Observable.throw({ message: 'missing parentId argument' });
     }
 
-    return this._getCategoriesWithCache({ requestToken: parentId + '', parentId });
+    return this._getCategoriesWithCache({ cacheToken: parentId + '', parentId });
   }
 
   public getSuggestions(text: string): Observable<CategoryData[]> {
+      // DEVELOPER NOTICE: this method always query the server bypassing the cache. this is by design.
+      // changing it prioritize cache will require refactoring places that are using this method.
     if (text) {
       return Observable.create(observer => {
         const filter = new KalturaCategoryFilter({
@@ -81,7 +132,7 @@ export class CategoriesSearchService {
         const requestSubscription = this.kalturaServerClient.request(
           new CategoryListAction({ filter })
         ).subscribe(result => {
-            const items = this.parseCategoriesItems(result);
+            const items = this.parseAndCacheCategories(result.objects);
 
             observer.next(items);
             observer.complete();
@@ -101,29 +152,18 @@ export class CategoriesSearchService {
     }
   }
 
-  private _getCategories({ parentId, categoriesList }: { parentId?: number, categoriesList?: number[] }): Observable<CategoriesQuery> {
-    return this.buildCategoryListRequest({ parentId, categoriesList })
-      .map(response => {
-        // parse response into categories items
-        return { items: this.parseCategoriesItems(response) };
-      });
-  }
-
-  private _getCategoriesWithCache({ requestToken, parentId, categoriesList }: { requestToken: string, parentId?: number, categoriesList?: number[] }): Observable<CategoriesQuery> {
+  private _getCategoriesWithCache({ cacheToken, parentId, categoriesList }: { cacheToken: string, parentId?: number, categoriesList?: number[] }): Observable<CategoriesQuery> {
     // no request found in queue - get from cache if already queried those categories
-    let cachedResponse = this._categoriesCache[requestToken];
+    let cachedResponse = this._groupedCategoriesCache[cacheToken];
 
     if (!cachedResponse) {
-      const categoryListRequest = this.buildCategoryListRequest({ parentId, categoriesList });
-
-      // 'multicast' function will share the observable if concurrent requests to the same parent will be executed).
-      // we don't use 'share' function since it is more relevant to hot/persist origin.
-      cachedResponse = categoryListRequest
+        this._logger.info(`caching categories for token '${cacheToken}'`);
+        this._groupedCategoriesCache[cacheToken] = cachedResponse = this.buildCategoryListRequest({ parentId, categoriesList })
         .map(response => {
           // parse response into categories items
-          return { items: this.parseCategoriesItems(response) };
+          return { items: this.parseAndCacheCategories(response.objects) };
         }).catch(error => {
-          this._categoriesCache[requestToken] = null;
+          this._groupedCategoriesCache[cacheToken] = null;
 
           // re-throw the provided error
           return Observable.throw(error);
@@ -135,101 +175,32 @@ export class CategoriesSearchService {
     return cachedResponse;
   }
 
-  private parseCategoriesItems(response: KalturaCategoryListResponse): CategoryData[] {
+  private parseAndCacheCategories(kalturaCategories: KalturaCategory[]): CategoryData[] {
     const result = [];
 
-    if (response && response.objects) {
-      response.objects.forEach((category: KalturaCategory) => {
+    if (kalturaCategories) {
+        kalturaCategories.map((category) => {
         const fullIdPath = (category.fullIds ? category.fullIds.split('>') : []).map((item: any) => Number(item));
-        result.push({
-          id: category.id,
-          name: category.name,
-          fullIdPath: fullIdPath,
-          referenceId: category.referenceId,
-          parentId: category.parentId !== 0 ? category.parentId : null,
-          sortValue: category.partnerSortValue,
-          fullNamePath: category.fullName ? category.fullName.split('>') : [],
-          childrenCount: category.directSubCategoriesCount,
-          tooltip: this._buildTooltip(category)
-        });
+        const newCategoryData = {
+            id: category.id,
+            name: category.name,
+            fullIdPath: fullIdPath,
+            referenceId: category.referenceId,
+            parentId: category.parentId !== 0 ? category.parentId : null,
+            sortValue: category.partnerSortValue,
+            fullName: category.fullName,
+            childrenCount: category.directSubCategoriesCount,
+            membersCount: category.membersCount,
+            appearInList: category.appearInList,
+            privacy: category.privacy,
+            privacyContext: category.privacyContext,
+            privacyContexts: category.privacyContexts,
+            contributionPolicy: category.contributionPolicy
+        };
+
+        this._categoriesMap.set(newCategoryData.id, newCategoryData);
+        result.push(newCategoryData);
       });
-    }
-
-    return result;
-  }
-
-  private _buildTooltip(category: KalturaCategory): string {
-    if (!category.privacyContexts) {
-      return category.fullName;
-    }
-
-    let result = `${category.fullName}\n`;
-
-    if (category.privacyContext) {
-      const title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.privacyContext');
-      result += `${title}: ${category.privacyContext}\n`;
-    }
-
-    if (category.privacy) {
-      const title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.contentPrivacy');
-      let value = '';
-      switch (category.privacy) {
-        case KalturaPrivacyType.all:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noRestriction');
-          break;
-        case KalturaPrivacyType.authenticatedUsers:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.requiresAuth');
-          break;
-        case KalturaPrivacyType.membersOnly:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noMembers');
-          break;
-        default:
-          break;
-      }
-
-      if (!!value) {
-        result += `${title}: ${value}\n`;
-      }
-    }
-
-    if (category.appearInList) {
-      let value = '';
-      let title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.categoryListing');
-      switch (category.appearInList) {
-        case KalturaAppearInListType.categoryMembersOnly:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.private');
-          break;
-        case KalturaAppearInListType.partnerOnly:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noRestriction');
-          break;
-        default:
-          break
-      }
-
-      if (!!value) {
-        result += `${title}: ${value}\n`;
-      }
-
-      value = '';
-      title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.contributionPolicy');
-      switch (<any>category.appearInList) {
-        case KalturaContributionPolicyType.all:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noRestriction');
-          break;
-        case KalturaContributionPolicyType.membersWithContributionPermission:
-          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.private');
-          break;
-        default:
-          break;
-      }
-
-      if (!!value) {
-        result += `${title}: ${value}\n`;
-      }
-
-      if (category.membersCount > 0) {
-        result += this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.specificEndUserPermissions');
-      }
     }
 
     return result;
@@ -246,13 +217,17 @@ export class CategoriesSearchService {
       filter.idIn = categoriesList.join(',');
     }
 
-    const responseProfile = new KalturaDetachedResponseProfile({
-      fields: 'id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount,contributionPolicy,privacyContext,privacyContexts,appearInList,privacy,membersCount',
-      type: KalturaResponseProfileType.includeFields
-    });
+    const responseProfile = this._createResponseProfile();
 
     return <any>this.kalturaServerClient.request(
       new CategoryListAction({ filter, responseProfile })
     )
+  }
+
+  private _createResponseProfile(): KalturaDetachedResponseProfile {
+      return new KalturaDetachedResponseProfile({
+          fields: 'id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount,contributionPolicy,privacyContext,privacyContexts,appearInList,privacy,membersCount',
+          type: KalturaResponseProfileType.includeFields
+      });
   }
 }
