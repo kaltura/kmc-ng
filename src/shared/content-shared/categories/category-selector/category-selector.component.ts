@@ -1,10 +1,10 @@
 import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    Component,
+    EventEmitter, Input, OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
@@ -16,17 +16,17 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 
 @Component({
-  selector: 'kCategoryParentSelector',
-  templateUrl: './category-parent-selector.component.html',
-  styleUrls: ['./category-parent-selector.component.scss']
+    selector: 'kCategorySelector',
+    templateUrl: './category-selector.component.html',
+    styleUrls: ['./category-selector.component.scss']
 })
-export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
+export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
 
   @Output() onCategorySelected = new EventEmitter<number>();
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
-
+    @Input() enableNoParentSelection: boolean = true;
 
   public _categoriesLoaded = false;
   public _selectedCategory: number = null;
@@ -35,15 +35,23 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
 
-
-
   constructor(private _categoriesSearchService: CategoriesSearchService,
               private _appLocalization: AppLocalization) {
-    this._updateSelectionTooltip();
+
+  }
+
+  ngOnChanges(changes)
+  {
+      if (typeof changes.enableNoParentSelection !== 'undefined')
+      {
+          this._updateSelectionTooltip();
+      }
   }
 
   ngOnInit() {
+      this._updateSelectionTooltip();
   }
+
   ngOnDestroy() {
 
     if (this._searchCategoriesSubscription) {
@@ -58,12 +66,13 @@ export class CategoryParentSelectorComponent implements OnDestroy, OnInit {
           const selectedCategory = this._categoriesSearchService.getCachedCategory(this._selectedCategory);
           tooltip = this._selectedCategory ? selectedCategory.fullName : '';
       } else {
-          tooltip = this._appLocalization.get('applications.content.addNewCategory.noParent');
+          tooltip = this._appLocalization.get(`applications.content.addNewCategory.${this.enableNoParentSelection ? 'noParent' : 'noSelection'}`);
       }
 
       this._selectionTooltip = tooltip ? this._appLocalization.get(
           'applications.content.categories.selectedCategory',
-          {0: tooltip}) : null;
+          {0: tooltip}
+      ) : null;
   }
 
   public _onAutoCompleteSearch(event): void {

@@ -24,6 +24,7 @@ import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-
 import { BrowserService } from '../providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { environment } from 'app-config/index';
+import { KmcServerPolls } from 'app-shared/kmc-shared';
 
 
 export enum AppAuthStatusTypes {
@@ -61,6 +62,7 @@ export class AppAuthentication {
 
   constructor(private kalturaServerClient: KalturaClient,
               private appStorage: AppStorage,
+              private _serverPolls: KmcServerPolls,
               private _pageExitVerificationService: PageExitVerificationService) {
     this._appUser = new AppUser();
   }
@@ -191,7 +193,7 @@ export class AppAuthentication {
           const value = `${ks}`;
           this.appStorage.setInSessionStorage('auth.login.ks', value);  // save ks in session storage
 
-          this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
+          this.onUserLoggedIn();
 
           return {success: true, error: null};
         }
@@ -273,7 +275,7 @@ export class AppAuthentication {
               return true;
             }).subscribe(
             () => {
-              this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
+              this.onUserLoggedIn();
               observer.next(true);
               observer.complete();
             },
@@ -290,6 +292,14 @@ export class AppAuthentication {
         }
       }
     });
+  }
+
+  private onUserLoggedIn()
+  {
+      this.kalturaServerClient.ks = this.appUser.ks;
+      this.kalturaServerClient.partnerId = this.appUser.partnerId;
+      this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
+      this._serverPolls.forcePolling();
   }
 
   public loginByKs(requestedPartnerId: number): Observable<void> {
@@ -320,5 +330,16 @@ export class AppAuthentication {
   private forceReload() {
     this._pageExitVerificationService.removeAll();
     this.reload();
+  }
+
+  // Hack to update user name in the header
+  public _updateNameManually(firstName: string, lastName: string, fullName: string): void {
+    if (firstName && lastName) {
+      this._appUser.firstName = firstName;
+      this._appUser.lastName = lastName;
+      this._appUser.fullName = fullName;
+    } else {
+      throw Error('Cannot update the current user. The first, the last name or the fullName is not provided');
+    }
   }
 }

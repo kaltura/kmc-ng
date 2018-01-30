@@ -1,5 +1,4 @@
 import {CategoryMetadataWidget} from './category-metadata/category-metadata-widget.service';
-
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActionTypes, CategoryService} from './category.service';
 import {CategorySectionsListWidget} from './category-sections-list/category-sections-list-widget.service';
@@ -11,6 +10,12 @@ import {Observable} from 'rxjs/Observable';
 import {CategoryEntitlementsWidget} from './category-entitlements/category-entitlements-widget.service';
 import {CategorySubcategoriesWidget} from './category-subcategories/category-subcategories-widget.service';
 import {CategoryDetailsWidget} from "./category-details/category-details-widget.service";
+import {
+  CategoriesStatus,
+  CategoriesStatusMonitorService
+} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { BrowserService } from 'app-shared/kmc-shell';
+
 
 @Component({
   selector: 'kCategory',
@@ -42,9 +47,13 @@ export class CategoryComponent implements OnInit, OnDestroy {
               widget4: CategorySubcategoriesWidget,
               widget5: CategoryEntitlementsWidget,
               public _categoryStore: CategoryService,
+              private _browserService: BrowserService,
               private _categoriesStore: CategoriesService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+
     categoryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5]);
+
   }
 
   ngOnDestroy() {
@@ -53,107 +62,127 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._categoryStore.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        status => {
-          this._showLoader = false;
-          this._areaBlockerMessage = null;
-
-          if (status) {
-            switch (status.action) {
-              case ActionTypes.CategoryLoading:
-                this._showLoader = true;
-
-							// when loading new category in progress, the 'categoryID' property
-							// reflect the category that is currently being loaded
-							// while 'category$' stream is null
-							this._currentCategoryId = +this._categoryStore.categoryId;
-							this._updateNavigationState();
-
-							break;
-						case ActionTypes.CategoryLoaded:
-							this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });
-							break;
-						case ActionTypes.CategoryLoadingFailed:
-							let message = status.error ? status.error.message : '';
-							message = message || this._appLocalization.get('applications.content.errors.loadError');
-							this._areaBlockerMessage = new AreaBlockerMessage({
-								message: message,
-								buttons: [
-									this._createBackToCategoriesButton()
-									]
-
-							});
-							break;
-						case ActionTypes.CategorySaving:
-							// loader is enabled using 'block-shell' tag automatically, no need to set the showLoader = true
-							break;
-						case ActionTypes.CategorySavingFailed:
-
-                this._areaBlockerMessage = new AreaBlockerMessage({
-                  message: this._appLocalization.get('applications.content.categoryDetails.errors.saveError'),
-                  buttons: [
-                    {
-                      label: this._appLocalization.get('applications.content.categoryDetails.errors.reload'),
-                      action: () => {
-                        this._categoryStore.reloadCategory();
-                      }
-                    }
-                  ]
-                });
-                break;
-              case ActionTypes.CategoryDataIsInvalid:
-
-                this._areaBlockerMessage = new AreaBlockerMessage({
-                  message: this._appLocalization.get('applications.content.categoryDetails.errors.validationError'),
-                  buttons: [
-                    {
-                      label: this._appLocalization.get('applications.content.categoryDetails.errors.dismiss'),
-                      action: () => {
-                        this._areaBlockerMessage = null;
-                      }
-                    }
-                  ]
-                });
-                break;
-              case ActionTypes.ActiveSectionBusy:
-
-                this._areaBlockerMessage = new AreaBlockerMessage({
-                  message: this._appLocalization.get('applications.content.categoryDetails.errors.busyError'),
-                  buttons: [
-                    {
-                      label: this._appLocalization.get('applications.content.categoryDetails.errors.dismiss'),
-                      action: () => {
-                        this._areaBlockerMessage = null;
-                      }
-                    }
-                  ]
-                });
-                break;
-              case ActionTypes.CategoryPrepareSavingFailed:
-
-                this._areaBlockerMessage = new AreaBlockerMessage({
-                  message: this._appLocalization.get('applications.content.categoryDetails.errors.savePrepareError'),
-                  buttons: [
-                    {
-                      label: this._appLocalization.get('applications.content.categoryDetails.errors.dismiss'),
-                      action: () => {
-                        this._areaBlockerMessage = null;
-                      }
-                    }
-                  ]
-                });
-                break;
-              default:
-                break;
-            }
+    this._showLoader = true;
+    this._categoriesStatusMonitorService.status$
+	    .cancelOnDestroy(this)
+	    .first()
+	    .subscribe((status: CategoriesStatus) => {
+          if (status.lock){
+            this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
+              message: this._appLocalization.get('applications.content.categories.categoriesLockMsg')
+            });
+            this._showLoader = false;
+            this._categoryStore.returnToCategories(true);
+          }else
+          {
+            this._prepare();
           }
-        },
-        error => {
-          // TODO [kmcng] navigate to error page
-          throw error;
         });
+  }
+
+  private _prepare(): void{
+    this._categoryStore.state$
+	    .cancelOnDestroy(this)
+	    .subscribe(
+            status => {
+              this._showLoader = false;
+              this._areaBlockerMessage = null;
+
+              if (status) {
+                switch (status.action) {
+                  case ActionTypes.CategoryLoading:
+                    this._showLoader = true;
+
+                    // when loading new category in progress, the 'categoryID' property
+                    // reflect the category that is currently being loaded
+                    // while 'category$' stream is null
+                    this._currentCategoryId = +this._categoryStore.categoryId;
+                    this._updateNavigationState();
+
+                    break;
+                  case ActionTypes.CategoryLoaded:
+                    this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });
+                    break;
+                  case ActionTypes.CategoryLoadingFailed:
+                    let message = status.error ? status.error.message : '';
+                    message = message || this._appLocalization.get('applications.content.errors.loadError');
+                    this._areaBlockerMessage = new AreaBlockerMessage({
+                      message: message,
+                      buttons: [
+                        this._createBackToCategoriesButton()
+                      ]
+
+                    });
+                    break;
+                  case ActionTypes.CategorySaving:
+                    // loader is enabled using 'block-shell' tag automatically, no need to set the showLoader = true
+                    break;
+                  case ActionTypes.CategorySavingFailed:
+
+                    this._areaBlockerMessage = new AreaBlockerMessage({
+                      message: this._appLocalization.get('applications.content.categoryDetails.errors.saveError'),
+                      buttons: [
+                        {
+                          label: this._appLocalization.get('applications.content.categoryDetails.errors.reload'),
+                          action: () => {
+                            this._categoryStore.reloadCategory();
+                          }
+                        }
+                      ]
+                    });
+                    break;
+                  case ActionTypes.CategoryDataIsInvalid:
+
+                    this._areaBlockerMessage = new AreaBlockerMessage({
+                      message: this._appLocalization.get('applications.content.categoryDetails.errors.validationError'),
+                      buttons: [
+                        {
+                          label: this._appLocalization.get('applications.content.categoryDetails.errors.dismiss'),
+                          action: () => {
+                            this._areaBlockerMessage = null;
+                          }
+                        }
+                      ]
+                    });
+                    break;
+                  case ActionTypes.ActiveSectionBusy:
+
+                    this._areaBlockerMessage = new AreaBlockerMessage({
+                      message: this._appLocalization.get('applications.content.categoryDetails.errors.busyError'),
+                      buttons: [
+                        {
+                          label: this._appLocalization.get('applications.content.categoryDetails.errors.dismiss'),
+                          action: () => {
+                            this._areaBlockerMessage = null;
+                          }
+                        }
+                      ]
+                    });
+                    break;
+                  case ActionTypes.CategoryPrepareSavingFailed:
+
+                    this._areaBlockerMessage = new AreaBlockerMessage({
+                      message: this._appLocalization.get('applications.content.categoryDetails.errors.savePrepareError'),
+                      buttons: [
+                        {
+                          label: this._appLocalization.get('applications.content.categoryDetails.errors.dismiss'),
+                          action: () => {
+                            this._areaBlockerMessage = null;
+                          }
+                        }
+                      ]
+                    });
+                    break;
+                  default:
+                    break;
+                }
+              }
+            },
+            error => {
+              // TODO [kmcng] navigate to error page
+              throw error;
+            });
   }
 
   private _updateNavigationState(): void {

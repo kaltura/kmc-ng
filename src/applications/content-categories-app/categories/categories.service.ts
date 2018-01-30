@@ -578,6 +578,11 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                         }
                         throw new Error(message);
                     }
+
+                    if (data[0].result) {
+                        this._appEvents.publish(new CategoriesGraphUpdatedEvent());
+                    }
+
                     return {category: data[0].result};
                 });
     }

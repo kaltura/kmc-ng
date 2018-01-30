@@ -1,4 +1,4 @@
-<p-radioButton class="kNoParentOption" [value]="null" [(ngModel)]="_selectedCategory"
+<p-radioButton *ngIf="enableNoParentSelection" class="kNoParentOption" [value]="null" [(ngModel)]="_selectedCategory"
                [ngModelOptions]="{standalone: true}"
                (click)="_clearSelection()"
                label="{{('applications.content.moveCategory.noParent') | translate}}"></p-radioButton>

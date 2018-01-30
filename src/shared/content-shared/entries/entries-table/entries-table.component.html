@@ -81,10 +81,7 @@
                 [header]="'applications.content.table.createdOn' | translate"
                 [sortable]="_columns.createdAt?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.createdAt)">
-        <ng-container *ngIf="!_columns.moderationCount">
-          <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | kDate}}</ng-template>
-        </ng-container>
-        <ng-container *ngIf="_columns.moderationCount">
+        <ng-container>
           <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | kDate}}</ng-template>
         </ng-container>
       </p-column>

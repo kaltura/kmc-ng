@@ -14,7 +14,10 @@
       "Settings": "Settings",
       "Users": "Users",
       "Account Settings": "Account Settings",
+      "Integration Settings": "Integration Settings",
       "Account Upgrade": "Account Upgrade",
+      "My User Settings": "My User Settings",
+      "Administration": "Administration",
       "Roles": "Roles",
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
@@ -461,7 +464,10 @@
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
+        "deleteWithEditWarningTags": "This category was created by another application and deleting it will effect this application or site.\n Do you want to continue?",
         "editWithEditWarningTags": "This category was created by another application and editing it will effect this application or site.\n Do you want to continue?",
+        "confirmDeleteWithSubCategories": "The category will be deleted with its sub-categories. Do you want to continue?",
+        "confirmDeleteSingle": "Are you sure you want to delete this category?",
         "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?",
         "confirmDeleteMultiple": "Are you sure you want to delete these categories?",
         "categoryId": "Category ID: {{0}}",
@@ -486,23 +492,29 @@
             "header": "Error",
             "message": "An unexpected error has occurred while trying to delete category."
           }
-        }
+        },
+        "categoriesLockTitle": "Categories Locked",
+        "categoriesLockMsg": "Category tree is currently updating.\nThis operation may take a few minutes.\nCategory editing options will be released when update is completed.",
+        "categoriesUpdateMsg": "Updating Categories"
       },
       "addNewCategory": {
         "newCategory": "New Category",
+        "newSubcategory": "New Sub-Category",
         "selectCategoryParent": "Select the parent category under which the new category will appear",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "apply": "Apply",
         "cancel": "Cancel",
-        "noParent": "No Parent",
+        "noParent":"No Parent",
+        "noSelection": "No Selection",
+
         "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}"
-,
+        "selectedParentCategory":"Parent Category Id: {{value}}",
         "name": "Name",
         "categoryMovedSuccessfully": "Category moved successfully",
         "errors": {
-          "requiredName": "You must enter name"
+          "requiredName": "You must enter name",
+          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
         }
       },
       "moveCategory":{
@@ -856,6 +868,7 @@
         "updated": "Entries updated successfully",
         "note": "Update Note",
         "confirm": "Are you sure you want to update {{0}} entries? It could take a while...",
+        "confirmCategories": "Are you sure you want to update {{0}} categories? It could take a while...",
         "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
         "confirmDropFolders": "Are you sure you want to update {{0}} drop folders files? It could take a while...",
         "deleteEntries": "Delete Entries",
@@ -1245,7 +1258,7 @@
           "title": "Entitlements",
           "description": "Manage your entitlements settings and specific end-user permissions to content in your applications.",
           "privacyContentLabel": {
-            "label" : "Privacy Content Label"
+            "label" : "Privacy Context Label"
           },
           "manageUsersPermissionsEditMessage": {
             "title": "Error",
@@ -1322,6 +1335,7 @@
           },
           "usersPermissions": {
             "title":"Manage End-user Permissions",
+            "titleView":"View End-user Permissions",
             "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",
             "close": "Close",
             "table": {
@@ -1341,7 +1355,7 @@
               "usersCount": "{{0}} Users",
               "selectedUsersCount": "{{0}} Selected",
               "cancel": "Cancel",
-              "remove": "Delete",
+              "remove": "Remove",
               "search": "Search",
               "refine": "Refine",
               "moreActions": "More Actions",
@@ -1445,24 +1459,7 @@
           "fieldRequired": "This field is required"
         }
       },
-      "addNewCategory": {
-        "newCategory": "New Category",
-        "newSubcategory": "New Sub-Category",
-        "selectCategoryParent": "Select the parent category under which the new category will appear",
-        "cancelEdit": "Cancel Edit",
-        "discard": "Discard all changes?",
-        "apply": "Apply",
-        "cancel": "Cancel",
-        "noParent":"No Parent",
-        "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}",
-        "name": "Name",
-        "categoryMovedSuccessfully": "Category moved successfully",
-        "errors": {
-          "requiredName": "You must enter name",
-          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
-        }
-      },
+
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",
@@ -1721,6 +1718,104 @@
         "schemaNameLength": "31 characters max in field \"Name\"",
         "fieldsRequired": "Custom Data must contain at least one field",
         "invalidInput": "Invalid Input"
+      },
+      "integrationSettings": {
+        "accountInfo": {
+          "title": "Account Info",
+          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges. <a href=\"http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/entitlementsettings.htm\">Read More.</a>",
+          "readMore": "Read More.",
+          "partnerId": "Partner ID",
+          "subPartnerId": "Sub Partner ID",
+          "adminSecret": "Administrator Secret",
+          "userSecret": "User Secret",
+          "errors": {
+            "loadFailed": "An error occurred during account info loading"
+          },
+          "notifications": {
+            "title": "Notifications",
+            "message": "For notification setting please contact your PM"
+          }
+        },
+        "entitlement": {
+          "title": "Entitlement",
+          "helpTip": "",
+          "explanation": "To add entitlement settings for categories click ‘Add Entitlement’ select the root category integrated with your application and label it below.",
+          "apiDefault": "API default",
+          "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
+          "entitlementEnforcementEnabled": "Entitlement enforcement enabled",
+          "addEntitlement": {
+            "buttonText": "Add Entitlement",
+            "title": "Add Entitlement",
+            "explanation": "Select the root category integrated with your application and label it below.",
+            "addPrivacyContextLabel": "Add privacy context label",
+            "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+            "apply": "Apply",
+            "errors": {
+              "requiredPrivacyContextLabel": "You must enter privacy context label"
+            }
+          },
+          "editEntitlement": {
+            "title": "Edit Entitlement",
+            "categoryName": "Category Name",
+            "privacyContextLabel": "Privacy context label",
+            "confirmationTitle": "Confirm Edit",
+            "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+            "errors": {
+              "privacyContextLabelRequired": "Please enter Privacy Context Label",
+              "privacyContextLabelExists": "Category is already set with a Privacy Context Label.",
+              "privacyContextLabelTooShort": "Privacy Context labels must include at least 4 characters",
+              "privacyContextLabelRegex": "Privacy Context labels must include only alphanumeric characters"
+            }
+          },
+          "deleteEntitlement": {
+            "title": "Delete Entitlement",
+            "confirmation": "Entitlement settings will be removed from all sub-categories in an asynchronous process. This operation may take a few minutes. \n\nNote: Any previous privacy settings defined for the {{0}} category (including all sub-categories) will be lost.\n\nAre you sure you want to continue?"
+          },
+          "table": {
+            "applicationRootCategory": "Application Root Category",
+            "privacyContextLabel": "Privacy Context Label",
+            "actions": {
+              "edit": "Edit",
+              "delete": "Delete"
+            }
+          },
+          "errors": {
+            "loadError": "An error occurred while loading Entitlement."
+          }
+        }
+      },
+      "myUserSettings": {
+        "userDetails": "User Details",
+        "editUserName": "Edit User Name",
+        "informationMessage": "Please make sure that the information below is up to date",
+        "userName": "User Name",
+        "userId": "User ID",
+        "emailAddress": "Email Address",
+        "role": "Role",
+        "roleDescription": "Role Description",
+        "password": "Password",
+        "editUser": "Edit Password",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "save": "Save",
+        "cancel": "Cancel",
+        "passwordRequiredName": "* Password is required for editing your name.",
+        "passwordRequiredEmail": "* Password is required for editing your email.",
+        "email": "Email",
+        "editEmailAddress": "Edit Email Address",
+        "changePassword": "Change Password",
+        "strongPassword": "It's better to use a strong password that you're not using elsewhere",
+        "currentPassword": "Current Password",
+        "newPassword": "New password",
+        "reTypeNewPassword": "Re-type new password",
+        "errors": {
+          "required": "This field is required",
+          "doNotMuchPasswords": "Password fields do not match",
+          "connection": "Error connecting to server",
+          "getUserData": "Error occurred during getting user data",
+          "updateUser": "Error occurred during updating user data",
+          "passwordStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules :\n- Must be of length between 8 and 14.\n- Must not contain your name\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols:  %%~!@#$^*=+?[]{}.\n- Must not contain the following characters: < or >."
+        }
       }
     }
   },

@@ -1,0 +1,48 @@
+@import 'app-theme/_variables.scss';
+
+.kContainer {
+  display: flex;
+  padding-top: 32px;
+  height: $minTableHeight;
+  box-sizing: border-box;
+  .kLeftColumn{
+    margin-right: 30px;
+  }
+  .kColumn {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+
+    .kAccountInfoContainer {
+      background-color: white;
+      flex: 0 0 auto;
+      margin-bottom: 30px;
+      height: 46%;
+      padding: 30px 28px;
+      min-height: 175px;
+      max-height: 279px;
+    }
+
+    .kNotifications {
+      background-color: white;
+      flex: 1 1 auto;
+      padding-left: 30px;
+      padding-top: 28px;
+      padding-bottom: 28px;
+      .kTitle {
+        color: $kGrayscale1;
+        padding-bottom: 30px;
+        width: 100%;
+        font-family: Lato;
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 24px;
+      }
+    }
+  }
+
+  .kColumn:first-child{
+    max-width: 586px;
+  }
+}

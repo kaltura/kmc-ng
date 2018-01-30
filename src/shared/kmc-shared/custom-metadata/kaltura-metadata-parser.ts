@@ -51,8 +51,8 @@ export class MetadataProfileParser {
 			type: this._extractElementType(element),
 			name: element.attr.name ? element.attr.name.value : '',
 			id: element.attr.id ? element.attr.id.value : '',
-			isRequired: element.attr.minOccurs.value + '' === '1',
-			allowMultiple: element.attr.maxOccurs.value + '' === 'unbounded',
+			isRequired: element.attr.minOccurs ? element.attr.minOccurs.value + '' === '1' : false,
+			allowMultiple: element.attr.maxOccurs ? element.attr.maxOccurs.value + '' === 'unbounded' : false,
 			optionalValues: [],
 			children: []
 		};
