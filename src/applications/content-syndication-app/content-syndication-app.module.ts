@@ -9,14 +9,16 @@ import {
   DropdownModule,
   InputTextModule,
   MenuModule,
+  MultiSelectModule,
   PaginatorModule,
+  RadioButtonModule,
   SpinnerModule,
   TieredMenuModule
 } from 'primeng/primeng';
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {ButtonModule} from 'primeng/components/button/button';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
@@ -29,6 +31,7 @@ import {PlaylistNamePipe} from './pipes/playlist-name.pipe';
 import {PlaylistIconPipe} from './pipes/playlist-icon.pipe';
 import {CopyToClipboardComponent} from './copy-to-clipboard/copy-to-clipboard.component';
 import {DestinationIconPipe} from './pipes/destination-icon.pipe';
+import {FeedDetailsComponentsList} from './feeds/feed-details/feed-details-components-list';
 
 @NgModule({
   imports: [
@@ -40,6 +43,7 @@ import {DestinationIconPipe} from './pipes/destination-icon.pipe';
     DataTableModule,
     DropdownModule,
     InputTextModule,
+    RadioButtonModule,
     KalturaCommonModule,
     KalturaPrimeNgUIModule,
     KalturaUIModule,
@@ -52,7 +56,9 @@ import {DestinationIconPipe} from './pipes/destination-icon.pipe';
     SpinnerModule,
     TieredMenuModule,
     TooltipModule,
+    MultiSelectModule,
     StickyModule,
+    FormsModule
   ],
   declarations: [
     PrimeTableSortDirectionPipe,
@@ -63,7 +69,8 @@ import {DestinationIconPipe} from './pipes/destination-icon.pipe';
     PlaylistIconPipe,
     FeedsListComponent,
     CopyToClipboardComponent,
-    FeedsTableComponent]
+    FeedsTableComponent,
+    FeedDetailsComponentsList]
 })
 export class ContentSyndicationAppModule {
 }

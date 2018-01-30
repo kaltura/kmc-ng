@@ -30,6 +30,10 @@ import {KalturaPlaylistListResponse} from 'kaltura-ngx-client/api/types/KalturaP
 import {SyndicationFeedDeleteAction} from 'kaltura-ngx-client/api/types/SyndicationFeedDeleteAction';
 import {environment} from 'app-environment';
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {KalturaSyndicationFeedEntryCount} from "kaltura-ngx-client/api/types/KalturaSyndicationFeedEntryCount";
+import {SyndicationFeedGetEntryCountAction} from "kaltura-ngx-client/api/types/SyndicationFeedGetEntryCountAction";
+import {SyndicationFeedAddAction} from "kaltura-ngx-client/api/types/SyndicationFeedAddAction";
+import {SyndicationFeedUpdateAction} from "kaltura-ngx-client/api/types/SyndicationFeedUpdateAction";
 
 export interface UpdateStatus {
   loading: boolean;
@@ -345,34 +349,56 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     };
   }
 
-  public confirmDelete(feeds: KalturaBaseSyndicationFeed[]): Observable<{ confirmed: boolean, error?: Error}> {
+  public confirmDelete(feeds: KalturaBaseSyndicationFeed[]): Observable<{ confirmed: boolean, error?: Error }> {
     if (!feeds || !feeds.length) {
       return Observable.throw(new Error(this._appLocalization.get('applications.content.syndication.errors.deleteAttemptFailed')))
     }
 
     return Observable.create(observer => {
-        const message: string = feeds.length < 5 ?
-          (feeds.length === 1 ? this._appLocalization.get('applications.content.syndication.deleteConfirmation.singleFeed',
-            {0: feeds[0].name}) :
-            this._appLocalization.get('applications.content.syndication.deleteConfirmation.upTo5Feed',
-              {0: feeds.map(feed => feed.name).join(', ')})) :
-          this._appLocalization.get('applications.content.syndication.deleteConfirmation.moreThan5');
+      const message: string = feeds.length < 5 ?
+        (feeds.length === 1 ? this._appLocalization.get('applications.content.syndication.deleteConfirmation.singleFeed',
+          {0: feeds[0].name}) :
+          this._appLocalization.get('applications.content.syndication.deleteConfirmation.upTo5Feed',
+            {0: feeds.map(feed => feed.name).join(', ')})) :
+        this._appLocalization.get('applications.content.syndication.deleteConfirmation.moreThan5');
 
-        this._browserService.confirm({
+      this._browserService.confirm({
           header: this._appLocalization.get('applications.content.syndication.deleteConfirmation.title'),
           message: this._appLocalization.get(message),
-            accept: () => {
-              observer.next({failed: false, confirmed: true});
-              observer.complete();
-            }, reject: () => {
+          accept: () => {
+            observer.next({failed: false, confirmed: true});
+            observer.complete();
+          }, reject: () => {
             observer.next({failed: false, confirmed: false});
             observer.complete();
           }
-          }
-        );
+        }
+      );
       return () => {
       }
     });
   }
 
+  public getFeedEntryCount(feedId: string): Observable<KalturaSyndicationFeedEntryCount> {
+    if (!feedId) {
+      return Observable.throw(new Error(this._appLocalization.get('applications.content.syndication.errors.getFeedEntryCount')))
+    }
+
+    return this._kalturaClient.request(
+      new SyndicationFeedGetEntryCountAction({feedId})
+    );
+  }
+
+  public update(id: string, syndicationFeed: KalturaBaseSyndicationFeed): Observable<void> {
+    return this._kalturaClient.request(
+      new SyndicationFeedUpdateAction({id, syndicationFeed})
+    )
+      .map(() => undefined);
+  }
+
+  public create(syndicationFeed: KalturaBaseSyndicationFeed): Observable<KalturaBaseSyndicationFeed> {
+    return this._kalturaClient.request(
+      new SyndicationFeedAddAction({syndicationFeed})
+    );
+  }
 }

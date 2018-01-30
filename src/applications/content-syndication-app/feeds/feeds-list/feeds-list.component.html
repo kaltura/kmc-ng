@@ -6,7 +6,7 @@
         <div class="kFeedsTableFilters">
           <button pButton type="button" label="{{'applications.content.syndication.addFeed' | translate}}"
                   class="kButtonBranded kAddFeedBtn" [class.kHidden]="_selectedFeeds?.length"
-                  [disabled]="_selectedFeeds?.length" (click)="addNewFeed.open()"></button>
+                  [disabled]="_selectedFeeds?.length" (click)="_addNewFeed()"></button>
           <span class="kSelectedFeedsNum" *ngIf="_feedsTotalCount">
              {{'applications.content.syndication.feeds' | translate: {'0': _feedsTotalCount} }}
           </span>
@@ -44,4 +44,9 @@
   </div>
 </k-area-blocker>
 
+<kPopupWidget #feedDetails [popupWidth]="995" [slider]="true">
+  <ng-template>
+    <kFeedDetails [parentPopupWidget]="feedDetails" [feed]="_currentEditFeed" [playlists]="_playlists"></kFeedDetails>
+  </ng-template>
+</kPopupWidget>
 

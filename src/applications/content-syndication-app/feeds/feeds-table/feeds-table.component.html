@@ -21,7 +21,7 @@
                 [sortable]="'custom'"
                 [style]="{'width':'300px'}">
         <ng-template let-col let-feed="rowData" pTemplate="body">
-          <div class="kColName" [kTooltip]="feed[col.field]" [maxWidth]="300" (click)="onEditFeed.emit(feed)">
+          <div class="kColName" [kTooltip]="feed[col.field]" [maxWidth]="300" (click)="_editFeed(feed)">
             {{feed[col.field]}}
           </div>
         </ng-template>

@@ -2,15 +2,17 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {FeedsFilters, FeedsService, SortDirection} from '../feeds.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kFeedsList',
   templateUrl: './feeds-list.component.html',
-  styleUrls: ['./feeds-list.component.scss']
+  styleUrls: ['./feeds-list.component.scss'],
+  providers : [FeedsService]
 })
 
 export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -20,7 +22,8 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
   public _selectedFeeds: KalturaBaseSyndicationFeed[] = [];
   public _feedsTotalCount: number = null;
   public _playlists: KalturaPlaylist[] = null;
-  // @ViewChild('addNewFeed') addNewFeed: PopupWidgetComponent;
+  public _currentEditFeed: KalturaBaseSyndicationFeed = null;
+  @ViewChild('feedDetails') feedDetailsPopup: PopupWidgetComponent;
 
   public _query = {
     pageIndex: 0,
@@ -86,7 +89,8 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
   public _onActionSelected({action, feed}: { action: string, feed: KalturaBaseSyndicationFeed }) {
     switch (action) {
       case 'edit':
-        // TODO: Implement
+        this._currentEditFeed = feed;
+        this.feedDetailsPopup.open();
         break;
       case 'delete':
         this._deleteFeed(feed);
@@ -271,5 +275,10 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+  }
+
+  public _addNewFeed() {
+    this._currentEditFeed = null;
+    this.feedDetailsPopup.open();
   }
 }

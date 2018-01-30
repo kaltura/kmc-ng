@@ -4,9 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 import * as R from 'ramda';
-import {KalturaClient} from 'kaltura-ngx-client';
-
-import {KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaPermissionFilter} from 'kaltura-ngx-client/api/types/KalturaPermissionFilter';
 import {UserLoginByLoginIdAction} from 'kaltura-ngx-client/api/types/UserLoginByLoginIdAction';
 import {UserGetByLoginIdAction} from 'kaltura-ngx-client/api/types/UserGetByLoginIdAction';
@@ -21,9 +19,7 @@ import {PartnerInfo} from './partner-info';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
-import { BrowserService } from '../providers/browser.service';
-import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-
+import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
 
 
 export enum AppAuthStatusTypes {
@@ -185,7 +181,8 @@ export class AppAuthentication {
           this.appUser.partnerInfo = new PartnerInfo(
             partnerProperties.name,
             partnerProperties.partnerPackage,
-            partnerProperties.landingPage
+            partnerProperties.landingPage,
+            partnerProperties.adultContent
           );
           Object.assign(this.appUser, generalProperties);
 
@@ -250,7 +247,7 @@ export class AppAuthentication {
                 'id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner'
               ])(results[0].result);
               const permissions = R.map(R.pick(['id', 'type', 'name', 'status']))(results[1].result.objects);
-              const partnerProperties: any = R.pick(['name', 'partnerPackage', 'landingPage'])(results[2].result);
+              const partnerProperties: any = R.pick(['name', 'partnerPackage', 'landingPage', 'adultContent'])(results[2].result);
               const permissionsFlags: any = results[3].result;
 
               this.appUser.ks = loginToken;
@@ -259,7 +256,8 @@ export class AppAuthentication {
               this.appUser.partnerInfo = new PartnerInfo(
                 partnerProperties.name,
                 partnerProperties.partnerPackage,
-                partnerProperties.landingPage
+                partnerProperties.landingPage,
+                partnerProperties.adultContent
               );
               Object.assign(this.appUser, generalProperties);
 

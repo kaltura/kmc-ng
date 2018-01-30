@@ -583,6 +583,145 @@
             "delete": "Delete"
           }
         },
+        "details": {
+          "header": {
+            "newFeed": "New Feed",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "save": "Save"
+          },
+          "name": "Name",
+          "contentType" : {
+            "content": "Content",
+            "allContent": "All Content",
+            "fromPlaylist": "From playlist"
+          },
+          "playerName": "Player({{0}})",
+          "entriesCountData": {
+            "count": "Entries count",
+            "numOfEntries": "{{0}} Entries",
+            "warning": "{{0}} Entries aren't included in this feed.",
+            "moreInfo": "More Info.",
+            "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC, then open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
+            "flavorId": "(flavor ID) {{0}}"
+          },
+          "destination": "Destination",
+          "availableDestinations": {
+            "promptText": "Choose Destination",
+            "google": "Google",
+            "yahoo": "Yahoo",
+            "itunes": "ITunes",
+            "roku": "Roku Direct Publisher",
+            "opera": "Opera Snap TV",
+            "flexibaleFormat": "Flexibale Format"
+          },
+          "destinationsForms": {
+            "google": {
+              "title": "Google Parameters",
+              "contentFlavor": {
+                "label": "Content Flavor",
+                "checkbox": "Add to default transcoding profile"
+              },
+              "landingPage": {
+                "label": "Landing page",
+                "explanation": "Enter the URL template that you would like to appear in the Google search results for each video in this feed.  The system will append the specific entry id for each entry. For example: \"http://mysite.com?videoid=\""
+              },
+              "playback": {
+                "label": "Playback",
+                "fromGoogle": "From Google",
+                "linkback": "Linkback to my site",
+                "player": "Player",
+                "playerMessage": "This player will appear within the Google search results page"
+              },
+              "adultContent": {
+                "label": "Adult Content",
+                "checkbox": "This feed includes adult content"
+              },
+              "errors": {
+                "invalidLandingPage": "Landing Page URL is not valid",
+                "requiredLandingPage": "Landing Page is required"
+              }
+            },
+            "yahoo": {
+              "title": "Yahoo Parameters",
+              "contentFlavor": {
+                "label": "Content Flavor",
+                "checkbox": "Add to default transcoding profile"
+              },
+              "landingPage": {
+                "label": "Landing page",
+                "explanation": "Enter the URL template that you would like to appear in the Yahoo search results for each video in this feed.  The system will append the specific entry id for each entry. For example: \"http://mysite.com?videoid=\""
+              },
+              "playback": {
+                "label": "Playback",
+                "fromYahoo": "From Yahoo",
+                "linkback": "Linkback to my site",
+                "player": "Player",
+                "playerMessage": "This player will appear within the Yahoo search results page"
+              },
+              "website": {
+                "label": "Website"
+              },
+              "description": {
+                "label": "Feed Description"
+              },
+              "category": {
+                "label": "Category",
+                "promptText": "Choose Category",
+                "itemsSelected":"{0} Selected Categories",
+                "availableCategories": {
+                  "Action": "Action",
+                  "Art &amp; Animation": "Art & Animation",
+                  "Entertainment &amp; TV": "Entertainment & TV",
+                  "Food": "Food",
+                  "Games": "Games",
+                  "How-To": "How-To",
+                  "Music": "Music",
+                  "People &amp; Vlogs": "People & Vlogs",
+                  "Science &amp; Environment": "Science & Environment",
+                  "Transportation": "Transportation",
+                  "Animals": "Animals",
+                  "Commercials": "Commercials",
+                  "Family": "Family",
+                  "Funny Videos": "Funny Videos",
+                  "Health &amp; Beauty": "Health & Beauty",
+                  "Movies &amp; Shorts": "Movies & Shorts",
+                  "News &amp; Politics": "News & Politics",
+                  "Products &amp; Tech.": "Products & Tech.",
+                  "Sports": "Sports",
+                  "Travel": "Travel"
+                }
+              },
+              "adultContent": {
+                "label": "Adult Content",
+                "checkbox": "This feed includes adult content"
+              },
+              "errors": {
+                "invalidLandingPage": "Landing Page URL is not valid",
+                "requiredLandingPage": "Landing Page is required",
+                "invalidWebsite": "Website URL is not valid",
+                "requiredWebsite": "Website is required"
+              }
+            },
+            "flexibleFormat": {
+              "xslCode": {
+                "label": "XSL Code",
+                "browse": "Browse",
+                "loading": "Loading...",
+                "errors": {
+                  "requiredXslCode": "XSL Code is required",
+                  "loadingFile": "Error loading file {{0}}"
+                }
+              }
+            }
+          },
+          "errors": {
+            "loadFailed":  "An error occurred during Feed data loading",
+            "enterName": "You must enter name to save feed.",
+            "chooseDestination": "You must choose destination to save feed.",
+            "fieldRequired": "This field is required"
+          }
+        },
         "deleteConfirmation": {
           "title": "Confirm Delete",
           "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
@@ -600,7 +739,8 @@
           "deleteErrorMultiple": {
             "header": "Delete action failed",
             "message": "An unexpected error has occurred while trying to delete selected feeds."
-          }
+          },
+          "getFeedEntryCount":  "An error occurred during Feed Entries Count loading"
         }
       },
       "moderation": {

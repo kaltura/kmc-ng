@@ -13,7 +13,6 @@ import {ISubscription} from 'rxjs/Subscription';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from 'app-shared/kmc-shell';
 import {FeedsService} from '../feeds.service';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
@@ -66,9 +65,6 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output()
   selectedFeedsChange = new EventEmitter<any>();
 
-  @Output()
-  onEditFeed = new EventEmitter<KalturaBaseSyndicationFeed>();
-
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
   private _actionsMenuFeed: KalturaBaseSyndicationFeed;
   private _feedsServiceStatusSubscription: ISubscription;
@@ -79,8 +75,7 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _feedsService: FeedsService,
-              private _cdRef: ChangeDetectorRef,
-              private _browserService: BrowserService) {
+              private _cdRef: ChangeDetectorRef) {
     this._fillCopyToClipboardTooltips();
   }
 
@@ -94,7 +89,7 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
           this._blockerMessage = new AreaBlockerMessage({
             message: result.errorMessage || 'Error loading feeds',
             buttons: [{
-              label: 'Retry',
+              label: this._appLocalization.get('app.common.retry'),
               action: () => {
                 this._feedsService.reload();
               }
@@ -153,29 +148,8 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  private _onActionSelected(action: string, feed: KalturaBaseSyndicationFeed) {
-    this.actionSelected.emit({'action': action, 'feed': feed});
-  }
-
-  private _buildMenu(): void {
-    this._items = [
-      {
-        label: this._appLocalization.get('applications.content.syndication.table.actions.edit'), command: (event) => {
-        this._onActionSelected('edit', this._actionsMenuFeed);
-      }
-      },
-      {
-        label: this._appLocalization.get('applications.content.syndication.table.actions.instructions'),
-        command: (event) => {
-          this._onActionSelected('viewEntries', this._actionsMenuFeed);
-        }
-      },
-      {
-        label: this._appLocalization.get('applications.content.syndication.table.actions.delete'), command: (event) => {
-        this._onActionSelected('delete', this._actionsMenuFeed);
-      }
-      },
-    ];
+  public _editFeed(feed: KalturaBaseSyndicationFeed) {
+    this._onActionSelected('edit', feed);
   }
 
   public _onSelectionChange(event) {
@@ -184,6 +158,33 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _onSortChanged(event) {
     this.sortChanged.emit(event);
+  }
+
+  private _onActionSelected(action: string, feed: KalturaBaseSyndicationFeed) {
+    this.actionSelected.emit({'action': action, 'feed': feed});
+  }
+
+  private _buildMenu(): void {
+    this._items = [
+      {
+        label: this._appLocalization.get('applications.content.syndication.table.actions.edit'),
+        command: (event) => {
+          this._onActionSelected('edit', this._actionsMenuFeed);
+        }
+      },
+      // {
+      //   label: this._appLocalization.get('applications.content.syndication.table.actions.instructions'),
+      //   command: (event) => {
+      //     this._onActionSelected('viewEntries', this._actionsMenuFeed);
+      //   }
+      // },
+      {
+        label: this._appLocalization.get('applications.content.syndication.table.actions.delete'),
+        command: (event) => {
+          this._onActionSelected('delete', this._actionsMenuFeed);
+        }
+      },
+    ];
   }
 
   private _fillCopyToClipboardTooltips(): void {

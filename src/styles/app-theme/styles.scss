@@ -200,6 +200,13 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   position: fixed !important;
   margin-top: 0px !important;
 }
+
+.kHidden {
+  visibility: hidden;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+}
 @media screen and (max-width: 1090px) {
   .kmcDetailsLayout .kDetailsWrapper .kDetailsHeader .kBackBtn {
     margin-left: 0px;
