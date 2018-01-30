@@ -34,7 +34,10 @@
                      (keyup.enter)="onFreetextChanged()"
                      placeholder="{{'applications.content.entries.searchEntries' | translate}}">
               <div #categoriesFilterBtn class="kCategoriesFilter">
-                <i class="kIconfolder"></i>
+                <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
+              <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
+                <div class="k-spinner-animation kSpinnerAnim"></div>
+              </div>
                 <span>{{'applications.content.entries.filterCategories' | translate}}</span>
                 <i class="kIcondropdown_arrow_bottom dropdown"></i>
               </div>

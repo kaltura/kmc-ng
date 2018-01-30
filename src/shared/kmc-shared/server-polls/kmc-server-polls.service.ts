@@ -5,6 +5,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
@@ -14,12 +15,16 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
       return this._onDestory.asObservable();
   }
 
-  constructor(private _kalturaClient: KalturaClient) {
-    super();
+  constructor(private _kalturaClient: KalturaClient, private _kalturaLogger: KalturaLogger) {
+    super(_kalturaLogger);
   }
 
   protected _createGlobalError(error?: Error): KalturaAPIException {
       return new KalturaAPIException('kmc-server_polls_global_error', error ? error.message : '');
+  }
+
+  protected _canExecute(): boolean {
+    return !!this._kalturaClient.ks;
   }
 
   /*
