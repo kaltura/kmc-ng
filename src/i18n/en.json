@@ -575,7 +575,7 @@
         "table": {
           "noResults": "No Results",
           "allContent": "All Content",
-          "flexibleFormatFeed": "Flexible Format Feed",
+          "flexibleFormatFeed": "Flexible Format",
           "copyToClipboardTooltip": {
             "success": "Copied",
             "failure": "Failed to Copy to Clipboard",

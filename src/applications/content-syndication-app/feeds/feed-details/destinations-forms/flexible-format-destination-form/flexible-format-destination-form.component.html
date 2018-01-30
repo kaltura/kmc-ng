@@ -1,4 +1,4 @@
-<kFileDialog #fileDialog [filter]="'*.xslt'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
+<kFileDialog #fileDialog [filter]="'.xslt,.xsl'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
 
 <div class="kRow kMultiLine" [class.kInputValidationError]="_error">
   <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.flexibleFormat.xslCode.label' | translate}}</span>
