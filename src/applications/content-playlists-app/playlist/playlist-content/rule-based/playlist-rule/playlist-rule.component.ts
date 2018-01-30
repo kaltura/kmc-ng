@@ -110,7 +110,7 @@ export class PlaylistRuleComponent implements OnInit {
           this._entriesStore.filter(filters);
         },
         error => {
-          this._blockerMessage = this._createErrorMessage(error.message, () => this._applyFilters());
+          this._blockerMessage = this._createErrorMessage(error.message, () => this._applyFilters(playlist));
         });
   }
 
