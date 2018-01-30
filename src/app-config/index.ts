@@ -188,7 +188,7 @@ export const environment = {
         },
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
-            "bulkActionsLimit": 2,
+            "bulkActionsLimit": 50,
             "ruleBasedTotalResults": 200
         },
         "createLive": {

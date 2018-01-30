@@ -3,8 +3,8 @@ import { PlaylistStore } from '../../playlist-store.service';
 import { RuleBasedContentWidget } from './rule-based-content-widget.service';
 import { EntriesDataProviderToken, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 import { PlaylistEntriesDataProvider } from './playlist-rule/playlist-entries-data-provider.service';
+import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
 
 @Component({
   selector: 'kPlaylistContentRuleBased',
@@ -31,14 +31,9 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._widgetService.attachForm();
 
-    this._widgetService.selectedRule$.subscribe(rule => {
-      this._selectedRule = rule;
-      this._rulePopup.open();
-    });
-
-    this._widgetService.state$
+    this._widgetService.data$
       .cancelOnDestroy(this)
-      .filter(state => state.loading)
+      .filter(Boolean)
       .subscribe(() => {
         this._clearSelection();
       });
@@ -54,7 +49,13 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
 
   public _onActionSelected(event: { action: string, rule: PlaylistRule }): void {
     this._clearSelection();
-    this._widgetService.onActionSelected(event);
+
+    if (event.action === 'view') {
+      this._selectedRule = event.rule;
+      this._rulePopup.open();
+    } else {
+      this._widgetService.onActionSelected(event);
+    }
   }
 
   public _deleteSelected(selectedRules: PlaylistRule[]): void {

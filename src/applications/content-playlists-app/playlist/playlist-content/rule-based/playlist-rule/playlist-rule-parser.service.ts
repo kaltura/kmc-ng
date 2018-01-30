@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 import { Observable } from 'rxjs/Observable';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
@@ -8,6 +7,7 @@ import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
 import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { MetadataProfile } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
+import { PlaylistRule } from './playlist-rule.interface';
 
 @Injectable()
 export class PlaylistRuleParserService implements OnDestroy {
@@ -19,8 +19,6 @@ export class PlaylistRuleParserService implements OnDestroy {
 
   }
 
-  // TODO [kmcng] get rid of duplicated requests for metadataProfiles
-  // in current implementation there're 2 requests for metadataProfiles to the server
   private _getMetadataProfiles(): Observable<{ items: MetadataProfile[] }> {
     return this._metadataProfileService
       .get({
@@ -28,7 +26,6 @@ export class PlaylistRuleParserService implements OnDestroy {
         ignoredCreateMode: MetadataProfileCreateModes.App
       })
       .cancelOnDestroy(this)
-      .first()
       .monitor('playlist-rule-parser: get metadata profiles');
   }
 

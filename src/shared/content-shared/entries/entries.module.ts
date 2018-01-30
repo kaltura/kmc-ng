@@ -27,7 +27,6 @@ import { EntriesSelectorComponent } from './entries-selector/entries-selector.co
 import { EntriesListTagsComponent } from './entries-list/entries-list-tags.component';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 import { CategoriesModule } from '../categories/categories.module';
-import { EntriesTotalDurationPipe } from 'app-shared/content-shared/entries/pipes/entries-total-duration.pipe';
 import { EntriesStoreDataProvider } from 'app-shared/content-shared/entries/entries-store/entries-store-data-provider.service';
 import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 
@@ -73,8 +72,7 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     EntriesTableComponent,
     EntriesListComponent,
     EntriesListTagsComponent,
-    EntriesSelectorComponent,
-    EntriesTotalDurationPipe
+    EntriesSelectorComponent
   ],
   exports: [
     EntryStatusPipe,
@@ -88,7 +86,6 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     EntriesTableComponent,
     EntriesListComponent,
     EntriesSelectorComponent,
-    EntriesTotalDurationPipe
   ]
 })
 export class EntriesModule {

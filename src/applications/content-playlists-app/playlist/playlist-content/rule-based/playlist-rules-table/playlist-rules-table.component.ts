@@ -1,8 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
-import { RuleBasedContentWidget } from '../rule-based-content-widget.service';
-import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
+import { PlaylistRule } from '../playlist-rule/playlist-rule.interface';
 
 @Component({
   selector: 'kPlaylistRulesTable',
@@ -45,32 +44,11 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
   public _items: MenuItem[];
 
   constructor(private _appLocalization: AppLocalization,
-              private _cdRef: ChangeDetectorRef,
-              private _widgetService: RuleBasedContentWidget) {
+              private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    let loadedOnce = false;
-
-    this._widgetService.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        result => {
-          if (!result.error) {
-            if (result.loading) {
-              this._emptyMessage = '';
-              loadedOnce = true;
-            } else {
-              if (loadedOnce) {
-                this.assignEmptyMessage();
-              }
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load rules'); // navigate to error page
-          throw error;
-        });
+    this.assignEmptyMessage();
   }
 
   ngAfterViewInit() {
@@ -96,7 +74,7 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.moveUp'),
-        command: (event) => this.onActionSelected.emit({ action: 'moveUp', rule: rule }),
+        command: () => this.onActionSelected.emit({ action: 'moveUp', rule: rule }),
         disabled: rowIndex === 0
       },
       {

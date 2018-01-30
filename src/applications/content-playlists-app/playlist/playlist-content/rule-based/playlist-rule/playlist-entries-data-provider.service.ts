@@ -59,7 +59,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       }).catch(() => null);
   }
 
-  public getServerFilter(data: EntriesFilters, forRequest = true): Observable<KalturaMediaEntryFilterForPlaylist> {
+  public getServerFilter(data: EntriesFilters, mediaTypesDefault = true): Observable<KalturaMediaEntryFilterForPlaylist> {
     try {
       return this._getMetadataProfiles()
         .map(metadataProfiles => {
@@ -196,7 +196,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           }
 
           // handle default value for media types
-          if (!filter.mediaTypeIn && forRequest) {
+          if (!filter.mediaTypeIn && mediaTypesDefault) {
             filter.mediaTypeIn = '1,2,5,6,201';
           }
 

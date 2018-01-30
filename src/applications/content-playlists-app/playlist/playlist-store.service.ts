@@ -18,6 +18,7 @@ import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { environment } from 'app-environment';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -147,6 +148,12 @@ export class PlaylistStore implements OnDestroy {
       .request(new PlaylistGetAction({ id }))
       .cancelOnDestroy(this)
       .subscribe(playlist => {
+          if (playlist.playlistType === KalturaPlaylistType.dynamic) {
+            if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
+              playlist.totalResults = environment.modules.contentPlaylists.ruleBasedTotalResults;
+            }
+          }
+
           this._loadPlaylistSubscription = null;
           this._playlist.next({ playlist });
           const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(playlist, { isNewData: false });

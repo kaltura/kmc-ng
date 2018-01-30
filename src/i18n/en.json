@@ -543,7 +543,7 @@
         "entryId": "Entry ID: {{0}}",
         "deleteNote": "Please note: the entry will be permanently deleted from your account.",
         "ruleName": "Rule name",
-        "ruleNamePlaceholder": "Top videos of past week",
+        "ruleNamePlaceholder": "Rule Name",
         "resultsLimit": "Results limit ({{0}})",
         "orderBy": "Order by",
         "totalDuration": "Total duration {{0}}",

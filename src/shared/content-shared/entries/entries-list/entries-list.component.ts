@@ -37,6 +37,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     public _tableIsBusy = false;
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineGroup[];
+    public _entriesDuration = 0;
 
     public _categoriesUpdating = false;
 
@@ -65,6 +66,13 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 		    .subscribe((status: CategoriesStatus) => {
                 this._categoriesUpdating = status.update;
             });
+
+      this._entriesStore.entries.data$
+        .cancelOnDestroy(this)
+        .filter(data => Array.isArray(data.items))
+        .subscribe(({ items }) => {
+          this._entriesDuration = items.reduce((total, entry) => total + entry.duration, 0);
+        });
 
         this._prepare();
     }

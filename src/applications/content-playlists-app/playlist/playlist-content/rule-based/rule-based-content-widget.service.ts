@@ -2,7 +2,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { PlaylistWidget } from '../../playlist-widget';
 import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
@@ -11,41 +10,37 @@ import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/P
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import { environment } from 'app-environment';
-import { Subject } from 'rxjs/Subject';
-import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
-
-export interface LoadEntriesStatus {
-  loading: boolean;
-  error: boolean
-}
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
 
 @Injectable()
 export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy {
-  private _state = new BehaviorSubject<LoadEntriesStatus>({ loading: false, error: false });
-  private _selectedRule = new Subject<PlaylistRule>();
   private _selectionIdGenerator = new FriendlyHashId();
 
   public rules: PlaylistRule[] = [];
   public rulesTotalCount = 0;
   public entriesDuration = 0;
   public entriesTotalCount = 0;
-  public state$ = this._state.asObservable();
-  public selectedRule$ = this._selectedRule.asObservable();
 
-  constructor(private _kalturaClient: KalturaClient) {
+  constructor(private _kalturaClient: KalturaClient, private _appLocalization: AppLocalization) {
     super(PlaylistWidgetKeys.ContentRuleBased);
   }
 
   ngOnDestroy() {
-    this._state.complete();
-    this._selectedRule.complete();
   }
 
   protected onValidate(wasActivated?: boolean): Observable<{ isValid: boolean }> {
     if (this.data.playlistType === KalturaPlaylistType.dynamic) { // validate only rule-based playlist
-      return Observable.of({ isValid: !wasActivated || !!this.rules.length });
+      if (this.wasActivated) {
+        return Observable.of({ isValid: !!this.rules.length });
+      }
+
+      if (this.isNewData && Array.isArray(this.data.filters)) {
+        return Observable.of({ isValid: !!this.data.filters.length })
+      }
+
+      return Observable.of({ isValid: false });
     }
 
     return Observable.of({ isValid: true });
@@ -53,9 +48,6 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
     if (data.playlistType === KalturaPlaylistType.dynamic) { // handle only rule-based playlist
-      if (typeof data.totalResults === 'undefined' || data.totalResults <= 0) {
-        data.totalResults = environment.modules.contentPlaylists.ruleBasedTotalResults;
-      }
       data.filters = this.rules.map(({ originalFilter }) => originalFilter);
     }
   }
@@ -68,7 +60,6 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
-    this._state.next({ loading: true, error: false });
     this.rules = [];
     this.rulesTotalCount = 0;
     this.entriesTotalCount = 0;
@@ -87,7 +78,16 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     return this._kalturaClient.multiRequest(rules)
       .cancelOnDestroy(this, this.widgetReset$)
       .map(responses => {
-        responses.forEach(({ result = [] }, index) => {
+        const responseIncomplete = !Array.isArray(responses)
+          || responses.some(response => !!response.error || !Array.isArray(response.result));
+        if (responseIncomplete) {
+          return Observable.of({
+            failed: true,
+            error: new Error(this._appLocalization.get('applications.content.playlistDetails.errors.loadError'))
+          });
+        }
+
+        responses.forEach(({ result }, index) => {
           const filter = this.data.filters[index];
           const entriesDuration = result.reduce((duration, entry) => duration + entry.duration, 0);
 
@@ -103,13 +103,11 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
         });
         this._updateDurationAndCount();
         super._hideLoader();
-        this._state.next({ loading: false, error: false });
         return { failed: false };
       })
       .catch(error => {
         super._hideLoader();
         super._showActivationError(error.message);
-        this._state.next({ loading: false, error: true });
         return Observable.of({ failed: true, error });
       });
   }
@@ -168,9 +166,6 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
       case 'moveDown':
         this._moveDownRules([rule]);
         break;
-      case 'view':
-        this._selectedRule.next(rule);
-        break;
       default:
         break;
     }
@@ -186,11 +181,12 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
 
   public updateRules(rule: PlaylistRule): void {
     const relevantRuleIndex = this.rules.findIndex(item => item.selectionId === rule.selectionId);
-    if (relevantRuleIndex !== -1) {
-      this.rules[relevantRuleIndex] = rule;
-    } else {
+    const isNewRule = relevantRuleIndex === -1;
+    if (isNewRule) {
       rule.selectionId = this._selectionIdGenerator.generateUnique(this.rules.map(item => item.selectionId));
       this.rules.push(rule);
+    } else {
+      this.rules[relevantRuleIndex] = rule;
     }
 
     this._updateDurationAndCount();
