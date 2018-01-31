@@ -68,6 +68,12 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
             this._error = null;
           }
         };
+
+        this._fileReader.onerror = (e) => {
+          this._loading = false;
+          showLoadError();
+        }
+
       } catch (ex) {
         showLoadError();
       }
