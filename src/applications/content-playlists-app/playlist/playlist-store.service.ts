@@ -182,7 +182,13 @@ export class PlaylistStore implements OnDestroy {
       const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
 
       if (routeSectionType !== null) {
-        this._sectionToRouteMapping[routeSectionType] = childRoute.path;
+        if (Array.isArray(routeSectionType)) {
+          routeSectionType.forEach(type => {
+            this._sectionToRouteMapping[type] = childRoute.path;
+          });
+        } else {
+          this._sectionToRouteMapping[routeSectionType] = childRoute.path;
+        }
       }
     });
   }
