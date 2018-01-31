@@ -11,6 +11,7 @@ import { MetadataProfileParser } from './kaltura-metadata-parser';
 import { KalturaMetadataProfileCreateMode } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileCreateMode';
 import { KalturaMetadataProfileFilter } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileFilter';
 import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 export enum MetadataProfileCreateModes {
     Api,
@@ -34,8 +35,12 @@ export class MetadataProfileStore extends PartnerProfileStore
 {
     private _cachedProfiles : { [key : string] : MetadataProfile[]} = {};
 
-    constructor(private _kalturaServerClient: KalturaClient) {
+    constructor(private _kalturaServerClient: KalturaClient, _appEvents: AppEventsService) {
         super();
+    }
+
+    public clearMetadataProfilesCache(): void {
+      this._cachedProfiles = {};
     }
 
     public get(filters : GetFilters) : Observable<{items : MetadataProfile[]}>
@@ -141,7 +146,7 @@ export class MetadataProfileStore extends PartnerProfileStore
                 case MetadataProfileTypes.Category:
                     metadataProfilesFilter.metadataObjectTypeEqual = KalturaMetadataObjectType.category;
                     break;
-                
+
             }
         }
 

@@ -5,6 +5,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { SchemasFilters, SchemasStore } from '../schemas-store/schemas-store.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
+import { MetadataProfileStore } from 'app-shared/kmc-shared/custom-metadata/metadata-profile-store.service';
 
 @Component({
   selector: 'kSchemasList',
@@ -27,6 +28,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   };
 
   constructor(public _schemasStore: SchemasStore,
+              private _metadataProfilesStore: MetadataProfileStore,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
   }
@@ -99,6 +101,10 @@ export class SchemasListComponent implements OnInit, OnDestroy {
         });
   }
 
+  private _updateMetadataProfiles(): void {
+    this._metadataProfilesStore.clearMetadataProfilesCache();
+  }
+
   private _proceedDeleteSchemas(schemas: SettingsMetadataProfile[]): void {
     this._schemasStore.deleteProfiles(schemas)
       .tag('block-shell')
@@ -108,6 +114,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
           this._blockerMessage = null;
           this._schemasStore.reload();
           this._clearSelection();
+          this._updateMetadataProfiles();
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({
@@ -197,6 +204,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
         () => {
           this._blockerMessage = null;
           this._schemasStore.reload();
+          this._updateMetadataProfiles();
         },
         (error) => {
           this._blockerMessage = new AreaBlockerMessage({
