@@ -141,9 +141,15 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private sortPlayers(sortBy){
     this._players.sort((a,b)=>{
-      if (a.value[sortBy] < b.value[sortBy])
+      let val1 = a.value[sortBy];
+      let val2 = b.value[sortBy];
+      if (sortBy === "name" && typeof val1 === "string" && typeof val2 === "string"){
+        val1 = val1.toLowerCase();
+        val2 = val2.toLowerCase();
+      }
+      if (val1 < val2)
         return 1;
-      if (a.value[sortBy] > b.value[sortBy])
+      if (val1 > val2)
         return -1;
       return 0;
     });
