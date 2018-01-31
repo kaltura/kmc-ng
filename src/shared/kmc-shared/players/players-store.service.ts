@@ -65,6 +65,6 @@ export class PlayersStore {
 
     const pager = new KalturaFilterPager({pageSize, pageIndex});
 
-    return <any>this._kalturaServerClient.request(new UiConfListAction({filter, pager}));
+    return this._kalturaServerClient.request(new UiConfListAction({filter, pager}));
   }
 }

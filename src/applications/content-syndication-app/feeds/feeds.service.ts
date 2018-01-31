@@ -90,13 +90,6 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
   private _prepare(): void {
     if (!this._isReady) {
-      const defaultPageSize = this._browserService.getFromLocalStorage(this._pageSizeCacheKey);
-      if (defaultPageSize !== null) {
-        this.filter({
-          pageSize: defaultPageSize
-        });
-      }
-
       this._registerToFilterStoreDataChanges();
       this._isReady = true;
     }
@@ -201,6 +194,8 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         response.objects.forEach(feed => {
           if (feed instanceof KalturaBaseSyndicationFeed) {
             if (feed instanceof KalturaGenericSyndicationFeed && !(feed instanceof KalturaGenericXsltSyndicationFeed)) {
+              this._logger.warn(
+                `feed with id '${feed.id}' was removed from list since it's a generic syndication feed with XSLT type which is not generic.`);
               return undefined; // stop processing this iteration if it's a generic syndication feed with XSLT type which is not generic
             } else {
               feedsArray.push(feed);
@@ -209,6 +204,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         });
         return {items: feedsArray, totalCount: response.totalCount};
       })
+        .filter(Boolean)
     } catch (err) {
       return Observable.throw(err);
     }
@@ -281,42 +277,17 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     return Observable.forkJoin(multiRequests)
       .map(responses => {
         const mergedResponses = [].concat.apply([], responses);
-        const hasFailure = mergedResponses.filter(function (response) {
+        const hasFailure = !!mergedResponses.find(function (response) {
           return response.error
-        }).length > 0;
+        });
         if (hasFailure) {
-          throw new Error('error');
+          throw new Error('An error occurred while trying to delete feeds');
         } else {
           return {};
         }
       });
   }
 
-
-  // public deleteFeed(feedId: number): Observable<void> {
-  //
-  //   return Observable.create(observer => {
-  //     let subscription: ISubscription;
-  //     if (feedId && feedId > 0) {
-  //       subscription = this._kalturaClient.request(new FeedDeleteAction({id: feedId})).subscribe(
-  //         result => {
-  //           observer.next();
-  //           observer.complete();
-  //         },
-  //         error => {
-  //           observer.error(error);
-  //         }
-  //       );
-  //     } else {
-  //       observer.error(new Error('missing feedId argument'));
-  //     }
-  //     return () => {
-  //       if (subscription) {
-  //         subscription.unsubscribe();
-  //       }
-  //     }
-  //   });
-  // }
 
   protected _preFilter(updates: Partial<FeedsFilters>): Partial<FeedsFilters> {
     if (typeof updates.pageIndex === 'undefined') {
@@ -332,8 +303,10 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
   }
 
   protected _createDefaultFiltersValue(): FeedsFilters {
+    const defaultPageSize = this._browserService.getFromLocalStorage(this._pageSizeCacheKey);
+
     return {
-      pageSize: 50,
+      pageSize: defaultPageSize || 50,
       pageIndex: 0,
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc
@@ -397,6 +370,9 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
   }
 
   public create(syndicationFeed: KalturaBaseSyndicationFeed): Observable<KalturaBaseSyndicationFeed> {
+    if (syndicationFeed.id) {
+      return Observable.throw(new Error('An error occurred while trying to Add Feed. \n Unable to add feed that already exists.'));
+    }
     return this._kalturaClient.request(
       new SyndicationFeedAddAction({syndicationFeed})
     );

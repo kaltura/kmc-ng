@@ -14,6 +14,7 @@ import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client/api/types/Kal
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PlayersStore} from 'app-shared/kmc-shared/players/players-store.service';
 import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 
 
 export abstract class DestinationComponentBase {
@@ -43,8 +44,8 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   public _flavors: KalturaFlavorParams[] = null;
   public _entriesCountData: { count: number, showWarning: boolean, warningCount: number, flavorName: string } =
     {count: 0, showWarning: false, warningCount: 0, flavorName: null};
-  public _availableDestinations: Array<{ value: KalturaSyndicationFeedType, label: string }>;
-  public _availablePlaylists: Array<{ value: KalturaPlaylist, label: string }>;
+  public _availableDestinations: Array<{ value: KalturaSyndicationFeedType, label: string }> = [];
+  public _availablePlaylists: Array<{ value: KalturaPlaylist, label: string }> = [];
   public _kalturaSyndicationFeedType = KalturaSyndicationFeedType;
   public _kalturaPlaylistType = KalturaPlaylistType;
   public _currentDestinationFormState: { isValid: boolean, isDirty: boolean } = {isValid: true, isDirty: false};
@@ -58,7 +59,8 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
               private _fb: FormBuilder,
               private _feedsService: FeedsService,
               private _flavorsStore: FlavoursStore,
-              private _playersStore: PlayersStore) {
+              private _playersStore: PlayersStore,
+              private _logger: KalturaLogger) {
     // prepare form
     this._createForm();
   }
@@ -76,7 +78,12 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _fillAvailablePlaylists(): void {
-    this._availablePlaylists = this.playlists.map(playlist => ({value: playlist, label: playlist.name || playlist.id}));
+    if (this.playlists && this.playlists.length) {
+      this._availablePlaylists = this.playlists.map(playlist => ({
+        value: playlist,
+        label: playlist.name || playlist.id
+      }));
+    }
   }
 
   private _fillAvailableDestinations(): void {
@@ -115,36 +122,40 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
+    if (this._isReady) {
+      return undefined;
+    }
+
     this._isBusy = true;
     this._queryData()
       .cancelOnDestroy(this)
       .subscribe(response => {
         this._isBusy = false;
-        if (!this._isReady) {
-          this._players = response.players;
-          this._flavors = response.flavors;
-          if (response.entriesCount) {
-            const showEntriesCountWarning: boolean =
-              [KalturaSyndicationFeedType.googleVideo, KalturaSyndicationFeedType.itunes, KalturaSyndicationFeedType.yahoo].indexOf(this.feed.type) >= 0;
+        this._isReady = true;
+        this._players = response.players;
+        this._flavors = response.flavors;
+        if (response.entriesCount) {
+          const showEntriesCountWarning: boolean =
+            [KalturaSyndicationFeedType.googleVideo, KalturaSyndicationFeedType.itunes, KalturaSyndicationFeedType.yahoo].indexOf(this.feed.type) >= 0;
 
-            this._entriesCountData = {
-              count: response.entriesCount.actualEntryCount,
-              showWarning: showEntriesCountWarning && response.entriesCount.totalEntryCount > response.entriesCount.actualEntryCount,
-              warningCount: showEntriesCountWarning ? response.entriesCount.requireTranscodingCount : null,
-              flavorName: (() => {
-                if (!showEntriesCountWarning) {
-                  return null;
-                }
-                const flavor = this._flavors.find(flvr => flvr.id === this.feed.flavorParamId);
-                // return flavor ID if couldn't get flavor name
-                return ((flavor && flavor.name) ||
-                  (this.feed.flavorParamId &&
-                    this._appLocalization.get('applications.content.syndication.details.entriesCountData.flavorId',
-                      {0: this.feed.flavorParamId.toString()})));
-              })()
-            };
-          }
-          this._isReady = true;
+          const getFlavorName = () => {
+            if (!showEntriesCountWarning) {
+              return null;
+            }
+            const flavor = this._flavors.find(flvr => flvr.id === this.feed.flavorParamId);
+            // return flavor ID if couldn't get flavor name
+            return ((flavor && flavor.name) ||
+              (this.feed.flavorParamId &&
+                this._appLocalization.get('applications.content.syndication.details.entriesCountData.flavorId',
+                  {0: this.feed.flavorParamId.toString()})));
+          };
+
+          this._entriesCountData = {
+            count: response.entriesCount.actualEntryCount,
+            showWarning: showEntriesCountWarning && response.entriesCount.totalEntryCount > response.entriesCount.actualEntryCount,
+            warningCount: showEntriesCountWarning ? response.entriesCount.requireTranscodingCount : null,
+            flavorName: getFlavorName()
+          };
         }
       }, error => {
         this._isBusy = false;
@@ -171,7 +182,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
 
   private _queryData(): Observable<{ players: KalturaUiConf[], flavors: KalturaFlavorParams[], entriesCount?: KalturaSyndicationFeedEntryCount }> {
     if (this._mode === 'edit' && (!this.feed || !this.feed.id)) {
-      return Observable.throw('Unable to load additional feed data');
+      return Observable.throw('An error occurred while trying to load feed');
     }
 
     const getPlayers$ = this._playersStore.get().cancelOnDestroy(this);
@@ -213,7 +224,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
         this._form.get('selectedPlaylist').value || (this.playlists && this.playlists.length && this.playlists[0].id),
       destination: {
         value: this._mode === 'edit' ? this.feed.type : this._form.get('destination').value,
-        disabled:  this._mode === 'edit'
+        disabled: this._mode === 'edit'
       },
     });
   }
@@ -226,21 +237,25 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     if (!this._form.valid ||
       !this._currentDestinationFormState.isValid ||
       (!this._form.dirty && !this._currentDestinationFormState.isDirty)) {
+      this._logger.warn('Unable to submit invalid feed form');
       return undefined;
     }
 
     const syndicationFeed = this.destinationComponent.getData();
-    syndicationFeed.name = this._form.get('name').value;
-    syndicationFeed.playlistId =
-      this._form.get('contentType').value === 'allContent' ?
-        '' :
-        this._form.get('selectedPlaylist').value.id;
+
+    if (syndicationFeed) {
+      syndicationFeed.name = this._form.get('name').value;
+      syndicationFeed.playlistId =
+        this._form.get('contentType').value === 'allContent' ?
+          '' :
+          this._form.get('selectedPlaylist').value.id;
 
 
-    if (this._mode === 'edit') {
-      this._updateFeed(this.feed.id, syndicationFeed);
-    } else {
-      this._addNewFeed(syndicationFeed);
+      if (this._mode === 'edit') {
+        this._updateFeed(this.feed.id, syndicationFeed);
+      } else {
+        this._addNewFeed(syndicationFeed);
+      }
     }
   }
 
@@ -254,23 +269,27 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
         this._feedsService.reload();
         this._close();
       }, error => {
+        const buttons = [{
+          label: this._appLocalization.get('app.common.close'),
+          action: () => {
+            this._blockerMessage = null;
+            this._close();
+          }
+        }];
+
+        if (error.code === 'client::unknown-error') {
+          buttons.unshift({
+            label: this._appLocalization.get('app.common.retry'),
+            action: () => {
+              this._blockerMessage = null;
+              this._addNewFeed(syndicationFeed);
+            }
+          });
+        }
+
         this._blockerMessage = new AreaBlockerMessage({
           message: error.message,
-          buttons: [
-            {
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => {
-                this._blockerMessage = null;
-                this._addNewFeed(syndicationFeed);
-              }
-            }, {
-              label: this._appLocalization.get('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-                this._close();
-              }
-            }
-          ]
+          buttons: buttons
         });
       });
   }
@@ -285,23 +304,27 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
         this._feedsService.reload();
         this._close();
       }, error => {
+        const buttons = [{
+          label: this._appLocalization.get('app.common.close'),
+          action: () => {
+            this._blockerMessage = null;
+            this._close();
+          }
+        }];
+
+        if (error.code === 'client::unknown-error') {
+          buttons.unshift({
+            label: this._appLocalization.get('app.common.retry'),
+            action: () => {
+              this._blockerMessage = null;
+              this._updateFeed(id, syndicationFeed);
+            }
+          });
+        }
+
         this._blockerMessage = new AreaBlockerMessage({
           message: error.message,
-          buttons: [
-            {
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => {
-                this._blockerMessage = null;
-                this._updateFeed(id, syndicationFeed);
-              }
-            }, {
-              label: this._appLocalization.get('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-                this._close();
-              }
-            }
-          ]
+          buttons: buttons
         });
       });
   }

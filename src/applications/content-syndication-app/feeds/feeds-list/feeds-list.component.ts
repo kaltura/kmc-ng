@@ -2,7 +2,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {FeedsFilters, FeedsService, SortDirection} from '../feeds.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
@@ -15,10 +15,13 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
   providers : [FeedsService]
 })
 
-export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class FeedsListComponent implements OnInit, OnDestroy {
 
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _isReady = false; // prevents from calling prepare function twice
+  public _tableIsBusy = false;
+  public _tableBlockerMessage: AreaBlockerMessage = null;
   public _selectedFeeds: KalturaBaseSyndicationFeed[] = [];
   public _feedsTotalCount: number = null;
   public _playlists: KalturaPlaylist[] = null;
@@ -50,16 +53,6 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
     this._prepare();
   }
 
-  ngAfterViewInit() {
-
-    // this.addNewFeed.state$
-    //   .cancelOnDestroy(this)
-    //   .subscribe(event => {
-    //     if (event.state === PopupWidgetStates.BeforeClose) {
-    //       this._linkedEntries = [];
-    //     }
-    //   });
-  }
 
   public _reload() {
     this._clearSelection();
@@ -204,7 +197,11 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  private _prepare() {
+  private _prepare(): void {
+    if (this._isReady) {
+      return undefined;
+    }
+
     this._isBusy = true;
     this._blockerMessage = null;
 
@@ -216,7 +213,9 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(response => {
           this._playlists = response;
           this._feedsService.reload();
+          this._registerToDataChanges();
           this._isBusy = false;
+          this._isReady = true;
         },
         error => {
           this._isBusy = false;
@@ -233,6 +232,36 @@ export class FeedsListComponent implements OnInit, OnDestroy, AfterViewInit {
             ]
           });
         })
+  }
+
+  private _registerToDataChanges(): void {
+    this._feedsService.feeds.state$
+      .cancelOnDestroy(this)
+      .subscribe(
+        result => {
+
+          this._tableIsBusy = result.loading;
+
+          if (result.errorMessage) {
+            this._tableBlockerMessage = new AreaBlockerMessage({
+              message: result.errorMessage || 'Error loading feeds',
+              buttons: [{
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._tableBlockerMessage = null;
+                  this._feedsService.reload();
+                }
+              }
+              ]
+            })
+          } else {
+            this._tableBlockerMessage = null;
+          }
+        },
+        error => {
+          console.warn('[kmcng] -> could not load feeds'); // navigate to error page
+          throw error;
+        });
   }
 
   private _restoreFiltersState(): void {

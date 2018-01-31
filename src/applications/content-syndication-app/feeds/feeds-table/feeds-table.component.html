@@ -1,5 +1,3 @@
-<k-area-blocker [showLoader]="(_feedsService.feeds.state$ | async)?.loading || this._deferredLoading"
-                [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kFeedsTable" [class.noResults]="!_feeds?.length">
     <p-dataTable [value]="_feeds" [sortField]="filter.sortBy"
                  [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
@@ -64,7 +62,7 @@
                 [sortable]="'custom'">
         <ng-template let-col let-feed="rowData" pTemplate="body">
           <div class="kColUrl">
-            <kCopyToClipboard class="kIcon" [text]="feed[col.field]" [iconSwitchTimeout]="5000"
+            <kCopyToClipboard class="kIcon" [text]="''" [iconSwitchTimeout]="5000"
                               [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
             <input readonly="true" class="kElipsis kUrl" type="text" [value]="feed[col.field]" pInputText=""
                    [kTooltip]="feed[col.field]" [maxWidth]="300"/>
@@ -82,4 +80,3 @@
     </p-dataTable>
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
   </div>
-</k-area-blocker>

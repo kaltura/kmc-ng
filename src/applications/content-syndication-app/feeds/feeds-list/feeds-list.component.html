@@ -24,15 +24,19 @@
         </div>
       </kSticky>
 
-      <kFeedsTable class="kFeedsTable"
-                   [feeds]="(_feedsService.feeds.data$ | async)?.items"
-                   [filter]="_query"
-                   (sortChanged)="_onSortChanged($event)"
-                   (actionSelected)="_onActionSelected($event)"
-                   [(selectedFeeds)]="_selectedFeeds"
-                   [playlists]="_playlists"
-                   (onEditFeed)="_onActionSelected({action: 'edit', feed: $event})">
-      </kFeedsTable>
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
+        <kFeedsTable class="kFeedsTable"
+                     [feeds]="(_feedsService.feeds.data$ | async)?.items"
+                     [filter]="_query"
+                     (sortChanged)="_onSortChanged($event)"
+                     (actionSelected)="_onActionSelected($event)"
+                     [(selectedFeeds)]="_selectedFeeds"
+                     [playlists]="_playlists"
+                     (onEditFeed)="_onActionSelected({action: 'edit', feed: $event})">
+        </kFeedsTable>
+      </k-area-blocker>
       <div class="kFeedsTableFooter kContent" #footer *ngIf="_feedsTotalCount">
         <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
                      [first]="_query.pageIndex * _query.pageSize"

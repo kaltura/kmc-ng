@@ -9,11 +9,8 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {ISubscription} from 'rxjs/Subscription';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {FeedsService} from '../feeds.service';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 
@@ -24,7 +21,6 @@ import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 })
 export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
-  public _blockerMessage: AreaBlockerMessage = null;
   public _feeds: KalturaBaseSyndicationFeed[] = [];
   private _deferredFeeds: any[];
   public _deferredLoading = true;
@@ -67,56 +63,21 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
   private _actionsMenuFeed: KalturaBaseSyndicationFeed;
-  private _feedsServiceStatusSubscription: ISubscription;
 
   public _emptyMessage = '';
 
   public _items: MenuItem[];
 
   constructor(private _appLocalization: AppLocalization,
-              private _feedsService: FeedsService,
               private _cdRef: ChangeDetectorRef) {
     this._fillCopyToClipboardTooltips();
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this._feedsServiceStatusSubscription = this._feedsService.feeds.state$.subscribe(
-      result => {
-        if (result.errorMessage) {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage || 'Error loading feeds',
-            buttons: [{
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => {
-                this._feedsService.reload();
-              }
-            }
-            ]
-          })
-        } else {
-          this._blockerMessage = null;
-          if (result.loading) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-            }
-          }
-        }
-      },
-      error => {
-        console.warn('[kmcng] -> could not load feeds'); // navigate to error page
-        throw error;
-      });
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngOnDestroy() {
-    this._feedsServiceStatusSubscription.unsubscribe();
-    this._feedsServiceStatusSubscription = null;
   }
 
   ngAfterViewInit() {
@@ -172,12 +133,6 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
           this._onActionSelected('edit', this._actionsMenuFeed);
         }
       },
-      // {
-      //   label: this._appLocalization.get('applications.content.syndication.table.actions.instructions'),
-      //   command: (event) => {
-      //     this._onActionSelected('viewEntries', this._actionsMenuFeed);
-      //   }
-      // },
       {
         label: this._appLocalization.get('applications.content.syndication.table.actions.delete'),
         command: (event) => {

@@ -8,7 +8,7 @@ import {Component, Input, OnInit} from '@angular/core';
 export class CopyToClipboardComponent implements OnInit {
 
   public _status: 'success' | 'failure' | 'idle' | 'notSupported' = 'idle';
-  private _text: string;
+  public _text: string;
 
   @Input() iconSwitchTimeout: number = 5000;
 
@@ -23,8 +23,7 @@ export class CopyToClipboardComponent implements OnInit {
   @Input()
   set text(text: string) {
     this._status = 'idle';
-    if (!this._isCopyToClipboardSupportedByBrowser() || !text || !text.length) {
-      console.warn('Unable to initiate CopyToClipboardComponent, unsupported in current browser');
+    if (!this._isCopyToClipboardSupportedByBrowser()) {
       this._status = 'notSupported';
     } else {
       this._text = text;
@@ -38,7 +37,7 @@ export class CopyToClipboardComponent implements OnInit {
   }
 
   copy(): void {
-    if (this._status !== 'idle') {
+    if (this._status !== 'idle' || !this._text ) {
       return undefined;
     }
 
