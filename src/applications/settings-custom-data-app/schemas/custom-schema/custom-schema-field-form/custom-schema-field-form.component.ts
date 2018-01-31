@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { MetadataItem, MetadataItemTypes } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
@@ -10,7 +10,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
   templateUrl: './custom-schema-field-form.component.html',
   styleUrls: ['./custom-schema-field-form.component.scss']
 })
-export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit {
+export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() field: MetadataItem | null;
 
   @Input() fields: MetadataItem[] | null;
@@ -60,6 +60,9 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
     this._buildForm();
+  }
+
+  ngOnInit() {
     this._prepare();
   }
 
