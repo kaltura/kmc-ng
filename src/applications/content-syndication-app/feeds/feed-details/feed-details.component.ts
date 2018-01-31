@@ -14,7 +14,8 @@ import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client/api/types/Kal
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PlayersStore} from 'app-shared/kmc-shared/players/players-store.service';
 import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {PlayerTypes} from 'app-shared/kmc-shared/players';
 
 
 export abstract class DestinationComponentBase {
@@ -185,7 +186,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       return Observable.throw('An error occurred while trying to load feed');
     }
 
-    const getPlayers$ = this._playersStore.get().cancelOnDestroy(this);
+    const getPlayers$ = this._playersStore.get({type: PlayerTypes.Entry}).cancelOnDestroy(this);
     const getFlavours$ = this._flavorsStore.get().cancelOnDestroy(this);
     const requests: Observable<any>[] = [getPlayers$, getFlavours$];
 

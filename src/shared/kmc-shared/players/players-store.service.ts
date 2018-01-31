@@ -9,62 +9,103 @@ import {KalturaUiConfListResponse} from 'kaltura-ngx-client/api/types/KalturaUiC
 import {KalturaUiConfFilter} from 'kaltura-ngx-client/api/types/KalturaUiConfFilter';
 import {KalturaUiConfObjType} from 'kaltura-ngx-client/api/types/KalturaUiConfObjType';
 import {KalturaUiConf} from 'kaltura-ngx-client/api/types/KalturaUiConf';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+
+export enum PlayerTypes {
+  Entry = 1,
+  Playlist = 2
+}
+
+export interface GetFilters {
+  type: PlayerTypes;
+}
+
 
 @Injectable()
 export class PlayersStore {
-  private _cachedPlayers: KalturaUiConf[] = [];
+  private _cachedPlayers: { [key: string]: Observable<KalturaUiConf[]> } = {};
+  private _logger: KalturaLogger;
 
-  constructor(private _kalturaServerClient: KalturaClient) {
+  constructor(private _kalturaServerClient: KalturaClient, logger: KalturaLogger) {
+    this._logger = logger.subLogger('PlayersStore');
   }
 
-  public get(): Observable<{ items: KalturaUiConf[] }> {
-    let currentPageIndex = 0;
-    return Observable.create(observer => {
-      let sub: ISubscription;
-      if (this._cachedPlayers.length) {
-        observer.next({items: this._cachedPlayers});
-        observer.complete();
-      } else {
-        const loadPlayers = () => {
-          sub = this._buildRequest(500, ++currentPageIndex).subscribe(
-            response => {
-              this._cachedPlayers = this._cachedPlayers.concat(response.objects);
 
-              if (this._cachedPlayers.length >= response.totalCount) {
+  public get(filters: GetFilters): Observable<KalturaUiConf[]> {
+    const cacheToken = this._createCacheKey(filters);
+    let cachedResponse = this._cachedPlayers[cacheToken];
+
+    // // no request found in queue - get from cache if already queried those categories
+    // let cachedResponse = this._cachedPlayers[cacheToken];
+
+    if (!cachedResponse) {
+      this._logger.info(`caching players for token '${cacheToken}'`);
+      this._cachedPlayers[cacheToken] = cachedResponse =
+        Observable.create(observer => {
+          let sub: ISubscription;
+          let currentPageIndex = 0;
+          let playersResults = [];
+          const loadPlayers = () => {
+            sub = this._buildRequest(filters, ++currentPageIndex).subscribe(
+              response => {
                 sub = null;
-                observer.next({items: this._cachedPlayers});
-                observer.complete();
-              } else {
-                loadPlayers();
+                playersResults = playersResults.concat(response.objects);
+
+                if (playersResults.length >= response.totalCount) {
+                  observer.next({items: playersResults});
+                  observer.complete();
+                } else {
+                  loadPlayers();
+                }
+              },
+              error => {
+                sub = null;
+                this._cachedPlayers[cacheToken] = null;
+                observer.error(error);
               }
-            },
-            error => {
-              sub = null;
-              this._cachedPlayers = [];
-              observer.error(error);
-            }
-          );
-        };
+            );
+          };
 
-        loadPlayers();
-      }
-      return () => {
-        if (sub) {
-          sub.unsubscribe();
-        }
-      }
-    });
+          loadPlayers();
 
+          return () => {
+          }
+        })
+          .publishReplay(1)
+          .refCount();
+    }
+
+    return cachedResponse;
   }
 
-  private _buildRequest(pageSize: number, pageIndex: number = 1): Observable<KalturaUiConfListResponse> {
+
+  private _createCacheKey(filters: GetFilters) {
+    if (filters) {
+      return `_${filters.type ? filters.type : ''}_`;
+    } else {
+      throw new Error('filter argument missing')
+    }
+  }
+
+  private _buildRequest(filters: GetFilters, pageIndex: number): Observable<KalturaUiConfListResponse> {
+    const tags = filters && filters.type === PlayerTypes.Playlist ? 'html5studio,playlist' : 'html5studio,player';
+
     const filter: KalturaUiConfFilter = new KalturaUiConfFilter({
       objTypeEqual: KalturaUiConfObjType.player,
-      tagsMultiLikeAnd: 'player'
+      tagsMultiLikeAnd: tags,
+      'orderBy': '-updatedAt',
+      'objTypeIn': '1,8'
     });
 
-    const pager = new KalturaFilterPager({pageSize, pageIndex});
+    const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+      type: KalturaResponseProfileType.includeFields,
+      fields: 'id,name,html5Url,createdAt,updatedAt,width,height'
+    });
 
-    return this._kalturaServerClient.request(new UiConfListAction({filter, pager}));
+    const pager = new KalturaFilterPager({pageSize: 500, pageIndex});
+
+    return this._kalturaServerClient.request(new UiConfListAction({filter, pager, responseProfile}));
   }
 }
