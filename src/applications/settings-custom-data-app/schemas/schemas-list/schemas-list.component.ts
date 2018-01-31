@@ -5,7 +5,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { SchemasFilters, SchemasStore } from '../schemas-store/schemas-store.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
-import { MetadataProfileStore } from 'app-shared/kmc-shared/custom-metadata/metadata-profile-store.service';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 
 @Component({
   selector: 'kSchemasList',
@@ -28,7 +29,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   };
 
   constructor(public _schemasStore: SchemasStore,
-              private _metadataProfilesStore: MetadataProfileStore,
+              private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
   }
@@ -102,7 +103,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   }
 
   private _updateMetadataProfiles(): void {
-    this._metadataProfilesStore.clearMetadataProfilesCache();
+    this._appEvents.publish(new MetadataProfileUpdatedEvent());
   }
 
   private _proceedDeleteSchemas(schemas: SettingsMetadataProfile[]): void {

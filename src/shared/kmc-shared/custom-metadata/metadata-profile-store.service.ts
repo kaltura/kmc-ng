@@ -12,6 +12,7 @@ import { KalturaMetadataProfileCreateMode } from 'kaltura-ngx-client/api/types/K
 import { KalturaMetadataProfileFilter } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileFilter';
 import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 
 export enum MetadataProfileCreateModes {
     Api,
@@ -37,9 +38,14 @@ export class MetadataProfileStore extends PartnerProfileStore
 
     constructor(private _kalturaServerClient: KalturaClient, _appEvents: AppEventsService) {
         super();
+
+        _appEvents.event(MetadataProfileUpdatedEvent)
+          .subscribe(() => {
+            this._clearMetadataProfilesCache();
+          })
     }
 
-    public clearMetadataProfilesCache(): void {
+    private _clearMetadataProfilesCache(): void {
       this._cachedProfiles = {};
     }
 
@@ -50,6 +56,7 @@ export class MetadataProfileStore extends PartnerProfileStore
 	        let sub: ISubscription;
             const cacheKey = this._createCacheKey(filters);
             const cachedResults = this._cachedProfiles[cacheKey];
+            console.warn(cachedResults);
             if (cachedResults)
             {
                 observer.next({items : cachedResults});
