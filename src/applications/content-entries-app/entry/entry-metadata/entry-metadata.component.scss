@@ -158,6 +158,11 @@ hr{
 			width: 100% !important;
 		}
 
+    .ui-autocomplete-multiple-container {
+      max-height: 101px;
+      overflow-y: auto;
+    }
+
 		  .ui-dropdown-label.ui-inputtext{
 			background-color: #ffffff;
 		}
