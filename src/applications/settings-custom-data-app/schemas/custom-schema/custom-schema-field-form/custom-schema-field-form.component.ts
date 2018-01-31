@@ -3,7 +3,6 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { MetadataItem, MetadataItemTypes } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
@@ -23,8 +22,6 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
   private _field: MetadataItem;
   private _isNew = true;
   private _systemNames: string[] = [];
-  private _fieldsIds: string[] = [];
-  private _fieldIdGenerator = new FriendlyHashId();
 
   public _title: string;
   public _saveBtnLabel: string;
@@ -117,7 +114,6 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
 
     if (this.fields && this.fields.length) {
       this._systemNames = this.fields.map(({ name }) => name);
-      this._fieldsIds = this.fields.map(({ id }) => id);
     }
   }
 
@@ -194,6 +190,49 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
     return this._field;
   }
 
+  private _generateFieldId(): string {
+    const ALPHA_CHAR_CODES = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70];
+    const uid = new Array(36);
+    let index = 0;
+
+    let i;
+    let j;
+
+    for (i = 0; i < 8; i++) {
+      uid[index++] = ALPHA_CHAR_CODES[Math.floor(Math.random() * 16)];
+    }
+
+    for (i = 0; i < 3; i++) {
+      uid[index++] = 45; // charCode for "-"
+
+      for (j = 0; j < 4; j++) {
+        uid[index++] = ALPHA_CHAR_CODES[Math.floor(Math.random() * 16)];
+      }
+    }
+
+    uid[index++] = 45; // charCode for "-"
+
+    const time = new Date().getTime();
+    // Note: time is the number of milliseconds since 1970,
+    // which is currently more than one trillion.
+    // We use the low 8 hex digits of this number in the UID.
+    // Just in case the system clock has been reset to
+    // Jan 1-4, 1970 (in which case this number could have only
+    // 1-7 hex digits), we pad on the left with 7 zeros
+    // before taking the low digits.
+    const timeString = ('0000000' + time.toString(16).toUpperCase()).substr(-8);
+
+    for (i = 0; i < 8; i++) {
+      uid[index++] = timeString.charCodeAt(i);
+    }
+
+    for (i = 0; i < 4; i++) {
+      uid[index++] = ALPHA_CHAR_CODES[Math.floor(Math.random() * 16)];
+    }
+
+    return String.fromCharCode.apply(null, uid);
+  }
+
   private _create(): MetadataItem {
     const formValue = this._fieldForm.value;
     const { label, type, allowMultiple, shortDescription, description, searchable, includeTime, listValues } = formValue;
@@ -224,7 +263,7 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
       optionalValues: [],
       isRequired: false,
       children: [],
-      id: this._fieldIdGenerator.generateUnique(this._fieldsIds)
+      id: this._generateFieldId()
     };
 
     if (type === MetadataItemTypes.List) {
