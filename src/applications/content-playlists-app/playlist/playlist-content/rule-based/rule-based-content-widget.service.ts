@@ -46,7 +46,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     return Observable.of({ isValid: true });
   }
 
-  protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
+  protected onDataSaving(data: KalturaPlaylist): void {
     if (data.playlistType === KalturaPlaylistType.dynamic) { // handle only rule-based playlist
       data.filters = this.rules.map(({ originalFilter }) => originalFilter);
     }
