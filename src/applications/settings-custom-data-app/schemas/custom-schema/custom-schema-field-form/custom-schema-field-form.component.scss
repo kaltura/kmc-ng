@@ -103,8 +103,25 @@
   }
 }
 
-:host /deep/ .kCustomSchemaFieldForm .ui-dropdown.ui-widget {
-  width: 335px;
+:host /deep/ .kCustomSchemaFieldForm {
+  .ui-dropdown.ui-widget {
+    width: 335px;
+  }
+
+  .ui-dropdown-item {
+    position: relative;
+    &:after {
+      position: absolute;
+      top: 9px;
+      right: 5px;
+      float: none;
+    }
+    .ui-helper-clearfix {
+      margin-right: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
 }
 
 :host /deep/ .kAllowMultiple .ui-radiobutton-label {
