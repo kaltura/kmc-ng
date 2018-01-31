@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
@@ -17,11 +17,12 @@ export class PlaylistAddEntryComponent {
   public _addButtonLabel = '';
   public _addButtonLabelTranslation = '';
   public _enforcedFilters: Partial<EntriesFilters> = {
-    'ingestionStatuses' : [KalturaEntryStatus.preconvert,
-        KalturaEntryStatus.ready,
-        KalturaEntryStatus.moderate,
-        KalturaEntryStatus.blocked
-        ]
+    'ingestionStatuses': [
+      KalturaEntryStatus.preconvert.toString(),
+      KalturaEntryStatus.ready.toString(),
+      KalturaEntryStatus.moderate.toString(),
+      KalturaEntryStatus.blocked.toString()
+    ]
   };
 
   constructor(private _appLocalization: AppLocalization) {
