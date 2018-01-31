@@ -19,18 +19,12 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
   providers: [PlaylistRuleParserService]
 })
 export class PlaylistRuleComponent implements OnInit {
-  @Input() set rule(value: PlaylistRule) {  // rule-based playlist specific
-    if (value) {
-      this._setPlaylistData(value);
-    }
-  }
+  @Input() rule: PlaylistRule;
 
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
   @Output() onClosePopupWidget = new EventEmitter<void>();
   @Output() onSaveRule = new EventEmitter<PlaylistRule>();
-
-  private _rule: PlaylistRule;
 
   public _blockerMessage: AreaBlockerMessage;
   public _title: string;
@@ -96,10 +90,20 @@ export class PlaylistRuleComponent implements OnInit {
   }
 
   private _prepare(): void {
-    this._title = this._appLocalization.get('applications.content.playlists.addRule');
-    this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.addToPlaylist');
+    if (this.rule) {
+      this._resultsLimit = this.rule.limit;
+      this._ruleName = this.rule.name;
+      this._orderBy = this.rule.orderBy;
 
-    this._entriesStore.resetFilters();
+      this._title = this._appLocalization.get('applications.content.playlists.updateRule');
+      this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.save');
+      this._applyFilters(this.rule);
+    } else {
+      this._title = this._appLocalization.get('applications.content.playlists.addRule');
+      this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.addToPlaylist');
+
+      this._entriesStore.resetFilters();
+    }
   }
 
   private _applyFilters(playlist: PlaylistRule): void {
@@ -112,17 +116,6 @@ export class PlaylistRuleComponent implements OnInit {
         error => {
           this._blockerMessage = this._createErrorMessage(error.message, () => this._applyFilters(playlist));
         });
-  }
-
-  private _setPlaylistData(playlist: PlaylistRule): void {
-    this._resultsLimit = playlist.limit;
-    this._ruleName = playlist.name;
-    this._orderBy = playlist.orderBy;
-    this._rule = playlist;
-
-    this._title = this._appLocalization.get('applications.content.playlists.updateRule');
-    this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.save');
-    this._applyFilters(playlist);
   }
 
   private _createErrorMessage(message: string, retryFn: Function): AreaBlockerMessage {
@@ -154,7 +147,7 @@ export class PlaylistRuleComponent implements OnInit {
         name: ruleName,
         limit: this._resultsLimit,
         orderBy: this._orderBy,
-        rule: this._rule
+        rule: this.rule
       }).subscribe(
         updatedRule => {
           this.onSaveRule.emit(updatedRule);
