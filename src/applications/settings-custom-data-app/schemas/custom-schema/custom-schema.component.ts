@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
@@ -7,35 +7,15 @@ import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-pro
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
 
 @Component({
   selector: 'kCustomSchema',
   templateUrl: './custom-schema.component.html',
   styleUrls: ['./custom-schema.component.scss']
 })
-export class CustomSchemaComponent {
-  @Input() set schema(value: SettingsMetadataProfile) {
-    if (value) {
-      this._schema = <SettingsMetadataProfile>Object.assign(KalturaTypesFactory.createObject(value), value);
-      this._profileFields = (this._schema.parsedProfile && this._schema.parsedProfile.items && this._schema.parsedProfile.items.length)
-        ? this._schema.parsedProfile.items : [];
-      this._title = this._appLocalization.get('applications.settings.metadata.editCustomSchema');
-    } else {
-      this._title = this._appLocalization.get('applications.settings.metadata.addCustomSchema');
-      const schema = <SettingsMetadataProfile>(new KalturaMetadataProfile({
-        name: '',
-        description: '',
-        systemName: ''
-      }));
-      schema.isNew = true;
-      schema.profileDisabled = false;
-      schema.applyTo = this._appLocalization.get('applications.settings.metadata.applyTo.entries');
-      (<any>schema).parsedProfile = { items: [] };
-
-      this._schema = schema;
-      this._profileFields = [];
-    }
-  }
+export class CustomSchemaComponent implements OnInit {
+  @Input() schema: SettingsMetadataProfile;
 
   @Output() onClosePopupWidget = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<SettingsMetadataProfile>();
@@ -53,6 +33,33 @@ export class CustomSchemaComponent {
 
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
+  }
+
+  ngOnInit() {
+    this._prepare();
+  }
+
+  private _prepare(): void {
+    if (this.schema) {
+      this._schema = <SettingsMetadataProfile>Object.assign(KalturaTypesFactory.createObject(this.schema), this.schema);
+      this._profileFields = (this._schema.parsedProfile && this._schema.parsedProfile.items && this._schema.parsedProfile.items.length)
+        ? this._schema.parsedProfile.items : [];
+      this._title = this._appLocalization.get('applications.settings.metadata.editCustomSchema');
+    } else {
+      this._title = this._appLocalization.get('applications.settings.metadata.addCustomSchema');
+      const schema = <SettingsMetadataProfile>(new KalturaMetadataProfile({
+        name: '',
+        description: '',
+        systemName: ''
+      }));
+      schema.isNew = true;
+      schema.profileDisabled = false;
+      schema.applyTo = KalturaMetadataObjectType.entry;
+      (<any>schema).parsedProfile = { items: [] };
+
+      this._schema = schema;
+      this._profileFields = [];
+    }
   }
 
   private _fieldsOrderChanged(): void {

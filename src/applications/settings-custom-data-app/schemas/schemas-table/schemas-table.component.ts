@@ -10,7 +10,7 @@ import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-prof
   templateUrl: './schemas-table.component.html',
   styleUrls: ['./schemas-table.component.scss']
 })
-export class SchemasTableComponent implements AfterViewInit, OnInit, OnDestroy {
+export class SchemasTableComponent implements AfterViewInit, OnDestroy {
   @Input() set schemas(data: SettingsMetadataProfile[]) {
     if (!this._deferredLoading) {
       this._schemas = [];
@@ -33,7 +33,7 @@ export class SchemasTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _deferredSchemas: SettingsMetadataProfile[];
 
   public _deferredLoading = true;
-  public _emptyMessage = '';
+  public _emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   public _blockerMessage: AreaBlockerMessage = null;
   public _items: MenuItem[];
   public _schemas: SettingsMetadataProfile[] = [];
@@ -45,43 +45,6 @@ export class SchemasTableComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               public _schemasStore: SchemasStore,
               private _cdRef: ChangeDetectorRef) {
-  }
-
-  ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this._schemasStore.schemas.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        result => {
-          if (result.errorMessage) {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: result.errorMessage || 'Error loading schemas',
-              buttons: [{
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => {
-                  this._schemasStore.reload();
-                }
-              }
-              ]
-            })
-          } else {
-            this._blockerMessage = null;
-            if (result.loading) {
-              this._emptyMessage = '';
-              loadedOnce = true;
-            } else {
-              if (loadedOnce) {
-                this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-              }
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load schemas'); // navigate to error page
-          throw error;
-        });
   }
 
   ngAfterViewInit() {

@@ -122,15 +122,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
             object.profileDisabled = true; // disabled
           }
 
-          const objectType = object.metadataObjectType.toString();
-          if (objectType === KalturaMetadataObjectType.entry.toString()) {
-            object.applyTo = this._appLocalization.get('applications.settings.metadata.applyTo.entries');
-          } else if (objectType === KalturaMetadataObjectType.category.toString()) {
-            object.applyTo = this._appLocalization.get('applications.settings.metadata.applyTo.categories');
-          } else {
-            object.applyTo = objectType;
-          }
-
+          object.applyTo = object.metadataObjectType;
           object.isNew = false;
         });
 
@@ -190,9 +182,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       name: schema.name,
       systemName: schema.systemName,
       description: schema.description,
-      metadataObjectType: schema.applyTo === this._appLocalization.get('applications.settings.metadata.applyTo.categories')
-        ? KalturaMetadataObjectType.category
-        : KalturaMetadataObjectType.entry
+      metadataObjectType: schema.applyTo
     });
 
     return new MetadataProfileUpdateAction({
@@ -208,9 +198,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       name: schema.name,
       systemName: schema.systemName,
       description: schema.description,
-      metadataObjectType: schema.applyTo === this._appLocalization.get('applications.settings.metadata.applyTo.categories')
-        ? KalturaMetadataObjectType.category
-        : KalturaMetadataObjectType.entry
+      metadataObjectType: schema.applyTo
     });
 
     return new MetadataProfileAddAction({
@@ -229,8 +217,9 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
   }
 
   protected _createDefaultFiltersValue(): SchemasFilters {
+    const pageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey) || 25;
     return {
-      pageSize: 25,
+      pageSize: pageSize,
       pageIndex: 0
     };
   }

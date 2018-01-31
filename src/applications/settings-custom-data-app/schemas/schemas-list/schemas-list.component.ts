@@ -18,6 +18,8 @@ export class SchemasListComponent implements OnInit, OnDestroy {
 
   public _selectedSchemas: SettingsMetadataProfile[] = [];
   public _selectedSchema: SettingsMetadataProfile = null;
+  public _tableIsBusy = false;
+  public _tableBlockerMessage: AreaBlockerMessage = null;
 
   public _query = {
     pageIndex: 0,
@@ -32,6 +34,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
+    this._registerToDataChanges();
   }
 
   ngOnDestroy() {
@@ -50,6 +53,10 @@ export class SchemasListComponent implements OnInit, OnDestroy {
     if (typeof updates.pageSize !== 'undefined') {
       this._query.pageSize = updates.pageSize;
     }
+
+    if (typeof updates.pageIndex !== 'undefined') {
+      this._query.pageIndex = updates.pageIndex;
+    }
   }
 
   private _registerToFilterStoreDataChanges(): void {
@@ -60,6 +67,36 @@ export class SchemasListComponent implements OnInit, OnDestroy {
         this._clearSelection();
         this._browserService.scrollToTop();
       });
+  }
+
+  private _registerToDataChanges(): void {
+    this._schemasStore.schemas.state$
+      .cancelOnDestroy(this)
+      .subscribe(
+        result => {
+
+          this._tableIsBusy = result.loading;
+
+          if (result.errorMessage) {
+            this._tableBlockerMessage = new AreaBlockerMessage({
+              message: result.errorMessage || this._appLocalization.get('applications.settings.metadata.errorLoading'),
+              buttons: [{
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._tableBlockerMessage = null;
+                  this._schemasStore.reload();
+                }
+              }
+              ]
+            })
+          } else {
+            this._tableBlockerMessage = null;
+          }
+        },
+        error => {
+          console.warn('[kmcng] -> could not load schemas'); // navigate to error page
+          throw error;
+        });
   }
 
   private _proceedDeleteSchemas(schemas: SettingsMetadataProfile[]): void {

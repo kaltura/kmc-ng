@@ -1624,6 +1624,7 @@
         }
       },
       "metadata": {
+        "errorLoading": "Error loading schemas",
         "addCustomSchema": "Add Custom Schema",
         "editCustomSchema": "Edit Custom Schema",
         "addCustomField": "Add Custom Field",

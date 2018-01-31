@@ -29,11 +29,15 @@
           </div>
         </div>
       </kSticky>
-      <kSchemasTable
-        class="kSchemasTable"
-        [schemas]="(_schemasStore.schemas.data$ | async)?.items"
-        (actionSelected)="_onActionSelected($event)"
-        [(selectedSchemas)]="_selectedSchemas"></kSchemasTable>
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
+        <kSchemasTable
+          class="kSchemasTable"
+          [schemas]="(_schemasStore.schemas.data$ | async)?.items"
+          (actionSelected)="_onActionSelected($event)"
+          [(selectedSchemas)]="_selectedSchemas"></kSchemasTable>
+      </k-area-blocker>
 
       <div class="kSchemasTableFooter kContent" #footer *ngIf="(_schemasStore.schemas.data$ | async)?.totalCount">
         <p-paginator

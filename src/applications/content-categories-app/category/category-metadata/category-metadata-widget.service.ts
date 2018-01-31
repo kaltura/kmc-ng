@@ -295,7 +295,8 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         return Observable.create(observer => {
             this.metadataForm.updateValueAndValidity();
             const isValid = this.metadataForm.valid;
-            observer.next({ isValid });
+            observer.next({ isValid: false });
+          this.updateState({ isValid: false });
             observer.complete();
         });
     }

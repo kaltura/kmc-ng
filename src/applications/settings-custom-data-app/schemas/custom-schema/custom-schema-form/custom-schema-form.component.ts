@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SettingsMetadataProfile } from '../../schemas-store/settings-metadata-profile.interface';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
 
 @Component({
   selector: 'kCustomSchemaForm',
@@ -35,12 +35,11 @@ export class CustomSchemaFormComponent {
   public _systemNameField: AbstractControl;
   public _applyToField: AbstractControl;
   public _applyToValues = {
-    entries: this._appLocalization.get('applications.settings.metadata.applyTo.entries'),
-    categories: this._appLocalization.get('applications.settings.metadata.applyTo.categories')
+    entry: KalturaMetadataObjectType.entry.toString(),
+    category: KalturaMetadataObjectType.category.toString()
   };
 
-  constructor(private _fb: FormBuilder,
-              private _appLocalization: AppLocalization) {
+  constructor(private _fb: FormBuilder) {
     this._buildForm();
   }
 
@@ -49,7 +48,7 @@ export class CustomSchemaFormComponent {
       name: ['', Validators.required],
       description: '',
       systemName: '',
-      applyTo: this._appLocalization.get('applications.settings.metadata.applyTo.entries')
+      applyTo: KalturaMetadataObjectType.entry.toString()
     });
 
     this._nameField = this._schemaForm.controls['name'];
@@ -79,8 +78,9 @@ export class CustomSchemaFormComponent {
         sendUpdate = true;
       }
 
-      if (this._schema.applyTo !== change.applyTo) {
-        this._schema.applyTo = change.applyTo;
+      const applyTo = new KalturaMetadataObjectType(change.applyTo);
+      if (!this._schema.applyTo.equals(applyTo)) {
+        this._schema.applyTo = applyTo;
         sendUpdate = true;
       }
 

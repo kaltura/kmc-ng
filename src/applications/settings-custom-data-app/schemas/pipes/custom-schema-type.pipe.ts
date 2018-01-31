@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { MetadataItemTypes } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { MetadataItemTypes } from 'shared/kmc-shared/custom-metadata/metadata-profile';
+import { AppLocalization } from '../../../../../../kaltura-ng/kaltura-common/dist/localization/app-localization.service';
 
 @Pipe({ name: 'kCustomSchemaTypePipe' })
 export class CustomSchemaTypePipe implements PipeTransform {

@@ -9,7 +9,7 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kal
   providers: [
     SchemasStore,
     KalturaLogger,
-    { provide: KalturaLoggerName, useValue: 'schemas-store.service' }
+    { provide: KalturaLoggerName, useValue: 'CustomData' }
   ]
 })
 export class SettingsCustomDataComponent {

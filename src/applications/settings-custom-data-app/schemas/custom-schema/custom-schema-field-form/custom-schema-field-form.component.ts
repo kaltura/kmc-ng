@@ -12,25 +12,9 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
   styleUrls: ['./custom-schema-field-form.component.scss']
 })
 export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit {
-  @Input() set field(value: MetadataItem | null) {
-    if (value) {
-      this._isNew = false;
-      this._field = <MetadataItem>Object.assign({}, value);
-      this._title = this._appLocalization.get('applications.settings.metadata.editCustomField');
-      this._saveBtnLabel = this._appLocalization.get('applications.settings.metadata.save');
-      this._setInitialValue(this._field);
-    } else {
-      this._title = this._appLocalization.get('applications.settings.metadata.addCustomField');
-      this._saveBtnLabel = this._appLocalization.get('applications.settings.metadata.add');
-    }
-  }
+  @Input() field: MetadataItem | null;
 
-  @Input() set fields(value: MetadataItem[] | null) {
-    if (value && value.length) {
-      this._systemNames = value.map(({ name }) => name);
-      this._fieldsIds = value.map(({ id }) => id);
-    }
-  }
+  @Input() fields: MetadataItem[] | null;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
 
@@ -79,6 +63,7 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
     this._buildForm();
+    this._prepare();
   }
 
   ngAfterViewInit() {
@@ -101,25 +86,39 @@ export class CustomSchemaFieldFormComponent implements OnDestroy, AfterViewInit 
 
   }
 
-  private _setInitialValue(field: MetadataItem): void {
-    this._fieldForm.setValue({
-      type: field.type,
-      allowMultiple: field.allowMultiple,
-      label: field.label,
-      shortDescription: field.description,
-      description: field.documentations,
-      searchable: !!field.isSearchable,
+  private _prepare(): void {
+    if (this.field) {
+      this._isNew = false;
+      this._field = <MetadataItem>Object.assign({}, this.field);
+      this._title = this._appLocalization.get('applications.settings.metadata.editCustomField');
+      this._saveBtnLabel = this._appLocalization.get('applications.settings.metadata.save');
+      this._fieldForm.setValue({
+        type: this._field.type,
+        allowMultiple: this._field.allowMultiple,
+        label: this._field.label,
+        shortDescription: this._field.description,
+        description: this._field.documentations,
+        searchable: !!this._field.isSearchable,
 
-      includeTime: !!field.isTimeControl,
-      listValues: (field.optionalValues && field.optionalValues.length)
-        ? field.optionalValues.map(({ value }) => value).join('\n')
-        : ''
-    });
+        includeTime: !!this._field.isTimeControl,
+        listValues: (this._field.optionalValues && this._field.optionalValues.length)
+          ? this._field.optionalValues.map(({ value }) => value).join('\n')
+          : ''
+      });
 
-    this._typeField.disable();
-    this._allowMultipleField.disable();
+      this._typeField.disable();
+      this._allowMultipleField.disable();
 
-    this._setPristine();
+      this._setPristine();
+    } else {
+      this._title = this._appLocalization.get('applications.settings.metadata.addCustomField');
+      this._saveBtnLabel = this._appLocalization.get('applications.settings.metadata.add');
+    }
+
+    if (this.fields && this.fields.length) {
+      this._systemNames = this.fields.map(({ name }) => name);
+      this._fieldsIds = this.fields.map(({ id }) => id);
+    }
   }
 
   private _setPristine(): void {
