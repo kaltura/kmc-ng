@@ -132,8 +132,10 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   public _onActionSelected({ action, schema }: { action: string, schema: SettingsMetadataProfile }): void {
     switch (action) {
       case 'edit':
-        this._selectedSchema = schema;
-        this._customSchemaPopup.open();
+        if (!schema.profileDisabled) {
+          this._selectedSchema = schema;
+          this._customSchemaPopup.open();
+        }
         break;
       case 'download':
         if (schema.downloadUrl) {
