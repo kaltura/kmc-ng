@@ -134,7 +134,7 @@ interface NodeModule extends WebpackModule {}
 interface Global extends GlobalEnvironment  {}
 
 
-
+// deepmerge typescripts - added manually since @Types/deepmerge doesn't work for version 1.3.3
 export default deepmerge;
 
 declare function deepmerge<T>(x: Partial<T>, y: Partial<T>, options?: deepmerge.Options): T;

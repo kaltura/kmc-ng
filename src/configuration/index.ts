@@ -1,10 +1,13 @@
 
-import { dynamicApplicationConfig, DynamicApplicationConfig } from './dynamic-application-config';
+import { DynamicApplicationConfig } from './dynamic-application-config';
 import { sharedModulesConfig, SharedModulesConfig } from 'app-shared/shared-modules-config';
 import { subApplicationsConfig, SubApplicationsConfig } from '../applications/sub-applications-config';
 import { StaticApplicationConfig } from './static-application-config';
 import { Observable } from 'rxjs/Observable';
 import deepmerge from 'deepmerge';
+import { environment as appEnvironment } from 'app/environments/environment';
+import  'rxjs/add/operator/takeUntil';
+import  'rxjs/add/operator/delay';
 
 export interface GlobalConfiguration {
     appVersion: string
@@ -18,20 +21,61 @@ export type ApplicationConfiguration = GlobalConfiguration & StaticApplicationCo
 
 export let environment: ApplicationConfiguration = <any>{};
 
+function getConfiguration(): Observable<DynamicApplicationConfig> {
+   return Observable.create(observer =>
+   {
+       let completed = false;
+       const xhr = new XMLHttpRequest();
+
+       xhr.onreadystatechange = function () {
+           if (xhr.readyState === 4) {
+               let resp;
+
+               completed = true;
+
+               try {
+                   if (xhr.status === 200) {
+                       resp = JSON.parse(xhr.response);
+                   } else {
+                       resp = new Error(xhr.statusText || 'failed to load configuration file from server');
+                   }
+               } catch (e) {
+                   resp = new Error(xhr.responseText);
+               }
+
+               if (resp instanceof Error) {
+                   observer.error(resp);
+               } else {
+                   observer.next(resp);
+               }
+           }
+       };
+
+       xhr.open('Get', `${appEnvironment.configurationUri}?v=${environment.appVersion}`);
+
+       xhr.send();
+
+       return () =>
+       {
+           if (!completed) {
+               console.warn('request to get application configuration was aborted');
+               xhr.abort();
+           }
+       }
+   });
+}
+
 export function initializeConfiguration(appConfiguration: StaticApplicationConfig): Observable<void> {
 
     // set conf
     environment = deepmerge.all<any>([_globalConfiguration, sharedModulesConfig, subApplicationsConfig, appConfiguration]);
 
-    return Observable.create(observer =>
-    {
-        setTimeout(() => {
-            const dynamicConfiguration = dynamicApplicationConfig; // TEMPORARY - should load from server
-
+    return getConfiguration()
+        .takeUntil(Observable.of(true).delay(appEnvironment.configurationTimeout))
+        .do(dynamicConfiguration => {
             environment = deepmerge(environment, dynamicConfiguration);
-
-            observer.next(undefined);
-            observer.complete();
+        })
+        .map(() => {
+            return undefined;
         });
-    })
-};
+}
