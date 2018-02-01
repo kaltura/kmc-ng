@@ -62,7 +62,7 @@
                 [sortable]="'custom'">
         <ng-template let-col let-feed="rowData" pTemplate="body">
           <div class="kColUrl">
-            <kCopyToClipboard class="kIcon" [text]="''" [iconSwitchTimeout]="5000"
+            <kCopyToClipboard class="kIcon" [text]="feed[col.field]" [iconSwitchTimeout]="5000"
                               [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
             <input readonly="true" class="kElipsis kUrl" type="text" [value]="feed[col.field]" pInputText=""
                    [kTooltip]="feed[col.field]" [maxWidth]="300"/>

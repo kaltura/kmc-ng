@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
@@ -12,6 +12,8 @@ import {KalturaUiConf} from 'kaltura-ngx-client/api/types/KalturaUiConf';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {AppEventsService} from "app-shared/kmc-shared";
+import {PlayersUpdatedEvent} from "app-shared/kmc-shared/events";
 
 export enum PlayerTypes {
   Entry = 1,
@@ -24,14 +26,25 @@ export interface GetFilters {
 
 
 @Injectable()
-export class PlayersStore {
+export class PlayersStore implements OnDestroy {
   private _cachedPlayers: { [key: string]: Observable<KalturaUiConf[]> } = {};
   private _logger: KalturaLogger;
 
-  constructor(private _kalturaServerClient: KalturaClient, logger: KalturaLogger) {
+  constructor(private _kalturaServerClient: KalturaClient, logger: KalturaLogger, private _appEvents: AppEventsService) {
     this._logger = logger.subLogger('PlayersStore');
+
+    this._appEvents.event(PlayersUpdatedEvent)
+      .cancelOnDestroy(this)
+      .subscribe((event) => {
+        this._logger.info(`clear players cache (triggered by PlayersUpdatedEvent)`);
+        const cacheKeyToDelete = this._createCacheKey({type: event.isPlaylist ? PlayerTypes.Playlist : PlayerTypes.Entry});
+        delete this._cachedPlayers[cacheKeyToDelete];
+      });
   }
 
+  ngOnDestroy() {
+
+  }
 
   public get(filters: GetFilters): Observable<KalturaUiConf[]> {
     const cacheToken = this._createCacheKey(filters);

@@ -29,9 +29,9 @@ import {PrimeTableSortDirectionPipe} from './pipes/prime-table-sort-direction.pi
 import {DestinationLabelPipe} from './pipes/destination-label.pipe';
 import {PlaylistNamePipe} from './pipes/playlist-name.pipe';
 import {PlaylistIconPipe} from './pipes/playlist-icon.pipe';
-import {CopyToClipboardComponent} from './copy-to-clipboard/copy-to-clipboard.component';
 import {DestinationIconPipe} from './pipes/destination-icon.pipe';
 import {FeedDetailsComponentsList} from './feeds/feed-details/feed-details-components-list';
+import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
 
 @NgModule({
   imports: [
@@ -58,7 +58,8 @@ import {FeedDetailsComponentsList} from './feeds/feed-details/feed-details-compo
     TooltipModule,
     MultiSelectModule,
     StickyModule,
-    FormsModule
+    FormsModule,
+    CopyToClipboardModule
   ],
   declarations: [
     PrimeTableSortDirectionPipe,
@@ -68,7 +69,6 @@ import {FeedDetailsComponentsList} from './feeds/feed-details/feed-details-compo
     PlaylistNamePipe,
     PlaylistIconPipe,
     FeedsListComponent,
-    CopyToClipboardComponent,
     FeedsTableComponent,
     FeedDetailsComponentsList]
 })
