@@ -47,7 +47,7 @@
       <p-column header="" [style]="{'width': '70px'}">
         <ng-template let-col let-rule="rowData" pTemplate="body" let-i="rowIndex">
           <div class="kPlaylistRulesTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, rule)"></button>
+            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, i, rule)"></button>
           </div>
         </ng-template>
       </p-column>
