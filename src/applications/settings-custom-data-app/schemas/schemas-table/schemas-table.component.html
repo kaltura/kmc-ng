@@ -47,7 +47,7 @@
     <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
       <ng-template let-col let-schema="rowData" pTemplate="body">
         <div class="kSchemasTableActions">
-          <button type="button" pButton icon="kIconmore"
+          <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"
                   (click)="_openActionsMenu($event, schema)"></button>
         </div>
       </ng-template>
