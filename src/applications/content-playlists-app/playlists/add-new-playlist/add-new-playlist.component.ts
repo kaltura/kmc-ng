@@ -39,8 +39,10 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
       if (this.addNewPlaylistForm.controls['playlistType'].value === 'ruleBased') {
         this.showNotSupportedMsg.emit();
       } else {
+        this._showConfirmationOnClose = false;
+        this.parentPopupWidget.close();
         const { name, description } = this.addNewPlaylistForm.value;
-        this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type: KalturaPlaylistType.staticList }))
+        this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type: KalturaPlaylistType.staticList }));
       }
     }
   }
