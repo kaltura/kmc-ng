@@ -107,11 +107,6 @@ export const environment = {
                       "enabled": true
                     },
                     {
-                        "routePath": "settings/accountUpgrade",
-                        "titleToken": "Account Upgrade",
-                        "enabled": true
-                    },
-                    {
                       "routePath": "settings/metadata",
                       "titleToken": "CustomData",
                       "enabled": true
@@ -119,6 +114,11 @@ export const environment = {
                     {
                       "routePath": "settings/myUserSettings",
                       "titleToken": "My User Settings",
+                      "enabled": true
+                    },
+                    {
+                      "routePath": "settings/accountInformation",
+                      "titleToken": "Account Information",
                       "enabled": true
                     }
                 ]

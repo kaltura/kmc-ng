@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SettingsAccountUpgradeComponent} from './settings-account-upgrade.component';
-import {routing} from './settings-account-upgrade-app.routes';
+import {SettingsAccountInformationComponent} from './settings-account-information.component';
+import {routing} from './settings-account-information-app.routes';
 import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ButtonModule, InputTextareaModule, InputTextModule} from 'primeng/primeng';
@@ -20,7 +20,7 @@ import {TranslateModule} from 'ng2-translate';
     InputTextareaModule,
     KalturaUIModule
   ],
-  declarations: [SettingsAccountUpgradeComponent]
+  declarations: [SettingsAccountInformationComponent]
 })
-export class SettingsAccountUpgradeAppModule {
+export class SettingsAccountInformationAppModule {
 }

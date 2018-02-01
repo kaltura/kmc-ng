@@ -15,9 +15,8 @@
       "Users": "Users",
       "Account Settings": "Account Settings",
       "Integration Settings": "Integration Settings",
-      "Account Upgrade": "Account Upgrade",
+      "Account Information": "Account Information",
       "My User Settings": "My User Settings",
-      "Administration": "Administration",
       "Roles": "Roles",
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
@@ -1633,7 +1632,7 @@
           "invalidFields": "There's some invalid fields"
         }
       },
-      "accountUpgrade": {
+      "accountInformation": {
         "contactUs": "Contact Us",
         "sendUsMessage": "Send us a message",
         "name": "Name",
@@ -1647,7 +1646,7 @@
         "errors": {
           "required": "This field is required.",
           "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
-          "sendFailed": "An error occurred during account upgrade"
+          "sendFailed": "An error occurred during send message"
         }
       },
       "metadata": {

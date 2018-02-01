@@ -4,7 +4,7 @@ import {AppBootstrap, AuthCanActivate} from 'app-shared/kmc-shell';
 import {LoginComponent} from './components/login/login.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {ErrorComponent} from './components/error/error.component';
-import { environment } from 'app-environment';
+import {environment} from 'app-environment';
 
 
 const routes: Routes = <Routes>[
@@ -64,8 +64,8 @@ const routes: Routes = <Routes>[
             loadChildren: '../applications/settings-integration-settings-app/settings-integration-settings-app.module#SettingsIntegrationSettingsAppModule'
           },
           {
-            path: 'accountUpgrade',
-            loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
+            path: 'accountInformation',
+            loadChildren: '../applications/settings-account-information-app/settings-account-information-app.module#SettingsAccountInformationAppModule'
           },
             {
                 path: 'metadata',
