@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { PartnerProfileStore } from '../partner-profile';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -32,7 +32,7 @@ export interface GetFilters
 }
 
 @Injectable()
-export class MetadataProfileStore extends PartnerProfileStore
+export class MetadataProfileStore extends PartnerProfileStore implements OnDestroy
 {
     private _cachedProfiles : { [key : string] : MetadataProfile[]} = {};
 
@@ -40,9 +40,14 @@ export class MetadataProfileStore extends PartnerProfileStore
         super();
 
         _appEvents.event(MetadataProfileUpdatedEvent)
+          .cancelOnDestroy(this)
           .subscribe(() => {
             this._clearMetadataProfilesCache();
           })
+    }
+
+    ngOnDestroy() {
+
     }
 
     private _clearMetadataProfilesCache(): void {
@@ -56,7 +61,6 @@ export class MetadataProfileStore extends PartnerProfileStore
 	        let sub: ISubscription;
             const cacheKey = this._createCacheKey(filters);
             const cachedResults = this._cachedProfiles[cacheKey];
-            console.warn(cachedResults);
             if (cachedResults)
             {
                 observer.next({items : cachedResults});
