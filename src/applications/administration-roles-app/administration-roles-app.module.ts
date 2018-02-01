@@ -28,7 +28,7 @@ import { KMCShellModule } from 'app-shared/kmc-shell';
 import { routing } from './administration-roles-app.routes';
 import { AdministrationRolesComponent } from './administration-roles.component';
 
-import { DynamicMetadataFormModule, MetadataProfileModule } from 'app-shared/kmc-shared';
+import { DynamicMetadataFormModule } from 'app-shared/kmc-shared';
 
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
@@ -57,7 +57,6 @@ import { EditRoleComponent } from './role/edit-role/edit-role.component';
     InputTextareaModule,
     InputTextModule,
     KalturaCommonModule,
-    MetadataProfileModule,
     DynamicMetadataFormModule,
     KalturaPrimeNgUIModule,
     KalturaUIModule,

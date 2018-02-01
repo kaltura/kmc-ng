@@ -36,7 +36,7 @@
 				<p-column [style]="{'width':'80px'}">
 					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<div class="kThumbnailsTableActions" *ngIf="thumb.id!==''">
-							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, thumb)"></button>
+							<button type="button" pButton class="kMoreActionsButton" icon="kIconmore" (click)="openActionsMenu($event, thumb)"></button>
 						</div>
 					</ng-template>
 				</p-column>

@@ -41,7 +41,7 @@ import {KMCShellModule} from 'app-shared/kmc-shell';
 import {routing} from './content-categories-app.routes';
 import {ContentCategoriesComponent} from './content-categories.component';
 
-import {DynamicMetadataFormModule, MetadataProfileModule} from 'app-shared/kmc-shared';
+import {DynamicMetadataFormModule} from 'app-shared/kmc-shared';
 
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
@@ -85,7 +85,6 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
         InputTextareaModule,
         InputTextModule,
         KalturaCommonModule,
-        MetadataProfileModule,
         DynamicMetadataFormModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,

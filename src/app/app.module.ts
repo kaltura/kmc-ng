@@ -105,7 +105,7 @@ export function clientConfigurationFactory() {
     DropdownModule,
     HttpModule,
     InputTextModule,
-    MetadataProfileModule,
+    MetadataProfileModule.forRoot(),
     Ng2PageScrollModule.forRoot(),
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),

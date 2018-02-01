@@ -82,8 +82,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       .cancelOnDestroy(this, this.widgetReset$)
       .map((entries: KalturaMediaEntry[]) => {
         this.entries = this._extendWithSelectionId(entries);
-        this.entriesTotalCount = entries.length;
-        this.entriesDuration = this.entries.reduce((acc, val) => acc + val.duration, 0);
+        this._recalculateCountAndDuration();
         super._hideLoader();
         return { failed: false };
       })
@@ -135,12 +134,17 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     this.updateState({ isDirty: true });
   }
 
+  private _recalculateCountAndDuration(): void {
+    this.entriesTotalCount = this.entries.length;
+    this.entriesDuration = this.entries.reduce((acc, val) => acc + val.duration, 0);
+  }
+
   private _deleteEntryFromPlaylist(entry: PlaylistContentMediaEntry): void {
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
       this.entries.splice(entryIndex, 1);
-      this.entriesTotalCount = this.entries.length;
+      this._recalculateCountAndDuration();
 
       this._setDirty();
     }
@@ -153,7 +157,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
       this._extendWithSelectionId([clonedEntry]);
       this.entries.splice(entryIndex, 0, clonedEntry);
-      this.entriesTotalCount = this.entries.length;
+      this._recalculateCountAndDuration();
       this._setDirty();
     }
   }
@@ -203,7 +207,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
   public addEntries(entries: KalturaMediaEntry[]): void {
     this.entries.push(...this._extendWithSelectionId(entries));
-    this.entriesTotalCount = this.entries.length;
+    this._recalculateCountAndDuration();
     this._setDirty();
   }
 

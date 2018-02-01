@@ -37,7 +37,7 @@
       <p-column styleClass="actionsColumn" header="">
         <ng-template let-subcategory="rowData" let-i="rowIndex" pTemplate="body">
           <div class="kTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, subcategory)"></button>
+            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, i, subcategory)"></button>
           </div>
         </ng-template>
       </p-column>
