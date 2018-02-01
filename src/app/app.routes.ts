@@ -65,13 +65,17 @@ const routes: Routes = <Routes>[
           },
           {
             path: 'accountUpgrade',
-              loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
+            loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
+          },
+            {
+                path: 'metadata',
+                loadChildren: '../applications/settings-custom-data-app/settings-custom-data-app.module#SettingsCustomDataAppModule'
             },
             {
-              path: 'myUserSettings',
-              loadChildren: '../applications/settings-my-user-settings-app/settings-my-user-settings-app.module#SettingsMyUserSettingsAppModule'
+                path: 'myUserSettings',
+                loadChildren: '../applications/settings-my-user-settings-app/settings-my-user-settings-app.module#SettingsMyUserSettingsAppModule'
             }
-          ]
+        ]
         },
         {
           path: 'administration', children: [

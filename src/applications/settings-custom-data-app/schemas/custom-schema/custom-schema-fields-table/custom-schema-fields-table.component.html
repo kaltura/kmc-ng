@@ -1,0 +1,81 @@
+<div class="kFieldsTable" [class.noResults]="!fields?.length">
+  <p-dataTable
+    #dataTable
+    scrollHeight="100%"
+    dataKey="id"
+    [scrollable]="true"
+    [value]="_fields"
+    [immutable]="false"
+    [rowTrackBy]="rowTrackBy"
+    (selectionChange)="_onSelectionChange($event)"
+    [(selection)]="selectedFields">
+
+    <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+
+    <p-column field="type" [style]="{'width':'50px'}">
+      <ng-template let-col let-field="rowData" pTemplate="body">
+        <i class="kTypeIcon" [ngClass]="field[col.field] | kCustomSchemaTypePipe:'icon'"></i>
+      </ng-template>
+    </p-column>
+
+    <p-column field="label"
+              [header]="'applications.settings.metadata.table.fieldLabel' | translate">
+      <ng-template let-col let-field="rowData" pTemplate="body">
+        <div class="kTitle" (click)="_editField(field)">
+          {{field[col.field]}}
+        </div>
+      </ng-template>
+    </p-column>
+
+    <p-column field="type"
+              [style]="{'width':'115px'}"
+              [header]="'applications.settings.metadata.table.fieldType' | translate">
+      <ng-template let-col let-field="rowData" pTemplate="body">
+        {{field[col.field] | kCustomSchemaTypePipe:'label'}}
+      </ng-template>
+    </p-column>
+
+    <p-column field="description"
+              [header]="'applications.settings.metadata.table.shortDescription' | translate"></p-column>
+
+    <p-column field="documentations"
+              [header]="'applications.settings.metadata.table.description' | translate"></p-column>
+
+    <p-column field="allowMultiple"
+              [style]="{'width':'100px'}"
+              [header]="'applications.settings.metadata.table.maxValues' | translate">
+      <ng-template let-col let-field="rowData" pTemplate="body">
+        {{field[col.field] ? ('applications.settings.metadata.unlimited' | translate) : '1'}}
+      </ng-template>
+    </p-column>
+
+    <p-column field="isSearchable"
+              [style]="{'width':'100px'}"
+              [header]="'applications.settings.metadata.table.searchable' | translate">
+      <ng-template let-col let-field="rowData" pTemplate="body">
+        {{ (field[col.field] ? 'app.common.yes' : 'app.common.no') | translate }}
+      </ng-template>
+    </p-column>
+
+    <p-column>
+      <ng-template let-col let-field="rowData" let-i="rowIndex" pTemplate="body">
+        <span class="kFieldsTableActions">
+          <i class="kIconarrow_up kActionMoveDown"
+             [kTooltip]="'applications.settings.metadata.table.moveDown' | translate"
+             [class.kActionDisabled]="i + 1 === _fields?.length"
+             (click)="i + 1 !== _fields?.length && _moveField(field, 'down')"></i>
+
+          <i class="kIconarrow_up"
+             [kTooltip]="'applications.settings.metadata.table.moveUp' | translate"
+             [class.kActionDisabled]="i === 0"
+             (click)="i !== 0 && _moveField(field, 'up')"></i>
+
+          <i class="kIconremove kActionDelete"
+             [kTooltip]="'applications.settings.metadata.table.remove' | translate"
+             (click)="_removeField(field)"></i>
+        </span>
+      </ng-template>
+    </p-column>
+
+  </p-dataTable>
+</div>
