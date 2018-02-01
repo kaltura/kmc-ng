@@ -1,0 +1,89 @@
+<div class="kCustomSchemaWrap">
+  <div class="kFloater">
+    <div class="kHeader">
+      <span class="kTitle">{{ _title }}</span>
+      <div class="kButtons">
+        <a class="kCancel" (click)="_cancel()">Cancel</a>
+        <button type="button"
+                class="kButtonBranded KButtonSave"
+                pButton
+                [disabled]="!_isDirty"
+                [label]="'app.common.save' | translate"
+                (click)="_saveSchema()"></button>
+      </div>
+    </div>
+    <div class="kContainer">
+      <div class="kSchemaFormWrapper">
+        <kCustomSchemaForm [(schema)]="_schema" (schemaChanges)="_setDirty()"></kCustomSchemaForm>
+
+        <div class="kCustomSchemaTableControls">
+          <div *ngIf="_selectedFields.length" class="kBulkControls">
+            <button pButton
+                    class="kButtonDefault kMoveBtn kMoveBtnTop"
+                    icon="kIcondropdown_arrow_top"
+                    (click)="_bulkMove('up')"></button>
+
+            <button pButton
+                    class="kButtonDefault kMoveBtn kMoveBtnBottom"
+                    icon="kIcondropdown_arrow_bottom"
+                    (click)="_bulkMove('down')"></button>
+
+            <button pButton class="kButtonDanger kBulkDeleteBtn"
+                    icon="kIcontrash"
+                    (click)="_bulkRemove()"></button>
+
+            <span class="kSelectedEntriesNum">
+              {{ 'applications.settings.metadata.fields' | translate : [_profileFields.length] }}
+            </span>
+
+            <div class="kSelected">
+              • {{ 'applications.settings.metadata.selected' | translate : [_selectedFields.length] }}
+              <a class="kBulkCancel" (click)="_clearSelection()">
+                {{'applications.settings.metadata.cancel' | translate}}
+              </a>
+            </div>
+          </div>
+          <div *ngIf="!_selectedFields.length" class="kDefaultControls">
+            <button
+              pButton
+              class="kButtonDefault"
+              type="button"
+              icon="kIconplus"
+              iconPos="left"
+              [label]="'applications.settings.metadata.addCustomField' | translate"
+              (click)="_editField(null)"></button>
+
+            <button
+              pButton
+              type="button"
+              class="kButtonDefault"
+              icon="kIconupload"
+              iconPos="left"
+              [disabled]="_schema?.isNew || !_schema?.downloadUrl"
+              [label]="'applications.settings.metadata.downloadSchema' | translate"
+              (click)="_downloadSchema()"></button>
+          </div>
+        </div>
+      </div>
+      <div class="kSchemaTableWrapper">
+        <kCustomSchemaFieldsTable [fields]="_profileFields"
+                                  (onActionSelected)="_actionSelected($event)"
+                                  [(selectedFields)]="_selectedFields"></kCustomSchemaFieldsTable>
+      </div>
+    </div>
+  </div>
+</div>
+
+<kPopupWidget #customSchemaField
+              [popupWidth]="586"
+              [popupHeight]="613"
+              [closeBtn]="true"
+              [closeOnClickOutside]="false"
+              [modal]="true">
+  <ng-template>
+    <kCustomSchemaFieldForm [field]="_selectedField"
+                            [fields]="_profileFields"
+                            [parentPopupWidget]="customSchemaField"
+                            (onSave)="_saveField($event)"></kCustomSchemaFieldForm>
+  </ng-template>
+</kPopupWidget>

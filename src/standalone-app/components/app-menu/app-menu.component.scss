@@ -2,11 +2,12 @@
 @import '../../styles/scss/kmc-logo';
 
 .kMainMenuWrapper{
-    min-height: 50px;
+    height: 54px;
 }
 
 .appMenu {
     background-color: $menuBkgColor;
+    height: 54px;
     display: flex;
     position: fixed;
     z-index: 700;

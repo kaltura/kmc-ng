@@ -22,7 +22,8 @@
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
       "DropFolders": "Drop Folders",
-      "UploadMonitor": "Upload Monitor"
+      "UploadMonitor": "Upload Monitor",
+      "CustomData": "Custom Data"
     },
     "userSettings": {
       "changeAccount": "Change Account",
@@ -68,7 +69,8 @@
       "yes": "Yes",
       "no": "No",
       "apply": "Apply",
-      "done": "Done"
+      "done": "Done",
+      "save": "Save"
     },
     "login": {
       "login": {
@@ -528,7 +530,7 @@
         }
       },
       "entries": {
-        "entries": "Entries",
+        "entries": "{{0}} Entries",
         "selected": "Selected",
         "bulkActions": "More Actions",
         "cancel": "Cancel",
@@ -541,7 +543,14 @@
         "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "entryId": "Entry ID: {{0}}",
-        "deleteNote": "Please note: the entry will be permanently deleted from your account."
+        "deleteNote": "Please note: the entry will be permanently deleted from your account.",
+        "ruleName": "Rule name",
+        "ruleNamePlaceholder": "Rule Name",
+        "resultsLimit": "Results limit ({{0}})",
+        "orderBy": "Order by",
+        "totalDuration": "Total duration {{0}}",
+        "resultsLimitRange": "1 - 200 Entries",
+        "noEntries": "No entries"
       },
       "playlists": {
         "playlists": "{{0}} Playlists",
@@ -566,7 +575,10 @@
         "deleteEntryNote": "Please note: this entry will be permanently deleted from your playlist.",
         "deleteEntriesNote": "Please note: those entries will be permanently deleted from your playlist.",
         "confirmDeleteEntry": "Are you sure you want to delete the selected entry?",
-        "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
+        "confirmDeleteEntries": "Are you sure you want to delete the selected entries?",
+        "addRule": "Add rule to your playlist",
+        "updateRule": "Update rule in your playlist",
+        "save": "Save"
       },
       "moderation": {
         "entryReports": "Entry Reports",
@@ -685,7 +697,11 @@
         "role": "Role",
         "lastLogin": "Last Login",
         "edit": "Edit",
-        "blockUnblock": "Block / Unblock"
+        "blockUnblock": "Block / Unblock",
+        "ruleName": "Rule Name",
+        "entriesCount": "No.Entries",
+        "limit": "Limit",
+        "orderBy": "Order By"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -822,7 +838,6 @@
         "selectPlaylistType": "Select playlist type",
         "manualPlaylist": "Manual playlist",
         "ruleBasedPlaylist": "Rule based playlist",
-        "addRuleBasedSubPlaylist": "Add rule based sub playlist",
         "nameIsMandatory": "You must enter a playlist name",
         "next": "Next",
         "playlistName": "Playlist Name",
@@ -881,7 +896,9 @@
         "reject": "Reject",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
-        "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries"
+        "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries",
+        "viewRule": "View/Edit rule",
+        "deleteRule": "Delete rule"
       },
       "entryDetails": {
         "sections": {
@@ -1472,14 +1489,23 @@
           "type": "Type:",
           "duration": "Duration: {{0}}",
           "moderation": "Moderation:",
-          "plays": "Plays:",
-          "numberOfEntries": "Number of Entries:"
+          "plays": "Plays:"
         },
         "metadata": {
           "playlistName": "Name",
           "description": "Description",
           "tags": "Tags",
           "nameIsMandatory": "You must enter a playlist name"
+        },
+        "content": {
+          "orderBy": {
+            "mostPlayed": "Most Played",
+            "mostRecent": "Most Recent",
+            "highestRated": "Highest Rated",
+            "entryName": "Entry Name"
+          },
+          "addRule": "Add rule",
+          "entriesInRules": "{{0}} Entries in {{1}} Rules"
         },
         "errors": {
           "reload": "Reload",
@@ -1495,7 +1521,10 @@
           "contentValidationError": "Add at least one entry",
           "loadError": "An error occurred while loading data",
           "addAtLeastOneMedia": "Add at least one media",
-          "entriesLoadError": "Error loading entries"
+          "entriesLoadError": "Error loading entries",
+          "addRules": "Add rules to your playlist",
+          "invalidInput": "Invalid Input",
+          "nameRequired": "Name field is required"
         }
       }
     },
@@ -1620,6 +1649,103 @@
           "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
           "sendFailed": "An error occurred during account upgrade"
         }
+      },
+      "metadata": {
+        "errorLoading": "Error loading schemas",
+        "addCustomSchema": "Add Custom Schema",
+        "editCustomSchema": "Edit Custom Schema",
+        "addCustomField": "Add Custom Field",
+        "editCustomField": "Edit Custom Field",
+        "downloadSchema": "Download Schema",
+        "schemas": "{{0}} Custom Schemas",
+        "selected": "{{0}} Selected",
+        "cancel": "Cancel",
+        "add": "Add",
+        "save": "Save",
+        "fields": "{{0}} Custom Fields",
+        "applyTo": {
+          "entries": "Entries",
+          "categories": "Categories"
+        },
+        "form": {
+          "customSchemaTitle": "Custom Schema title",
+          "description": "Description",
+          "systemName": "System Name",
+          "applyTo": "Apply to",
+          "entries": "Entries",
+          "categories": "Categories"
+        },
+        "table": {
+          "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
+          "name": "Custom Schema Title",
+          "id": "ID",
+          "systemName": "System Name",
+          "description": "Description",
+          "applyTo": "Apply to",
+          "fieldsIncluded": "Fields included",
+          "fieldLabel": "Field Label",
+          "fieldType": "Field Type",
+          "shortDescription": "Short Description",
+          "maxValues": "Max Values",
+          "searchable": "Searchable",
+          "deleteCustomDataField": "Delete Custom Data Field",
+          "bulkDeleteCustomDataField": "Delete Custom Data Field",
+          "fieldBulkRemoveConfirmation": "Are you sure you want to delete the selected fields?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for bulk upload, deleting schema fields affects the validation of XMLs custom data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion",
+          "fieldRemoveConfirmation": "Are you sure you want to delete {{0}}?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for bulk upload, deleting schema fields affects the validation of XMLs custom data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion",
+          "moveUp": "Move Up",
+          "moveDown": "Move Down",
+          "remove": "Remove",
+          "actions": {
+            "edit": "Edit",
+            "download": "Download",
+            "delete": "Delete"
+          }
+        },
+        "type": {
+          "object": "Entry-ID list",
+          "date": "Date",
+          "list": "Text select list",
+          "text": "Text"
+        },
+        "unlimited": "Unlimited",
+        "deleteSchema": "Delete Custom Data Schema",
+        "deleteSchemas": "Delete Custom Data Schemas",
+        "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema: {{0}} ?",
+        "confirmDeleteMultipleNames": "Are you sure you want to delete the following custom data schemas:\n {{0}} ?",
+        "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas",
+        "updateError": "An error occurred during custom data schemas update",
+        "discardChanges": "Discard Changes",
+        "discardWarning": "You will lose any unsaved changes. Continue?",
+        "fieldForm": {
+          "type": "Field Type",
+          "allowMultiple": "Max No. of Values",
+          "label": "Field Label",
+          "shortDescription": "Short Description",
+          "description": "Description",
+          "searchable": "Searchable",
+          "includeTime": "Include Time",
+          "listValues": "List Values",
+          "listValuesPlaceholder": "Enter the values, one per line",
+          "single": "Single",
+          "unlimited": "Unlimited",
+          "saveChanges": "Would you like to save the changes you made?",
+          "validationErrors": {
+            "invalidInput": "Invalid Input",
+            "invalidSystemName": "Field system name must be unique, please enter a different name.",
+            "emptyLabel": "Please insert a field label",
+            "invalidLabelPrefix": "Field name must begin with a letter.",
+            "invalidChars": "Invalid input. The special characters < > & \" and ' are not allowed.",
+            "emptyListValues": "Invalid input in \"List values\": at least one option should be listed.",
+            "invalidListOptions": "Invalid input in \"List values\": only letters, digits and the following special characters - ()|-@~&/^$=_%.': -  are allowed.",
+            "invalidListOptionsPrefix": "Invalid input in \"List values\": - is an illegal prefix."
+          }
+        },
+        "fieldsOrderChangedTitle": "You reordered fields in your schema",
+        "fieldsOrderChangedWaring": "Note: If you use XMLs for bulk upload, Reordering schema fields affects the validation of custom data elements in existing XMLs. If you reorder schema fields, you also need to update your bulk upload XML structure to reflect the new field order. Do you want to save your schema changes?",
+        "requiredSchemaName": "Name must not be empty",
+        "schemaNameLength": "31 characters max in field \"Name\"",
+        "fieldsRequired": "Custom Data must contain at least one field",
+        "invalidInput": "Invalid Input"
       },
       "integrationSettings": {
         "accountInfo": {

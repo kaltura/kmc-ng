@@ -15,7 +15,7 @@
                         [autoWidth]="false"
                         [placeholder]="'applications.content.entryDetails.related.select' | translate"
                         [(ngModel)]="file.format"
-                        (onChange)="_widgetService._setDirty()"></p-dropdown>
+                        (onChange)="_widgetService.setDirty()"></p-dropdown>
 					</ng-template>
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.related.size' | translate}}">
@@ -37,7 +37,7 @@
 				<p-column [style]="{'width':'80px'}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
 						<div class="kRelatedTableActions" *ngIf="!file.uploading && !file.uploadFailure">
-							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, file)"></button>
+							<button type="button" pButton class="kMoreActionsButton" icon="kIconmore" (click)="openActionsMenu($event, file)"></button>
 						</div>
 						<div *ngIf="file.uploading" class="kUploadMonitor">
 							<span>{{file.progress && file.progress !== '0' ? file.progress + '%' : 'applications.content.entryDetails.related.pending' | translate }}</span>
