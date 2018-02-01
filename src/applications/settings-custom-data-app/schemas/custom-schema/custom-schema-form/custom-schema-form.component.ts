@@ -59,7 +59,7 @@ export class CustomSchemaFormComponent {
 
   private _buildForm(): void {
     this._schemaForm = this._fb.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, Validators.maxLength(31)])],
       description: '',
       systemName: '',
       applyTo: KalturaMetadataObjectType.entry.toString()
