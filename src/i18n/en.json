@@ -953,7 +953,8 @@
           "selected": "Selected",
           "clear": "Clear Selection",
           "addGroup": "Add Group",
-          "deleteGroup": "Delete Group"
+          "deleteGroup": "Delete Group",
+          "nameRequired": "You must enter an entry name"
         },
         "thumbnails": {
           "thumbnails": "Thumbnails",
