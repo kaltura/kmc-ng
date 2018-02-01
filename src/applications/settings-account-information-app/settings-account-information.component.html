@@ -1,14 +1,7 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <form [formGroup]="contactUsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountInformationWrapper kContent">
-    <section class="kCallUs">
-      <div class="kCallUsHeader">
-        {{'applications.settings.accountInformation.callUsHeader' | translate}}
-
-      </div>
-      <div class="kCallUsBody">
-        {{'applications.settings.accountInformation.callUsBody' | translate}}
-
-      </div>
+    <section class="kAccountInfoContainer">
+      <kAccountInfo></kAccountInfo>
     </section>
     <section class="kFormContainer">
       <div class="kFormSection">

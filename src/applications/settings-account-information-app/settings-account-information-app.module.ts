@@ -7,6 +7,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ButtonModule, InputTextareaModule, InputTextModule} from 'primeng/primeng';
 import {AreaBlockerModule, KalturaUIModule} from '@kaltura-ng/kaltura-ui';
 import {TranslateModule} from 'ng2-translate';
+import {AccountInfoComponent} from './account-info/account-info.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import {TranslateModule} from 'ng2-translate';
     InputTextareaModule,
     KalturaUIModule
   ],
-  declarations: [SettingsAccountInformationComponent]
+  declarations: [SettingsAccountInformationComponent, AccountInfoComponent]
 })
 export class SettingsAccountInformationAppModule {
 }

@@ -1,0 +1,50 @@
+@import 'app-theme/_variables.scss';
+.kContainer {
+  width: 100%;
+  background-color: $kSecondary;
+  display: flex;
+  border-radius: 3px;
+  color: #FFFFFF;
+  align-items: center;
+  padding-top:40px;
+  padding-bottom: 40px;
+
+
+  .kGraphicsContainer {
+    flex: 0 0 auto;
+    width: 160px;
+    text-align: center;
+
+    .kIcon {
+      font-size: 128px;
+    }
+  }
+  .kAccountInfoContainer {
+    flex: 1 1 auto;
+
+    padding-right: 35px;
+    width: 100%;
+
+    .kHeader {
+      font-size: 24px;
+    }
+
+    .kTrialExpiration{
+      padding-top: 16px;
+      font-size: 18px;
+    }
+
+    .kStatistics {
+      padding-top: 16px;
+      .kBandwidth, .kStorage {
+        font-size: 18px;
+        line-height: 24px;
+      }
+    }
+
+    .kContactUs {
+      padding-top: 16px;
+      font-size: 15px;
+    }
+  }
+}

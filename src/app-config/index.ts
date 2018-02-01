@@ -219,6 +219,10 @@ export const environment = {
         },
         "settingsMetadata": {
           "apiUrl": "/api_v3/index.php/service/metadata_metadataprofile/action/serve"
+        },
+        "settingsAccountInformation": {
+          "checkFreeTrialExpiration": true,
+          "trialPeriod": 30
         }
     },
     "entriesShared": {

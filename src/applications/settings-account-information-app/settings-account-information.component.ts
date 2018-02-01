@@ -69,7 +69,7 @@ export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
     this._accountInformationService
       .sendContactSalesForceInformation(this.contactUsForm.value)
       .cancelOnDestroy(this)
-      .subscribe(response => {
+      .subscribe(() => {
           // this._fillForm(updatedPartner);
           this._updateAreaBlockerState(false, null);
           this._browserService.alert(
