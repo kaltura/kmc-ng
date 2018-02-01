@@ -8,5 +8,9 @@ export const SectionsList = [
   {
     label: 'applications.content.playlistDetails.sections.content',
     key: PlaylistWidgetKeys.Content
+  },
+  {
+    label: 'applications.content.playlistDetails.sections.content',
+    key: PlaylistWidgetKeys.ContentRuleBased
   }
 ];

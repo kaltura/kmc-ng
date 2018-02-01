@@ -193,7 +193,8 @@ export const environment = {
         },
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
-            "bulkActionsLimit": 50
+            "bulkActionsLimit": 50,
+            "ruleBasedTotalResults": 200
         },
         "createLive": {
           "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"

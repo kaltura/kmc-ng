@@ -6,7 +6,6 @@ export interface CreateNewPlaylistEventArgs {
   type: KalturaPlaylistType;
   description?: string;
   playlistContent?: string; // entry ids separated by comma
-  ruleBasedSub?: boolean;
 }
 
 export class CreateNewPlaylistEvent extends AppEvent {
