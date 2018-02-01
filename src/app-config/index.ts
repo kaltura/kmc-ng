@@ -10,17 +10,7 @@ export const environment = {
     },
     "core": {
         "kaltura": {
-            "serverEndpoint" : "www.kaltura.com",
             "useHttpsProtocol": true,
-            "cdnUrl": "http://cdnapi.kaltura.com",
-            "legacyKmcUrl": "kmc.kaltura.com",
-            "expiry": "86400",
-            "limitToParentId" : null,
-            "privileges": "disableentitlement",
-            "previewUIConf": "38524931",
-            "liveAnalyticsVersion": "v2.6",
-            "securedCdnUrl": "https://cdnapisec.kaltura.com",
-            "contactsalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
         },
         "menuConfig": [
             {
@@ -112,6 +102,11 @@ export const environment = {
                         "enabled": true
                     },
                     {
+                      "routePath": "settings/metadata",
+                      "titleToken": "CustomData",
+                      "enabled": true
+                    },
+                    {
                       "routePath": "settings/myUserSettings",
                       "titleToken": "My User Settings",
                       "enabled": true
@@ -136,17 +131,6 @@ export const environment = {
                 ]
             }
         ],
-        "externalLinks": {
-            "USER_MANUAL": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
-            "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support",
-            "SIGNUP": "https://corp.kaltura.com/free-trial",
-            "CONTACT_US": "https://corp.kaltura.com/company/contact-us",
-            "HIGH_SPEED_UPLOAD": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
-            "UPGRADE_ACCOUNT":"https://site.kaltura.com/Request-Users.html",
-            "EMBED_HELP1": "http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/embedcodetypes.htm",
-            "EMBED_HELP2": "https://knowledge.kaltura.com/how-enforce-delivery-type-each-player-using-ui-variables",
-            "BULK_UPLOAD_SAMPLES": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
-        },
         "locales": [
             {
                 "id": "en",
@@ -171,17 +155,6 @@ export const environment = {
         ]
     },
     "modules": {
-        "analyticsLive" : {
-            "url" : "http://localhost:9090/"
-        },
-        "studio": {
-            "api_url": "http://www.kaltura.com",
-            "path": "./studio/index.html",
-            "uiConfId": "39700052",
-            "version": "v2.0.9",
-            "html5_version":"v2.57.2",
-            "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
-        },
         "contentEntries" : {
             "createdAtDateRange" : "2005:2030",
             "bulkActionsLimit": 50
@@ -189,9 +162,6 @@ export const environment = {
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
             "bulkActionsLimit": 50
-        },
-        "createLive": {
-          "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
         },
         "contentCategories": {
             "createdAtDateRange": "2005:2030",
@@ -210,6 +180,9 @@ export const environment = {
         "dropFolders" : {
           "createdAtDateRange" : "2005:2030",
           "bulkActionsLimit": 50
+        },
+        "settingsMetadata": {
+          "apiUrl": "/api_v3/index.php/service/metadata_metadataprofile/action/serve"
         }
     },
     "entriesShared": {
