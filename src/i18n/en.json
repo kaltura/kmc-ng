@@ -433,7 +433,7 @@
         "addCategory": "Add Category",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
-        "confirmDeleteSingle": "Are you sure you want to delete these categories?",
+        "deletedSuccessfully": "Categories have been deleted",
         "refine": "Refine",
         "filterCategories": "Filter Categories",
         "edit": "Edit",

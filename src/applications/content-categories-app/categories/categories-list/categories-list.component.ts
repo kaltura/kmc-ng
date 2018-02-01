@@ -337,7 +337,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                                 () => {
                                     this._browserService.showGrowlMessage({
                                         severity: 'success',
-                                        detail: this._appLocalization.get('applications.content.categories.deleted')
+                                        detail: this._appLocalization.get('applications.content.categories.deletedSuccessfully')
                                     });
                                     this._categoriesStatusMonitorService.updateCategoriesStatus();
                                     this._categoriesService.reload();
