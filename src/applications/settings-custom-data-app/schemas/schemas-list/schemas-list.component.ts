@@ -135,6 +135,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
     switch (action) {
       case 'edit':
         if (!schema.profileDisabled) {
+          this._clearSelection();
           this._selectedSchema = schema;
           this._customSchemaPopup.open();
         }
