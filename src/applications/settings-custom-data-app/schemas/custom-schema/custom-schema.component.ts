@@ -42,8 +42,8 @@ export class CustomSchemaComponent implements OnInit {
   private _prepare(): void {
     if (this.schema) {
       this._schema = <SettingsMetadataProfile>Object.assign(KalturaTypesFactory.createObject(this.schema), this.schema);
-      this._profileFields = (this._schema.parsedProfile && this._schema.parsedProfile.items && this._schema.parsedProfile.items.length)
-        ? this._schema.parsedProfile.items : [];
+      this._profileFields = (this._schema.parsedProfile && Array.isArray(this._schema.parsedProfile.items))
+        ? [...this._schema.parsedProfile.items] : [];
       this._title = this._appLocalization.get('applications.settings.metadata.editCustomSchema');
     } else {
       this._title = this._appLocalization.get('applications.settings.metadata.addCustomSchema');
