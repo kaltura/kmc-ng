@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SettingsMetadataProfile } from '../../schemas-store/settings-metadata-profile.interface';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { KalturaAPIException } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kCustomSchemaForm',
@@ -9,6 +10,14 @@ import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaM
   styleUrls: ['./custom-schema-form.component.scss']
 })
 export class CustomSchemaFormComponent {
+  @Input() set serverValidationError(value: KalturaAPIException) {
+    if (value) {
+      if (value.code === 'SYSTEM_NAME_ALREADY_EXISTS') {
+        this._systemNameField.setErrors({ 'incorrect': true });
+      }
+    }
+  }
+
   @Input() set schema(value: SettingsMetadataProfile) {
     if (value) {
       this._schema = value;

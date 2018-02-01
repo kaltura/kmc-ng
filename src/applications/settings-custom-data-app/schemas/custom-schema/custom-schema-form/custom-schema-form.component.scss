@@ -52,6 +52,10 @@
       color: $kGrayscale2;
       width: 529px;
       border-radius: 3px;
+
+      &.kControlInvalid {
+        border: 1px solid $kDandger;
+      }
     }
     .KTextArea {
       height: 60px;

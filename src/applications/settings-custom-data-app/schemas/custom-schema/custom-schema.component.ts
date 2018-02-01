@@ -5,7 +5,7 @@ import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMeta
 import { BrowserService } from 'app-shared/kmc-shell';
 import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
-import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
 
@@ -16,6 +16,7 @@ import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaM
 })
 export class CustomSchemaComponent implements OnInit {
   @Input() schema: SettingsMetadataProfile;
+  @Input() serverValidationError: KalturaAPIException = null;
 
   @Output() onClosePopupWidget = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<SettingsMetadataProfile>();
@@ -125,12 +126,10 @@ export class CustomSchemaComponent implements OnInit {
           message: this._appLocalization.get('applications.settings.metadata.fieldsOrderChangedWaring'),
           accept: () => {
             this.onSave.emit(this._schema);
-            this.onClosePopupWidget.emit();
           }
         });
       } else {
         this.onSave.emit(this._schema);
-        this.onClosePopupWidget.emit();
       }
     }
   }
