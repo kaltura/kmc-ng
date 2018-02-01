@@ -23,7 +23,7 @@ export class CustomSchemaTypePipe implements PipeTransform {
         break;
 
       case MetadataItemTypes.List:
-        result.icon = 'kIconmetadata-templates'; // TODO [kmcng] replace with relevant icon
+        result.icon = 'kIconList';
         result.label = this._appLocalization.get('applications.settings.metadata.type.list');
         break;
 
