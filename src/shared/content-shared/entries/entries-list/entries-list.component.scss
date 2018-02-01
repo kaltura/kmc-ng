@@ -3,7 +3,7 @@
 .kEntries {
   font-size: 15px;
   background-color: $appBkgColor;
-  padding-top: 30px;
+  padding-top: 24px;
   width: 100%;
   min-width: $minAppWidth;
   box-sizing: border-box;
@@ -115,7 +115,7 @@
   }
   .kSearchInput {
     background: $kMagnifyingGlassBkg;
-    padding-left: 30px;
+    padding-left: 38px;
     margin-right: 8px;
     width: 250px;
   }
