@@ -11,14 +11,20 @@ import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaM
 export class CustomSchemaFormComponent {
   @Input() set schema(value: SettingsMetadataProfile) {
     if (value) {
-      this._initialChange = true;
       this._schema = value;
-      this._schemaForm.patchValue({
-        name: value.name,
-        description: value.description,
-        systemName: value.systemName,
-        applyTo: value.applyTo
-      });
+      this._schemaForm.patchValue(
+        {
+          name: value.name,
+          description: value.description,
+          systemName: value.systemName,
+          applyTo: value.applyTo
+        },
+        { emitEvent: false }
+      );
+
+      if (!this._schema.isNew) {
+        this._applyToField.disable({ onlySelf: true });
+      }
     } else {
       throw Error('schema must be provided');
     }
@@ -27,7 +33,6 @@ export class CustomSchemaFormComponent {
   @Output() schemaChanges = new EventEmitter<SettingsMetadataProfile>();
 
   private _schema: SettingsMetadataProfile;
-  private _initialChange = true;
 
   public _schemaForm: FormGroup;
   public _nameField: AbstractControl;
@@ -57,11 +62,6 @@ export class CustomSchemaFormComponent {
     this._applyToField = this._schemaForm.controls['applyTo'];
 
     this._schemaForm.valueChanges.subscribe((change) => {
-      if (this._initialChange) { // ignore initial update
-        this._initialChange = false;
-        return;
-      }
-
       let sendUpdate = false;
       if (this._schema.name !== change.name) {
         this._schema.name = change.name;
@@ -78,10 +78,12 @@ export class CustomSchemaFormComponent {
         sendUpdate = true;
       }
 
-      const applyTo = new KalturaMetadataObjectType(change.applyTo);
-      if (!this._schema.applyTo.equals(applyTo)) {
-        this._schema.applyTo = applyTo;
-        sendUpdate = true;
+      if (change.applyTo) {
+        const applyTo = new KalturaMetadataObjectType(change.applyTo);
+        if (!this._schema.applyTo.equals(applyTo)) {
+          this._schema.applyTo = applyTo;
+          sendUpdate = true;
+        }
       }
 
       if (sendUpdate) {
