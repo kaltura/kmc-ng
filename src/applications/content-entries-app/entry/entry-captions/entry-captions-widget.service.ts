@@ -102,6 +102,9 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
             case TrackedFileStatuses.uploadCompleted:
               relevantCaption.uploading = false;
               relevantCaption.uploadFailure = false;
+              if (relevantCaption.partnerId) { // indicator that entry was saved
+                relevantCaption.status = KalturaCaptionAssetStatus.ready;
+              }
               break;
             case TrackedFileStatuses.failure:
               relevantCaption.uploading = false;
