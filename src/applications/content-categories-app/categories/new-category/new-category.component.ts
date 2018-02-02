@@ -26,6 +26,7 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
   public _selectedParentCategory: number = null;
   public newCategoryForm: FormGroup;
   public _categoriesUpdating = false;
+  public _nameEmptyError = false;
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
@@ -58,8 +59,9 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
   }
 
   private _createNewCategory() {
-    const categoryName = this.newCategoryForm.controls['name'].value;
+    const categoryName = (this.newCategoryForm.controls['name'].value || '').trim();
     if (!categoryName || !categoryName.length) {
+      this._nameEmptyError = true;
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.addNewCategory.errors.requiredName'),
         buttons: [
