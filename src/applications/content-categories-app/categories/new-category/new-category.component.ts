@@ -84,24 +84,27 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
         .tag('block-shell')
         .subscribe(({category}) => {
             this.onApply.emit({categoryId: category.id});
+            this._blockerMessage = null;
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
           },
           error => {
-
-              const message = 'An error occurred while trying to add new category';
             this._blockerMessage = new AreaBlockerMessage(
               {
-                message: error.message || message,
-                buttons: [
-                  {
+                message: error.message || this._appLocalization.get('applications.content.addNewCategory.errors.createFailed'),
+                buttons: [{
                     label: this._appLocalization.get('app.common.ok'),
                     action: () => {
                       this._blockerMessage = null;
+                      if (error.code === 'MAX_CATEGORIES_FOR_ENTRY_REACHED') {
+                        this.onApply.emit({ categoryId: error.args.categoryId });
+                        if (this.parentPopupWidget) {
+                          this.parentPopupWidget.close();
+                        }
+                      }
                     }
-                  }
-                ]
+                  }]
               });
           });
     }
