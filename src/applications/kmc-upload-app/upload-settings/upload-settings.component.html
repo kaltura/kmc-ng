@@ -64,6 +64,7 @@
                           kDropdownCloseOnScroll
                           [scrollTarget]="_tableScrollableWrapper"
                           [(ngModel)]="file.mediaType"
+                          (onChange)="_updateFileValidityOnTypeChange(file)"
                           [placeholder]="'applications.content.entryDetails.related.select' | translate"></p-dropdown>
             </ng-template>
           </p-column>
