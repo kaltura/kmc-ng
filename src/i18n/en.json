@@ -513,6 +513,8 @@
         "name": "Name",
         "categoryMovedSuccessfully": "Category moved successfully",
         "errors": {
+          "cannotLinkEntries": "Category was created, but failed to link some of the entries, please review the created category",
+          "createFailed": "An error occurred while trying to add new category",
           "requiredName": "You must enter name",
           "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
         }
