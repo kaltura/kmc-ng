@@ -179,7 +179,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // add to categories changed
   onAddToCategoriesChanged(categories: CategoryData[]): void {
-    this.executeService(this._bulkAddCategoriesService, (categories || []).map(category => category.id));
+    this.executeService(this._bulkAddCategoriesService, (categories || []));
   }
 
   // remove categories changed
