@@ -185,7 +185,7 @@ export class CategoryService implements OnDestroy {
                 'applications.content.categoryDetails.referenceIdInUse',
                 [
                   newCategory.referenceId,
-                  response.objects.map(({ fullName }) => fullName).join(', ')
+                  response.objects.map(({ fullName, id }) => `- ${fullName} (ID:${id})`).join('\n')
                 ]
               );
               this._browserService.confirm({
