@@ -537,9 +537,11 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
      * @return {Observable<number>} new category ID
      */
     public addNewCategory(newCategoryData: NewCategoryData): Observable<{ category: KalturaCategory }> {
-        if (!newCategoryData || !newCategoryData.name) {
-            const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
-            return Observable.throw(new Error(nameRequiredErrorMessage));
+        const newCategoryName = newCategoryData ? (newCategoryData.name || '').trim() : null;
+        if (!newCategoryName) {
+            const error = new Error('missing category name');
+            (<any>error).code = 'missing_category_name';
+            return Observable.throw(error);
         }
         const category = new KalturaCategory({
             name: newCategoryData.name,
@@ -571,12 +573,16 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                 data => {
                     if (data.hasErrors()) {
                         let message = 'An error occurred while trying to add new category';
-                        if (data[0].error && data[0].error.message) { // show error of CategoryAddAction
-                          message = data[0].error.message;
+                        let errorCode = '';
+                        if (data[0].error) { // show error of CategoryAddAction
+                            errorCode = 'category_creation_failure';
                         } else if (multiRequest.requests.length > 1) {
-                          message = 'Category was created, but failed to link some of the entries, please review the created category'
+                            errorCode = 'entries_link_issue';
                         }
-                        throw new Error(message);
+                        const error = new Error(message);
+                        (<any>error).code = errorCode;
+                        (<any>error).context = { categoryId: data[0].result.id };
+                        throw error;
                     }
 
                     if (data[0].result) {

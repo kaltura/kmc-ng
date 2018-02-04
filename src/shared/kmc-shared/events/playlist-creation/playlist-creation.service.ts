@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { CreateNewPlaylistEvent, CreateNewPlaylistEventArgs } from 'app-shared/kmc-shared/playlist-creation';
+import { AppEventsService } from 'shared/kmc-shared/index';
+import { CreateNewPlaylistEvent, CreateNewPlaylistEventArgs } from 'shared/kmc-shared/events/playlist-creation/index';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 
@@ -24,18 +24,19 @@ export class PlaylistCreationService implements OnDestroy {
       this._creationSubscription = this._appEvents.event(CreateNewPlaylistEvent)
         .subscribe(({ data, tabName = 'content' }) => {
           this._newPlaylistData = data;
-          this._router.navigate([`/content/playlists/playlist/new/${tabName}`]);
+          this._router.navigate([`/content/playlists/playlist/new/${tabName}`])
+            .catch(() => {
+              this._newPlaylistData = null;
+            });
         });
     } else {
       console.warn('Service was already initialized!');
     }
   }
 
-  public getNewPlaylistData(): CreateNewPlaylistEventArgs {
-    return this._newPlaylistData;
-  }
-
-  public clearNewPlaylistData(): void {
+  public popNewPlaylistData(): CreateNewPlaylistEventArgs {
+    const newPlaylistData = this._newPlaylistData;
     this._newPlaylistData = null;
+    return newPlaylistData;
   }
 }
