@@ -48,15 +48,30 @@ npm run standalone
 npm install
 
 # create runtime configuration file by coping a sample one (the code below is written for bash)
-cp src/app/kmc-config.template.json src/app/kmc-config.json
-vim src/app/kmc-config.json
+cp src/kmc-app/kmc-config.template.json src/app/kmc-config.json
+vim src/kmc-app/kmc-config.json
 
 # run the application in the browser (port 4200)
-npm run start -- --o
+npm run start -- -o
 ```
 
-### <a name="config"></a>Updating application configuration
-By default the `kmc-config.template.json` file contains information that is used against Kaltura production server. We advice you to check that the application works as expected with the default configuration before you customize it against your own server.
+> Note: By default the `kmc-config.template.json` file contains information that is used against Kaltura production server. We advice you to check that the application works as expected with the default configuration before you customize it against your own server.
+
+
+## KMC-ng Configuration
+
+The configuration of the kmc-ng application is split into several files. Each file serves different area of the application. A list of configuration files can be found below:
+
+
+
+| File Path | Purpose | Load phase |
+|:-------|:-------|:-------|
+| src/kmc-app/kmc-config.json | app server configuration | runtime configuration loaded by the browser. Note that it might be cached by the browser per app version |
+| src/kmc-app/static-kmc-config.ts | app shell configuration | transpiles into the app bundle. can be modified only before building the application |
+| src/applications/sub-applications-config.ts | sub-applications configuration | transpiles into the app bundle. can be modified only before building the application |
+| src/shared/shared-modules-config.ts | shared modules configurations| transpiles into the app bundle. can be modified only before building the application |
+
+
 
 ### Contributing
 KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
@@ -80,18 +95,19 @@ $ npm run build -- --prod
 
 A distributed standalone application will be created in the `dist/` folder.
 
-## Configuring the server
+### Configuring the server
 Angular applications are considered as Single page applications (a.k.a SPA). This requires the server to be configured correctly. Each technology has its own configuration set.
 - an example for [IIS server](https://gingter.org/2017/03/20/deep-link-angular-spa-iis/).
 - an example for [Nginx server](https://gist.github.com/dimitardanailov/7a7c4e3be9e03d1b578a).
 
 You will also need to setup `<base href="/">` in the `index.html` file to match the relative path this application will be hosted at.
-- Make sure you use `/` as a suffix of the href value.
 - You can do it manually after you created the deployed application
 - You can do it as part of the build command as shown below:
 ```
 npm run build -- --prod --baseHref /your-app-path/
 ```
+
+**Important** Make sure you wrap the value with `/` (both as a suffix and as a prefix)
 
 ## FAQ
 
