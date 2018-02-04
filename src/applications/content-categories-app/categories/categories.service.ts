@@ -10,7 +10,7 @@ import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/Kaltu
 import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
-import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
@@ -566,25 +566,26 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             });
         }
 
-        return this._kalturaClient.multiRequest(multiRequest)
-            .map(
-                data => {
-                    if (data.hasErrors()) {
-                        let message = 'An error occurred while trying to add new category';
-                        if (data[0].error && data[0].error.message) { // show error of CategoryAddAction
-                          message = data[0].error.message;
-                        } else if (multiRequest.requests.length > 1) {
-                          message = 'Category was created, but failed to link some of the entries, please review the created category'
-                        }
-                        throw new Error(message);
-                    }
+      return this._kalturaClient.multiRequest(multiRequest)
+        .map(data => {
+          if (data.hasErrors()) {
+            if (data[0].error && data[0].error.message) { // show error of CategoryAddAction
+              throw data[0].error;
+            } else if (multiRequest.requests.length > 1) {
+              const relevantError = data.find(({ error }) => error instanceof KalturaAPIException).error;
+              if (relevantError) {
+                throw new KalturaAPIException(relevantError.code, relevantError.message, { categoryId: data[0].result.id });
+              }
+              throw new Error(this._appLocalization.get('applications.content.addNewCategory.errors.cannotLinkEntries'));
+            }
+          }
 
-                    if (data[0].result) {
-                        this._appEvents.publish(new CategoriesGraphUpdatedEvent());
-                    }
+          if (data[0].result) {
+            this._appEvents.publish(new CategoriesGraphUpdatedEvent());
+          }
 
-                    return {category: data[0].result};
-                });
+          return { category: data[0].result };
+        });
     }
 
     /**

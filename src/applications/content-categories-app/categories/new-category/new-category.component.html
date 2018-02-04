@@ -11,14 +11,14 @@
       <form class="kRow" [formGroup]="newCategoryForm" novalidate>
         <span class="kLabel">{{'applications.content.addNewCategory.name' | translate}}</span>
         <div class="kRequired" [ngClass]="{'kHasError':!newCategoryForm.get('name').valid &&
-                   newCategoryForm.get('name').touched}">*
+                   newCategoryForm.get('name').touched || _nameEmptyError}">*
         </div>
         <div>
           <input class="kControl" formControlName="name" pInputText
                  [ngClass]="{'kHasError':!newCategoryForm.get('name').valid &&
-                   newCategoryForm.get('name').touched}">
+                   newCategoryForm.get('name').touched || _nameEmptyError}">
           <div *ngIf="newCategoryForm.get('name').touched &&
-                 newCategoryForm.get('name').hasError('required')"
+                 newCategoryForm.get('name').hasError('required') || _nameEmptyError"
                class="error">
             {{'applications.content.addNewCategory.errors.requiredName' | translate}}
           </div>

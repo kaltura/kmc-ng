@@ -27,6 +27,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   public _selectedParentCategory: number = null;
   public newCategoryForm: FormGroup;
   public _categoriesUpdating = false;
+  public _nameEmptyError = false;
 
   private _showConfirmationOnClose = true;
 
@@ -90,8 +91,9 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private _createNewCategory() {
-    const categoryName = this.newCategoryForm.controls['name'].value;
+    const categoryName = (this.newCategoryForm.controls['name'].value || '').trim();
     if (!categoryName || !categoryName.length) {
+      this._nameEmptyError = true;
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.addNewCategory.errors.requiredName'),
         buttons: [
@@ -114,24 +116,27 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
         .tag('block-shell')
         .subscribe(({category}) => {
             this.onApply.emit({categoryId: category.id});
+            this._blockerMessage = null;
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
           },
           error => {
-
-              const message = 'An error occurred while trying to add new category';
             this._blockerMessage = new AreaBlockerMessage(
               {
-                message: error.message || message,
-                buttons: [
-                  {
+                message: error.message || this._appLocalization.get('applications.content.addNewCategory.errors.createFailed'),
+                buttons: [{
                     label: this._appLocalization.get('app.common.ok'),
                     action: () => {
                       this._blockerMessage = null;
+                      if (error.code === 'MAX_CATEGORIES_FOR_ENTRY_REACHED') {
+                        this.onApply.emit({ categoryId: error.args.categoryId });
+                        if (this.parentPopupWidget) {
+                          this.parentPopupWidget.close();
+                        }
+                      }
                     }
-                  }
-                ]
+                  }]
               });
           });
     }

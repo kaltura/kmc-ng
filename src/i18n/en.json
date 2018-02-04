@@ -513,8 +513,10 @@
         "name": "Name",
         "categoryMovedSuccessfully": "Category moved successfully",
         "errors": {
+          "createFailed": "An error occurred while trying to add new category",
           "requiredName": "You must enter name",
-          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
+          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID",
+          "cannotLinkEntries": "Category was created, but failed to link some of the entries, please review the created category"
         }
       },
       "moveCategory":{
