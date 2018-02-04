@@ -4,10 +4,10 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app.module';
 import { initializeConfiguration, environment as appConfig } from 'app-environment';
 import { environment } from 'app/environments/environment';
-import { kmcConfiguration } from './kmc-config';
+import { staticKMCConfiguration } from './static-kmc-config';
 
 
-initializeConfiguration(kmcConfiguration)
+initializeConfiguration(staticKMCConfiguration)
     .subscribe(
         () =>
         {
