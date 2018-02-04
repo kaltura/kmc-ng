@@ -5,7 +5,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
+import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 @Component({

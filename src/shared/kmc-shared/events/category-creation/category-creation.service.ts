@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {AppEventsService} from 'app-shared/kmc-shared';
-import {CreateNewCategoryEvent, CreateNewCategoryEventArgs} from 'app-shared/kmc-shared/category-creation';
+import {AppEventsService} from 'shared/kmc-shared/index';
+import {CreateNewCategoryEvent, CreateNewCategoryEventArgs} from 'shared/kmc-shared/events/category-creation/index';
 import {Router} from '@angular/router';
 import {ISubscription} from 'rxjs/Subscription';
 
