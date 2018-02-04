@@ -1,0 +1,43 @@
+<form class="kCustomSchemaForm" [formGroup]="_schemaForm" novalidate>
+  <div class="kRow">
+    <span class="kLabel">{{'applications.settings.metadata.form.customSchemaTitle' | translate}}</span>
+    <div class="kRequired">*</div>
+    <div>
+      <input class="kControl" pInputText
+             [class.kControlInvalid]="_nameField.touched && _nameField.invalid"
+             [formControl]="_nameField">
+    </div>
+  </div>
+
+  <div class="kRow">
+    <span class="kLabel">{{'applications.settings.metadata.form.description' | translate}}</span>
+    <div>
+      <textarea class="kControl KTextArea" pInputText [formControl]="_descriptionField"></textarea>
+    </div>
+  </div>
+
+  <div class="kRow">
+    <span class="kLabel">{{'applications.settings.metadata.form.systemName' | translate}}</span>
+    <div>
+      <input class="kControl" pInputText
+             [class.kControlInvalid]="_systemNameField.invalid"
+             [formControl]="_systemNameField">
+    </div>
+  </div>
+
+  <div class="kRow applyTo">
+    <span class="kLabel">{{'applications.settings.metadata.form.applyTo' | translate}}</span>
+    <div class="kSelectApplyTo">
+      <p-radioButton class="kRadioLeft"
+                     name="applyTo"
+                     [value]="_applyToValues.entry"
+                     [formControl]="_applyToField"
+                     [label]="'applications.settings.metadata.form.entries' | translate"></p-radioButton>
+      <p-radioButton class="kRadioRight"
+                     name="applyTo"
+                     [value]="_applyToValues.category"
+                     [formControl]="_applyToField"
+                     [label]="'applications.settings.metadata.form.categories' | translate"></p-radioButton>
+    </div>
+  </div>
+</form>

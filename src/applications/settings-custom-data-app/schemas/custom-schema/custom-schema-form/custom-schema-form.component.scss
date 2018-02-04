@@ -1,0 +1,70 @@
+@import 'app-theme/_variables.scss';
+
+.kCustomSchemaForm {
+  padding: 32px 28px 23px 32px;
+
+  .kRow {
+    &:first-child {
+      padding-top: 0;
+    }
+    &.applyTo {
+      padding-top: 13px;
+    }
+
+    display: flex;
+    padding-top: 20px;
+
+    .kSelectApplyTo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .kRadioLeft,
+      .kRadioRight {
+        display: flex;
+        margin-right: 55px;
+      }
+    }
+
+    .kLabel {
+      width: 237px;
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+      flex: 0 0 auto;
+      height: 18px;
+      color: $kGrayscale1;
+      font-size: 15px;
+      line-height: 18px;
+    }
+
+    .kRequired {
+      width: 20px;
+      font-size: 24px;
+      color: $kGrayscale3;
+      margin-left: -28px;
+    }
+    .kRequired, .kLabel {
+      padding: 8px 4px;
+      height: 18px;
+    }
+    .kControl {
+      height: 34px;
+      color: $kGrayscale2;
+      width: 529px;
+      border-radius: 3px;
+
+      &.kControlInvalid {
+        border: 1px solid $kDandger;
+      }
+    }
+    .KTextArea {
+      height: 60px;
+    }
+  }
+}
+
+:host /deep/ .kSelectApplyTo .ui-radiobutton-label {
+  font-weight: normal;
+  font-size: 15px;
+  margin-left: 5px;
+}

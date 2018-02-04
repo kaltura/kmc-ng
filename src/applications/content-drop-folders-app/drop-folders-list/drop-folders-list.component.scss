@@ -4,7 +4,7 @@
   font-size: 15px;
   background-color: $appBkgColor;
   height: $contentArea;
-  padding-top: 30px;
+  padding-top: 24px;
   width: 100%;
   min-width: $minAppWidth;
   box-sizing: border-box;
@@ -17,7 +17,7 @@
     height: 34px;
     background: $kMagnifyingGlassBkg;
     margin-right: 8px;
-    padding: 9px 4px 8px 30px;
+    padding: 9px 4px 8px 38px;
 
     &:focus {
       background-color: white;
@@ -103,9 +103,9 @@
     flex: 0 0 auto;
     margin-top: 2px;
     margin-left: 8px;
-    padding: 4px;
+    padding: 5px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 10px;
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.3);

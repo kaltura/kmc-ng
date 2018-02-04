@@ -51,8 +51,8 @@ export class MetadataProfileParser {
 			type: this._extractElementType(element),
 			name: element.attr.name ? element.attr.name.value : '',
 			id: element.attr.id ? element.attr.id.value : '',
-			isRequired: element.attr.minOccurs.value + '' === '1',
-			allowMultiple: element.attr.maxOccurs.value + '' === 'unbounded',
+			isRequired: element.attr.minOccurs ? element.attr.minOccurs.value + '' === '1' : false,
+			allowMultiple: element.attr.maxOccurs ? element.attr.maxOccurs.value + '' === 'unbounded' : false,
 			optionalValues: [],
 			children: []
 		};
@@ -155,5 +155,118 @@ export class MetadataProfileParser {
 			}
 		}
 	}
+
+  private _extractMetadataItemType(type: MetadataItemTypes): string {
+    switch (type) {
+      case MetadataItemTypes.Text:
+        return 'textType';
+      case MetadataItemTypes.Date:
+        return 'dateType';
+      case MetadataItemTypes.List:
+        return 'listType';
+      case MetadataItemTypes.Object:
+        return 'objectType';
+      default:
+        return '';
+    }
+  }
+
+  private _convertMetadataItems(items: MetadataItem[]): object[] {
+    return items.map(item => {
+      const result = {
+        'attr': {
+          'id': item.id,
+          'name': item.name,
+          'minOccurs': 0,
+          'maxOccurs': item.allowMultiple ? 'unbounded' : 1
+        },
+        'annotation': {
+          'documentation': { 'text': item.documentations },
+          'appinfo': {
+            'label': { 'text': item.label },
+            'key': { 'text': item.key },
+            'searchable': { 'text': String(!!item.isSearchable) },
+            'timeControl': { 'text': String(!!item.isTimeControl) },
+            'description': { 'text': item.description }
+          }
+        }
+      };
+
+      if (item.type !== MetadataItemTypes.List) {
+        Object.assign(result.attr, { 'type': this._extractMetadataItemType(item.type) });
+      } else {
+        Object.assign(result, {
+          'simpleType': {
+            'restriction': {
+              'attr': { 'base': this._extractMetadataItemType(item.type) },
+              'enumeration': [...item.optionalValues.map(option => ({ 'attr': { 'value': option.value } }))]
+            }
+          }
+        });
+      }
+
+      return result;
+    });
+  }
+
+  public generateSchema(parsedProfile: MetadataProfile): string {
+    let result = '';
+
+    const schemaObject = {
+      'attr': { 'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema' },
+      'element': {
+        'attr': { 'name': 'metadata' },
+        'complexType': {
+          'sequence': {
+            'element': [...this._convertMetadataItems(parsedProfile.items)]
+          }
+        }
+      },
+      'complexType': [
+        {
+          'attr': { 'name': 'textType' },
+          'simpleContent': {
+            'extension': {
+              'attr': { 'base': 'xsd:string' },
+              'text': null
+            }
+          }
+        },
+        {
+          'attr': { 'name': 'dateType' },
+          'simpleContent': {
+            'extension': {
+              'attr': { 'base': 'xsd:long' },
+              'text': null
+            }
+          }
+        },
+        {
+          'attr': { 'name': 'objectType' },
+          'simpleContent': {
+            'extension': {
+              'attr': { 'base': 'xsd:string' },
+              'text': null
+            }
+          }
+        }
+      ],
+      'simpleType': {
+        'attr': { 'name': 'listType' },
+        'restriction': {
+          'attr': { 'base': 'xsd:string' },
+          'text': null
+        }
+      }
+    };
+
+    try {
+      result = XmlParser.toXml(schemaObject, 'schema', 'xsd');
+    } catch (e) {
+      console.error(e);
+    }
+
+    return result;
+  }
 
 }

@@ -2,14 +2,13 @@ import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client/api/types/PlaylistGetAction';
-import { KalturaPlaylist, KalturaPlaylistArgs } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistUpdateAction } from 'kaltura-ngx-client/api/types/PlaylistUpdateAction';
 import { Observable } from 'rxjs/Observable';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { PlaylistAddAction } from 'kaltura-ngx-client/api/types/PlaylistAddAction';
@@ -17,7 +16,7 @@ import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PlaylistCreationService } from 'app-shared/kmc-shared/events/playlist-creation';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { environment } from 'app-environment';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -66,6 +65,7 @@ export class PlaylistStore implements OnDestroy {
 
   constructor(private _router: Router,
               private _playlistRoute: ActivatedRoute,
+              private _appAuth: AppAuthentication,
               private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
@@ -84,7 +84,7 @@ export class PlaylistStore implements OnDestroy {
     this._state.complete();
 
     if (this._pageExitVerificationToken) {
-        this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+      this._pageExitVerificationService.remove(this._pageExitVerificationToken);
     }
 
     if (this._loadPlaylistSubscription) {
@@ -119,7 +119,7 @@ export class PlaylistStore implements OnDestroy {
       this._pageExitVerificationToken = this._pageExitVerificationService.add();
     } else {
       if (this._pageExitVerificationToken) {
-          this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+        this._pageExitVerificationService.remove(this._pageExitVerificationToken);
       }
       this._pageExitVerificationToken = null;
     }
@@ -146,6 +146,12 @@ export class PlaylistStore implements OnDestroy {
       .request(new PlaylistGetAction({ id }))
       .cancelOnDestroy(this)
       .subscribe(playlist => {
+          if (playlist.playlistType === KalturaPlaylistType.dynamic) {
+            if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
+              playlist.totalResults = environment.modules.contentPlaylists.ruleBasedTotalResults;
+            }
+          }
+
           this._loadPlaylistSubscription = null;
           this._playlist.next({ playlist });
           const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(playlist, { isNewData: false });
@@ -174,7 +180,13 @@ export class PlaylistStore implements OnDestroy {
       const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
 
       if (routeSectionType !== null) {
-        this._sectionToRouteMapping[routeSectionType] = childRoute.path;
+        if (Array.isArray(routeSectionType)) {
+          routeSectionType.forEach(type => {
+            this._sectionToRouteMapping[type] = childRoute.path;
+          });
+        } else {
+          this._sectionToRouteMapping[routeSectionType] = childRoute.path;
+        }
       }
     });
   }
@@ -198,8 +210,10 @@ export class PlaylistStore implements OnDestroy {
                   playlist: new KalturaPlaylist({
                     name: newData.name,
                     description: newData.description,
-                    playlistType: KalturaPlaylistType.staticList,
-                    playlistContent: newData.playlistContent
+                    playlistContent: newData.playlistContent,
+                    playlistType: newData.type,
+                    creatorId: this._appAuth.appUser.id,
+                    totalResults: environment.modules.contentPlaylists.ruleBasedTotalResults
                   })
                 });
 
@@ -232,6 +246,10 @@ export class PlaylistStore implements OnDestroy {
       const newPlaylist = <KalturaPlaylist>KalturaTypesFactory.createObject(this.playlist);
       newPlaylist.playlistType = this.playlist.playlistType;
 
+      if (newPlaylist.playlistType === KalturaPlaylistType.dynamic) {
+        newPlaylist.totalResults = this.playlist.totalResults;
+      }
+
       const id = this._getPlaylistId();
       const action = id === 'new'
         ? new PlaylistAddAction({ playlist: newPlaylist })
@@ -247,7 +265,7 @@ export class PlaylistStore implements OnDestroy {
               this._savePlaylistInvoked = true;
 
               return this._kalturaServerClient.multiRequest(request)
-                  .tag('block-shell')
+                .tag('block-shell')
                 .monitor('playlist store: save playlist')
                 .map(([res]) => {
                     if (res.error) {

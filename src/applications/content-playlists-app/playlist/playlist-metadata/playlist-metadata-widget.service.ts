@@ -48,12 +48,11 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
   }
 
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
-    const nameFromForm = (this.metadataForm.value.name || '').trim();
-    const nameFromData = (this.data.name || '').trim();
-    const name = wasActivated ? nameFromForm : nameFromData;
-    return Observable.of({
-      isValid: !!name.trim()
-    });
+      const name = wasActivated ? this.metadataForm.value.name : this.data.name;
+      const hasValue = (name || '').trim() !== '';
+      return Observable.of({
+          isValid: hasValue
+      });
   }
 
   protected onDataSaving(newData: KalturaPlaylist, request: KalturaMultiRequest): void {

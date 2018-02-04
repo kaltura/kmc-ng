@@ -44,7 +44,6 @@ import { CategoryData } from 'app-shared/content-shared/categories/categories-se
 })
 export class BulkActionsComponent implements OnInit, OnDestroy {
   private _allowedStatusesForPlaylist = [
-    KalturaEntryStatus.preconvert.toString(),
     KalturaEntryStatus.ready.toString(),
     KalturaEntryStatus.moderate.toString(),
     KalturaEntryStatus.blocked.toString()

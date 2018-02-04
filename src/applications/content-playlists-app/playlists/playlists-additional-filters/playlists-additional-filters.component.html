@@ -7,28 +7,28 @@
 			<div class="kDateRange">
 				<p-calendar
 					class="kDateRangeFirst"
-					[(ngModel)]="_createdAfter"
+					[(ngModel)]="createdAfter"
 					[readonlyInput]="true"
 					[showIcon]="true"
 					[monthNavigator]="true"
 					[yearNavigator]="true"
-					[maxDate]="_createdBefore"
+					[maxDate]="createdBefore"
 					[yearRange]="_createdAtDateRange"
 					icon="kIconcalendar"
 					(onSelect)="_onCreatedChanged()"></p-calendar>
 				<p-calendar
 					class="kDateRangeLast kPullLeft30"
-					[(ngModel)]="_createdBefore"
+					[(ngModel)]="createdBefore"
 					[readonlyInput]="true"
 					[showIcon]="true"
 					[monthNavigator]="true"
 					[yearNavigator]="true"
-					[minDate]="_createdAfter"
+					[minDate]="createdAfter"
 					[yearRange]="_createdAtDateRange"
 					icon="kIconcalendar"
 					(onSelect)="_onCreatedChanged()"></p-calendar>
 				<div class="kClearDates">
-          <a (click)="_clearCreatedComponents()" [ngClass]="{disabledLink: !_createdAfter && !_createdBefore}">{{'applications.content.filters.clearDates' | translate}}</a>
+          <a (click)="_clearCreatedComponents()" [ngClass]="{disabledLink: !createdAfter && !createdBefore}">{{'applications.content.filters.clearDates' | translate}}</a>
         </div>
 			</div>
 		</div>

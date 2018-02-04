@@ -1,4 +1,5 @@
 export const PlaylistWidgetKeys = {
   'Metadata': 'Metadata',
-  'Content': 'Content'
+  'Content': 'Content',
+  'ContentRuleBased': 'ContentRuleBased'
 };
