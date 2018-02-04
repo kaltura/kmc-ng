@@ -9,13 +9,13 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-        "app/kmc-config.json",
+        "kmc-app/kmc-config.json",
         "assets",
         "i18n",
         "favicon.ico"
       ],
       "index": "index.html",
-      "main": "app/main.ts",
+      "main": "kmc-app/main.ts",
       "polyfills": "polyfills.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
@@ -29,8 +29,8 @@
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
-        "dev": "app/environments/environment.ts",
-        "prod": "app/environments/environment.prod.ts"
+        "dev": "kmc-app/environments/environment.ts",
+        "prod": "kmc-app/environments/environment.prod.ts"
       },
       "stylePreprocessorOptions" : {
         "includePaths" : ["styles"]

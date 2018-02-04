@@ -48,7 +48,7 @@ npm run standalone
 npm install
 
 # create runtime configuration file by coping a sample one (the code below is written for bash)
-cp src/kmc-app/kmc-config.template.json src/app/kmc-config.json
+cp src/kmc-app/kmc-config.template.json src/kmc-app/kmc-config.json
 vim src/kmc-app/kmc-config.json
 
 # run the application in the browser (port 4200)

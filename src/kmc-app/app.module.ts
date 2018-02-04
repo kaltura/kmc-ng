@@ -11,7 +11,7 @@ import { PreviewAndEmbedModule } from '../applications/preview-and-embed/preview
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
-import { environment as buildEnvironment } from 'app/environments/environment'
+import { environment as buildEnvironment } from 'kmc-app/environments/environment'
 
 import {
   AppBootstrap,

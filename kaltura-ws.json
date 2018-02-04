@@ -21,7 +21,7 @@
         "key": "appVersion"
       },
       "changeLog": {
-        "htmlPath": "./src/app/components/changelog/changelog-content/changelog-content.component.html"
+        "htmlPath": "./src/kmc-app/components/changelog/changelog-content/changelog-content.component.html"
       }
     }
   }

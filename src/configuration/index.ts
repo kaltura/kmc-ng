@@ -5,7 +5,7 @@ import { subApplicationsConfig, SubApplicationsConfig } from '../applications/su
 import { StaticApplicationConfig } from './static-application-config';
 import { Observable } from 'rxjs/Observable';
 import deepmerge from 'deepmerge';
-import { environment as appEnvironment } from 'app/environments/environment';
+import { environment as appEnvironment } from 'kmc-app/environments/environment';
 import  'rxjs/add/operator/takeUntil';
 import  'rxjs/add/operator/delay';
 
