@@ -56,21 +56,25 @@ export class BulkAddCategoriesService extends BulkActionBaseService<CategoryData
               });
             });
 
-            if (alreadyAdded.length) {
-              const message = alreadyAdded.map(({ entryName, categoryName }) =>
-                this._appLocalization.get(
-                  'applications.content.bulkActions.entryAlreadyAssignedToCategory',
-                  [entryName, categoryName]
-                )
-              ).join('\n');
-              this._browserService.alert({ message });
-            }
+            const notifyAlreadyAdded = () =>
+            {
+                if (alreadyAdded.length) {
+                    const message = alreadyAdded.map(({ entryName, categoryName }) =>
+                        this._appLocalization.get(
+                            'applications.content.bulkActions.entryAlreadyAssignedToCategory',
+                            [entryName, categoryName]
+                        )
+                    ).join('\n');
+                    this._browserService.alert({ message });
+                }
+            };
 
             if (requests && requests.length) {
               this.transmit(requests, true).subscribe(
                 () => {
                   observer.next();
                   observer.complete();
+                    notifyAlreadyAdded();
                 },
                 error => {
                   observer.error(error);
@@ -79,6 +83,7 @@ export class BulkAddCategoriesService extends BulkActionBaseService<CategoryData
             } else {
               observer.next();
               observer.complete();
+                notifyAlreadyAdded();
             }
           },
           error => {
