@@ -169,7 +169,9 @@ export class CategoryService implements OnDestroy {
 			}
 
   private _checkReferenceId(newCategory: KalturaCategory): Observable<boolean> {
-    if (newCategory.referenceId === this.category.referenceId) {
+    if (!newCategory.referenceId ||
+		((newCategory.referenceId || null) === (this.category.referenceId || null))
+	) {
       return Observable.of(true);
     }
 
