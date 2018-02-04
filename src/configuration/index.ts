@@ -37,7 +37,12 @@ function getConfiguration(): Observable<DynamicApplicationConfig> {
                    if (xhr.status === 200) {
                        resp = JSON.parse(xhr.response);
                    } else {
-                       resp = new Error(xhr.statusText || 'failed to load configuration file from server');
+                       if (appEnvironment.production) {
+                           resp = new Error('failed to load configuration file from server with error ' + xhr.statusText);
+                       }else {
+                           resp = new Error('failed to load configuration file from server with error ' + xhr.statusText + ' (did you remember to create a configuration file from the provided template in the app folder?)');
+                       }
+
                    }
                } catch (e) {
                    resp = new Error(xhr.responseText);
