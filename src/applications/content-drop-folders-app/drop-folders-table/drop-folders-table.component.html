@@ -61,7 +61,7 @@
         <p-column header="" styleClass="actionsColumn">
           <ng-template let-col let-folder="rowData" pTemplate="body" let-i="rowIndex">
             <div class="kDropFoldersTableActions">
-              <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, folder)"></button>
+              <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, folder)"></button>
             </div>
           </ng-template>
         </p-column>

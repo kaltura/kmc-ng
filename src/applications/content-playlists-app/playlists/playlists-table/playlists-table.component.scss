@@ -9,13 +9,6 @@
   .kPlaylistsTableActions {
     width: 100%;
     text-align: center;
-    button {
-      color: grey !important;
-      background-color: rgba(0, 0, 0, 0) !important;
-      border: none !important;
-      font-size: 16px !important;
-      outline: 0;
-    }
   }
 
   .kTitle{
@@ -34,7 +27,7 @@
     align-items: center;
 
     .kMediaTypeIcon {
-      font-size: 26px;
+      font-size: 24px;
       margin-right: 23px;
     }
   }

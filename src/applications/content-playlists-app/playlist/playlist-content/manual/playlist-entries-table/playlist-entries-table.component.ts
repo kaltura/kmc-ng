@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { PlaylistContentWidget } from '../playlist-content-widget.service';
+import { ManualContentWidget } from '../manual-content-widget.service';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -41,7 +41,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
-              private _widgetService: PlaylistContentWidget,
+              private _widgetService: ManualContentWidget,
               private _router: Router) {
   }
 
