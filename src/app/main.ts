@@ -15,8 +15,20 @@ initializeConfiguration(kmcConfiguration)
         },
         (error) =>
         {
-            // TODO managed this scenario
-            throw error;
+            try {
+                const appContainer = document.getElementById('appContainer');
+                if (appContainer) {
+                    appContainer.remove();
+                }
+
+                const errorElement = document.getElementById('appError');
+                if (errorElement) {
+                    errorElement.style.display = 'block';
+                }
+            }catch(innerError) {
+            }
+
+            console.error(error);
         }
     );
 
