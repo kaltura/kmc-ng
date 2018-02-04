@@ -19,9 +19,9 @@ import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {CreateNewCategoryEvent} from 'app-shared/kmc-shared/category-creation';
+import {CreateNewCategoryEvent} from 'app-shared/kmc-shared/events/category-creation';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
+import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
@@ -44,7 +44,6 @@ import { CategoryData } from 'app-shared/content-shared/categories/categories-se
 })
 export class BulkActionsComponent implements OnInit, OnDestroy {
   private _allowedStatusesForPlaylist = [
-    KalturaEntryStatus.preconvert.toString(),
     KalturaEntryStatus.ready.toString(),
     KalturaEntryStatus.moderate.toString(),
     KalturaEntryStatus.blocked.toString()
@@ -180,7 +179,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // add to categories changed
   onAddToCategoriesChanged(categories: CategoryData[]): void {
-    this.executeService(this._bulkAddCategoriesService, (categories || []).map(category => category.id));
+    this.executeService(this._bulkAddCategoriesService, (categories || []));
   }
 
   // remove categories changed

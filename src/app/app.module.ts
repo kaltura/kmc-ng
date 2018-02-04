@@ -77,9 +77,10 @@ import { ChangeAccountComponent } from './components/changeAccount/change-accoun
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
-import { PlaylistCreationModule, PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
-import {CategoryCreationModule} from 'app-shared/kmc-shared/category-creation';
+import { PlaylistCreationModule, PlaylistCreationService } from 'app-shared/kmc-shared/events/playlist-creation';
+import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
+import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -104,7 +105,7 @@ export function clientConfigurationFactory() {
     DropdownModule,
     HttpModule,
     InputTextModule,
-    MetadataProfileModule,
+    MetadataProfileModule.forRoot(),
     Ng2PageScrollModule.forRoot(),
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
@@ -134,7 +135,8 @@ export function clientConfigurationFactory() {
     PlaylistCreationModule.forRoot(),
     CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
-    CategoriesStatusModule.forRoot()
+    CategoriesStatusModule.forRoot(),
+    ViewCategoryEntriesModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
