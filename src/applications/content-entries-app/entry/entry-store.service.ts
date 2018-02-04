@@ -343,7 +343,7 @@ export class EntryStore implements  OnDestroy {
 			{
 				if (response.allowed)
 				{
-					this._router.navigate(["entry", entryId],{ relativeTo : this._entryRoute.parent});
+					this._router.navigate(["entry", entryId, "metadata"],{ relativeTo : this._entryRoute.parent});
 				}
 			}
 		);

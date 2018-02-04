@@ -2,8 +2,8 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app.module';
-import { environment as appConfig } from 'app-config';
-import { environment } from 'environments/environment';
+import { environment as appConfig } from 'app-environment';
+import { environment } from 'kmc-app/environments/environment';
 
 if (environment.production) {
     enableProdMode();

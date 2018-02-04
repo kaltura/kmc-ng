@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization, AppStorage } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from './app-authentication.service';
-import { environment } from 'app-config';
+import { environment } from 'app-environment';
 
 export enum BoostrappingStatus
 {

@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { AppAuthentication } from 'app-shared/kmc-shell';
-import { environment } from 'app-config';
+import { environment } from 'app-environment';
 
 @Component({
     selector: 'kAnalyticsLive',
