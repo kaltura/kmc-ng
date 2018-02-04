@@ -113,22 +113,49 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(({category}) => {
+          this._showConfirmationOnClose = false;
             this.onApply.emit({categoryId: category.id});
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
           },
           error => {
+            let message = '';
+            let navigateToCategory = false;
+            switch (error.code)
+            {
+                case 'category_creation_failure':
+                    message = this._appLocalization.get('applications.content.addNewCategory.errors.createFailed');
+                    break;
+                case 'missing_category_name':
+                    message = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
+                    break;
+                case 'entries_link_issue':
+                    message = this._appLocalization.get('applications.content.addNewCategory.errors.cannotLinkEntries');
+                    navigateToCategory = true;
+                    break;
+                default:
+                    message = 'An error occurred while trying to add new category';
+                    break;
+            }
 
-              const message = 'An error occurred while trying to add new category';
             this._blockerMessage = new AreaBlockerMessage(
               {
-                message: error.message || message,
+                message: message,
                 buttons: [
                   {
                     label: this._appLocalization.get('app.common.ok'),
                     action: () => {
                       this._blockerMessage = null;
+                        if (navigateToCategory) {
+                            this._showConfirmationOnClose = false;
+                            if (error.context && error.context.categoryId) {
+                                this.onApply.emit({categoryId: error.context.categoryId});
+                            }
+                            if (this.parentPopupWidget) {
+                                this.parentPopupWidget.close();
+                            }
+                        }
                     }
                   }
                 ]
