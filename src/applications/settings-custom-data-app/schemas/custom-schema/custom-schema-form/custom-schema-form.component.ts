@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SettingsMetadataProfile } from '../../schemas-store/settings-metadata-profile.interface';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { KalturaAPIException } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kCustomSchemaForm',
@@ -9,16 +10,30 @@ import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaM
   styleUrls: ['./custom-schema-form.component.scss']
 })
 export class CustomSchemaFormComponent {
+  @Input() set serverValidationError(value: KalturaAPIException) {
+    if (value) {
+      if (value.code === 'SYSTEM_NAME_ALREADY_EXISTS') {
+        this._systemNameField.setErrors({ 'incorrect': true });
+      }
+    }
+  }
+
   @Input() set schema(value: SettingsMetadataProfile) {
     if (value) {
-      this._initialChange = true;
       this._schema = value;
-      this._schemaForm.patchValue({
-        name: value.name,
-        description: value.description,
-        systemName: value.systemName,
-        applyTo: value.applyTo
-      });
+      this._schemaForm.patchValue(
+        {
+          name: value.name,
+          description: value.description,
+          systemName: value.systemName,
+          applyTo: value.applyTo
+        },
+        { emitEvent: false }
+      );
+
+      if (!this._schema.isNew) {
+        this._applyToField.disable({ onlySelf: true });
+      }
     } else {
       throw Error('schema must be provided');
     }
@@ -27,7 +42,6 @@ export class CustomSchemaFormComponent {
   @Output() schemaChanges = new EventEmitter<SettingsMetadataProfile>();
 
   private _schema: SettingsMetadataProfile;
-  private _initialChange = true;
 
   public _schemaForm: FormGroup;
   public _nameField: AbstractControl;
@@ -45,7 +59,7 @@ export class CustomSchemaFormComponent {
 
   private _buildForm(): void {
     this._schemaForm = this._fb.group({
-      name: ['', Validators.required],
+      name: ['', Validators.compose([Validators.required, Validators.maxLength(31)])],
       description: '',
       systemName: '',
       applyTo: KalturaMetadataObjectType.entry.toString()
@@ -57,11 +71,6 @@ export class CustomSchemaFormComponent {
     this._applyToField = this._schemaForm.controls['applyTo'];
 
     this._schemaForm.valueChanges.subscribe((change) => {
-      if (this._initialChange) { // ignore initial update
-        this._initialChange = false;
-        return;
-      }
-
       let sendUpdate = false;
       if (this._schema.name !== change.name) {
         this._schema.name = change.name;
@@ -78,10 +87,12 @@ export class CustomSchemaFormComponent {
         sendUpdate = true;
       }
 
-      const applyTo = new KalturaMetadataObjectType(change.applyTo);
-      if (!this._schema.applyTo.equals(applyTo)) {
-        this._schema.applyTo = applyTo;
-        sendUpdate = true;
+      if (change.applyTo) {
+        const applyTo = new KalturaMetadataObjectType(change.applyTo);
+        if (!this._schema.applyTo.equals(applyTo)) {
+          this._schema.applyTo = applyTo;
+          sendUpdate = true;
+        }
       }
 
       if (sendUpdate) {
