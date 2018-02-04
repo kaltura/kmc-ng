@@ -36,6 +36,8 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
 
   goNext() {
     if (this.addNewPlaylistForm.valid) {
+      this._showConfirmationOnClose = false;
+      this.parentPopupWidget.close();
       const { name, description, playlistType: type } = this.addNewPlaylistForm.value;
       this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type }))
     }
