@@ -7,9 +7,10 @@ import { ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-sections-list-widget.service';
-import { PlaylistContentWidget } from './playlist-content/playlist-content-widget.service';
+import { ManualContentWidget } from './playlist-content/manual/manual-content-widget.service';
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
+import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 @Component({
@@ -21,12 +22,14 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
     PlaylistWidgetsManager,
     PlaylistSectionsListWidget,
     PlaylistDetailsWidget,
-    PlaylistContentWidget,
-    PlaylistMetadataWidget
+    ManualContentWidget,
+    PlaylistMetadataWidget,
+    RuleBasedContentWidget
   ]
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
   public _playlistName: string;
+  public _playlistTypeIcon: string;
   public _currentPlaylistId: string;
   public _showLoader = false;
   public _areaBlockerMessage: AreaBlockerMessage;
@@ -42,9 +45,10 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               playlistWidgetsManager: PlaylistWidgetsManager,
               widget1: PlaylistSectionsListWidget,
               widget2: PlaylistDetailsWidget,
-              widget3: PlaylistContentWidget,
-              widget4: PlaylistMetadataWidget) {
-    playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4])
+              widget3: ManualContentWidget,
+              widget4: PlaylistMetadataWidget,
+              widget5: RuleBasedContentWidget) {
+    playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5])
   }
 
   ngOnInit() {
@@ -72,6 +76,9 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
               case ActionTypes.PlaylistLoaded:
                 this._playlistName = this._playlistStore.playlist.name;
+                this._playlistTypeIcon = this._playlistStore.playlist.playlistType === KalturaPlaylistType.staticList
+                  ? 'kIconPlaylist_Manual'
+                  : 'kIconPlaylist_RuleBased';
                 break;
 
               case ActionTypes.PlaylistLoadingFailed:
@@ -163,7 +170,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   private _updateNavigationState(): void {
     // TODO [kmcng] find a better way that doesn't need access to the playlist directly
-    const playlists = (this._playlistsStore.playlists.data().items || []).filter(playlist => playlist.playlistType === KalturaPlaylistType.staticList);
+    const playlists = this._playlistsStore.playlists.data().items;
     if (playlists && this._currentPlaylistId) {
       const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
       this._enableNextButton = currentPlaylistIndex >= 0 && (currentPlaylistIndex < playlists.length - 1);
@@ -191,7 +198,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   public _navigateToPlaylist(direction: 'next' | 'prev'): void {
     // TODO [kmcng] find a better way that doesn't need access to the playlist directly
-    const playlists = (this._playlistsStore.playlists.data().items || []).filter(playlist => playlist.playlistType === KalturaPlaylistType.staticList);
+    const playlists = this._playlistsStore.playlists.data().items;
     if (playlists && this._currentPlaylistId) {
       const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
       let newPlaylist = null;

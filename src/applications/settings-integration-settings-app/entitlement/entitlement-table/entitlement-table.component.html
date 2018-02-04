@@ -23,10 +23,10 @@
           <span [kTooltip]="entitlement[col.field]">{{entitlement[col.field]}}</span>
         </ng-template>
       </p-column>
-      <p-column styleClass="kActionsColumn" header="">
+      <p-column styleClass="kActionsColumn" header="" [style]="{'width':'60px'}">
         <ng-template let-entitlement="rowData" let-i="rowIndex" pTemplate="body">
           <div class="kTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, entitlement)"></button>
+            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, i, entitlement)"></button>
           </div>
         </ng-template>
       </p-column>

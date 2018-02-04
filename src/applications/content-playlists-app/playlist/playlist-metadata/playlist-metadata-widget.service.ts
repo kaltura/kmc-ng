@@ -49,8 +49,9 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
 
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
     const name = wasActivated ? this.metadataForm.value.name : this.data.name;
+    const hasValue = (name || '').trim() !== '';
     return Observable.of({
-      isValid: !!name.trim()
+      isValid: hasValue
     });
   }
 

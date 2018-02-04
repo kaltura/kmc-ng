@@ -112,6 +112,11 @@ export const environment = {
                         "enabled": true
                     },
                     {
+                      "routePath": "settings/metadata",
+                      "titleToken": "CustomData",
+                      "enabled": true
+                    },
+                    {
                       "routePath": "settings/myUserSettings",
                       "titleToken": "My User Settings",
                       "enabled": true
@@ -188,7 +193,8 @@ export const environment = {
         },
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
-            "bulkActionsLimit": 50
+            "bulkActionsLimit": 50,
+            "ruleBasedTotalResults": 200
         },
         "createLive": {
           "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
@@ -210,6 +216,9 @@ export const environment = {
         "dropFolders" : {
           "createdAtDateRange" : "2005:2030",
           "bulkActionsLimit": 50
+        },
+        "settingsMetadata": {
+          "apiUrl": "/api_v3/index.php/service/metadata_metadataprofile/action/serve"
         }
     },
     "entriesShared": {

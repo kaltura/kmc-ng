@@ -1,0 +1,27 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+  <div class="kPlaylistEntriesHolder">
+      <kPlaylistEntryListBulkOperationsContent
+        [selectedEntries]="_selectedEntries"
+        [duration]="_widgetService._entriesDuration"
+        [entriesTotalCount]="_widgetService._entriesTotalCount"
+        (addEntry)="addEntry.open()"
+        (deleteEntries)="_deleteSelected($event)"
+        (clearSelection)="_clearSelection()"
+        (moveEntries)="_widgetService.moveEntries($event)">
+      </kPlaylistEntryListBulkOperationsContent>
+
+    <kPlaylistEntriesTable
+      class="kPlaylistEntriesTable"
+      [entries]="_widgetService.entries"
+      (onActionSelected)="_onActionSelected($event)"
+      (sortChanged)="_onSortChanged($event)"
+      [(selectedEntries)]="_selectedEntries">
+    </kPlaylistEntriesTable>
+  </div>
+
+  <kPopupWidget #addEntry [popupWidth]="995" [slider]="true">
+    <ng-template>
+      <kAddEntry (onClosePopupWidget)="addEntry.close()" (onAddEntries)="_widgetService.addEntries($event)"></kAddEntry>
+    </ng-template>
+  </kPopupWidget>
+</k-area-blocker>
