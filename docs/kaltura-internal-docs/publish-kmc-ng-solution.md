@@ -89,7 +89,7 @@ npm i
 
 4. Update dependencies on the kaltura-ng libraries as followed:
 ```
-npm install @kaltura-ng/kaltura-{common,primeng-ui,ui}@latest @kaltura-ng/mc-{shared,theme}@latest
+npm install @kaltura-ng/kaltura-{common,primeng-ui,ui,logger}@latest @kaltura-ng/mc-{shared,theme}@latest
 ```
    * Make sure the list above contains all the libraries found in [kaltura-ng](https://github.com/kaltura/kaltura-ng) repository
 
