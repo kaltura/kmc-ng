@@ -133,7 +133,7 @@ npm run build:prod
 ```
 
 6. Add the studio application
-   * goto the the following link and find the latest release (make sure it is not a pre-release)
+   * goto the the [following link](https://github.com/kaltura/player-studio/releases) and find the latest release (make sure it is not a pre-release)
    * download the attached zip file
    * extract it into folder `dist/studio`
 
