@@ -10,11 +10,13 @@ import  'rxjs/add/operator/takeUntil';
 import  'rxjs/add/operator/delay';
 
 export interface GlobalConfiguration {
-    appVersion: string
+    appVersion: string,
+    temporaryKey: string
 }
 
 const _globalConfiguration: GlobalConfiguration = {
-    appVersion: '3.5.0'
+    appVersion: '3.5.0',
+    temporaryKey: 'will be removed in version 3.7.0'
 }
 
 export type ApplicationConfiguration = GlobalConfiguration & StaticApplicationConfig & DynamicApplicationConfig & SharedModulesConfig & SubApplicationsConfig;
