@@ -3,7 +3,7 @@
       <kPlaylistEntryListBulkOperationsContent
         [selectedEntries]="_selectedEntries"
         [duration]="_widgetService.entriesDuration"
-        [entriesTotalCount]="_widgetService._entriesTotalCount"
+        [entriesTotalCount]="_widgetService.entriesTotalCount"
         (addEntry)="addEntry.open()"
         (deleteEntries)="_deleteSelected($event)"
         (clearSelection)="_clearSelection()"
