@@ -2,8 +2,8 @@
   <div class="kPlaylistEntriesHolder">
       <kPlaylistEntryListBulkOperationsContent
         [selectedEntries]="_selectedEntries"
-        [duration]="_widgetService._entriesDuration"
-        [entriesTotalCount]="_widgetService._entriesTotalCount"
+        [duration]="_widgetService.entriesDuration"
+        [entriesTotalCount]="_widgetService.entriesTotalCount"
         (addEntry)="addEntry.open()"
         (deleteEntries)="_deleteSelected($event)"
         (clearSelection)="_clearSelection()"
