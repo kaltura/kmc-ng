@@ -183,11 +183,11 @@ export class MetadataProfileParser {
         'annotation': {
           'documentation': { 'text': item.documentations },
           'appinfo': {
-            'label': { 'text': item.label },
-            'key': { 'text': item.key },
-            'searchable': { 'text': String(!!item.isSearchable) },
-            'timeControl': { 'text': String(!!item.isTimeControl) },
-            'description': { 'text': item.description }
+            'noprefix:label': { 'text': item.label },
+            'noprefix:key': { 'text': item.key },
+            'noprefix:searchable': { 'text': String(!!item.isSearchable) },
+            'noprefix:timeControl': { 'text': String(!!item.isTimeControl) },
+            'noprefix:description': { 'text': item.description }
           }
         }
       };
