@@ -1,4 +1,4 @@
-import {NgModule, Provider} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -21,7 +21,6 @@ import {
   NewEntryUploadModule
 } from 'app-shared/kmc-shell';
 import {
-  AppLocalization,
   AppStorage,
   KalturaCommonModule,
   OperationTagModule,
@@ -31,12 +30,10 @@ import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltur
 import {KalturaClient, KalturaClientConfiguration} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
-  AccessControlProfileStore,
   AppEventsModule,
   FlavoursStore,
   KalturaServerModule,
   MetadataProfileModule,
-  PartnerProfileStore
 } from 'app-shared/kmc-shared';
 
 import {AppComponent} from './app.component';
@@ -77,14 +74,11 @@ import { ChangeAccountComponent } from './components/changeAccount/change-accoun
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
-import { PlaylistCreationModule, PlaylistCreationService } from 'app-shared/kmc-shared/events/playlist-creation';
+import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-creation';
 import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
-
-const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
-
-
+import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
 
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
@@ -136,7 +130,8 @@ export function clientConfigurationFactory() {
     CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
-    ViewCategoryEntriesModule.forRoot()
+    ViewCategoryEntriesModule.forRoot(),
+    AccessControlProfileModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -159,7 +154,7 @@ export function clientConfigurationFactory() {
   ],
   exports: [],
   providers: <any>[
-    ...partnerProviders,
+      FlavoursStore,
       KalturaLogger,
       {
           provide: KalturaLoggerName, useValue: 'kmc'

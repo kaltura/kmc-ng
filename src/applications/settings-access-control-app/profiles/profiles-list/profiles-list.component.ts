@@ -6,6 +6,8 @@ import { AccessControlProfilesFilters, AccessControlProfilesStore } from '../pro
 import { SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AccessControlProfileUpdatedEvent } from 'app-shared/kmc-shared/events/access-control-profile-updated.event';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 @Component({
   selector: 'kAccessControlProfilesList',
@@ -25,6 +27,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
+              private _appEvents: AppEventsService,
               public _store: AccessControlProfilesStore) {
   }
 
@@ -43,6 +46,10 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
         'pageIndex'
       ]
     ));
+  }
+
+  private _updateAccessControlProfiles(): void {
+    this._appEvents.publish(new AccessControlProfileUpdatedEvent());
   }
 
   private _updateComponentState(updates: Partial<AccessControlProfilesFilters>): void {
@@ -74,6 +81,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
+          this._updateAccessControlProfiles();
           this._store.reload();
           this._clearSelection();
         },
@@ -175,6 +183,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
+          this._updateAccessControlProfiles();
           this._store.reload();
         },
         (error) => {
@@ -192,7 +201,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
               }
             }]
           });
-        })
+        });
   }
 }
 

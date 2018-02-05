@@ -1,8 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { PartnerProfileStore } from '../partner-profile';
-import { ISubscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/throw';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import { AccessControlListAction } from 'kaltura-ngx-client/api/types/AccessControlListAction';
@@ -11,57 +9,47 @@ import { KalturaAccessControlFilter } from 'kaltura-ngx-client/api/types/Kaltura
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { AccessControlProfileUpdatedEvent } from 'app-shared/kmc-shared/events/access-control-profile-updated.event';
 
 @Injectable()
-export class AccessControlProfileStore extends PartnerProfileStore
-{
-    private _cachedProfiles : KalturaAccessControl[] = [];
+export class AccessControlProfileStore extends PartnerProfileStore implements OnDestroy {
+  private _cachedProfiles: KalturaAccessControl[] = [];
 
-    constructor(private _kalturaServerClient: KalturaClient) {
-    	super();
+  constructor(private _kalturaServerClient: KalturaClient, _appEvents: AppEventsService) {
+    super();
+
+    _appEvents.event(AccessControlProfileUpdatedEvent)
+      .cancelOnDestroy(this)
+      .subscribe(() => {
+        this._clearCache();
+      });
+  }
+
+  ngOnDestroy() {
+  }
+
+  private _clearCache(): void {
+    this._cachedProfiles = [];
+  }
+
+  public get(): Observable<{ items: KalturaAccessControl[] }> {
+    const cachedResults = this._cachedProfiles;
+
+    if (cachedResults && cachedResults.length) {
+      return Observable.of({ items: cachedResults });
     }
 
-    public get() : Observable<{items : KalturaAccessControl[]}>
-    {
-        return Observable.create(observer =>
-        {
-	        let sub: ISubscription;
-            const cachedResults = this._cachedProfiles;
-            if (cachedResults.length)
-            {
-                observer.next({items : cachedResults});
-            }else {
-	            sub = this._buildGetRequest().subscribe(
-                    response =>
-                    {
-	                    sub = null;
-                        observer.next({items : response.objects});
-                        observer.complete();
-                    },
-                    error =>
-                    {
-	                    sub = null;
-                        observer.error(error);
-                    }
-                );
-            }
-	        return () =>{
-		        if (sub) {
-			        sub.unsubscribe();
-		        }
-	        }
-        });
+    return this._buildGetRequest()
+      .do(({ objects }) => {
+        this._cachedProfiles = objects;
+      })
+      .map(({ objects }) => ({ items: objects }));
+  }
 
-    }
-
-    private _buildGetRequest(): Observable<KalturaAccessControlListResponse> {
-        const accessControlProfilesFilter = new KalturaAccessControlFilter();
-	    accessControlProfilesFilter.orderBy = '-createdAt';
-		const accessControlProfilesPager = new KalturaFilterPager();
-	    accessControlProfilesPager.pageSize = 1000;
-        return <any>this._kalturaServerClient.request(new AccessControlListAction({
-            filter : accessControlProfilesFilter,
-	        pager: accessControlProfilesPager
-        }));
-    }
+  private _buildGetRequest(): Observable<KalturaAccessControlListResponse> {
+    const filter = new KalturaAccessControlFilter({ orderBy: '-createdAt' });
+    const pager = new KalturaFilterPager({ pageSize: 1000 });
+    return <any>this._kalturaServerClient.request(new AccessControlListAction({ filter, pager }));
+  }
 }
