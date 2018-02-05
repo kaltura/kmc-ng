@@ -1,7 +1,9 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppEventsService } from 'app-shared/kmc-shared';
 import { environment } from 'app-environment';
-import { environment as env} from '../../environments/environment';
+import { environment as env} from '../../kmc-app/environments/environment';
+import { UpdatePlayersEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
   selector: 'kStudio',
@@ -13,9 +15,12 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
   public studioUrl: string = "";
   public isProduction = false;
 
-  constructor(private appAuthentication: AppAuthentication) {
+  constructor(private appAuthentication: AppAuthentication, private _appEvents: AppEventsService) {
     window["kmc"] = {
       "version": "3",
+      "preview_embed":{
+        "updateList": (isPlaylist: boolean) => {this._updatePlayers(isPlaylist)}
+      },
       "vars": {
         "ks": this.appAuthentication.appUser.ks,
         "api_url": environment.modules.studio.api_url,
@@ -40,9 +45,13 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
   }
 
+  _updatePlayers(isPlaylist):void{
+    this._appEvents.publish(new UpdatePlayersEvent(isPlaylist));
+  }
 
   ngOnDestroy() {
     this.studioUrl = "";
+    window["kmc"] = null;
   }
 
 }

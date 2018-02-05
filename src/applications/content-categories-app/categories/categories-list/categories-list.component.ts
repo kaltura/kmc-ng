@@ -7,13 +7,16 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
+import {CategoryCreationService} from 'app-shared/kmc-shared/events/category-creation';
 import { CategoriesModes } from "app-shared/content-shared/categories/categories-mode-type";
 import {
     CategoriesRefineFiltersService,
     RefineGroup
 } from '../categories-refine-filters.service';
 
+import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 
 @Component({
   selector: 'kCategoriesList',
@@ -30,6 +33,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     public _linkedEntries: { entryId: string }[] = [];
     @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
     @ViewChild('addNewCategory') addNewCategory: PopupWidgetComponent;
+    public _categoriesLocked = false;
+    public _categoriesUpdating = false;
 
     @ViewChild('tags') private tags: StickyComponent;
 
@@ -55,10 +60,23 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _categoriesUtilsService: CategoriesUtilsService,
-                public _categoryCreationService: CategoryCreationService) {
+                public _categoryCreationService: CategoryCreationService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+                private _appEvents: AppEventsService) {
     }
 
     ngOnInit() {
+        this._categoriesStatusMonitorService.status$
+		    .cancelOnDestroy(this)
+		    .subscribe((status: CategoriesStatus) => {
+                if (this._categoriesLocked && status.lock === false){
+                    // categories were locked and now open - reload categories to reflect changes
+                    this._reload();
+                }
+                this._categoriesLocked = status.lock;
+                this._categoriesUpdating = status.update;
+            });
+
         this._prepare();
     }
 
@@ -304,6 +322,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                     this.moveCategoryPopup.open();
                 }
                 break;
+            case 'viewEntries':
+              this._appEvents.publish(new ViewCategoryEntriesEvent(category.id));
+              break;
             default:
                 break;
         }
@@ -320,10 +341,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                             .tag('block-shell')
                             .subscribe(
                                 () => {
-                                    this._browserService.showGrowlMessage({
-                                        severity: 'success',
-                                        detail: this._appLocalization.get('applications.content.categories.deleted')
-                                    });
+                                    this._categoriesStatusMonitorService.updateCategoriesStatus();
                                     this._categoriesService.reload();
                                 },
                                 error => {

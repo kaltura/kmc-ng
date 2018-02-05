@@ -14,12 +14,15 @@
       "Settings": "Settings",
       "Users": "Users",
       "Account Settings": "Account Settings",
+      "Integration Settings": "Integration Settings",
       "Account Upgrade": "Account Upgrade",
+      "My User Settings": "My User Settings",
       "Roles": "Roles",
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
       "DropFolders": "Drop Folders",
       "UploadMonitor": "Upload Monitor",
+      "CustomData": "Custom Data",
       "AccessControl": "Access Control"
     },
     "userSettings": {
@@ -66,7 +69,8 @@
       "yes": "Yes",
       "no": "No",
       "apply": "Apply",
-      "done": "Done"
+      "done": "Done",
+      "save": "Save"
     },
     "login": {
       "login": {
@@ -342,8 +346,8 @@
           "header": "Cancel uploads",
           "message": "Are you sure you want to cancel those uploads?"
         },
-        "files": "Files",
-        "selected": "Selected",
+        "files": "{{0}} Files",
+        "selected": "{{0}} Selected",
         "cancel": "Cancel",
         "table": {
           "fileName": "File Name",
@@ -460,7 +464,10 @@
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
+        "deleteWithEditWarningTags": "This category was created by another application and deleting it will effect this application or site.\n Do you want to continue?",
         "editWithEditWarningTags": "This category was created by another application and editing it will effect this application or site.\n Do you want to continue?",
+        "confirmDeleteWithSubCategories": "The category will be deleted with its sub-categories. Do you want to continue?",
+        "confirmDeleteSingle": "Are you sure you want to delete this category?",
         "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?",
         "confirmDeleteMultiple": "Are you sure you want to delete these categories?",
         "categoryId": "Category ID: {{0}}",
@@ -485,23 +492,31 @@
             "header": "Error",
             "message": "An unexpected error has occurred while trying to delete category."
           }
-        }
+        },
+        "categoriesLockTitle": "Categories Locked",
+        "categoriesLockMsg": "Category tree is currently updating.\nThis operation may take a few minutes.\nCategory editing options will be released when update is completed.",
+        "categoriesUpdateMsg": "Updating Categories"
       },
       "addNewCategory": {
         "newCategory": "New Category",
+        "newSubcategory": "New Sub-Category",
         "selectCategoryParent": "Select the parent category under which the new category will appear",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "apply": "Apply",
         "cancel": "Cancel",
-        "noParent": "No Parent",
+        "noParent":"No Parent",
+        "noSelection": "No Selection",
+
         "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}"
-,
+        "selectedParentCategory":"Parent Category Id: {{value}}",
         "name": "Name",
         "categoryMovedSuccessfully": "Category moved successfully",
         "errors": {
-          "requiredName": "You must enter name"
+          "cannotLinkEntries": "Category was created, but failed to link some of the entries, please review the created category",
+          "createFailed": "An error occurred while trying to add new category",
+          "requiredName": "You must enter name",
+          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
         }
       },
       "moveCategory":{
@@ -517,7 +532,7 @@
         }
       },
       "entries": {
-        "entries": "Entries",
+        "entries": "{{0}} Entries",
         "selected": "Selected",
         "bulkActions": "More Actions",
         "cancel": "Cancel",
@@ -530,7 +545,14 @@
         "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "entryId": "Entry ID: {{0}}",
-        "deleteNote": "Please note: the entry will be permanently deleted from your account."
+        "deleteNote": "Please note: the entry will be permanently deleted from your account.",
+        "ruleName": "Rule name",
+        "ruleNamePlaceholder": "Rule Name",
+        "resultsLimit": "Results limit ({{0}})",
+        "orderBy": "Order by",
+        "totalDuration": "Total duration {{0}}",
+        "resultsLimitRange": "1 - 200 Entries",
+        "noEntries": "No entries"
       },
       "playlists": {
         "playlists": "{{0}} Playlists",
@@ -555,7 +577,10 @@
         "deleteEntryNote": "Please note: this entry will be permanently deleted from your playlist.",
         "deleteEntriesNote": "Please note: those entries will be permanently deleted from your playlist.",
         "confirmDeleteEntry": "Are you sure you want to delete the selected entry?",
-        "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
+        "confirmDeleteEntries": "Are you sure you want to delete the selected entries?",
+        "addRule": "Add rule to your playlist",
+        "updateRule": "Update rule in your playlist",
+        "save": "Save"
       },
       "moderation": {
         "entryReports": "Entry Reports",
@@ -674,7 +699,11 @@
         "role": "Role",
         "lastLogin": "Last Login",
         "edit": "Edit",
-        "blockUnblock": "Block / Unblock"
+        "blockUnblock": "Block / Unblock",
+        "ruleName": "Rule Name",
+        "entriesCount": "No.Entries",
+        "limit": "Limit",
+        "orderBy": "Order By"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -811,7 +840,6 @@
         "selectPlaylistType": "Select playlist type",
         "manualPlaylist": "Manual playlist",
         "ruleBasedPlaylist": "Rule based playlist",
-        "addRuleBasedSubPlaylist": "Add rule based sub playlist",
         "nameIsMandatory": "You must enter a playlist name",
         "next": "Next",
         "playlistName": "Playlist Name",
@@ -855,6 +883,7 @@
         "updated": "Entries updated successfully",
         "note": "Update Note",
         "confirm": "Are you sure you want to update {{0}} entries? It could take a while...",
+        "confirmCategories": "Are you sure you want to update {{0}} categories? It could take a while...",
         "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
         "confirmDropFolders": "Are you sure you want to update {{0}} drop folders files? It could take a while...",
         "deleteEntries": "Delete Entries",
@@ -869,7 +898,11 @@
         "reject": "Reject",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
-        "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries"
+        "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries",
+        "viewRule": "View/Edit rule",
+        "deleteRule": "Delete rule",
+        "noCategoriesOrEntries": "No categories or entries were selected",
+        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}."
       },
       "entryDetails": {
         "sections": {
@@ -924,7 +957,8 @@
           "selected": "Selected",
           "clear": "Clear Selection",
           "addGroup": "Add Group",
-          "deleteGroup": "Delete Group"
+          "deleteGroup": "Delete Group",
+          "nameRequired": "You must enter an entry name"
         },
         "thumbnails": {
           "thumbnails": "Thumbnails",
@@ -1198,6 +1232,7 @@
         }
       },
       "categoryDetails": {
+        "referenceIdInUse": "The following entries are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
         "headerProps": {
@@ -1244,7 +1279,7 @@
           "title": "Entitlements",
           "description": "Manage your entitlements settings and specific end-user permissions to content in your applications.",
           "privacyContentLabel": {
-            "label" : "Privacy Content Label"
+            "label" : "Privacy Context Label"
           },
           "manageUsersPermissionsEditMessage": {
             "title": "Error",
@@ -1321,6 +1356,7 @@
           },
           "usersPermissions": {
             "title":"Manage End-user Permissions",
+            "titleView":"View End-user Permissions",
             "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",
             "close": "Close",
             "table": {
@@ -1340,7 +1376,7 @@
               "usersCount": "{{0}} Users",
               "selectedUsersCount": "{{0}} Selected",
               "cancel": "Cancel",
-              "remove": "Delete",
+              "remove": "Remove",
               "search": "Search",
               "refine": "Refine",
               "moreActions": "More Actions",
@@ -1444,24 +1480,7 @@
           "fieldRequired": "This field is required"
         }
       },
-      "addNewCategory": {
-        "newCategory": "New Category",
-        "newSubcategory": "New Sub-Category",
-        "selectCategoryParent": "Select the parent category under which the new category will appear",
-        "cancelEdit": "Cancel Edit",
-        "discard": "Discard all changes?",
-        "apply": "Apply",
-        "cancel": "Cancel",
-        "noParent":"No Parent",
-        "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}",
-        "name": "Name",
-        "categoryMovedSuccessfully": "Category moved successfully",
-        "errors": {
-          "requiredName": "You must enter name",
-          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
-        }
-      },
+
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",
@@ -1476,14 +1495,23 @@
           "type": "Type:",
           "duration": "Duration: {{0}}",
           "moderation": "Moderation:",
-          "plays": "Plays:",
-          "numberOfEntries": "Number of Entries:"
+          "plays": "Plays:"
         },
         "metadata": {
           "playlistName": "Name",
           "description": "Description",
           "tags": "Tags",
           "nameIsMandatory": "You must enter a playlist name"
+        },
+        "content": {
+          "orderBy": {
+            "mostPlayed": "Most Played",
+            "mostRecent": "Most Recent",
+            "highestRated": "Highest Rated",
+            "entryName": "Entry Name"
+          },
+          "addRule": "Add rule",
+          "entriesInRules": "{{0}} Entries in {{1}} Rules"
         },
         "errors": {
           "reload": "Reload",
@@ -1499,7 +1527,10 @@
           "contentValidationError": "Add at least one entry",
           "loadError": "An error occurred while loading data",
           "addAtLeastOneMedia": "Add at least one media",
-          "entriesLoadError": "Error loading entries"
+          "entriesLoadError": "Error loading entries",
+          "addRules": "Add rules to your playlist",
+          "invalidInput": "Invalid Input",
+          "nameRequired": "Name field is required"
         }
       }
     },
@@ -1623,6 +1654,203 @@
           "required": "This field is required.",
           "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
           "sendFailed": "An error occurred during account upgrade"
+        }
+      },
+      "metadata": {
+        "errorLoading": "Error loading schemas",
+        "addCustomSchema": "Add Custom Schema",
+        "editCustomSchema": "Edit Custom Schema",
+        "addCustomField": "Add Custom Field",
+        "editCustomField": "Edit Custom Field",
+        "downloadSchema": "Download Schema",
+        "schemas": "{{0}} Custom Schemas",
+        "selected": "{{0}} Selected",
+        "cancel": "Cancel",
+        "add": "Add",
+        "save": "Save",
+        "fields": "{{0}} Custom Fields",
+        "applyTo": {
+          "entries": "Entries",
+          "categories": "Categories"
+        },
+        "form": {
+          "customSchemaTitle": "Custom Schema title",
+          "description": "Description",
+          "systemName": "System Name",
+          "applyTo": "Apply to",
+          "entries": "Entries",
+          "categories": "Categories"
+        },
+        "table": {
+          "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
+          "name": "Custom Schema Title",
+          "id": "ID",
+          "systemName": "System Name",
+          "description": "Description",
+          "applyTo": "Apply to",
+          "fieldsIncluded": "Fields included",
+          "fieldLabel": "Field Label",
+          "fieldType": "Field Type",
+          "shortDescription": "Short Description",
+          "labelTT": "System Name: {{name}}",
+          "maxValues": "Max Values",
+          "searchable": "Searchable",
+          "deleteCustomDataField": "Delete Custom Data Field",
+          "bulkDeleteCustomDataField": "Delete Custom Data Field",
+          "fieldBulkRemoveConfirmation": "Are you sure you want to delete the selected fields?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for bulk upload, deleting schema fields affects the validation of XMLs custom data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion",
+          "fieldRemoveConfirmation": "Are you sure you want to delete {{0}}?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for bulk upload, deleting schema fields affects the validation of XMLs custom data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion",
+          "moveUp": "Move Up",
+          "moveDown": "Move Down",
+          "remove": "Remove",
+          "actions": {
+            "edit": "Edit",
+            "download": "Download",
+            "delete": "Delete"
+          }
+        },
+        "type": {
+          "object": "Entry-ID list",
+          "date": "Date",
+          "list": "Text select list",
+          "text": "Text"
+        },
+        "unlimited": "Unlimited",
+        "deleteSchema": "Delete Custom Data Schema",
+        "deleteSchemas": "Delete Custom Data Schemas",
+        "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema: {{0}} ?",
+        "confirmDeleteMultipleNames": "Are you sure you want to delete the following custom data schemas:\n {{0}} ?",
+        "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas",
+        "updateError": "An error occurred during custom data schemas update",
+        "discardChanges": "Discard Changes",
+        "discardWarning": "You will lose any unsaved changes. Continue?",
+        "fieldForm": {
+          "type": "Field Type",
+          "allowMultiple": "Max No. of Values",
+          "label": "Field Label",
+          "shortDescription": "Short Description",
+          "description": "Description",
+          "searchable": "Searchable",
+          "includeTime": "Include Time",
+          "listValues": "List Values",
+          "listValuesPlaceholder": "Enter the values, one per line",
+          "single": "Single",
+          "unlimited": "Unlimited",
+          "saveChanges": "Would you like to save the changes you made?",
+          "validationErrors": {
+            "invalidInput": "Invalid Input",
+            "invalidSystemName": "Field system name must be unique, please enter a different name.",
+            "emptyLabel": "Please insert a field label",
+            "invalidLabelPrefix": "Field name must begin with a letter.",
+            "invalidChars": "Invalid input. The special characters < > & \" and ' are not allowed.",
+            "emptyListValues": "Invalid input in \"List values\": at least one option should be listed.",
+            "invalidListOptions": "Invalid input in \"List values\": only letters, digits and the following special characters - ()|-@~&/^$=_%.': -  are allowed.",
+            "invalidListOptionsPrefix": "Invalid input in \"List values\": - is an illegal prefix."
+          }
+        },
+        "fieldsOrderChangedTitle": "You reordered fields in your schema",
+        "fieldsOrderChangedWaring": "Note: If you use XMLs for bulk upload, Reordering schema fields affects the validation of custom data elements in existing XMLs. If you reorder schema fields, you also need to update your bulk upload XML structure to reflect the new field order. Do you want to save your schema changes?",
+        "requiredSchemaName": "Name must not be empty",
+        "schemaNameLength": "31 characters max in field \"Name\"",
+        "fieldsRequired": "Custom Data must contain at least one field",
+        "invalidInput": "Invalid Input"
+      },
+      "integrationSettings": {
+        "accountInfo": {
+          "title": "Account Info",
+          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges. <a href=\"http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/entitlementsettings.htm\">Read More.</a>",
+          "readMore": "Read More.",
+          "partnerId": "Partner ID",
+          "subPartnerId": "Sub Partner ID",
+          "adminSecret": "Administrator Secret",
+          "userSecret": "User Secret",
+          "errors": {
+            "loadFailed": "An error occurred during account info loading"
+          },
+          "notifications": {
+            "title": "Notifications",
+            "message": "For notification setting please contact your PM"
+          }
+        },
+        "entitlement": {
+          "title": "Entitlement",
+          "helpTip": "",
+          "explanation": "To add entitlement settings for categories click ‘Add Entitlement’ select the root category integrated with your application and label it below.",
+          "apiDefault": "API default",
+          "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
+          "entitlementEnforcementEnabled": "Entitlement enforcement enabled",
+          "addEntitlement": {
+            "buttonText": "Add Entitlement",
+            "title": "Add Entitlement",
+            "explanation": "Select the root category integrated with your application and label it below.",
+            "addPrivacyContextLabel": "Add privacy context label",
+            "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+            "apply": "Apply",
+            "errors": {
+              "requiredPrivacyContextLabel": "You must enter privacy context label"
+            }
+          },
+          "editEntitlement": {
+            "title": "Edit Entitlement",
+            "categoryName": "Category Name",
+            "privacyContextLabel": "Privacy context label",
+            "confirmationTitle": "Confirm Edit",
+            "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+            "errors": {
+              "privacyContextLabelRequired": "Please enter Privacy Context Label",
+              "privacyContextLabelExists": "Category is already set with a Privacy Context Label.",
+              "privacyContextLabelTooShort": "Privacy Context labels must include at least 4 characters",
+              "privacyContextLabelRegex": "Privacy Context labels must include only alphanumeric characters"
+            }
+          },
+          "deleteEntitlement": {
+            "title": "Delete Entitlement",
+            "confirmation": "Entitlement settings will be removed from all sub-categories in an asynchronous process. This operation may take a few minutes. \n\nNote: Any previous privacy settings defined for the {{0}} category (including all sub-categories) will be lost.\n\nAre you sure you want to continue?"
+          },
+          "table": {
+            "applicationRootCategory": "Application Root Category",
+            "privacyContextLabel": "Privacy Context Label",
+            "actions": {
+              "edit": "Edit",
+              "delete": "Delete"
+            }
+          },
+          "errors": {
+            "loadError": "An error occurred while loading Entitlement."
+          }
+        }
+      },
+      "myUserSettings": {
+        "userDetails": "User Details",
+        "editUserName": "Edit User Name",
+        "informationMessage": "Please make sure that the information below is up to date",
+        "userName": "User Name",
+        "userId": "User ID",
+        "emailAddress": "Email Address",
+        "role": "Role",
+        "roleDescription": "Role Description",
+        "password": "Password",
+        "editUser": "Edit Password",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "save": "Save",
+        "cancel": "Cancel",
+        "passwordRequiredName": "* Password is required for editing your name.",
+        "passwordRequiredEmail": "* Password is required for editing your email.",
+        "email": "Email",
+        "editEmailAddress": "Edit Email Address",
+        "changePassword": "Change Password",
+        "strongPassword": "It's better to use a strong password that you're not using elsewhere",
+        "currentPassword": "Current Password",
+        "newPassword": "New password",
+        "reTypeNewPassword": "Re-type new password",
+        "errors": {
+          "required": "This field is required",
+          "doNotMuchPasswords": "Password fields do not match",
+          "connection": "Error connecting to server",
+          "getUserData": "Error occurred during getting user data",
+          "updateUser": "Error occurred during updating user data",
+          "passwordErr": "Supplied password is invalid",
+          "passwordStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules :\n- Must be of length between 8 and 14.\n- Must not contain your name\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols:  %%~!@#$^*=+?[]{}.\n- Must not contain the following characters: < or >."
         }
       },
       "accessControl": {

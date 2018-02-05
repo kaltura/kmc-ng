@@ -81,10 +81,7 @@
                 [header]="'applications.content.table.createdOn' | translate"
                 [sortable]="_columns.createdAt?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.createdAt)">
-        <ng-container *ngIf="!_columns.moderationCount">
-          <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | kDate}}</ng-template>
-        </ng-container>
-        <ng-container *ngIf="_columns.moderationCount">
+        <ng-container>
           <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | kDate}}</ng-template>
         </ng-container>
       </p-column>
@@ -123,7 +120,7 @@
                 [style]="{'overflow':'visible', 'width':'80px'}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kEntriesTableActions">
-            <button type="button" pButton class="kMoreButton" icon="kIconmore" (click)="_openActionsMenu($event, entry)"></button>
+            <button type="button" pButton class="kMoreActionsButton" icon="kIconmore" (click)="_openActionsMenu($event, entry)"></button>
           </div>
         </ng-template>
       </p-column>

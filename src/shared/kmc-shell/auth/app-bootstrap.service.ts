@@ -4,19 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization, AppStorage } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from './app-authentication.service';
-import { environment } from 'app-config';
-
-export const BootstrapAdapterToken = new InjectionToken('bootstrapAdapter');
-
-export enum BootstrapAdapterType
-{
-    preAuth,
-    postAuth
-}
-export interface BootstrapAdapter{
-    type: BootstrapAdapterType,
-    execute() : void
-}
+import { environment } from 'app-environment';
 
 export enum BoostrappingStatus
 {
@@ -35,9 +23,7 @@ export class AppBootstrap implements CanActivate {
 
     constructor(private appLocalization: AppLocalization,
                 private auth: AppAuthentication,
-
-                private appStorage: AppStorage,
-                @Inject(BootstrapAdapterToken) @Optional() private bootstrapAdapters: BootstrapAdapter[]) {
+                private appStorage: AppStorage) {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -57,7 +43,7 @@ export class AppBootstrap implements CanActivate {
                             // we must modify document.location instead of using Angular router because
                             // router is not supported until at least once component
                             // was initialized
-                                document.location.href = environment.shell.browser.errorRoute;
+                            document.location.href = environment.shell.browser.errorRoute;
                             if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
                         }
                     }
@@ -92,17 +78,9 @@ export class AppBootstrap implements CanActivate {
             const language = this.getCurrentLanguage();
             this.appLocalization.load(language, 'en').subscribe(
                 () => {
-                    // Start authentication process
-                    if (!this.executeAdapter(BootstrapAdapterType.preAuth)) {
-                        bootstrapFailure("preAuth adapter execution failure");
-                        return;
-                    }
+
                     this.auth.loginAutomatically().subscribe(
                         () => {
-                            if (!this.executeAdapter(BootstrapAdapterType.postAuth)) {
-                                bootstrapFailure("postAuth adapter execution failure");
-                                return;
-                            }
                             this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
                         },
                         () => {
@@ -129,20 +107,5 @@ export class AppBootstrap implements CanActivate {
         }
 
         return lang === null ? "en" : lang;
-    }
-
-    executeAdapter(adapterType: BootstrapAdapterType): boolean {
-        if (this.bootstrapAdapters) {
-            try {
-                this.bootstrapAdapters.forEach(function (adapter) {
-                    if (adapter.type === adapterType) {
-                        return adapter.execute();
-                    }
-                });
-                return true;
-            } catch (ex) {
-                return false;
-            }
-        }
     }
 }

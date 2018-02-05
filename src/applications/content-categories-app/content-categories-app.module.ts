@@ -41,7 +41,7 @@ import {KMCShellModule} from 'app-shared/kmc-shell';
 import {routing} from './content-categories-app.routes';
 import {ContentCategoriesComponent} from './content-categories.component';
 
-import {DynamicMetadataFormModule, MetadataProfileModule} from 'app-shared/kmc-shared';
+import {DynamicMetadataFormModule} from 'app-shared/kmc-shared';
 
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
@@ -61,7 +61,6 @@ import {CategoriesComponentsList} from './categories/categories-components-list'
 import {CategoryCanDeactivate} from './category/category-can-deactivate.service';
 import {DetailsBarModule} from '@kaltura-ng/kaltura-ui/details-bar';
 import {CategoriesUtilsService} from './categories-utils.service';
-import {CategoryParentSelectorComponent} from './categories/category-parent-selector/category-parent-selector.component';
 import {NewCategoryComponent} from './categories/new-category/new-category.component';
 import {MoveCategoryComponent} from './categories/move-category/move-category.component';
 import {CategoriesRefineFiltersService} from './categories/categories-refine-filters.service';
@@ -86,7 +85,6 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
         InputTextareaModule,
         InputTextModule,
         KalturaCommonModule,
-        MetadataProfileModule,
         DynamicMetadataFormModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,
@@ -115,7 +113,6 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
         CategoryComponentsList,
         CategoriesComponentsList,
         CategoriesBulkActionsComponent,
-        CategoryParentSelectorComponent,
         MoveCategoryComponent,
         NewCategoryComponent
     ],

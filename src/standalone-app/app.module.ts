@@ -12,7 +12,6 @@ import { PreviewAndEmbedModule } from '../applications/preview-and-embed/preview
 import {
   AppBootstrap,
   AuthModule,
-  BootstrapAdapterToken,
   BrowserService,
   KMCShellModule,
   NewEntryUploadModule
@@ -45,7 +44,6 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {AppMenuComponent} from './components/app-menu/app-menu.component';
 import {ErrorComponent} from './components/error/error.component';
 import {UserSettingsComponent} from './components/user-settings/user-settings.component';
-import {KalturaHttpConfigurationAdapter} from './services/kaltura-http-configuration-adapter.service';
 
 import {
   ButtonModule,
@@ -73,8 +71,8 @@ import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-ap
 import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
-import { PlaylistCreationModule } from 'app-shared/kmc-shared/playlist-creation';
-import {CategoryCreationModule} from 'app-shared/kmc-shared/category-creation';
+import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-creation';
+import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
@@ -102,7 +100,7 @@ export function clientConfigurationFactory() {
     DropdownModule,
     HttpModule,
     InputTextModule,
-    MetadataProfileModule,
+    MetadataProfileModule.forRoot(),
     Ng2PageScrollModule.forRoot(),
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
@@ -158,11 +156,6 @@ export function clientConfigurationFactory() {
           provide: KalturaLoggerName, useValue: 'analytics'
       },
     AppMenuService,
-    {
-      provide: BootstrapAdapterToken,
-      useClass: KalturaHttpConfigurationAdapter,
-      multi: true
-    },
     { provide: AppStorage, useExisting: BrowserService },
     KalturaClient,
     {

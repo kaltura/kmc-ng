@@ -1,0 +1,115 @@
+@import 'app-theme/_variables.scss';
+
+.kCustomSchemaWrap {
+  .kFloater{
+    display: flex;
+    flex-direction: column;
+
+    .kHeader {
+      height: 72px;
+      width: 100%;
+      padding: 0 24px;
+      box-sizing: border-box;
+      border-bottom: 1px solid $kGrayscale4;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+
+      .kTitle {
+        color: #333333;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .kButtons {
+        display: flex;
+        margin-left: auto;
+
+        .KButtonSave {
+          height: 34px;
+          width: 100px;
+        }
+
+        .kCancel {
+          font-size: 15px;
+          color: #333333;
+          align-self: center;
+          margin-right: 24px;
+        }
+
+        .kButtonDefault {
+          font-weight: normal;
+        }
+      }
+    }
+
+    .kContainer{
+      flex: 1 1 auto;
+
+      .kSchemaFormWrapper {
+        height: 328px;
+
+        .kCustomSchemaTableControls {
+          padding: 0 32px;
+
+          .kBulkControls {
+            display: inline-flex;
+            align-items: center;
+            font-size: 15px;
+
+            .kSelectedEntriesNum {
+              margin: 0 5px 0 20px;
+            }
+
+            .kSelected {
+              font-weight: bold;
+            }
+
+            .kBulkCancel {
+              margin-left: 20px;
+              color: $kGrayscale1;
+              font-weight: normal;
+            }
+
+            .kMoveBtn {
+              width: 40px;
+              height: 34px;
+              margin: 0;
+            }
+
+            .kMoveBtnTop {
+              border-top-right-radius: 0;
+              border-bottom-right-radius: 0;
+            }
+
+            .kMoveBtnBottom {
+              margin: 0 20px 0 -4px;
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0;
+            }
+
+            .kBulkDeleteBtn {
+              width: 42px;
+              height: 34px;
+              font-size: 24px;
+            }
+          }
+
+          .kDefaultControls {
+            button {
+              margin-right: 24px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+:host /deep/ .kCustomSchemaTableControls .kIconupload {
+  transform: rotate(180deg);
+}
+
+:host /deep/ span.ui-button-icon-left.fa.kIcontrash{
+  margin-left: -.5em;
+}
