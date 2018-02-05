@@ -4,16 +4,20 @@
       <kSticky [stickyClass]="'kStickyClass'" stickyId="uploadControlFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kUploadsTableFilters kContent">
           <span class="kSelectedUploadsNum" *ngIf="_uploads.length">
-            {{ _uploads.length }} {{ 'applications.content.uploadControl.files' | translate }}
+            {{ 'applications.content.uploadControl.files' | translate: [_uploads.length] }}
           </span>
 
           <div [class.kHidden]="!_selectedUploads.length" class="kBulkOperations">
-            <span class="kSelectedUploadsLabel">• {{_selectedUploads.length}} {{'applications.content.uploadControl.selected' | translate}}</span>
+            <span class="kSelectedUploadsLabel">
+              • {{'applications.content.uploadControl.selected' | translate: [_selectedUploads.length]}}
+            </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_bulkCancel()"></button>
-            <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.uploadControl.cancel' | translate}}</a>
+            <a class="kBulkCancel" (click)="_clearSelection()">
+              {{'applications.content.uploadControl.cancel' | translate}}
+            </a>
           </div>
         </div>
-        </kSticky>
+      </kSticky>
 
       <kUploadListTable class="kUploadsTable"
                         [uploads]="_uploads"

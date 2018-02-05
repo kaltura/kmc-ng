@@ -5,7 +5,7 @@
       (onSort)="_onSortChanged($event)" [(selection)]="selectedCategories" emptyMessage="{{_emptyMessage}}"
       kStickyHeader [sticksTo]="'categoriesTags'" stickyClass="stickyHeader" [stickyId]="'categoriesTable'">
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-      <p-column field="name" [header]="'applications.content.table.name' | translate" [sortable]="'custom'" [style]="{'width':'100px'}">
+      <p-column field="name" [header]="'applications.content.table.name' | translate" [sortable]="'custom'">
         <ng-template let-col let-category="rowData" pTemplate="body">
           <div [kTooltip]="category.fullName" class="kTitle" (click)="onActionSelected('edit',category)" [maxWidth]="300">
             {{category[col.field]}}</div>
