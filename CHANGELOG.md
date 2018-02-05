@@ -1,3 +1,69 @@
+<a name="3.6.0"></a>
+# [3.6.0](https://github.com/kaltura/kmc-ng/compare/v3.5.0...v3.6.0) (2018-02-05)
+
+
+### Bug Fixes
+
+* **administration/roles:** fix table layout (padding left) ([750430a](https://github.com/kaltura/kmc-ng/commit/750430a))
+* **content-categories:** confirm closing the new category window if the form is dirty or a folder was selected by the user ([#365](https://github.com/kaltura/kmc-ng/issues/365)) ([1efe9b7](https://github.com/kaltura/kmc-ng/commit/1efe9b7))
+* **content-categories:** fix confirmation message for bulk updating more than 50 categories at once ([a27cd81](https://github.com/kaltura/kmc-ng/commit/a27cd81))
+* **content-categories:** handle creation errors correctly ([dc5ab01](https://github.com/kaltura/kmc-ng/commit/dc5ab01))
+* **content-category:** fix labels and headers in entitlement users bulk actions and window title ([7007caf](https://github.com/kaltura/kmc-ng/commit/7007caf))
+* **content-category:** fix typo in "Privacy Context Label" label in category details ([4c0908d](https://github.com/kaltura/kmc-ng/commit/4c0908d))
+* **content-entries:** send missing filter when creating a new playlist from bulk entries selection ([e730474](https://github.com/kaltura/kmc-ng/commit/e730474))
+* **content-moderation:** send admin KS to player to enable playback of moderated entries ([159acfd](https://github.com/kaltura/kmc-ng/commit/159acfd))
+* **content-playlists:** close the new playlist now restore the page scrollbar ([#371](https://github.com/kaltura/kmc-ng/issues/371)) ([788e636](https://github.com/kaltura/kmc-ng/commit/788e636))
+* **content-playlists:** style fixes for table actions button in rule-based playlist content tab ([c335bd0](https://github.com/kaltura/kmc-ng/commit/c335bd0))
+* **content/categories:** fix categories table layout (columns width) ([a3bb4c6](https://github.com/kaltura/kmc-ng/commit/a3bb4c6))
+* **content/entries:** cut long text and add tooltip for long access control properties in bulk window ([6b2aace](https://github.com/kaltura/kmc-ng/commit/6b2aace))
+* **content/entries:** enable save button when user changes related file > file type ([dd02ce8](https://github.com/kaltura/kmc-ng/commit/dd02ce8))
+* **content/entry:** show access control section template when there's no data yet ([431b05b](https://github.com/kaltura/kmc-ng/commit/431b05b))
+* **content/entry:** show name required validation error ([5442836](https://github.com/kaltura/kmc-ng/commit/5442836))
+* **content/playlist:** display total duration for manual playlists ([fc28c5c](https://github.com/kaltura/kmc-ng/commit/fc28c5c))
+* **content/playlist:** display total entries count for manual playlists ([04d09bf](https://github.com/kaltura/kmc-ng/commit/04d09bf))
+* **content/playlists:** clear selection of entries upon save for manual playlist ([#388](https://github.com/kaltura/kmc-ng/issues/388)) ([93cf164](https://github.com/kaltura/kmc-ng/commit/93cf164))
+* **content/playlists:** placeholder layout fix in new playlist view > name field. ([40e2321](https://github.com/kaltura/kmc-ng/commit/40e2321))
+* **content/upload-control:** issues involving selection of items ([1b6df96](https://github.com/kaltura/kmc-ng/commit/1b6df96))
+* ensure playlist name provided when creating new playlist from entries view ([4021882](https://github.com/kaltura/kmc-ng/commit/4021882))
+* **cotent/playlists:** recalculate entries duration and total count when duplicating entry in manual playlist ([#353](https://github.com/kaltura/kmc-ng/issues/353)) ([bebf701](https://github.com/kaltura/kmc-ng/commit/bebf701))
+* **settings-custom data:** style fixes for table actions button ([be495e1](https://github.com/kaltura/kmc-ng/commit/be495e1))
+* **settings/custom data:** prevent edit of apply to, handle edge case during saving ([23787d8](https://github.com/kaltura/kmc-ng/commit/23787d8))
+* **settings/custom-metadata:** create valid schema when saving ([2867a34](https://github.com/kaltura/kmc-ng/commit/2867a34))
+* changed locale format into fixed formats ([#374](https://github.com/kaltura/kmc-ng/issues/374)) ([fa31c48](https://github.com/kaltura/kmc-ng/commit/fa31c48))
+* fix drop-folders list styling ([a83538e](https://github.com/kaltura/kmc-ng/commit/a83538e))
+* fix reference id comparison when reference id is null ([c831726](https://github.com/kaltura/kmc-ng/commit/c831726))
+* IE11 layout fixes ([6b01d0e](https://github.com/kaltura/kmc-ng/commit/6b01d0e))
+* layout fix for manual playlist content - bulk selection label ([296e56b](https://github.com/kaltura/kmc-ng/commit/296e56b))
+* parse metadata profiles elements that are missing attribute minOccurs ([0df1fd2](https://github.com/kaltura/kmc-ng/commit/0df1fd2))
+* **settings/my-user-settings:** fix error message and clean previous errors when opening the floaters ([a0bcf45](https://github.com/kaltura/kmc-ng/commit/a0bcf45))
+* **upload:** remove validation error message for file type once user select a type from list ([c4a3940](https://github.com/kaltura/kmc-ng/commit/c4a3940))
+* production build issues ([f411d64](https://github.com/kaltura/kmc-ng/commit/f411d64))
+* remove grawl message on category delete success. ([5490a9d](https://github.com/kaltura/kmc-ng/commit/5490a9d))
+* show moderation flags count ([96b4e7d](https://github.com/kaltura/kmc-ng/commit/96b4e7d))
+* sort player names in Share & Embed screen alphabetically disregarding casing ([bb43aa3](https://github.com/kaltura/kmc-ng/commit/bb43aa3))
+* ux fixes ([#370](https://github.com/kaltura/kmc-ng/issues/370)) ([a29942c](https://github.com/kaltura/kmc-ng/commit/a29942c))
+
+
+### Features
+
+* add runtime server configuration support ([#387](https://github.com/kaltura/kmc-ng/issues/387)) ([d1a9bb9](https://github.com/kaltura/kmc-ng/commit/d1a9bb9))
+* Categories status polling - display locked or updating categories status ([#347](https://github.com/kaltura/kmc-ng/issues/347)) ([9782afb](https://github.com/kaltura/kmc-ng/commit/9782afb))
+* persist sort of tables in entries, playlists, and categories when user clear all filters ([5131d65](https://github.com/kaltura/kmc-ng/commit/5131d65))
+* **content/entries:** exclude preconvert status from allowed entries to be added to a playlist ([52b0557](https://github.com/kaltura/kmc-ng/commit/52b0557))
+* pre-define entries list with enforced filters and default filters ([69edd3c](https://github.com/kaltura/kmc-ng/commit/69edd3c))
+* **content/categories:** add category action > view (categories) entries ([3fd4347](https://github.com/kaltura/kmc-ng/commit/3fd4347))
+* **content/categories:** warn when trying to update category reference id to an existing one ([313e0da](https://github.com/kaltura/kmc-ng/commit/313e0da))
+* **content/drop-folder:** add server side sorting ([1206509](https://github.com/kaltura/kmc-ng/commit/1206509))
+* **content/entries:** add choose frame button to entry details > thumbnail section ([b4d2c67](https://github.com/kaltura/kmc-ng/commit/b4d2c67))
+* **content/entries:** show max 3 lines in tags and categories components ([208ff94](https://github.com/kaltura/kmc-ng/commit/208ff94))
+* **content/entries:** show notification when trying to associate entries to a category which already has this entries associated to ([1ce4165](https://github.com/kaltura/kmc-ng/commit/1ce4165))
+* **content/playlists:** add playlist of type rule-based view ([c41dcfe](https://github.com/kaltura/kmc-ng/commit/c41dcfe))
+* **settings:** add integration settings view ([#314](https://github.com/kaltura/kmc-ng/issues/314)) ([2c696e9](https://github.com/kaltura/kmc-ng/commit/2c696e9))
+* **settings:** add My user settings view ([2d6c8a1](https://github.com/kaltura/kmc-ng/commit/2d6c8a1))
+* **studio:** register to studio callback to refresh players list upon add / delete players in Studio ([0d221c9](https://github.com/kaltura/kmc-ng/commit/0d221c9))
+
+
+
 <a name="3.5.0"></a>
 # [3.5.0](https://github.com/kaltura/kmc-ng/compare/v3.4.0...v3.5.0) (2018-01-14)
 
