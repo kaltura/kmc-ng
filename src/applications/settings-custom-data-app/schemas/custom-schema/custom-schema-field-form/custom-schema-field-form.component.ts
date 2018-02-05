@@ -11,6 +11,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
   styleUrls: ['./custom-schema-field-form.component.scss']
 })
 export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterViewInit {
+
   @Input() field: MetadataItem | null;
 
   @Input() fields: MetadataItem[] | null;
@@ -183,11 +184,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     }
 
     if (formValue.type === MetadataItemTypes.List) {
-      const currentValue = this._field.optionalValues.map(({ value }) => value).join('\n');
-      const newValue = listValues.trim();
-      if (currentValue !== newValue) {
-        this._field.optionalValues = newValue.split('\n').map(value => ({ value, text: value }));
-      }
+      this._field.optionalValues = this._formatOptionalValues(listValues);
     }
 
     return this._field;
@@ -255,7 +252,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       return null;
     }
 
-    const newField = {
+    const newField: MetadataItem = {
       allowMultiple,
       type,
       name: systemName,
@@ -272,10 +269,28 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     };
 
     if (type === MetadataItemTypes.List) {
-      newField.optionalValues = listValues.split('\n').map(value => ({ value, text: value }));
+      newField.optionalValues = this._formatOptionalValues(listValues);
     }
 
     return newField;
+  }
+
+  private _formatOptionalValues(values: string) : {value: string, text: string}[]
+  {
+      const trimmedValues = (values || '').trim();
+
+      if (trimmedValues.length)
+      {
+          return trimmedValues.split('\n').map(row => {
+              const value = (row || '').trim();
+              if (value) {
+                  return ({value, text: value})
+              }else
+              {
+                  return null;
+              }
+          }).filter(Boolean);
+      }
   }
 
   private _validateForm(): boolean {

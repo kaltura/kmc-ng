@@ -2,7 +2,7 @@
 import {
 	MetadataProfile, MetadataItemTypes, MetadataItem
 } from './metadata-profile';
-import { XmlParser } from '@kaltura-ng/kaltura-common';
+import { KalturaUtils, XmlParser } from '@kaltura-ng/kaltura-common';
 
 
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
@@ -199,7 +199,7 @@ export class MetadataProfileParser {
           'simpleType': {
             'restriction': {
               'attr': { 'base': this._extractMetadataItemType(item.type) },
-              'enumeration': [...item.optionalValues.map(option => ({ 'attr': { 'value': option.value } }))]
+              'enumeration': [...item.optionalValues.map(option => ({ 'attr': { 'value': KalturaUtils.escapeXml(option.value) } }))]
             }
           }
         });
