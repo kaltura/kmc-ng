@@ -221,7 +221,7 @@ export const environment = {
           "apiUrl": "/api_v3/index.php/service/metadata_metadataprofile/action/serve"
         },
         "settingsAccountInformation": {
-          "checkFreeTrialExpiration": true,
+          "checkFreeTrialExpiration": false,
           "trialPeriod": 30
         }
     },
