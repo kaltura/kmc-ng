@@ -143,7 +143,6 @@ cd dist
 zip -r kmc-ng-vX.X.X.zip .
 ```
    * replace `vX.X.X` with the actual version number
-   * NOTICE: you must re-build the project
 
 8. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 
