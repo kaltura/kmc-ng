@@ -95,7 +95,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       this._fieldForm.setValue({
         type: this._field.type,
         allowMultiple: this._field.allowMultiple,
-        label: this._field.label,
+        label: this._field.key,
         shortDescription: this._field.description,
         description: this._field.documentations,
         searchable: !!this._field.isSearchable,
@@ -162,8 +162,8 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     const formValue = this._fieldForm.getRawValue();
     const { label, shortDescription, description, searchable, includeTime, listValues } = formValue;
 
-    if (this._field.label !== label) {
-      this._field.label = label;
+    if (this._field.key !== label) {
+      this._field.key = label;
     }
 
     if (this._field.description !== shortDescription) {
@@ -239,7 +239,8 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   private _create(): MetadataItem {
     const formValue = this._fieldForm.value;
     const { label, type, allowMultiple, shortDescription, description, searchable, includeTime, listValues } = formValue;
-    const systemName = label
+    const formattedLabel = label.trim();
+    const systemName = formattedLabel
       .replace(/[~`:;,!@#$%\^*()\-+.={}|?\\\/\[\]]/g, '')
       .split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.substr(1, word.length))
@@ -258,7 +259,8 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       allowMultiple,
       type,
       name: systemName,
-      label: label.trim(),
+      key: formattedLabel,
+      label: formattedLabel,
       isSearchable: searchable,
       isTimeControl: includeTime,
       description: shortDescription,

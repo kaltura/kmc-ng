@@ -1692,6 +1692,7 @@
           "fieldLabel": "Field Label",
           "fieldType": "Field Type",
           "shortDescription": "Short Description",
+          "labelTT": "System Name: {{name}}",
           "maxValues": "Max Values",
           "searchable": "Searchable",
           "deleteCustomDataField": "Delete Custom Data Field",
