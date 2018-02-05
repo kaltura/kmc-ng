@@ -5,7 +5,7 @@
 			<p class="kTitle">{{'applications.content.entryDetails.thumbnails.thumbnails' | translate}}</p>
 			<div class="kButtons">
 			<button pButton class="kButtonDefault" (click)="fileDialog.open($event)" icon="kIconupload" label="{{'applications.content.entryDetails.thumbnails.upload' | translate}}"></button>
-			<!--button pButton class="kButtonDefault" (click)="capturePopup.open()" icon="kIconimage" label="{{'applications.content.entryDetails.thumbnails.capture.choose' | translate}}"></button-->
+			<button pButton class="kButtonDefault" (click)="capturePopup.open()" *ngIf="_widgetService.allowGrabFromVideo" icon="kIconimage" label="{{'applications.content.entryDetails.thumbnails.capture.choose' | translate}}"></button>
 		</div>
 		</div>
 		<div class="kTable">
