@@ -74,7 +74,16 @@ hr{
 			.kControl, k-prime-control
 			{
 				width:100%;
+
+        .kControlInvalid {
+          border: 1px solid $kDandger;
+        }
 			}
+      .kControlErrorMessage {
+        color: $kDandger;
+        font-size: 14px;
+        margin-top: 8px;
+      }
 
 		}
 
