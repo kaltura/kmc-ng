@@ -46,22 +46,18 @@
 
 ### Features
 
-* add runtime server configuration support ([#387](https://github.com/kaltura/kmc-ng/issues/387)) ([d1a9bb9](https://github.com/kaltura/kmc-ng/commit/d1a9bb9))
-* Categories status polling - display locked or updating categories status ([#347](https://github.com/kaltura/kmc-ng/issues/347)) ([9782afb](https://github.com/kaltura/kmc-ng/commit/9782afb))
-* persist sort of tables in entries, playlists, and categories when user clear all filters ([5131d65](https://github.com/kaltura/kmc-ng/commit/5131d65))
-* **content/entries:** exclude preconvert status from allowed entries to be added to a playlist ([52b0557](https://github.com/kaltura/kmc-ng/commit/52b0557))
-* pre-define entries list with enforced filters and default filters ([69edd3c](https://github.com/kaltura/kmc-ng/commit/69edd3c))
-* **content/categories:** add category action > view (categories) entries ([3fd4347](https://github.com/kaltura/kmc-ng/commit/3fd4347))
-* **content/categories:** warn when trying to update category reference id to an existing one ([313e0da](https://github.com/kaltura/kmc-ng/commit/313e0da))
-* **content/drop-folder:** add server side sorting ([1206509](https://github.com/kaltura/kmc-ng/commit/1206509))
-* **content/entries:** add choose frame button to entry details > thumbnail section ([b4d2c67](https://github.com/kaltura/kmc-ng/commit/b4d2c67))
-* **content/entries:** show max 3 lines in tags and categories components ([208ff94](https://github.com/kaltura/kmc-ng/commit/208ff94))
-* **content/entries:** show notification when trying to associate entries to a category which already has this entries associated to ([1ce4165](https://github.com/kaltura/kmc-ng/commit/1ce4165))
-* **content/playlists:** add playlist of type rule-based view ([c41dcfe](https://github.com/kaltura/kmc-ng/commit/c41dcfe))
-* **settings:** add integration settings view ([#314](https://github.com/kaltura/kmc-ng/issues/314)) ([2c696e9](https://github.com/kaltura/kmc-ng/commit/2c696e9))
-* **settings:** add My user settings view ([2d6c8a1](https://github.com/kaltura/kmc-ng/commit/2d6c8a1))
-* **studio:** register to studio callback to refresh players list upon add / delete players in Studio ([0d221c9](https://github.com/kaltura/kmc-ng/commit/0d221c9))
-
+* **Server configuration:** the ability to configure against any server using local configuration files
+* **Categories move lockdown:** display categories status upon server lock and update states, prevent categories action upon server lock
+* **Integration settings:** Settings > Integration Settings screen including Account Info, Notification and Entitlements Settings
+* **Rule-based playlist:** Content > Playlists > Rule-based playlist: New playlist, Edit playlist, Add / Edit / Delete rules
+* **Custom Data:** Settings > Custom data: Add / Edit / Delete custom data schemas and fields
+* **My User Settings:** Settings > My user settings: View & edit user settings
+* **Thumbnail capture from entry:** Widget allowing capturing a specific frame from the entry to be used as the entry thumbnail
+* **Filters refactor:** Refactor of the filters system across the application
+* **UX Fixes:** Following feedback from UX team
+* **UI enhancements:** Updated styles and layouts, new "copy to clipboard" component and more
+* **studio:** register to studio callback to refresh players list upon add / delete players in Studio
+* **content/drop-folder:** add server side sorting
 
 
 <a name="3.5.0"></a>
