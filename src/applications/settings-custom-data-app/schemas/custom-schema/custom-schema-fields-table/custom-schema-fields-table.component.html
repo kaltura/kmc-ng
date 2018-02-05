@@ -18,10 +18,10 @@
       </ng-template>
     </p-column>
 
-    <p-column field="label"
+    <p-column field="key"
               [header]="'applications.settings.metadata.table.fieldLabel' | translate">
       <ng-template let-col let-field="rowData" pTemplate="body">
-        <div class="kTitle" (click)="_editField(field)">
+        <div class="kTitle" (click)="_editField(field)" [kTooltip]="'applications.settings.metadata.table.labelTT' | translate : {name: field['name']}">
           {{field[col.field]}}
         </div>
       </ng-template>
