@@ -341,10 +341,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                             .tag('block-shell')
                             .subscribe(
                                 () => {
-                                    this._browserService.showGrowlMessage({
-                                        severity: 'success',
-                                        detail: this._appLocalization.get('applications.content.categories.deleted')
-                                    });
                                     this._categoriesStatusMonitorService.updateCategoriesStatus();
                                     this._categoriesService.reload();
                                 },
