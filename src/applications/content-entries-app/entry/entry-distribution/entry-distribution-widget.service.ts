@@ -337,12 +337,15 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public deleteDistributionProfile(profile: ExtendedKalturaEntryDistribution): void {
-    const entrySubmitted = [KalturaEntryDistributionStatus.ready, KalturaEntryDistributionStatus.errorUpdating].indexOf(profile.status);
+    const entrySubmitted = [
+      KalturaEntryDistributionStatus.ready,
+      KalturaEntryDistributionStatus.errorUpdating
+    ].indexOf(profile.status) !== -1;
     const entryNotSubmitted = [
       KalturaEntryDistributionStatus.queued,
       KalturaEntryDistributionStatus.pending,
       KalturaEntryDistributionStatus.errorSubmitting
-    ].indexOf(profile.status);
+    ].indexOf(profile.status) !== -1;
     let action;
 
     if (entrySubmitted) {
