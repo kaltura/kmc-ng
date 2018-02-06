@@ -40,7 +40,7 @@ export const routing: Route[] = [
           { path: 'related', component: EntryRelated, data: { sectionKey: EntryWidgetKeys.Related } },
           { path: 'clips', component: EntryClips, data: { sectionKey: EntryWidgetKeys.Clips } },
           { path: 'users', component: EntryUsers, data: { sectionKey: EntryWidgetKeys.Users } },
-          { path: 'export', component: EntryDistribution, data: { sectionKey: EntryWidgetKeys.Distribution } },
+          { path: 'distribution', component: EntryDistribution, data: { sectionKey: EntryWidgetKeys.Distribution } },
         ]
       }
     ]
