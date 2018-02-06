@@ -71,8 +71,8 @@ import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-ap
 import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
-import { PlaylistCreationModule } from 'app-shared/kmc-shared/playlist-creation';
-import {CategoryCreationModule} from 'app-shared/kmc-shared/category-creation';
+import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-creation';
+import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
@@ -100,7 +100,7 @@ export function clientConfigurationFactory() {
     DropdownModule,
     HttpModule,
     InputTextModule,
-    MetadataProfileModule,
+    MetadataProfileModule.forRoot(),
     Ng2PageScrollModule.forRoot(),
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),

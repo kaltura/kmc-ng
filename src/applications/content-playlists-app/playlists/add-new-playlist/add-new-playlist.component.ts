@@ -5,7 +5,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
+import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 @Component({
@@ -16,9 +16,10 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
 export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() showNotSupportedMsg = new EventEmitter<boolean>();
   addNewPlaylistForm: FormGroup;
   private _showConfirmationOnClose = true;
+
+  public _playlistTypes = KalturaPlaylistType;
 
   constructor(private _formBuilder: FormBuilder,
               public router: Router,
@@ -29,19 +30,16 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
     this.addNewPlaylistForm = _formBuilder.group({
       name: ['', Validators.required],
       description: '',
-      playlistType: ['manual'],
-      ruleBasedSub: false
+      playlistType: KalturaPlaylistType.staticList
     });
   }
 
   goNext() {
     if (this.addNewPlaylistForm.valid) {
-      if (this.addNewPlaylistForm.controls['playlistType'].value === 'ruleBased') {
-        this.showNotSupportedMsg.emit();
-      } else {
-        const { name, description } = this.addNewPlaylistForm.value;
-        this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type: KalturaPlaylistType.staticList }))
-      }
+      this._showConfirmationOnClose = false;
+      this.parentPopupWidget.close();
+      const { name, description, playlistType: type } = this.addNewPlaylistForm.value;
+      this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type }))
     }
   }
 

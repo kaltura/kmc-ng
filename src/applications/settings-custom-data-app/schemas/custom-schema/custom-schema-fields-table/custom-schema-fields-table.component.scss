@@ -1,0 +1,99 @@
+@import 'app-theme/_variables.scss';
+
+.kFieldsTable {
+  background-color: white;
+  height: auto;
+  padding: 0;
+
+  .kTitle {
+    color: $kGrayscale1;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    max-height: 45px;
+    &:hover {
+      color: #000000;
+    }
+    &.kProfileDisabled {
+      color: $kGrayscale4;
+      cursor: text;
+    }
+  }
+
+  .kTypeIcon {
+    font-size: 24px;
+    color: $kGrayscale3;
+    vertical-align: middle;
+  }
+
+  .kFieldNameWrap {
+    display: flex;
+    align-items: center;
+
+    .kMediaTypeIcon {
+      font-size: 26px;
+      margin-right: 23px;
+    }
+  }
+
+  .kFieldsTableActions {
+    display: none;
+    align-content: center;
+    color: $kGrayscale1;
+
+    i {
+      margin-right: 10px;
+      font-size: 22px;
+      cursor: pointer;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.kActionDisabled {
+        color: $kGrayscale3;
+        cursor: text;
+      }
+
+      &.kActionMoveDown {
+        transform: rotate(180deg);
+      }
+
+      &.kActionDelete {
+        color: $kDandger
+      }
+    }
+  }
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
+}
+
+:host /deep/ .kFieldsTable {
+  tr.kProfileDisabled .ui-cell-data {
+    color: $kGrayscale4;
+  }
+
+  tr:hover .kFieldsTableActions {
+    display: flex !important;
+  }
+
+  p-datatable {
+    .ui-datatable-scrollable-body {
+      margin-bottom: 34px;
+    }
+
+    .ui-datatable-scrollable-table-wrapper {
+      height: calc(100vh - 521px);
+    }
+
+    .stickyHeader {
+      z-index: 10;
+      display: table;
+    }
+  }
+}
