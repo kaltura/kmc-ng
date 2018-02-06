@@ -37,6 +37,10 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   }
 
   protected onActivate(firstTimeActivating: boolean) {
+    if (this.data && !this.data.directSubCategoriesCount) {
+      this._categoryService.openSection(CategoryWidgetKeys.Metadata);
+      return;
+    }
 
 
     super._showLoader();
