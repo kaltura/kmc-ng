@@ -1591,7 +1591,7 @@
         "required": "This field is required",
         "emailFormat": "This Email format is not valid",
         "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
-        "alreadyExist": "User already exist",
+        "alreadyExist": "User already exists",
         "alreadyExistError": "Login e-mail {{0}} is already listed in the system as an authorized user in your account.",
         "userAssociatedCaption": "Associated user",
         "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?",
