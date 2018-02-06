@@ -1,6 +1,6 @@
 <div class="kBulkActions">
   <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deleteEntries()"></button>
-  <button #menuToggle class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.entries.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
+  <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.entries.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
 </div>
 
 <p-tieredMenu #menu kMenuCloseOnScroll [menu]="menu" [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
