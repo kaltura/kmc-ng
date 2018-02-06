@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ExtendedKalturaEntryDistribution } from '../entry-distribution-widget.service';
 import { KalturaEntryDistributionFlag } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionFlag';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
@@ -18,6 +18,9 @@ export class DistributedProfileComponent {
       this._setupDeleteButton();
     }
   }
+
+  @Output() onDeleteDistribution = new EventEmitter<ExtendedKalturaEntryDistribution>();
+  @Output() onOpenProfile = new EventEmitter<ExtendedKalturaEntryDistribution>();
 
   public _profile: ExtendedKalturaEntryDistribution;
   public _isModified = false;
@@ -44,11 +47,20 @@ export class DistributedProfileComponent {
           this._actionButtonDisabled = true;
         }
         break;
+      case KalturaEntryDistributionStatus.errorDeleting:
+        this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.upToDate');
+        this._actionButtonDisabled = true;
+        break;
+      case KalturaEntryDistributionStatus.submitting:
+      case KalturaEntryDistributionStatus.importSubmitting:
+      case KalturaEntryDistributionStatus.updating:
+      case KalturaEntryDistributionStatus.importUpdating:
+      case KalturaEntryDistributionStatus.deleting:
+        this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.processing');
+        this._actionButtonDisabled = true;
+        break;
       case KalturaEntryDistributionStatus.errorSubmitting:
       case KalturaEntryDistributionStatus.errorUpdating:
-        this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.retry');
-        this._actionButtonDisabled = false;
-        break;
       case KalturaEntryDistributionStatus.pending:
         this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
         this._actionButtonDisabled = false;

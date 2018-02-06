@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EntryDistributionWidget } from './entry-distribution-widget.service';
+import { EntryDistributionWidget, ExtendedKalturaEntryDistribution } from './entry-distribution-widget.service';
 
 
 @Component({

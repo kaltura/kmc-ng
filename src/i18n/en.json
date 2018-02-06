@@ -1221,8 +1221,12 @@
           "lastUpdate": "Last Update {{0}}",
           "moreDetails": "More Details",
           "moreInfo": "More Info",
+          "processing": "Processing",
+          "auto": "Auto",
           "modified": "Modified",
           "retry": "Retry",
+          "deleteConfirmTitle": "TBD",
+          "deleteConfirm": "TBD",
           "status": {
             "readyForDistribution": "Ready for Distribution",
             "scheduledForDistribution": "Scheduled for Distribution",
@@ -1241,6 +1245,8 @@
             "exportFailed": "Export Failed"
           },
           "errors": {
+            "errorLoading": "Failed to load entry distribution data",
+            "cannotDelete": "Cannot delete distribution profile",
             "metadataError": "Metadata Error.",
             "missingMetadata": "Missing Metadata.",
             "missingFlavor": "Missing Flavor.",

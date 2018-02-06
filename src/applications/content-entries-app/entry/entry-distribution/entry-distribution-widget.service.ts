@@ -24,9 +24,16 @@ import { KalturaThumbAsset } from 'kaltura-ngx-client/api/types/KalturaThumbAsse
 import { KalturaEntryDistribution } from 'kaltura-ngx-client/api/types/KalturaEntryDistribution';
 import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { EntryDistributionSubmitDeleteAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitDeleteAction';
+import { EntryDistributionDeleteAction } from 'kaltura-ngx-client/api/types/EntryDistributionDeleteAction';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
+import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
+  autoDistribution: boolean;
 }
 
 export interface DistributionWidgetData {
@@ -51,7 +58,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   };
 
   constructor(private _appLocalization: AppLocalization,
-              private _kalturaClient: KalturaClient) {
+              private _kalturaClient: KalturaClient,
+              private _browserService: BrowserService) {
     super(EntryWidgetKeys.Distribution);
   }
 
@@ -242,10 +250,15 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         entryProfiles.forEach((profile) => {
           const relevantPartnerProfile = undistributedProfiles.find(({ id }) => id === profile.distributionProfileId);
           if (relevantPartnerProfile) {
+            const autoDistribution = relevantPartnerProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic ||
+              profile.status === KalturaEntryDistributionStatus.queued;
             const distributedProfile = <ExtendedKalturaEntryDistribution>Object.assign(
               KalturaTypesFactory.createObject(profile),
               profile,
-              { name: relevantPartnerProfile.name }
+              {
+                autoDistribution,
+                name: relevantPartnerProfile.name
+              }
             );
             distributedProfiles.push(distributedProfile);
             undistributedProfiles.splice(undistributedProfiles.indexOf(relevantPartnerProfile), 1);
@@ -261,7 +274,99 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       });
   }
 
+  public _refresh(): void {
+    super._showLoader();
+
+    this._flavors.next({ items: [] });
+    this._thumbnails.next({ items: [] });
+    this._distributedProfiles.next({ items: [] });
+    this._undistributedProfiles.next({ items: [] });
+
+    this._loadDistributionData()
+      .cancelOnDestroy(this, this.widgetReset$)
+      .subscribe(
+        (response) => {
+          this._flavors.next({ items: response.flavors });
+          this._thumbnails.next({ items: response.thumbnails });
+          this._distributedProfiles.next({ items: response.distributedProfiles });
+          this._undistributedProfiles.next({ items: response.undistributedProfiles });
+
+          super._hideLoader();
+        },
+        error => {
+          super._hideLoader();
+          super._showBlockerMessage(new AreaBlockerMessage({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.errorLoading'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.retry'),
+              action: () => this._refresh()
+            }]
+          }), true);
+        });
+  }
+
+  private _performDeleteRequest(action: KalturaRequest<KalturaEntryDistribution | void>): void {
+    this._kalturaClient.request(action)
+      .tag('block-shell')
+      .cancelOnDestroy(this, this.widgetReset$)
+      .subscribe(
+        () => {
+          this._refresh();
+          this._browserService.scrollToTop();
+        },
+        error => {
+          this._showBlockerMessage(new AreaBlockerMessage({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDelete'),
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => this._performDeleteRequest(action)
+              },
+              {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => this._removeBlockerMessage()
+              }
+            ]
+          }), false);
+        }
+      );
+  }
+
   public setDirty(): void {
     super.updateState({ isDirty: true });
+  }
+
+  public deleteDistributionProfile(profile: ExtendedKalturaEntryDistribution): void {
+    const entrySubmitted = [KalturaEntryDistributionStatus.ready, KalturaEntryDistributionStatus.errorUpdating].indexOf(profile.status);
+    const entryNotSubmitted = [
+      KalturaEntryDistributionStatus.queued,
+      KalturaEntryDistributionStatus.pending,
+      KalturaEntryDistributionStatus.errorSubmitting
+    ].indexOf(profile.status);
+    let action;
+
+    if (entrySubmitted) {
+      action = new EntryDistributionSubmitDeleteAction({ id: profile.id });
+    } else if (entryNotSubmitted) {
+      action = new EntryDistributionDeleteAction({ id: profile.id });
+    }
+
+    if (!action) {
+      this._showBlockerMessage(new AreaBlockerMessage({
+        message: this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDelete'),
+        buttons: [{
+          label: this._appLocalization.get('app.common.ok'),
+          action: () => this._removeBlockerMessage()
+        }]
+      }), false);
+      return;
+    }
+
+    this._browserService.confirm(
+      {
+        header: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirmTitle'),
+        message: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirm', [profile.id]),
+        accept: () => this._performDeleteRequest(action)
+      });
   }
 }

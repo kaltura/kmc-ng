@@ -4,7 +4,8 @@
     <div class="kDistributionList">
       <kEntryDistributedProfile
         *ngFor="let profile of (_widgetService.distributionProfiles$.distributed | async).items"
-        [profile]="profile"></kEntryDistributedProfile>
+        [profile]="profile"
+        (onDeleteDistribution)="_widgetService.deleteDistributionProfile($event)"></kEntryDistributedProfile>
       <kEntryUndistributedProfile
         *ngFor="let profile of (_widgetService.distributionProfiles$.undistributed | async).items"
         [profile]="profile"></kEntryUndistributedProfile>

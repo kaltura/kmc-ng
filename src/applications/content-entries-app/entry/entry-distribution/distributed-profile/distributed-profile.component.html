@@ -27,6 +27,10 @@
       <span class="kLastUpdate">
         {{'applications.content.entryDetails.distribution.lastUpdate' | translate:[(_profile?.updatedAt | kDate:'MM/DD/YYYY')]}}
       </span>
+      <span *ngIf="_profile?.autoDistribution">
+        <span class="kDelimiter"></span>
+        {{'applications.content.entryDetails.distribution.auto' | translate}}
+      </span>
       <span class="kDelimiter"></span>
       <a class="kMoreDetails">{{'applications.content.entryDetails.distribution.moreDetails' | translate}}</a>
     </div>
@@ -36,7 +40,9 @@
   </div>
 
   <div class="kControls">
-    <button *ngIf="!_deleteButtonHidden" pButton icon="kIcontrash" class="kButtonDanger kDeleteBtn"></button>
+    <button *ngIf="!_deleteButtonHidden" pButton
+            icon="kIcontrash" class="kButtonDanger kDeleteBtn"
+            (click)="onDeleteDistribution.emit(_profile)"></button>
     <button *ngIf="!_actionButtonHidden" pButton class="kButtonDefault kUpdateBtn"
             [disabled]="!_isModified && _actionButtonDisabled"
             [label]="_actionButtonLabel"></button>
