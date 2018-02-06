@@ -49,6 +49,10 @@ export class DistributedProfileComponent {
         this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.retry');
         this._actionButtonDisabled = false;
         break;
+      case KalturaEntryDistributionStatus.pending:
+        this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
+        this._actionButtonDisabled = false;
+        break;
       default:
         this._actionButtonHidden = true;
         break;
@@ -64,7 +68,7 @@ export class DistributedProfileComponent {
       KalturaEntryDistributionStatus.errorSubmitting
     ];
 
-    this._deleteButtonHidden = enabledStatuses.indexOf(this._profile.status) !== -1;
+    this._deleteButtonHidden = enabledStatuses.indexOf(this._profile.status) === -1;
   }
 }
 

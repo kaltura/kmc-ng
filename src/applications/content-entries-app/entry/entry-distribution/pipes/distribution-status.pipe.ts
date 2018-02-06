@@ -24,15 +24,16 @@ export class DistributionStatusPipe implements PipeTransform {
       case KalturaEntryDistributionStatus.pending:
         if (!profile.validationErrors || profile.validationErrors.length === 0) {
           result.label = this._appLocalization.get('applications.content.entryDetails.distribution.status.readyForDistribution');
+          result.icon = 'kIconinactive';
         } else if (profile.dirtyStatus === KalturaEntryDistributionFlag.submitRequired) {
           result.label = this._appLocalization.get('applications.content.entryDetails.distribution.status.scheduledForDistribution');
+          result.icon = 'kIconscheduled';
         }
-        result.icon = 'kIconhelp_full'; // TODO [kmcng] replace with relevant icon
         break;
 
       case KalturaEntryDistributionStatus.queued:
         result.label = this._appLocalization.get('applications.content.entryDetails.distribution.status.queued');
-        result.icon = 'kIconhelp_full'; // TODO [kmcng] replace with relevant icon
+        result.icon = 'kIconupload2';
         break;
 
       case KalturaEntryDistributionStatus.ready:
@@ -46,7 +47,7 @@ export class DistributionStatusPipe implements PipeTransform {
 
       case KalturaEntryDistributionStatus.deleted:
         result.label = this._appLocalization.get('applications.content.entryDetails.distribution.status.deleted');
-        result.icon = 'kIconhelp_full'; // TODO [kmcng] replace with relevant icon
+        result.icon = 'kIconinactive';
         break;
 
       case KalturaEntryDistributionStatus.submitting:
