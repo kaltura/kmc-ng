@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UsersStore } from './users.service';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -107,7 +107,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _upgradeAccount(): void {
-    this._browserService.openLink(environment.core.externalLinks.UPGRADE_ACCOUNT, {}, '_blank');
+    this._browserService.openLink(subApplicationsConfig.core.externalLinks.UPGRADE_ACCOUNT, {}, '_blank');
   }
 
   public _onPaginationChanged(state: any): void {

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
@@ -47,7 +47,7 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
   public _createdAfter: Date;
   public _createdBefore: Date;
   public _createdAtFilterError: string = null;
-  public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
 
   constructor(private _dropFoldersStore: DropFoldersStoreService,
               private _appLocalization: AppLocalization) {

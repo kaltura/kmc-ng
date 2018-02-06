@@ -3,7 +3,7 @@ import { PartnerListFeatureStatusAction } from 'kaltura-ngx-client/api/types/Par
 import { KalturaFeatureStatusListResponse } from 'kaltura-ngx-client/api/types/KalturaFeatureStatusListResponse';
 import { KalturaFeatureStatusType } from 'kaltura-ngx-client/api/types/KalturaFeatureStatusType';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
-import { environment } from 'app-environment';
+import { modulesConfig } from 'config/modules';
 import { CategoriesStatusRequestFactory } from './categories-status-request-factory';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { KalturaFeatureStatus } from 'kaltura-ngx-client/api/types/KalturaFeatureStatus';
@@ -20,7 +20,7 @@ export interface CategoriesStatus {
 export class CategoriesStatusMonitorService implements OnDestroy {
     
     private _pollingState: null | 'running' = null;
-    private _pollingInterval: PollInterval = <PollInterval>environment.categoriesShared.categoriesStatusSampleInterval;
+    private _pollingInterval: PollInterval = <PollInterval>modulesConfig.categoriesShared.categoriesStatusSampleInterval;
     private _currentStatus = { lock: null, update: null };
 
     private _status = new ReplaySubject<CategoriesStatus>(1);

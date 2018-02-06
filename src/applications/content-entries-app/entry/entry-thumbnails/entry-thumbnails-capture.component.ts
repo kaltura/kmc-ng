@@ -1,6 +1,6 @@
 import { Component, AfterContentInit, Input } from '@angular/core';
 import { AppAuthentication } from 'app-shared/kmc-shell';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
@@ -21,7 +21,7 @@ export class EntryThumbnailCapture implements AfterContentInit{
 
 	ngAfterContentInit(){
 		this.playerConfig = {
-			uiconfid: parseInt(environment.core.kaltura.previewUIConf),
+			uiconfid: parseInt(subApplicationsConfig.core.kaltura.previewUIConf),
 			pid: this._appAuthentication.appUser.partnerId,
 			entryid: this.entryId
 		};

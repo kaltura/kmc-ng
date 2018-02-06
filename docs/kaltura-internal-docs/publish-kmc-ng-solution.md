@@ -112,7 +112,7 @@ ws --spa index.html
 > To continue with the publish you will need to create a github personal access token that will be used to deploy a release tag. please access [Github-Personal access tokens](https://github.com/settings/tokens) page and create a token by pressing the 'create new token' button. In the new token form, make sure you select `repo` scope, which is the first scope, including its' children.
 
 1. Prepare a release `npm run release:prepare`.
-   * open file `src/configuration/index.ts` and make sure `appVersion` was updated correctly.
+   * open file `src/configuration/app-config-loader.ts` and make sure `appVersion` was updated correctly.
 
 2. Review version release notes in  `changelog.md` file and modify it as needed.
    * Focus on the **"features section"** as it will be used in multiple places.

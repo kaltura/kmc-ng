@@ -2,12 +2,12 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app.module';
-import { initializeConfiguration, environment as appConfig } from 'app-environment';
-import { environment } from './environments/environment';
-import { staticKMCConfiguration } from './static-kmc-config';
+import { environment } from 'environments/environment';
+import { globalConfiguration } from 'config/global';
 
+import { initializeConfiguration } from '../configuration/server-config';
 
-initializeConfiguration(staticKMCConfiguration)
+initializeConfiguration()
     .subscribe(
         () =>
         {
@@ -34,8 +34,8 @@ initializeConfiguration(staticKMCConfiguration)
 
 if (environment.production) {
     enableProdMode();
-    console.log(`Running KMCng version '${appConfig.appVersion}' (Production mode)`);
+    console.log(`Running KMCng version '${globalConfiguration.appVersion}' (Production mode)`);
 } else {
-    console.log(`Running KMCng version '${appConfig.appVersion}' (Development mode)`);
+    console.log(`Running KMCng version '${globalConfiguration.appVersion}' (Development mode)`);
 }
 

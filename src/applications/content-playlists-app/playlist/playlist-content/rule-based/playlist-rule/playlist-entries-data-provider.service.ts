@@ -20,7 +20,7 @@ import {
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 
 @Injectable()
@@ -205,9 +205,9 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
             filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
           }
 
-          filter.limit = data.limits && data.limits > 0 && data.limits <= environment.modules.contentPlaylists.ruleBasedTotalResults
+          filter.limit = data.limits && data.limits > 0 && data.limits <= subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults
             ? data.limits
-            : environment.modules.contentPlaylists.ruleBasedTotalResults;
+            : subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults;
 
           // readonly filters for rule-based playlist
           filter.statusIn = '1,2';
@@ -245,7 +245,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
         .switchMap(filter => this._kalturaServerClient.request(
           new PlaylistExecuteFromFiltersAction({
             filters: [filter],
-            totalResults: environment.modules.contentPlaylists.ruleBasedTotalResults,
+            totalResults: subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults,
             pager: pagination,
             responseProfile
           }))
@@ -278,7 +278,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       distributions: [], categories: [],
       categoriesMode,
       customMetadata: {},
-      limits: environment.modules.contentPlaylists.ruleBasedTotalResults,
+      limits: subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults,
     };
   }
 }

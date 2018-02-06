@@ -5,7 +5,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { PreviewEmbedService } from './preview-and-embed.service';
 
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
@@ -162,9 +162,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     const secured: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.secured');
     this._previewForm = this._fb.group({
       selectedPlayer: null,
-      selectedEmbedType: this._browserService.getFromLocalStorage('previewEmbed.embedType') || environment.modules.previewEmbed.embedType,
-      seo: seo !== null ? seo : environment.modules.previewEmbed.includeSeoMetadata,
-      secured: secured !== null ? secured : environment.modules.previewEmbed.secureEmbed
+      selectedEmbedType: this._browserService.getFromLocalStorage('previewEmbed.embedType') || subApplicationsConfig.modules.previewEmbed.embedType,
+      seo: seo !== null ? seo : subApplicationsConfig.modules.previewEmbed.includeSeoMetadata,
+      secured: secured !== null ? secured : subApplicationsConfig.modules.previewEmbed.secureEmbed
     });
   }
 
@@ -178,14 +178,14 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private getGenerator():any{
-    const baseCdnUrl = environment.core.kaltura.cdnUrl.replace("http://","");
-    const securedCdnUrl = environment.core.kaltura.securedCdnUrl.replace("https://","");
+    const baseCdnUrl = subApplicationsConfig.core.kaltura.cdnUrl.replace("http://","");
+    const securedCdnUrl = subApplicationsConfig.core.kaltura.securedCdnUrl.replace("https://","");
     // 'kEmbedCodeGenerator' is bundled with the app. Location: assets/js/KalturaEmbedCodeGenerator.min.js
     return new window['kEmbedCodeGenerator']({
       host: baseCdnUrl,
       securedHost: securedCdnUrl,
       partnerId: this._appAuthentication.appUser.partnerId,
-      includeKalturaLinks: environment.modules.previewEmbed.includeKalturaLinks
+      includeKalturaLinks: subApplicationsConfig.modules.previewEmbed.includeKalturaLinks
     });
   }
 
@@ -273,7 +273,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private createPreviewLink(isPreview: boolean):void{
       let url = '';
       try {
-        url = this.getProtocol(isPreview) + '://' + environment.core.kaltura.serverEndpoint + '/index.php/extwidget/preview';
+        url = this.getProtocol(isPreview) + '://' + subApplicationsConfig.core.kaltura.serverEndpoint + '/index.php/extwidget/preview';
         url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
         url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.id;
         if (this.media instanceof KalturaMediaEntry) {
@@ -289,7 +289,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       // create short link
       this._previewEmbedService.generateShortLink(url).cancelOnDestroy(this).subscribe(
           (res: KalturaShortLink) => {
-            this._shortLink = 'http://' + environment.core.kaltura.serverEndpoint + '/tiny/' + res.id;
+            this._shortLink = 'http://' + subApplicationsConfig.core.kaltura.serverEndpoint + '/tiny/' + res.id;
           },
           error => {
             console.log("could not generate short link for preview");
@@ -324,7 +324,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   public openLink(link): void {
-    this._browserService.openLink(environment.core.externalLinks[link]);
+    this._browserService.openLink(subApplicationsConfig.core.externalLinks[link]);
   }
 
   public close(): void{

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { environment } from 'app-environment';
+import { AnalyticsAppConfig } from './analytics-app-config';
 
 import { AppAuthentication, AppNavigator, BrowserService, ILoginError, ILoginResponse } from 'app-shared/kmc-shell';
 import { TranslateService } from 'ng2-translate';

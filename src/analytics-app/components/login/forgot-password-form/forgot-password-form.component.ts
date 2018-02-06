@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { environment } from 'app-environment';
+import { AnalyticsAppConfig } from './analytics-app-config';
 import { LoginScreens } from '../login.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 

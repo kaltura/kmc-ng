@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { environment } from 'app-environment';
+import { kmcAppConfig } from '../../kmc-app-config';
 
 import { AppAuthentication, AppNavigator, BrowserService, ILoginError, ILoginResponse } from 'app-shared/kmc-shell';
 import { TranslateService } from 'ng2-translate';
@@ -55,8 +55,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _makeLoginRequest(username: string, password: string): Observable<ILoginResponse> {
     return this._appAuthentication.login(username, password, {
-      privileges: environment.core.kaltura.privileges,
-      expiry: environment.core.kaltura.expiry
+      privileges: kmcAppConfig.core.kaltura.privileges,
+      expiry: kmcAppConfig.core.kaltura.expiry
     }).cancelOnDestroy(this);
   }
 
@@ -187,6 +187,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public _signUp(): void {
-    this._browserService.openLink(environment.core.externalLinks.SIGNUP, {}, '_self');
+    this._browserService.openLink(kmcAppConfig.core.externalLinks.SIGNUP, {}, '_self');
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { AppAuthentication } from 'app-shared/kmc-shell';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 @Component({
     selector: 'kAnalyticsLive',
@@ -16,7 +16,7 @@ export class AnalyticsLiveComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     ngOnInit() {
-        this.appUrl = `${environment.modules.analyticsLive.url}?ks=${this.appAuthentication.appUser.ks}`;
+        this.appUrl = `${subApplicationsConfig.modules.analyticsLive.url}?ks=${this.appAuthentication.appUser.ks}`;
     }
 
     ngAfterViewInit() {

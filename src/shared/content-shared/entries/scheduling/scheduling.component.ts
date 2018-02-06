@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { environment } from 'app-environment';
+import { modulesConfig } from 'config/modules';
 
 @Component({
   selector: 'kScheduling',
@@ -27,7 +27,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
 
   public _schedulingForm: FormGroup;
   public _timeZone: any = {};
-  public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = modulesConfig.modules.contentEntries.createdAtDateRange;
 
   constructor() {
   }

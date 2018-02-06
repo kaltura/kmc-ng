@@ -1,4 +1,4 @@
-import {NgModule, Provider} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -11,7 +11,6 @@ import { PreviewAndEmbedModule } from '../applications/preview-and-embed/preview
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
-import { environment as buildEnvironment } from 'kmc-app/environments/environment'
 
 import {
   AppBootstrap,
@@ -21,7 +20,6 @@ import {
   NewEntryUploadModule
 } from 'app-shared/kmc-shell';
 import {
-  AppLocalization,
   AppStorage,
   KalturaCommonModule,
   OperationTagModule,
@@ -64,7 +62,6 @@ import {
 
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
-import { environment } from 'app-environment';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
@@ -77,10 +74,11 @@ import { ChangeAccountComponent } from './components/changeAccount/change-accoun
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
-import { PlaylistCreationModule, PlaylistCreationService } from 'app-shared/kmc-shared/events/playlist-creation';
+import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-creation';
 import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
+import { kmcAppConfig } from './kmc-app-config';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -88,7 +86,7 @@ const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, Flav
 
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
-    const { useHttpsProtocol, serverEndpoint } = environment.core.kaltura;
+    const { useHttpsProtocol, serverEndpoint } = kmcAppConfig.core.kaltura;
     result.endpointUrl = `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}`;
     result.clientTag = 'KMCng';
     return result;
@@ -179,14 +177,14 @@ export class AppModule {
                 kalturaLogger: KalturaLogger,
                 uploadManagement: UploadManagement) {
 
-        if (buildEnvironment.production) {
+        if (kmcAppConfig.production) {
             kalturaLogger.setOptions({level: 'Warn'})
         } else {
             kalturaLogger.setOptions({level: 'All'})
         }
 
         // TODO [kmcng] move to a relevant location
-        uploadManagement.setMaxUploadRequests(environment.uploadsShared.MAX_CONCURENT_UPLOADS);
+        uploadManagement.setMaxUploadRequests(kmcAppConfig.uploadsShared.MAX_CONCURENT_UPLOADS);
 
         appBootstrap.bootstrap();
 

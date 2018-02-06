@@ -1,5 +1,5 @@
 
-export interface SharedModulesConfig {
+export interface ModulesConfig {
     entriesShared: {
         pageSize: number,
         MAX_ENTRIES: number,
@@ -27,7 +27,7 @@ export interface SharedModulesConfig {
     }
 }
 
-export const sharedModulesConfig: SharedModulesConfig = {
+export const modulesConfig: ModulesConfig = {
     "entriesShared": {
         "pageSize": 50,
         "MAX_ENTRIES": 10000,

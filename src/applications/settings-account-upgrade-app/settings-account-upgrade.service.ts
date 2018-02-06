@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import {Http} from '@angular/http';
 
 
@@ -20,6 +20,6 @@ export class SettingsAccountUpgradeService {
   /** update the */
   public sendContactSalesForceInformation(data: AccountUpgrade): Observable<any> {
     return this._http
-      .post(environment.core.kaltura.contactsalesforce, data);
+      .post(subApplicationsConfig.core.kaltura.contactsalesforce, data);
   }
 }

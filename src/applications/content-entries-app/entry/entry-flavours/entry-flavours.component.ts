@@ -10,7 +10,7 @@ import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursWidget } from './entry-flavours-widget.service';
 import { Flavor } from './flavor';
 
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 
@@ -137,7 +137,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	}
 
   private _validateFileSize(file: File): boolean {
-    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const maxFileSize = subApplicationsConfig.uploadsShared.MAX_FILE_SIZE;
     const fileSize = file.size / 1024 / 1024; // convert to Mb
 
     return this._uploadManagement.supportChunkUpload(new NewEntryFlavourFile(null)) || fileSize < maxFileSize;

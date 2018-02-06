@@ -14,7 +14,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {environment} from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {PrivacyMode} from './components/bulk-change-content-privacy/bulk-change-content-privacy.component';
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
@@ -232,7 +232,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       );
     };
 
-    if (confirmChunks && this.selectedCategories.length > environment.modules.contentCategories.bulkActionsLimit) {
+    if (confirmChunks && this.selectedCategories.length > subApplicationsConfig.modules.contentCategories.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),

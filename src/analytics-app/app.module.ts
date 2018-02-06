@@ -60,7 +60,7 @@ import {
 
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
-import { environment } from 'app-environment';
+import { AnalyticsAppConfig } from './analytics-app-config';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
 import { LoginFormComponent } from './components/login/login-form/login-form.component';

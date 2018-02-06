@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
@@ -51,7 +51,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
   public _uploadedAfter: Date;
   public _uploadedBefore: Date;
   public _createdAtFilterError: string = null;
-  public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
 
   constructor(private _bulkLogStore: BulkLogStoreService,
               private _appLocalization: AppLocalization) {

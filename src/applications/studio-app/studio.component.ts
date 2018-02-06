@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { environment } from 'app-environment';
-import { environment as env} from '../../kmc-app/environments/environment';
+import { subApplicationsConfig } from 'config/sub-applications';
+import { environment as env} from '../../environments/environment';
 import { UpdatePlayersEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
@@ -23,13 +23,13 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       "vars": {
         "ks": this.appAuthentication.appUser.ks,
-        "api_url": environment.modules.studio.api_url,
+        "api_url": subApplicationsConfig.modules.studio.api_url,
         "studio": {
-          "config": '{"version":' + environment.modules.studio.version + ', "name":"Video Studio V2", "tags":"studio_v2", "html5_version":' + environment.modules.studio.html5_version + ', "html5lib":' + environment.modules.studio.html5lib + '}',
+          "config": '{"version":' + subApplicationsConfig.modules.studio.version + ', "name":"Video Studio V2", "tags":"studio_v2", "html5_version":' + subApplicationsConfig.modules.studio.html5_version + ', "html5lib":' + subApplicationsConfig.modules.studio.html5lib + '}',
           "showFlashStudio": false,
           "showHTMLStudio": true,
-          "uiConfID": parseInt(environment.modules.studio.uiConfId),
-          "version": environment.modules.studio.version
+          "uiConfID": parseInt(subApplicationsConfig.modules.studio.uiConfId),
+          "version": subApplicationsConfig.modules.studio.version
         }
       }
     }
@@ -38,7 +38,7 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     if (env.production) {
       this.isProduction = true;
-      this.studioUrl = environment.modules.studio.path;
+      this.studioUrl = subApplicationsConfig.modules.studio.path;
     }
   }
 

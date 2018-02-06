@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-    configurationUri: 'kmc-app/kmc-config.json',
+    configurationUri: 'configuration/server-config.json',
     configurationTimeout: 10000
 }

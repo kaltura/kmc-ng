@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'app-environment';
+import { AnalyticsAppConfig } from './analytics-app-config';
 
 
 import { AppMenuConfig } from './app-menu-config'

@@ -8,7 +8,7 @@ import {CategoryWidgetKeys} from '../category-widget-keys';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
-import {environment} from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
@@ -73,7 +73,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
 
   private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
-    const subcategoriesLimit: number = environment.categoriesShared.SUB_CATEGORIES_LIMIT || 50;
+    const subcategoriesLimit: number = subApplicationsConfig.categoriesShared.SUB_CATEGORIES_LIMIT || 50;
     if (!parentCategory) {
       return Observable.throw(new Error('parentCategory to get subcategories for is not defined'));
     }

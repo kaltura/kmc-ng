@@ -20,7 +20,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { EntryWidget } from '../entry-widget';
@@ -124,7 +124,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 				    fileExt: thumbnail.fileExt
 			    };
 			    thumb.isDefault = thumbnail.tags.indexOf("default_thumb") > -1;
-			    thumb.url = environment.core.kaltura.cdnUrl + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
+			    thumb.url = subApplicationsConfig.core.kaltura.cdnUrl + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
 			    thumbs.push(thumb);
 		    }
 	    });
@@ -266,7 +266,7 @@ export class EntryThumbnailsWidget extends EntryWidget
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
       const fileData: File = selectedFiles[0];
-      const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+      const maxFileSize = subApplicationsConfig.uploadsShared.MAX_FILE_SIZE;
 	  const fileSize = fileData.size / 1024 / 1024; // convert to Mb
 	    if (fileSize > maxFileSize) {
 		    this._browserService.alert({

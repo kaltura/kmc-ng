@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 @Component({
   selector: 'kPlaylistsAdditionalFilter',
@@ -15,7 +15,7 @@ export class PlaylistsAdditionalFiltersComponent {
   public _showLoader = false;
   public _blockerMessage: AreaBlockerMessage = null;
   @Output() createdChanged = new EventEmitter<any>();
-  public _createdAtDateRange: string = environment.modules.contentPlaylists.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.modules.contentPlaylists.createdAtDateRange;
 
   constructor() {
   }

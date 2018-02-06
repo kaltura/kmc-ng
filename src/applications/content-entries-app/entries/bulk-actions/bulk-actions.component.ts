@@ -14,7 +14,7 @@ import {
 } from './services'
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import {BulkActionBaseService} from './services/bulk-action-base.service';
-import {environment} from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
@@ -258,7 +258,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       );
     };
 
-    if (confirmChunks && this.selectedEntries.length > environment.modules.contentEntries.bulkActionsLimit) {
+    if (confirmChunks && this.selectedEntries.length > subApplicationsConfig.modules.contentEntries.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
