@@ -1,6 +1,6 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
   <div class="kDistribution">
-    <div class="kDistributionHeader">{{'applications.content.entryDetails.distribution.export' | translate}}</div>
+    <div class="kDistributionHeader">{{'applications.content.entryDetails.distribution.distribution' | translate}}</div>
     <div class="kDistributionList">
       <kEntryDistributedProfile
         *ngFor="let profile of (_widgetService.distributionProfiles$.distributed | async).items"
