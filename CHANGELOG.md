@@ -1,3 +1,13 @@
+<a name="3.6.1"></a>
+## [3.6.1](https://github.com/kaltura/kmc-ng/compare/v3.6.0...v3.6.1) (2018-02-06)
+
+
+### Bug Fixes
+
+* false import path that works only locally when using kmc-ng workspace solution ([944ea04](https://github.com/kaltura/kmc-ng/commit/944ea04))
+
+
+
 <a name="3.6.0"></a>
 # [3.6.0](https://github.com/kaltura/kmc-ng/compare/v3.5.0...v3.6.0) (2018-02-05)
 
