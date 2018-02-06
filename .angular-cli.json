@@ -27,7 +27,7 @@
       "scripts": [
         "./assets/js/KalturaEmbedCodeGenerator.min.js"
       ],
-      "environmentSource": "environments/environment.ts",
+      "environmentSource": "kmc-app/environments/environment.ts",
       "environments": {
         "dev": "kmc-app/environments/environment.ts",
         "prod": "kmc-app/environments/environment.prod.ts"
