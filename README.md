@@ -95,6 +95,14 @@ $ npm run build -- --prod
 
 A distributed standalone application will be created in the `dist/` folder.
 
+ ### Add the studio application
+ You will need to add the studio application to the distribution folder. We recommend you to take the lastest version of v2 (v3 currently doesn't work in the kmc-ng)*[]:
+ - goto the the [following link](https://github.com/kaltura/player-studio/releases) and find the latest release (make sure it is not a pre-release)
+ - download the attached zip file
+ - extract it into folder `dist/studio`
+
+
+
 ### Configuring the server
 Angular applications are considered as Single page applications (a.k.a SPA). This requires the server to be configured correctly. Each technology has its own configuration set.
 - an example for [IIS server](https://gingter.org/2017/03/20/deep-link-angular-spa-iis/).
