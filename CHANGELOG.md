@@ -4,7 +4,7 @@
 
 ### Bug Fixes
 
-* false import path that works only locally when using kmc-ng workspace solution ([944ea04](https://github.com/kaltura/kmc-ng/commit/944ea04))
+* fix wrong import path in custom schema form ([944ea04](https://github.com/kaltura/kmc-ng/commit/944ea04))
 
 
 
