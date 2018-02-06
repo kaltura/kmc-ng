@@ -15,7 +15,7 @@ export interface GlobalConfiguration {
 }
 
 const _globalConfiguration: GlobalConfiguration = {
-    appVersion: '3.6.0',
+    appVersion: '3.6.1',
     temporaryKey: 'will be removed in version 3.7.0'
 }
 
