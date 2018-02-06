@@ -1,5 +1,5 @@
 import {ModuleWithProviders, NgModule, Optional, Self} from '@angular/core';
-import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation/category-creation.service';
+import {CategoryCreationService} from 'shared/kmc-shared/events/category-creation/category-creation.service';
 
 @NgModule({
   imports: <any[]>[],
