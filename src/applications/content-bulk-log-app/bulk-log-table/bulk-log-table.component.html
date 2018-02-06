@@ -61,7 +61,7 @@
       <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <div class="kBulkLogTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, bulkLogItem)"></button>
+            <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, bulkLogItem)"></button>
           </div>
         </ng-template>
       </p-column>

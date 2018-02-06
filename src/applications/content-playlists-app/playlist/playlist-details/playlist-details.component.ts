@@ -9,7 +9,7 @@ import { PlaylistDetailsWidget } from './playlist-details-widget.service';
 })
 export class PlaylistDetailsComponent implements OnInit, OnDestroy {
   public _currentPlaylist: KalturaPlaylist;
-  public _numberOfEntries = 0;
+  public _isNew = false;
 
   constructor(public _widgetService: PlaylistDetailsWidget) {
   }
@@ -21,16 +21,12 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
       .filter(Boolean)
       .subscribe(data => {
         this._currentPlaylist = data;
-        this._numberOfEntries = this._getNumberOfEntries(data.playlistContent);
+        this._isNew = !this._currentPlaylist.id;
       });
   }
 
   ngOnDestroy() {
     this._widgetService.detachForm();
-  }
-
-  private _getNumberOfEntries(playlistContent: string): number {
-    return playlistContent && playlistContent.indexOf(',') !== -1 ? playlistContent.split(',').length : Number(Boolean(playlistContent));
   }
 }
 

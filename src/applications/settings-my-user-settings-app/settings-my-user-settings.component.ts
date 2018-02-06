@@ -115,14 +115,17 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   }
 
   public _editUserName(): void {
+    this._updateBlockerMessage = null;
     this.editUserNamePopup.open();
   }
 
   public _editEmailAddress(): void {
+    this._updateBlockerMessage = null;
     this.editEmailAddressPopup.open();
   }
 
   public _changePassword(): void {
+    this._updateBlockerMessage = null;
     this.changePasswordPopup.open();
   }
 }

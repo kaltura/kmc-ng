@@ -49,7 +49,7 @@ a.disabled {
 .kTreeConfig {
   font-size: 24px;
   position: absolute;
-  right: 18px;
+  right: 16px;
   top: 26px;
   color: $kGrayscale3;
   cursor: pointer;
@@ -59,7 +59,10 @@ a.disabled {
 }
 
 .kHeader {
-  padding-top: 8px;
+  padding-top: 10px;
+  kautocomplete{
+    margin-left: 4px;
+  }
 }
 
 .kLoadingMessage {
@@ -107,7 +110,7 @@ a.disabled {
     padding: 0px;
     input {
       height: 34px;
-      padding-left: 4px;
+      padding-left: 8px;
       width: 328px;
       &:active {
         background-color: white;

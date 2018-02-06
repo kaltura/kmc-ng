@@ -116,6 +116,10 @@ export class UploadListComponent implements OnInit, OnDestroy {
     return data instanceof NewEntryUploadFile || data instanceof NewEntryFlavourFile;
   }
 
+  private _updateSelectedUploadsOnRemove(fileId: string): void {
+    this._selectedUploads = this._selectedUploads.filter(({ id }) => id !== fileId);
+  }
+
   private _addFile(trackedFile: TrackedFileData): void {
 
     if (isMonitoredUploadFile(trackedFile.data)) {
@@ -136,7 +140,10 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   private _removeFile(id: string): void {
     const relevantFileIndex = this._uploads.findIndex(file => file.id === id);
-    this._uploads.splice(relevantFileIndex, 1);
+    if (relevantFileIndex !== -1) {
+      this._uploads.splice(relevantFileIndex, 1);
+    }
+    this._updateSelectedUploadsOnRemove(id);
   }
 
   private _updateFile(id, changes: Partial<UploadFileData>): void {

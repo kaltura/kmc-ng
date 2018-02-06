@@ -1,0 +1,137 @@
+@import 'app-theme/_variables.scss';
+
+.kTagsWrapper {
+  z-index: 500;
+}
+
+.kSchemas {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  padding-top: 30px;
+  width: 100%;
+  min-width: $minAppWidth;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0px;
+  .kSchemasHolder {
+    height: 100%;
+    min-height: $minTableHeight;
+    border: 1px solid $kGrayscale6;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .kSchemasTable {
+    border: none;
+    position: relative;
+    background-color: white;
+    width: 100%;
+    flex: 1 1 auto;
+  }
+  .kSchemasTableFooter {
+    bottom: 0px;
+    height: 34px;
+    background-color: white;
+    border-top: 1px solid $kGrayscale6;
+    position: fixed;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    padding: 0 14px 28px;
+    display: block;
+  }
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
+  }
+  .kFiltersWrapper {
+    display: block;
+    height: 66px;
+  }
+  .kSchemasTableFilters {
+    color: $kGrayscale1;
+    z-index: 500;
+    height: 66px;
+    background-color: white;
+    flex: 0 0 auto;
+    align-items: center;
+    margin-left: 0px;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    .kSelectedSchemasNum {
+      padding-left: 16px;
+    }
+  }
+  .kRefreshBtn {
+    font-size: 24px;
+    border: none;
+    min-width: inherit;
+    margin-right: 16px;
+    width: 40px;
+    outline: 0px;
+    color: $kGrayscale3;
+    &:active {
+      box-shadow: none;
+      transform: rotate(45deg);
+    }
+    &:hover {
+      background-color: #ffffff;
+      color: $kPrimary;
+    }
+  }
+  .kBulkOperations {
+    margin-left: 15px;
+    width: 400px;
+  }
+  .kSelectedSchemasLabel {
+    font-weight: bold;
+    margin-right: 36px;
+    margin-left: 5px;
+  }
+  .kAddSchemaBtn {
+    margin-left: 14px;
+    height: 36px;
+    border: none;
+  }
+  .kBulkCancel {
+    margin-left: 26px;
+  }
+  .kBulkDeleteBtn {
+    margin-right: 10px;
+    width: 44px;
+    font-size: 18px;
+  }
+  .kBulkActionsBtn {
+    font-weight: 400;
+    font-size: 15px;
+  }
+  .kFilters {
+    display: flex;
+    margin-left: auto;
+  }
+  .kHidden {
+    visibility: hidden;
+    width: 0px;
+    height: 0px;
+  }
+}
+
+:host /deep/ k-area-blocker > .kAreaBlockerContainer {
+  z-index: 203;
+}
+
+:host /deep/ span.ui-button-icon-left.fa.kIcontrash {
+  margin-left: -.5em;
+}
+
+:host /deep/ .ui-button-icon-only .fa {
+  margin-left: -.5em;
+}
+
+:host /deep/ .kStickyClass {
+  border-bottom: 1px solid $kGrayscale5;
+}
