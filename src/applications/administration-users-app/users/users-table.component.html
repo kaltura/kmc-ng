@@ -40,13 +40,13 @@
       <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}"
                 [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field] | date:'MM/dd/yy HH:mm'}}</span>
+          <span class="kTitle">{{user[col.field] | kDate}}</span>
         </ng-template>
       </p-column>
       <p-column header="" styleClass="kTableActions">
         <ng-template let-col let-user="rowData" pTemplate="body">
           <div class="kUsersTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, user)"></button>
+            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, user)"></button>
           </div>
         </ng-template>
       </p-column>

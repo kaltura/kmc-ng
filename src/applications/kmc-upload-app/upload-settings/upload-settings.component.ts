@@ -238,6 +238,13 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     return result;
   }
 
+  public _updateFileValidityOnTypeChange(file: UploadSettingsFile): void {
+    if (file.hasError && file.errorToken === 'applications.upload.validation.wrongType') {
+      file.errorToken = null;
+      file.hasError = false;
+    }
+  }
+
   public _editName(file: UploadSettingsFile): void {
     file.isEditing = true;
   }

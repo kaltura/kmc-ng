@@ -26,6 +26,8 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { EntryWidget } from '../entry-widget';
 import { KalturaThumbParams } from 'kaltura-ngx-client/api/types/KalturaThumbParams';
 import { ThumbAssetGenerateAction } from 'kaltura-ngx-client/api/types/ThumbAssetGenerateAction';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
 export interface ThumbnailRow {
 	id: string,
@@ -43,6 +45,7 @@ export interface ThumbnailRow {
 @Injectable()
 export class EntryThumbnailsWidget extends EntryWidget
 {
+	public allowGrabFromVideo = false;
 	private _thumbnails = new BehaviorSubject<{ items : ThumbnailRow[]}>(
 		{ items : []}
 	);
@@ -61,6 +64,7 @@ export class EntryThumbnailsWidget extends EntryWidget
      */
     protected onReset()
     {
+    	this.allowGrabFromVideo = false;
     }
 
     protected onActivate(firstTimeActivating: boolean) {
@@ -93,6 +97,9 @@ export class EntryThumbnailsWidget extends EntryWidget
 			    const thumbnails = responses[0] || [];
 			    this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
 			    this.buildThumbnailsData(thumbnails);
+			    this.allowGrabFromVideo = (this.data.status
+						&& [KalturaEntryStatus.ready.toString(), KalturaEntryStatus.moderate.toString()].indexOf(this.data.status.toString()) !== -1
+						&& this.data.mediaType === KalturaMediaType.video);
 			    super._hideLoader();
 		    });
 
@@ -314,15 +321,22 @@ export class EntryThumbnailsWidget extends EntryWidget
 						{
 							message: 'Error capturing thumb',
 							buttons: [
-								{
-									label: 'Retry',
-									action: () => {
-										this.captureThumbnail(position);
-									}
-								}
+                                {
+                                    label: 'Dismiss',
+                                    action: () => {
+                                        this._removeBlockerMessage();
+                                    }
+                                },
+                                {
+                                    label: 'Retry',
+                                    action: () => {
+                                        this._removeBlockerMessage();
+                                        this.captureThumbnail(position);
+                                    }
+                                }
 							]
 						}
-					), true);
+					), false);
 				}
 			);
 	}

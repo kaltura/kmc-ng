@@ -2,7 +2,7 @@
   <div class="kContainer">
     <div class="kHeader" [class.kInheritance]="categoryInheritUserPermissions">
         <span class="kTitle">
-          {{'applications.content.categoryDetails.entitlements.usersPermissions.title' | translate}}
+          {{(categoryInheritUserPermissions ? 'applications.content.categoryDetails.entitlements.usersPermissions.titleView' : 'applications.content.categoryDetails.entitlements.usersPermissions.title') | translate}}
         </span>
       <button pButton class="kButtonDefault kButton"
               label="{{'applications.content.categoryDetails.entitlements.usersPermissions.close' | translate}}"

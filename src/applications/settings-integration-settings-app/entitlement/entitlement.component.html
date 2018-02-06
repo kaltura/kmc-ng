@@ -1,0 +1,51 @@
+<k-area-blocker [showLoader]="_isBusy"
+                [message]="_blockerMessage">
+  <div class="kContainer">
+    <div class="kTitle">
+      <span>{{'applications.settings.integrationSettings.entitlement.title' | translate}}</span>
+      <kInputHelper class="kHelp" trigger="click">
+        <span [innerHTML]="'applications.settings.integrationSettings.accountInfo.helpText' | translate">
+        </span>
+      </kInputHelper>
+    </div>
+    <div class="kExplanation">{{'applications.settings.integrationSettings.entitlement.explanation' | translate}}</div>
+    <div class="kEntitlementReforcement">
+      <div class="kApiDefault">{{'applications.settings.integrationSettings.entitlement.apiDefault' | translate}}</div>
+      <div class="kEntitlementEnforcement">
+        <span *ngIf="_partnerDefaultEntitlementEnforcement">
+          {{'applications.settings.integrationSettings.entitlement.entitlementEnforcementEnabled' | translate}}
+        </span>
+        <span *ngIf="!_partnerDefaultEntitlementEnforcement">
+          {{'applications.settings.integrationSettings.entitlement.entitlementEnforcementDisabled' | translate}}
+        </span>
+      </div>
+    </div>
+    <div class="kAddEntitlement">
+      <button type="button" class="kButtonDefault" (click)="addNewEntitlement.open()" pButton
+              label="{{'applications.settings.integrationSettings.entitlement.addEntitlement.buttonText' | translate}}"></button>
+    </div>
+    <div class="kEntitlementsHolder">
+      <kEntitlementsTable
+        [entitlements]="_entitlements"
+        (onActionSelected)="_onActionSelected($event)">
+      </kEntitlementsTable>
+    </div>
+  </div>
+</k-area-blocker>
+
+<kPopupWidget #addNewEntitlement [popupWidth]="586" [popupHeight]="663" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
+<ng-template>
+  <kNewEntitlement (onApply)="_loadEntitlementSectionData()" [parentPopupWidget]="addNewEntitlement"></kNewEntitlement>
+</ng-template>
+</kPopupWidget>
+
+
+<kPopupWidget #editEntitlementPopup [popupWidth]="586" [popupHeight]="323" [modal]="true" [preventPageScroll]="true">
+  <ng-template>
+    <kEditEntitlement (onEntitlementUpdated)="_loadEntitlementSectionData()"
+                      [entitlement]="_currentEditEntitlement"
+                      [ownerPopup]="editEntitlementPopup">
+    </kEditEntitlement>
+  </ng-template>
+</kPopupWidget>
+

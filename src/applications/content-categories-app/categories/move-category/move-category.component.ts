@@ -5,6 +5,10 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {
+  CategoriesStatus,
+  CategoriesStatusMonitorService
+} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
   selector: 'kMoveCategory',
@@ -19,13 +23,21 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedParentCategory: number = null;
+  public _categoriesUpdating = false;
 
   constructor(private _categoriesService: CategoriesService,
               private _appLocalization: AppLocalization,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
   }
 
   ngOnInit() {
+    this._categoriesStatusMonitorService.status$
+	    .cancelOnDestroy(this)
+	    .subscribe((status: CategoriesStatus) => {
+          this._categoriesUpdating = status.update;
+        });
+
     if (!this.selectedCategories || !this.selectedCategories.length) {
       this._blockerMessage = new AreaBlockerMessage(
         {
@@ -82,6 +94,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(() => {
           this.onMovedCategories.emit();
+          this._categoriesStatusMonitorService.updateCategoriesStatus();
           if (this.parentPopupWidget) {
             this.parentPopupWidget.close();
           }

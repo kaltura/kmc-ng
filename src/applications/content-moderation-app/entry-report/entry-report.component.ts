@@ -69,7 +69,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       uiconfid: parseInt(environment.core.kaltura.previewUIConf),
       pid: this.appAuthentication.appUser.partnerId,
       entryid: this.entryId,
-      flashvars: {'closedCaptions': { 'plugin': true }}
+      flashvars: {'closedCaptions': { 'plugin': true }, 'ks': this.appAuthentication.appUser.ks}
     };
   }
 

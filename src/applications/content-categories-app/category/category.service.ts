@@ -20,6 +20,10 @@ import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
+import { CategoriesStatusMonitorService } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { CategoryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
+import { CategoryListAction } from 'kaltura-ngx-client/api/types/CategoryListAction';
+import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -77,7 +81,8 @@ export class CategoryService implements OnDestroy {
                 private _appLocalization: AppLocalization,
                 private _appEvents: AppEventsService,
                 private _pageExitVerificationService: PageExitVerificationService,
-                appEvents: AppEventsService) {
+                appEvents: AppEventsService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
         this._widgetsManager.categoryStore = this;
 
@@ -163,7 +168,50 @@ export class CategoryService implements OnDestroy {
 				});
 			}
 
+  private _checkReferenceId(newCategory: KalturaCategory): Observable<boolean> {
+    if (!newCategory.referenceId ||
+		((newCategory.referenceId || null) === (this.category.referenceId || null))
+	) {
+      return Observable.of(true);
+    }
 
+    return Observable.create(observer => {
+      this._kalturaServerClient
+        .request(new CategoryListAction({
+          filter: new KalturaCategoryFilter({ referenceIdEqual: newCategory.referenceId })
+        }))
+        .subscribe(
+          response => {
+            if (Array.isArray(response.objects) && response.objects.length) {
+              const message = this._appLocalization.get(
+                'applications.content.categoryDetails.referenceIdInUse',
+                [
+                  newCategory.referenceId,
+                  response.objects.map(({ fullName, id }) => `- ${fullName} (ID:${id})`).join('\n')
+                ]
+              );
+              this._browserService.confirm({
+                message,
+                accept: () => {
+                  observer.next(true);
+                  observer.complete();
+                },
+                reject: () => {
+                  observer.next(false);
+                  observer.complete();
+                }
+              })
+            } else {
+              observer.next(true);
+              observer.complete();
+            }
+          },
+          error => {
+            this._state.next({ action: ActionTypes.CategoryPrepareSavingFailed });
+            observer.next(false);
+          });
+    });
+  }
 
 	private _transmitSaveRequest(newCategory: KalturaCategory) {
 		this._state.next({ action: ActionTypes.CategorySaving });
@@ -188,25 +236,41 @@ export class CategoryService implements OnDestroy {
 
                     const userModifiedName = this.category.name !== newCategory.name;
 
-					return this._kalturaServerClient.multiRequest(request)
-						.monitor('category store: save category')
-                        .tag('block-shell')
-                        .map(
-						categorySavedResponse => {
+					return this._checkReferenceId(newCategory)
+            .switchMap(proceedSaveRequest => {
+              if (proceedSaveRequest) {
+                return this._kalturaServerClient.multiRequest(request)
+                  .monitor('category store: save category')
+                  .tag('block-shell')
+                  .map(
+                    categorySavedResponse => {
 
-							if (userModifiedName) {
-                                this._appEvents.publish(new CategoriesGraphUpdatedEvent());
-                            }
+                      if (userModifiedName) {
+                        this._appEvents.publish(new CategoriesGraphUpdatedEvent());
+                      }
 
-							if (categorySavedResponse.hasErrors()) {
-								this._state.next({ action: ActionTypes.CategorySavingFailed });
-							} else {
-								this._loadCategory(this.categoryId);
-							}
 
-							return Observable.empty();
-						}
-						)
+                      // if categories were deleted during the save operation (sub-categories window) - invoke immediate polling of categories status
+                      const deletedCategories = request.requests.find((req, index) => {
+                        return (req instanceof CategoryDeleteAction && !categorySavedResponse[index].error)
+                      });
+                      if (deletedCategories) {
+                        this._categoriesStatusMonitorService.updateCategoriesStatus();
+                      }
+
+                      if (categorySavedResponse.hasErrors()) {
+                        this._state.next({ action: ActionTypes.CategorySavingFailed });
+                      } else {
+                        this._loadCategory(this.categoryId);
+                      }
+
+                      return Observable.empty();
+                    }
+                  )
+              } else {
+                return Observable.empty();
+              }
+            });
 				}
 				else {
 					switch (response.reason) {
@@ -339,7 +403,13 @@ export class CategoryService implements OnDestroy {
 		}).monitor('category store: check if can leave section without saving');
 	}
 
-	public returnToCategories() {
+	public returnToCategories(force = false) {
+
+    	if (force)
+	    {
+		    this._categoryIsDirty = false;
+		    this._updatePageExitVerification();
+	    }
 		this._router.navigate(['content/categories']);
 	}
 }
