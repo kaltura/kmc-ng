@@ -44,6 +44,13 @@
 
       .kTranscodingProfile {
         margin-left: 7px;
+
+        .kTranscodingProfileItem {
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 200px;
+        }
       }
 
       .kTranscodingProfileError {
@@ -141,8 +148,18 @@
   }
 }
 
-:host /deep/ .ui-dropdown.ui-widget {
-  min-width: 127px;
+:host /deep/ .kTranscodingProfile {
+  .ui-dropdown-label {
+    text-overflow: ellipsis;
+  }
+
+  .ui-dropdown.ui-widget {
+    width: 184px;
+  }
+}
+
+:host /deep/ .kFileType .ui-dropdown.ui-widget {
+  width: 127px;
 }
 
 :host /deep/ .kTable.empty .ui-widget-content {
@@ -158,7 +175,7 @@
   margin-bottom: -1px;
 }
 
-:host /deep/ .kTable tr:hover .kIconRemoveFile,                // show remove icon when hovering a row
+:host /deep/ .kTable tr:hover .kIconRemoveFile, // show remove icon when hovering a row
 :host /deep/ .kTable td:nth-child(2):hover .kIconEditFileName { // show edit icon when hovering filename column
   display: block !important;
 }
@@ -166,3 +183,4 @@
 :host /deep/ .kTable .ui-datatable-scrollable-table-wrapper {
   height: 280px;
 }
+

@@ -9,9 +9,9 @@ Thank you for your interest in the kmc-ng project. The project is currently unde
 
 In the coming months we plan to complete adding all the features we have in the legacy kmc as well as some new shiny features.
 
-The following list contains some major features in our roadmap:
+The following list contains some major features in our road-map:
 - [ ] upgrade to Angular 5
-- [ ] add on-prem server configuration provided at run-time
+- [x] add runtime server configuration
 - [ ] embed permission support across views
 - [ ] add multi language translations
 - [ ] add missing views (like settings > custom data, content > syndication etc)
@@ -19,8 +19,11 @@ The following list contains some major features in our roadmap:
 - [ ] add external app integration (like studio, analytics, usage dashboard, entry Clip&Trim etc)
 
 
+## <a name="issue"></a> Got a question or found an Issue?
+If you find a bug in the source code, you can help us by
+[submitting an issue](https://github.com/kaltura/kmc-ng/issues).
 
-## Quick start
+## Getting started
 
 ### Prerequisites
 
@@ -28,58 +31,52 @@ The following list contains some major features in our roadmap:
 - [x] Ensure you have [git installed](https://git-for-windows.github.io/) 
 - [x] Ensure you have npm installed, version 5.0.0 or above.
 
-### Project build options
-> KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
-
-You have two development options as described below.
-
-#### Option I (the blue pill) - Build this repo (kmc-ng) only to get a running application
-This option builds the kmc-ng repo against the Kaltura libraries published on NPM. 
-Note that the build script runs an earlier version of the application which compiles against the published NPM libraries. This version does not include latest features and fixes.
-  
-  > Please do not open issues when using this version as it is not up to date.
-  > If you want to create a pull request or open an issue, use the second option.
+### Run the application
+To run KMC-ng application, do the following:
 
 ```bash
 # clone our repo
-$ git clone https://github.com/kaltura/kmc-ng.git 
+git clone https://github.com/kaltura/kmc-ng.git
 
 # change directory to your app
-$ cd kmc-ng
-
-# install the dependencies
-$ npm install
+cd kmc-ng
 
 # checkout latest standalone code
-$ npm run standalone
+npm run standalone
 
 # sync dependencies to the new branch
-$ npm install
+npm install
 
+# create runtime configuration file by coping a sample one (the code below is written for bash)
+cp src/kmc-app/kmc-config.template.json src/kmc-app/kmc-config.json
+vim src/kmc-app/kmc-config.json
+
+# run the application in the browser (port 4200)
+npm run start -- -o
 ```
 
-> Note - if you need to [edit the application configuration](#config), change file [src/app-config/index.ts](https://github.com/kaltura/kmc-ng/blob/master/src/app-config/index.ts#L13)
-
-#### Option II (the red pill)- Develop kmc-ng complete solution (multiple repos)
-> In this option you will clone all the relevant repos to your machine and bind them together. Use this option to develop and create pull requests.
-
-Please read [docs/develop kmc-ng solution guide](./docs/develop-kmc-ng-solution.md).
+> Note: By default the `kmc-config.template.json` file contains information that is used against Kaltura production server. We advice you to check that the application works as expected with the default configuration before you customize it against your own server.
 
 
-### Run the application
-To run a standalone application, do the following:
-```
-# make sure you are working with latest standalone code
-$ npm run standalone
+## KMC-ng Configuration
 
-# run the application
-$ npm start
-```
-navigate to [http://localhost:4200](http://localhost:4200) in your browser.
+The configuration of the kmc-ng application is split into several files. Each file serves different area of the application. A list of configuration files can be found below:
 
-## <a name="config"></a>Configuring the application endpoints
-The Github version configures server endpoints against the Kaltura production server.
-If you need to configure these enpoint, edit file [src/app-config/index.ts](https://github.com/kaltura/kmc-ng/blob/master/src/app-config/index.ts#L13).
+
+
+| File Path | Purpose | Load phase |
+|:-------|:-------|:-------|
+| src/kmc-app/kmc-config.json | app server configuration | runtime configuration loaded by the browser. Note that it might be cached by the browser per app version |
+| src/kmc-app/static-kmc-config.ts | app shell configuration | transpiles into the app bundle. can be modified only before building the application |
+| src/applications/sub-applications-config.ts | sub-applications configuration | transpiles into the app bundle. can be modified only before building the application |
+| src/shared/shared-modules-config.ts | shared modules configurations| transpiles into the app bundle. can be modified only before building the application |
+
+
+
+### Contributing
+KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
+
+To contribute to this project please refer to [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## Deploy standalone application
 
@@ -96,26 +93,21 @@ $ npm install
 $ npm run build -- --prod
 ```
 
-A distrubted standalone application will be created in the `dist/` folder.
+A distributed standalone application will be created in the `dist/` folder.
 
-Update the base url to match your production environment.
-- Open the `index.html` file in the dist folder.
-- update the following `<base href="/">` to match the relative path this application will be hosted at. Make sure you use `/` as a suffix of the href value.
+### Configuring the server
+Angular applications are considered as Single page applications (a.k.a SPA). This requires the server to be configured correctly. Each technology has its own configuration set.
+- an example for [IIS server](https://gingter.org/2017/03/20/deep-link-angular-spa-iis/).
+- an example for [Nginx server](https://gist.github.com/dimitardanailov/7a7c4e3be9e03d1b578a).
 
+You will also need to setup `<base href="/">` in the `index.html` file to match the relative path this application will be hosted at.
+- You can do it manually after you created the deployed application
+- You can do it as part of the build command as shown below:
+```
+npm run build -- --prod --baseHref /your-app-path/
+```
 
-## KMC-ng solution
-KMC-ng is built on-top of several kaltura instrastructure packages. 
-Below is a summary of the core packages being used:
-
- Package | Version  |
-|:-------|:-------|
-| [kaltura-common](https://www.npmjs.com/package/@kaltura-ng/kaltura-common) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-common.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-common) |
-| [kaltura-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-ui) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-ui.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-ui) |
-| [kaltura-primeng-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-primeng-ui) |[![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-primeng-ui.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-primeng-ui) |
-| [@kaltura-ng/mc-theme](https://www.npmjs.com/package/@kaltura-ng/mc-theme) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fmc-theme.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fmc-theme)
-**Note**
-
-- The version number listed above represent the latest version deployed to npm for each package. This is not necessarily the versions currently in-use by this app. You can review `package.json` to get the actual packages versions.
+**Important** Make sure you wrap the value with `/` (both as a suffix and as a prefix)
 
 ## FAQ
 

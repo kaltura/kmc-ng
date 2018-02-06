@@ -48,7 +48,7 @@ export class SettingsMyUserSettingsService {
         const message = error && error.message
           ? error.code === 'PASSWORD_STRUCTURE_INVALID'
             ? this._appLocalization.get('applications.settings.myUserSettings.errors.passwordStructure')
-            : error.message
+            : this._appLocalization.get('applications.settings.myUserSettings.errors.passwordErr')
           : this._appLocalization.get('applications.settings.myUserSettings.errors.updateUser');
         return Observable.throw(new Error(message));
       })

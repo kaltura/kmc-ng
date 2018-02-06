@@ -89,7 +89,7 @@ npm i
 
 4. Update dependencies on the kaltura-ng libraries as followed:
 ```
-npm install @kaltura-ng/kaltura-{common,primeng-ui,ui}@latest @kaltura-ng/mc-{shared,theme}@latest
+npm install @kaltura-ng/kaltura-{common,primeng-ui,ui,logger}@latest @kaltura-ng/mc-{shared,theme}@latest
 ```
    * Make sure the list above contains all the libraries found in [kaltura-ng](https://github.com/kaltura/kaltura-ng) repository
 
@@ -133,7 +133,7 @@ npm run build:prod
 ```
 
 6. Add the studio application
-   * goto the the following link and find the latest release (make sure it is not a pre-release)
+   * goto the the [following link](https://github.com/kaltura/player-studio/releases) and find the latest release (make sure it is not a pre-release)
    * download the attached zip file
    * extract it into folder `dist/studio`
 
@@ -143,7 +143,6 @@ cd dist
 zip -r kmc-ng-vX.X.X.zip .
 ```
    * replace `vX.X.X` with the actual version number
-   * NOTICE: you must re-build the project
 
 8. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 

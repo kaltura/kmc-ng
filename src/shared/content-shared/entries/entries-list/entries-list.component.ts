@@ -13,6 +13,8 @@ import { EntriesRefineFiltersService,
 
 
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
+
 @Component({
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',
@@ -56,8 +58,9 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     constructor(public _entriesStore: EntriesStore,
                 private _entriesRefineFilters: EntriesRefineFiltersService,
                 private _appLocalization: AppLocalization,
-                private _browserService: BrowserService, private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
-
+                private _browserService: BrowserService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+                private _viewCategoryEntries: ViewCategoryEntriesService) {
   }
 
     ngOnInit() {
@@ -119,6 +122,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                     this._restoreFiltersState();
                     this._registerToFilterStoreDataChanges();
                     this._registerToDataChanges();
+                    this._applyCategoryFilter();
                 },
                 error => {
                     this._isBusy = false;
@@ -135,6 +139,15 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                         ]
                     })
                 });
+    }
+
+    private _applyCategoryFilter(): void {
+      setTimeout(() => { // run code in the next event loop to show actual value of the filter in the tags
+        const categoryId = this._viewCategoryEntries.popCategoryId();
+        if (categoryId) {
+          this.onCategorySelected(categoryId);
+        }
+      }, 0);
     }
 
     private _registerToDataChanges(): void {

@@ -17,6 +17,12 @@ export class ManualContentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._widgetService.attachForm();
+    this._widgetService.data$
+      .filter(Boolean)
+      .cancelOnDestroy(this)
+      .subscribe(() => {
+        this._clearSelection();
+      });
   };
 
   ngOnDestroy() {

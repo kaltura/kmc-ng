@@ -52,6 +52,7 @@
         class="kDropFoldersTable"
         [dropFolders]="(_dropFoldersStore.dropFolders.data$ | async)?.items"
         (navigateToEntry)="_navigateToEntry($event)"
+        (sortChanged)="_onSortChanged($event)"
         (deleteDropFolderFiles)="_deleteDropFolderFiles($event)"
         [(selectedDropFolders)]="_selectedDropFolders"></kDropFoldersListTable>
       </k-area-blocker>

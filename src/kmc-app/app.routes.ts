@@ -4,7 +4,6 @@ import {AppBootstrap, AuthCanActivate} from 'app-shared/kmc-shell';
 import {LoginComponent} from './components/login/login.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {ErrorComponent} from './components/error/error.component';
-import {environment} from 'app-environment';
 
 
 const routes: Routes = <Routes>[
@@ -16,7 +15,7 @@ const routes: Routes = <Routes>[
     children: [
       { path: 'login', component: LoginComponent },
         {
-            path: '', redirectTo: environment.shell.browser.appRoute, pathMatch: 'full'
+            path: '', redirectTo: '/content/entries/list', pathMatch: 'full'
         },
       {
         path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
@@ -96,7 +95,7 @@ const routes: Routes = <Routes>[
     ]
   },
   {
-    path: '**', redirectTo: environment.shell.browser.appRoute, pathMatch: 'full'
+    path: '**', redirectTo: '/', pathMatch: 'full'
   }
 ];
 

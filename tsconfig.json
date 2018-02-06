@@ -25,7 +25,7 @@
         "shared/*"
       ],
       "app-environment": [
-        "app-config"
+        "configuration"
       ],
       "app-theme/*": [
         "styles/app-theme/*"
@@ -137,6 +137,12 @@
       ],
       "core-js/*": [
         "../node_modules/core-js/*"
+      ],
+      "deepmerge": [
+        "../node_modules/deepmerge"
+      ],
+      "deepmerge/*": [
+        "../node_modules/deepmerge/*"
       ],
       "intl": [
         "../node_modules/intl"

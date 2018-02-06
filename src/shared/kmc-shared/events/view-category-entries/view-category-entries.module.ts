@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule, Optional, Self } from '@angular/core';
-import { PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation/playlist-creation.service';
+import { ViewCategoryEntriesService } from './view-category-entries.service';
 
 @NgModule({
   imports: <any[]>[],
@@ -7,15 +7,15 @@ import { PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation
   exports: <any[]>[],
   providers: <any[]>[]
 })
-export class PlaylistCreationModule {
+export class ViewCategoryEntriesModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: PlaylistCreationModule,
-      providers: [PlaylistCreationService]
+      ngModule: ViewCategoryEntriesModule,
+      providers: [ViewCategoryEntriesService]
     };
   }
 
-  constructor(@Optional() @Self() playlistCreationService: PlaylistCreationService) {
+  constructor(@Optional() @Self() playlistCreationService: ViewCategoryEntriesService) {
     if (playlistCreationService) {
       playlistCreationService.init();
     }

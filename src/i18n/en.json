@@ -346,8 +346,8 @@
           "header": "Cancel uploads",
           "message": "Are you sure you want to cancel those uploads?"
         },
-        "files": "Files",
-        "selected": "Selected",
+        "files": "{{0}} Files",
+        "selected": "{{0}} Selected",
         "cancel": "Cancel",
         "table": {
           "fileName": "File Name",
@@ -513,6 +513,8 @@
         "name": "Name",
         "categoryMovedSuccessfully": "Category moved successfully",
         "errors": {
+          "cannotLinkEntries": "Category was created, but failed to link some of the entries, please review the created category",
+          "createFailed": "An error occurred while trying to add new category",
           "requiredName": "You must enter name",
           "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
         }
@@ -898,7 +900,9 @@
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
         "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries",
         "viewRule": "View/Edit rule",
-        "deleteRule": "Delete rule"
+        "deleteRule": "Delete rule",
+        "noCategoriesOrEntries": "No categories or entries were selected",
+        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}."
       },
       "entryDetails": {
         "sections": {
@@ -953,7 +957,8 @@
           "selected": "Selected",
           "clear": "Clear Selection",
           "addGroup": "Add Group",
-          "deleteGroup": "Delete Group"
+          "deleteGroup": "Delete Group",
+          "nameRequired": "You must enter an entry name"
         },
         "thumbnails": {
           "thumbnails": "Thumbnails",
@@ -1227,6 +1232,7 @@
         }
       },
       "categoryDetails": {
+        "referenceIdInUse": "The following entries are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
         "headerProps": {
@@ -1692,6 +1698,7 @@
           "fieldLabel": "Field Label",
           "fieldType": "Field Type",
           "shortDescription": "Short Description",
+          "labelTT": "System Name: {{name}}",
           "maxValues": "Max Values",
           "searchable": "Searchable",
           "deleteCustomDataField": "Delete Custom Data Field",
@@ -1848,6 +1855,7 @@
           "connection": "Error connecting to server",
           "getUserData": "Error occurred during getting user data",
           "updateUser": "Error occurred during updating user data",
+          "passwordErr": "Supplied password is invalid",
           "passwordStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules :\n- Must be of length between 8 and 14.\n- Must not contain your name\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols:  %%~!@#$^*=+?[]{}.\n- Must not contain the following characters: < or >."
         }
       }

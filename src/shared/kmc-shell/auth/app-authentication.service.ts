@@ -20,7 +20,7 @@ import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPas
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
-import {environment} from 'app-config/index';
+import {environment} from 'app-environment';
 import {KmcServerPolls} from 'app-shared/kmc-shared';
 
 

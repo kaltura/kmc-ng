@@ -2,7 +2,7 @@
 import {
 	MetadataProfile, MetadataItemTypes, MetadataItem
 } from './metadata-profile';
-import { XmlParser } from '@kaltura-ng/kaltura-common';
+import { KalturaUtils, XmlParser } from '@kaltura-ng/kaltura-common';
 
 
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
@@ -183,11 +183,11 @@ export class MetadataProfileParser {
         'annotation': {
           'documentation': { 'text': item.documentations },
           'appinfo': {
-            'label': { 'text': item.label },
-            'key': { 'text': item.key },
-            'searchable': { 'text': String(!!item.isSearchable) },
-            'timeControl': { 'text': String(!!item.isTimeControl) },
-            'description': { 'text': item.description }
+            'noprefix:label': { 'text': item.label },
+            'noprefix:key': { 'text': item.key },
+            'noprefix:searchable': { 'text': String(!!item.isSearchable) },
+            'noprefix:timeControl': { 'text': String(!!item.isTimeControl) },
+            'noprefix:description': { 'text': item.description }
           }
         }
       };
@@ -199,7 +199,7 @@ export class MetadataProfileParser {
           'simpleType': {
             'restriction': {
               'attr': { 'base': this._extractMetadataItemType(item.type) },
-              'enumeration': [...item.optionalValues.map(option => ({ 'attr': { 'value': option.value } }))]
+              'enumeration': [...item.optionalValues.map(option => ({ 'attr': { 'value': KalturaUtils.escapeXml(option.value) } }))]
             }
           }
         });
