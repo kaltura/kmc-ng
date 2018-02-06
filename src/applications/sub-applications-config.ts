@@ -24,12 +24,16 @@ export interface SubApplicationsConfig {
             includeSeoMetadata: boolean,
             embedType: string
         },
-        dropFolders : {
+        dropFolders: {
             createdAtDateRange : string,
             bulkActionsLimit: number
         },
         settingsMetadata: {
             apiUrl: string
+        },
+        settingsAccountInformation: {
+            checkFreeTrialExpiration: boolean,
+            trialPeriod: number
         },
         createLive: {
             akamaiEdgeServerIpURL: string
@@ -79,6 +83,10 @@ export const subApplicationsConfig: SubApplicationsConfig = {
         },
         "settingsMetadata": {
             "apiUrl": "/api_v3/index.php/service/metadata_metadataprofile/action/serve"
+        },
+        "settingsAccountInformation": {
+            "checkFreeTrialExpiration": false,
+            "trialPeriod": 30
         },
         "createLive": {
             "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
