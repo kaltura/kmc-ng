@@ -40,7 +40,7 @@ export class LiveDashboardComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       }
     } catch (ex) {
-      this.logger.warn(`Could not load live dashboard, please check that live dashboard configurations are loaded correctly\n error: ${ex}`)
+      this.logger.warn(`Could not load live dashboard, please check that live dashboard configurations are loaded correctly\n error: ${ex}`);
       this._liveDashboardUrl = null;
       window['kmc'] = null;
       window['lang'] = null;
