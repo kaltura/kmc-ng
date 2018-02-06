@@ -1215,6 +1215,7 @@
           "tooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier"
         },
         "distribution": {
+          "cancel": "Cancel",
           "distribution": "Distribution",
           "export": "Export",
           "upToDate": "Up To Date",

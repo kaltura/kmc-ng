@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
 
 @Component({
@@ -8,5 +8,7 @@ import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/Kaltura
 })
 export class UndistributedProfileComponent {
   @Input() profile: KalturaDistributionProfile;
+
+  @Output() onExport = new EventEmitter<KalturaDistributionProfile>();
 }
 

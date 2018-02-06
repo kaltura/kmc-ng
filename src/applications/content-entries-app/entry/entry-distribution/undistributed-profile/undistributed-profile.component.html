@@ -19,6 +19,7 @@
 
   <div class="kControls">
     <button pButton class="kButtonDefault kExportBtn"
-            [label]="'applications.content.entryDetails.distribution.export' | translate"></button>
+            [label]="'applications.content.entryDetails.distribution.export' | translate"
+            (click)="onExport.emit(profile)"></button>
   </div>
 </div>

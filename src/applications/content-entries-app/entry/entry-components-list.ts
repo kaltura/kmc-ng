@@ -29,6 +29,7 @@ import { DistributedProfileComponent } from './entry-distribution/distributed-pr
 import { DistributionStatusPipe } from './entry-distribution/pipes/distribution-status.pipe';
 import { DistributedProfileErrorInfoComponent } from './entry-distribution/distributed-profile-error-info/distributed-profile-error-info.component';
 import { DistributedProfileErrorsComponent } from './entry-distribution/distributed-profile-errors/distributed-profile-errors.component';
+import { EditDistributionProfileComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile.component';
 
 
 export const EntryComponentsList = [
@@ -62,5 +63,6 @@ export const EntryComponentsList = [
     UndistributedProfileComponent,
     DistributionStatusPipe,
     DistributedProfileErrorsComponent,
-    DistributedProfileErrorInfoComponent
+    DistributedProfileErrorInfoComponent,
+    EditDistributionProfileComponent
 ];

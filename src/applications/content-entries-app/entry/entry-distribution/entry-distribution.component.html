@@ -8,7 +8,14 @@
         (onDeleteDistribution)="_widgetService.deleteDistributionProfile($event)"></kEntryDistributedProfile>
       <kEntryUndistributedProfile
         *ngFor="let profile of (_widgetService.distributionProfiles$.undistributed | async).items"
-        [profile]="profile"></kEntryUndistributedProfile>
+        [profile]="profile"
+        (onExport)="editProfile.open()"></kEntryUndistributedProfile>
     </div>
   </div>
 </k-area-blocker>
+
+<kPopupWidget #editProfile [popupWidth]="995" [slider]="true">
+  <ng-template>
+    <kEditDistributionProfile [parentPopup]="editProfile"></kEditDistributionProfile>
+  </ng-template>
+</kPopupWidget>
