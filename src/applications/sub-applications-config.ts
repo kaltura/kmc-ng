@@ -93,7 +93,7 @@ export const subApplicationsConfig: SubApplicationsConfig = {
             "url" : "http://localhost:9090/"
         },
         "usageDashboard" : {
-          "path": "local_machine_only/usageDashboard/index.html",
+          "path": "__local_machine_only__/usageDashboard/index.html",
           "uiConfId": "39700052",
           "map_urls" : ["cf1.kaltura.com/content/static/maps/v1", "cf2.kaltura.com/content/static/maps/v1", "cf3.kaltura.com/content/static/maps/v1"],
           "map_zoom_levels": 12

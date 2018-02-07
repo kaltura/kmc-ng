@@ -13,7 +13,7 @@
         "assets",
         "i18n",
         "favicon.ico",
-        "local_machine_only/**/*"
+        "__local_machine_only__/**/*"
       ],
       "index": "index.html",
       "main": "kmc-app/main.ts",

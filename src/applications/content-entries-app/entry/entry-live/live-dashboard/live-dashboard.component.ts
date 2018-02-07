@@ -25,7 +25,7 @@ export class LiveDashboardComponent implements OnInit, AfterViewInit, OnDestroy 
 
     try {
       const serverUrlPrefix: string = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
-      this._liveDashboardUrl = 'local_machine_only/liveDashboard/index.html'; // todo: override from configuration
+      this._liveDashboardUrl = '__local_machine_only__/liveDashboard/index.html'; // todo: override from configuration
 
       const currentLang = this._browserService.getFromLocalStorage('kmc_lang');
       window['lang'] =  currentLang || 'en';
