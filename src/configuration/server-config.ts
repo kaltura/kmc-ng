@@ -45,7 +45,7 @@ const ServerConfigSchema = {
             html5_version: { type: 'string' },
             html5lib: { type: 'string' }
           },
-          required: ['uri', 'version', /*'path', */'uiConfId', 'html5_version', 'html5lib'],
+          required: ['uri', 'version', 'path', 'uiConfId', 'html5_version', 'html5lib'],
           additionalProperties: false
         }
       },
