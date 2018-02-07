@@ -1243,7 +1243,10 @@
             "tags": "Tags",
             "delete": "Delete",
             "videoFlavors": "Video Flavors",
-            "thumbnail": "Thumbnail"
+            "thumbnail": "Thumbnail",
+            "missingFlavor": "Missing Flavor",
+            "format": "Format: {{0}}",
+            "codec": "Codec: {{0}}"
           },
           "status": {
             "readyForDistribution": "Ready for Distribution",
@@ -1269,7 +1272,9 @@
             "missingMetadata": "Missing Metadata.",
             "missingFlavor": "Missing Flavor.",
             "missingThumbnail": "Missing Thumbnail.",
-            "autoDistributionMetadataMissing": "Auto-distribution Metadata is Missing."
+            "autoDistributionMetadataMissing": "Auto-distribution Metadata is Missing.",
+            "failedLoadMissingFlavors": "Failed to load missing flavors assets: {{0}}",
+            "serverError": "Server error"
           },
           "errorsInfo": {
             "goToMetadataTab": "Go to Metadata Tab",

@@ -1,7 +1,7 @@
 <div class="kEditDistributionProfileWrap">
   <div class="kFloater">
     <div class="kHeader">
-      <span class="kTitle">{{profile?.name}}</span>
+      <span class="kTitle">{{_profile?.name}}</span>
       <div class="kButtons">
         <a class="kCancel" (click)="parentPopup.close()">
           {{'applications.content.entryDetails.distribution.cancel' | translate}}
@@ -17,7 +17,7 @@
       <form>
         <div class="kRow kFirstRow">
           <span class="kLabel">{{'applications.content.entryDetails.distribution.form.status' | translate}}</span>
-          <span class="kReadonlyData" *ngIf="distribute">
+          <span class="kReadonlyData" *ngIf="_forDistribution">
             <i class="kIconinactive"></i>
             {{'applications.content.entryDetails.distribution.status.notDistributed' | translate}}
           </span>
@@ -29,18 +29,18 @@
                       binary="true"></p-checkbox>
         </div>
 
-        <div *ngIf="!distribute">
+        <div *ngIf="!_forDistribution">
           <div class="kRow">
             <span class="kLabel">{{'applications.content.entryDetails.distribution.form.lastUpdate' | translate}}</span>
             <span class="kReadonlyData">
-              {{profile?.updatedAt | kDate:'short'}}
+              {{_profile?.updatedAt | kDate:'short'}}
             </span>
           </div>
 
           <div class="kRow">
             <span class="kLabel">{{'applications.content.entryDetails.distribution.form.remoteId' | translate}}</span>
             <span class="kReadonlyData">
-              {{profile?.remoteId}}
+              {{_profile?.remoteId}}
             </span>
           </div>
         </div>
@@ -81,6 +81,29 @@
       </form>
 
       <h2 class="kFormHeader">{{'applications.content.entryDetails.distribution.form.videoFlavors' | translate}}</h2>
+      <div class="kFlavor" *ngFor="let flavor of _requiredFlavors">
+        <div class="kFlavorInfo">
+          <i class="kIconplayback-file kFlavorIcon"></i>
+          <span class="kFlavorName">{{flavor.name}}</span>
+        </div>
+        <div class="kFlavorMetadata">
+          <span *ngIf="flavor.paramsId === undefined" class="kFlavorMissingMetadata">
+            <i class="kIconwarning kFlavorMissingIcon"></i>
+            {{'applications.content.entryDetails.distribution.form.missingFlavor' | translate}}
+          </span>
+          <span *ngIf="flavor.paramsId !== undefined">
+            {{'applications.content.entryDetails.distribution.form.format'| translate:[flavor.format]}}
+            <span class="kFlavorMetadataDelimiter"></span>
+            {{'applications.content.entryDetails.distribution.form.codec'| translate:[flavor.codec]}}
+            <span class="kFlavorMetadataDelimiter"></span>
+            {{flavor.bitrate}}
+            <span class="kFlavorMetadataDelimiter"></span>
+            {{flavor.size}}
+            <span class="kFlavorMetadataDelimiter"></span>
+            {{flavor.dimensions}}
+          </span>
+        </div>
+      </div>
 
       <h2 class="kFormHeader">{{'applications.content.entryDetails.distribution.form.thumbnail' | translate}}</h2>
     </div>

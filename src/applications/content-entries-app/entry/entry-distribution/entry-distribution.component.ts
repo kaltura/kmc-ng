@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { EntryDistributionWidget } from './entry-distribution-widget.service';
+import { EntryDistributionWidget, ExtendedKalturaEntryDistribution } from './entry-distribution-widget.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
 
@@ -14,8 +14,8 @@ export class EntryDistributionComponent implements OnInit, OnDestroy {
 
   public _loading = false;
   public _loadingError = null;
-  public _selectedProfile: KalturaDistributionProfile;
-  public _distribute = false;
+  public _selectedDistributedProfile: ExtendedKalturaEntryDistribution;
+  public _selectedUndistributedProfile: KalturaDistributionProfile;
 
   constructor(public _widgetService: EntryDistributionWidget) {
   }
@@ -30,8 +30,8 @@ export class EntryDistributionComponent implements OnInit, OnDestroy {
   }
 
   public _distributeProfile(profile: KalturaDistributionProfile): void {
-    this._distribute = true;
-    this._selectedProfile = profile;
+    this._selectedUndistributedProfile = profile;
+    this._selectedDistributedProfile = null;
     this._editProfilePopup.open();
   }
 }

@@ -30,6 +30,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
+import { FlavorParamsGetAction } from 'kaltura-ngx-client/api/types/FlavorParamsGetAction';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -370,6 +371,24 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         header: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirmTitle'),
         message: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirm', [profile.id]),
         accept: () => this._performDeleteRequest(action)
+      });
+  }
+
+  public loadMissingFlavors(flavors: Partial<Flavor>[]): Observable<{id: string, name: string}[]> {
+    const actions = flavors.map(({ id }) => new FlavorParamsGetAction({ id: Number(id) }));
+    return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
+      .map(responses => {
+        return responses.map(response => {
+          const result = response.result;
+          if (response.error || !result) {
+            throw Error(response.error
+              ? response.error.message
+              : this._appLocalization.get('applications.content.entryDetails.distribution.errors.serverError')
+            );
+          }
+
+          return { id: String(result.id), name: result.name };
+        });
       });
   }
 }
