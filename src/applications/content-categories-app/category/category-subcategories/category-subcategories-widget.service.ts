@@ -37,6 +37,10 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   }
 
   protected onActivate(firstTimeActivating: boolean) {
+    if (this.data && !this.data.directSubCategoriesCount) {
+      this._categoryService.openSection(CategoryWidgetKeys.Metadata);
+      return;
+    }
 
 
     super._showLoader();
@@ -207,7 +211,10 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
     if (this.isDirty) {
       this._subcategoriesMarkedForDelete.forEach(subcategory => {
-        request.requests.push(new CategoryDeleteAction({id: subcategory.id}));
+        request.requests.push(new CategoryDeleteAction({
+          id: subcategory.id,
+          moveEntriesToParentCategory: 1
+        }));
       });
       this._subcategories.getValue().forEach((subcategory, index) => {
         request.requests.push(new CategoryUpdateAction({
