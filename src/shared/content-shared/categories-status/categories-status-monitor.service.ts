@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { PartnerListFeatureStatusAction } from 'kaltura-ngx-client/api/types/PartnerListFeatureStatusAction';
 import { KalturaFeatureStatusListResponse } from 'kaltura-ngx-client/api/types/KalturaFeatureStatusListResponse';
 import { KalturaFeatureStatusType } from 'kaltura-ngx-client/api/types/KalturaFeatureStatusType';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
@@ -8,7 +7,7 @@ import { CategoriesStatusRequestFactory } from './categories-status-request-fact
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { KalturaFeatureStatus } from 'kaltura-ngx-client/api/types/KalturaFeatureStatus';
 import { PollInterval } from '@kaltura-ng/kaltura-common';
-import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-ngx-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export interface CategoriesStatus {
@@ -18,9 +17,9 @@ export interface CategoriesStatus {
 
 @Injectable()
 export class CategoriesStatusMonitorService implements OnDestroy {
-    
+
     private _pollingState: null | 'running' = null;
-    private _pollingInterval: PollInterval = <PollInterval>modulesConfig.categoriesShared.categoriesStatusSampleInterval;
+    private _pollingInterval: PollInterval = <PollInterval>modulesConfig.contentShared.categories.categoriesStatusSampleInterval;
     private _currentStatus = { lock: null, update: null };
 
     private _status = new ReplaySubject<CategoriesStatus>(1);

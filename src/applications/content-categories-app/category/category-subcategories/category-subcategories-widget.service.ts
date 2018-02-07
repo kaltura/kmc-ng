@@ -73,7 +73,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
 
   private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
-    const subcategoriesLimit: number = modulesConfig.categoriesShared.SUB_CATEGORIES_LIMIT || 50;
+    const subcategoriesLimit: number = modulesConfig.contentShared.categories.subCategoriesLimit || 50;
     if (!parentCategory) {
       return Observable.throw(new Error('parentCategory to get subcategories for is not defined'));
     }

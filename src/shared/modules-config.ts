@@ -1,48 +1,32 @@
 
 export interface ModulesConfig {
-    entriesShared: {
-        pageSize: number,
-        MAX_ENTRIES: number,
-        categoriesFilters: {
-            maxChildrenToShow: number
+    shared: {
+        lists: {
+            maxItems: number,
+            defaultPageSize: number
         }
-    },
-    categoriesShared: {
-        MAX_CATEGORIES: number,
-        categoriesStatusSampleInterval: number,
-        categoriesFilters: {
-            maxChildrenToShow: number
-        },
-        SUB_CATEGORIES_LIMIT: number
-    },
-    rolesShared: {
-        MAX_ROLES: number,
-        rolesFilters: {
-            maxChildrenToShow: number
+    }
+    contentShared: {
+        categories: {
+            categoriesStatusSampleInterval: number,
+            subCategoriesLimit: number,
+            maxTreeItemChildrenToShow: number
         }
     }
 }
 
 export const modulesConfig: ModulesConfig = {
-    "entriesShared": {
-        "pageSize": 50,
-        "MAX_ENTRIES": 10000,
-        "categoriesFilters": {
-            "maxChildrenToShow": 500
+    'shared': {
+        'lists': {
+            'maxItems': 10000,
+            'defaultPageSize': 50
         }
     },
-    "categoriesShared": {
-        "MAX_CATEGORIES": 10000,
-        "categoriesStatusSampleInterval": 30,
-        "categoriesFilters": {
-            "maxChildrenToShow": 500
-        },
-        "SUB_CATEGORIES_LIMIT": 50
-    },
-    "rolesShared": {
-        "MAX_ROLES": 10000,
-        "rolesFilters": {
-            "maxChildrenToShow": 500
+    'contentShared': {
+        'categories': {
+            'categoriesStatusSampleInterval': 30,
+            'subCategoriesLimit': 50,
+            'maxTreeItemChildrenToShow': 500
         }
     }
 }

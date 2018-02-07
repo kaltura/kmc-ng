@@ -47,7 +47,7 @@ export class CategoriesTreeService {
       // make sure the node children weren't loaded already.
       if (node.childrenStatus !== NodeChildrenStatuses.loaded && node.childrenStatus !== NodeChildrenStatuses.loading) {
 
-        const maxNumberOfChildren = modulesConfig.entriesShared.categoriesFilters.maxChildrenToShow;
+        const maxNumberOfChildren = modulesConfig.contentShared.categories.maxTreeItemChildrenToShow;
         if (node.childrenCount > maxNumberOfChildren) {
           node.setChildrenLoadStatus(
             NodeChildrenStatuses.error,

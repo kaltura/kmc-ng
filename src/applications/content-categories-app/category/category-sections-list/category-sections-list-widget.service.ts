@@ -107,7 +107,7 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
         return category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
       case CategoryWidgetKeys.SubCategories:
         return category.directSubCategoriesCount > 0 &&
-          category.directSubCategoriesCount <= modulesConfig.categoriesShared.SUB_CATEGORIES_LIMIT;
+          category.directSubCategoriesCount <= modulesConfig.contentShared.categories.subCategoriesLimit;
       default:
         return true;
     }

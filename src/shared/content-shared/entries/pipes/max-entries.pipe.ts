@@ -8,7 +8,7 @@ export class MaxEntriesPipe implements PipeTransform {
   }
 
   transform(value: number): number {
-    const maxEntries = modulesConfig.entriesShared.MAX_ENTRIES;
+    const maxEntries = modulesConfig.shared.lists.maxItems;
     return value > maxEntries ? maxEntries : value;
   }
 }
