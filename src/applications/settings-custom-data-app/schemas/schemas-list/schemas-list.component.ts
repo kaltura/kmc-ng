@@ -16,12 +16,11 @@ import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metada
 export class SchemasListComponent implements OnInit, OnDestroy {
   @ViewChild('customSchema') _customSchemaPopup: PopupWidgetComponent;
 
-  public _blockerMessage: AreaBlockerMessage = null;
-
   public _selectedSchemas: SettingsMetadataProfile[] = [];
   public _selectedSchema: SettingsMetadataProfile = null;
   public _tableIsBusy = false;
   public _tableBlockerMessage: AreaBlockerMessage = null;
+  public _serverValidationError = null;
 
   public _query = {
     pageIndex: 0,
@@ -112,22 +111,17 @@ export class SchemasListComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         () => {
-          this._blockerMessage = null;
           this._schemasStore.reload();
           this._clearSelection();
           this._updateMetadataProfiles();
         },
         error => {
-          this._blockerMessage = new AreaBlockerMessage({
+          this._browserService.alert({
             message: error.message || this._appLocalization.get('applications.settings.metadata.updateError'),
-            buttons: [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._clearSelection();
-                this._schemasStore.reload();
-              }
-            }]
+            accept: () => {
+              this._clearSelection();
+              this._schemasStore.reload();
+            }
           });
         }
       );
@@ -141,6 +135,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
     switch (action) {
       case 'edit':
         if (!schema.profileDisabled) {
+          this._clearSelection();
           this._selectedSchema = schema;
           this._customSchemaPopup.open();
         }
@@ -203,19 +198,18 @@ export class SchemasListComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._blockerMessage = null;
+          this._serverValidationError = null;
+          this._customSchemaPopup.close();
           this._schemasStore.reload();
           this._updateMetadataProfiles();
         },
         (error) => {
-          this._blockerMessage = new AreaBlockerMessage({
+          this._serverValidationError = error;
+          this._browserService.alert({
             message: error.message,
-            buttons: [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this._schemasStore.reload();
-              }
-            }]
+            accept: () => {
+              this._schemasStore.reload();
+            }
           });
         }
       )

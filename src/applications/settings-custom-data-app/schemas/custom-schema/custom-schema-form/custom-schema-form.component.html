@@ -3,7 +3,9 @@
     <span class="kLabel">{{'applications.settings.metadata.form.customSchemaTitle' | translate}}</span>
     <div class="kRequired">*</div>
     <div>
-      <input class="kControl" pInputText [formControl]="_nameField">
+      <input class="kControl" pInputText
+             [class.kControlInvalid]="_nameField.touched && _nameField.invalid"
+             [formControl]="_nameField">
     </div>
   </div>
 
@@ -17,7 +19,9 @@
   <div class="kRow">
     <span class="kLabel">{{'applications.settings.metadata.form.systemName' | translate}}</span>
     <div>
-      <input class="kControl" pInputText [formControl]="_systemNameField">
+      <input class="kControl" pInputText
+             [class.kControlInvalid]="_systemNameField.invalid"
+             [formControl]="_systemNameField">
     </div>
   </div>
 

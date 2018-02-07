@@ -27,6 +27,7 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   @Output() selectedDropFoldersChange = new EventEmitter<any>();
   @Output() navigateToEntry = new EventEmitter<string>();
   @Output() deleteDropFolderFiles = new EventEmitter<any>();
+  @Output() sortChanged = new EventEmitter<any>();
 
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 

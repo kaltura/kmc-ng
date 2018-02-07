@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
+import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {UserUpdateLoginDataActionArgs} from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
 
 @Component({
   selector: 'kChangePassword',
@@ -30,8 +30,8 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  private _passwordMatchValidator(g: FormGroup): ValidationErrors | null {
-    return g.parent && g.parent.value.newPassword === g.value ? null : { 'mismatch': true };
+  public _passwordMatchValidator(passControl: AbstractControl): ValidationErrors | null {
+    return passControl.parent && passControl.parent.value.newPassword === passControl.value ? null : { 'mismatch': true };
   }
 
   // Create empty structured form on loading

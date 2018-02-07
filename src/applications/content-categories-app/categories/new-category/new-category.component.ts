@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, AfterViewInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoriesService} from '../categories.service';
 
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
@@ -10,13 +10,14 @@ import {
   CategoriesStatus,
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kNewCategory',
   templateUrl: './new-category.component.html',
   styleUrls: ['./new-category.component.scss']
 })
-export class NewCategoryComponent implements OnInit, OnDestroy {
+export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() linkedEntries: {entryId: string}[] = [];
@@ -27,9 +28,12 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
   public newCategoryForm: FormGroup;
   public _categoriesUpdating = false;
 
+  private _showConfirmationOnClose = true;
+
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
               private _categoriesService: CategoriesService,
+              private _browserService: BrowserService,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
     this.newCategoryForm = this._fb.group({
@@ -45,10 +49,38 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
         });
   }
 
+  ngAfterViewInit() {
+    if (this.parentPopupWidget) {
+      this.parentPopupWidget.state$
+		  .cancelOnDestroy(this)
+		  .subscribe(({ state, context }) => {
+            if (state === PopupWidgetStates.Open) {
+              this._showConfirmationOnClose = true;
+            }
+            if (state === PopupWidgetStates.BeforeClose
+                && context && context.allowClose && this.newCategoryForm.dirty
+                && this._showConfirmationOnClose) {
+              context.allowClose = false;
+              this._browserService.confirm(
+                  {
+                    header: this._appLocalization.get('applications.content.addNewPlaylist.cancelEdit'),
+                    message: this._appLocalization.get('applications.content.addNewPlaylist.discard'),
+                    accept: () => {
+                      this._showConfirmationOnClose = false;
+                      this.parentPopupWidget.close();
+                    }
+                  }
+              );
+            }
+          });
+    }
+  }
+
   ngOnDestroy() {
   }
 
   public _onCategorySelected(event: number) {
+      this.newCategoryForm.markAsDirty();
     this._selectedParentCategory = event;
   }
 
@@ -81,22 +113,49 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(({category}) => {
+          this._showConfirmationOnClose = false;
             this.onApply.emit({categoryId: category.id});
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
           },
           error => {
+            let message = '';
+            let navigateToCategory = false;
+            switch (error.code)
+            {
+                case 'category_creation_failure':
+                    message = this._appLocalization.get('applications.content.addNewCategory.errors.createFailed');
+                    break;
+                case 'missing_category_name':
+                    message = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
+                    break;
+                case 'entries_link_issue':
+                    message = this._appLocalization.get('applications.content.addNewCategory.errors.cannotLinkEntries');
+                    navigateToCategory = true;
+                    break;
+                default:
+                    message = 'An error occurred while trying to add new category';
+                    break;
+            }
 
-              const message = 'An error occurred while trying to add new category';
             this._blockerMessage = new AreaBlockerMessage(
               {
-                message: error.message || message,
+                message: message,
                 buttons: [
                   {
                     label: this._appLocalization.get('app.common.ok'),
                     action: () => {
                       this._blockerMessage = null;
+                        if (navigateToCategory) {
+                            this._showConfirmationOnClose = false;
+                            if (error.context && error.context.categoryId) {
+                                this.onApply.emit({categoryId: error.context.categoryId});
+                            }
+                            if (this.parentPopupWidget) {
+                                this.parentPopupWidget.close();
+                            }
+                        }
                     }
                   }
                 ]

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { MetadataItemTypes } from 'shared/kmc-shared/custom-metadata/metadata-profile';
-import { AppLocalization } from '../../../../../../kaltura-ng/kaltura-common/dist/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Pipe({ name: 'kCustomSchemaTypePipe' })
 export class CustomSchemaTypePipe implements PipeTransform {
@@ -23,7 +23,7 @@ export class CustomSchemaTypePipe implements PipeTransform {
         break;
 
       case MetadataItemTypes.List:
-        result.icon = 'kIconmetadata-templates'; // TODO [kmcng] replace with relevant icon
+        result.icon = 'kIconList';
         result.label = this._appLocalization.get('applications.settings.metadata.type.list');
         break;
 
