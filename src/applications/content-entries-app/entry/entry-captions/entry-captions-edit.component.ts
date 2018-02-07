@@ -11,7 +11,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
+import { globalConfig } from 'config/global';
 
 function urlValidator(control: AbstractControl): {[key: string]: boolean} | null {
 	let v: string = control.value;
@@ -115,7 +116,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 	}
 
   private _validateFileSize(file: File): boolean {
-    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
     const fileSize = file.size / 1024 / 1024; // convert to Mb
 
     return this._uploadManagement.supportChunkUpload(new NewEntryCaptionFile(null)) || fileSize < maxFileSize;

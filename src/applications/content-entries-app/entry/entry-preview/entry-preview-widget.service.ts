@@ -1,12 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { EntryWidget } from '../entry-widget';
+import { serverConfig } from 'config/server';
 
 @Injectable()
 export class EntryPreviewWidget extends EntryWidget implements OnDestroy
@@ -53,7 +54,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
                 sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
                 sourceType === KalturaSourceType.manualLiveStream.toString());
 
-            const UIConfID = environment.core.kaltura.previewUIConf;
+            const UIConfID = serverConfig.kalturaServer.previewUIConf;
             const partnerID = this.appAuthentication.appUser.partnerId;
             const ks = this.appAuthentication.appUser.ks || "";
 
@@ -64,7 +65,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
 
             this._urlHash = this._urlHash + 1;
 
-            result = `${environment.core.kaltura.cdnUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}&hash=${this._urlHash}`;
+            result = `${serverConfig.cdnServers.serverUri}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}&hash=${this._urlHash}`;
         }
 
         return result;

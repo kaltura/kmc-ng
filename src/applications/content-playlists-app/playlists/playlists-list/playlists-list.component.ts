@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistsFilters, PlaylistsStore, SortDirection } from '../playlists-store/playlists-store.service';
 import { BulkDeleteService } from '../bulk-service/bulk-delete.service';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
@@ -82,7 +82,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _deletePlaylist(ids: string[]): void {
-    if (ids.length > environment.modules.contentPlaylists.bulkActionsLimit) {
+    if (ids.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
