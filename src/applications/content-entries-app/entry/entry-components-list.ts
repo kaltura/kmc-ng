@@ -23,7 +23,7 @@ import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.co
 import { LinkedEntriesPopup } from './entry-metadata/entry-selector/linked-entries-popup.component';
 import { CategoriesSelector } from './entry-metadata/category-selector/categories-selector.component';
 import { TagsPipe } from './entry-flavours/tags.pipe';
-import { EntryDistribution } from './entry-distribution/entry-distribution.component';
+import { EntryDistributionComponent } from './entry-distribution/entry-distribution.component';
 import { UndistributedProfileComponent } from './entry-distribution/undistributed-profile/undistributed-profile.component';
 import { DistributedProfileComponent } from './entry-distribution/distributed-profile/distributed-profile.component';
 import { DistributionStatusPipe } from './entry-distribution/pipes/distribution-status.pipe';
@@ -58,7 +58,7 @@ export const EntryComponentsList = [
     LinkedEntries,
     LinkedEntriesPopup,
     TagsPipe,
-    EntryDistribution,
+    EntryDistributionComponent,
     DistributedProfileComponent,
     UndistributedProfileComponent,
     DistributionStatusPipe,

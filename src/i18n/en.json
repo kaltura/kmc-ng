@@ -1229,6 +1229,22 @@
           "retry": "Retry",
           "deleteConfirmTitle": "TBD",
           "deleteConfirm": "TBD",
+          "form": {
+            "status": "Status",
+            "updates": "Updates",
+            "updateAutomatically": "Update Automatically",
+            "lastUpdate": "Last Update",
+            "remoteId": "Remote ID",
+            "startDate": "Start Date",
+            "endDate": "End Date",
+            "metadata": "Metadata",
+            "name": "Name",
+            "description": "Description",
+            "tags": "Tags",
+            "delete": "Delete",
+            "videoFlavors": "Video Flavors",
+            "thumbnail": "Thumbnail"
+          },
           "status": {
             "readyForDistribution": "Ready for Distribution",
             "scheduledForDistribution": "Scheduled for Distribution",
@@ -1242,7 +1258,7 @@
             "errorSubmitting": "Distribution Failed",
             "errorDeleting": "Removal Failed",
             "removed": "Removed",
-            "notDistributed": "Not distributed",
+            "notDistributed": "Not exported",
             "updateFailed": "Update Failed",
             "exportFailed": "Export Failed"
           },

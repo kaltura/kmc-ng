@@ -15,7 +15,7 @@ import { EntryScheduling } from './entry/entry-scheduling/entry-scheduling.compo
 import { EntryAccessControl } from './entry/entry-access-control/entry-access-control.component';
 import { EntryThumbnails } from './entry/entry-thumbnails/entry-thumbnails.component';
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
-import { EntryDistribution } from './entry/entry-distribution/entry-distribution.component';
+import { EntryDistributionComponent } from './entry/entry-distribution/entry-distribution.component';
 
 export const routing: Route[] = [
   {
@@ -40,7 +40,7 @@ export const routing: Route[] = [
           { path: 'related', component: EntryRelated, data: { sectionKey: EntryWidgetKeys.Related } },
           { path: 'clips', component: EntryClips, data: { sectionKey: EntryWidgetKeys.Clips } },
           { path: 'users', component: EntryUsers, data: { sectionKey: EntryWidgetKeys.Users } },
-          { path: 'distribution', component: EntryDistribution, data: { sectionKey: EntryWidgetKeys.Distribution } },
+          { path: 'distribution', component: EntryDistributionComponent, data: { sectionKey: EntryWidgetKeys.Distribution } },
         ]
       }
     ]

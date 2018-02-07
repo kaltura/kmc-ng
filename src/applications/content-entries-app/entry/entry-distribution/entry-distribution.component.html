@@ -9,13 +9,17 @@
       <kEntryUndistributedProfile
         *ngFor="let profile of (_widgetService.distributionProfiles$.undistributed | async).items"
         [profile]="profile"
-        (onExport)="editProfile.open()"></kEntryUndistributedProfile>
+        (onExport)="_distributeProfile($event)"></kEntryUndistributedProfile>
     </div>
   </div>
 </k-area-blocker>
 
 <kPopupWidget #editProfile [popupWidth]="995" [slider]="true">
   <ng-template>
-    <kEditDistributionProfile [parentPopup]="editProfile"></kEditDistributionProfile>
+    <kEditDistributionProfile [parentPopup]="editProfile"
+                              [entry]="_widgetService.data"
+                              [flavors]="(_widgetService.flavors$ | async)?.items"
+                              [profile]="_selectedProfile"
+                              [distribute]="_distribute"></kEditDistributionProfile>
   </ng-template>
 </kPopupWidget>

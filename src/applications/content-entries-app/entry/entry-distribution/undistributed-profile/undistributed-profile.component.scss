@@ -44,17 +44,11 @@
       color: $kGrayscale1;
 
       .kStatus {
-        .kUndistributedStatusIcon {
-          font-size: 16px;
-          position: relative;
-          top: 3px;
-          margin-right: 5px;
-          border: 2px solid;
-          border-radius: 50%;
-          height: 12px;
-          width: 12px;
-          display: inline-block;
+        .kIconinactive {
           color: $kGrayscale3;
+          margin-right: 8px;
+          position: relative;
+          top: 1px;
         }
       }
     }
