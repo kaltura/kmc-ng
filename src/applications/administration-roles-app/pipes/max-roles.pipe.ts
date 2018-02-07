@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { subApplicationsConfig } from 'config/sub-applications';
+import { modulesConfig } from 'config/modules';
 
 
 @Pipe({ name: 'kMaxRoles' })
@@ -8,7 +8,7 @@ export class MaxRolesPipe implements PipeTransform {
   }
 
   transform(value: number): number {
-    const maxroles = subApplicationsConfig.rolesShared.MAX_ROLES;
+    const maxroles = modulesConfig.rolesShared.MAX_ROLES;
     return value > maxroles ? maxroles : value;
   }
 }

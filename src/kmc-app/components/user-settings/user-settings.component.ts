@@ -4,6 +4,7 @@ import {AppAuthentication, AppUser, PartnerPackageTypes, AppNavigator} from 'app
 import { kmcAppConfig } from '../../kmc-app-config';
 import {Md5} from 'ts-md5/dist/md5';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { serverConfig } from 'config/server';
 
 @Component({
   selector: 'kKMCUserSettings',
@@ -39,7 +40,7 @@ export class UserSettingsComponent {
   }
 
   openUserManual() {
-    this.browserService.openLink(kmcAppConfig.core.externalLinks.USER_MANUAL, {}, '_blank');
+    this.browserService.openLink(serverConfig.externalLinks.USER_MANUAL, {}, '_blank');
   }
 
   openSupport() {
@@ -51,7 +52,7 @@ export class UserSettingsComponent {
     };
 
     // TODO [kmc] Open support in a modal window over KMC and not in _blank
-    this.browserService.openLink(kmcAppConfig.core.externalLinks.SUPPORT, params, '_blank');
+    this.browserService.openLink(serverConfig.externalLinks.SUPPORT, params, '_blank');
   }
 
   onLangSelected(event) {

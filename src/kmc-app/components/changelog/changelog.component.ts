@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { kmcAppConfig } from '../../kmc-app-config';
+import { globalConfig } from 'config/global';
 
 @Component({
   selector: 'kChangelog',
@@ -20,7 +20,7 @@ export class ChangelogComponent implements OnInit {
 
   ngOnInit() {
     const cachedVersion = this._browserService.getFromLocalStorage(this._appCachedVersionToken);
-    this._showChangelog = cachedVersion !== kmcAppConfig.appVersion;
+    this._showChangelog = cachedVersion !== globalConfig.appVersion;
     setTimeout(() => {
       this.onShowChangelog.emit(this._showChangelog);
     });
@@ -28,7 +28,7 @@ export class ChangelogComponent implements OnInit {
 
   public _openChangelog(): void {
     this._showChangelog = false;
-    this._browserService.setInLocalStorage(this._appCachedVersionToken, kmcAppConfig.appVersion);
+    this._browserService.setInLocalStorage(this._appCachedVersionToken, globalConfig.appVersion);
     this.onShowChangelog.emit(this._showChangelog);
     this.changelogPopup.open();
   }

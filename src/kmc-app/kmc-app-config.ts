@@ -8,9 +8,6 @@ export interface KmcAppConfig {
         }
     },
     core: {
-        kaltura: {
-            useHttpsProtocol: boolean,
-        },
         menuConfig: {
             routePath: string,
             titleToken: string,
@@ -40,9 +37,6 @@ export const kmcAppConfig: KmcAppConfig = {
         }
     },
     'core': {
-        'kaltura': {
-            'useHttpsProtocol': true,
-        },
         'menuConfig': [
             {
                 'routePath': 'content',

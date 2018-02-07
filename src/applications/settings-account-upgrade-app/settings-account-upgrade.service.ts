@@ -3,6 +3,7 @@ import {Observable} from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { subApplicationsConfig } from 'config/sub-applications';
 import {Http} from '@angular/http';
+import { serverConfig } from 'config/server';
 
 
 export interface AccountUpgrade {
@@ -20,6 +21,6 @@ export class SettingsAccountUpgradeService {
   /** update the */
   public sendContactSalesForceInformation(data: AccountUpgrade): Observable<any> {
     return this._http
-      .post(subApplicationsConfig.core.kaltura.contactsalesforce, data);
+      .post(serverConfig.core.kaltura.contactsalesforce, data);
   }
 }

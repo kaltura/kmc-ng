@@ -13,6 +13,7 @@ import { Flavor } from './flavor';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { globalConfig } from 'config/global';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -137,7 +138,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	}
 
   private _validateFileSize(file: File): boolean {
-    const maxFileSize = subApplicationsConfig.uploadsShared.MAX_FILE_SIZE;
+    const maxFileSize = globalConfig.server.maxUploadFileSize;
     const fileSize = file.size / 1024 / 1024; // convert to Mb
 
     return this._uploadManagement.supportChunkUpload(new NewEntryFlavourFile(null)) || fileSize < maxFileSize;

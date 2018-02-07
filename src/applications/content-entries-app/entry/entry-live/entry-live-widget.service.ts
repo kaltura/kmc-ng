@@ -19,8 +19,8 @@ import { EntryWidgetKeys } from '../entry-widget-keys';
 
 import { LiveXMLExporter } from './live-xml-exporter';
 import { AVAIL_BITRATES } from './bitrates';
-import { subApplicationsConfig } from 'config/sub-applications';
 import { EntryWidget } from '../entry-widget';
+import { serverConfig } from 'config/server';
 
 export interface bitrate {
 	enabled: boolean,
@@ -173,8 +173,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	 */
 
 	public _openLiveReport(): void {
-		const base_url = window.location.protocol + '//' + subApplicationsConfig.core.kaltura.legacyKmcUrl;
-		const url = base_url + '/apps/liveanalytics/' + subApplicationsConfig.core.kaltura.liveAnalyticsVersion + '/index.html#/entry/' + this.data.id + '/nonav';
+		const base_url = window.location.protocol + '//' + serverConfig.core.kaltura.legacyKmcUrl;
+		const url = base_url + '/apps/liveanalytics/' + serverConfig.core.kaltura.liveAnalyticsVersion + '/index.html#/entry/' + this.data.id + '/nonav';
 		this._browserService.openLink(url);
 	}
 

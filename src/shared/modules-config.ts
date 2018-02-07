@@ -20,10 +20,6 @@ export interface ModulesConfig {
         rolesFilters: {
             maxChildrenToShow: number
         }
-    },
-    uploadsShared: {
-        MAX_FILE_SIZE: number, // Mb
-        MAX_CONCURENT_UPLOADS: number
     }
 }
 
@@ -48,9 +44,5 @@ export const modulesConfig: ModulesConfig = {
         "rolesFilters": {
             "maxChildrenToShow": 500
         }
-    },
-    "uploadsShared": {
-        "MAX_FILE_SIZE": 2047, // Mb
-        "MAX_CONCURENT_UPLOADS": 4
     }
 }

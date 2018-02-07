@@ -2,6 +2,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { serverConfig } from 'config/server';
 
 @Component({
   selector: 'kKMCUploadMenu',
@@ -25,11 +26,11 @@ export class UploadMenuComponent {
   }
 
   onHighSpeedLinkClicked() {
-    this._browserService.openLink(subApplicationsConfig.core.externalLinks.HIGH_SPEED_UPLOAD);
+    this._browserService.openLink(serverConfig.externalLinks.HIGH_SPEED_UPLOAD);
   }
 
   onDownloadSamplesClicked() {
-    this._browserService.openLink(subApplicationsConfig.core.externalLinks.BULK_UPLOAD_SAMPLES);
+    this._browserService.openLink(serverConfig.externalLinks.BULK_UPLOAD_SAMPLES);
   }
 
 }

@@ -7,6 +7,7 @@ import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -71,7 +72,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   public _scheduledBefore: Date;
   public _scheduledSelected: boolean;
   public _scheduledFilterError: string = null;
-  public _createdAtDateRange: string = modulesConfig.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
   public _createdAfter: Date;
   public _createdBefore: Date;
 

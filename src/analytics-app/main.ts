@@ -2,16 +2,15 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app.module';
-import { environment } from 'environments/environment';
-import { globalConfiguration } from 'config/global';
+import { globalConfig } from 'config/global';
 
-if (environment.production) {
+if (globalConfig.production) {
     enableProdMode();
 
-    console.log(`Running KMCng version '${globalConfiguration.appVersion}' (Production mode)`);
+    console.log(`Running KMCng version '${globalConfig.appVersion}' (Production mode)`);
 }else
 {
-    console.log(`Running KMCng version '${globalConfiguration.appVersion}' (Development mode)`);
+    console.log(`Running KMCng version '${globalConfig.appVersion}' (Development mode)`);
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule);

@@ -5,6 +5,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization, AppStorage } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from './app-authentication.service';
 import { modulesConfig } from 'config/modules';
+import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
+import { globalConfig } from 'config/global';
 
 export enum BoostrappingStatus
 {
@@ -43,7 +45,7 @@ export class AppBootstrap implements CanActivate {
                             // we must modify document.location instead of using Angular router because
                             // router is not supported until at least once component
                             // was initialized
-                            document.location.href = modulesConfig.shell.browser.errorRoute;
+                            document.location.href = kmcAppConfig.shell.browser.errorRoute;
                             if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
                         }
                     }
@@ -55,7 +57,7 @@ export class AppBootstrap implements CanActivate {
                     // we must modify document.location instead of using Angular router because
                     // router is not supported until at least once component
                     // was initialized
-                    document.location.href = modulesConfig.shell.browser.errorRoute;
+                    document.location.href = kmcAppConfig.shell.browser.errorRoute;
                     if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
                 }
             );
@@ -74,7 +76,7 @@ export class AppBootstrap implements CanActivate {
             this._initialized = true;
 
             // init localization, wait for localization to load before continuing
-            this.appLocalization.setFilesHash(modulesConfig.appVersion);
+            this.appLocalization.setFilesHash(globalConfig.appVersion);
             const language = this.getCurrentLanguage();
             this.appLocalization.load(language, 'en').subscribe(
                 () => {
@@ -101,7 +103,7 @@ export class AppBootstrap implements CanActivate {
         // try getting last selected language from local storage
         if (this.appStorage.getFromLocalStorage('kmc_lang') !== null) {
             const userLanguage: string = this.appStorage.getFromLocalStorage('kmc_lang');
-            if (modulesConfig.core.locales.find(locale => locale.id === userLanguage)) {
+            if (kmcAppConfig.core.locales.find(locale => locale.id === userLanguage)) {
                 lang = userLanguage;
             }
         }

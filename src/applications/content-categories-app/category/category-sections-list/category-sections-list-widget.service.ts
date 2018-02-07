@@ -7,7 +7,7 @@ import {CategorySectionsList} from './category-sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
 import {CategoryWidgetKeys} from '../category-widget-keys';
-import { subApplicationsConfig } from 'config/sub-applications';
+import { modulesConfig } from 'config/modules';
 
 export interface SectionWidgetItem {
   label: string,
@@ -107,7 +107,7 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
         return category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
       case CategoryWidgetKeys.SubCategories:
         return category.directSubCategoriesCount > 0 &&
-          category.directSubCategoriesCount <= subApplicationsConfig.categoriesShared.SUB_CATEGORIES_LIMIT;
+          category.directSubCategoriesCount <= modulesConfig.categoriesShared.SUB_CATEGORIES_LIMIT;
       default:
         return true;
     }

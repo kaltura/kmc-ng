@@ -78,7 +78,8 @@ import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-cr
 import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
-import { kmcAppConfig } from './kmc-app-config';
+import { globalConfig } from 'config/global';
+import { getKalturaServerUri } from 'config/server';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -86,8 +87,7 @@ const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, Flav
 
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
-    const { useHttpsProtocol, serverEndpoint } = kmcAppConfig.core.kaltura;
-    result.endpointUrl = `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}`;
+    result.endpointUrl = getKalturaServerUri();
     result.clientTag = 'KMCng';
     return result;
 }
@@ -177,14 +177,14 @@ export class AppModule {
                 kalturaLogger: KalturaLogger,
                 uploadManagement: UploadManagement) {
 
-        if (kmcAppConfig.production) {
+        if (globalConfig.production) {
             kalturaLogger.setOptions({level: 'Warn'})
         } else {
             kalturaLogger.setOptions({level: 'All'})
         }
 
         // TODO [kmcng] move to a relevant location
-        uploadManagement.setMaxUploadRequests(kmcAppConfig.uploadsShared.MAX_CONCURENT_UPLOADS);
+        uploadManagement.setMaxUploadRequests(globalConfig.server.maxConcurrentUploads);
 
         appBootstrap.bootstrap();
 

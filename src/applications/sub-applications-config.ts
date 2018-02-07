@@ -28,9 +28,6 @@ export interface SubApplicationsConfig {
             createdAtDateRange : string,
             bulkActionsLimit: number
         },
-        settingsMetadata: {
-            apiUrl: string
-        },
         createLive: {
             akamaiEdgeServerIpURL: string
         },
@@ -76,9 +73,6 @@ export const subApplicationsConfig: SubApplicationsConfig = {
         "dropFolders": {
             "createdAtDateRange": "2005:2030",
             "bulkActionsLimit": 50
-        },
-        "settingsMetadata": {
-            "apiUrl": "/api_v3/index.php/service/metadata_metadataprofile/action/serve"
         },
         "createLive": {
             "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"

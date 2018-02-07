@@ -7,6 +7,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { Observer } from 'rxjs/Observer';
+import { serverConfig } from 'config/server';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -107,7 +108,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _upgradeAccount(): void {
-    this._browserService.openLink(subApplicationsConfig.core.externalLinks.UPGRADE_ACCOUNT, {}, '_blank');
+    this._browserService.openLink(serverConfig.externalLinks.UPGRADE_ACCOUNT, {}, '_blank');
   }
 
   public _onPaginationChanged(state: any): void {

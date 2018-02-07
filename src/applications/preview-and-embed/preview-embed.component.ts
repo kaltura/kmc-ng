@@ -14,6 +14,7 @@ import { KalturaUiConfListResponse } from 'kaltura-ngx-client/api/types/KalturaU
 import { KalturaUiConf } from 'kaltura-ngx-client/api/types/KalturaUiConf';
 import { KalturaShortLink } from 'kaltura-ngx-client/api/types/KalturaShortLink';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { serverConfig } from 'config/server';
 
 @Component({
   selector: 'kPreviewEmbedDetails',
@@ -178,8 +179,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private getGenerator():any{
-    const baseCdnUrl = subApplicationsConfig.core.kaltura.cdnUrl.replace("http://","");
-    const securedCdnUrl = subApplicationsConfig.core.kaltura.securedCdnUrl.replace("https://","");
+    const baseCdnUrl = serverConfig.core.kaltura.cdnUrl.replace("http://","");
+    const securedCdnUrl = serverConfig.core.kaltura.securedCdnUrl.replace("https://","");
     // 'kEmbedCodeGenerator' is bundled with the app. Location: assets/js/KalturaEmbedCodeGenerator.min.js
     return new window['kEmbedCodeGenerator']({
       host: baseCdnUrl,
@@ -273,7 +274,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private createPreviewLink(isPreview: boolean):void{
       let url = '';
       try {
-        url = this.getProtocol(isPreview) + '://' + subApplicationsConfig.core.kaltura.serverEndpoint + '/index.php/extwidget/preview';
+        url = this.getProtocol(isPreview) + '://' + serverConfig.core.kaltura.serverEndpoint + '/index.php/extwidget/preview';
         url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
         url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.id;
         if (this.media instanceof KalturaMediaEntry) {
@@ -289,7 +290,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       // create short link
       this._previewEmbedService.generateShortLink(url).cancelOnDestroy(this).subscribe(
           (res: KalturaShortLink) => {
-            this._shortLink = 'http://' + subApplicationsConfig.core.kaltura.serverEndpoint + '/tiny/' + res.id;
+            this._shortLink = 'http://' + serverConfig.core.kaltura.serverEndpoint + '/tiny/' + res.id;
           },
           error => {
             console.log("could not generate short link for preview");
@@ -324,7 +325,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   public openLink(link): void {
-    this._browserService.openLink(subApplicationsConfig.core.externalLinks[link]);
+    this._browserService.openLink(serverConfig.externalLinks[link]);
   }
 
   public close(): void{

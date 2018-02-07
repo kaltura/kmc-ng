@@ -8,7 +8,6 @@ import {CategoryWidgetKeys} from '../category-widget-keys';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
-import { subApplicationsConfig } from 'config/sub-applications';
 import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
@@ -21,6 +20,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {CategoryService} from '../category.service';
+import { modulesConfig } from 'config/modules';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -73,7 +73,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
 
   private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
-    const subcategoriesLimit: number = subApplicationsConfig.categoriesShared.SUB_CATEGORIES_LIMIT || 50;
+    const subcategoriesLimit: number = modulesConfig.categoriesShared.SUB_CATEGORIES_LIMIT || 50;
     if (!parentCategory) {
       return Observable.throw(new Error('parentCategory to get subcategories for is not defined'));
     }

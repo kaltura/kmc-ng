@@ -8,6 +8,7 @@ import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui'
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
+import { globalConfig } from 'config/global';
 
 export interface UploadSettingsFile {
   file: File;
@@ -216,7 +217,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
     let result = true;
     const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
-    const maxFileSize = subApplicationsConfig.uploadsShared.MAX_FILE_SIZE;
+    const maxFileSize = globalConfig.server.maxUploadFileSize;
 
     files.forEach(file => {
       const fileSize = file.size / 1024 / 1024; // convert to Mb

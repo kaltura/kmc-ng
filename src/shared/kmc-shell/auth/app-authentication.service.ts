@@ -24,6 +24,8 @@ import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { modulesConfig } from 'config/modules';
 import { KmcServerPolls } from 'app-shared/kmc-shared';
+import { serverConfig } from 'config/server';
+import { globalConfig } from 'config/global';
 
 
 export enum AppAuthStatusTypes {
@@ -134,7 +136,7 @@ export class AppAuthentication {
     const permissionFilter = new KalturaPermissionFilter();
     permissionFilter.nameEqual = 'FEATURE_DISABLE_REMEMBER_ME';
 
-    const partnerId = modulesConfig.core.kaltura.limitToParentId || undefined;
+    const partnerId = globalConfig.server.limitToPartnerId || undefined;
     const request = new KalturaMultiRequest(
       new UserLoginByLoginIdAction(
         {
@@ -222,7 +224,7 @@ export class AppAuthentication {
       if (this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedOut) {
           const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
         if (loginToken) {
-            const partnerId = modulesConfig.core.kaltura.limitToParentId || undefined;
+            const partnerId = globalConfig.server.limitToPartnerId || undefined;
 
             const requests = [
             new UserGetAction({

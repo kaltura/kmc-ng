@@ -6,7 +6,6 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Router } from '@angular/router';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { BulkService } from '../bulk-service/bulk.service';
-import { subApplicationsConfig } from 'config/sub-applications';
 import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntryReportSections } from './entry-report-sections';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
@@ -16,6 +15,7 @@ import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceTyp
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { Observer } from 'rxjs/Observer';
+import { serverConfig } from 'config/server';
 
 export interface Tabs {
   name: string;
@@ -66,7 +66,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._loadEntryModerationDetails();
     this._playerConfig = {
-      uiconfid: parseInt(subApplicationsConfig.core.kaltura.previewUIConf),
+      uiconfid: parseInt(serverConfig.core.kaltura.previewUIConf),
       pid: this.appAuthentication.appUser.partnerId,
       entryid: this.entryId,
       flashvars: {'closedCaptions': { 'plugin': true }, 'ks': this.appAuthentication.appUser.ks}
