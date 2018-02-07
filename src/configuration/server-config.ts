@@ -3,7 +3,100 @@ import  'rxjs/add/operator/delay';
 import { Observable } from 'rxjs/Observable';
 import { environment } from 'environments/environment';
 import { globalConfig } from './global-config';
+import * as Ajv from 'ajv'
 
+
+const ServerConfigSchema = {
+  properties: {
+    kalturaServer: {
+      properties: {
+        uri: { type: 'string' },
+        expiry: { type: 'number' },
+        privileges: { type: 'string' },
+        previewUIConf: { type: 'number' }
+      },
+      required: ['uri', 'expiry', 'privileges', 'previewUIConf'],
+      additionalProperties: false
+    },
+    cdnServers: {
+      properties: {
+        serverUri: { type: 'string' },
+        securedServerUri: { type: 'string' }
+      },
+      required: ['serverUri', 'securedServerUri'],
+      additionalProperties: false
+    },
+    externalApps: {
+      properties: {
+        analytics: {
+          properties: {
+            uri: { type: 'string' },
+            version: { type: 'string' }
+          },
+          required: ['uri', 'version'],
+          additionalProperties: false
+        },
+        studio: {
+          properties: {
+            uri: { type: 'string' },
+            version: { type: 'string' },
+            path: { type: 'string' },
+            uiConfId: { type: 'string' },
+            html5_version: { type: 'string' },
+            html5lib: { type: 'string' }
+          },
+          required: ['uri', 'version', /*'path', */'uiConfId', 'html5_version', 'html5lib'],
+          additionalProperties: false
+        }
+      },
+      required: ['analytics', 'studio'],
+      additionalProperties: false
+    },
+    externalLinks: {
+      properties: {
+        previewAndEmbed: {
+          properties: {
+            embedTypes: { type: 'string' },
+            deliveryProtocols: { type: 'string' }
+          },
+          required: ['embedTypes', 'deliveryProtocols'],
+          additionalProperties: false
+        },
+        kaltura: {
+          properties: {
+            userManual: { type: 'string' },
+            support: { type: 'string' },
+            signUp: { type: 'string' },
+            contactUs: { type: 'string' },
+            upgradeAccount: { type: 'string' },
+            contactSalesforce: { type: 'string' }
+          },
+          required: ['userManual', 'support', 'signUp', 'contactUs', 'upgradeAccount', 'contactSalesforce'],
+          additionalProperties: false
+        },
+        uploads: {
+          properties: {
+            highSpeedUpload: { type: 'string' },
+            bulkUploadSamples: { type: 'string' }
+          },
+          required: ['highSpeedUpload', 'bulkUploadSamples'],
+          additionalProperties: false
+        },
+        live: {
+          properties: {
+            akamaiEdgeServerIpURL: { type: 'string' }
+          },
+          required: ['akamaiEdgeServerIpURL'],
+          additionalProperties: false
+        }
+      },
+      required: ['previewAndEmbed', 'kaltura', 'uploads', 'live'],
+      additionalProperties: false
+    }
+  },
+  required: ['kalturaServer', 'cdnServers', 'externalApps', 'externalLinks'],
+  additionalProperties: false
+};
 
 export interface ServerConfig {
     kalturaServer: {
@@ -51,6 +144,19 @@ export interface ServerConfig {
             akamaiEdgeServerIpURL: string
         }
     }
+}
+
+function validateSeverConfig(data: ServerConfig): { isValid: boolean, error?: string } {
+  const ajv = new Ajv({allErrors: true, verbose: true});
+  const validate = ajv.compile(ServerConfigSchema);
+  const isValid = !!validate(data);
+  let error = null;
+
+  if (!isValid) {
+    error = ajv.errorsText(validate.errors);
+  }
+
+  return { isValid, error };
 }
 
 export const serverConfig: ServerConfig = <any>{};
@@ -120,7 +226,12 @@ export function initializeConfiguration(): Observable<void> {
     return getConfiguration()
         .takeUntil(Observable.of(true).delay(environment.configurationTimeout))
         .do(response => {
-            Object.assign(serverConfig, response);
+            const validationResult = validateSeverConfig(response);
+            if (validationResult.isValid) {
+              Object.assign(serverConfig, response);
+            } else {
+              throw Error(validationResult.error || 'Invalid server configuration')
+            }
         })
         .map(() => {
             return undefined;
