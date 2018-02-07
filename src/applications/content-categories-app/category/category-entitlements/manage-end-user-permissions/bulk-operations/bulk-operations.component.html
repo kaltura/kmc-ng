@@ -6,7 +6,7 @@
 <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton
         label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.moreActions' | translate}}"
         (click)="menu.toggle($event)"></button>
-<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons"
+<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" kMenuCloseOnScroll
               [appendTo]="'body'"></p-tieredMenu>
 
  

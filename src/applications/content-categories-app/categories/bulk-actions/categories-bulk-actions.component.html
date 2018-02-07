@@ -5,7 +5,7 @@
 </div>
 
 <!--since we append the menu to the body, any styling modifications are currently not available-->
-<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
+<p-tieredMenu #menu kMenuCloseOnScroll [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
 
 <kPopupWidget #bulkActionsPopup [modal]="true" [popupWidth]="500">
   <ng-template>
