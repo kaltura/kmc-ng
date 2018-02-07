@@ -32,7 +32,7 @@ export class FlavoursStore extends PartnerProfileStore implements OnDestroy {
         .catch(error => {
             // re-throw the provided error
             this._getFlavorsFilters$ = null;
-            return Observable.throw(new Error('Unable to create draft entry'));
+            return Observable.throw(new Error('failed to retrieve flavors list'));
         })
         .publishReplay(1)
         .refCount();
