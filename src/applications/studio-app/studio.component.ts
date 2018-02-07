@@ -4,6 +4,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { environment as env} from '../../environments/environment';
 import { UpdatePlayersEvent } from 'app-shared/kmc-shared/events';
+import { getKalturaServerUri, serverConfig } from 'config/server';
 
 @Component({
   selector: 'kStudio',
@@ -23,13 +24,13 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       "vars": {
         "ks": this.appAuthentication.appUser.ks,
-        "api_url": subApplicationsConfig.modules.studio.api_url,
+        "api_url": getKalturaServerUri(),
         "studio": {
-          "config": '{"version":' + subApplicationsConfig.modules.studio.version + ', "name":"Video Studio V2", "tags":"studio_v2", "html5_version":' + subApplicationsConfig.modules.studio.html5_version + ', "html5lib":' + subApplicationsConfig.modules.studio.html5lib + '}',
+          "config": '{"version":' + serverConfig.externalApps.studio.version + ', "name":"Video Studio V2", "tags":"studio_v2", "html5_version":' + serverConfig.externalApps.studio.html5_version + ', "html5lib":' + serverConfig.externalApps.studio.html5lib + '}',
           "showFlashStudio": false,
           "showHTMLStudio": true,
-          "uiConfID": parseInt(subApplicationsConfig.modules.studio.uiConfId),
-          "version": subApplicationsConfig.modules.studio.version
+          "uiConfID": parseInt(serverConfig.externalApps.studio.uiConfId),
+          "version": serverConfig.externalApps.studio.version
         }
       }
     }
@@ -38,7 +39,7 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     if (env.production) {
       this.isProduction = true;
-      this.studioUrl = subApplicationsConfig.modules.studio.path;
+      this.studioUrl = serverConfig.externalApps.studio.uri;
     }
   }
 
