@@ -3,6 +3,9 @@ import {SettingsAccountInformationService} from '../settings-account-information
 import {AppAuthentication, PartnerPackageTypes} from 'app-shared/kmc-shell';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import {environment} from 'app-environment';
+import {KalturaPartnerStatistics} from 'kaltura-ngx-client/api/types/KalturaPartnerStatistics';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
 
 @Component({
@@ -17,7 +20,10 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   public _showTrialUserInfo: boolean;
   public _trialExpirationDateString = '';
 
-  constructor(private _accountInformationService: SettingsAccountInformationService, private _appAuthentication: AppAuthentication) {
+  constructor(private _accountInformationService: SettingsAccountInformationService,
+              private _appAuthentication: AppAuthentication,
+              private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -27,7 +33,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       const trialPeriod: number = environment.modules.settingsAccountInformation.trialPeriod;
 
       this._trialExpirationDateString =
-        (new DatePipe()).transform(this._appAuthentication.appUser.createdAt.getTime() + trialPeriod, 'MM/DD/YYYY'); // "01/15/1992"
+        (new DatePipe()).transform(this._appAuthentication.appUser.createdAt.getTime() + trialPeriod, 'dateOnly'); // "01/15/1992"
     }
     this.loadStatistics();
   }
@@ -36,10 +42,15 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
     this._isBusy = true;
     this._accountInformationService.getStatistics()
       .cancelOnDestroy(this)
-      .subscribe(({bandwidth, storage}) => {
+      .subscribe((response: KalturaPartnerStatistics) => {
         this._isBusy = false;
-        this._bandwidth = bandwidth;
-        this._storage = storage;
+        this._bandwidth = response.bandwidth ? response.bandwidth.toFixed(2) : this._appLocalization.get('app.common.n_a');
+        this._storage = response.hosting ? response.hosting.toFixed(2) : this._appLocalization.get('app.common.n_a');
+      }, error => {
+        this._isBusy = false;
+        this._logger.warn(`cannot load bandwidth and monthly storage information`);
+        this._bandwidth = this._appLocalization.get('app.common.n_a');
+        this._storage = this._appLocalization.get('app.common.n_a');
       });
   }
 

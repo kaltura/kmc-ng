@@ -5,6 +5,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 
 function phoneValidator(): ValidatorFn {
@@ -31,15 +32,21 @@ export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
   public contactUsForm: FormGroup;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
+  public _canContactSalesForceInformation = true;
 
   constructor(private _accountInformationService: SettingsAccountInformationService,
               private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
     this._createForm();
+    this._canContactSalesForceInformation = this._accountInformationService.canContactSalesForceInformation();
+    if (!this._canContactSalesForceInformation) {
+      this._logger.warn('Cannot send message to SalesForce: missing \'contactsalesforce\' configuration');
+    }
   }
 
   ngOnDestroy(): void {

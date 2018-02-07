@@ -3,7 +3,7 @@
     <section class="kAccountInfoContainer">
       <kAccountInfo></kAccountInfo>
     </section>
-    <section class="kFormContainer">
+    <section class="kFormContainer" *ngIf="_canContactSalesForceInformation">
       <div class="kFormSection">
         <div class="kTitle">{{'applications.settings.accountInformation.sendUsMessage' | translate}}</div>
         <div class="kRow">
