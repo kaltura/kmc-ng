@@ -1,11 +1,11 @@
 
 export interface SubApplicationsConfig {
     modules: {
-        contentEntries : {
+        contentEntries: {
             createdAtDateRange : string,
             bulkActionsLimit: number
         },
-        contentPlaylists : {
+        contentPlaylists: {
             createdAtDateRange : string,
             bulkActionsLimit: number,
             ruleBasedTotalResults: number
@@ -14,18 +14,18 @@ export interface SubApplicationsConfig {
             createdAtDateRange: string,
             bulkActionsLimit: number
         },
-        contentModeration : {
+        contentModeration: {
             createdAtDateRange : string,
             bulkActionsLimit: number
         },
-        previewEmbed:{
+        previewEmbed: {
             includeKalturaLinks: boolean,
             secureEmbed: boolean,
             includeSeoMetadata: boolean,
             embedType: string
         },
-        dropFolders : {
-            createdAtDateRange : string,
+        dropFolders: {
+            createdAtDateRange: string,
             bulkActionsLimit: number
         },
         settingsMetadata: {
@@ -36,6 +36,12 @@ export interface SubApplicationsConfig {
         },
         analyticsLive: {
             url: string
+        },
+        usageDashboard: {
+          path: string,
+          uiConfId: string,
+          map_urls: string[],
+          map_zoom_levels: number
         },
         studio: {
             api_url: string,
@@ -85,6 +91,12 @@ export const subApplicationsConfig: SubApplicationsConfig = {
         },
         "analyticsLive" : {
             "url" : "http://localhost:9090/"
+        },
+        "usageDashboard" : {
+          "path": "local_machine_only/usageDashboard/index.html",
+          "uiConfId": "39700052",
+          "map_urls" : ["cf1.kaltura.com/content/static/maps/v1", "cf2.kaltura.com/content/static/maps/v1", "cf3.kaltura.com/content/static/maps/v1"],
+          "map_zoom_levels": 12
         },
         "studio": {
             "api_url": "http://www.kaltura.com",

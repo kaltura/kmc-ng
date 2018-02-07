@@ -1,4 +1,4 @@
-import { StaticApplicationConfig } from '../configuration/static-application-config';
+import {StaticApplicationConfig} from '../configuration/static-application-config';
 
 //
 
@@ -82,7 +82,14 @@ export const staticKMCConfiguration: StaticApplicationConfig = {
               'titleToken': 'Analytics',
               'showSubMenu': false,
               'enabled': false
-          }, {
+          },
+          {
+              'routePath': 'usageDashboard',
+              'titleToken': 'Usage Dashboard',
+              'showSubMenu': false,
+              'enabled': true
+          },
+          {
               'routePath': 'settings',
               'titleToken': '',
               'showSubMenu': true,
