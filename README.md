@@ -68,12 +68,9 @@ The configuration of the kmc-ng application is split into several files. Each fi
 |:-------|:-------|:-------|:-------|:-------|
 | Server configuration | src/configuration/server-config.ts | import { serverConfig } from 'config/server'; | All source base | runtime configuration (1) |
 | General configuration | src/configuration/global-config.ts | import { globalConfig } from 'config/global'; | All source base | transpile into the app bundle (2) |
-| Sub-applications configuration | src/applications/sub-applications-config.ts | import { subApplicationsConfig } from 'config/sub-applications';
- | folder 'applications' | transpile into the app bundle (2) |
- | Shared modules configuration | src/shared/modules-config.ts | import { modulesConfig } from 'config/modules';
-  | folder 'shared' | transpile into the app bundle (2) |
- | KMC application configuration | src/kmc-app/kmc-app-config.ts | import { kmcAppConfig } from '../../kmc-app-config'; (3)
-  | folder 'kmc-app' | transpile into the app bundle (2) |
+| Sub-applications configuration | src/applications/sub-applications-config.ts | import { subApplicationsConfig } from 'config/sub-applications'; | folder 'applications' | transpile into the app bundle (2) |
+ | Shared modules configuration | src/shared/modules-config.ts | import { modulesConfig } from 'config/modules'; | folder 'shared' | transpile into the app bundle (2) |
+ | KMC application configuration | src/kmc-app/kmc-app-config.ts | import { kmcAppConfig } from '../../kmc-app-config'; (3) | folder 'kmc-app' | transpile into the app bundle (2) |
 **remarks:**
 - (1) a matching configuration file `src/configuration/server-config.json` is loaded by the browser. It might be cached by the browsers per app version
 - (2) this configuration file can be modified only before building the application
