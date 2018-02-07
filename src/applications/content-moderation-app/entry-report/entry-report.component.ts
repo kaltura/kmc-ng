@@ -66,7 +66,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._loadEntryModerationDetails();
     this._playerConfig = {
-      uiconfid: parseInt(serverConfig.core.kaltura.previewUIConf),
+      uiconfid: serverConfig.kalturaServer.previewUIConf,
       pid: this.appAuthentication.appUser.partnerId,
       entryid: this.entryId,
       flashvars: {'closedCaptions': { 'plugin': true }, 'ks': this.appAuthentication.appUser.ks}

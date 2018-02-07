@@ -108,7 +108,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _upgradeAccount(): void {
-    this._browserService.openLink(serverConfig.externalLinks.UPGRADE_ACCOUNT, {}, '_blank');
+    this._browserService.openLink(serverConfig.externalLinks.kaltura.upgradeAccount, {}, '_blank');
   }
 
   public _onPaginationChanged(state: any): void {

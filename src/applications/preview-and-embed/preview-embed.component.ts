@@ -179,8 +179,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private getGenerator():any{
-    const baseCdnUrl = serverConfig.core.kaltura.cdnUrl.replace("http://","");
-    const securedCdnUrl = serverConfig.core.kaltura.securedCdnUrl.replace("https://","");
+    const baseCdnUrl = serverConfig.cdnServers.serverUri.replace("http://","");
+    const securedCdnUrl = serverConfig.cdnServers.securedServerUri.replace("https://","");
     // 'kEmbedCodeGenerator' is bundled with the app. Location: assets/js/KalturaEmbedCodeGenerator.min.js
     return new window['kEmbedCodeGenerator']({
       host: baseCdnUrl,
@@ -274,7 +274,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private createPreviewLink(isPreview: boolean):void{
       let url = '';
       try {
-        url = this.getProtocol(isPreview) + '://' + serverConfig.core.kaltura.serverEndpoint + '/index.php/extwidget/preview';
+        url = this.getProtocol(isPreview) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
         url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
         url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.id;
         if (this.media instanceof KalturaMediaEntry) {
@@ -290,7 +290,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       // create short link
       this._previewEmbedService.generateShortLink(url).cancelOnDestroy(this).subscribe(
           (res: KalturaShortLink) => {
-            this._shortLink = 'http://' + serverConfig.core.kaltura.serverEndpoint + '/tiny/' + res.id;
+            this._shortLink = 'http://' + serverConfig.kalturaServer.uri + '/tiny/' + res.id;
           },
           error => {
             console.log("could not generate short link for preview");
@@ -324,8 +324,15 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this.sortPlayers(sortBy);
   }
 
-  public openLink(link): void {
-    this._browserService.openLink(serverConfig.externalLinks[link]);
+  public openLink(link: 'embedTypes' | 'deliveryProtocols'): void {
+    switch (link) {
+        case 'embedTypes':
+            this._browserService.openLink(serverConfig.externalLinks.previewAndEmbed.embedTypes);
+            break;
+        case 'deliveryProtocols':
+            this._browserService.openLink(serverConfig.externalLinks.previewAndEmbed.deliveryProtocols);
+            break;
+    }
   }
 
   public close(): void{

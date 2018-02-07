@@ -40,7 +40,7 @@ export class UserSettingsComponent {
   }
 
   openUserManual() {
-    this.browserService.openLink(serverConfig.externalLinks.USER_MANUAL, {}, '_blank');
+    this.browserService.openLink(serverConfig.externalLinks.kaltura.userManual, {}, '_blank');
   }
 
   openSupport() {
@@ -51,8 +51,7 @@ export class UserSettingsComponent {
       'pid': this._userContext.partnerId
     };
 
-    // TODO [kmc] Open support in a modal window over KMC and not in _blank
-    this.browserService.openLink(serverConfig.externalLinks.SUPPORT, params, '_blank');
+    this.browserService.openLink(serverConfig.externalLinks.kaltura.support, params, '_blank');
   }
 
   onLangSelected(event) {

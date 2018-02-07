@@ -21,6 +21,6 @@ export class SettingsAccountUpgradeService {
   /** update the */
   public sendContactSalesForceInformation(data: AccountUpgrade): Observable<any> {
     return this._http
-      .post(serverConfig.core.kaltura.contactsalesforce, data);
+      .post(serverConfig.externalLinks.kaltura.contactSalesforce, data);
   }
 }

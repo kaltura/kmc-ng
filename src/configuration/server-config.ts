@@ -6,29 +6,50 @@ import { globalConfig } from './global-config';
 
 
 export interface ServerConfig {
-    core: {
-        kaltura: {
-            serverEndpoint : string,
-            cdnUrl: string,
-            legacyKmcUrl: string,
-            expiry: string,
-            privileges: string,
-            previewUIConf: string,
-            liveAnalyticsVersion: string,
-            securedCdnUrl: string,
-            contactsalesforce: string
+    kalturaServer: {
+        uri: string,
+        expiry: number,
+        privileges: string,
+        previewUIConf: number
+    },
+    cdnServers: {
+        serverUri: string,
+        securedServerUri: string
+    },
+    externalApps: {
+        analytics: {
+            uri: string,
+            version: string
+        },
+        studio: {
+            uri: string,
+            version: string,
+            path: string,
+            uiConfId: string,
+            html5_version: string,
+            html5lib: string
         }
     },
     externalLinks: {
-        USER_MANUAL: string,
-        SUPPORT: string,
-        SIGNUP: string,
-        CONTACT_US: string,
-        HIGH_SPEED_UPLOAD: string,
-        UPGRADE_ACCOUNT: string,
-        EMBED_HELP1: string,
-        EMBED_HELP2: string,
-        BULK_UPLOAD_SAMPLES: string
+        previewAndEmbed: {
+            embedTypes: string,
+            deliveryProtocols: string
+        },
+        kaltura: {
+            userManual: string,
+            support: string,
+            signUp: string,
+            contactUs: string,
+            upgradeAccount: string,
+            contactSalesforce: string,
+        },
+        uploads: {
+            highSpeedUpload: string,
+            bulkUploadSamples: string
+        },
+        live: {
+            akamaiEdgeServerIpURL: string
+        }
     }
 }
 
@@ -38,7 +59,7 @@ export function getKalturaServerUri(suffix: string = ''): string{
     if (serverConfig)
     {
         const useHttpsProtocol = globalConfig.server.useSecuredProtocol;
-        const serverEndpoint = serverConfig.core.kaltura.serverEndpoint;
+        const serverEndpoint = serverConfig.kalturaServer.uri;
         return `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}${suffix}`;
     }else {
         throw new Error('cannot provide kaltura server uri. missing server configuration');

@@ -21,7 +21,7 @@ export class EntryThumbnailCapture implements AfterContentInit{
 
 	ngAfterContentInit(){
 		this.playerConfig = {
-			uiconfid: parseInt(serverConfig.core.kaltura.previewUIConf),
+			uiconfid: serverConfig.kalturaServer.previewUIConf,
 			pid: this._appAuthentication.appUser.partnerId,
 			entryid: this.entryId
 		};

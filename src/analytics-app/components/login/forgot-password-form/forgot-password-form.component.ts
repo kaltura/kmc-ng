@@ -60,6 +60,6 @@ export class ForgotPasswordFormComponent {
   }
 
   public _openContactUs(): void {
-    this._browserService.openLink(serverConfig.externalLinks.CONTACT_US);
+    this._browserService.openLink(serverConfig.externalLinks.kaltura.contactUs);
   }
 }

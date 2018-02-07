@@ -26,11 +26,11 @@ export class UploadMenuComponent {
   }
 
   onHighSpeedLinkClicked() {
-    this._browserService.openLink(serverConfig.externalLinks.HIGH_SPEED_UPLOAD);
+    this._browserService.openLink(serverConfig.externalLinks.uploads.highSpeedUpload);
   }
 
   onDownloadSamplesClicked() {
-    this._browserService.openLink(serverConfig.externalLinks.BULK_UPLOAD_SAMPLES);
+    this._browserService.openLink(serverConfig.externalLinks.uploads.bulkUploadSamples);
   }
 
 }

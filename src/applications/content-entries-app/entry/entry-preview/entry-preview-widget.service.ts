@@ -54,7 +54,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
                 sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
                 sourceType === KalturaSourceType.manualLiveStream.toString());
 
-            const UIConfID = serverConfig.core.kaltura.previewUIConf;
+            const UIConfID = serverConfig.kalturaServer.previewUIConf;
             const partnerID = this.appAuthentication.appUser.partnerId;
             const ks = this.appAuthentication.appUser.ks || "";
 
@@ -65,7 +65,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
 
             this._urlHash = this._urlHash + 1;
 
-            result = `${serverConfig.core.kaltura.cdnUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}&hash=${this._urlHash}`;
+            result = `${serverConfig.cdnServers.serverUri}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}&hash=${this._urlHash}`;
         }
 
         return result;
