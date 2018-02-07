@@ -82,7 +82,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _deletePlaylist(ids: string[]): void {
-    if (ids.length > subApplicationsConfig.modules.contentPlaylists.bulkActionsLimit) {
+    if (ids.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),

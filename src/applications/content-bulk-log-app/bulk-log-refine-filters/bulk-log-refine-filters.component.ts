@@ -51,7 +51,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
   public _uploadedAfter: Date;
   public _uploadedBefore: Date;
   public _createdAtFilterError: string = null;
-  public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
 
   constructor(private _bulkLogStore: BulkLogStoreService,
               private _appLocalization: AppLocalization) {

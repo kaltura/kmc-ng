@@ -15,7 +15,7 @@ export class PlaylistsAdditionalFiltersComponent {
   public _showLoader = false;
   public _blockerMessage: AreaBlockerMessage = null;
   @Output() createdChanged = new EventEmitter<any>();
-  public _createdAtDateRange: string = subApplicationsConfig.modules.contentPlaylists.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
 
   constructor() {
   }

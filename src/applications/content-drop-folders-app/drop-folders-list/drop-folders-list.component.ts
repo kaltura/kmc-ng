@@ -189,7 +189,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
         );
     };
 
-    if (ids.length > subApplicationsConfig.modules.dropFolders.bulkActionsLimit) {
+    if (ids.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.bulkActions.note'),
         message: this._appLocalization.get('applications.content.bulkActions.confirmDropFolders', { '0': ids.length }),

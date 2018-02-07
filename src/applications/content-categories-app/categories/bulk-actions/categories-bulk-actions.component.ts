@@ -232,7 +232,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       );
     };
 
-    if (confirmChunks && this.selectedCategories.length > subApplicationsConfig.modules.contentCategories.bulkActionsLimit) {
+    if (confirmChunks && this.selectedCategories.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),

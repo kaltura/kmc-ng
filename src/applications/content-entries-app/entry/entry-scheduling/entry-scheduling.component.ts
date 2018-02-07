@@ -15,7 +15,7 @@ export class EntryScheduling implements AfterViewInit, OnInit, OnDestroy {
 
 	_enableEndDate: boolean;
 
-	public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
+	public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
 
     constructor(
         public _widgetService: EntrySchedulingWidget

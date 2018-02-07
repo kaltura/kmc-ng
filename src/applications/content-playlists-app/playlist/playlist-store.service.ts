@@ -148,7 +148,7 @@ export class PlaylistStore implements OnDestroy {
       .subscribe(playlist => {
           if (playlist.playlistType === KalturaPlaylistType.dynamic) {
             if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
-              playlist.totalResults = subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults;
+              playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
             }
           }
 
@@ -213,7 +213,7 @@ export class PlaylistStore implements OnDestroy {
                     playlistContent: newData.playlistContent,
                     playlistType: newData.type,
                     creatorId: this._appAuth.appUser.id,
-                    totalResults: subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults
+                    totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
                   })
                 });
 

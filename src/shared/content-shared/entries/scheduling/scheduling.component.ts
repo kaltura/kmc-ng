@@ -28,7 +28,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
 
   public _schedulingForm: FormGroup;
   public _timeZone: any = {};
-  public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
 
   constructor() {
   }

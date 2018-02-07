@@ -47,7 +47,7 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
   public _createdAfter: Date;
   public _createdBefore: Date;
   public _createdAtFilterError: string = null;
-  public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
 
   constructor(private _dropFoldersStore: DropFoldersStoreService,
               private _appLocalization: AppLocalization) {

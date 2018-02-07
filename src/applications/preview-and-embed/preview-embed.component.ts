@@ -163,9 +163,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     const secured: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.secured');
     this._previewForm = this._fb.group({
       selectedPlayer: null,
-      selectedEmbedType: this._browserService.getFromLocalStorage('previewEmbed.embedType') || subApplicationsConfig.modules.previewEmbed.embedType,
-      seo: seo !== null ? seo : subApplicationsConfig.modules.previewEmbed.includeSeoMetadata,
-      secured: secured !== null ? secured : subApplicationsConfig.modules.previewEmbed.secureEmbed
+      selectedEmbedType: this._browserService.getFromLocalStorage('previewEmbed.embedType') || subApplicationsConfig.previewAndEmbedApp.embedType,
+      seo: seo !== null ? seo : subApplicationsConfig.previewAndEmbedApp.includeSeoMetadata,
+      secured: secured !== null ? secured : subApplicationsConfig.previewAndEmbedApp.secureEmbed
     });
   }
 
@@ -186,7 +186,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       host: baseCdnUrl,
       securedHost: securedCdnUrl,
       partnerId: this._appAuthentication.appUser.partnerId,
-      includeKalturaLinks: subApplicationsConfig.modules.previewEmbed.includeKalturaLinks
+      includeKalturaLinks: subApplicationsConfig.previewAndEmbedApp.includeKalturaLinks
     });
   }
 

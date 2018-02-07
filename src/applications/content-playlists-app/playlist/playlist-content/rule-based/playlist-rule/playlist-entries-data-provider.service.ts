@@ -205,9 +205,9 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
             filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
           }
 
-          filter.limit = data.limits && data.limits > 0 && data.limits <= subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults
+          filter.limit = data.limits && data.limits > 0 && data.limits <= subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
             ? data.limits
-            : subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults;
+            : subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
 
           // readonly filters for rule-based playlist
           filter.statusIn = '1,2';
@@ -245,7 +245,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
         .switchMap(filter => this._kalturaServerClient.request(
           new PlaylistExecuteFromFiltersAction({
             filters: [filter],
-            totalResults: subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults,
+            totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
             pager: pagination,
             responseProfile
           }))
@@ -278,7 +278,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       distributions: [], categories: [],
       categoriesMode,
       customMetadata: {},
-      limits: subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults,
+      limits: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
     };
   }
 }

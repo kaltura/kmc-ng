@@ -17,7 +17,7 @@ export abstract class BulkActionBaseService<T> {
   {
     let maxRequestsPerMultiRequest = requests.length;
     if (chunk){
-      maxRequestsPerMultiRequest = subApplicationsConfig.modules.contentEntries.bulkActionsLimit;
+      maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit;
     }
 
     let multiRequests: Observable<KalturaMultiResponse>[] = [];

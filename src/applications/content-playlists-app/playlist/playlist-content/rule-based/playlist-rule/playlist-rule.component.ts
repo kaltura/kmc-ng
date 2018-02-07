@@ -74,7 +74,7 @@ export class PlaylistRuleComponent implements OnInit {
     }
   ];
 
-  public _resultsLimit = subApplicationsConfig.modules.contentPlaylists.ruleBasedTotalResults;
+  public _resultsLimit = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
   public _ruleName = '';
   public _orderBy = KalturaPlayableEntryOrderBy.playsDesc; // default
 

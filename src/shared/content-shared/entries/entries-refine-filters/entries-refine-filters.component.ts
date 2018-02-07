@@ -72,7 +72,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   public _scheduledBefore: Date;
   public _scheduledSelected: boolean;
   public _scheduledFilterError: string = null;
-  public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
   public _createdAfter: Date;
   public _createdBefore: Date;
 

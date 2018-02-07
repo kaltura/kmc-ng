@@ -18,7 +18,7 @@ export class BulkService implements OnDestroy {
   private _transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<{}> {
     let maxRequestsPerMultiRequest = requests.length;
     if (chunk) {
-      maxRequestsPerMultiRequest = subApplicationsConfig.modules.contentModeration.bulkActionsLimit;
+      maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit;
     }
 
     // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest

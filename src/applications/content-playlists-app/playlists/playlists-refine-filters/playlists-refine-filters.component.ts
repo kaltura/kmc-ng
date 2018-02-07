@@ -18,7 +18,7 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
   public _createdAfter: Date;
   public _createdBefore: Date;
   public _createdAtFilterError: string = null;
-  public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
 
   constructor(private _store: PlaylistsStore,
               private _appLocalization: AppLocalization) {

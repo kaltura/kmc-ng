@@ -347,7 +347,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
     const requests = ids.map(id => new DropFolderFileDeleteAction({ dropFolderFileId: id }));
 
-    const maxRequestsPerMultiRequest = subApplicationsConfig.modules.dropFolders.bulkActionsLimit;
+    const maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit;
 
     // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest
     const splittedRequests = [];

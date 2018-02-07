@@ -57,7 +57,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
 
   public _showLoader = true;
   public _createdFilterError: string = null;
-  public _createdAtDateRange: string = subApplicationsConfig.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
   public _createdAfter: Date;
   public _createdBefore: Date;
 

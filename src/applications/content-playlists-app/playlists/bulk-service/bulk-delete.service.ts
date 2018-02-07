@@ -22,7 +22,7 @@ export class BulkDeleteService {
   private _transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<{}> {
     let maxRequestsPerMultiRequest = requests.length;
     if (chunk) {
-      maxRequestsPerMultiRequest = subApplicationsConfig.modules.contentPlaylists.bulkActionsLimit || requests.length;
+      maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit || requests.length;
     }
 
     // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest

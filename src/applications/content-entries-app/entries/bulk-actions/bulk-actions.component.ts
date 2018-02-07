@@ -258,7 +258,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       );
     };
 
-    if (confirmChunks && this.selectedEntries.length > subApplicationsConfig.modules.contentEntries.bulkActionsLimit) {
+    if (confirmChunks && this.selectedEntries.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
