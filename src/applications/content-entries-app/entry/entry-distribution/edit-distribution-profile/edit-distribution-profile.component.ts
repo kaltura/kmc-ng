@@ -15,7 +15,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 })
 export class EditDistributionProfileComponent implements OnInit {
   @Input() parentPopup: PopupWidgetComponent;
-  @Input() distributedProfile: ExtendedKalturaEntryDistribution;
+  @Input() distributedProfile: ExtendedKalturaEntryDistribution | null;
   @Input() undistributedProfile: KalturaDistributionProfile;
   @Input() flavors: Flavor[] = [];
   @Input() entry: KalturaBaseEntry;
