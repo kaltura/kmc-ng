@@ -20,7 +20,7 @@ export class UserSettingsComponent {
   constructor(private userAuthentication: AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService) {
     this._userContext = userAuthentication.appUser;
 
-    kmcAppConfig.core.locales.forEach(locale => {
+      kmcAppConfig.locales.forEach(locale => {
       this._languages.push({label: locale.label, value: locale.id});
     });
 

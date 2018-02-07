@@ -33,8 +33,8 @@ initializeConfiguration()
 
 if (environment.production) {
     enableProdMode();
-    console.log(`Running KMCng version '${globalConfig.appVersion}' (Production mode)`);
+    console.log(`Running KMCng version '${globalConfig.client.appVersion}' (Production mode)`);
 } else {
-    console.log(`Running KMCng version '${globalConfig.appVersion}' (Development mode)`);
+    console.log(`Running KMCng version '${globalConfig.client.appVersion}' (Development mode)`);
 }
 

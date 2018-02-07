@@ -2,10 +2,12 @@
 import { environment } from '../environments/environment';
 
 export interface GlobalConfig {
-    useSecuredProtocol: boolean,
-    production: boolean,
-    appVersion: string,
-    server: {
+    client: {
+        useSecuredProtocol: boolean,
+        production: boolean,
+        appVersion: string
+    },
+    kalturaServer: {
         useSecuredProtocol: boolean,
         maxUploadFileSize: number,
         maxConcurrentUploads: number,
@@ -14,10 +16,12 @@ export interface GlobalConfig {
 }
 
 export const globalConfig: GlobalConfig = {
-    production: environment.production,
-    appVersion: '3.6.1',
-    useSecuredProtocol: environment.client.useSecuredProtocol,
-    server: {
+    client: {
+        production: environment.production,
+        appVersion: '3.6.1',
+        useSecuredProtocol: environment.client.useSecuredProtocol
+    },
+    kalturaServer: {
         useSecuredProtocol: environment.server.useSecuredProtocol,
         maxUploadFileSize: 2047, // Mb
         maxConcurrentUploads: 4,

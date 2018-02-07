@@ -267,7 +267,7 @@ export class EntryThumbnailsWidget extends EntryWidget
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
       const fileData: File = selectedFiles[0];
-      const maxFileSize = globalConfig.server.maxUploadFileSize;
+      const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
 	  const fileSize = fileData.size / 1024 / 1024; // convert to Mb
 	    if (fileSize > maxFileSize) {
 		    this._browserService.alert({

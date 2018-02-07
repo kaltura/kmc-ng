@@ -10,7 +10,7 @@ export class AppMenuService {
   constructor() {}
 
   getMenuConfig() : AppMenuConfig {
-    return kmcAppConfig.core.menuConfig;
+    return kmcAppConfig.menuItems;
   }
 
 

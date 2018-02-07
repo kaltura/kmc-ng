@@ -20,7 +20,7 @@ export class ChangelogComponent implements OnInit {
 
   ngOnInit() {
     const cachedVersion = this._browserService.getFromLocalStorage(this._appCachedVersionToken);
-    this._showChangelog = cachedVersion !== globalConfig.appVersion;
+    this._showChangelog = cachedVersion !== globalConfig.client.appVersion;
     setTimeout(() => {
       this.onShowChangelog.emit(this._showChangelog);
     });
@@ -28,7 +28,7 @@ export class ChangelogComponent implements OnInit {
 
   public _openChangelog(): void {
     this._showChangelog = false;
-    this._browserService.setInLocalStorage(this._appCachedVersionToken, globalConfig.appVersion);
+    this._browserService.setInLocalStorage(this._appCachedVersionToken, globalConfig.client.appVersion);
     this.onShowChangelog.emit(this._showChangelog);
     this.changelogPopup.open();
   }

@@ -8,7 +8,7 @@ export class AppMenuService {
   constructor() {}
 
   getMenuConfig() : AppMenuConfig {
-    return analyticsAppConfig.core.menuConfig;
+    return analyticsAppConfig.menuItems;
   }
 
 

@@ -18,7 +18,7 @@ export class AppNavigator {
         this.router.navigateByUrl('/');
     }
     navigateToError(){
-        this.router.navigateByUrl(kmcAppConfig.shell.browser.errorRoute);
+        this.router.navigateByUrl(kmcAppConfig.routing.errorRoute);
     }
     navigate(path: string){
         this.router.navigateByUrl(path);

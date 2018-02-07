@@ -177,14 +177,14 @@ export class AppModule {
                 kalturaLogger: KalturaLogger,
                 uploadManagement: UploadManagement) {
 
-        if (globalConfig.production) {
+        if (globalConfig.client.production) {
             kalturaLogger.setOptions({level: 'Warn'})
         } else {
             kalturaLogger.setOptions({level: 'All'})
         }
 
         // TODO [kmcng] move to a relevant location
-        uploadManagement.setMaxUploadRequests(globalConfig.server.maxConcurrentUploads);
+        uploadManagement.setMaxUploadRequests(globalConfig.kalturaServer.maxConcurrentUploads);
 
         appBootstrap.bootstrap();
 

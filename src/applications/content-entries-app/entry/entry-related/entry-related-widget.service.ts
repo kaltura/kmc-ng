@@ -283,7 +283,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	}
 
   private _validateFileSize(file: File): boolean {
-    const maxFileSize = globalConfig.server.maxUploadFileSize;
+    const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
     const fileSize = file.size / 1024 / 1024; // convert to Mb
 
     return this._uploadManagement.supportChunkUpload(new NewEntryRelatedFile(null)) || fileSize < maxFileSize;

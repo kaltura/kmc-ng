@@ -169,7 +169,7 @@ export class AppModule {
     constructor(appBootstrap: AppBootstrap,
                 uploadManagement: UploadManagement) {
         // TODO [kmcng] move to a relevant location
-        uploadManagement.setMaxUploadRequests(globalConfig.server.maxConcurrentUploads);
+        uploadManagement.setMaxUploadRequests(globalConfig.kalturaServer.maxConcurrentUploads);
 
         appBootstrap.bootstrap();
 

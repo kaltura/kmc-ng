@@ -58,7 +58,7 @@ export const serverConfig: ServerConfig = <any>{};
 export function getKalturaServerUri(suffix: string = ''): string{
     if (serverConfig)
     {
-        const useHttpsProtocol = globalConfig.server.useSecuredProtocol;
+        const useHttpsProtocol = globalConfig.kalturaServer.useSecuredProtocol;
         const serverEndpoint = serverConfig.kalturaServer.uri;
         return `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}${suffix}`;
     }else {
@@ -82,7 +82,7 @@ function getConfiguration(): Observable<ServerConfig> {
                     if (xhr.status === 200) {
                         resp = JSON.parse(xhr.response);
                     } else {
-                        if (globalConfig.production) {
+                        if (globalConfig.client.production) {
                             resp = new Error('failed to load configuration file from server with error ' + xhr.statusText);
                         }else {
                             resp = new Error('failed to load configuration file from server with error ' + xhr.statusText + ' (did you remember to create a configuration file from the provided template in the app folder?)');
@@ -101,7 +101,7 @@ function getConfiguration(): Observable<ServerConfig> {
             }
         };
 
-        xhr.open('Get', `${environment.configurationUri}?v=${globalConfig.appVersion}`);
+        xhr.open('Get', `${environment.configurationUri}?v=${globalConfig.client.appVersion}`);
 
         xhr.send();
 

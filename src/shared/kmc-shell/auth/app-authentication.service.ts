@@ -136,7 +136,7 @@ export class AppAuthentication {
     const permissionFilter = new KalturaPermissionFilter();
     permissionFilter.nameEqual = 'FEATURE_DISABLE_REMEMBER_ME';
 
-    const partnerId = globalConfig.server.limitToPartnerId || undefined;
+    const partnerId = globalConfig.kalturaServer.limitToPartnerId || undefined;
     const request = new KalturaMultiRequest(
       new UserLoginByLoginIdAction(
         {
@@ -224,7 +224,7 @@ export class AppAuthentication {
       if (this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedOut) {
           const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
         if (loginToken) {
-            const partnerId = globalConfig.server.limitToPartnerId || undefined;
+            const partnerId = globalConfig.kalturaServer.limitToPartnerId || undefined;
 
             const requests = [
             new UserGetAction({

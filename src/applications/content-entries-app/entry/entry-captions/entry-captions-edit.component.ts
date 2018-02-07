@@ -116,7 +116,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 	}
 
   private _validateFileSize(file: File): boolean {
-    const maxFileSize = globalConfig.server.maxUploadFileSize;
+    const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
     const fileSize = file.size / 1024 / 1024; // convert to Mb
 
     return this._uploadManagement.supportChunkUpload(new NewEntryCaptionFile(null)) || fileSize < maxFileSize;

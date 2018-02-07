@@ -9,6 +9,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { subApplicationsConfig } from 'config/sub-applications';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { globalConfig } from 'config/global';
+import { serverConfig } from 'config/server';
 
 export interface UploadSettingsFile {
   file: File;
@@ -217,7 +218,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
     let result = true;
     const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
-    const maxFileSize = globalConfig.server.maxUploadFileSize;
+    const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
 
     files.forEach(file => {
       const fileSize = file.size / 1024 / 1024; // convert to Mb

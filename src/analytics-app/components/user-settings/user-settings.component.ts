@@ -19,7 +19,7 @@ export class UserSettingsComponent {
   constructor(private userAuthentication: AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService) {
     this._userContext = userAuthentication.appUser;
 
-    analyticsAppConfig.core.locales.forEach(locale => {
+    analyticsAppConfig.locales.forEach(locale => {
       this._languages.push({label: locale.label, value: locale.id});
     });
 
