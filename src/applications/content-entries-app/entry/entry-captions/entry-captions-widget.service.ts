@@ -102,6 +102,9 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
             case TrackedFileStatuses.uploadCompleted:
               relevantCaption.uploading = false;
               relevantCaption.uploadFailure = false;
+              if (relevantCaption.partnerId) { // indicator that entry was saved
+                relevantCaption.status = KalturaCaptionAssetStatus.ready;
+              }
               break;
             case TrackedFileStatuses.failure:
               relevantCaption.uploading = false;
@@ -210,23 +213,27 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     }
 
     public _getCaptionStatus(caption: any): string {
-        let status = "";
-        if (caption.status) {
+      let status = '';
+      if (caption.status) {
+        switch (caption.status.toString()) {
+          case KalturaCaptionAssetStatus.error.toString():
+            status = this._appLocalization.get('applications.content.entryDetails.captions.error');
+            break;
+          case KalturaCaptionAssetStatus.ready.toString():
+            status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
+            break;
+          default:
             status = this._appLocalization.get('applications.content.entryDetails.captions.processing');
-            switch (caption.status.toString()) {
-                case KalturaCaptionAssetStatus.error.toString():
-                    status = this._appLocalization.get('applications.content.entryDetails.captions.error');
-                    break;
-                case KalturaCaptionAssetStatus.ready.toString():
-                    status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
-                    break;
-            }
-        } else {
-            if (caption.serverUploadToken || caption.uploadUrl) {
-                status = this._appLocalization.get('applications.content.entryDetails.captions.ready');
-            }
+            break;
         }
-        return status;
+      } else {
+        if (caption.uploading) {
+          status = this._appLocalization.get('applications.content.entryDetails.captions.processing');
+        } else if (caption.serverUploadToken || caption.uploadUrl) {
+          status = this._appLocalization.get('applications.content.entryDetails.captions.ready');
+        }
+      }
+      return status;
     }
 
   public _addCaption(): any {

@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators, ValidatorFn} from '@angular/forms';
-import {SettingsAccountUpgradeService} from './settings-account-upgrade.service';
+import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {SettingsAccountInformationService} from './settings-account-information.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 
 function phoneValidator(): ValidatorFn {
@@ -20,26 +21,32 @@ function phoneValidator(): ValidatorFn {
 }
 
 @Component({
-  selector: 'kmc-settings-account-upgrade',
-  templateUrl: './settings-account-upgrade.component.html',
-  styleUrls: ['./settings-account-upgrade.component.scss'],
-  providers: [SettingsAccountUpgradeService],
+  selector: 'kmc-settings-account-information',
+  templateUrl: './settings-account-information.component.html',
+  styleUrls: ['./settings-account-information.component.scss'],
+  providers: [SettingsAccountInformationService],
 })
-export class SettingsAccountUpgradeComponent implements OnInit, OnDestroy {
+export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
 
 
   public contactUsForm: FormGroup;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
+  public _canContactSalesForceInformation = true;
 
-  constructor(private _accountUpgradeService: SettingsAccountUpgradeService,
+  constructor(private _accountInformationService: SettingsAccountInformationService,
               private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
     this._createForm();
+    this._canContactSalesForceInformation = this._accountInformationService.canContactSalesForceInformation();
+    if (!this._canContactSalesForceInformation) {
+      this._logger.warn('Cannot send message to SalesForce: missing \'contactsalesforce\' configuration');
+    }
   }
 
   ngOnDestroy(): void {
@@ -66,23 +73,23 @@ export class SettingsAccountUpgradeComponent implements OnInit, OnDestroy {
     }
 
     this._updateAreaBlockerState(true, null);
-    this._accountUpgradeService
+    this._accountInformationService
       .sendContactSalesForceInformation(this.contactUsForm.value)
       .cancelOnDestroy(this)
-      .subscribe(response => {
+      .subscribe(() => {
           // this._fillForm(updatedPartner);
           this._updateAreaBlockerState(false, null);
           this._browserService.alert(
             {
-              header: this._appLocalization.get('applications.settings.accountUpgrade.sendSuccessHeader'),
-              message: this._appLocalization.get('applications.settings.accountUpgrade.sendSuccessBody')
+              header: this._appLocalization.get('applications.settings.accountInformation.sendSuccessHeader'),
+              message: this._appLocalization.get('applications.settings.accountInformation.sendSuccessBody')
             }
           );
         },
         error => {
           const blockerMessage = new AreaBlockerMessage(
             {
-              message: this._appLocalization.get('applications.settings.accountUpgrade.errors.sendFailed'),
+              message: this._appLocalization.get('applications.settings.accountInformation.errors.sendFailed'),
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.ok'),
