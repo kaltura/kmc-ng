@@ -16,7 +16,7 @@ import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PlaylistCreationService } from 'app-shared/kmc-shared/events/playlist-creation';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -148,7 +148,7 @@ export class PlaylistStore implements OnDestroy {
       .subscribe(playlist => {
           if (playlist.playlistType === KalturaPlaylistType.dynamic) {
             if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
-              playlist.totalResults = environment.modules.contentPlaylists.ruleBasedTotalResults;
+              playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
             }
           }
 
@@ -213,7 +213,7 @@ export class PlaylistStore implements OnDestroy {
                     playlistContent: newData.playlistContent,
                     playlistType: newData.type,
                     creatorId: this._appAuth.appUser.id,
-                    totalResults: environment.modules.contentPlaylists.ruleBasedTotalResults
+                    totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
                   })
                 });
 
