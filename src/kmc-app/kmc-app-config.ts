@@ -58,7 +58,7 @@ export const kmcAppConfig: KmcAppConfig = {
                 {
                     'routePath': 'content/syndication',
                     'titleToken': 'Syndication',
-                    'enabled': false,
+                    'enabled': true,
                     'position': 'left'
                 },
                 {

@@ -1,9 +1,9 @@
-import { AppEvent } from 'app-shared/kmc-shared/app-events/app-event';
+import {AppEvent} from 'app-shared/kmc-shared/app-events/app-event';
 
-export class UpdatePlayersEvent extends AppEvent {
+export class PlayersUpdatedEvent extends AppEvent {
 
     constructor(public isPlaylist: boolean)
     {
-        super('UpdatePlayersEvent');
+        super('PlayersUpdatedEvent');
     }
 }

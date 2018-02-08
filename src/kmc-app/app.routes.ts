@@ -35,6 +35,10 @@ const routes: Routes = <Routes>[
             loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule'
           },
           {
+            path: 'syndication',
+            loadChildren: '../applications/content-syndication-app/content-syndication-app.module#ContentSyndicationAppModule'
+          },
+          {
             path: 'upload-control',
             loadChildren: '../applications/content-upload-control-app/content-upload-control-app.module#ContentUploadControlAppModule'
           },
