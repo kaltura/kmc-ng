@@ -1248,7 +1248,8 @@
             "format": "Format: {{0}}",
             "codec": "Codec: {{0}}",
             "notRequired": "Not Required",
-            "kbps": "{{0}} Kbps"
+            "kbps": "{{0}} Kbps",
+            "missingThumbnail": "Missing Thumbnail"
           },
           "status": {
             "readyForDistribution": "Ready for Distribution",

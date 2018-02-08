@@ -6,7 +6,19 @@ import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/Kaltura
 import { EntryDistributionWidget, ExtendedKalturaEntryDistribution } from '../entry-distribution-widget.service';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import { KalturaThumbAsset } from 'kaltura-ngx-client/api/types/KalturaThumbAsset';
+import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client/api/types/KalturaDistributionThumbDimensions';
+import { KalturaThumbAssetStatus } from 'kaltura-ngx-client/api/types/KalturaThumbAssetStatus';
+import { getKalturaServerUri } from 'config/server';
+
+export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
+  entryThumbnail?: {
+    size: number,
+    url: string;
+    id: string
+  }
+}
 
 @Component({
   selector: 'kEditDistributionProfile',
@@ -19,10 +31,12 @@ export class EditDistributionProfileComponent implements OnInit {
   @Input() undistributedProfile: KalturaDistributionProfile;
   @Input() flavors: Flavor[] = [];
   @Input() entry: KalturaBaseEntry;
+  @Input() thumbnails: KalturaThumbAsset[] = [];
 
   public _profile: KalturaDistributionProfile | ExtendedKalturaEntryDistribution;
   public _forDistribution = true;
   public _requiredFlavors: Partial<Flavor>[] = [];
+  public _requiredThumbnails: ExtendedKalturaDistributionThumbDimensions[] = [];
   public _profileName = '';
   public _distributionName = '';
 
@@ -34,6 +48,7 @@ export class EditDistributionProfileComponent implements OnInit {
 
   constructor(private _appLocalization: AppLocalization,
               private _widget: EntryDistributionWidget,
+              private _appAuthentication: AppAuthentication,
               private _browserService: BrowserService) {
 
   }
@@ -55,6 +70,11 @@ export class EditDistributionProfileComponent implements OnInit {
       this._distributionName = this.undistributedProfile.name;
     }
 
+    this._prepareFlavors();
+    this._prepareThumbnails();
+  }
+
+  private _prepareFlavors(): void {
     const requiredFlavorsIds = (this.undistributedProfile.requiredFlavorParamsIds || '').split(',');
     if (requiredFlavorsIds.length) {
       const requiredFlavors = requiredFlavorsIds.map(flavorId => {
@@ -97,6 +117,21 @@ export class EditDistributionProfileComponent implements OnInit {
             });
       }
     }
+  }
+
+  private _prepareThumbnails(): void {
+    const entryThumbnails = this.thumbnails.filter(thumbnail => thumbnail.status === KalturaThumbAssetStatus.ready);
+    this._requiredThumbnails = this.undistributedProfile.requiredThumbDimensions.map(thumbnail => {
+      const relevantEntryThumbnail = entryThumbnails.find(item => item.width === thumbnail.width && item.height === thumbnail.height);
+      if (relevantEntryThumbnail) {
+        (<ExtendedKalturaDistributionThumbDimensions>thumbnail).entryThumbnail = {
+          id: relevantEntryThumbnail.id,
+          size: Number(relevantEntryThumbnail.size),
+          url: getKalturaServerUri(`/api_v3/index.php/service/thumbasset/action/serve/ks/${this._appAuthentication.appUser.ks}/thumbAssetId/${relevantEntryThumbnail.id}`)
+        };
+      }
+      return thumbnail;
+    });
   }
 
   public _getEntryTags(entry: KalturaMediaEntry): string[] {

@@ -18,6 +18,7 @@
   <ng-template>
     <kEditDistributionProfile [parentPopup]="editProfile"
                               [entry]="_widgetService.data"
+                              [thumbnails]="(_widgetService.thumbnails$ | async)?.items"
                               [flavors]="(_widgetService.flavors$ | async)?.items"
                               [undistributedProfile]="_selectedUndistributedProfile"
                               [distributedProfile]="_selectedDistributedProfile"></kEditDistributionProfile>

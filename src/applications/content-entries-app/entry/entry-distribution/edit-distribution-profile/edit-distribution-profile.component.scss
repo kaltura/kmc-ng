@@ -126,6 +126,7 @@
       }
 
       .kFlavor {
+        margin-bottom: 24px;
 
         .kFlavorInfo {
           color: $kGrayscale1;
@@ -170,6 +171,77 @@
               position: relative;
               top: 5px;
             }
+          }
+        }
+      }
+
+      .kThumbnail {
+        display: flex;
+        align-items: center;
+        margin-bottom: 24px;
+
+        .kThumbnailHolder {
+          overflow: hidden;
+          position: relative;
+          width: 116px;
+          height: 65px;
+          background-color: $kGrayscale7;
+          white-space: nowrap;
+          text-align: center;
+          border-radius: 3px;
+          cursor: pointer;
+          &.disable {
+            cursor: auto;
+          }
+          img {
+            position: absolute;
+            left: -100%;
+            right: -100%;
+            top: -100%;
+            bottom: -100%;
+            margin: auto;
+            width: 116px;
+            height: auto;
+            border-radius: 3px;
+          }
+        }
+
+        .kThumbnailInfo {
+          margin-left: 16px;
+
+          .kThumbnailDimensions {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 15px;
+          }
+
+          .kThumbnailMetadata {
+            font-size: 14px;
+            .kThumbnailMissingMetadata {
+              color: $kDandger;
+
+              .kThumbnailMissingIcon {
+                font-size: 20px;
+                margin-right: 8px;
+                position: relative;
+                top: 3px;
+                left: -1px;
+                padding: 1px;
+              }
+            }
+
+            .kThumbnailMetadataDelimiter {
+              margin: 0 10px;
+
+              &:after {
+                content: '|';
+                font-size: 12px;
+                color: $kGrayscale4;
+                top: -1px;
+                position: relative;
+              }
+            }
+
           }
         }
       }
