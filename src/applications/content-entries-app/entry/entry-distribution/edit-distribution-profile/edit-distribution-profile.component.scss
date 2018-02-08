@@ -17,9 +17,30 @@
       align-items: center;
 
       .kTitle {
-        color: #333333;
-        font-size: 15px;
-        font-weight: 700;
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 24px;
+          margin-right: 10px;
+        }
+
+        .kTitleNames {
+          display: flex;
+          flex-direction: column;
+
+          .kTitleProfileName {
+            color: $kGrayscale1;
+            font-size: 15px;
+            font-weight: 700;
+          }
+
+          .kTitleDistributionName {
+            color: $kGrayscale3;
+            font-size: 14px;
+            margin-top: 10px;
+          }
+        }
       }
 
       .kButtons {

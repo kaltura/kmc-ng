@@ -23,6 +23,8 @@ export class EditDistributionProfileComponent implements OnInit {
   public _profile: KalturaDistributionProfile | ExtendedKalturaEntryDistribution;
   public _forDistribution = true;
   public _requiredFlavors: Partial<Flavor>[] = [];
+  public _profileName = '';
+  public _distributionName = '';
 
   public get _addButtonLabel(): string {
     return this._forDistribution
@@ -47,6 +49,11 @@ export class EditDistributionProfileComponent implements OnInit {
 
     this._forDistribution = !this.distributedProfile;
     this._profile = this.distributedProfile || this.undistributedProfile;
+    this._profileName = this._profile.name;
+
+    if (!this._forDistribution) {
+      this._distributionName = this.undistributedProfile.name;
+    }
 
     const requiredFlavorsIds = (this.undistributedProfile.requiredFlavorParamsIds || '').split(',');
     if (requiredFlavorsIds.length) {
