@@ -87,11 +87,11 @@
           <span class="kFlavorName">{{flavor.name}}</span>
         </div>
         <div class="kFlavorMetadata">
-          <span *ngIf="flavor.paramsId === undefined" class="kFlavorMissingMetadata">
+          <span *ngIf="flavor.status === ''" class="kFlavorMissingMetadata">
             <i class="kIconwarning kFlavorMissingIcon"></i>
             {{'applications.content.entryDetails.distribution.form.missingFlavor' | translate}}
           </span>
-          <span *ngIf="flavor.paramsId !== undefined">
+          <span *ngIf="flavor.status !== ''">
             {{'applications.content.entryDetails.distribution.form.format'| translate:[flavor.format]}}
             <span class="kFlavorMetadataDelimiter"></span>
             {{'applications.content.entryDetails.distribution.form.codec'| translate:[flavor.codec]}}
