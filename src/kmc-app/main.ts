@@ -1,16 +1,15 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
 import { AppModule } from './app.module';
-import { initializeConfiguration, environment as appConfig } from 'app-environment';
-import { environment } from './environments/environment';
-import { staticKMCConfiguration } from './static-kmc-config';
+import { environment } from 'environments/environment';
+import { initializeConfiguration } from '../configuration/server-config';
+import { globalConfig } from 'config/global';
 
-
-initializeConfiguration(staticKMCConfiguration)
+initializeConfiguration()
     .subscribe(
         () =>
         {
+
             platformBrowserDynamic().bootstrapModule(AppModule);
         },
         (error) =>
@@ -34,8 +33,8 @@ initializeConfiguration(staticKMCConfiguration)
 
 if (environment.production) {
     enableProdMode();
-    console.log(`Running KMCng version '${appConfig.appVersion}' (Production mode)`);
+    console.log(`Running KMCng version '${globalConfig.client.appVersion}' (Production mode)`);
 } else {
-    console.log(`Running KMCng version '${appConfig.appVersion}' (Development mode)`);
+    console.log(`Running KMCng version '${globalConfig.client.appVersion}' (Development mode)`);
 }
 

@@ -8,7 +8,7 @@
             [label]="'applications.content.moderation.selectAction' | translate"
             (click)="menu.toggle($event)"></button>
   </div>
-  <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons"
+  <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" class="kOverrideFAIcons" kMenuCloseOnScroll
                 [appendTo]="'body'"></p-tieredMenu>
 </kEntriesList>
 </k-area-blocker>
