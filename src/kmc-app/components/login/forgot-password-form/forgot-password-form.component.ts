@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { environment } from 'app-environment';
 import { LoginScreens } from '../login.component';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { serverConfig } from 'config/server';
 
 @Component({
   selector: 'kKMCForgotPasswordForm',
@@ -60,6 +60,6 @@ export class ForgotPasswordFormComponent {
   }
 
   public _openContactUs(): void {
-    this._browserService.openLink(environment.core.externalLinks.CONTACT_US);
+    this._browserService.openLink(serverConfig.externalLinks.kaltura.contactUs);
   }
 }

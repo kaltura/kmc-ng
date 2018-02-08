@@ -21,11 +21,20 @@
       "dom"
     ],
     "paths": {
+      "config/global": [
+        "configuration/global-config"
+      ],
+      "config/server": [
+        "configuration/server-config.ts"
+      ],
+      "config/sub-applications": [
+        "applications/sub-applications-config"
+      ],
+      "config/modules": [
+        "shared/modules-config"
+      ],
       "app-shared/*": [
         "shared/*"
-      ],
-      "app-environment": [
-        "configuration"
       ],
       "app-theme/*": [
         "styles/app-theme/*"

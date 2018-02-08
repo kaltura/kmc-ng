@@ -9,7 +9,7 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-        "kmc-app/kmc-config.json",
+        "configuration/server-config.json",
         "assets",
         "i18n",
         "favicon.ico",
@@ -28,10 +28,10 @@
       "scripts": [
         "./assets/js/KalturaEmbedCodeGenerator.min.js"
       ],
-      "environmentSource": "kmc-app/environments/environment.ts",
+      "environmentSource": "environments/environment.ts",
       "environments": {
-        "dev": "kmc-app/environments/environment.ts",
-        "prod": "kmc-app/environments/environment.prod.ts"
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
       },
       "stylePreprocessorOptions" : {
         "includePaths" : ["styles"]
