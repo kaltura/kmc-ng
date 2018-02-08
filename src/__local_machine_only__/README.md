@@ -5,7 +5,7 @@ this guide will walk you through on how to host local apps,
 such as Studio, Usage Dashboard, Live Dashboard, etc.
 
 
-##about "__local_machine_only__" folder:
+##About "__local_machine_only__" folder:
 Due to cross domain issues, external apps which needed to be integrated and tested,
 will be added and **hosted locally** using this folder.
 
