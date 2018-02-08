@@ -77,6 +77,7 @@ import { EntriesModule } from 'app-shared/content-shared/entries/entries.module'
 import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
+import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -129,7 +130,8 @@ export function clientConfigurationFactory() {
     OperationTagModule.forRoot(),
     PlaylistCreationModule.forRoot(),
     CategoryCreationModule.forRoot(),
-    KMCServerPollsModule.forRoot()
+    KMCServerPollsModule.forRoot(),
+    ViewCategoryEntriesModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
