@@ -60,7 +60,6 @@ import {
 
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
-import { environment } from 'app-environment';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
@@ -76,6 +75,8 @@ import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-crea
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
+import { globalConfig } from 'config/global';
+import { getKalturaServerUri } from 'config/server';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -83,8 +84,7 @@ const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, Flav
 
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
-    const { useHttpsProtocol, serverEndpoint } = environment.core.kaltura;
-    result.endpointUrl = `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}`;
+    result.endpointUrl = getKalturaServerUri();
     result.clientTag = 'KMCng';
     return result;
 }
@@ -169,7 +169,7 @@ export class AppModule {
     constructor(appBootstrap: AppBootstrap,
                 uploadManagement: UploadManagement) {
         // TODO [kmcng] move to a relevant location
-        uploadManagement.setMaxUploadRequests(environment.uploadsShared.MAX_CONCURENT_UPLOADS);
+        uploadManagement.setMaxUploadRequests(globalConfig.kalturaServer.maxConcurrentUploads);
 
         appBootstrap.bootstrap();
 

@@ -1,0 +1,50 @@
+{
+  "kalturaServer": {
+    "uri" : "www.kaltura.com",
+    "expiry": 86400,
+    "privileges": "disableentitlement",
+    "previewUIConf": 38524931,
+    "freeTrialExpiration": {
+      "enabled": false,
+      "trialPeriodInDays": 30
+    }
+  },
+  "cdnServers": {
+    "serverUri": "http://cdnapi.kaltura.com",
+    "securedServerUri": "https://cdnapisec.kaltura.com"
+  },
+  "externalApps": {
+    "analytics": {
+      "uri": "",
+      "version": ""
+    },
+    "studio": {
+      "uri": "",
+      "version": "v2.0.9",
+      "uiConfId": "39700052",
+      "html5_version":"v2.57.2",
+      "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
+    }
+  },
+  "externalLinks": {
+    "previewAndEmbed": {
+      "embedTypes": "http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/embedcodetypes.htm",
+      "deliveryProtocols": "https://knowledge.kaltura.com/how-enforce-delivery-type-each-player-using-ui-variables"
+    },
+    "kaltura": {
+      "userManual": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
+      "support": "http://kmc.kaltura.com/index.php/kmc/support",
+      "signUp": "https://corp.kaltura.com/free-trial",
+      "contactUs": "https://corp.kaltura.com/company/contact-us",
+      "upgradeAccount":"https://site.kaltura.com/Request-Users.html",
+      "contactSalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
+    },
+    "uploads": {
+      "highSpeedUpload": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
+      "bulkUploadSamples": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
+    },
+    "live": {
+      "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
+    }
+  }
+}

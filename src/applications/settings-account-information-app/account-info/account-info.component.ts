@@ -2,10 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SettingsAccountInformationService} from '../settings-account-information.service';
 import {AppAuthentication, PartnerPackageTypes} from 'app-shared/kmc-shell';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
-import {environment} from 'app-environment';
 import {KalturaPartnerStatistics} from 'kaltura-ngx-client/api/types/KalturaPartnerStatistics';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { serverConfig } from 'config/server';
 
 
 @Component({
@@ -27,10 +27,11 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._showTrialUserInfo = this._appAuthentication.appUser.partnerInfo.partnerPackage === PartnerPackageTypes.PartnerPackageFree &&
-      environment.modules.settingsAccountInformation.checkFreeTrialExpiration;
+    this._showTrialUserInfo = this._appAuthentication.appUser.partnerInfo.partnerPackage === PartnerPackageTypes.PartnerPackageFree
+        && serverConfig.kalturaServer.freeTrialExpiration.enabled
+        && !!this._appAuthentication.appUser.createdAt;
     if (this._showTrialUserInfo) {
-      const trialPeriod: number = environment.modules.settingsAccountInformation.trialPeriod;
+      const trialPeriod: number = serverConfig.kalturaServer.freeTrialExpiration.trialPeriodInDays;
 
       this._trialExpirationDateString =
         (new DatePipe()).transform(this._appAuthentication.appUser.createdAt.getTime() + trialPeriod, 'dateOnly'); // "01/15/1992"

@@ -14,9 +14,9 @@ const routes: Routes = <Routes>[
     path: '', canActivate: [AppBootstrap],
     children: [
       { path: 'login', component: LoginComponent },
-        {
-            path: '', redirectTo: '/content/entries/list', pathMatch: 'full'
-        },
+      {
+          path: '', redirectTo: '/content/entries/list', pathMatch: 'full'
+      },
       {
         path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
         {

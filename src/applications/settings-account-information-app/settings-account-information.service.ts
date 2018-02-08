@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {environment} from 'app-environment';
 import {Http} from '@angular/http';
 import {KalturaClient} from 'kaltura-ngx-client';
 import {KalturaPartnerStatistics} from 'kaltura-ngx-client/api/types/KalturaPartnerStatistics';
 import {PartnerGetStatisticsAction} from 'kaltura-ngx-client/api/types/PartnerGetStatisticsAction';
+import { serverConfig } from 'config/server';
 
 
 export interface AccountInformation {
@@ -22,7 +22,7 @@ export class SettingsAccountInformationService {
 
   public canContactSalesForceInformation(): boolean {
     try {
-      return !!environment.core.kaltura.contactsalesforce;
+      return !!serverConfig.externalLinks.kaltura.contactSalesforce;
     } catch (ex) {
       return false;
     }
@@ -31,7 +31,7 @@ export class SettingsAccountInformationService {
   public sendContactSalesForceInformation(data: AccountInformation): Observable<void> {
     try {
       return this._http
-        .post(environment.core.kaltura.contactsalesforce, data)
+        .post(serverConfig.externalLinks.kaltura.contactSalesforce, data)
         .map(() => undefined);
     } catch (ex) {
       return Observable.throw(new Error('An error occurred while trying to contact SalesForce'));

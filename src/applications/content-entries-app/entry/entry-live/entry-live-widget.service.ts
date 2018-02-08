@@ -19,8 +19,8 @@ import { EntryWidgetKeys } from '../entry-widget-keys';
 
 import { LiveXMLExporter } from './live-xml-exporter';
 import { AVAIL_BITRATES } from './bitrates';
-import { environment } from 'app-environment';
 import { EntryWidget } from '../entry-widget';
+import { serverConfig } from 'config/server';
 
 export interface bitrate {
 	enabled: boolean,
@@ -109,73 +109,6 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 				this._setManualStreams();
 				break;
 		}
-	}
-
-	/*
-	 private _fetchConversionProfiles(): void {
-	 this._conversionProfiles.next({items: [], loading: true});
-
-	 this._kalturaServerClient.request(new ConversionProfileListAction({
-	 filter: new KalturaConversionProfileFilter({
-	 typeEqual: KalturaConversionProfileType.liveStream
-	 }),
-	 pager: new KalturaFilterPager({
-	 pageIndex: 1,
-	 pageSize: 500
-	 })
-	 }))
-	 .cancelOnDestroy(this, this.widgetReset$)
-	 .monitor('get conversion profiles')
-	 .subscribe(
-	 response => {
-	 if (response.objects && response.objects.length) {
-	 // set the default profile first in the array
-	 response.objects.sort(function (a, b) {
-	 if (a.isDefault > b.isDefault)
-	 return -1;
-	 if (a.isDefault < b.isDefault)
-	 return 1;
-	 return 0;
-	 });
-	 // create drop down options array
-	 let conversionProfiles = [];
-	 response.objects.forEach(profile => {
-	 conversionProfiles.push({label: profile.name, value: profile.id});
-	 if (this.data.conversionProfileId === profile.id) {
-	 this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
-	 }
-	 });
-	 this._conversionProfiles.next({items: conversionProfiles, loading: false});
-	 }
-	 },
-	 error => {
-	 this._conversionProfiles.next({items: [], loading: false, error: error});
-	 }
-	 );
-	 }
-
-	 public regenerateStreamToken(): void {
-	 this._regeneratingToken = true;
-	 this._kalturaServerClient.request(new LiveStreamRegenerateStreamTokenAction({entryId: this.data.id}))
-	 .cancelOnDestroy(this, this.widgetReset$)
-	 .monitor('regenerate stream token')
-	 .subscribe(
-	 response => {
-	 this._regeneratingToken = false;
-   this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateSuccess')});
-	 },
-	 error => {
-	 this._regeneratingToken = false;
-   this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure')});
-	 }
-	 );
-	 }
-	 */
-
-	public _openLiveReport(): void {
-		const base_url = window.location.protocol + '//' + environment.core.kaltura.legacyKmcUrl;
-		const url = base_url + '/apps/liveanalytics/' + environment.core.kaltura.liveAnalyticsVersion + '/index.html#/entry/' + this.data.id + '/nonav';
-		this._browserService.openLink(url);
 	}
 
 	public _exportXML() {
