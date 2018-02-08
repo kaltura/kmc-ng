@@ -5,7 +5,7 @@ this guide will walk you through on how to host local apps,
 such as Studio, Usage Dashboard, Live Dashboard, etc.
 
 
-#about "__local_machine_only__" folder:
+##about "__local_machine_only__" folder:
 Due to cross domain issues, external apps which needed to be integrated and tested,
 will be added and **hosted locally** using this folder.
 
@@ -14,7 +14,7 @@ will be added and **hosted locally** using this folder.
 Any of the local apps being added to it shouldn't be added to the source control.
 
 
-#Config new app
+##Config new app
 In Order to host a new local app we need to configure it first.
 1. Copy **kmc-ng/src/configuration/server-config.template.json**
 into same folder.
