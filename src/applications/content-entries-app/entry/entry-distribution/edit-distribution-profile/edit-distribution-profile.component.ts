@@ -59,7 +59,11 @@ export class EditDistributionProfileComponent implements OnInit {
     if (requiredFlavorsIds.length) {
       const requiredFlavors = requiredFlavorsIds.map(flavorId => {
         const relevantFlavor = this.flavors.find(({ paramsId }) => Number(flavorId) === paramsId);
-        return relevantFlavor || { id: flavorId, name: '' };
+        if (relevantFlavor) {
+          (<any>relevantFlavor).size = Number(relevantFlavor.size); // prevent kFileSize pipe fail on string
+          return relevantFlavor;
+        }
+        return { id: flavorId, name: '' };
       });
 
       this._requiredFlavors = requiredFlavors;

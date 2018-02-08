@@ -1246,7 +1246,9 @@
             "thumbnail": "Thumbnail",
             "missingFlavor": "Missing Flavor",
             "format": "Format: {{0}}",
-            "codec": "Codec: {{0}}"
+            "codec": "Codec: {{0}}",
+            "notRequired": "Not Required",
+            "kbps": "{{0}} Kbps"
           },
           "status": {
             "readyForDistribution": "Ready for Distribution",
