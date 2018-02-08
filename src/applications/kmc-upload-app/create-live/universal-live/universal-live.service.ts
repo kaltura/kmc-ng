@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {environment} from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import {Http} from '@angular/http';
+import { serverConfig } from 'config/server';
 
 @Injectable()
 export class UniversalLiveService {
@@ -10,7 +11,7 @@ export class UniversalLiveService {
   }
 
   public getDefaultIp(): Observable<string> {
-    let akamaiEdgeServerIpURL = environment.modules.createLive.akamaiEdgeServerIpURL;
+    let akamaiEdgeServerIpURL = serverConfig.externalLinks.live.akamaiEdgeServerIpURL;
     const pattern = /^https?:\/\//;
 
     if (!pattern.test(akamaiEdgeServerIpURL)) {

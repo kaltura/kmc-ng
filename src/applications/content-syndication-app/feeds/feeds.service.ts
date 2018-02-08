@@ -28,12 +28,12 @@ import {PlaylistListAction} from 'kaltura-ngx-client/api/types/PlaylistListActio
 import {KalturaPlaylistOrderBy} from 'kaltura-ngx-client/api/types/KalturaPlaylistOrderBy';
 import {KalturaPlaylistListResponse} from 'kaltura-ngx-client/api/types/KalturaPlaylistListResponse';
 import {SyndicationFeedDeleteAction} from 'kaltura-ngx-client/api/types/SyndicationFeedDeleteAction';
-import {environment} from 'app-environment';
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {KalturaSyndicationFeedEntryCount} from "kaltura-ngx-client/api/types/KalturaSyndicationFeedEntryCount";
 import {SyndicationFeedGetEntryCountAction} from "kaltura-ngx-client/api/types/SyndicationFeedGetEntryCountAction";
 import {SyndicationFeedAddAction} from "kaltura-ngx-client/api/types/SyndicationFeedAddAction";
 import {SyndicationFeedUpdateAction} from "kaltura-ngx-client/api/types/SyndicationFeedUpdateAction";
+import { subApplicationsConfig } from 'config/sub-applications';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -256,7 +256,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
   private _transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<{}> {
     let maxRequestsPerMultiRequest = requests.length;
     if (chunk) {
-      maxRequestsPerMultiRequest = environment.modules.contentEntries.bulkActionsLimit;
+      maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit;
     }
 
     const multiRequests: Observable<KalturaMultiResponse>[] = [];

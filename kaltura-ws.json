@@ -17,7 +17,7 @@
     },
     "release": {
       "appConfig": {
-        "path": "./src/configuarion/index.ts",
+        "path": "./src/configuration/global-config.ts",
         "key": "appVersion"
       },
       "changeLog": {

@@ -28,11 +28,12 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { EntryWidgetKeys } from '../entry-widget-keys';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators'
-import { environment } from 'app-environment';
 import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
 import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client/api/types/KalturaAttachmentAssetListResponse';
+import { getKalturaServerUri } from 'config/server';
+import { globalConfig } from 'config/global';
 
 export interface RelatedFile extends KalturaAttachmentAsset {
   uploading?: boolean,
@@ -281,7 +282,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	}
 
   private _validateFileSize(file: File): boolean {
-    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
     const fileSize = file.size / 1024 / 1024; // convert to Mb
 
     return this._uploadManagement.supportChunkUpload(new NewEntryRelatedFile(null)) || fileSize < maxFileSize;
@@ -302,10 +303,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
   }
 
 	private _openFile(fileId: string, operation: string): void {
-		const serverEndpoint = environment.core.kaltura.serverEndpoint;
-        const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
-
-        let url = protocol + serverEndpoint + "/api_v3/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId;
+        let url = getKalturaServerUri("/api_v3/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId);
 		this._browserService.openLink(url);
 	}
 
