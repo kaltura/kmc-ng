@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaClient, KalturaRequest } from 'kaltura-ngx-client';
 import { BaseEntryApproveAction } from 'kaltura-ngx-client/api/types/BaseEntryApproveAction';
 import { BaseEntryRejectAction } from 'kaltura-ngx-client/api/types/BaseEntryRejectAction';
@@ -18,7 +18,7 @@ export class BulkService implements OnDestroy {
   private _transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<{}> {
     let maxRequestsPerMultiRequest = requests.length;
     if (chunk) {
-      maxRequestsPerMultiRequest = environment.modules.contentModeration.bulkActionsLimit;
+      maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit;
     }
 
     // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest

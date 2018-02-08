@@ -60,9 +60,13 @@
     min-width: 0;
   }
 
-  .kEntriesTable {
+  div.kEntriesTable {
     height: calc(100vh - 223px);
     overflow-y: auto;
+
+    &.kTagsVisible {
+      height: calc(100vh - 264px);
+    }
   }
 
   .kEntriesTableFooter {

@@ -16,7 +16,7 @@ import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaM
 import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
 import { MetadataProfileParser } from 'app-shared/kmc-shared';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { MetadataProfileDeleteAction } from 'kaltura-ngx-client/api/types/MetadataProfileDeleteAction';
 import { SettingsMetadataProfile } from './settings-metadata-profile.interface';
@@ -24,6 +24,8 @@ import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
 import { MetadataProfileUpdateAction } from 'kaltura-ngx-client/api/types/MetadataProfileUpdateAction';
 import { MetadataProfileAddAction } from 'kaltura-ngx-client/api/types/MetadataProfileAddAction';
+import { globalConfig } from 'config/global';
+import { getKalturaServerUri } from 'config/server';
 
 export interface SchemasFilters {
   pageSize: number,
@@ -110,13 +112,9 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
 
             if (!object.profileDisabled) {
               object.defaultLabel = object.parsedProfile.items.map(({ label }) => label).join(',');
-
-              const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
-              const domain = environment.core.kaltura.serverEndpoint;
-              const apiUrl = environment.modules.settingsMetadata.apiUrl;
               const ks = this._appAuth.appUser.ks;
               const id = object.id;
-              object.downloadUrl = `${protocol}${domain}${apiUrl}/ks/${ks}/id/${id}`;
+              object.downloadUrl = getKalturaServerUri(`/api_v3/index.php/service/metadata_metadataprofile/action/serve/ks/${ks}/id/${id}`);
             }
           } else {
             object.profileDisabled = true; // disabled

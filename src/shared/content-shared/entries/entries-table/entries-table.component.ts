@@ -59,6 +59,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() showBulkSelect = true;
   @Input() filter: any = {};
   @Input() selectedEntries: any[] = [];
+  @Input() isTagsBarVisible = false;
 
   @Output() sortChanged = new EventEmitter<any>();
   @Output() actionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();

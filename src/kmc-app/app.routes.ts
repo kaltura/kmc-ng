@@ -14,9 +14,9 @@ const routes: Routes = <Routes>[
     path: '', canActivate: [AppBootstrap],
     children: [
       { path: 'login', component: LoginComponent },
-        {
-            path: '', redirectTo: '/content/entries/list', pathMatch: 'full'
-        },
+      {
+          path: '', redirectTo: '/content/entries/list', pathMatch: 'full'
+      },
       {
         path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
         {
@@ -63,8 +63,8 @@ const routes: Routes = <Routes>[
             loadChildren: '../applications/settings-integration-settings-app/settings-integration-settings-app.module#SettingsIntegrationSettingsAppModule'
           },
           {
-            path: 'accountUpgrade',
-            loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
+            path: 'accountInformation',
+            loadChildren: '../applications/settings-account-information-app/settings-account-information-app.module#SettingsAccountInformationAppModule'
           },
             {
                 path: 'metadata',

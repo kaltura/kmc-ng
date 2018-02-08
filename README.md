@@ -14,8 +14,8 @@ The following list contains some major features in our road-map:
 - [x] add runtime server configuration
 - [ ] embed permission support across views
 - [ ] add multi language translations
-- [ ] add missing views (like settings > custom data, content > syndication etc)
-- [ ] add missing tools like thumbnail grab from video
+- [ ] add missing views like  content > syndication & distribution, transcoding profile etc
+- [ ] add missing tools like create crop from thumbnail, entry flavor > replace media
 - [ ] add external app integration (like studio, analytics, usage dashboard, entry Clip&Trim etc)
 
 
@@ -48,14 +48,14 @@ npm run standalone
 npm install
 
 # create runtime configuration file by coping a sample one (the code below is written for bash)
-cp src/kmc-app/kmc-config.template.json src/kmc-app/kmc-config.json
-vim src/kmc-app/kmc-config.json
+cp src/configuration/server-config.template.json src/configuration/server-config.json
+vim src/configuration/server-config.json
 
 # run the application in the browser (port 4200)
 npm run start -- -o
 ```
 
-> Note: By default the `kmc-config.template.json` file contains information that is used against Kaltura production server. We advice you to check that the application works as expected with the default configuration before you customize it against your own server.
+> Note: By default the `server-config.template.json` file has setup for Kaltura production server. We advice you to check that the application works as expected with the default configuration before you customize it against your own server.
 
 
 ## KMC-ng Configuration
@@ -64,13 +64,17 @@ The configuration of the kmc-ng application is split into several files. Each fi
 
 
 
-| File Path | Purpose | Load phase |
-|:-------|:-------|:-------|
-| src/kmc-app/kmc-config.json | app server configuration | runtime configuration loaded by the browser. Note that it might be cached by the browser per app version |
-| src/kmc-app/static-kmc-config.ts | app shell configuration | transpiles into the app bundle. can be modified only before building the application |
-| src/applications/sub-applications-config.ts | sub-applications configuration | transpiles into the app bundle. can be modified only before building the application |
-| src/shared/shared-modules-config.ts | shared modules configurations| transpiles into the app bundle. can be modified only before building the application |
-
+| Purpose | File Path | import Statement | Can be used by |  Load phase |
+|:-------|:-------|:-------|:-------|:-------|
+| Server configuration | src/configuration/server-config.ts | import { serverConfig } from 'config/server'; | All source base | runtime configuration (1) |
+| General configuration | src/configuration/global-config.ts | import { globalConfig } from 'config/global'; | All source base | transpile into the app bundle (2) |
+| Sub-applications configuration | src/applications/sub-applications-config.ts | import { subApplicationsConfig } from 'config/sub-applications'; | folder 'applications' | transpile into the app bundle (2) |
+ | Shared modules configuration | src/shared/modules-config.ts | import { modulesConfig } from 'config/modules'; | folder 'shared' | transpile into the app bundle (2) |
+ | KMC application configuration | src/kmc-app/kmc-app-config.ts | import { kmcAppConfig } from '../../kmc-app-config'; (3) | folder 'kmc-app' | transpile into the app bundle (2) |
+**remarks:**
+- (1) a matching configuration file `src/configuration/server-config.json` is loaded by the browser. It might be cached by the browsers per app version
+- (2) this configuration file can be modified only before building the application
+- (3) the path is relative to the file that contains the import statement
 
 
 ### Contributing

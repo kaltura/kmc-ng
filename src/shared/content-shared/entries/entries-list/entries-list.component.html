@@ -70,9 +70,10 @@
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
             <k-entries-list-tags
-                    [refineFilters]="_refineFilters"
-                [enforcedFilters] = "enforcedFilters"
-                (onTagsChange)="onTagsChange()"></k-entries-list-tags>
+              [refineFilters]="_refineFilters"
+              [enforcedFilters] = "enforcedFilters"
+              (onTagsBarVisible)="_isTagsBarVisible = $event"
+              (onTagsChange)="onTagsChange()"></k-entries-list-tags>
         </div>
       </kSticky>
 
@@ -82,6 +83,7 @@
                         [bodyScroll]="true">
       <kEntriesTable class="kEntriesTable"
                      scrollHeight="100%"
+                     [isTagsBarVisible]="_isTagsBarVisible"
                      [entries]="(_entriesStore.entries.data$ | async)?.items"
                      [showBulkSelect]="bulkWrapper.children.length !== 0"
                      [filter]="_query"

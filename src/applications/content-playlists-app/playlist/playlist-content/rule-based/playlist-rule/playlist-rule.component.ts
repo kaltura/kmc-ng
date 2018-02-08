@@ -4,7 +4,7 @@ import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistRuleParserService } from './playlist-rule-parser.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaEntryModerationStatus } from 'kaltura-ngx-client/api/types/KalturaEntryModerationStatus';
@@ -74,7 +74,7 @@ export class PlaylistRuleComponent implements OnInit {
     }
   ];
 
-  public _resultsLimit = environment.modules.contentPlaylists.ruleBasedTotalResults;
+  public _resultsLimit = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
   public _ruleName = '';
   public _orderBy = KalturaPlayableEntryOrderBy.playsDesc; // default
 

@@ -1,0 +1,47 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <form [formGroup]="contactUsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountInformationWrapper kContent">
+    <section class="kAccountInfoContainer">
+      <kAccountInfo></kAccountInfo>
+    </section>
+    <section class="kFormContainer" *ngIf="_canContactSalesForceInformation">
+      <div class="kFormSection">
+        <div class="kTitle">{{'applications.settings.accountInformation.sendUsMessage' | translate}}</div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.accountInformation.name' | translate}}</span>
+          <div class="kRequired"></div>
+          <input class="kControl" formControlName="name" pInputText>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.accountInformation.phone' | translate}}</span>
+          <div class="kRequired" [ngClass]="{'kHasError':!contactUsForm.controls['phone'].valid &&
+                   contactUsForm.controls['phone'].touched}">*
+          </div>
+          <div>
+            <input class="kControl" formControlName="phone" pInputText
+                   [ngClass]="{'kHasError':!contactUsForm.controls['phone'].valid &&
+                   contactUsForm.controls['phone'].touched}">
+            <div *ngIf="contactUsForm.controls['phone'].touched">
+              <div *ngIf="contactUsForm.controls['phone'].hasError('required')"
+                   class="error">
+                {{'applications.settings.accountInformation.errors.required' | translate}}
+              </div>
+              <div *ngIf="contactUsForm.controls['phone'].hasError('phonePattern')"
+                   class="error">
+                {{'applications.settings.accountInformation.errors.phoneInvalid' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.accountInformation.comments' | translate}}</span>
+          <div class="kRequired"></div>
+          <textarea class="kControl" formControlName="comments" pInputTextarea></textarea>
+        </div>
+        <div class="kSaveBtnContainer kRow">
+          <button pButton class="kButtonBranded kSaveBtn"
+                  label="{{'applications.settings.accountInformation.send' | translate}}"></button>
+        </div>
+      </div>
+    </section>
+  </form>
+</k-area-blocker>
