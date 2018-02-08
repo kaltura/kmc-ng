@@ -26,7 +26,7 @@ import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/nu
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
 import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
 import { DropFolderFileDeleteAction } from 'kaltura-ngx-client/api/types/DropFolderFileDeleteAction';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
@@ -347,7 +347,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
     const requests = ids.map(id => new DropFolderFileDeleteAction({ dropFolderFileId: id }));
 
-    const maxRequestsPerMultiRequest = environment.modules.dropFolders.bulkActionsLimit;
+    const maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit;
 
     // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest
     const splittedRequests = [];

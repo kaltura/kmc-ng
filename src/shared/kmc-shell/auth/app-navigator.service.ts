@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AppAuthentication } from './app-authentication.service';
-import { environment } from 'app-environment';
+import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 
 @Injectable()
 export class AppNavigator {
@@ -18,7 +18,7 @@ export class AppNavigator {
         this.router.navigateByUrl('/');
     }
     navigateToError(){
-        this.router.navigateByUrl(environment.shell.browser.errorRoute);
+        this.router.navigateByUrl(kmcAppConfig.routing.errorRoute);
     }
     navigate(path: string){
         this.router.navigateByUrl(path);

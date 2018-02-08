@@ -1,9 +1,10 @@
 import {Component, Input} from '@angular/core';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppAuthentication, AppUser, PartnerPackageTypes, AppNavigator} from 'app-shared/kmc-shell';
-import {environment} from 'app-environment';
+import { kmcAppConfig } from '../../kmc-app-config';
 import {Md5} from 'ts-md5/dist/md5';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { serverConfig } from 'config/server';
 
 @Component({
   selector: 'kKMCUserSettings',
@@ -19,7 +20,7 @@ export class UserSettingsComponent {
   constructor(private userAuthentication: AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService) {
     this._userContext = userAuthentication.appUser;
 
-    environment.core.locales.forEach(locale => {
+      kmcAppConfig.locales.forEach(locale => {
       this._languages.push({label: locale.label, value: locale.id});
     });
 
@@ -39,7 +40,7 @@ export class UserSettingsComponent {
   }
 
   openUserManual() {
-    this.browserService.openLink(environment.core.externalLinks.USER_MANUAL, {}, '_blank');
+    this.browserService.openLink(serverConfig.externalLinks.kaltura.userManual, {}, '_blank');
   }
 
   openSupport() {
@@ -50,8 +51,7 @@ export class UserSettingsComponent {
       'pid': this._userContext.partnerId
     };
 
-    // TODO [kmc] Open support in a modal window over KMC and not in _blank
-    this.browserService.openLink(environment.core.externalLinks.SUPPORT, params, '_blank');
+    this.browserService.openLink(serverConfig.externalLinks.kaltura.support, params, '_blank');
   }
 
   onLangSelected(event) {
