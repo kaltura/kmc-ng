@@ -11,10 +11,12 @@
   },
   "externalApps": {
     "analytics": {
+      "enabled": true,
       "uri": "",
       "version": ""
     },
     "studio": {
+      "enabled": true,
       "uri": "",
       "version": "v2.0.9",
       "uiConfId": "39700052",
@@ -22,10 +24,12 @@
       "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
     },
     "liveDashboard": {
+      "enabled": true,
       "uri": "",
       "version": "v1.4.1"
     },
     "usageDashboard": {
+      "enabled": true,
       "uri": "",
       "uiConfId": 36060752,
       "map_urls": [

@@ -1,9 +1,10 @@
-import {  EventEmitter , Injectable} from '@angular/core';
-import { LocalStorageService, SessionStorageService } from 'ng2-webstorage';
-import { IAppStorage } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
+import {EventEmitter, Injectable} from '@angular/core';
+import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
+import {AppLocalization, IAppStorage} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+import {Router} from "@angular/router";
 
 export interface Confirmation {
 	message: string;
@@ -29,6 +30,11 @@ export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
 export type AppStatus = {
   errorMessage : string;
 };
+
+export enum UnpermittedActionReasons {
+  Permissions,
+  InvalidConfiguration
+}
 
 @Injectable()
 export class BrowserService implements IAppStorage {
@@ -70,7 +76,10 @@ export class BrowserService implements IAppStorage {
     return this._sessionStartedAt;
   }
 
-	constructor(private localStorage: LocalStorageService, private sessionStorage: SessionStorageService) {
+	constructor(private localStorage: LocalStorageService,
+              private sessionStorage: SessionStorageService,
+              private _router: Router,
+              private _appLocalization: AppLocalization) {
 	}
 
   private _downloadContent(url: string): void {
@@ -279,4 +288,24 @@ export class BrowserService implements IAppStorage {
 			this._growlMessage.next(message);
 		}
 	}
+
+  public handleUnpermittedAction(reason: UnpermittedActionReasons, navigateTo?: string): void {
+      switch (reason) {
+        case (UnpermittedActionReasons.InvalidConfiguration):
+          this.alert(
+            {
+              message: this._appLocalization.get('app.UnpermittedActionReasons.InvalidConfiguration.message'),
+              accept: () => {
+                this._router.navigate([navigateTo || '/']);
+              }
+            }
+          );
+          break;
+        case (UnpermittedActionReasons.Permissions):
+          break;
+        default:
+          break;
+      }
+  }
+
 }

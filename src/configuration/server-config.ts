@@ -18,22 +18,26 @@ export interface ServerConfig {
     },
     externalApps: {
         analytics: {
-            uri: string,
-            version: string
+          enabled: boolean,
+          uri: string,
+          version: string
         },
         studio: {
-            uri: string,
-            version: string,
-            path: string,
-            uiConfId: string,
-            html5_version: string,
-            html5lib: string
+          enabled: boolean,
+          uri: string,
+          version: string,
+          path: string,
+          uiConfId: string,
+          html5_version: string,
+          html5lib: string
         },
         liveDashboard: {
+          enabled: boolean,
           uri: string,
           version: string
         },
         usageDashboard: {
+          enabled: boolean,
           uri: string,
           uiConfId: number,
           map_urls: string[],
@@ -125,12 +129,70 @@ function getConfiguration(): Observable<ServerConfig> {
     });
 }
 
+function isStudioAppValid(): boolean {
+  let isValid = false;
+  if (serverConfig.externalApps.studio.enabled) {
+    isValid =
+      !!serverConfig.externalApps.studio.uri &&
+      !serverConfig.externalApps.studio.uri.match(/\s/g) && // not contains white spaces
+      !!serverConfig.externalApps.studio.version &&
+      !!serverConfig.externalApps.studio.path &&
+      !!serverConfig.externalApps.studio.uiConfId &&
+      !!serverConfig.externalApps.studio.html5_version &&
+      !!serverConfig.externalApps.studio.html5lib;
+
+    if (!isValid) {
+      console.warn('Cannot enable Studio - configuration is invalid for Studio')
+    }
+  }
+  return isValid;
+}
+
+function isLiveDashboardAppValid(): boolean {
+  let isValid = false;
+  if (serverConfig.externalApps.liveDashboard.enabled) {
+    isValid =
+      !!serverConfig.externalApps.liveDashboard.uri &&
+      !serverConfig.externalApps.liveDashboard.uri.match(/\s/g) && // not contains white spaces
+      !!serverConfig.externalApps.liveDashboard.version;
+
+    if (!isValid) {
+      console.warn('Cannot enable Live Dashboard - configuration is invalid for Live Dashboard')
+    }
+  }
+  return isValid;
+}
+
+function isUsageDashboardAppValid(): boolean {
+  let isValid = false;
+  if (serverConfig.externalApps.usageDashboard.enabled) {
+    isValid =
+      !!serverConfig.externalApps.usageDashboard.uri &&
+      !serverConfig.externalApps.usageDashboard.uri.match(/\s/g) && // not contains white spaces
+      typeof (serverConfig.externalApps.usageDashboard.uiConfId) !== 'undefined' &&
+      serverConfig.externalApps.usageDashboard.uiConfId !== null &&
+      serverConfig.externalApps.usageDashboard.map_urls &&
+      serverConfig.externalApps.usageDashboard.map_urls.length &&
+      serverConfig.externalApps.usageDashboard.map_urls.indexOf('') === -1 && // no empty url
+      !!serverConfig.externalApps.usageDashboard.map_zoom_levels;
+
+    if (!isValid) {
+      console.warn('Cannot enable Usage Dashboard - configuration is invalid for Usage Dashboard')
+    }
+  }
+  return isValid;
+}
+
+
 export function initializeConfiguration(): Observable<void> {
 
     return getConfiguration()
         .takeUntil(Observable.of(true).delay(environment.configurationTimeout))
         .do(response => {
             Object.assign(serverConfig, response);
+            serverConfig.externalApps.studio.enabled = isStudioAppValid();
+            serverConfig.externalApps.liveDashboard.enabled = isLiveDashboardAppValid();
+            serverConfig.externalApps.usageDashboard.enabled = isUsageDashboardAppValid();
         })
         .map(() => {
             return undefined;

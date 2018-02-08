@@ -23,6 +23,11 @@ export class LiveDashboardComponent implements OnInit, OnDestroy {
       return undefined;
     }
 
+    if (!serverConfig.externalApps.liveDashboard.enabled) {
+      this.logger.warn('Could not load live dashboard for provided entry, live dashboard not enabled for partner');
+      return undefined;
+    }
+
     try {
       this._liveDashboardUrl = serverConfig.externalApps.liveDashboard.uri;
 

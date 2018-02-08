@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppAuthentication} from 'app-shared/kmc-shell';
+import {AppAuthentication, BrowserService, UnpermittedActionReasons} from 'app-shared/kmc-shell';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
@@ -12,11 +12,16 @@ export class UsageDashboardComponent implements OnInit, OnDestroy {
 
   public _usageDashboardUrl = null;
 
-  constructor(private appAuthentication: AppAuthentication, private logger: KalturaLogger) {
+  constructor(private appAuthentication: AppAuthentication, private logger: KalturaLogger, private browserService: BrowserService) {
   }
 
   ngOnInit() {
     try {
+      if (!serverConfig.externalApps.usageDashboard.enabled) { // Deep link when disabled handling
+        this.browserService.handleUnpermittedAction(UnpermittedActionReasons.InvalidConfiguration)
+        return undefined;
+      }
+
       this._usageDashboardUrl = serverConfig.externalApps.usageDashboard.uri;
       window['kmc'] = {
         'vars': {
