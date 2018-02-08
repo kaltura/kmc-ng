@@ -4,12 +4,12 @@
       <kSticky stickyId="dropFolderFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kDropFoldersTableFilters kContent">
           <span class="kSelectedDropFoldersNum" *ngIf="(_dropFoldersStore.dropFolders.data$ | async)?.totalCount">
-            {{ (_dropFoldersStore.dropFolders.data$ | async)?.totalCount }} {{ 'applications.content.uploadControl.files' | translate }}
+            {{ 'applications.content.uploadControl.files' | translate:[(_dropFoldersStore.dropFolders.data$ | async)?.totalCount] }}
           </span>
 
           <div [class.kHidden]="!_selectedDropFolders.length" class="kBulkOperations">
             <span class="kSelectedDropFoldersLabel">
-              • {{_selectedDropFolders.length}} {{'applications.content.uploadControl.selected' | translate}}
+              • {{'applications.content.uploadControl.selected' | translate:[_selectedDropFolders.length]}}
             </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
                     (click)="_bulkDelete(_selectedDropFolders)"></button>
