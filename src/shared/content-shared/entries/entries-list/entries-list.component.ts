@@ -42,6 +42,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     public _entriesDuration = 0;
 
     public _categoriesUpdating = false;
+    public _isTagsBarVisible = false;
 
     public _query = {
         freetext: '',

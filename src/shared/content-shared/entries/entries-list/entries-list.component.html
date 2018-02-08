@@ -70,9 +70,10 @@
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
             <k-entries-list-tags
-                    [refineFilters]="_refineFilters"
-                [enforcedFilters] = "enforcedFilters"
-                (onTagsChange)="onTagsChange()"></k-entries-list-tags>
+              [refineFilters]="_refineFilters"
+              [enforcedFilters] = "enforcedFilters"
+              (onTagsBarVisible)="_isTagsBarVisible = $event"
+              (onTagsChange)="onTagsChange()"></k-entries-list-tags>
         </div>
       </kSticky>
 
