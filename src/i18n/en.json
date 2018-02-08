@@ -1656,9 +1656,9 @@
         },
         "accountInfo": {
           "header": "We are excited that you’re looking for more info on upgrading your account!",
-          "trial": "Your Free trial will expire at {{0}}",
-          "bandwidth": "Your monthly bandwith consumption so far: {{0}} GB",
-          "storage": "Your current monthly storage usage so far: {{0}} GB",
+          "trial": "Your free trial expires on {{0}}",
+          "bandwidth": "Monthly bandwidth consumption so far: {{0}} GB",
+          "storage": "Current monthly storage usage so far: {{0}} GB",
           "contactUs": "Contact us to learn more about different packages and added- value services."
         }
       },
