@@ -1,14 +1,14 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
-import {environment} from 'app-environment';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {getKalturaServerUri, serverConfig} from 'config/server';
 
 @Component({
   selector: 'kLiveDashboard',
   templateUrl: './live-dashboard.component.html',
   styleUrls: ['./live-dashboard.component.scss']
 })
-export class LiveDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+export class LiveDashboardComponent implements OnInit, OnDestroy {
 
   @Input()
   entryId: string = null;
@@ -24,18 +24,17 @@ export class LiveDashboardComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     try {
-      const serverUrlPrefix: string = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
-      this._liveDashboardUrl = '__local_machine_only__/liveDashboard/index.html'; // todo: override from configuration
+      this._liveDashboardUrl = serverConfig.externalApps.liveDashboard.uri;
 
       const currentLang = this._browserService.getFromLocalStorage('kmc_lang');
       window['lang'] =  currentLang || 'en';
       window['kmc'] = {
         'vars': {
           'ks': this.appAuthentication.appUser.ks,
-          'service_url': serverUrlPrefix + environment.core.kaltura.serverEndpoint,
+          'service_url': getKalturaServerUri(),
           'liveDashboard': {
             'entryId': this.entryId,
-            'version': 'v1.4.1' // todo: override from configuration
+            'version': serverConfig.externalApps.liveDashboard.version
           }
         }
       }
@@ -46,10 +45,6 @@ export class LiveDashboardComponent implements OnInit, AfterViewInit, OnDestroy 
       window['lang'] = null;
     }
   }
-
-  ngAfterViewInit() {
-  }
-
 
   ngOnDestroy() {
     this._liveDashboardUrl = null;

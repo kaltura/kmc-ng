@@ -98,6 +98,12 @@ export const kmcAppConfig: KmcAppConfig = {
             'titleToken': 'Analytics',
             'showSubMenu': false,
             'enabled': false
+        },
+        {
+          'routePath': 'usageDashboard',
+          'titleToken': 'Usage Dashboard',
+          'showSubMenu': false,
+          'enabled': true
         }, {
             'routePath': 'settings',
             'titleToken': '',

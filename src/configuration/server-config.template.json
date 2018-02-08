@@ -20,6 +20,20 @@
       "uiConfId": "39700052",
       "html5_version":"v2.57.2",
       "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
+    },
+    "liveDashboard": {
+      "uri": "",
+      "version": "v1.4.1"
+    },
+    "usageDashboard": {
+      "uri": "",
+      "uiConfId": 36060752,
+      "map_urls": [
+        "cf1.kaltura.com/content/static/maps/v1",
+        "cf2.kaltura.com/content/static/maps/v1",
+        "cf3.kaltura.com/content/static/maps/v1"
+      ],
+      "map_zoom_levels": "12"
     }
   },
   "externalLinks": {

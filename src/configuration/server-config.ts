@@ -1,8 +1,8 @@
-import  'rxjs/add/operator/takeUntil';
-import  'rxjs/add/operator/delay';
-import { Observable } from 'rxjs/Observable';
-import { environment } from 'environments/environment';
-import { globalConfig } from './global-config';
+import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/delay';
+import {Observable} from 'rxjs/Observable';
+import {environment} from 'environments/environment';
+import {globalConfig} from './global-config';
 
 
 export interface ServerConfig {
@@ -28,6 +28,16 @@ export interface ServerConfig {
             uiConfId: string,
             html5_version: string,
             html5lib: string
+        },
+        liveDashboard: {
+          uri: string,
+          version: string
+        },
+        usageDashboard: {
+          uri: string,
+          uiConfId: number,
+          map_urls: string[],
+          map_zoom_levels: string,
         }
     },
     externalLinks: {
