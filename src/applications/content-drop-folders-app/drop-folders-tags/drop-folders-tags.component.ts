@@ -127,11 +127,11 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
     if (fromDate || toDate) {
       let tooltip = '';
       if (fromDate && toDate) {
-        tooltip = `${(new DatePipe()).transform(fromDate.getTime(), 'MMMM D, YYYY')} - ${(new DatePipe()).transform(toDate.getTime(), 'MMMM D, YYYY')}`;
+        tooltip = `${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')} - ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       } else if (fromDate) {
-        tooltip = `From ${(new DatePipe()).transform(fromDate.getTime(), 'MMMM D, YYYY')}`;
+        tooltip = `From ${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')}`;
       } else if (toDate) {
-        tooltip = `Until ${(new DatePipe()).transform(toDate.getTime(), 'MMMM D, YYYY')}`;
+        tooltip = `Until ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       }
       this._tags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip });
     }
