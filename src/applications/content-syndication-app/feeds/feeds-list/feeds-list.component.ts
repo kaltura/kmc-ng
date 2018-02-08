@@ -152,7 +152,9 @@ export class FeedsListComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(
-          result => {}, // reload is handled by service
+          result => {
+            this._clearSelection();
+          }, // reload is handled by service
           error => {
             this._blockerMessage = new AreaBlockerMessage({
               title: this._appLocalization.get('applications.content.syndication.errors.deleteErrorMultiple.header'),
