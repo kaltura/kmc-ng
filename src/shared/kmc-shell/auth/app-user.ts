@@ -1,4 +1,5 @@
-import { PartnerInfo } from "./partner-info";
+import {PartnerInfo} from "./partner-info";
+
 export class AppUser {
 
     ks : string;
@@ -14,6 +15,7 @@ export class AppUser {
     permissions : any;
     permissionsFlags : string[];
     partnerInfo: PartnerInfo;
+    createdAt: Date;
 
     constructor()
     {

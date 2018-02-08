@@ -4,9 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 import * as R from 'ramda';
-import {KalturaClient} from 'kaltura-ngx-client';
-
-import {KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaPermissionFilter} from 'kaltura-ngx-client/api/types/KalturaPermissionFilter';
 import {UserLoginByLoginIdAction} from 'kaltura-ngx-client/api/types/UserLoginByLoginIdAction';
 import {UserGetByLoginIdAction} from 'kaltura-ngx-client/api/types/UserGetByLoginIdAction';
@@ -23,8 +21,7 @@ import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminU
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { modulesConfig } from 'config/modules';
-import { KmcServerPolls } from 'app-shared/kmc-shared';
-import { serverConfig } from 'config/server';
+import { KmcServerPolls } from 'app-shared/kmc-shared';import { serverConfig } from 'config/server';
 import { globalConfig } from 'config/global';
 
 
@@ -255,7 +252,7 @@ export class AppAuthentication {
             (results) => {
               // TODO [kmc] this logic is duplicated to the login process.
               const generalProperties = R.pick([
-                'id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner'
+                'id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner', 'createdAt'
               ])(results[0].result);
               const permissions = R.map(R.pick(['id', 'type', 'name', 'status']))(results[1].result.objects);
               const partnerProperties: any = R.pick(['name', 'partnerPackage', 'landingPage'])(results[2].result);
