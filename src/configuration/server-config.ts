@@ -10,7 +10,11 @@ export interface ServerConfig {
         uri: string,
         expiry: number,
         privileges: string,
-        previewUIConf: number
+        previewUIConf: number,
+        freeTrialExpiration: {
+            enabled: boolean,
+            trialPeriodInDays: number
+        }
     },
     cdnServers: {
         serverUri: string,

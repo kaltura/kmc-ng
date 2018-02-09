@@ -15,7 +15,7 @@
       "Users": "Users",
       "Account Settings": "Account Settings",
       "Integration Settings": "Integration Settings",
-      "Account Upgrade": "Account Upgrade",
+      "Account Information": "Account Information",
       "My User Settings": "My User Settings",
       "Administration": "Administration",
       "Roles": "Roles",
@@ -581,6 +581,193 @@
         "addRule": "Add rule to your playlist",
         "updateRule": "Update rule in your playlist",
         "save": "Save"
+      },
+      "syndication": {
+        "addFeed": "Add Feed",
+        "feeds": "{{0}} Feeds",
+        "selected": "{{0}} Selected",
+        "table": {
+          "noResults": "No Results",
+          "allContent": "All Content",
+          "flexibleFormatFeed": "Flexible Format",
+          "copyToClipboardTooltip": {
+            "success": "Copied",
+            "failure": "Failed to Copy to Clipboard",
+            "idle": "Copy to Clipboard",
+            "notSupported": "Copy to Clipboard not supported"
+          },
+          "columns": {
+            "name": "Name",
+            "id": "ID",
+            "destination": "Destination",
+            "source": "Source",
+            "url": "URL"
+          },
+          "actions": {
+            "edit": "Edit",
+            "instructions": "Instructions",
+            "delete": "Delete"
+          }
+        },
+        "details": {
+          "header": {
+            "newFeed": "New Feed",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "save": "Save"
+          },
+          "name": "Name",
+          "contentType" : {
+            "content": "Content",
+            "allContent": "All Content",
+            "fromPlaylist": "From playlist"
+          },
+          "playerName": "Player({{0}})",
+          "entriesCountData": {
+            "count": "Entries count",
+            "numOfEntries": "{{0}} Entries",
+            "warning": "{{0}} Entries aren't included in this feed.",
+            "moreInfo": "More Info.",
+            "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC, then open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
+            "flavorId": "(flavor ID) {{0}}"
+          },
+          "destination": "Destination",
+          "availableDestinations": {
+            "promptText": "Choose Destination",
+            "google": "Google",
+            "yahoo": "Yahoo",
+            "itunes": "ITunes",
+            "roku": "Roku Direct Publisher",
+            "opera": "Opera Snap TV",
+            "flexibaleFormat": "Flexibale Format"
+          },
+          "destinationsForms": {
+            "google": {
+              "title": "Google Parameters",
+              "contentFlavor": {
+                "label": "Content Flavor",
+                "checkbox": "Add to default transcoding profile"
+              },
+              "landingPage": {
+                "label": "Landing page",
+                "explanation": "Enter the URL template that you would like to appear in the Google search results for each video in this feed.  The system will append the specific entry id for each entry. For example: \"http://mysite.com?videoid=\""
+              },
+              "playback": {
+                "label": "Playback",
+                "fromGoogle": "From Google",
+                "linkback": "Linkback to my site",
+                "player": "Player",
+                "playerMessage": "This player will appear within the Google search results page"
+              },
+              "adultContent": {
+                "label": "Adult Content",
+                "checkbox": "This feed includes adult content"
+              },
+              "errors": {
+                "invalidLandingPage": "Landing Page URL is not valid",
+                "requiredLandingPage": "Landing Page is required"
+              }
+            },
+            "yahoo": {
+              "title": "Yahoo Parameters",
+              "contentFlavor": {
+                "label": "Content Flavor",
+                "checkbox": "Add to default transcoding profile"
+              },
+              "landingPage": {
+                "label": "Landing page",
+                "explanation": "Enter the URL template that you would like to appear in the Yahoo search results for each video in this feed.  The system will append the specific entry id for each entry. For example: \"http://mysite.com?videoid=\""
+              },
+              "playback": {
+                "label": "Playback",
+                "fromYahoo": "From Yahoo",
+                "linkback": "Linkback to my site",
+                "player": "Player",
+                "playerMessage": "This player will appear within the Yahoo search results page"
+              },
+              "website": {
+                "label": "Website"
+              },
+              "description": {
+                "label": "Feed Description"
+              },
+              "category": {
+                "label": "Category",
+                "promptText": "Choose Category",
+                "itemsSelected":"{0} Selected Categories",
+                "availableCategories": {
+                  "Action": "Action",
+                  "Art &amp; Animation": "Art & Animation",
+                  "Entertainment &amp; TV": "Entertainment & TV",
+                  "Food": "Food",
+                  "Games": "Games",
+                  "How-To": "How-To",
+                  "Music": "Music",
+                  "People &amp; Vlogs": "People & Vlogs",
+                  "Science &amp; Environment": "Science & Environment",
+                  "Transportation": "Transportation",
+                  "Animals": "Animals",
+                  "Commercials": "Commercials",
+                  "Family": "Family",
+                  "Funny Videos": "Funny Videos",
+                  "Health &amp; Beauty": "Health & Beauty",
+                  "Movies &amp; Shorts": "Movies & Shorts",
+                  "News &amp; Politics": "News & Politics",
+                  "Products &amp; Tech.": "Products & Tech.",
+                  "Sports": "Sports",
+                  "Travel": "Travel"
+                }
+              },
+              "adultContent": {
+                "label": "Adult Content",
+                "checkbox": "This feed includes adult content"
+              },
+              "errors": {
+                "invalidLandingPage": "Landing Page URL is not valid",
+                "requiredLandingPage": "Landing Page is required",
+                "invalidWebsite": "Website URL is not valid",
+                "requiredWebsite": "Website is required"
+              }
+            },
+            "flexibleFormat": {
+              "xslCode": {
+                "label": "XSL Code",
+                "browse": "Browse",
+                "loading": "Loading...",
+                "errors": {
+                  "requiredXslCode": "XSL Code is required",
+                  "loadingFile": "Error loading file {{0}}"
+                }
+              }
+            }
+          },
+          "errors": {
+            "loadFailed":  "An error occurred during Feed data loading",
+            "enterName": "You must enter name to save feed.",
+            "chooseDestination": "You must choose destination to save feed.",
+            "fieldRequired": "This field is required"
+          }
+        },
+        "deleteConfirmation": {
+          "title": "Confirm Delete",
+          "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
+          "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+          "moreThan5": "Are you sure you want to delete the selected feeds?"
+        },
+        "errors": {
+          "loadFailed": "An error occurred during Syndication Feeds loading",
+          "deleteAttemptSelectedFailed": "Unable to delete selected feeds, please review your selection before trying again",
+          "deleteAttemptFailed": "Unable to delete feed, please review the mentioned feed before trying again",
+          "deleteError": {
+            "header": "Delete action failed",
+            "message": "An unexpected error has occurred while trying to delete feed."
+          },
+          "deleteErrorMultiple": {
+            "header": "Delete action failed",
+            "message": "An unexpected error has occurred while trying to delete selected feeds."
+          },
+          "getFeedEntryCount":  "An error occurred during Feed Entries Count loading"
+        }
       },
       "moderation": {
         "entryReports": "Entry Reports",
@@ -1764,7 +1951,7 @@
           "invalidFields": "There's some invalid fields"
         }
       },
-      "accountUpgrade": {
+      "accountInformation": {
         "contactUs": "Contact Us",
         "sendUsMessage": "Send us a message",
         "name": "Name",
@@ -1773,12 +1960,18 @@
         "send": "Send",
         "sendSuccessHeader": "Thank You!",
         "sendSuccessBody": "Someone from our team will get back to you.",
-        "callUsHeader": "We are excited that you’re looking for more info on upgrading your account!",
         "callUsBody": "Just fill in the form below and we’ll make sure to get back to you shortly with lots of information on our latest and greatest products and services that you can start tapping into.",
         "errors": {
           "required": "This field is required.",
           "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
-          "sendFailed": "An error occurred during account upgrade"
+          "sendFailed": "An error occurred during send message"
+        },
+        "accountInfo": {
+          "header": "We are excited that you’re looking for more info on upgrading your account!",
+          "trial": "Your free trial expires on {{0}}",
+          "bandwidth": "Monthly bandwidth consumption so far: {{0}} GB",
+          "storage": "Current monthly storage usage so far: {{0}} GB",
+          "contactUs": "Contact us to learn more about different packages and added- value services."
         }
       },
       "metadata": {

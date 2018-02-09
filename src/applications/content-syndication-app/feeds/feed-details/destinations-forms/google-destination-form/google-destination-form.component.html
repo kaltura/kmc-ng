@@ -1,0 +1,93 @@
+<form [formGroup]="_form" novalidate>
+  <div class="kRow kTitle">
+    {{'applications.content.syndication.details.destinationsForms.google.title' | translate}}
+  </div>
+  <div class="kContentFlavor">
+
+    <!--Content Flavor-->
+    <div class="kRow kMultiLine">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.google.contentFlavor.label' | translate}}</span>
+      <div class="kControlContainer">
+        <span class="kControl">
+          <p-dropdown class="kControl" [options]="_availableContentFlavors" formControlName="contentFlavor"
+                      [autoWidth]="false" [filter]="true">
+          </p-dropdown>
+        </span>
+        <!--Add to default transcoding profile-->
+        <div class="kAddToDefaultTranscodingProfile">
+          <p-checkbox formControlName="addToDefaultTranscodingProfile"
+                      label="{{'applications.content.syndication.details.destinationsForms.google.contentFlavor.checkbox' | translate}}"
+                      binary="true"></p-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <!--Landing Page-->
+    <div class="kRow" [class.kInputValidationError]="_form.get('landingPage').touched && _form.get('landingPage').invalid">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.google.landingPage.label' | translate}}</span>
+      <div class="kAsterix"
+           [ngClass]="{'kHasError':!_form.get('landingPage').valid && _form.get('landingPage').touched}">*
+      </div>
+      <div class="kControlContainer">
+        <input class="kControl" formControlName="landingPage" pInputText placeholder="http://"
+               [ngClass]="{'kHasError':!_form.get('landingPage').valid && _form.get('landingPage').touched}">
+        <div *ngIf="_form.get('landingPage').touched && _form.get('landingPage').hasError('required')"
+             class="error">
+          {{'applications.content.syndication.details.destinationsForms.google.errors.requiredLandingPage' | translate}}
+        </div>
+        <div *ngIf="_form.get('landingPage').touched && _form.get('landingPage').hasError('url')"
+             class="error">
+          {{'applications.content.syndication.details.destinationsForms.google.errors.invalidLandingPage' | translate}}
+        </div>
+      </div>
+    </div>
+
+    <!--Landing Page Explanation-->
+    <div class="kLandingPageExplanation">
+      {{'applications.content.syndication.details.destinationsForms.google.landingPage.explanation' | translate}}
+    </div>
+
+
+    <!--Playback-->
+    <div class="kRow kPlayback kMultiLine">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.google.playback.label' | translate}}</span>
+      <div class="kControlContainer">
+            <span class="kControl">
+              <p-radioButton class="kFromGoogle" name="playback" (click)="_clearPlayer()"
+                             [value]="'fromGoogle'"
+                             formControlName="playback"
+                             label="{{'applications.content.syndication.details.destinationsForms.google.playback.fromGoogle' | translate}}">
+              </p-radioButton>
+              <p-radioButton class="kPlaybackLinkback" name="playback"
+                             [value]="'linkback'"
+                             formControlName="playback"
+                             label="{{'applications.content.syndication.details.destinationsForms.google.playback.linkback' | translate}}">
+              </p-radioButton>
+            </span>
+        <!--Select Player-->
+        <div class="kSelectPlayer" *ngIf="_form.get('playback').value === 'fromGoogle'">
+          <div class="kSelectPlayerLabel">{{'applications.content.syndication.details.destinationsForms.google.playback.player' | translate}}</div>
+          <p-dropdown class="kSelectPlayerControl" [options]="_availablePlayers" formControlName="selectedPlayer"
+                      [autoWidth]="false" [filter]="true">
+          </p-dropdown>
+        </div>
+        <div class="kSelectPlayerInfo">
+          {{'applications.content.syndication.details.destinationsForms.google.playback.playerMessage' | translate}}
+        </div>
+      </div>
+    </div>
+
+    <!--Adult Content-->
+    <div class="kRow kMultiLine">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.google.adultContent.label' | translate}}</span>
+      <div class="kControlContainer">
+        <span class="kControl">
+          <p-checkbox formControlName="adultContent"
+                      label="{{'applications.content.syndication.details.destinationsForms.google.adultContent.checkbox' | translate}}"
+                      binary="true"></p-checkbox>
+        </span>
+      </div>
+    </div>
+
+  </div>
+</form>

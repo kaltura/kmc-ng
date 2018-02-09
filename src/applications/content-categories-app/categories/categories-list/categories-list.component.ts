@@ -8,13 +8,12 @@ import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoryCreationService} from 'app-shared/kmc-shared/events/category-creation';
-import { CategoriesModes } from "app-shared/content-shared/categories/categories-mode-type";
+import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
+import {CategoriesRefineFiltersService, RefineGroup} from '../categories-refine-filters.service';
 import {
-    CategoriesRefineFiltersService,
-    RefineGroup
-} from '../categories-refine-filters.service';
-
-import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+  CategoriesStatus,
+  CategoriesStatusMonitorService
+} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 
@@ -40,6 +39,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     public _isBusy = false;
     public _blockerMessage: AreaBlockerMessage = null;
+    public _isReady = false; // prevents from calling prepare function twice
     public _tableIsBusy = false;
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineGroup[];
@@ -85,6 +85,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
         // NOTICE: do not execute here any logic that should run only once.
         // this function will re-run if preparation failed. execute your logic
         // only once the filters were fetched successfully.
+        if (this._isReady) {
+          return undefined;
+        }
 
         this._isBusy = true;
         this._refineFiltersService.getFilters()
@@ -101,6 +104,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
 
                     this._isBusy = false;
+                    this._isReady = true;
                     this._refineFilters = groups;
                     this._restoreFiltersState();
                     this._registerToFilterStoreDataChanges();
@@ -135,7 +139,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                         this._tableBlockerMessage = new AreaBlockerMessage({
                             message: result.errorMessage || 'Error loading categories',
                             buttons: [{
-                                label: 'Retry',
+                                label: this._appLocalization.get('app.common.retry'),
                                 action: () => {
                                     this._tableBlockerMessage = null;
                                     this._categoriesService.reload();
