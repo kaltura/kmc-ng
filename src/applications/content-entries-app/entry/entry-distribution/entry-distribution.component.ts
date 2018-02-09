@@ -34,5 +34,15 @@ export class EntryDistributionComponent implements OnInit, OnDestroy {
     this._selectedDistributedProfile = null;
     this._editProfilePopup.open();
   }
+
+  public _distributeSelectedProfile(payload: { entryId: string, profileId: number }): void {
+    this._widgetService.distributeProfile(payload, () => {
+      this._editProfilePopup.close();
+    });
+  }
+
+  public _updateSelectedProfile(): void {
+
+  }
 }
 

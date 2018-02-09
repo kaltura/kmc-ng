@@ -1309,6 +1309,7 @@
           "errors": {
             "errorLoading": "Failed to load entry distribution data",
             "cannotDelete": "Cannot delete distribution profile",
+            "cannotDistribute": "Cannot distribute profile",
             "metadataError": "Metadata Error.",
             "missingMetadata": "Missing Metadata.",
             "missingFlavor": "Missing Flavor.",

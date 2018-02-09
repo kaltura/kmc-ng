@@ -31,6 +31,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 import { FlavorParamsGetAction } from 'kaltura-ngx-client/api/types/FlavorParamsGetAction';
+import { EntryDistributionAddAction } from 'kaltura-ngx-client/api/types/EntryDistributionAddAction';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -374,7 +375,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       });
   }
 
-  public loadMissingFlavors(flavors: Partial<Flavor>[]): Observable<{id: string, name: string}[]> {
+  public loadMissingFlavors(flavors: Partial<Flavor>[]): Observable<{ id: string, name: string }[]> {
     const actions = flavors.map(({ id }) => new FlavorParamsGetAction({ id: Number(id) }));
     return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .map(responses => {
@@ -390,5 +391,37 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
           return { id: String(result.id), name: result.name };
         });
       });
+  }
+
+  public distributeProfile(payload: { entryId: string, profileId: number }, closePopupCallback: () => void): void {
+    const newEntryDistribution = new KalturaEntryDistribution({
+      entryId: payload.entryId,
+      distributionProfileId: payload.profileId
+    });
+
+    this._kalturaClient.request(new EntryDistributionAddAction({ entryDistribution: newEntryDistribution }))
+      .cancelOnDestroy(this, this.widgetReset$)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this._refresh();
+          closePopupCallback();
+        },
+        error => {
+          this._showBlockerMessage(new AreaBlockerMessage({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDistribute'),
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => this.distributeProfile(payload, closePopupCallback)
+              },
+              {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => this._removeBlockerMessage()
+              }
+            ]
+          }), false);
+        });
+
   }
 }

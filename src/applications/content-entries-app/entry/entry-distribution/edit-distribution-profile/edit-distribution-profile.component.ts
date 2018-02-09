@@ -38,7 +38,7 @@ export class EditDistributionProfileComponent implements OnInit {
   @Input() entry: KalturaBaseEntry;
   @Input() thumbnails: KalturaThumbAsset[] = [];
 
-  @Output() onDistribute = new EventEmitter();
+  @Output() onDistribute = new EventEmitter<{ entryId: string, profileId: number }>();
   @Output() onUpdate = new EventEmitter();
 
   public _profile: KalturaDistributionProfile | ExtendedKalturaEntryDistribution;
@@ -335,7 +335,7 @@ export class EditDistributionProfileComponent implements OnInit {
     }
 
     if (this._forDistribution) {
-      this.onDistribute.emit();
+      this.onDistribute.emit({ entryId: this.entry.id, profileId: this.undistributedProfile.id });
     } else {
       this.onUpdate.emit();
     }
