@@ -1,24 +1,7 @@
 <div class="kEditDistributionProfileThumbnails">
   <h2 class="kFormHeader">{{'applications.content.entryDetails.distribution.form.thumbnail' | translate}}</h2>
-  <div class="kThumbnail" *ngFor="let thumbnail of requiredThumbnails">
-    <div class="kThumbnailHolder">
-      <img *ngIf="thumbnail.entryThumbnail" [src]="thumbnail.entryThumbnail.url">
-    </div>
-    <div class="kThumbnailInfo">
-      <div class="kThumbnailDimensions">{{thumbnail.width}}x{{thumbnail.height}}</div>
-      <div class="kThumbnailMetadata">
-        <span *ngIf="thumbnail.entryThumbnail">
-          {{thumbnail.entryThumbnail.size | kFileSize}}
-          <span class="kThumbnailMetadataDelimiter"></span>
-          {{thumbnail.entryThumbnail.id}}
-        </span>
-        <span *ngIf="!thumbnail.entryThumbnail" class="kThumbnailMissingMetadata">
-          <i class="kIconwarning kThumbnailMissingIcon"></i>
-          {{'applications.content.entryDetails.distribution.form.missingThumbnail' | translate}}
-       </span>
-      </div>
-    </div>
-  </div>
+  <kEditDistributionProfileThumbnailItem *ngFor="let thumbnail of requiredThumbnails"
+                                         [thumbnail]="thumbnail"></kEditDistributionProfileThumbnailItem>
   <span *ngIf="!requiredThumbnails.length">
     {{'applications.content.entryDetails.distribution.form.notRequired' | translate}}
   </span>

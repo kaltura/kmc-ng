@@ -13,11 +13,11 @@ import { KalturaThumbAssetStatus } from 'kaltura-ngx-client/api/types/KalturaThu
 import { getKalturaServerUri } from 'config/server';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
-  entryThumbnail?: {
+  entryThumbnails?: {
     size: number,
     url: string;
     id: string
-  }
+  }[]
 }
 
 @Component({
@@ -122,13 +122,13 @@ export class EditDistributionProfileComponent implements OnInit {
   private _prepareThumbnails(): void {
     const entryThumbnails = this.thumbnails.filter(thumbnail => thumbnail.status === KalturaThumbAssetStatus.ready);
     this._requiredThumbnails = this.undistributedProfile.requiredThumbDimensions.map(thumbnail => {
-      const relevantEntryThumbnail = entryThumbnails.find(item => item.width === thumbnail.width && item.height === thumbnail.height);
-      if (relevantEntryThumbnail) {
-        (<ExtendedKalturaDistributionThumbDimensions>thumbnail).entryThumbnail = {
+      const relevantEntryThumbnails = entryThumbnails.filter(item => item.width === thumbnail.width && item.height === thumbnail.height);
+      if (relevantEntryThumbnails.length) {
+        (<ExtendedKalturaDistributionThumbDimensions>thumbnail).entryThumbnails = relevantEntryThumbnails.map(relevantEntryThumbnail => ({
           id: relevantEntryThumbnail.id,
           size: Number(relevantEntryThumbnail.size),
           url: getKalturaServerUri(`/api_v3/index.php/service/thumbasset/action/serve/ks/${this._appAuthentication.appUser.ks}/thumbAssetId/${relevantEntryThumbnail.id}`)
-        };
+        }));
       }
       return thumbnail;
     });

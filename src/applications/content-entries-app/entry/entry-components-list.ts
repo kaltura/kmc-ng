@@ -34,6 +34,7 @@ import { DistributionProviderTypeIconPipe } from './entry-distribution/pipes/dis
 import { EditDistributionProfileFlavorsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-flavors/edit-distribution-profile-flavors.component';
 import { EditDistributionProfileMetadataComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-metadata/edit-distribution-profile-metadata.component';
 import { EditDistributionProfileThumbnailsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/edit-distribution-profile-thumbnails.component';
+import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';
 
 
 export const EntryComponentsList = [
@@ -72,5 +73,6 @@ export const EntryComponentsList = [
   DistributionProviderTypeIconPipe,
   EditDistributionProfileFlavorsComponent,
   EditDistributionProfileMetadataComponent,
-  EditDistributionProfileThumbnailsComponent
+  EditDistributionProfileThumbnailsComponent,
+  EditDistributionProfileThumbnailItemComponent
 ];
