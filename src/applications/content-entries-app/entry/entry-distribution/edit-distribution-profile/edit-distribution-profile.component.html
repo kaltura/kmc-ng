@@ -53,6 +53,18 @@
           </div>
         </div>
 
+        <div class="kRow" *ngIf="!_forDistribution && (_requestXmlLink || _responseXmlLink)">
+          <span class="kLabel">{{'applications.content.entryDetails.distribution.form.logs' | translate}}</span>
+          <span class="kReadonlyData kDistributionLink">
+            <a *ngIf="_requestXmlLink" [href]="_requestXmlLink" target="_blank">
+              {{'applications.content.entryDetails.distribution.form.requestXml' | translate}}
+            </a>
+            <a *ngIf="_responseXmlLink" [href]="_responseXmlLink" target="_blank">
+              {{'applications.content.entryDetails.distribution.form.requestXml' | translate}}
+            </a>
+          </span>
+        </div>
+
         <div class="kRow">
           <span class="kLabel">{{'applications.content.entryDetails.distribution.form.startDate' | translate}}</span>
           <p-calendar class="kControl kDateControl"

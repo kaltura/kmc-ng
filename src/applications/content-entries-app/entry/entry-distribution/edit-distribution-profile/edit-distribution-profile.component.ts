@@ -12,6 +12,9 @@ import { KalturaThumbAssetStatus } from 'kaltura-ngx-client/api/types/KalturaThu
 import { getKalturaServerUri } from 'config/server';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
+import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -44,6 +47,8 @@ export class EditDistributionProfileComponent implements OnInit {
   public _createdFilterError = '';
   public _missingFlavorError = '';
   public _missingThumbnailError = '';
+  public _requestXmlLink = '';
+  public _responseXmlLink = '';
 
   public _distributionForm: FormGroup;
   public _updatesField: AbstractControl;
@@ -94,8 +99,25 @@ export class EditDistributionProfileComponent implements OnInit {
     this._profile = this.distributedProfile || this.undistributedProfile;
     this._profileName = this._profile.name;
 
-    if (!this._forDistribution) {
+    if (this._forDistribution) {
+      this._startDateField.disable();
+      this._endDateField.disable();
+    } else {
       this._distributionName = this.undistributedProfile.name;
+
+      if (this.distributedProfile.hasSubmitSentDataLog === KalturaNullableBoolean.trueValue) {
+        this._requestXmlLink = getKalturaServerUri(`/api_v3/index.php/service/contentDistribution_entryDistribution/action/serveSentData/actionType/1/id/${this.distributedProfile.id}/ks/${this._appAuthentication.appUser.ks}`);
+      }
+
+      if (this.distributedProfile.hasSubmitResultsLog === KalturaNullableBoolean.trueValue) {
+        this._responseXmlLink = getKalturaServerUri(`/api_v3/index.php/service/contentDistribution_entryDistribution/action/serveReturnedData/actionType/1/id/${this.distributedProfile.id}/ks/${this._appAuthentication.appUser.ks}`);
+      }
+
+      const updates = this.undistributedProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic
+        || this.distributedProfile.status === KalturaEntryDistributionStatus.queued;
+      const startDate = this.distributedProfile.sunrise;
+      const endDate = this.distributedProfile.sunset;
+      this._distributionForm.setValue({ updates, startDate, endDate });
     }
 
     this._prepareFlavors();
@@ -127,6 +149,7 @@ export class EditDistributionProfileComponent implements OnInit {
                   relevantMissingFlavor.name = item.name;
                 }
               });
+              this._missingFlavorError = this._appLocalization.get('applications.content.entryDetails.distribution.errors.missingFlavors');
               this._requiredFlavors = [...requiredFlavors];
             },
             error => {
@@ -157,6 +180,8 @@ export class EditDistributionProfileComponent implements OnInit {
           size: Number(relevantEntryThumbnail.size),
           url: getKalturaServerUri(`/api_v3/index.php/service/thumbasset/action/serve/ks/${this._appAuthentication.appUser.ks}/thumbAssetId/${relevantEntryThumbnail.id}`)
         }));
+      } else {
+        this._missingThumbnailError = this._appLocalization.get('applications.content.entryDetails.distribution.errors.missingThumbnails');
       }
       return thumbnail;
     });
