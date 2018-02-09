@@ -1,0 +1,69 @@
+@import 'app-theme/_variables.scss';
+
+.kEditDistributionProfileMetadata {
+  .kRow {
+    display: flex;
+    padding-top: 20px;
+
+    &.kFirstRow {
+      padding-top: 0;
+    }
+
+    .kLabel {
+      width: 172px;
+      flex: 0 0 auto;
+      height: 18px;
+      color: $kGrayscale1;
+      font-size: 15px;
+      line-height: 18px;
+      padding: 8px 4px;
+    }
+
+    .kReadonlyData {
+      padding: 8px 0;
+      font-size: 15px;
+
+      .kIconinactive {
+        color: $kGrayscale3;
+        margin-right: 8px;
+        position: relative;
+        top: 1px;
+      }
+    }
+
+    .kControl {
+      height: 34px;
+      color: $kGrayscale2;
+      width: 500px;
+      border-radius: 3px;
+
+      &.kDateControl {
+        width: 176px;
+      }
+
+      &.kControlInvalid {
+        border: 1px solid $kDandger;
+      }
+
+      &.kMetadataControl {
+        padding: 0 10px;
+      }
+    }
+    .KTextArea {
+      height: 75px;
+      padding: 10px;
+    }
+  }
+
+  .kFormHeader {
+    margin-top: 32px;
+    margin-bottom: 24px;
+  }
+}
+
+:host /deep/ .kEditDistributionProfileMetadata {
+  .ui-inputtext:disabled {
+    border-color: $kGrayscale2;
+    color: $kGrayscale2;
+  }
+}

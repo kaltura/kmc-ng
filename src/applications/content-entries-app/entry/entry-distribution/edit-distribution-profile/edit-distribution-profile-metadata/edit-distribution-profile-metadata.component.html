@@ -1,0 +1,23 @@
+<div class="kEditDistributionProfileMetadata">
+  <h2 class="kFormHeader">{{'applications.content.entryDetails.distribution.form.metadata' | translate}}</h2>
+  <div class="kRow kFirstRow">
+    <span class="kLabel">{{'applications.content.entryDetails.distribution.form.name' | translate}}</span>
+    <span>
+      <input pInputText class="kControl kMetadataControl" [disabled]="true" [value]="entry?.name">
+    </span>
+  </div>
+
+  <div class="kRow">
+    <span class="kLabel">{{'applications.content.entryDetails.distribution.form.updates' | translate}}</span>
+    <span>
+      <textarea pInputText class="kControl KTextArea" [disabled]="true" [value]="entry?.description"></textarea>
+    </span>
+  </div>
+
+  <div class="kRow">
+    <span class="kLabel">{{'applications.content.entryDetails.distribution.form.tags' | translate}}</span>
+    <span class="kControl">
+      <kAutoComplete [multiple]="true"></kAutoComplete>
+    </span>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<div class="kEditDistributionProfileWrap">
+  <div class="kFloater">
+    <div class="kHeader">
+      <div class="kTitle">
+        <img [src]="undistributedProfile?.providerType | kEntriesDistributionProviderTypeIcon"
+             [alt]="undistributedProfile?.name">
+        <div class="kTitleNames">
+          <span class="kTitleProfileName">{{_profileName}}</span>
+          <span *ngIf="!_forDistribution" class="kTitleDistributionName">{{_distributionName}}</span>
+        </div>
+      </div>
+      <div class="kButtons">
+        <a class="kCancel" (click)="parentPopup.close()">
+          {{'applications.content.entryDetails.distribution.cancel' | translate}}
+        </a>
+        <button type="button"
+                class="kButtonBranded"
+                [disabled]="true"
+                pButton
+                [label]="_addButtonLabel"></button>
+      </div>
+    </div>
+    <div class="kContainer">
+      <form>
+        <div class="kRow kFirstRow">
+          <span class="kLabel">{{'applications.content.entryDetails.distribution.form.status' | translate}}</span>
+          <span class="kReadonlyData" *ngIf="_forDistribution">
+            <i class="kIconinactive"></i>
+            {{'applications.content.entryDetails.distribution.status.notDistributed' | translate}}
+          </span>
+        </div>
+
+        <div class="kRow">
+          <span class="kLabel">{{'applications.content.entryDetails.distribution.form.updates' | translate}}</span>
+          <p-checkbox [label]="'applications.content.entryDetails.distribution.form.updateAutomatically' | translate"
+                      binary="true"></p-checkbox>
+        </div>
+
+        <div *ngIf="!_forDistribution">
+          <div class="kRow">
+            <span class="kLabel">{{'applications.content.entryDetails.distribution.form.lastUpdate' | translate}}</span>
+            <span class="kReadonlyData">
+              {{_profile?.updatedAt | kDate:'short'}}
+            </span>
+          </div>
+
+          <div class="kRow">
+            <span class="kLabel">{{'applications.content.entryDetails.distribution.form.remoteId' | translate}}</span>
+            <span class="kReadonlyData">
+              {{_profile?.remoteId}}
+            </span>
+          </div>
+        </div>
+
+        <div class="kRow">
+          <span class="kLabel">{{'applications.content.entryDetails.distribution.form.startDate' | translate}}</span>
+          <p-calendar class="kControl kDateControl" [readonlyInput]="true" [showIcon]="true"
+                      [monthNavigator]="true" [yearNavigator]="true" icon="kIconcalendar"></p-calendar>
+        </div>
+
+        <div class="kRow">
+          <span class="kLabel">{{'applications.content.entryDetails.distribution.form.endDate' | translate}}</span>
+          <p-calendar class="kControl kDateControl" [readonlyInput]="true" [showIcon]="true"
+                      [monthNavigator]="true" [yearNavigator]="true" icon="kIconcalendar"></p-calendar>
+        </div>
+      </form>
+
+      <kEditDistributionProfileMetadata
+        [entry]="entry"></kEditDistributionProfileMetadata>
+
+      <kEditDistributionProfileFlavors
+        [requiredFlavors]="_requiredFlavors"></kEditDistributionProfileFlavors>
+
+      <kEditDistributionProfileThumbnails
+        [requiredThumbnails]="_requiredThumbnails"></kEditDistributionProfileThumbnails>
+    </div>
+  </div>
+</div>

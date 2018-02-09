@@ -1,0 +1,140 @@
+@import 'app-theme/_variables.scss';
+
+.kEditDistributionProfileWrap {
+  .kFloater {
+    display: flex;
+    flex-direction: column;
+    color: $kGrayscale1;
+
+    .kHeader {
+      height: 78px;
+      width: 100%;
+      padding: 0 24px;
+      box-sizing: border-box;
+      border-bottom: 1px solid $kGrayscale4;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+
+      .kTitle {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 24px;
+          margin-right: 10px;
+        }
+
+        .kTitleNames {
+          display: flex;
+          flex-direction: column;
+
+          .kTitleProfileName {
+            color: $kGrayscale1;
+            font-size: 15px;
+            font-weight: 700;
+          }
+
+          .kTitleDistributionName {
+            color: $kGrayscale3;
+            font-size: 14px;
+            margin-top: 10px;
+          }
+        }
+      }
+
+      .kButtons {
+        display: flex;
+        margin-left: auto;
+
+        .kCancel {
+          font-size: 15px;
+          color: #333333;
+          align-self: center;
+          margin-right: 24px;
+        }
+
+        .kButtonDefault {
+          font-weight: normal;
+        }
+      }
+    }
+
+    .kContainer {
+      flex: 1 1 auto;
+      padding: 28px;
+      height: calc(100vh - 213px);
+      overflow-y: auto;
+
+      .kRow {
+        display: flex;
+        padding-top: 20px;
+
+        &.kFirstRow {
+          padding-top: 0;
+        }
+
+        .kLabel {
+          width: 172px;
+          flex: 0 0 auto;
+          height: 18px;
+          color: $kGrayscale1;
+          font-size: 15px;
+          line-height: 18px;
+          padding: 8px 4px;
+        }
+
+        .kReadonlyData {
+          padding: 8px 0;
+          font-size: 15px;
+
+          .kIconinactive {
+            color: $kGrayscale3;
+            margin-right: 8px;
+            position: relative;
+            top: 1px;
+          }
+        }
+
+        .kControl {
+          height: 34px;
+          color: $kGrayscale2;
+          width: 500px;
+          border-radius: 3px;
+
+          &.kDateControl {
+            width: 176px;
+          }
+
+          &.kControlInvalid {
+            border: 1px solid $kDandger;
+          }
+        }
+      }
+
+      .kFormHeader {
+        margin-top: 32px;
+        margin-bottom: 24px;
+      }
+    }
+  }
+}
+
+:host /deep/ .kEditDistributionProfileWrap {
+  p-checkbox {
+    padding: 6px 0;
+    .ui-chkbox-label {
+      font-size: 15px;
+      font-weight: normal;
+    }
+  }
+
+  .kDateControl .ui-inputtext {
+    width: 176px;
+  }
+
+  .ui-inputtext:disabled {
+    border-color: $kGrayscale2;
+    color: $kGrayscale2;
+  }
+}

@@ -1,0 +1,39 @@
+<div class="kEditDistributionProfileFlavors">
+  <h2 class="kFormHeader">{{'applications.content.entryDetails.distribution.form.videoFlavors' | translate}}</h2>
+  <div class="kFlavor" *ngFor="let flavor of requiredFlavors">
+    <div class="kFlavorInfo">
+      <i class="kIconplayback-file kFlavorIcon"></i>
+      <span class="kFlavorName">{{flavor.name}}</span>
+    </div>
+    <div class="kFlavorMetadata">
+      <span *ngIf="flavor.paramsId === undefined" class="kFlavorMissingMetadata">
+        <i class="kIconwarning kFlavorMissingIcon"></i>
+        {{'applications.content.entryDetails.distribution.form.missingFlavor' | translate}}
+      </span>
+      <span *ngIf="flavor.paramsId !== undefined">
+        <span *ngIf="flavor.format">
+          {{'applications.content.entryDetails.distribution.form.format'| translate:[flavor.format]}}
+          <span class="kFlavorMetadataDelimiter"></span>
+        </span>
+        <span *ngIf="flavor.codec">
+          {{'applications.content.entryDetails.distribution.form.codec'| translate:[flavor.codec]}}
+          <span class="kFlavorMetadataDelimiter"></span>
+        </span>
+        <span *ngIf="flavor.bitrate">
+          {{'applications.content.entryDetails.distribution.form.kbps'| translate:[flavor.bitrate]}}
+          <span class="kFlavorMetadataDelimiter"></span>
+        </span>
+        <span *ngIf="flavor.size">
+          {{flavor.size | kFileSize}}
+          <span class="kFlavorMetadataDelimiter"></span>
+        </span>
+        <span *ngIf="flavor.dimensions">
+          {{flavor.dimensions}}
+        </span>
+      </span>
+    </div>
+  </div>
+  <span *ngIf="!requiredFlavors.length">
+    {{'applications.content.entryDetails.distribution.form.notRequired' | translate}}
+  </span>
+</div>

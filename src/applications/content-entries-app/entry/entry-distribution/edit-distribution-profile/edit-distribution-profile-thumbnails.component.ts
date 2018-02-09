@@ -22,8 +22,8 @@ export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistr
 
 @Component({
   selector: 'kEditDistributionProfile',
-  templateUrl: './edit-distribution-profile.component.html',
-  styleUrls: ['./edit-distribution-profile.component.scss']
+  templateUrl: './edit-distribution-profile-thumbnails.component.html',
+  styleUrls: ['./edit-distribution-profile-thumbnails.component.scss']
 })
 export class EditDistributionProfileComponent implements OnInit {
   @Input() parentPopup: PopupWidgetComponent;
