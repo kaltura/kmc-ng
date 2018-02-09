@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ExtendedKalturaDistributionThumbDimensions } from '../../edit-distribution-profile-thumbnails.component';
+import { ExtendedKalturaDistributionThumbDimensions } from '../../edit-distribution-profile.component';
 
 @Component({
   selector: 'kEditDistributionProfileThumbnailItem',
