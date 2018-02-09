@@ -1277,7 +1277,10 @@
             "missingThumbnail": "Missing Thumbnail.",
             "autoDistributionMetadataMissing": "Auto-distribution Metadata is Missing.",
             "failedLoadMissingFlavors": "Failed to load missing flavors assets: {{0}}",
-            "serverError": "Server error"
+            "serverError": "Server error",
+            "datesRangeError": "End date can't be earlier than start day",
+            "missingThumbnails": "Required thumbnail sizes are missing from entry thumbnails",
+            "missingFlavors": "Required flavors are missing from entry flavors"
           },
           "errorsInfo": {
             "goToMetadataTab": "Go to Metadata Tab",

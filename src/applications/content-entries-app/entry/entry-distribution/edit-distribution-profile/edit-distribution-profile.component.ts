@@ -5,12 +5,13 @@ import { Flavor } from '../../entry-flavours/flavor';
 import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
 import { EntryDistributionWidget, ExtendedKalturaEntryDistribution } from '../entry-distribution-widget.service';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { KalturaThumbAsset } from 'kaltura-ngx-client/api/types/KalturaThumbAsset';
 import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client/api/types/KalturaDistributionThumbDimensions';
 import { KalturaThumbAssetStatus } from 'kaltura-ngx-client/api/types/KalturaThumbAssetStatus';
 import { getKalturaServerUri } from 'config/server';
+import { subApplicationsConfig } from 'config/sub-applications';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -39,6 +40,20 @@ export class EditDistributionProfileComponent implements OnInit {
   public _requiredThumbnails: ExtendedKalturaDistributionThumbDimensions[] = [];
   public _profileName = '';
   public _distributionName = '';
+  public _createdAtDateRange = subApplicationsConfig.shared.datesRange;
+  public _createdFilterError = '';
+  public _missingFlavorError = '';
+  public _missingThumbnailError = '';
+
+  public _distributionForm: FormGroup;
+  public _updatesField: AbstractControl;
+  public _startDateField: AbstractControl;
+  public _endDateField: AbstractControl;
+
+
+  public get _actionDisabled(): boolean {
+    return !!(this._createdFilterError || this._missingFlavorError || this._missingThumbnailError);
+  }
 
   public get _addButtonLabel(): string {
     return this._forDistribution
@@ -48,13 +63,26 @@ export class EditDistributionProfileComponent implements OnInit {
 
   constructor(private _appLocalization: AppLocalization,
               private _widget: EntryDistributionWidget,
+              private _fb: FormBuilder,
               private _appAuthentication: AppAuthentication,
               private _browserService: BrowserService) {
-
+    this._buildForm();
   }
 
   ngOnInit() {
     this._prepare();
+  }
+
+  private _buildForm(): void {
+    this._distributionForm = this._fb.group({
+      updates: false,
+      startDate: null,
+      endDate: null
+    });
+
+    this._updatesField = this._distributionForm.controls['updates'];
+    this._startDateField = this._distributionForm.controls['startDate'];
+    this._endDateField = this._distributionForm.controls['endDate'];
   }
 
   private _prepare(): void {
@@ -134,8 +162,19 @@ export class EditDistributionProfileComponent implements OnInit {
     });
   }
 
-  public _getEntryTags(entry: KalturaMediaEntry): string[] {
-    return (entry && entry.tags) ? entry.tags.split(',').map(item => item.trim()) : null;
+  public _onCreatedChanged(): void {
+    const startDate = this._startDateField.value;
+    const endDate = this._endDateField.value;
+
+    if (startDate && endDate) {
+      const isValid = startDate <= endDate;
+
+      if (isValid) {
+        this._createdFilterError = null;
+      } else {
+        this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.distribution.errors.datesRangeError');
+      }
+    }
   }
 }
 

@@ -15,13 +15,13 @@
         </a>
         <button type="button"
                 class="kButtonBranded"
-                [disabled]="true"
+                [disabled]="_actionDisabled"
                 pButton
                 [label]="_addButtonLabel"></button>
       </div>
     </div>
     <div class="kContainer">
-      <form>
+      <form [formGroup]="_distributionForm">
         <div class="kRow kFirstRow">
           <span class="kLabel">{{'applications.content.entryDetails.distribution.form.status' | translate}}</span>
           <span class="kReadonlyData" *ngIf="_forDistribution">
@@ -33,6 +33,7 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.content.entryDetails.distribution.form.updates' | translate}}</span>
           <p-checkbox [label]="'applications.content.entryDetails.distribution.form.updateAutomatically' | translate"
+                      [formControl]="_updatesField"
                       binary="true"></p-checkbox>
         </div>
 
@@ -54,14 +55,33 @@
 
         <div class="kRow">
           <span class="kLabel">{{'applications.content.entryDetails.distribution.form.startDate' | translate}}</span>
-          <p-calendar class="kControl kDateControl" [readonlyInput]="true" [showIcon]="true"
-                      [monthNavigator]="true" [yearNavigator]="true" icon="kIconcalendar"></p-calendar>
+          <p-calendar class="kControl kDateControl"
+                      icon="kIconcalendar"
+                      [showTime]="true"
+                      [readonlyInput]="true"
+                      [showIcon]="true"
+                      [monthNavigator]="true"
+                      [yearNavigator]="true"
+                      [formControl]="_startDateField"
+                      [yearRange]="_createdAtDateRange"
+                      (onSelect)="_onCreatedChanged()"></p-calendar>
         </div>
 
         <div class="kRow">
           <span class="kLabel">{{'applications.content.entryDetails.distribution.form.endDate' | translate}}</span>
-          <p-calendar class="kControl kDateControl" [readonlyInput]="true" [showIcon]="true"
-                      [monthNavigator]="true" [yearNavigator]="true" icon="kIconcalendar"></p-calendar>
+          <div>
+            <p-calendar class="kControl kDateControl"
+                        icon="kIconcalendar"
+                        [showTime]="true"
+                        [readonlyInput]="true"
+                        [showIcon]="true"
+                        [monthNavigator]="true"
+                        [yearNavigator]="true"
+                        [formControl]="_endDateField"
+                        [yearRange]="_createdAtDateRange"
+                        (onSelect)="_onCreatedChanged()"></p-calendar>
+            <div *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</div>
+          </div>
         </div>
       </form>
 
