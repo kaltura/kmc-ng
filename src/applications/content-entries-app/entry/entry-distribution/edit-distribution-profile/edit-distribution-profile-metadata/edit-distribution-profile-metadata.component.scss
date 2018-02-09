@@ -66,4 +66,10 @@
     border-color: $kGrayscale2;
     color: $kGrayscale2;
   }
+
+  .ui-autocomplete-multiple-container {
+    width: 500px;
+    max-height: 101px;
+    overflow-y: auto;
+  }
 }
