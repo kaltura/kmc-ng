@@ -10,14 +10,15 @@
         </div>
       </div>
       <div class="kButtons">
-        <a class="kCancel" (click)="parentPopup.close()">
+        <a class="kCancel" (click)="_cancel()">
           {{'applications.content.entryDetails.distribution.cancel' | translate}}
         </a>
         <button type="button"
                 class="kButtonBranded"
-                [disabled]="_actionDisabled"
                 pButton
-                [label]="_addButtonLabel"></button>
+                [disabled]="_actionDisabled"
+                [label]="_addButtonLabel"
+                (click)="_saveProfile()"></button>
       </div>
     </div>
     <div class="kContainer">

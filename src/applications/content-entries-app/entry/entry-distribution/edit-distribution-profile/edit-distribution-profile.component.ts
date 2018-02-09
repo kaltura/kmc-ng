@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { Flavor } from '../../entry-flavours/flavor';
@@ -15,6 +15,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
+import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -36,6 +37,9 @@ export class EditDistributionProfileComponent implements OnInit {
   @Input() flavors: Flavor[] = [];
   @Input() entry: KalturaBaseEntry;
   @Input() thumbnails: KalturaThumbAsset[] = [];
+
+  @Output() onDistribute = new EventEmitter();
+  @Output() onUpdate = new EventEmitter();
 
   public _profile: KalturaDistributionProfile | ExtendedKalturaEntryDistribution;
   public _forDistribution = true;
@@ -100,10 +104,10 @@ export class EditDistributionProfileComponent implements OnInit {
     this._profileName = this._profile.name;
 
     if (this._forDistribution) {
-      this._startDateField.disable();
-      this._endDateField.disable();
+      this._startDateField.disable({ onlySelf: true });
+      this._endDateField.disable({ onlySelf: true });
     } else {
-      this._distributionName = this.undistributedProfile.name;
+      this._distributionName = this._getProviderName(this.undistributedProfile.providerType);
 
       if (this.distributedProfile.hasSubmitSentDataLog === KalturaNullableBoolean.trueValue) {
         this._requestXmlLink = getKalturaServerUri(`/api_v3/index.php/service/contentDistribution_entryDistribution/action/serveSentData/actionType/1/id/${this.distributedProfile.id}/ks/${this._appAuthentication.appUser.ks}`);
@@ -117,11 +121,118 @@ export class EditDistributionProfileComponent implements OnInit {
         || this.distributedProfile.status === KalturaEntryDistributionStatus.queued;
       const startDate = this.distributedProfile.sunrise;
       const endDate = this.distributedProfile.sunset;
-      this._distributionForm.setValue({ updates, startDate, endDate });
+      this._distributionForm.setValue(
+        { updates, startDate, endDate },
+        { emitEvent: false }
+      );
     }
 
     this._prepareFlavors();
     this._prepareThumbnails();
+  }
+
+  private _getProviderName(type: KalturaDistributionProviderType): string {
+    switch (true) {
+      case type.equals(KalturaDistributionProviderType.attUverse):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.avn):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.comcastMrss):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.crossKaltura):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.dailymotion):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.doubleclick):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.facebook):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.freewheel):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.freewheelGeneric):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.ftp):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.ftpScheduled):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.generic):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.hulu):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.idetic):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.metroPcs):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.msn):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.ndn):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.podcast):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.pushToNews):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.quickplay):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.synacorHbo):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.syndication):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.timeWarner):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.tvcom):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.tvinci):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.unicorn):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.uverse):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.uverseClickToOrder):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.verizonVcast):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.yahoo):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.youtube):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.youtubeApi):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      default:
+        return '';
+
+    }
   }
 
   private _prepareFlavors(): void {
@@ -199,6 +310,34 @@ export class EditDistributionProfileComponent implements OnInit {
       } else {
         this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.distribution.errors.datesRangeError');
       }
+    }
+  }
+
+  public _cancel(): void {
+    if (this._distributionForm.dirty) {
+      this._browserService.confirm({
+        message: this._appLocalization.get('applications.content.entryDetails.distribution.form.discardChanges'),
+        accept: () => {
+          this.parentPopup.close();
+        }
+      });
+    } else {
+      this.parentPopup.close();
+    }
+  }
+
+  public _saveProfile(): void {
+    if (this._createdFilterError || this._missingFlavorError || this._missingThumbnailError) {
+      this._browserService.alert({
+        message: this._createdFilterError || this._missingFlavorError || this._missingThumbnailError
+      });
+      return;
+    }
+
+    if (this._forDistribution) {
+      this.onDistribute.emit();
+    } else {
+      this.onUpdate.emit();
     }
   }
 }
