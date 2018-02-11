@@ -15,28 +15,29 @@
   },
   "externalApps": {
     "studio": {
-      "enabled": true,
+      "enabled": false,
       "uri": "",
-      "version": "v2.0.9",
-      "uiConfId": "39700052",
-      "html5_version":"v2.57.2",
-      "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
+      "version": "",
+      "uiConfId": "",
+      "html5_version":"",
+      "html5lib":""
     },
     "liveDashboard": {
-      "enabled": true,
+      "enabled": false,
       "uri": "",
-      "version": "v1.4.1"
+      "version": ""
+    },
+    "kava": {
+      "enabled": false,
+      "uri": ""
     },
     "usageDashboard": {
-      "enabled": true,
+      "enabled": false,
       "uri": "",
-      "uiConfId": 36060752,
+      "uiConfId": 0,
       "map_urls": [
-        "cf1.kaltura.com/content/static/maps/v1",
-        "cf2.kaltura.com/content/static/maps/v1",
-        "cf3.kaltura.com/content/static/maps/v1"
       ],
-      "map_zoom_levels": "12"
+      "map_zoom_levels": ""
     }
   },
   "externalLinks": {

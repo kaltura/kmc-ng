@@ -27,6 +27,10 @@
       "uri": "@externalApps.liveDashboard.uri@",
       "version": "@externalApps.liveDashboard.version@"
     },
+    "kava": {
+      "enabled": @externalApps.kava.enabled@,
+      "uri": "@externalApps.kava.uri@"
+    },
     "usageDashboard": {
       "enabled": @externalApps.usageDashboard.enabled@,
       "uri": "@externalApps.usageDashboard.uri@",

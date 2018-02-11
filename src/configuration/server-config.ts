@@ -66,6 +66,14 @@ export const ServerConfigSchema = {
                     required: ['enabled', 'uri', 'version'],
                     additionalProperties: false
                 },
+                kava: {
+                    properties: {
+                        enabled: {type: 'boolean'},
+                        uri: {type: 'string'}
+                    },
+                    required: ['enabled', 'uri'],
+                    additionalProperties: false
+                }
             },
             required: ['studio', 'usageDashboard', 'liveDashboard'],
             additionalProperties: false
@@ -144,6 +152,10 @@ export interface ServerConfig {
             enabled: boolean,
             uri: string,
             version: string
+        },
+        kava: {
+            enabled: boolean,
+            uri: string
         },
         usageDashboard: {
             enabled: boolean,

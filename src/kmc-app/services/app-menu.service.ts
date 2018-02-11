@@ -18,6 +18,8 @@ export class AppMenuService {
           return serverConfig.externalApps.usageDashboard.enabled;
         case 'studio':
           return serverConfig.externalApps.studio.enabled;
+        case 'kava':
+              return serverConfig.externalApps.kava.enabled;
         default:
           return true;
       }

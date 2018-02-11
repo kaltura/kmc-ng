@@ -17,7 +17,7 @@ export class AnalyticsLiveComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     ngOnInit() {
-        //this.appUrl = `${serverConfig.externalApps.analytics.uri}?ks=${this.appAuthentication.appUser.ks}`;
+        this.appUrl = `${serverConfig.externalApps.kava.uri}?ks=${this.appAuthentication.appUser.ks}`;
     }
 
     ngAfterViewInit() {
