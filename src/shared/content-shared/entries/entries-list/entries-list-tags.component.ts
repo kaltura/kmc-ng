@@ -1,15 +1,14 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
-import * as moment from 'moment';
-import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
 import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {
-    RefineGroup,
-    RefineGroupList
+  RefineGroup,
+  RefineGroupList
 } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
-import { CategoriesSearchService } from 'app-shared/content-shared/categories/categories-search.service';
-import { ISubscription } from 'rxjs/Subscription';
+import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
+import {ISubscription} from 'rxjs/Subscription';
+import {DatePipe} from '@kaltura-ng/kaltura-ui';
 
 export interface TagItem {
     type: string,
@@ -196,19 +195,18 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 1);
         }
 
-        const {fromDate, toDate} = this._entriesStore.cloneFilter('createdAt', { fromDate: null, toDate: null});
-        if (fromDate || toDate) {
-            let tooltip = '';
-            if (fromDate && toDate) {
-                tooltip = `${moment(fromDate).format('MMMM D, YYYY')} - ${moment(toDate).format('MMMM D, YYYY')}`;
-            } else if (fromDate) {
-                tooltip = `From ${moment(fromDate).format('MMMM D, YYYY')}`;
-            } else if (toDate) {
-                tooltip = `Until ${moment(toDate).format('MMMM D, YYYY')}`;
-            }
-
-            this._tags.push({type: 'createdAt', value: null, label: 'Dates', tooltip });
+      const {fromDate, toDate} = this._entriesStore.cloneFilter('createdAt', {fromDate: null, toDate: null});
+      if (fromDate || toDate) {
+        let tooltip = '';
+        if (fromDate && toDate) {
+          tooltip = `${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')} - ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
+        } else if (fromDate) {
+          tooltip = `From ${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')}`;
+        } else if (toDate) {
+          tooltip = `Until ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
         }
+        this._tags.push({type: 'createdAt', value: null, label: 'Dates', tooltip});
+      }
     }
 
     private _syncTagOfFreetext(): void {
