@@ -1,8 +1,8 @@
-import { Component, Input, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
-import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { RefineList } from '../bulk-log-store/bulk-log-refine-filters.service';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {BulkLogFilters, BulkLogStoreService} from '../bulk-log-store/bulk-log-store.service';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {RefineList} from '../bulk-log-store/bulk-log-refine-filters.service';
+import {DatePipe} from "@kaltura-ng/kaltura-ui";
 
 export interface TagItem {
   type: string,
@@ -102,18 +102,17 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
         1);
     }
 
-    const { fromDate, toDate } = this._store.cloneFilter('createdAt', { fromDate: null, toDate: null });
+    const {fromDate, toDate} = this._store.cloneFilter('createdAt', {fromDate: null, toDate: null});
     if (fromDate || toDate) {
       let tooltip = '';
       if (fromDate && toDate) {
-        tooltip = `${moment(fromDate).format('MMMM D, YYYY')} - ${moment(toDate).format('MMMM D, YYYY')}`;
+        tooltip = `${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')} - ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       } else if (fromDate) {
-        tooltip = `From ${moment(fromDate).format('MMMM D, YYYY')}`;
+        tooltip = `From ${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')}`;
       } else if (toDate) {
-        tooltip = `Until ${moment(toDate).format('MMMM D, YYYY')}`;
+        tooltip = `Until ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       }
-
-      this._tags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip });
+      this._tags.push({type: 'createdAt', value: null, label: 'Dates', tooltip});
     }
   }
 

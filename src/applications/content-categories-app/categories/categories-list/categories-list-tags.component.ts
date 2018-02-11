@@ -1,15 +1,11 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, Input} from '@angular/core';
-
-import * as moment from 'moment';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
 import {CategoriesFilters, CategoriesService} from '../categories.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {
-    RefineGroup,
-    RefineGroupList
-} from '../categories-refine-filters.service';
-import { CategoriesSearchService } from 'app-shared/content-shared/categories/categories-search.service';
-import { ISubscription } from 'rxjs/Subscription';
+import {RefineGroup, RefineGroupList} from '../categories-refine-filters.service';
+import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
+import {ISubscription} from 'rxjs/Subscription';
+import {DatePipe} from '@kaltura-ng/kaltura-ui';
 
 export interface TagItem {
   type: string,
@@ -189,11 +185,11 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
     if (fromDate || toDate) {
       let tooltip = '';
       if (fromDate && toDate) {
-        tooltip = `${moment(fromDate).format('MMMM D, YYYY')} - ${moment(toDate).format('MMMM D, YYYY')}`;
+        tooltip = `${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')} - ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       } else if (fromDate) {
-        tooltip = `From ${moment(fromDate).format('MMMM D, YYYY')}`;
+        tooltip = `From ${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')}`;
       } else if (toDate) {
-        tooltip = `Until ${moment(toDate).format('MMMM D, YYYY')}`;
+        tooltip = `Until ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       }
       this._tags.push({type: 'createdAt', value: null, label: 'Dates', tooltip});
     }
