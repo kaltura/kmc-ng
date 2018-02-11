@@ -94,6 +94,7 @@ const routes: Routes = <Routes>[
           ]
         },
         { path: 'studio', loadChildren: '../applications/studio-app/studio-app.module#StudioAppModule' },
+        { path: 'usageDashboard', loadChildren: '../applications/usage-dashboard-app/usage-dashboard-app.module#UsageDashboardAppModule' },
       ]
       }
     ]
