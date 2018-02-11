@@ -135,6 +135,12 @@
       "@types/seamless-immutable/*": [
         "../node_modules/@types/seamless-immutable/*"
       ],
+      "ajv": [
+        "../node_modules/ajv"
+      ],
+      "ajv/*": [
+        "../node_modules/ajv/*"
+      ],
       "angular2-qrcode": [
         "../node_modules/angular2-qrcode"
       ],

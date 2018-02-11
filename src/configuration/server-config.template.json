@@ -20,6 +20,7 @@
     },
     "studio": {
       "uri": "",
+      "path": "",
       "version": "v2.0.9",
       "uiConfId": "39700052",
       "html5_version":"v2.57.2",
