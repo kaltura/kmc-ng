@@ -1,10 +1,9 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import {  AfterViewInit, Component,OnDestroy , OnInit} from '@angular/core';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { environment as env} from '../../environments/environment';
-import { UpdatePlayersEvent } from 'app-shared/kmc-shared/events';
-import { getKalturaServerUri, serverConfig } from 'config/server';
+import { PlayersUpdatedEvent } from 'app-shared/kmc-shared/events';import { getKalturaServerUri, serverConfig } from 'config/server';
 
 @Component({
   selector: 'kStudio',
@@ -47,7 +46,7 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   _updatePlayers(isPlaylist):void{
-    this._appEvents.publish(new UpdatePlayersEvent(isPlaylist));
+    this._appEvents.publish(new PlayersUpdatedEvent(isPlaylist));
   }
 
   ngOnDestroy() {

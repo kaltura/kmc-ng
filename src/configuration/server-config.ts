@@ -13,7 +13,16 @@ const ServerConfigSchema = {
         uri: { type: 'string' },
         expiry: { type: 'number' },
         privileges: { type: 'string' },
-        previewUIConf: { type: 'number' }
+        previewUIConf: { type: 'number' },
+          freeTrialExpiration: {
+            properties: {
+                enabled: { type: 'boolean' },
+                trialPeriodInDays: { type: 'number' }
+            },
+            required: ['enabled', 'trialPeriodInDays'],
+            additionalProperties: false
+        }
+
       },
       required: ['uri', 'expiry', 'privileges', 'previewUIConf'],
       additionalProperties: false
@@ -40,12 +49,11 @@ const ServerConfigSchema = {
           properties: {
             uri: { type: 'string' },
             version: { type: 'string' },
-            path: { type: 'string' },
             uiConfId: { type: 'string' },
             html5_version: { type: 'string' },
             html5lib: { type: 'string' }
           },
-          required: ['uri', 'version', 'path', 'uiConfId', 'html5_version', 'html5lib'],
+          required: ['uri', 'version', 'uiConfId', 'html5_version', 'html5lib'],
           additionalProperties: false
         }
       },
@@ -103,7 +111,11 @@ export interface ServerConfig {
         uri: string,
         expiry: number,
         privileges: string,
-        previewUIConf: number
+        previewUIConf: number,
+        freeTrialExpiration: {
+            enabled: boolean,
+            trialPeriodInDays: number
+        }
     },
     cdnServers: {
         serverUri: string,
@@ -117,7 +129,6 @@ export interface ServerConfig {
         studio: {
             uri: string,
             version: string,
-            path: string,
             uiConfId: string,
             html5_version: string,
             html5lib: string

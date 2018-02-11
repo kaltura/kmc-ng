@@ -214,6 +214,13 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   display: flex;
   align-items: center;
 }
+
+.kHidden {
+  visibility: hidden;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+}
 .kMoreActionsButton {
   color: $kGrayscale3 !important;
   background-color: rgba(0, 0, 0, 0) !important;

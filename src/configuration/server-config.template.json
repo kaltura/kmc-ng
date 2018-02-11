@@ -3,7 +3,11 @@
     "uri" : "www.kaltura.com",
     "expiry": 86400,
     "privileges": "disableentitlement",
-    "previewUIConf": 38524931
+    "previewUIConf": 38524931,
+    "freeTrialExpiration": {
+      "enabled": false,
+      "trialPeriodInDays": 30
+    }
   },
   "cdnServers": {
     "serverUri": "http://cdnapi.kaltura.com",

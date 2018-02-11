@@ -6,8 +6,8 @@ import {HttpModule} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
-import { PreviewAndEmbedModule } from '../applications/preview-and-embed/preview-and-embed.module';
+import {KalturaLogger, KalturaLoggerName} from '@kaltura-ng/kaltura-logger';
+import {PreviewAndEmbedModule} from '../applications/preview-and-embed/preview-and-embed.module';
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
@@ -78,10 +78,11 @@ import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-cr
 import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
+import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
 
-const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
+const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore];
 
 
 

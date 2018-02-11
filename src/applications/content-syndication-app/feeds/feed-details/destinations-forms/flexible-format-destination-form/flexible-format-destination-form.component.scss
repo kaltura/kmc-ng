@@ -1,0 +1,28 @@
+
+.kRow {
+  .kLabel {
+    padding-top: 8px;
+  }
+  .kAsterix {
+    padding-top: 10px;
+  }
+  .kBrowse{
+    display: block;
+  }
+
+  .kControl.threeRows {
+    margin-top: 11px;
+    height: 325px;
+    width: 741px;
+  }
+}
+
+:host /deep/ {
+  .ui-button-text {
+    height: 34px;
+    width: 100px;
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 8px;
+  }
+}

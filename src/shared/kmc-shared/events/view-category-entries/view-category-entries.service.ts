@@ -24,7 +24,7 @@ export class ViewCategoryEntriesService implements OnDestroy {
       this._viewSubscription = this._appEvents.event(ViewCategoryEntriesEvent)
         .subscribe(({ id }) => {
           this._categoryId = id;
-          this._router.navigate(['/entries/list'])
+          this._router.navigate(['/content/entries/list'])
             .catch(() => {
               this._categoryId = null;
             });

@@ -28,7 +28,6 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { EntryWidgetKeys } from '../entry-widget-keys';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators'
-import { subApplicationsConfig } from 'config/sub-applications';
 import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
