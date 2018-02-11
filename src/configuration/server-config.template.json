@@ -1,63 +1,61 @@
 {
   "kalturaServer": {
-    "uri" : "www.kaltura.com",
-    "expiry": 86400,
-    "privileges": "disableentitlement",
-    "previewUIConf": 38524931,
+    "uri" : "@kalturaServer.uri@",
+    "expiry": @kalturaServer.expiry@,
+    "privileges": "@kalturaServer.privileges@",
+    "previewUIConf": @kalturaServer.previewUIConf@,
     "freeTrialExpiration": {
-      "enabled": false,
-      "trialPeriodInDays": 30
+      "enabled": @kalturaServer.freeTrialExpiration.enabled@,
+      "trialPeriodInDays": @kalturaServer.freeTrialExpiration.trialPeriodInDays@
     }
   },
   "cdnServers": {
-    "serverUri": "http://cdnapi.kaltura.com",
-    "securedServerUri": "https://cdnapisec.kaltura.com"
+    "serverUri": "@cdnServers.serverUri@",
+    "securedServerUri": "@cdnServers.securedServerUri@"
   },
   "externalApps": {
     "studio": {
-      "enabled": true,
-      "uri": "",
-      "version": "v2.0.9",
-      "uiConfId": "39700052",
-      "html5_version":"v2.57.2",
-      "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
+      "enabled": @externalApps.studio.enabled@,
+      "uri": "@externalApps.studio.uri@",
+      "version": "@externalApps.studio.vesrion@",
+      "uiConfId": "@externalApps.studio.uiConfId@",
+      "html5_version":"@externalApps.studio.html5_version@",
+      "html5lib":"@externalApps.studio.html5lib@"
     },
     "liveDashboard": {
-      "enabled": true,
-      "uri": "",
-      "version": "v1.4.1"
+      "enabled": @externalApps.liveDashboard.enabled@,
+      "uri": "@externalApps.liveDashboard.uri@",
+      "version": "@externalApps.liveDashboard.version@"
     },
     "usageDashboard": {
-      "enabled": true,
-      "uri": "",
-      "uiConfId": 36060752,
+      "enabled": @externalApps.usageDashboard.enabled@,
+      "uri": "@externalApps.usageDashboard.uri@",
+      "uiConfId": @externalApps.usageDashboard.uiConfId@,
       "map_urls": [
-        "cf1.kaltura.com/content/static/maps/v1",
-        "cf2.kaltura.com/content/static/maps/v1",
-        "cf3.kaltura.com/content/static/maps/v1"
+        @externalApps.usageDashboard.map_urls@
       ],
-      "map_zoom_levels": "12"
+      "map_zoom_levels": "@externalApps.usageDashboard.map_zoom_levels@"
     }
   },
   "externalLinks": {
     "previewAndEmbed": {
-      "embedTypes": "http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/embedcodetypes.htm",
-      "deliveryProtocols": "https://knowledge.kaltura.com/how-enforce-delivery-type-each-player-using-ui-variables"
+      "embedTypes": "@externalLinks.previewAndEmbed.embedTypes@",
+      "deliveryProtocols": "@externalLinks.previewAndEmbed.deliveryProtocols@"
     },
     "kaltura": {
-      "userManual": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
-      "support": "http://kmc.kaltura.com/index.php/kmc/support",
-      "signUp": "https://corp.kaltura.com/free-trial",
-      "contactUs": "https://corp.kaltura.com/company/contact-us",
-      "upgradeAccount":"https://site.kaltura.com/Request-Users.html",
-      "contactSalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
+      "userManual": "@externalLinks.kaltura.userManual@",
+      "support": "@externalLinks.kaltura.support@",
+      "signUp": "@externalLinks.kaltura.signUp@",
+      "contactUs": "@externalLinks.kaltura.contactUs@",
+      "upgradeAccount":"@externalLinks.kaltura.upgradeAccount@",
+      "contactSalesforce": "@externalLinks.kaltura.contactSalesforce@"
     },
     "uploads": {
-      "highSpeedUpload": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
-      "bulkUploadSamples": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
+      "highSpeedUpload": "@externalLinks.uploads.highSpeedUpload@",
+      "bulkUploadSamples": "@externalLinks.uploads.bulkUploadSamples@"
     },
     "live": {
-      "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
+      "akamaiEdgeServerIpURL": "@externalLinks.live.akamaiEdgeServerIpURL@"
     }
   }
 }

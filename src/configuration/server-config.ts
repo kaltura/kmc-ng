@@ -67,7 +67,7 @@ export const ServerConfigSchema = {
                     additionalProperties: false
                 },
             },
-            required: ['studio'],
+            required: ['studio', 'usageDashboard', 'liveDashboard'],
             additionalProperties: false
         },
         externalLinks: {
