@@ -32,7 +32,6 @@
   "scripts": {
     "kws": "kws",
     "ng": "ng",
-    "postinstall": "node ./scripts/fix-tsconfig-paths.js",
     "start": "ng serve",
     "build": "ng build",
     "prebuild:prod": "node ./scripts/pre-build-prod.js",
@@ -84,7 +83,7 @@
     "seamless-immutable": "~7.1.2",
     "ts-md5": "^1.2.0",
     "tslib": "^1.5.0",
-    "web-animations-js": "^2.2.5",
+    "web-animations-js": "~2.3.1",
     "zone.js": "~0.8.19"
   },
   "devDependencies": {
