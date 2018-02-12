@@ -177,14 +177,16 @@ export class UsersStore implements OnDestroy {
       });
   }
 
-  public isUserAlreadyExists(email: string): Observable<IsUserExistsStatuses> {
+  public isUserAlreadyExists(email: string): Observable<IsUserExistsStatuses | null> {
     return this._kalturaServerClient
       .request(new UserGetByLoginIdAction({ loginId: email }))
-      .map(() => IsUserExistsStatuses.kmcUser)
+      .map(() => {
+        return IsUserExistsStatuses.kmcUser;
+      })
       .catch(error => {
         const status = error.code === 'LOGIN_DATA_NOT_FOUND'
           ? IsUserExistsStatuses.otherSystemUser :
-          (error.code === 'USER_NOT_FOUND' ? IsUserExistsStatuses.unknownUser : '');
+          (error.code === 'USER_NOT_FOUND' ? IsUserExistsStatuses.unknownUser : null);
         return Observable.of(status);
       });
   }

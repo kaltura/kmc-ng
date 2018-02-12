@@ -56,7 +56,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           name: metadataProfile.name,
           lists: (metadataProfile.items || []).map(item => ({ id: item.id, name: item.name }))
         }));
-      }).catch(() => null);
+      });
   }
 
   public getServerFilter(data: EntriesFilters, mediaTypesDefault = true): Observable<KalturaMediaEntryFilterForPlaylist> {

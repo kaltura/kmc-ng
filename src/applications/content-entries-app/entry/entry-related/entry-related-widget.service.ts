@@ -157,7 +157,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
         this.relatedFileDiffer = {};
         this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
-          this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
+          this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create();
           this.relatedFileDiffer[asset.id].diff(asset);
         });
         super._hideLoader();

@@ -32,7 +32,6 @@ import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-
 import { Subject } from 'rxjs/Subject';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
-import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 
 export enum SortDirection {
   Desc,
@@ -260,7 +259,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     };
   }
 
-  public convertFiltersToServerStruct(): Observable<KalturaMediaEntryFilterForPlaylist> {
+  public convertFiltersToServerStruct(): Observable<KalturaMediaEntryFilter> {
     return this._dataProvider.getServerFilter(this._getFiltersAsReadonly(), false);
   }
 }
