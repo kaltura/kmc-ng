@@ -11,7 +11,6 @@ In the coming months we plan to complete adding all the features we have in the 
 
 The following list contains some major features in our road-map:
 - [ ] upgrade to Angular 5
-- [x] add runtime server configuration
 - [ ] embed permission support across views
 - [ ] add multi language translations
 - [ ] add missing views like  content > distribution, transcoding profile etc
