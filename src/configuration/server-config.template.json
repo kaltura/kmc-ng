@@ -1,8 +1,6 @@
 {
   "kalturaServer": {
     "uri" : "@kalturaServer.uri@",
-    "expiry": @kalturaServer.expiry@,
-    "privileges": "@kalturaServer.privileges@",
     "previewUIConf": @kalturaServer.previewUIConf@,
     "freeTrialExpiration": {
       "enabled": @kalturaServer.freeTrialExpiration.enabled@,

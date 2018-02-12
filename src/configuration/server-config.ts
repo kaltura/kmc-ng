@@ -19,8 +19,6 @@ export const ServerConfigSchema = {
         kalturaServer: {
             properties: {
                 uri: {type: 'string'},
-                expiry: {type: 'number'},
-                privileges: {type: 'string'},
                 previewUIConf: {type: 'number'},
                 freeTrialExpiration: {
                     properties: {
@@ -32,7 +30,7 @@ export const ServerConfigSchema = {
                 }
 
             },
-            required: ['uri', 'expiry', 'privileges', 'previewUIConf'],
+            required: ['uri', 'previewUIConf', 'freeTrialExpiration'],
             additionalProperties: false
         },
         cdnServers: {
@@ -88,7 +86,7 @@ export const ServerConfigSchema = {
                     additionalProperties: false
                 }
             },
-            required: ['studio', 'usageDashboard', 'liveDashboard'],
+            required: ['studio', 'usageDashboard', 'liveDashboard', 'kava'],
             additionalProperties: false
         },
         externalLinks: {
@@ -140,8 +138,6 @@ export const ServerConfigSchema = {
 export interface ServerConfig {
     kalturaServer: {
         uri: string,
-        expiry: number,
-        privileges: string,
         previewUIConf: number,
         freeTrialExpiration: {
             enabled: boolean,

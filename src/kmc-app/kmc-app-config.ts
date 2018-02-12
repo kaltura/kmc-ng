@@ -1,5 +1,9 @@
 export interface KmcAppConfig {
   storageNamespace: string,
+  kalturaServer: {
+      expiry: number,
+      privileges: string
+  },
   routing: {
     errorRoute: string,
     loginRoute: string
@@ -25,6 +29,10 @@ export interface KmcAppConfig {
 
 export const kmcAppConfig: KmcAppConfig = {
   'storageNamespace': 'kmc-ng',
+  'kalturaServer': {
+      "expiry": 86400,
+      "privileges": "disableentitlement"
+  },
   'routing': {
     'errorRoute': '/error',
     'loginRoute': '/login',

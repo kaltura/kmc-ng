@@ -1,8 +1,6 @@
 {
   "kalturaServer": {
     "uri" : "www.kaltura.com",
-    "expiry": 86400,
-    "privileges": "disableentitlement",
     "previewUIConf": 38524931,
     "freeTrialExpiration": {
       "enabled": false,
@@ -29,6 +27,7 @@
     },
     "kava": {
       "enabled": false,
+      "version": "",
       "uri": ""
     },
     "usageDashboard": {
