@@ -29,6 +29,12 @@
             <i class="kIconinactive"></i>
             {{'applications.content.entryDetails.distribution.status.notDistributed' | translate}}
           </span>
+          <span class="kReadonlyData" *ngIf="!_forDistribution">
+            <span class="kStatus" *ngIf="!_profile?.validationErrors?.length">
+              <i class="kStatusIcon" [ngClass]="_profile | kEntriesDistributionStatus:'icon'"></i>
+              {{_profile | kEntriesDistributionStatus:'label'}}
+            </span>
+          </span>
         </div>
 
         <div class="kRow">

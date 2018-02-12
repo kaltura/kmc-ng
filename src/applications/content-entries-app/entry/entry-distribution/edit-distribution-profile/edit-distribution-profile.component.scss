@@ -109,6 +109,31 @@
             position: relative;
             top: 1px;
           }
+
+          .kStatus {
+            .kStatusIcon {
+              font-size: 16px;
+              position: relative;
+              top: 1px;
+              margin-right: 5px;
+            }
+
+            .kIconhelp_full { // TODO [kmcng] replace with relevant icon
+              color: $kOrange;
+            }
+
+            .kIconcomplete {
+              color: $kSuccess;
+            }
+
+            .kIconsync {
+              color: $kSecondary;
+            }
+
+            .kIconerror {
+              color: $kDandger;
+            }
+          }
         }
 
         .kControl {

@@ -42,12 +42,14 @@ export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistributi
 export interface DistributionWidgetData {
   distributedProfiles: ExtendedKalturaEntryDistribution[],
   undistributedProfiles: KalturaDistributionProfile[],
+  partnerDistributionProfiles: KalturaDistributionProfile[],
   flavors: Flavor[];
   thumbnails: KalturaThumbAsset[];
 }
 
 @Injectable()
 export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
+  private _partnerDistributionProfiles = new BehaviorSubject<{ items: KalturaDistributionProfile[] }>({ items: [] });
   private _distributedProfiles = new BehaviorSubject<{ items: KalturaEntryDistribution[] }>({ items: [] });
   private _undistributedProfiles = new BehaviorSubject<{ items: KalturaDistributionProfile[] }>({ items: [] });
   private _flavors = new BehaviorSubject<{ items: Flavor[] }>({ items: [] });
@@ -57,7 +59,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   public thumbnails$ = this._thumbnails.asObservable();
   public distributionProfiles$ = {
     distributed: this._distributedProfiles.asObservable(),
-    undistributed: this._undistributedProfiles.asObservable()
+    undistributed: this._undistributedProfiles.asObservable(),
+    partnerProfiles: this._partnerDistributionProfiles.asObservable()
   };
 
   constructor(private _appLocalization: AppLocalization,
@@ -83,12 +86,11 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
     return this._loadDistributionData()
       .do((response: DistributionWidgetData) => {
-        console.warn(response.distributedProfiles);
-        console.warn(response.undistributedProfiles);
         this._flavors.next({ items: response.flavors });
         this._thumbnails.next({ items: response.thumbnails });
         this._distributedProfiles.next({ items: response.distributedProfiles });
         this._undistributedProfiles.next({ items: response.undistributedProfiles });
+        this._partnerDistributionProfiles.next({ items: response.partnerDistributionProfiles });
 
         super._hideLoader();
       })
@@ -246,7 +248,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         // TODO [kmcng] what if some of responses have error?
         const flavors = this._mapEntryFlavorsResponse(entryFlavors.result);
         const thumbnails = this._mapThumbnailsResponse(entryThumbnails.result);
-        const undistributedProfiles = this._mapPartnerDistributionResponse(partnerDistribution.result);
+        const partnerDistributionProfiles = this._mapPartnerDistributionResponse(partnerDistribution.result);
+        const undistributedProfiles = [...partnerDistributionProfiles];
         const entryProfiles = this._mapEntryDistributionResponse(entryDistribution.result);
         const distributedProfiles = [];
 
@@ -272,7 +275,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
           flavors,
           thumbnails,
           distributedProfiles,
-          undistributedProfiles
+          undistributedProfiles,
+          partnerDistributionProfiles
         };
       });
   }

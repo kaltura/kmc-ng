@@ -120,8 +120,8 @@ export class EditDistributionProfileComponent implements OnInit {
 
       const updates = this.undistributedProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic
         || this.distributedProfile.status === KalturaEntryDistributionStatus.queued;
-      const startDate = this.distributedProfile.sunrise;
-      const endDate = this.distributedProfile.sunset;
+      const startDate = this.distributedProfile.sunrise || null;
+      const endDate = this.distributedProfile.sunset || null;
       this._distributionForm.setValue(
         { updates, startDate, endDate },
         { emitEvent: false }
