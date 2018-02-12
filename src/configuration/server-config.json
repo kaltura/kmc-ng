@@ -33,6 +33,7 @@
     },
     "usageDashboard": {
       "enabled": false,
+      "version": "",
       "uri": "",
       "uiConfId": 0,
       "map_urls": [

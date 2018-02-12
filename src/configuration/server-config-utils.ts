@@ -16,7 +16,7 @@ function isStudioAppValid(): boolean {
             !!serverConfig.externalApps.studio.html5lib;
 
         if (!isValid) {
-            console.warn('Cannot enable Studio - configuration is invalid for Studio')
+            console.warn('Disabling Studio standalone application - configuration is invalid');
         }
     }
     return isValid;
@@ -31,7 +31,22 @@ function isLiveDashboardAppValid(): boolean {
             !!serverConfig.externalApps.liveDashboard.version;
 
         if (!isValid) {
-            console.warn('Cannot enable Live Dashboard - configuration is invalid for Live Dashboard')
+            console.warn('Disabling Live Dashboard standalone application - configuration is invalid');
+        }
+    }
+    return isValid;
+}
+
+function isKavaAppValid(): boolean {
+    let isValid = false;
+    if (serverConfig.externalApps.kava.enabled) {
+        isValid =
+            !!serverConfig.externalApps.kava.uri &&
+            !serverConfig.externalApps.kava.uri.match(/\s/g) && // not contains white spaces
+            !!serverConfig.externalApps.kava.version;
+
+        if (!isValid) {
+            console.warn('Disabling KAVA standalone application - configuration is invalid');
         }
     }
     return isValid;
@@ -51,7 +66,7 @@ function isUsageDashboardAppValid(): boolean {
             !!serverConfig.externalApps.usageDashboard.map_zoom_levels;
 
         if (!isValid) {
-            console.warn('Cannot enable Usage Dashboard - configuration is invalid for Usage Dashboard')
+            console.warn('Disabling Usage Dashboard standalone application - configuration is invalid')
         }
     }
     return isValid;
@@ -134,6 +149,7 @@ export function initializeConfiguration(): Observable<void> {
             if (validationResult.isValid) {
                 Object.assign(serverConfig, response);
                 serverConfig.externalApps.studio.enabled = isStudioAppValid();
+                serverConfig.externalApps.kava.enabled = isKavaAppValid();
                 serverConfig.externalApps.liveDashboard.enabled = isLiveDashboardAppValid();
                 serverConfig.externalApps.usageDashboard.enabled = isUsageDashboardAppValid();
 
