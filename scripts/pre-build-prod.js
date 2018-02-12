@@ -55,5 +55,5 @@ function findRoot(start) {
 	return findRoot(start)
 }
 
-console.log("check file 'src/configuration/config-server.json file'. make sure it doesn't have external app mapped to \'__local_machine_only__\'");
+console.log("validating file 'src/configuration/config-server.json file'");
 ensureNoLocalMachine();
