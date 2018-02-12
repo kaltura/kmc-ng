@@ -5,7 +5,7 @@
 
   <div class="kUndistributedProfileContent">
     <span class="kTitle">
-      <span class="kTitleLabel">{{profile?.name}}</span>
+      <span class="kTitleLabel" (click)="onExport.emit(profile)">{{profile?.name}}</span>
       <i class="kIconexternal_link kTitleIcon"></i>
     </span>
     <div class="kMetadata">

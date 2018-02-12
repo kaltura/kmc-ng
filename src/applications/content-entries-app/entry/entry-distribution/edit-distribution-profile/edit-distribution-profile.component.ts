@@ -16,6 +16,7 @@ import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNull
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
 import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -38,7 +39,7 @@ export class EditDistributionProfileComponent implements OnInit {
   @Input() entry: KalturaBaseEntry;
   @Input() thumbnails: KalturaThumbAsset[] = [];
 
-  @Output() onDistribute = new EventEmitter<{ entryId: string, profileId: number }>();
+  @Output() onDistribute = new EventEmitter<{ entryId: string, profileId: number, submitWhenReady: boolean }>();
   @Output() onUpdate = new EventEmitter();
 
   public _profile: KalturaDistributionProfile | ExtendedKalturaEntryDistribution;
@@ -335,7 +336,8 @@ export class EditDistributionProfileComponent implements OnInit {
     }
 
     if (this._forDistribution) {
-      this.onDistribute.emit({ entryId: this.entry.id, profileId: this.undistributedProfile.id });
+      const submitWhenReady = !!this._updatesField.value;
+      this.onDistribute.emit({ entryId: this.entry.id, profileId: this.undistributedProfile.id, submitWhenReady });
     } else {
       this.onUpdate.emit();
     }

@@ -40,7 +40,9 @@
 
         <div *ngIf="!_forDistribution">
           <div class="kRow">
-            <span class="kLabel">{{'applications.content.entryDetails.distribution.form.lastUpdate' | translate}}</span>
+              <span class="kLabel">
+                {{'applications.content.entryDetails.distribution.form.lastUpdate' | translate}}
+              </span>
             <span class="kReadonlyData">
               {{_profile?.updatedAt | kDate:'short'}}
             </span>

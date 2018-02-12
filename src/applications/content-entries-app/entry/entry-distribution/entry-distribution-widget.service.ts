@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -32,6 +32,7 @@ import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 import { FlavorParamsGetAction } from 'kaltura-ngx-client/api/types/FlavorParamsGetAction';
 import { EntryDistributionAddAction } from 'kaltura-ngx-client/api/types/EntryDistributionAddAction';
+import { EntryDistributionSubmitAddAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitAddAction';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -393,34 +394,37 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       });
   }
 
-  public distributeProfile(payload: { entryId: string, profileId: number }, closePopupCallback: () => void): void {
+  public distributeProfile(payload: { entryId: string, profileId: number, submitWhenReady: boolean }, closePopupCallback: () => void): void {
     const newEntryDistribution = new KalturaEntryDistribution({
       entryId: payload.entryId,
       distributionProfileId: payload.profileId
     });
 
-    this._kalturaClient.request(new EntryDistributionAddAction({ entryDistribution: newEntryDistribution }))
+    const request = new KalturaMultiRequest(
+      new EntryDistributionAddAction({ entryDistribution: newEntryDistribution }),
+      new EntryDistributionSubmitAddAction({ id: 0, submitWhenReady: payload.submitWhenReady })
+        .setDependency(['id', 0, 'id'])
+    );
+
+    this._kalturaClient.multiRequest(request)
       .cancelOnDestroy(this, this.widgetReset$)
       .tag('block-shell')
+      .map(responses => {
+        responses.forEach(response => {
+          if (response.error instanceof KalturaAPIException) {
+            throw Error(response.error.message);
+          }
+        });
+      })
       .subscribe(
         () => {
           this._refresh();
           closePopupCallback();
         },
         error => {
-          this._showBlockerMessage(new AreaBlockerMessage({
-            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDistribute'),
-            buttons: [
-              {
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => this.distributeProfile(payload, closePopupCallback)
-              },
-              {
-                label: this._appLocalization.get('app.common.cancel'),
-                action: () => this._removeBlockerMessage()
-              }
-            ]
-          }), false);
+          this._browserService.alert({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDistribute')
+          });
         });
 
   }

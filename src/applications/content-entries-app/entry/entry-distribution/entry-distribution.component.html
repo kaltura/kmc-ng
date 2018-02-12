@@ -12,17 +12,17 @@
         (onExport)="_distributeProfile($event)"></kEntryUndistributedProfile>
     </div>
   </div>
-
-  <kPopupWidget #editProfile [popupWidth]="995" [slider]="true">
-    <ng-template>
-      <kEditDistributionProfile [parentPopup]="editProfile"
-                                [entry]="_widgetService.data"
-                                [thumbnails]="(_widgetService.thumbnails$ | async)?.items"
-                                [flavors]="(_widgetService.flavors$ | async)?.items"
-                                [undistributedProfile]="_selectedUndistributedProfile"
-                                [distributedProfile]="_selectedDistributedProfile"
-                                (onDistribute)="_distributeSelectedProfile($event)"
-                                (onUpdate)="_updateSelectedProfile($event)"></kEditDistributionProfile>
-    </ng-template>
-  </kPopupWidget>
 </k-area-blocker>
+
+<kPopupWidget #editProfile [popupWidth]="995" [slider]="true">
+  <ng-template>
+    <kEditDistributionProfile [parentPopup]="editProfile"
+                              [entry]="_widgetService.data"
+                              [thumbnails]="(_widgetService.thumbnails$ | async)?.items"
+                              [flavors]="(_widgetService.flavors$ | async)?.items"
+                              [undistributedProfile]="_selectedUndistributedProfile"
+                              [distributedProfile]="_selectedDistributedProfile"
+                              (onDistribute)="_distributeSelectedProfile($event)"
+                              (onUpdate)="_updateSelectedProfile($event)"></kEditDistributionProfile>
+  </ng-template>
+</kPopupWidget>

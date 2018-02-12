@@ -82,5 +82,9 @@ export class DistributedProfileComponent {
 
     this._deleteButtonHidden = enabledStatuses.indexOf(this._profile.status) === -1;
   }
+
+  public _performAction(profile: ExtendedKalturaEntryDistribution): void {
+
+  }
 }
 

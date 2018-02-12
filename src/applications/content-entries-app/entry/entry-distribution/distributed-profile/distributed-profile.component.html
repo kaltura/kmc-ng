@@ -44,6 +44,7 @@
             (click)="onDeleteDistribution.emit(_profile)"></button>
     <button *ngIf="!_actionButtonHidden" pButton class="kButtonDefault kUpdateBtn"
             [disabled]="!_isModified && _actionButtonDisabled"
-            [label]="_actionButtonLabel"></button>
+            [label]="_actionButtonLabel"
+            (click)="_performAction(_profile)"></button>
   </div>
 </div>
