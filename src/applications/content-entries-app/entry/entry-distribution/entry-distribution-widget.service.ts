@@ -33,9 +33,9 @@ import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/t
 import { FlavorParamsGetAction } from 'kaltura-ngx-client/api/types/FlavorParamsGetAction';
 import { EntryDistributionAddAction } from 'kaltura-ngx-client/api/types/EntryDistributionAddAction';
 import { EntryDistributionSubmitAddAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitAddAction';
-import { DistributionProfileUpdateAction } from 'kaltura-ngx-client/api/types/DistributionProfileUpdateAction';
 import { EntryDistributionUpdateAction } from 'kaltura-ngx-client/api/types/EntryDistributionUpdateAction';
 import { EntryDistributionSubmitUpdateAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitUpdateAction';
+import { EntryDistributionRetrySubmitAction } from 'kaltura-ngx-client/api/types/EntryDistributionRetrySubmitAction';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -58,7 +58,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   private _flavors = new BehaviorSubject<{ items: Flavor[] }>({ items: [] });
   private _thumbnails = new BehaviorSubject<{ items: KalturaThumbAsset[] }>({ items: [] });
 
-  public updateProfileMessage: AreaBlockerMessage;
+  public popupMessage: AreaBlockerMessage;
   public flavors$ = this._flavors.asObservable();
   public thumbnails$ = this._thumbnails.asObservable();
   public distributionProfiles$ = {
@@ -316,12 +316,15 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         });
   }
 
-  private _performDeleteRequest(action: KalturaRequest<KalturaEntryDistribution | void>): void {
+  private _performDeleteRequest(action: KalturaRequest<KalturaEntryDistribution | void>, closePopupCallback?: () => void): void {
     this._kalturaClient.request(action)
       .tag('block-shell')
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(
         () => {
+          if (typeof closePopupCallback === 'function') {
+            closePopupCallback();
+          }
           this._refresh();
           this._browserService.scrollToTop();
         },
@@ -331,7 +334,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
-                action: () => this._performDeleteRequest(action)
+                action: () => this._performDeleteRequest(action, closePopupCallback)
               },
               {
                 label: this._appLocalization.get('app.common.cancel'),
@@ -347,7 +350,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     super.updateState({ isDirty: true });
   }
 
-  public deleteDistributionProfile(profile: ExtendedKalturaEntryDistribution): void {
+  public deleteDistributionProfile(profile: ExtendedKalturaEntryDistribution, closePopupCallback?: () => void): void {
     const entrySubmitted = [
       KalturaEntryDistributionStatus.ready,
       KalturaEntryDistributionStatus.errorUpdating
@@ -366,13 +369,9 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     }
 
     if (!action) {
-      this._showBlockerMessage(new AreaBlockerMessage({
+      this._browserService.alert({
         message: this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDelete'),
-        buttons: [{
-          label: this._appLocalization.get('app.common.ok'),
-          action: () => this._removeBlockerMessage()
-        }]
-      }), false);
+      });
       return;
     }
 
@@ -380,7 +379,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       {
         header: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirmTitle'),
         message: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirm', [profile.id]),
-        accept: () => this._performDeleteRequest(action)
+        accept: () => this._performDeleteRequest(action, closePopupCallback)
       });
   }
 
@@ -408,13 +407,18 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       distributionProfileId: payload.profileId
     });
 
-    const requests = new KalturaMultiRequest(
-      new EntryDistributionAddAction({ entryDistribution: newEntryDistribution }),
-      new EntryDistributionSubmitAddAction({ id: 0, submitWhenReady: payload.submitWhenReady })
-        .setDependency(['id', 0, 'id'])
-    );
+    const actions: KalturaRequest<KalturaEntryDistribution>[] = [
+      new EntryDistributionAddAction({ entryDistribution: newEntryDistribution })
+    ];
 
-    this._kalturaClient.multiRequest(requests)
+    if (payload.submitWhenReady) {
+      actions.push(
+        new EntryDistributionSubmitAddAction({ id: 0, submitWhenReady: payload.submitWhenReady })
+          .setDependency(['id', 0, 'id'])
+      );
+    }
+
+    this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .cancelOnDestroy(this, this.widgetReset$)
       .tag('block-shell')
       .map(responses => {
@@ -437,59 +441,34 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   }
 
-  public updateProfile(payload: { distributionProfile?: KalturaDistributionProfile, entryDistribution?: ExtendedKalturaEntryDistribution },
-                       closePopupCallback: () => void): void {
-    const requests = [];
+  public updateProfile(profile: ExtendedKalturaEntryDistribution, closePopupCallback: () => void): void {
 
-    if (payload.distributionProfile) {
-      requests.push(new DistributionProfileUpdateAction({
-        id: payload.distributionProfile.id,
-        distributionProfile: payload.distributionProfile
-      }));
-    }
-
-    if (payload.entryDistribution) {
-      requests.push(new EntryDistributionUpdateAction({
-        id: payload.entryDistribution.id,
-        entryDistribution: payload.entryDistribution
-      }));
-    }
-
-    if (requests.length > 0) {
-      this._kalturaClient.multiRequest(requests)
-        .cancelOnDestroy(this, this.widgetReset$)
-        .tag('block-shell')
-        .map(responses => {
-          responses.forEach(response => {
-            if (response.error instanceof KalturaAPIException) {
-              throw Error(response.error.message);
-            }
+    this._kalturaClient.request(new EntryDistributionUpdateAction({
+      id: profile.id,
+      entryDistribution: profile
+    }))
+      .cancelOnDestroy(this, this.widgetReset$)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this._refresh();
+          closePopupCallback();
+        },
+        error => {
+          this.popupMessage = new AreaBlockerMessage({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => this.updateProfile(profile, closePopupCallback)
+              },
+              {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => this.popupMessage = null
+              }
+            ]
           });
-        })
-        .subscribe(
-          () => {
-            this._refresh();
-            closePopupCallback();
-          },
-          error => {
-            this.updateProfileMessage = new AreaBlockerMessage({
-              message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => this.updateProfile(payload, closePopupCallback)
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => this.updateProfileMessage = null
-                }
-              ]
-            });
-          });
-    } else {
-      // should not reach this part
-      throw Error('There\'s nothing to update');
-    }
+        });
   }
 
   public submitProfileUpdate(profileId: number): void {
@@ -503,6 +482,36 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         error => {
           this._browserService.alert({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
+          });
+        });
+  }
+
+  public submitDistribution(profileId: number): void {
+    this._kalturaClient.request(new EntryDistributionSubmitAddAction({ id: profileId }))
+      .cancelOnDestroy(this, this.widgetReset$)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this._refresh();
+        },
+        error => {
+          this._browserService.alert({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
+          });
+        });
+  }
+
+  public retryDistribution(profileId: number): void {
+    this._kalturaClient.request(new EntryDistributionRetrySubmitAction({ id: profileId }))
+      .cancelOnDestroy(this, this.widgetReset$)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this._refresh();
+        },
+        error => {
+          this._browserService.alert({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.retryFailed'),
           });
         });
   }

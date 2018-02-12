@@ -19,10 +19,7 @@ export class DistributedProfileComponent {
     }
   }
 
-  @Output() onDeleteDistribution = new EventEmitter<ExtendedKalturaEntryDistribution>();
-  @Output() onOpenProfile = new EventEmitter<ExtendedKalturaEntryDistribution>();
-  @Output() onSubmitUpdate = new EventEmitter<number>();
-  @Output() onDistribute = new EventEmitter<number>();
+  @Output() onActionSelected = new EventEmitter<{ action: string, payload: any }>();
 
   public _profile: ExtendedKalturaEntryDistribution;
   public _isModified = false;
@@ -36,7 +33,7 @@ export class DistributedProfileComponent {
   }
 
   private _setupActionButton(): void {
-    const { status, dirtyStatus } = this._profile;
+    const { status, dirtyStatus, validationErrors } = this._profile;
     this._actionButtonHidden = false;
 
     switch (status) {
@@ -50,8 +47,10 @@ export class DistributedProfileComponent {
         }
         break;
       case KalturaEntryDistributionStatus.errorDeleting:
-        this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.upToDate');
-        this._actionButtonDisabled = true;
+      case KalturaEntryDistributionStatus.errorSubmitting:
+      case KalturaEntryDistributionStatus.errorUpdating:
+        this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.retry');
+        this._actionButtonDisabled = false;
         break;
       case KalturaEntryDistributionStatus.submitting:
       case KalturaEntryDistributionStatus.importSubmitting:
@@ -61,11 +60,13 @@ export class DistributedProfileComponent {
         this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.processing');
         this._actionButtonDisabled = true;
         break;
-      case KalturaEntryDistributionStatus.errorSubmitting:
-      case KalturaEntryDistributionStatus.errorUpdating:
       case KalturaEntryDistributionStatus.pending:
-        this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
-        this._actionButtonDisabled = false;
+        if (!validationErrors.length) {
+          this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
+          this._actionButtonDisabled = false;
+        } else {
+          this._actionButtonHidden = true;
+        }
         break;
       default:
         this._actionButtonHidden = true;
@@ -86,15 +87,36 @@ export class DistributedProfileComponent {
   }
 
   public _performAction(profile: ExtendedKalturaEntryDistribution): void {
-    if (profile.status === KalturaEntryDistributionStatus.errorUpdating || profile.dirtyStatus === KalturaEntryDistributionFlag.updateRequired) {
-      this.onSubmitUpdate.emit(profile.id);
-    } else if (profile.status === KalturaEntryDistributionStatus.pending
-      || profile.status === KalturaEntryDistributionStatus.errorSubmitting
-      || profile.status === KalturaEntryDistributionStatus.queued) {
-      this.onDistribute.emit(profile.distributionProfileId);
-    } else {
-      // do nothing
+    switch (profile.status) {
+      case KalturaEntryDistributionStatus.errorDeleting:
+      case KalturaEntryDistributionStatus.errorSubmitting:
+      case KalturaEntryDistributionStatus.errorUpdating:
+        this.onActionSelected.emit({ action: 'retry', payload: profile.id });
+        break;
+
+      case KalturaEntryDistributionStatus.pending:
+      case KalturaEntryDistributionStatus.queued:
+        this.onActionSelected.emit({ action: 'distribute', payload: profile.id });
+        break;
+
+      case KalturaEntryDistributionStatus.ready:
+        if (profile.dirtyStatus === KalturaEntryDistributionFlag.updateRequired) {
+          this.onActionSelected.emit({ action: 'sendUpdate', payload: profile.id });
+        }
+        break;
+
+      default:
+        break;
+
     }
+  }
+
+  public _openProfile(profile: ExtendedKalturaEntryDistribution): void {
+    this.onActionSelected.emit({ action: 'open', payload: profile });
+  }
+
+  public _deleteDistribution(profile: ExtendedKalturaEntryDistribution): void {
+    this.onActionSelected.emit({ action: 'deleteDistribution', payload: profile });
   }
 }
 

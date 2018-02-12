@@ -5,7 +5,7 @@
 
   <div class="kDistributedProfileContent">
     <span class="kTitle">
-      <span class="kTitleLabel" (click)="onOpenProfile.emit(_profile)">{{_profile?.name}}</span>
+      <span class="kTitleLabel" (click)="_openProfile(_profile)">{{_profile?.name}}</span>
       <i class="kIconexternal_link kTitleIcon"></i>
     </span>
     <div class="kMetadata">
@@ -31,7 +31,9 @@
         {{'applications.content.entryDetails.distribution.auto' | translate}}
       </span>
       <span class="kDelimiter"></span>
-      <a class="kMoreDetails">{{'applications.content.entryDetails.distribution.moreDetails' | translate}}</a>
+      <a class="kMoreDetails" (click)="_openProfile(_profile)">
+        {{'applications.content.entryDetails.distribution.moreDetails' | translate}}
+      </a>
     </div>
     <div class="kValidationErrors" *ngIf="_profile?.validationErrors?.length">
       <kEntryDistributedProfileErrors [errors]="_profile?.validationErrors"></kEntryDistributedProfileErrors>
@@ -41,9 +43,9 @@
   <div class="kControls">
     <button *ngIf="!_deleteButtonHidden" pButton
             icon="kIcontrash" class="kButtonDanger kDeleteBtn"
-            (click)="onDeleteDistribution.emit(_profile)"></button>
+            (click)="_deleteDistribution(_profile)"></button>
     <button *ngIf="!_actionButtonHidden" pButton class="kButtonDefault kUpdateBtn"
-            [disabled]="!_isModified && _actionButtonDisabled"
+            [disabled]="_actionButtonDisabled"
             [label]="_actionButtonLabel"
             (click)="_performAction(_profile)"></button>
   </div>

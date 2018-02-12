@@ -23,7 +23,7 @@ export class EditDistributionProfileMetadataComponent implements OnInit {
     if (this.entry) {
       this._metadataForm.setValue({
         name: this.entry.name,
-        description: this.entry.description,
+        description: this.entry.description || '',
         tags: (this.entry.tags ? this.entry.tags.split(',').map(item => item.trim()) : null)
       });
     }

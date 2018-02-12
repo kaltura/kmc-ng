@@ -5,30 +5,25 @@
       <kEntryDistributedProfile
         *ngFor="let profile of (_widgetService.distributionProfiles$.distributed | async).items"
         [profile]="profile"
-        (onOpenProfile)="_editProfile($event)"
-        (onDistribute)="_distributeProfileById($event)"
-        (onSubmitUpdate)="_widgetService.submitProfileUpdate($event)"
-        (onDeleteDistribution)="_widgetService.deleteDistributionProfile($event)"></kEntryDistributedProfile>
+        (onActionSelected)="_onDistributedProfileActionSelected($event)"></kEntryDistributedProfile>
       <kEntryUndistributedProfile
         *ngFor="let profile of (_widgetService.distributionProfiles$.undistributed | async).items"
         [profile]="profile"
-        (onExport)="_distributeProfile($event)"></kEntryUndistributedProfile>
+        (onExport)="_openUndistributedProfile($event)"></kEntryUndistributedProfile>
     </div>
   </div>
 </k-area-blocker>
 
 <kPopupWidget #editProfile [popupWidth]="995" [slider]="true">
   <ng-template>
-    <k-area-blocker [message]="_widgetService.updateProfileMessage">
+    <k-area-blocker [message]="_widgetService.popupMessage">
       <kEditDistributionProfile [parentPopup]="editProfile"
                                 [entry]="_widgetService.data"
                                 [thumbnails]="(_widgetService.thumbnails$ | async)?.items"
                                 [flavors]="(_widgetService.flavors$ | async)?.items"
                                 [undistributedProfile]="_selectedUndistributedProfile"
                                 [distributedProfile]="_selectedDistributedProfile"
-                                (onDelete)="_widgetService.deleteDistributionProfile($event)"
-                                (onDistribute)="_distributeSelectedProfile($event)"
-                                (onUpdate)="_updateSelectedProfile($event)"></kEditDistributionProfile>
+                                (onActionSelected)="_onEditProfileActionSelected($event)"></kEditDistributionProfile>
     </k-area-blocker>
   </ng-template>
 </kPopupWidget>

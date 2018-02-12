@@ -30,14 +30,14 @@
             {{'applications.content.entryDetails.distribution.status.notDistributed' | translate}}
           </span>
           <span class="kReadonlyData" *ngIf="!_forDistribution">
-            <span class="kStatus" *ngIf="!_profile?.validationErrors?.length">
+            <span class="kStatus">
               <i class="kStatusIcon" [ngClass]="_profile | kEntriesDistributionStatus:'icon'"></i>
               {{_profile | kEntriesDistributionStatus:'label'}}
             </span>
           </span>
         </div>
 
-        <div class="kRow">
+        <div class="kRow" *ngIf="_forDistribution">
           <span class="kLabel">{{'applications.content.entryDetails.distribution.form.updates' | translate}}</span>
           <p-checkbox [label]="'applications.content.entryDetails.distribution.form.updateAutomatically' | translate"
                       [formControl]="_updatesField"
@@ -45,7 +45,7 @@
         </div>
 
         <div *ngIf="!_forDistribution">
-          <div class="kRow">
+          <div class="kRow" *ngIf="_profile?.updatedAt !== undefined">
               <span class="kLabel">
                 {{'applications.content.entryDetails.distribution.form.lastUpdate' | translate}}
               </span>
@@ -54,7 +54,7 @@
             </span>
           </div>
 
-          <div class="kRow">
+          <div class="kRow" *ngIf="_profile?.remoteId !== undefined">
             <span class="kLabel">{{'applications.content.entryDetails.distribution.form.remoteId' | translate}}</span>
             <span class="kReadonlyData">
               {{_profile?.remoteId}}
@@ -111,7 +111,7 @@
           <button pButton class="kButtonDanger"
                   icon="kIcontrash"
                   [label]="'applications.content.entryDetails.distribution.form.delete' | translate"
-                  (click)="onDelete.emit(_profile)"></button>
+                  (click)="_deleteProfile(_profile)"></button>
         </div>
       </div>
 

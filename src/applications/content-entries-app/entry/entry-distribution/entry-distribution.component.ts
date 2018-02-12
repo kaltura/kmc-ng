@@ -29,25 +29,7 @@ export class EntryDistributionComponent implements OnInit, OnDestroy {
     this._widgetService.detachForm();
   }
 
-  public _distributeProfileById(profileId: number): void {
-    this._widgetService.distributionProfiles$.partnerProfiles
-      .cancelOnDestroy(this)
-      .subscribe(({ items }) => {
-        this._selectedDistributedProfile = null;
-        this._selectedUndistributedProfile = items.find(({ id }) => {
-          return profileId === id
-        });
-        this._editProfilePopup.open();
-      });
-  }
-
-  public _distributeProfile(profile: KalturaDistributionProfile): void {
-    this._selectedUndistributedProfile = profile;
-    this._selectedDistributedProfile = null;
-    this._editProfilePopup.open();
-  }
-
-  public _editProfile(profile: ExtendedKalturaEntryDistribution): void {
+  private _openDistributedProfile(profile: ExtendedKalturaEntryDistribution): void {
     this._widgetService.distributionProfiles$.partnerProfiles
       .cancelOnDestroy(this)
       .subscribe(({ items }) => {
@@ -59,16 +41,68 @@ export class EntryDistributionComponent implements OnInit, OnDestroy {
       });
   }
 
-  public _distributeSelectedProfile(payload: { entryId: string, profileId: number, submitWhenReady: boolean }): void {
+  private _distributeSelectedProfile(payload: { entryId: string, profileId: number, submitWhenReady: boolean }): void {
     this._widgetService.distributeProfile(payload, () => {
       this._editProfilePopup.close();
     });
   }
 
-  public _updateSelectedProfile(payload: { distributionProfile?: KalturaDistributionProfile, entryDistribution?: ExtendedKalturaEntryDistribution }): void {
-    this._widgetService.updateProfile(payload, () => {
+  private _updateSelectedProfile(profile: ExtendedKalturaEntryDistribution): void {
+    this._widgetService.updateProfile(profile, () => {
       this._editProfilePopup.close();
     })
+  }
+
+  public _openUndistributedProfile(profile: KalturaDistributionProfile): void {
+    this._selectedUndistributedProfile = profile;
+    this._selectedDistributedProfile = null;
+    this._editProfilePopup.open();
+  }
+
+  public _onDistributedProfileActionSelected(event: { action: string, payload: any }): void {
+    switch (event.action) {
+      case 'retry':
+        this._widgetService.retryDistribution(event.payload);
+        break;
+
+      case 'distribute':
+        this._widgetService.submitDistribution(event.payload);
+        break;
+
+      case 'sendUpdate':
+        this._widgetService.submitProfileUpdate(event.payload);
+        break;
+
+      case 'open':
+        this._openDistributedProfile(event.payload);
+        break;
+
+      case 'deleteDistribution':
+        this._widgetService.deleteDistributionProfile(event.payload);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  public _onEditProfileActionSelected(event: { action: string, payload: any }): void {
+    switch (event.action) {
+      case 'distribute':
+        this._distributeSelectedProfile(event.payload);
+        break;
+
+      case 'update':
+        this._updateSelectedProfile(event.payload);
+        break;
+
+      case 'delete':
+        this._widgetService.deleteDistributionProfile(event.payload, () => this._editProfilePopup.close());
+        break;
+
+      default:
+        break;
+    }
   }
 }
 

@@ -28,6 +28,9 @@ export class DistributionStatusPipe implements PipeTransform {
         } else if (profile.dirtyStatus === KalturaEntryDistributionFlag.submitRequired) {
           result.label = this._appLocalization.get('applications.content.entryDetails.distribution.status.scheduledForDistribution');
           result.icon = 'kIconscheduled';
+        } else if (profile.validationErrors && profile.validationErrors.length) {
+          result.label = this._appLocalization.get('applications.content.entryDetails.distribution.status.exportFailed');
+          result.icon = 'kIconerror';
         }
         break;
 
