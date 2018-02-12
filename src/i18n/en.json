@@ -1513,7 +1513,8 @@
             "serverError": "Server error",
             "datesRangeError": "\"Start Date\" must be before \"End Date\"",
             "missingThumbnails": "Required thumbnail sizes are missing from entry thumbnails",
-            "missingFlavors": "Required flavors are missing from entry flavors"
+            "missingFlavors": "Required flavors are missing from entry flavors",
+            "updateFailed": "Update failed"
           },
           "errorsInfo": {
             "goToMetadataTab": "Go to Metadata Tab",

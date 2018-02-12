@@ -35,6 +35,7 @@ import { EntryDistributionAddAction } from 'kaltura-ngx-client/api/types/EntryDi
 import { EntryDistributionSubmitAddAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitAddAction';
 import { DistributionProfileUpdateAction } from 'kaltura-ngx-client/api/types/DistributionProfileUpdateAction';
 import { EntryDistributionUpdateAction } from 'kaltura-ngx-client/api/types/EntryDistributionUpdateAction';
+import { EntryDistributionSubmitUpdateAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitUpdateAction';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -485,6 +486,24 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
               ]
             });
           });
+    } else {
+      // should not reach this part
+      throw Error('There\'s nothing to update');
     }
+  }
+
+  public submitProfileUpdate(profileId: number): void {
+    this._kalturaClient.request(new EntryDistributionSubmitUpdateAction({ id: profileId }))
+      .cancelOnDestroy(this, this.widgetReset$)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this._refresh();
+        },
+        error => {
+          this._browserService.alert({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
+          });
+        });
   }
 }

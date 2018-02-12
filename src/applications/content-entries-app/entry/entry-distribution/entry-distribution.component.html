@@ -6,6 +6,8 @@
         *ngFor="let profile of (_widgetService.distributionProfiles$.distributed | async).items"
         [profile]="profile"
         (onOpenProfile)="_editProfile($event)"
+        (onDistribute)="_distributeProfileById($event)"
+        (onSubmitUpdate)="_widgetService.submitProfileUpdate($event)"
         (onDeleteDistribution)="_widgetService.deleteDistributionProfile($event)"></kEntryDistributedProfile>
       <kEntryUndistributedProfile
         *ngFor="let profile of (_widgetService.distributionProfiles$.undistributed | async).items"

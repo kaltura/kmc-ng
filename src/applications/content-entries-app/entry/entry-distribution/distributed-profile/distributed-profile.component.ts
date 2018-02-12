@@ -21,6 +21,8 @@ export class DistributedProfileComponent {
 
   @Output() onDeleteDistribution = new EventEmitter<ExtendedKalturaEntryDistribution>();
   @Output() onOpenProfile = new EventEmitter<ExtendedKalturaEntryDistribution>();
+  @Output() onSubmitUpdate = new EventEmitter<number>();
+  @Output() onDistribute = new EventEmitter<number>();
 
   public _profile: ExtendedKalturaEntryDistribution;
   public _isModified = false;
@@ -40,7 +42,7 @@ export class DistributedProfileComponent {
     switch (status) {
       case KalturaEntryDistributionStatus.ready:
         if (dirtyStatus === KalturaEntryDistributionFlag.updateRequired) {
-          this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.update');
+          this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
           this._actionButtonDisabled = false;
         } else {
           this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.upToDate');
@@ -84,7 +86,15 @@ export class DistributedProfileComponent {
   }
 
   public _performAction(profile: ExtendedKalturaEntryDistribution): void {
-
+    if (profile.status === KalturaEntryDistributionStatus.errorUpdating || profile.dirtyStatus === KalturaEntryDistributionFlag.updateRequired) {
+      this.onSubmitUpdate.emit(profile.id);
+    } else if (profile.status === KalturaEntryDistributionStatus.pending
+      || profile.status === KalturaEntryDistributionStatus.errorSubmitting
+      || profile.status === KalturaEntryDistributionStatus.queued) {
+      this.onDistribute.emit(profile.distributionProfileId);
+    } else {
+      // do nothing
+    }
   }
 }
 
