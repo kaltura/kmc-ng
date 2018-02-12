@@ -4,6 +4,7 @@ import { AppAuthentication, AppNavigator, BrowserService, ILoginError, ILoginRes
 import { TranslateService } from 'ng2-translate';
 import { Observable } from 'rxjs/Observable';
 import { serverConfig } from 'config/server';
+import { analyticsAppConfig } from '../../analytics-app-config';
 
 export enum LoginScreens {
   Login,
@@ -59,8 +60,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _makeLoginRequest(username: string, password: string): Observable<ILoginResponse> {
     return this._appAuthentication.login(username, password, {
-      privileges: serverConfig.kalturaServer.privileges,
-      expiry: serverConfig.kalturaServer.expiry
+      privileges: analyticsAppConfig.kalturaServer.privileges,
+      expiry: analyticsAppConfig.kalturaServer.expiry
     }).cancelOnDestroy(this);
   }
 

@@ -11,12 +11,10 @@ In the coming months we plan to complete adding all the features we have in the 
 
 The following list contains some major features in our road-map:
 - [ ] upgrade to Angular 5
-- [x] add runtime server configuration
 - [ ] embed permission support across views
 - [ ] add multi language translations
-- [ ] add missing views like  content > syndication & distribution, transcoding profile etc
+- [ ] add missing views like  content > distribution, transcoding profile etc
 - [ ] add missing tools like create crop from thumbnail, entry flavor > replace media
-- [ ] add external app integration (like studio, analytics, usage dashboard, entry Clip&Trim etc)
 
 
 ## <a name="issue"></a> Got a question or found an Issue?
@@ -98,12 +96,8 @@ $ npm run build -- --prod
 
 A distributed standalone application will be created in the `dist/` folder.
 
- ### Add the studio application
- You will need to add the studio application to the distribution folder. We recommend you to take the lastest version of v2 (v3 currently doesn't work in the kmc-ng)*[]:
- - goto the the [following link](https://github.com/kaltura/player-studio/releases) and find the latest release (make sure it is not a pre-release)
- - download the attached zip file
- - extract it into folder `dist/studio`
-
+### External (standalone) applications integrations
+The KMC integrates several standalone applications using iFrames. It contains a dedicated bridge component responsible for the communication with between the KMC shell and standalone application. External applications are not part of the KMC deployment process, they are configured at runtime by the server as part of file `src/configuration/server-config.json`. Read [__local_machine_only__/README.md](./__local_machine_only__/README.md) to learn more about standalone applications integration.
 
 
 ### Configuring the server

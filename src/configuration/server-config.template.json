@@ -1,8 +1,6 @@
 {
   "kalturaServer": {
     "uri" : "@kalturaServer.uri@",
-    "expiry": @kalturaServer.expiry@,
-    "privileges": "@kalturaServer.privileges@",
     "previewUIConf": @kalturaServer.previewUIConf@,
     "freeTrialExpiration": {
       "enabled": @kalturaServer.freeTrialExpiration.enabled@,
@@ -27,9 +25,15 @@
       "uri": "@externalApps.liveDashboard.uri@",
       "version": "@externalApps.liveDashboard.version@"
     },
+    "kava": {
+      "enabled": @externalApps.kava.enabled@,
+      "version": "@externalApps.kava.version@",
+      "uri": "@externalApps.kava.uri@"
+    },
     "usageDashboard": {
       "enabled": @externalApps.usageDashboard.enabled@,
       "uri": "@externalApps.usageDashboard.uri@",
+      "version": "@externalApps.usageDashboard.version@",
       "uiConfId": @externalApps.usageDashboard.uiConfId@,
       "map_urls": [
         @externalApps.usageDashboard.map_urls@

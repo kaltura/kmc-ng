@@ -2,14 +2,23 @@ import  'rxjs/add/operator/takeUntil';
 import  'rxjs/add/operator/delay';
 import { globalConfig } from './global-config';
 
+/*************************************
+ * Developer Notice:
+ * When you add/edit/remove server configuration you should sync the following places:
+ * - this file > 'ServerConfigSchema' constant
+ * - this file > 'ServerConfig' interface
+ * - file 'server-config.template.json' (used by CI server)
+ *
+ * If you are modifing an External application (a.k.a standalone application):
+ * - file '__local_machine_only__/README.md' > section 'Test external applications integration'
+ * - for new external apps you should also update the zip file 'samples-for-tests-only.zip'
+ *************************************/
 
 export const ServerConfigSchema = {
     properties: {
         kalturaServer: {
             properties: {
                 uri: {type: 'string'},
-                expiry: {type: 'number'},
-                privileges: {type: 'string'},
                 previewUIConf: {type: 'number'},
                 freeTrialExpiration: {
                     properties: {
@@ -21,7 +30,7 @@ export const ServerConfigSchema = {
                 }
 
             },
-            required: ['uri', 'expiry', 'privileges', 'previewUIConf'],
+            required: ['uri', 'previewUIConf', 'freeTrialExpiration'],
             additionalProperties: false
         },
         cdnServers: {
@@ -49,12 +58,13 @@ export const ServerConfigSchema = {
                 usageDashboard: {
                     properties: {
                         enabled: {type: 'boolean'},
+                        version: {type: 'string'},
                         uri: {type: 'string'},
                         uiConfId: {type: 'number'},
                         map_urls: { type: 'array', items: { type: 'string' } },
                         map_zoom_levels: {type: 'string'}
                     },
-                    required: ['enabled', 'uri', 'uiConfId', 'map_urls', 'map_zoom_levels'],
+                    required: ['enabled', 'version', 'uri', 'uiConfId', 'map_urls', 'map_zoom_levels'],
                     additionalProperties: false
                 },
                 liveDashboard: {
@@ -66,8 +76,17 @@ export const ServerConfigSchema = {
                     required: ['enabled', 'uri', 'version'],
                     additionalProperties: false
                 },
+                kava: {
+                    properties: {
+                        enabled: {type: 'boolean'},
+                        version: {type: 'string'},
+                        uri: {type: 'string'}
+                    },
+                    required: ['enabled', 'version', 'uri'],
+                    additionalProperties: false
+                }
             },
-            required: ['studio', 'usageDashboard', 'liveDashboard'],
+            required: ['studio', 'usageDashboard', 'liveDashboard', 'kava'],
             additionalProperties: false
         },
         externalLinks: {
@@ -119,8 +138,6 @@ export const ServerConfigSchema = {
 export interface ServerConfig {
     kalturaServer: {
         uri: string,
-        expiry: number,
-        privileges: string,
         previewUIConf: number,
         freeTrialExpiration: {
             enabled: boolean,
@@ -142,11 +159,17 @@ export interface ServerConfig {
         },
         liveDashboard: {
             enabled: boolean,
+            version: string,
             uri: string,
-            version: string
+        },
+        kava: {
+            enabled: boolean,
+            version: string,
+            uri: string
         },
         usageDashboard: {
             enabled: boolean,
+            version: string,
             uri: string,
             uiConfId: number,
             map_urls: string[],
