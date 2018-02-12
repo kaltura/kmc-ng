@@ -24,6 +24,7 @@
                                 [flavors]="(_widgetService.flavors$ | async)?.items"
                                 [undistributedProfile]="_selectedUndistributedProfile"
                                 [distributedProfile]="_selectedDistributedProfile"
+                                (onDelete)="_widgetService.deleteDistributionProfile($event)"
                                 (onDistribute)="_distributeSelectedProfile($event)"
                                 (onUpdate)="_updateSelectedProfile($event)"></kEditDistributionProfile>
     </k-area-blocker>

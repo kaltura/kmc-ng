@@ -40,6 +40,7 @@ export class EditDistributionProfileComponent implements OnInit {
 
   @Output() onDistribute = new EventEmitter<{ entryId: string, profileId: number, submitWhenReady: boolean }>();
   @Output() onUpdate = new EventEmitter<{ distributionProfile?: KalturaDistributionProfile, entryDistribution?: ExtendedKalturaEntryDistribution }>();
+  @Output() onDelete = new EventEmitter<ExtendedKalturaEntryDistribution>();
 
   public _profile: KalturaDistributionProfile | ExtendedKalturaEntryDistribution;
   public _forDistribution = true;

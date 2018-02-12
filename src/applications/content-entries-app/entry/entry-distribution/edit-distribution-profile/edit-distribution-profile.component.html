@@ -105,6 +105,15 @@
           </div>
         </div>
       </form>
+      <div class="kRow kRemoveProfile" *ngIf="!_forDistribution">
+        <span class="kLabel"></span>
+        <div>
+          <button pButton class="kButtonDanger"
+                  icon="kIcontrash"
+                  [label]="'applications.content.entryDetails.distribution.form.delete' | translate"
+                  (click)="onDelete.emit(_profile)"></button>
+        </div>
+      </div>
 
       <kEditDistributionProfileMetadata
         [entry]="entry"></kEditDistributionProfileMetadata>
