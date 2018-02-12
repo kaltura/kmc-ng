@@ -21,11 +21,20 @@
       "dom"
     ],
     "paths": {
+      "config/global": [
+        "configuration/global-config"
+      ],
+      "config/server": [
+        "configuration/server-config.ts"
+      ],
+      "config/sub-applications": [
+        "applications/sub-applications-config"
+      ],
+      "config/modules": [
+        "shared/modules-config"
+      ],
       "app-shared/*": [
         "shared/*"
-      ],
-      "app-environment": [
-        "app-config"
       ],
       "app-theme/*": [
         "styles/app-theme/*"
@@ -126,6 +135,12 @@
       "@types/seamless-immutable/*": [
         "../node_modules/@types/seamless-immutable/*"
       ],
+      "ajv": [
+        "../node_modules/ajv"
+      ],
+      "ajv/*": [
+        "../node_modules/ajv/*"
+      ],
       "angular2-qrcode": [
         "../node_modules/angular2-qrcode"
       ],
@@ -137,6 +152,12 @@
       ],
       "core-js/*": [
         "../node_modules/core-js/*"
+      ],
+      "deepmerge": [
+        "../node_modules/deepmerge"
+      ],
+      "deepmerge/*": [
+        "../node_modules/deepmerge/*"
       ],
       "intl": [
         "../node_modules/intl"

@@ -1,15 +1,14 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
-import * as moment from 'moment';
-import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
 import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {
-    RefineGroup,
-    RefineGroupList
+  RefineGroup,
+  RefineGroupList
 } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
-import { CategoriesSearchService } from 'app-shared/content-shared/categories/categories-search.service';
-import { ISubscription } from 'rxjs/Subscription';
+import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
+import {ISubscription} from 'rxjs/Subscription';
+import {DatePipe} from '@kaltura-ng/kaltura-ui';
 
 export interface TagItem {
     type: string,
@@ -19,7 +18,7 @@ export interface TagItem {
     dataFetchSubscription?: ISubscription
 }
 
-const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'categories' ];
+const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions' ];
 
 @Component({
     selector: 'k-entries-list-tags',
@@ -28,7 +27,7 @@ const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 
 
 })
 export class EntriesListTagsComponent implements OnInit, OnDestroy {
-
+    @Output() onTagsBarVisible = new EventEmitter<boolean>();
     @Output() onTagsChange = new EventEmitter<void>();
     @Input() enforcedFilters: Partial<EntriesFilters>;
 
@@ -59,7 +58,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             tag.dataFetchSubscription = null;
         }
 
-        if (listTypes.indexOf(tag.type) > -1) {
+        if (tag.type === 'categories' || refineListsType.indexOf(tag.type) > -1) {
             // remove tag of type list from filters
             const previousData = this._entriesStore.cloneFilter(tag.type, []);
             const previousDataItemIndex = previousData.findIndex(item => item === tag.value);
@@ -114,7 +113,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             this._showTags = true;
 
             (this._tags || []).forEach(tag => {
-                if ((<string[]>listTypes).indexOf(tag.type) !== -1) {
+                if ((<string[]>refineListsType).indexOf(tag.type) !== -1) {
                     tag.label = this._getRefineLabel(tag.type, tag.value);
                     tag.tooltip = this._appLocalization.get(`applications.content.filters.${tag.type}`, {'0': tag.label});
                 }else if (tag.type.indexOf('customMetadata|') === 0)
@@ -137,8 +136,10 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         this._updateComponentState(this._entriesStore.cloneFilters(
             [
                 'freetext',
+                'createdAt',
                 'customMetadata',
-                ...listTypes
+                ...refineListsType,
+                'categories'
             ]
         ));
     }
@@ -163,11 +164,16 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             this._syncTagsOfCustomMetadata(updates.customMetadata);
         }
 
-        listTypes.forEach(listType => {
+        refineListsType.forEach(listType => {
             if (typeof updates[listType] !== 'undefined') {
                 this._syncTagsOfList(listType);
             }
         });
+
+        if (typeof updates.categories !== 'undefined')
+        {
+            this._syncTagsOfCategories();
+        }
     }
 
     private _registerToFilterStoreDataChanges(): void {
@@ -175,6 +181,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(({changes}) => {
                 this._updateComponentState(changes);
+
+                const isTagsVisible = !!(this._tags && this._tags.length);
+                this.onTagsBarVisible.emit(isTagsVisible);
             });
     }
 
@@ -186,19 +195,18 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 1);
         }
 
-        const {fromDate, toDate} = this._entriesStore.cloneFilter('createdAt', { fromDate: null, toDate: null});
-        if (fromDate || toDate) {
-            let tooltip = '';
-            if (fromDate && toDate) {
-                tooltip = `${moment(fromDate).format('LL')} - ${moment(toDate).format('LL')}`;
-            } else if (fromDate) {
-                tooltip = `From ${moment(fromDate).format('LL')}`;
-            } else if (toDate) {
-                tooltip = `Until ${moment(toDate).format('LL')}`;
-            }
-
-            this._tags.push({type: 'createdAt', value: null, label: 'Dates', tooltip });
+      const {fromDate, toDate} = this._entriesStore.cloneFilter('createdAt', {fromDate: null, toDate: null});
+      if (fromDate || toDate) {
+        let tooltip = '';
+        if (fromDate && toDate) {
+          tooltip = `${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')} - ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
+        } else if (fromDate) {
+          tooltip = `From ${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')}`;
+        } else if (toDate) {
+          tooltip = `Until ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
         }
+        this._tags.push({type: 'createdAt', value: null, label: 'Dates', tooltip});
+      }
     }
 
     private _syncTagOfFreetext(): void {
@@ -221,6 +229,58 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         }
     }
 
+    private _syncTagsOfCategories(): void {
+        const currentValue = this._entriesStore.cloneFilter('categories', []);
+
+        if (currentValue instanceof Array) {
+            // Developer notice: we must make sure the type at runtime is an array. this is a safe check only we don't expect the value to be different
+            const tagsFilters = this._tags.filter(item => item.type === 'categories');
+
+            const tagsFiltersMap = this._entriesStore.filtersUtils.toMap(tagsFilters, 'value');
+            const currentValueMap = this._entriesStore.filtersUtils.toMap(currentValue, null);
+            const diff = this._entriesStore.filtersUtils.getDiff(tagsFiltersMap, currentValueMap);
+
+            diff.deleted.forEach(item => {
+                this._tags.splice(
+                    this._tags.indexOf(item),
+                    1);
+            });
+
+            diff.added.forEach(item => {
+                const newTag: TagItem = {
+                    type: 'categories',
+                    value: item,
+                    label: '',
+                    tooltip: ''
+                };
+
+                const category = this._categoriesSearch.getCachedCategory(Number(item));
+
+                if (category) {
+                    newTag.label = category.name;
+                    newTag.tooltip = category.fullName;
+                } else {
+                    newTag.label = `(${this._appLocalization.get('applications.content.filters.loading_lbl')})`;
+                    newTag.tooltip = this._appLocalization.get('applications.content.filters.categoryId_tt', {'0': item});
+                    newTag.dataFetchSubscription = this._categoriesSearch.getCategory(Number(item))
+                        .cancelOnDestroy(this)
+                        .subscribe(
+                            result => {
+                                newTag.label = result.name;
+                                newTag.tooltip = result.fullName;
+                            },
+                            error => {
+                                newTag.label = String(item);
+                            }
+                        );
+                }
+
+
+                this._tags.push(newTag);
+            });
+        }
+    }
+
     private _syncTagsOfList(filterName: keyof EntriesFilters): void {
         const currentValue = this._entriesStore.cloneFilter(filterName, []);
 
@@ -239,42 +299,13 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             });
 
             diff.added.forEach(item => {
+                const label = this._getRefineLabel(filterName, item);
                 const newTag: TagItem = {
                     type: filterName,
                     value: item,
-                    label: '',
-                    tooltip: ''
+                    label: label,
+                    tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': label})
                 };
-
-                if (filterName === 'categories') {
-
-                    const category = this._categoriesSearch.getCachedCategory(Number(item));
-
-                    if (category) {
-                        newTag.label = category.name;
-                        newTag.tooltip = category.fullName;
-                    } else {
-                        newTag.label = `(${this._appLocalization.get('applications.content.filters.loading_lbl')})`;
-                        newTag.tooltip = this._appLocalization.get('applications.content.filters.categoryId_tt', {'0': item});
-                        newTag.dataFetchSubscription = this._categoriesSearch.getCategory(Number(item))
-                            .cancelOnDestroy(this)
-                            .subscribe(
-                                result => {
-                                    newTag.label = result.name;
-                                    newTag.tooltip = result.fullName;
-                                },
-                                error => {
-                                    newTag.label = item;
-                                }
-                            );
-                    }
-
-                } else {
-                    newTag.label = this._getRefineLabel(filterName, item);
-                    newTag.tooltip = this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': newTag.label})
-                }
-
-
                 this._tags.push(newTag);
             });
         }

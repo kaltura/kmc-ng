@@ -8,7 +8,6 @@ import {CategoryWidgetKeys} from '../category-widget-keys';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
-import {environment} from 'app-environment';
 import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
@@ -21,6 +20,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {CategoryService} from '../category.service';
+import { modulesConfig } from 'config/modules';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -37,6 +37,10 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   }
 
   protected onActivate(firstTimeActivating: boolean) {
+    if (this.data && !this.data.directSubCategoriesCount) {
+      this._categoryService.openSection(CategoryWidgetKeys.Metadata);
+      return;
+    }
 
 
     super._showLoader();
@@ -73,7 +77,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
 
   private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
-    const subcategoriesLimit: number = environment.categoriesShared.SUB_CATEGORIES_LIMIT || 50;
+    const subcategoriesLimit: number = modulesConfig.contentShared.categories.subCategoriesLimit || 50;
     if (!parentCategory) {
       return Observable.throw(new Error('parentCategory to get subcategories for is not defined'));
     }
@@ -207,7 +211,10 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
     if (this.isDirty) {
       this._subcategoriesMarkedForDelete.forEach(subcategory => {
-        request.requests.push(new CategoryDeleteAction({id: subcategory.id}));
+        request.requests.push(new CategoryDeleteAction({
+          id: subcategory.id,
+          moveEntriesToParentCategory: 1
+        }));
       });
       this._subcategories.getValue().forEach((subcategory, index) => {
         request.requests.push(new CategoryUpdateAction({

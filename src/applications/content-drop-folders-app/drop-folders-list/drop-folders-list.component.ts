@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
+import { DropFoldersFilters, DropFoldersStoreService, SortDirection } from '../drop-folders-store/drop-folders-store.service';
 import { Router } from '@angular/router';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky.component';
@@ -28,7 +28,9 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   public _query = {
     freeText: '',
     pageIndex: 0,
-    pageSize: null // pageSize is set to null by design. It will be modified after the first time loading drop folders
+    pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading drop folders
+    sortBy: 'createdAt',
+    sortDirection: SortDirection.Desc
   };
 
   constructor(public _dropFoldersStore: DropFoldersStoreService,
@@ -115,7 +117,9 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
       [
         'pageSize',
         'pageIndex',
-        'freeText'
+        'freeText',
+        'sortBy',
+        'sortDirection'
       ]
     ));
   }
@@ -131,6 +135,14 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
     if (typeof updates.pageIndex !== 'undefined') {
       this._query.pageIndex = updates.pageIndex;
+    }
+
+    if (typeof updates.sortBy !== 'undefined') {
+      this._query.sortBy = updates.sortBy;
+    }
+
+    if (typeof updates.sortDirection !== 'undefined') {
+      this._query.sortDirection = updates.sortDirection;
     }
   }
 
@@ -177,7 +189,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
         );
     };
 
-    if (ids.length > environment.modules.dropFolders.bulkActionsLimit) {
+    if (ids.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.bulkActions.note'),
         message: this._appLocalization.get('applications.content.bulkActions.confirmDropFolders', { '0': ids.length }),
@@ -208,6 +220,13 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
   public _onFreetextChanged(): void {
     this._dropFoldersStore.filter({ freeText: this._query.freeText });
+  }
+
+  public _onSortChanged(event): void {
+    this._dropFoldersStore.filter({
+      sortBy: event.field,
+      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+    });
   }
 
   public _reload(): void {

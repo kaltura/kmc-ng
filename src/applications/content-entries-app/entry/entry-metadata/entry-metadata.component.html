@@ -13,7 +13,15 @@
             <div class="kRow kValign">
                 <span class="kLabel">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
                 <div class="kControl">
-                    <input #nameField formControlName="name" type="text" pInputText/>
+                  <input #nameField
+                         formControlName="name"
+                         type="text"
+                         pInputText
+                         [class.kControlInvalid]="_widgetService.metadataForm.controls['name'].touched && _widgetService.metadataForm.controls['name'].invalid"/>
+                  <div *ngIf="_widgetService.metadataForm.controls['name'].touched && _widgetService.metadataForm.controls['name'].invalid"
+                        class="kControlErrorMessage">
+                  {{'applications.content.entryDetails.metadata.nameRequired' | translate}}
+                </div>
                 </div>
             </div>
             <div class="kRow">
@@ -55,7 +63,7 @@
             </div>
 			<div class="kRow kValign">
 				<span class="kLabel"></span>
-				<a (click)="categoriesPopup.open()" class="kLink">{{'applications.content.entryDetails.metadata.browse' | translate}}</a>
+				<a (click)="openCategoriesBrowser()" class="kLink">{{'applications.content.entryDetails.metadata.browse' | translate}}</a>
 			</div>
             <div class="kRow" *ngIf="_widgetService.isLiveEntry">
                 <span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>

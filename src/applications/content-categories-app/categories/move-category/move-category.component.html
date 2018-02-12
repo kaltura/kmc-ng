@@ -8,11 +8,12 @@
     </div>
     <div class="kContainer">
       <div class="kRow">
-        <span>{{('applications.content.moveCategory.selectCategoryParent') | translate}}</span>
+        <span class="kSelectParentMsg">{{('applications.content.moveCategory.selectCategoryParent') | translate}}</span>
+        <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
+          <div class="k-spinner-animation kSpinnerAnim"></div>
+        </div>
       </div>
-
-        <kCategoryParentSelector (onCategorySelected)="_onCategorySelected($event)"></kCategoryParentSelector>
-
+        <kCategorySelector (onCategorySelected)="_onCategorySelected($event)"></kCategorySelector>
     </div>
     <div class="kFooter">
       <button type="button" class="kButtonBranded" pButton

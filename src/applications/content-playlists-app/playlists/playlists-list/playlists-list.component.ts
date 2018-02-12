@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistsFilters, PlaylistsStore, SortDirection } from '../playlists-store/playlists-store.service';
 import { BulkDeleteService } from '../bulk-service/bulk-delete.service';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
@@ -9,7 +9,6 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 
@@ -83,7 +82,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _deletePlaylist(ids: string[]): void {
-    if (ids.length > environment.modules.contentPlaylists.bulkActionsLimit) {
+    if (ids.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
@@ -214,11 +213,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               this._appEvents.publish(new PreviewAndEmbedEvent(event.playlist));
               break;
           case 'view':
-              if (event.playlist.playlistType !== KalturaPlaylistType.dynamic) {
-                  this._router.navigate(['/content/playlists/playlist', event.playlist.id]);
-              } else {
-                  this._onShowNotSupportedMsg(false);
-              }
+              this._router.navigate(['/content/playlists/playlist', event.playlist.id]);
               break;
           case 'delete':
               this._browserService.confirm(
@@ -287,15 +282,5 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   public _addPlaylist(): void {
     this.addNewPlaylist.open();
-  }
-
-  public _onShowNotSupportedMsg(newPlaylist = true): void {
-    const message = newPlaylist ? 'applications.content.addNewPlaylist.notSupportedMsg' : 'applications.content.playlists.notSupportedMsg';
-    this._browserService.alert(
-      {
-        header: this._appLocalization.get('app.common.note'),
-        message: this._appLocalization.get(message)
-      }
-    );
   }
 }

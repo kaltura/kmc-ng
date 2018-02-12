@@ -5,7 +5,7 @@ import { CategoriesTreeNode, NodeChildrenStatuses } from './categories-tree-node
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { CategoriesSearchService, CategoryData } from '../categories-search.service';
-import { environment } from 'app-environment';
+import { modulesConfig } from 'config/modules';
 
 
 @Injectable()
@@ -47,7 +47,7 @@ export class CategoriesTreeService {
       // make sure the node children weren't loaded already.
       if (node.childrenStatus !== NodeChildrenStatuses.loaded && node.childrenStatus !== NodeChildrenStatuses.loading) {
 
-        const maxNumberOfChildren = environment.entriesShared.categoriesFilters.maxChildrenToShow;
+        const maxNumberOfChildren = modulesConfig.contentShared.categories.maxTreeItemChildrenToShow;
         if (node.childrenCount > maxNumberOfChildren) {
           node.setChildrenLoadStatus(
             NodeChildrenStatuses.error,

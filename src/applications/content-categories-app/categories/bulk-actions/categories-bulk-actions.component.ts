@@ -14,7 +14,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {environment} from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {PrivacyMode} from './components/bulk-change-content-privacy/bulk-change-content-privacy.component';
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
@@ -23,6 +23,7 @@ import {AppearInListType} from './components/bulk-change-category-listing/bulk-c
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import {CategoriesUtilsService} from "../../categories-utils.service";
+import { CategoriesStatusMonitorService } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -50,7 +51,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
               private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
               private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
               private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService,
-              private _categoriesUtilsService: CategoriesUtilsService) {
+              private _categoriesUtilsService: CategoriesUtilsService,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
   }
 
   ngOnInit() {
@@ -170,7 +172,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (result.confirmed) {
           setTimeout(() => {
-            this.executeService(this._bulkDeleteService, {}, true, false);
+            this.executeService(this._bulkDeleteService, {}, true, false, () => {this._categoriesStatusMonitorService.updateCategoriesStatus();});
             // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
           }, 0);
         }
@@ -230,11 +232,11 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       );
     };
 
-    if (confirmChunks && this.selectedCategories.length > environment.modules.contentCategories.bulkActionsLimit) {
+    if (confirmChunks && this.selectedCategories.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
-          message: this._appLocalization.get('applications.content.bulkActions.confirm', { '0': this.selectedCategories.length }),
+          message: this._appLocalization.get('applications.content.bulkActions.confirmCategories', { '0': this.selectedCategories.length }),
           accept: () => {
             execute();
           }

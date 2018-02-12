@@ -1,12 +1,13 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
-import { environment } from 'app-environment';
+import { modulesConfig } from 'config/modules';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -71,7 +72,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   public _scheduledBefore: Date;
   public _scheduledSelected: boolean;
   public _scheduledFilterError: string = null;
-  public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
   public _createdAfter: Date;
   public _createdBefore: Date;
 

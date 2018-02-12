@@ -1,17 +1,6 @@
-import {
-  AfterViewChecked,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
-
+import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -35,11 +24,13 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('autoComplete') private _autoComplete: AutoComplete;
 
     public _categoriesLoaded = false;
-    public _treeSelection: number[] = [];
+    public _categoriesLocked = false;
+  public _categoriesUpdating = false;
+  public _treeSelection: number[] = [];
 
     private _searchCategoriesSubscription: ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
-    @Input() buttonLabel = '';
+  @Input() buttonLabel = '';
     @Input() set value(value: CategoryData[]) {
         this._selectedCategories = value ? [...value] : [];
         this._treeSelection = value ? [...value.map(item => {
@@ -54,12 +45,17 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
     private parentPopupStateChangeSubscription: ISubscription;
     @Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(private _categoriesSearchService: CategoriesSearchService, private cdRef: ChangeDetectorRef, private _appLocalization: AppLocalization) {
+    constructor(private _categoriesSearchService: CategoriesSearchService, private cdRef: ChangeDetectorRef, private _appLocalization: AppLocalization, private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
     }
 
 
     ngOnInit() {
-
+        this._categoriesStatusMonitorService.status$
+            .cancelOnDestroy(this)
+            .subscribe((status: CategoriesStatus) => {
+                this._categoriesLocked = status.lock;
+                this._categoriesUpdating = status.update;
+            });
     }
 
     ngAfterViewInit() {

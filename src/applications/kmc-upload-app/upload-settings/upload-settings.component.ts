@@ -6,8 +6,10 @@ import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType'
 import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
+import { globalConfig } from 'config/global';
+import { serverConfig } from 'config/server';
 
 export interface UploadSettingsFile {
   file: File;
@@ -216,7 +218,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
     let result = true;
     const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
-    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
 
     files.forEach(file => {
       const fileSize = file.size / 1024 / 1024; // convert to Mb
@@ -236,6 +238,13 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     });
 
     return result;
+  }
+
+  public _updateFileValidityOnTypeChange(file: UploadSettingsFile): void {
+    if (file.hasError && file.errorToken === 'applications.upload.validation.wrongType') {
+      file.errorToken = null;
+      file.hasError = false;
+    }
   }
 
   public _editName(file: UploadSettingsFile): void {

@@ -8,7 +8,8 @@ import { routing } from './content-playlists-app.routes';
 
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, InputTextModule, MenuModule, PaginatorModule, RadioButtonModule,
+  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
+  RadioButtonModule,
   SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
@@ -23,6 +24,7 @@ import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
+import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui/slider/slider.module';
 import { PlaylistsTableSortDirectionPipe } from './playlists/playlists-table/playlists-table-sort-direction.pipe';
 
 @NgModule({
@@ -52,11 +54,12 @@ import { PlaylistsTableSortDirectionPipe } from './playlists/playlists-table/pla
       RouterModule.forChild(routing),
 	  StickyModule,
         EntriesModule,
-    FiltersModule],
-    declarations: [
+    FiltersModule,
+    DropdownModule,
+    SliderModule
+  ],declarations: [
       ContentPlaylistsComponent,
-        PlaylistsTableSortDirectionPipe,
-      PlaylistsComponentsList,
+      PlaylistsTableSortDirectionPipe,PlaylistsComponentsList,
       PlaylistComponentsList
     ],
     exports: [

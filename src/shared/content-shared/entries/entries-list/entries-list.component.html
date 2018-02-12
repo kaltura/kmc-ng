@@ -1,9 +1,12 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
-      <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
-        <div class="kEntriesTableFilters kContent">
-          <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">{{(_entriesStore.entries.data$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
+      <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'">
+        <div class="kEntriesTableFilters kContent" [class.kAdditionalFilters]="additionalFilters.children.length !== 0">
+          <span class="kSelectedEntriesNum"
+                *ngIf="(_entriesStore.entries.data$ | async)?.totalCount && additionalFilters.children.length === 0">
+            {{'applications.content.entries.entries' | translate: [(_entriesStore.entries.data$ | async)?.totalCount]}}
+          </span>
 
           <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
             <span *ngIf="bulkWrapper.children.length !== 0"
@@ -18,22 +21,31 @@
                class="kBulkCancel"
                (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
           </div>
-          <div [class.kHidden]="selectedEntries.length" class="kFilters">
-            <input type="text"
-                   pInputText
-                   class="kSearchInput"
-                   [(ngModel)]="_query.freetext"
-                   (keyup.enter)="onFreetextChanged()"
-                   placeholder="{{'applications.content.entries.searchEntries' | translate}}">
-            <div #categoriesFilterBtn class="kCategoriesFilter">
-              <i class="kIconfolder"></i>
-              <span>{{'applications.content.entries.filterCategories' | translate}}</span>
-              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+          <div class="kFiltersWrapper" [class.kHidden]="additionalFilters.children.length === 0 && selectedEntries.length">
+            <div #additionalFilters>
+              <ng-content select=".additional-filters"></ng-content>
             </div>
-            <div #refineBtn class="kRefine">
-              <i class="kIconfilter"></i>
-              <span>{{'applications.content.entries.refine' | translate}}</span>
-              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+
+            <div class="kFilters">
+              <input type="text"
+                     pInputText
+                     class="kSearchInput"
+                     [(ngModel)]="_query.freetext"
+                     (keyup.enter)="onFreetextChanged()"
+                     placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+              <div #categoriesFilterBtn class="kCategoriesFilter">
+                <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
+              <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
+                <div class="k-spinner-animation kSpinnerAnim"></div>
+              </div>
+                <span>{{'applications.content.entries.filterCategories' | translate}}</span>
+                <i class="kIcondropdown_arrow_bottom dropdown"></i>
+              </div>
+              <div #refineBtn class="kRefine">
+                <i class="kIconfilter"></i>
+                <span>{{'applications.content.entries.refine' | translate}}</span>
+                <i class="kIcondropdown_arrow_bottom dropdown"></i>
+              </div>
             </div>
           </div>
           <button *ngIf="showReload"
@@ -44,13 +56,24 @@
                   [kTooltip]="'applications.content.entries.refresh' | translate"
                   (click)="_reload()"></button>
         </div>
+        <span class="kEntriesInfo"
+              *ngIf="additionalFilters.children.length !== 0 && !(_entriesStore.entries.state$ | async)?.loading">
+          <span *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">
+            {{'applications.content.entries.entries' | translate: [(_entriesStore.entries.data$ | async)?.totalCount]}}
+            {{'applications.content.entries.totalDuration' | translate: [(_entriesDuration | kTime)]}}
+          </span>
+          <span *ngIf="!(_entriesStore.entries.data$ | async)?.totalCount">
+            {{'applications.content.entries.noEntries' | translate }}
+          </span>
+        </span>
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
             <k-entries-list-tags
-                    [refineFilters]="_refineFilters"
-                [enforcedFilters] = "enforcedFilters"
-            (onTagsChange)="onTagsChange()"></k-entries-list-tags>
+              [refineFilters]="_refineFilters"
+              [enforcedFilters] = "enforcedFilters"
+              (onTagsBarVisible)="_isTagsBarVisible = $event"
+              (onTagsChange)="onTagsChange()"></k-entries-list-tags>
         </div>
       </kSticky>
 
@@ -60,6 +83,7 @@
                         [bodyScroll]="true">
       <kEntriesTable class="kEntriesTable"
                      scrollHeight="100%"
+                     [isTagsBarVisible]="_isTagsBarVisible"
                      [entries]="(_entriesStore.entries.data$ | async)?.items"
                      [showBulkSelect]="bulkWrapper.children.length !== 0"
                      [filter]="_query"
@@ -94,7 +118,8 @@
               [closeBtn]="false"
               [targetRef]="categoriesFilterBtn"
               [targetOffset]="{'x':-10, 'y': -21}"
-              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'" [scrollOffset]="80" >
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'"
+              [scrollOffset]="80">
   <ng-template>
   <kCategoriesFilter  [parentPopupWidget]="categoriesFilterPopup" [selection]="_query.categories"
                       [selectionMode]="_query.categoriesMode"

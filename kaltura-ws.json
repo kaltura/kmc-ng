@@ -12,16 +12,16 @@
   "commands": {
     "bookmark": {
       "standalone": [
-        "870766af7f71dd70b99c72800b35e29549f06037"
+        "49a2d7e8f8997f9aeb5cd524a81f24c120f1099a"
       ]
     },
     "release": {
       "appConfig": {
-        "path": "./src/app-config/index.ts",
+        "path": "./src/configuration/global-config.ts",
         "key": "appVersion"
       },
       "changeLog": {
-        "htmlPath": "./src/app/components/changelog/changelog-content/changelog-content.component.html"
+        "htmlPath": "./src/kmc-app/components/changelog/changelog-content/changelog-content.component.html"
       }
     }
   }

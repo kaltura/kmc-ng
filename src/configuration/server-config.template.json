@@ -1,0 +1,65 @@
+{
+  "kalturaServer": {
+    "uri" : "@kalturaServer.uri@",
+    "previewUIConf": @kalturaServer.previewUIConf@,
+    "freeTrialExpiration": {
+      "enabled": @kalturaServer.freeTrialExpiration.enabled@,
+      "trialPeriodInDays": @kalturaServer.freeTrialExpiration.trialPeriodInDays@
+    }
+  },
+  "cdnServers": {
+    "serverUri": "@cdnServers.serverUri@",
+    "securedServerUri": "@cdnServers.securedServerUri@"
+  },
+  "externalApps": {
+    "studio": {
+      "enabled": @externalApps.studio.enabled@,
+      "uri": "@externalApps.studio.uri@",
+      "version": "@externalApps.studio.vesrion@",
+      "uiConfId": "@externalApps.studio.uiConfId@",
+      "html5_version":"@externalApps.studio.html5_version@",
+      "html5lib":"@externalApps.studio.html5lib@"
+    },
+    "liveDashboard": {
+      "enabled": @externalApps.liveDashboard.enabled@,
+      "uri": "@externalApps.liveDashboard.uri@",
+      "version": "@externalApps.liveDashboard.version@"
+    },
+    "kava": {
+      "enabled": @externalApps.kava.enabled@,
+      "version": "@externalApps.kava.version@",
+      "uri": "@externalApps.kava.uri@"
+    },
+    "usageDashboard": {
+      "enabled": @externalApps.usageDashboard.enabled@,
+      "uri": "@externalApps.usageDashboard.uri@",
+      "version": "@externalApps.usageDashboard.version@",
+      "uiConfId": @externalApps.usageDashboard.uiConfId@,
+      "map_urls": [
+        @externalApps.usageDashboard.map_urls@
+      ],
+      "map_zoom_levels": "@externalApps.usageDashboard.map_zoom_levels@"
+    }
+  },
+  "externalLinks": {
+    "previewAndEmbed": {
+      "embedTypes": "@externalLinks.previewAndEmbed.embedTypes@",
+      "deliveryProtocols": "@externalLinks.previewAndEmbed.deliveryProtocols@"
+    },
+    "kaltura": {
+      "userManual": "@externalLinks.kaltura.userManual@",
+      "support": "@externalLinks.kaltura.support@",
+      "signUp": "@externalLinks.kaltura.signUp@",
+      "contactUs": "@externalLinks.kaltura.contactUs@",
+      "upgradeAccount":"@externalLinks.kaltura.upgradeAccount@",
+      "contactSalesforce": "@externalLinks.kaltura.contactSalesforce@"
+    },
+    "uploads": {
+      "highSpeedUpload": "@externalLinks.uploads.highSpeedUpload@",
+      "bulkUploadSamples": "@externalLinks.uploads.bulkUploadSamples@"
+    },
+    "live": {
+      "akamaiEdgeServerIpURL": "@externalLinks.live.akamaiEdgeServerIpURL@"
+    }
+  }
+}

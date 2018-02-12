@@ -9,12 +9,14 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
+        "configuration/server-config.json",
         "assets",
         "i18n",
-        "favicon.ico"
+        "favicon.ico",
+        "__local_machine_only__/**/*"
       ],
       "index": "index.html",
-      "main": "main.ts",
+      "main": "kmc-app/main.ts",
       "polyfills": "polyfills.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",

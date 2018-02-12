@@ -74,7 +74,16 @@ hr{
 			.kControl, k-prime-control
 			{
 				width:100%;
+
+        .kControlInvalid {
+          border: 1px solid $kDandger;
+        }
 			}
+      .kControlErrorMessage {
+        color: $kDandger;
+        font-size: 14px;
+        margin-top: 8px;
+      }
 
 		}
 
@@ -157,6 +166,11 @@ hr{
 	  .ui-dropdown.ui-widget{
 			width: 100% !important;
 		}
+
+    .ui-autocomplete-multiple-container {
+      max-height: 101px;
+      overflow-y: auto;
+    }
 
 		  .ui-dropdown-label.ui-inputtext{
 			background-color: #ffffff;

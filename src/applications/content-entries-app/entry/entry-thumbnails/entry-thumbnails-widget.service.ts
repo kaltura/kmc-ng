@@ -20,12 +20,15 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { environment } from 'app-environment';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { EntryWidget } from '../entry-widget';
 import { KalturaThumbParams } from 'kaltura-ngx-client/api/types/KalturaThumbParams';
 import { ThumbAssetGenerateAction } from 'kaltura-ngx-client/api/types/ThumbAssetGenerateAction';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { globalConfig } from 'config/global';
+import { serverConfig } from 'config/server';
 
 export interface ThumbnailRow {
 	id: string,
@@ -43,6 +46,7 @@ export interface ThumbnailRow {
 @Injectable()
 export class EntryThumbnailsWidget extends EntryWidget
 {
+	public allowGrabFromVideo = false;
 	private _thumbnails = new BehaviorSubject<{ items : ThumbnailRow[]}>(
 		{ items : []}
 	);
@@ -61,6 +65,7 @@ export class EntryThumbnailsWidget extends EntryWidget
      */
     protected onReset()
     {
+    	this.allowGrabFromVideo = false;
     }
 
     protected onActivate(firstTimeActivating: boolean) {
@@ -93,6 +98,9 @@ export class EntryThumbnailsWidget extends EntryWidget
 			    const thumbnails = responses[0] || [];
 			    this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
 			    this.buildThumbnailsData(thumbnails);
+			    this.allowGrabFromVideo = (this.data.status
+						&& [KalturaEntryStatus.ready.toString(), KalturaEntryStatus.moderate.toString()].indexOf(this.data.status.toString()) !== -1
+						&& this.data.mediaType === KalturaMediaType.video);
 			    super._hideLoader();
 		    });
 
@@ -117,7 +125,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 				    fileExt: thumbnail.fileExt
 			    };
 			    thumb.isDefault = thumbnail.tags.indexOf("default_thumb") > -1;
-			    thumb.url = environment.core.kaltura.cdnUrl + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
+			    thumb.url = serverConfig.cdnServers.serverUri + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
 			    thumbs.push(thumb);
 		    }
 	    });
@@ -259,7 +267,7 @@ export class EntryThumbnailsWidget extends EntryWidget
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
       const fileData: File = selectedFiles[0];
-      const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+      const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
 	  const fileSize = fileData.size / 1024 / 1024; // convert to Mb
 	    if (fileSize > maxFileSize) {
 		    this._browserService.alert({
@@ -314,15 +322,22 @@ export class EntryThumbnailsWidget extends EntryWidget
 						{
 							message: 'Error capturing thumb',
 							buttons: [
-								{
-									label: 'Retry',
-									action: () => {
-										this.captureThumbnail(position);
-									}
-								}
+                                {
+                                    label: 'Dismiss',
+                                    action: () => {
+                                        this._removeBlockerMessage();
+                                    }
+                                },
+                                {
+                                    label: 'Retry',
+                                    action: () => {
+                                        this._removeBlockerMessage();
+                                        this.captureThumbnail(position);
+                                    }
+                                }
 							]
 						}
-					), true);
+					), false);
 				}
 			);
 	}

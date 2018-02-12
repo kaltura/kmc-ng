@@ -1,8 +1,8 @@
-import { Component, Input, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
-import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {DropFoldersFilters, DropFoldersStoreService} from '../drop-folders-store/drop-folders-store.service';
+import {AppLocalization} from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import {RefineList} from '../drop-folders-store/drop-folders-refine-filters.service';
+import {DatePipe} from '@kaltura-ng/kaltura-ui';
 
 export interface TagItem {
   type: string,
@@ -127,11 +127,11 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
     if (fromDate || toDate) {
       let tooltip = '';
       if (fromDate && toDate) {
-        tooltip = `${moment(fromDate).format('LL')} - ${moment(toDate).format('LL')}`;
+        tooltip = `${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')} - ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       } else if (fromDate) {
-        tooltip = `From ${moment(fromDate).format('LL')}`;
+        tooltip = `From ${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')}`;
       } else if (toDate) {
-        tooltip = `Until ${moment(toDate).format('LL')}`;
+        tooltip = `Until ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       }
       this._tags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip });
     }

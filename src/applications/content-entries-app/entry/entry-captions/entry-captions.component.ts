@@ -11,7 +11,8 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
 
-import { environment } from 'app-environment';
+import { getKalturaServerUri, serverConfig } from 'config/server';
+
 
 @Component({
     selector: 'kEntryCaptions',
@@ -104,16 +105,15 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
 	private _downloadFile(): void {
 		if (this._browserService.isIE11()) { // IE11 - use download API
-			const baseUrl = environment.core.kaltura.cdnUrl;
+			const baseUrl = serverConfig.cdnServers.serverUri;
 			const protocol = 'http';
 			const partnerId = this._appAuthentication.appUser.partnerId;
 			const entryId = this._widgetService.data.id;
 			let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._widgetService.currentCaption.id + '/format/download/protocol/' + protocol;
 			this._browserService.openLink(url);
 		}else {
-            const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
-			const serverEndpoint = environment.core.kaltura.serverEndpoint;
-			let url = protocol + serverEndpoint + "/api_v3/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._widgetService.currentCaption.id;
+            const url = getKalturaServerUri("/api_v3/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._widgetService.currentCaption.id);
+
 			this._browserService.download(url, this._widgetService.currentCaption.id + "." + this._widgetService.currentCaption.fileExt, this._widgetService.currentCaption.fileExt);
 		}
 	}

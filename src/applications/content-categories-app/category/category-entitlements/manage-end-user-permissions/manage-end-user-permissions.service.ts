@@ -182,7 +182,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
           // create request items
           if (typeof data.categoryId === 'undefined' || typeof data.inheritUsers === 'undefined') {
               //  this is valid condition - this scenario will happen until category id will be provided
-              return Observable.of({items: [], totalCount: 0});
+              return Observable.of({items: [], totalCount: 0, actualUsersCount: 0});
           }
 
           const filter: KalturaCategoryUserFilter = new KalturaCategoryUserFilter({

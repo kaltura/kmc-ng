@@ -4,7 +4,7 @@
   font-size: 15px;
   background-color: $appBkgColor;
   height: $contentArea;
-  padding-top: 30px;
+  padding-top: 24px;
   width: 100%;
   min-width: $minAppWidth;
   box-sizing: border-box;
@@ -29,7 +29,7 @@
     outline: 0;
     color: $kGrayscale3;
     right: 0;
-    position: absolute;
+    margin-left: auto;
     &:active {
       box-shadow: none;
       transform: rotate(45deg);

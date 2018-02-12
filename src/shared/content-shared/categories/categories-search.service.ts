@@ -65,6 +65,7 @@ export class CategoriesSearchService implements OnDestroy {
   {
   }
 
+
   public getAllCategories(): Observable<CategoriesQuery> {
     return this._getCategoriesWithCache({ cacheToken: 'all_categories_token' });
   }
@@ -78,6 +79,9 @@ export class CategoriesSearchService implements OnDestroy {
   }
 
   public getCategory(categoryId: number): Observable<CategoryData> {
+      // DEVELOPER NOTICE: this method always query the server bypassing the cache. this is by design.
+      // changing it prioritize cache will require refactoring places that are using this method.
+
       const responseProfile = this._createResponseProfile();
 
       return <any>this.kalturaServerClient.request(
@@ -88,6 +92,8 @@ export class CategoriesSearchService implements OnDestroy {
   }
 
   public getCategories(categoriesList: number[]): Observable<CategoriesQuery> {
+      // DEVELOPER NOTICE: this method always query the server bypassing the cache. this is by design.
+      // changing it prioritize cache will require refactoring places that are using this method.
     if (categoriesList && categoriesList.length) {
         return this.buildCategoryListRequest({ categoriesList })
             .map(response => {
@@ -109,6 +115,8 @@ export class CategoriesSearchService implements OnDestroy {
   }
 
   public getSuggestions(text: string): Observable<CategoryData[]> {
+      // DEVELOPER NOTICE: this method always query the server bypassing the cache. this is by design.
+      // changing it prioritize cache will require refactoring places that are using this method.
     if (text) {
       return Observable.create(observer => {
         const filter = new KalturaCategoryFilter({
