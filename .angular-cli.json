@@ -12,7 +12,8 @@
         "configuration/server-config.json",
         "assets",
         "i18n",
-        "favicon.ico"
+        "favicon.ico",
+        "__local_machine_only__/**/*"
       ],
       "index": "index.html",
       "main": "kmc-app/main.ts",

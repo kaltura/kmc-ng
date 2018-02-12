@@ -10,6 +10,7 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
+      "Usage Dashboard": "Usage Dashboard",
       "Administration": "Administration",
       "Settings": "Settings",
       "Users": "Users",
@@ -139,6 +140,11 @@
     },
     "pageExitVerification": {
       "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost"
+    },
+    "UnpermittedActionReasons": {
+      "InvalidConfiguration": {
+        "message": "This view cannot be loaded. If the problem persists - please contact Kaltura support.\nClick OK to navigate to entries view."
+      }
     }
   },
   "applications": {
@@ -869,6 +875,7 @@
         "duration": "Duration",
         "status": "Status",
         "previewAndEmbed": "Share & Embed",
+        "liveDashboard": "Live Dashboard",
         "delete": "Delete",
         "view": "View Details",
         "entries": "Entries",

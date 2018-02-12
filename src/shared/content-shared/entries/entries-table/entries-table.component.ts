@@ -10,11 +10,12 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { DataTable, Menu, MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {DataTable, Menu, MenuItem} from 'primeng/primeng';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {KalturaSourceType} from "kaltura-ngx-client/api/types/KalturaSourceType";
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -108,18 +109,23 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  private _hideMenuItems(status, mediaType, { commandName }): boolean {
-    const isNotReady = status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString();
+  private _hideMenuItems(source, status, mediaType, { commandName }): boolean {
+    const isReadyStatus = status instanceof KalturaEntryStatus && status.toString() === KalturaEntryStatus.ready.toString();
     const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
     const isPreviewCommand = commandName === 'preview';
     const isViewCommand = commandName === 'view';
-
-    return !(isNotReady && isPreviewCommand) && !(isNotReady && isLiveStreamFlash && isViewCommand);
+    const isKalturaLive = source instanceof KalturaSourceType && source.toString() === KalturaSourceType.liveStream.toString();
+    const isLiveDashboardCommand = commandName === 'liveDashboard';
+    return !(
+      (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
+      (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
+      (isLiveDashboardCommand && !isKalturaLive) // hide live-dashboard menu item for entry that isn't kaltura live
+    );
   }
 
   private _buildMenu(entry: KalturaMediaEntry): void {
     this._items = this.rowActions
-		.filter(item => this._hideMenuItems(status, entry.mediaType, item))
+		.filter(item => this._hideMenuItems(entry.sourceType, entry.status, entry.mediaType, item))
 		.map(action =>
             Object.assign({}, action, {
               command: ({ item }) => {
