@@ -17,13 +17,15 @@
 
 <kPopupWidget #editProfile [popupWidth]="995" [slider]="true">
   <ng-template>
-    <kEditDistributionProfile [parentPopup]="editProfile"
-                              [entry]="_widgetService.data"
-                              [thumbnails]="(_widgetService.thumbnails$ | async)?.items"
-                              [flavors]="(_widgetService.flavors$ | async)?.items"
-                              [undistributedProfile]="_selectedUndistributedProfile"
-                              [distributedProfile]="_selectedDistributedProfile"
-                              (onDistribute)="_distributeSelectedProfile($event)"
-                              (onUpdate)="_updateSelectedProfile($event)"></kEditDistributionProfile>
+    <k-area-blocker [message]="_widgetService.updateProfileMessage">
+      <kEditDistributionProfile [parentPopup]="editProfile"
+                                [entry]="_widgetService.data"
+                                [thumbnails]="(_widgetService.thumbnails$ | async)?.items"
+                                [flavors]="(_widgetService.flavors$ | async)?.items"
+                                [undistributedProfile]="_selectedUndistributedProfile"
+                                [distributedProfile]="_selectedDistributedProfile"
+                                (onDistribute)="_distributeSelectedProfile($event)"
+                                (onUpdate)="_updateSelectedProfile($event)"></kEditDistributionProfile>
+    </k-area-blocker>
   </ng-template>
 </kPopupWidget>

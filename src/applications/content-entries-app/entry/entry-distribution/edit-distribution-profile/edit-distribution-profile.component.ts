@@ -16,7 +16,6 @@ import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNull
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
 import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -40,7 +39,7 @@ export class EditDistributionProfileComponent implements OnInit {
   @Input() thumbnails: KalturaThumbAsset[] = [];
 
   @Output() onDistribute = new EventEmitter<{ entryId: string, profileId: number, submitWhenReady: boolean }>();
-  @Output() onUpdate = new EventEmitter();
+  @Output() onUpdate = new EventEmitter<{ distributionProfile?: KalturaDistributionProfile, entryDistribution?: ExtendedKalturaEntryDistribution }>();
 
   public _profile: KalturaDistributionProfile | ExtendedKalturaEntryDistribution;
   public _forDistribution = true;
@@ -339,7 +338,24 @@ export class EditDistributionProfileComponent implements OnInit {
       const submitWhenReady = !!this._updatesField.value;
       this.onDistribute.emit({ entryId: this.entry.id, profileId: this.undistributedProfile.id, submitWhenReady });
     } else {
-      this.onUpdate.emit();
+      const updates = {
+        distributionProfile: null,
+        entryDistribution: null
+      };
+      if (this._updatesField.dirty) {
+        this.undistributedProfile.submitEnabled = this._updatesField.value
+          ? KalturaDistributionProfileActionStatus.automatic
+          : KalturaDistributionProfileActionStatus.manual;
+        updates.distributionProfile = this.undistributedProfile;
+      }
+
+      if (this._startDateField.dirty || this._endDateField.dirty) {
+        this.distributedProfile.sunrise = this._startDateField.value || null;
+        this.distributedProfile.sunset = this._endDateField.value || null;
+        updates.entryDistribution = this.distributedProfile;
+      }
+
+      this.onUpdate.emit(updates);
     }
   }
 }

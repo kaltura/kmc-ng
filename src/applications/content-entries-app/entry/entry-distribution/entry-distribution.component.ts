@@ -53,8 +53,10 @@ export class EntryDistributionComponent implements OnInit, OnDestroy {
     });
   }
 
-  public _updateSelectedProfile(): void {
-
+  public _updateSelectedProfile(payload: { distributionProfile?: KalturaDistributionProfile, entryDistribution?: ExtendedKalturaEntryDistribution }): void {
+    this._widgetService.updateProfile(payload, () => {
+      this._editProfilePopup.close();
+    })
   }
 }
 
