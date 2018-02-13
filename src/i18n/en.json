@@ -1421,8 +1421,9 @@
           "auto": "Auto",
           "modified": "Modified",
           "retry": "Retry",
-          "deleteConfirmTitle": "TBD",
-          "deleteConfirm": "TBD",
+          "refresh": "Refresh",
+          "deleteConfirmTitle": "Delete distribution",
+          "deleteConfirm": "Delete distribution?",
           "form": {
             "status": "Status",
             "updates": "Updates",

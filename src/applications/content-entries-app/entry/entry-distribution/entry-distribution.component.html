@@ -1,6 +1,11 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
   <div class="kDistribution">
-    <div class="kDistributionHeader">{{'applications.content.entryDetails.distribution.distribution' | translate}}</div>
+    <div class="kDistributionHeader">
+      <span>{{'applications.content.entryDetails.distribution.distribution' | translate}}</span>
+      <button pButton class="kButtonDefault kRefreshBtn" icon="kIconrefresh"
+              [kTooltip]="'applications.content.entryDetails.distribution.refresh' | translate"
+              (click)="_widgetService.refresh()"></button>
+    </div>
     <div class="kDistributionList">
       <kEntryDistributedProfile
         *ngFor="let profile of (_widgetService.distributionProfiles$.distributed | async).items"

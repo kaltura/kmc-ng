@@ -50,7 +50,7 @@
                 {{'applications.content.entryDetails.distribution.form.lastUpdate' | translate}}
               </span>
             <span class="kReadonlyData">
-              {{_profile?.updatedAt | kDate:'short'}}
+              {{_profile?.updatedAt | kDate:'dateOnly'}}
             </span>
           </div>
 
@@ -60,11 +60,10 @@
               {{_profile?.remoteId}}
             </span>
           </div>
-        </div>
 
-        <div class="kRow" *ngIf="!_forDistribution && (_requestXmlLink || _responseXmlLink)">
-          <span class="kLabel">{{'applications.content.entryDetails.distribution.form.logs' | translate}}</span>
-          <span class="kReadonlyData kDistributionLink">
+          <div class="kRow" *ngIf="_requestXmlLink || _responseXmlLink">
+            <span class="kLabel">{{'applications.content.entryDetails.distribution.form.logs' | translate}}</span>
+            <span class="kReadonlyData kDistributionLink">
             <a *ngIf="_requestXmlLink" [href]="_requestXmlLink" target="_blank">
               {{'applications.content.entryDetails.distribution.form.requestXml' | translate}}
             </a>
@@ -72,6 +71,7 @@
               {{'applications.content.entryDetails.distribution.form.requestXml' | translate}}
             </a>
           </span>
+          </div>
         </div>
 
         <div class="kRow">

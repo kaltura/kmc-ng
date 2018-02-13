@@ -1,23 +1,17 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ExtendedKalturaEntryDistribution } from '../entry-distribution-widget.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EntryDistributionWidget, ExtendedKalturaEntryDistribution } from '../entry-distribution-widget.service';
 import { KalturaEntryDistributionFlag } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionFlag';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
 
 @Component({
   selector: 'kEntryDistributedProfile',
   templateUrl: './distributed-profile.component.html',
   styleUrls: ['./distributed-profile.component.scss']
 })
-export class DistributedProfileComponent {
-  @Input() set profile(value: ExtendedKalturaEntryDistribution | null) {
-    if (value) {
-      this._profile = value;
-      this._isModified = this._profile.dirtyStatus === KalturaEntryDistributionFlag.updateRequired;
-      this._setupActionButton();
-      this._setupDeleteButton();
-    }
-  }
+export class DistributedProfileComponent implements OnInit {
+  @Input() profile: ExtendedKalturaEntryDistribution | null;
 
   @Output() onActionSelected = new EventEmitter<{ action: string, payload: any }>();
 
@@ -27,13 +21,30 @@ export class DistributedProfileComponent {
   public _actionButtonDisabled = true;
   public _actionButtonHidden = true;
   public _deleteButtonHidden = true;
+  public _providerType: KalturaDistributionProviderType = null;
 
-  constructor(private _appLocalization: AppLocalization) {
+  constructor(private _appLocalization: AppLocalization,
+              private _widgetService: EntryDistributionWidget) {
 
   }
 
+  ngOnInit() {
+    this._prepare();
+  }
+
+  private _prepare(): void {
+    if (this.profile) {
+      this._profile = this.profile;
+      this._isModified = this._profile.dirtyStatus === KalturaEntryDistributionFlag.updateRequired;
+      this._setupActionButton();
+      this._setupDeleteButton();
+      const distributionProfile = this._widgetService.getPartnerProfileById(this.profile.distributionProfileId);
+      this._providerType = distributionProfile ? distributionProfile.providerType : null;
+    }
+  }
+
   private _setupActionButton(): void {
-    const { status, dirtyStatus, validationErrors } = this._profile;
+    const { status, dirtyStatus } = this._profile;
     this._actionButtonHidden = false;
 
     switch (status) {
@@ -60,13 +71,10 @@ export class DistributedProfileComponent {
         this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.processing');
         this._actionButtonDisabled = true;
         break;
+      case KalturaEntryDistributionStatus.queued:
       case KalturaEntryDistributionStatus.pending:
-        if (!validationErrors.length) {
           this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
           this._actionButtonDisabled = false;
-        } else {
-          this._actionButtonHidden = true;
-        }
         break;
       default:
         this._actionButtonHidden = true;

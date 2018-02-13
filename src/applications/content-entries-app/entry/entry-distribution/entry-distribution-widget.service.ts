@@ -63,8 +63,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   public thumbnails$ = this._thumbnails.asObservable();
   public distributionProfiles$ = {
     distributed: this._distributedProfiles.asObservable(),
-    undistributed: this._undistributedProfiles.asObservable(),
-    partnerProfiles: this._partnerDistributionProfiles.asObservable()
+    undistributed: this._undistributedProfiles.asObservable()
   };
 
   constructor(private _appLocalization: AppLocalization,
@@ -285,37 +284,6 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       });
   }
 
-  public _refresh(): void {
-    super._showLoader();
-
-    this._flavors.next({ items: [] });
-    this._thumbnails.next({ items: [] });
-    this._distributedProfiles.next({ items: [] });
-    this._undistributedProfiles.next({ items: [] });
-
-    this._loadDistributionData()
-      .cancelOnDestroy(this, this.widgetReset$)
-      .subscribe(
-        (response) => {
-          this._flavors.next({ items: response.flavors });
-          this._thumbnails.next({ items: response.thumbnails });
-          this._distributedProfiles.next({ items: response.distributedProfiles });
-          this._undistributedProfiles.next({ items: response.undistributedProfiles });
-
-          super._hideLoader();
-        },
-        error => {
-          super._hideLoader();
-          super._showBlockerMessage(new AreaBlockerMessage({
-            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.errorLoading'),
-            buttons: [{
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => this._refresh()
-            }]
-          }), true);
-        });
-  }
-
   private _performDeleteRequest(action: KalturaRequest<KalturaEntryDistribution | void>, closePopupCallback?: () => void): void {
     this._kalturaClient.request(action)
       .tag('block-shell')
@@ -325,7 +293,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
           if (typeof closePopupCallback === 'function') {
             closePopupCallback();
           }
-          this._refresh();
+          this.refresh();
           this._browserService.scrollToTop();
         },
         error => {
@@ -430,7 +398,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       })
       .subscribe(
         () => {
-          this._refresh();
+          this.refresh();
           closePopupCallback();
         },
         error => {
@@ -451,7 +419,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._refresh();
+          this.refresh();
           closePopupCallback();
         },
         error => {
@@ -477,7 +445,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._refresh();
+          this.refresh();
         },
         error => {
           this._browserService.alert({
@@ -492,7 +460,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._refresh();
+          this.refresh();
         },
         error => {
           this._browserService.alert({
@@ -507,12 +475,53 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._refresh();
+          this.refresh();
         },
         error => {
           this._browserService.alert({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.retryFailed'),
           });
+        });
+  }
+
+  public getPartnerProfileById(profileId): KalturaDistributionProfile {
+    const partnerProfiles = this._partnerDistributionProfiles.getValue().items;
+
+    if (partnerProfiles) {
+      return partnerProfiles.find(({ id }) => id === profileId) || null;
+    }
+
+    return null;
+  }
+
+  public refresh(): void {
+    super._showLoader();
+
+    this._flavors.next({ items: [] });
+    this._thumbnails.next({ items: [] });
+    this._distributedProfiles.next({ items: [] });
+    this._undistributedProfiles.next({ items: [] });
+
+    this._loadDistributionData()
+      .cancelOnDestroy(this, this.widgetReset$)
+      .subscribe(
+        (response) => {
+          this._flavors.next({ items: response.flavors });
+          this._thumbnails.next({ items: response.thumbnails });
+          this._distributedProfiles.next({ items: response.distributedProfiles });
+          this._undistributedProfiles.next({ items: response.undistributedProfiles });
+
+          super._hideLoader();
+        },
+        error => {
+          super._hideLoader();
+          super._showBlockerMessage(new AreaBlockerMessage({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.errorLoading'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.retry'),
+              action: () => this.refresh()
+            }]
+          }), true);
         });
   }
 }
