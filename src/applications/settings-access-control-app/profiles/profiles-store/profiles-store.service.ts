@@ -195,7 +195,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
             let countries = [];
             let ips = [];
             let flavors = [];
-            let advancedSecurity = [];
+            let advancedSecurity = '';
 
             item.restrictions.forEach(restriction => {
               if (restriction instanceof KalturaSiteRestriction) {
@@ -266,10 +266,10 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
                 const len = restriction.previewLength;
                 const min = Math.floor(len / 60);
                 const sec = len % 60;
-                advancedSecurity = [this._appLocalization.get(
+                advancedSecurity = this._appLocalization.get(
                   'applications.settings.accessControl.restrictions.freePreviewDetails',
                   [min, sec]
-                )];
+                );
               }
 
               item.advancedSecurity = advancedSecurityItem;
@@ -286,6 +286,14 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
                   }
                 }
               );
+
+              item.details = {
+                domains,
+                countries,
+                ips,
+                flavors,
+                advancedSecurity
+              }
             });
           }
         });

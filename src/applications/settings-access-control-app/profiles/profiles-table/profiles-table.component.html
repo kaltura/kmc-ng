@@ -25,10 +25,7 @@
       <p-column field="name"
                 [header]="'applications.settings.accessControl.table.name' | translate">
         <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span class="kAccessControlProfileTableName"
-                [kTooltip]="profile?.description"
-                [maxWidth]="228"
-                (click)="_onActionSelected('edit', profile)">
+          <span class="kAccessControlProfileTableName" (click)="_onActionSelected('edit', profile)">
             {{ profile[col.field] }}
           </span>
         </ng-template>
@@ -113,21 +110,28 @@
       </p-column>
       <ng-template let-profile pTemplate="rowexpansion">
         <div class="kAccessControlProfilesDetailRow">
-          <table *ngIf="profile?.details?.length">
-            <tr *ngFor="let detail of profile.details">
+          <table>
+            <tr>
               <td class="kStub1"></td>
               <td class="kStub1"></td>
-              <td colspan="3"></td>
-              <td>{{detail.domain}}</td>
+              <td colspan="3">{{profile?.description}}</td>
+              <td>
+                <div *ngFor="let domain of profile?.details?.domains" [kTooltip]="domain">{{domain}}</div>
+              </td>
               <td class="kCountryList">
-                <div *ngIf="detail.country">
-                  <img class="kCountryListFlag" [src]="detail.country | kCountryFromCode:'icon'" [alt]="detail.country">
-                  {{detail.country | kCountryFromCode:'label'}}
+                <div *ngFor="let country of profile?.details?.countries"
+                     [kTooltip]="country | kCountryFromCode:'label'">
+                  <img class="kCountryListFlag" [src]="country | kCountryFromCode:'icon'" [alt]="country">
+                  {{country | kCountryFromCode:'label'}}
                 </div>
               </td>
-              <td>{{detail.ip}}</td>
-              <td>{{detail.flavor}}</td>
-              <td>{{detail.advancedSecurity}}</td>
+              <td>
+                <div *ngFor="let ip of profile?.details?.ips" [kTooltip]="ip">{{ip}}</div>
+              </td>
+              <td>
+                <div *ngFor="let flavor of profile?.details?.flavors" [kTooltip]="flavor">{{flavor}}</div>
+              </td>
+              <td>{{profile?.details?.advancedSecurity}}</td>
               <td class="kStub2"></td>
             </tr>
           </table>

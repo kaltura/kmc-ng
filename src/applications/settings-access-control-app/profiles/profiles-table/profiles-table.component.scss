@@ -85,6 +85,8 @@
     font-size: 15px;
     color: $kGrayscale3;
     overflow-y: auto;
+    max-height: 195px;
+    padding: 12px 0;
 
     table {
       border-collapse: collapse;
@@ -92,16 +94,22 @@
       table-layout: fixed;
 
       tr {
-        height: 70px;
-
         td {
-          padding: .25em .5em;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          padding: 0 .5em;
+          vertical-align: top;
+
+          div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space:nowrap;
+            margin-bottom: 26px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
 
           &.kCountryList {
-            white-space: nowrap;
-
             .kCountryListFlag {
               margin-right: 6px;
             }

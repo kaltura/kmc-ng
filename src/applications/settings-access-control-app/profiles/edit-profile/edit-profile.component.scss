@@ -184,13 +184,17 @@
     .ui-autocomplete-multiple-container {
       display: flex;
       height: 60px !important;
+      flex-wrap: wrap;
+      overflow-y: auto;
 
       .ui-autocomplete-token {
-        flex: 1 0 auto;
+        flex: 0 auto;
       }
 
       .ui-autocomplete-input-token {
+        flex: 1;
         width: 100%;
+        min-width: 175px;
       }
     }
   }
