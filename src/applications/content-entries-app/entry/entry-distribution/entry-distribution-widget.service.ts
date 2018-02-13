@@ -248,7 +248,21 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       ))
       .cancelOnDestroy(this, this.widgetReset$)
       .map(([partnerDistribution, entryDistribution, entryFlavors, entryThumbnails]) => {
-        // TODO [kmcng] what if some of responses have error?
+        if (partnerDistribution.error) {
+          throw Error(partnerDistribution.error.message);
+        }
+
+        if (entryDistribution.error) {
+          throw Error(entryDistribution.error.message);
+        }
+
+        if (entryFlavors.error) {
+          throw Error(entryFlavors.error.message);
+        }
+
+        if (entryThumbnails.error) {
+          throw Error(entryThumbnails.error.message);
+        }
         const flavors = this._mapEntryFlavorsResponse(entryFlavors.result);
         const thumbnails = this._mapThumbnailsResponse(entryThumbnails.result);
         const partnerDistributionProfiles = this._mapPartnerDistributionResponse(partnerDistribution.result);
