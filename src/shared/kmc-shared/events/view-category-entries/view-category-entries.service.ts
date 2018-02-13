@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AppEventsService } from 'shared/kmc-shared/index';
+import { AppEventsService } from 'shared/kmc-shared/app-events';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
-import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
+import { ViewCategoryEntriesEvent } from './view-category-entries.event';
 
 @Injectable()
 export class ViewCategoryEntriesService implements OnDestroy {
