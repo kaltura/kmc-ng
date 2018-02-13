@@ -2124,6 +2124,8 @@
           "flavorsSelected": "{0} Flavors Selected",
           "invalidValue": "Invalid Value",
           "validationMessage": {
+            "invalidDomainName": "Invalid domain name",
+            "invalidIp": "Invalid IP",
             "validationFailed": "Validation Failed",
             "profileNameRequired": "Profile name is required",
             "authorizedDomains": "No domains added to the approved or restricted lists. The domain restriction will be: allow all domains.",

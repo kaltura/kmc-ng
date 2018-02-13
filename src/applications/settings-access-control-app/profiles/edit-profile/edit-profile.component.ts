@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -17,23 +17,21 @@ import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
 import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
 
+export interface AccessControlAutocompleteItem {
+  value: any,
+  __tooltip: any,
+  __class?: string
+}
+
 @Component({
   selector: 'kAccessControlProfilesEditProfile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
-export class EditProfileComponent implements OnDestroy {
+export class EditProfileComponent implements OnInit, OnDestroy {
   @Input() parentPopup: PopupWidgetComponent;
 
-  @Input() set profile(value: ExtendedKalturaAccessControl | null) {
-    if (value) {
-      this._profile = value;
-      this._setInitialValue(this._profile);
-      this._headerTitle = this._appLocalization.get('applications.settings.accessControl.editAccessControlProfile');
-    } else {
-      this._headerTitle = this._appLocalization.get('applications.settings.accessControl.addAccessControlProfile');
-    }
-  }
+  @Input() profile: ExtendedKalturaAccessControl | null;
 
   @Output() onSave = new EventEmitter<KalturaAccessControl>();
 
@@ -81,11 +79,27 @@ export class EditProfileComponent implements OnDestroy {
               private _browserService: BrowserService,
               private _fb: FormBuilder,
               public _store: AccessControlProfilesStore) {
+    this._convertDomainsUserInputToValidValue = this._convertDomainsUserInputToValidValue.bind(this);
+    this._convertIpsUserInputToValidValue = this._convertIpsUserInputToValidValue.bind(this);
     this._buildForm();
+  }
+
+  ngOnInit() {
+    this._prepare();
   }
 
   ngOnDestroy() {
 
+  }
+
+  private _prepare(): void {
+    if (this.profile) {
+      this._profile = this.profile;
+      this._setInitialValue(this._profile);
+      this._headerTitle = this._appLocalization.get('applications.settings.accessControl.editAccessControlProfile');
+    } else {
+      this._headerTitle = this._appLocalization.get('applications.settings.accessControl.addAccessControlProfile');
+    }
   }
 
   private _setInitialValue(profile: ExtendedKalturaAccessControl): void {
@@ -96,8 +110,8 @@ export class EditProfileComponent implements OnDestroy {
       const domain = profile.domain;
       const isAuthorized = domain.isAuthorized;
       domainsType = isAuthorized ? KalturaSiteRestrictionType.allowSiteList : KalturaSiteRestrictionType.restrictSiteList;
-      allowedDomains = isAuthorized ? domain.details : [];
-      restrictedDomains = !isAuthorized ? domain.details : [];
+      allowedDomains = isAuthorized ? domain.details.map(value => ({ value, __tooltip: value })) : [];
+      restrictedDomains = !isAuthorized ? domain.details.map(value => ({ value, __tooltip: value })) : [];
     }
 
     let countriesType = null;
@@ -118,8 +132,8 @@ export class EditProfileComponent implements OnDestroy {
       const ips = profile.ips;
       const isAuthorized = ips.isAuthorized;
       ipsType = isAuthorized ? KalturaIpAddressRestrictionType.allowList : KalturaIpAddressRestrictionType.restrictList;
-      allowedIps = isAuthorized ? ips.details : [];
-      restrictedIps = !isAuthorized ? ips.details : [];
+      allowedIps = isAuthorized ? ips.details.map(value => ({ value, __tooltip: value })) : [];
+      restrictedIps = !isAuthorized ? ips.details.map(value => ({ value, __tooltip: value })) : [];
     }
 
     let flavorsType = null;
@@ -310,28 +324,28 @@ export class EditProfileComponent implements OnDestroy {
       .cancelOnDestroy(this)
       .filter(value => value && this._allowedIpsField.enabled)
       .subscribe(value => {
-        this._ipsFormatError = value.some(ip => ip && !this._validateIp(ip));
+        this._ipsFormatError = value.some(ip => ip && ip.__class === 'invalid');
       });
 
     this._restrictedIpsField.valueChanges
       .cancelOnDestroy(this)
       .filter(value => value && this._restrictedIpsField.enabled)
       .subscribe(value => {
-        this._ipsFormatError = value.some(ip => ip && !this._validateIp(ip));
+        this._ipsFormatError = value.some(ip => ip && ip.__class === 'invalid');
       });
 
     this._allowedDomainsField.valueChanges
       .cancelOnDestroy(this)
       .filter(value => value && this._allowedDomainsField.enabled)
       .subscribe(value => {
-        this._domainsFormatError = value.some(domain => domain && !this._validateDomain(domain));
+        this._domainsFormatError = value.some(domain => domain && domain.__class === 'invalid');
       });
 
     this._restrictedDomainsField.valueChanges
       .cancelOnDestroy(this)
       .filter(value => value && this._restrictedDomainsField.enabled)
       .subscribe(value => {
-        this._domainsFormatError = value.some(domain => domain && !this._validateDomain(domain));
+        this._domainsFormatError = value.some(domain => domain && domain.__class === 'invalid');
       });
   }
 
@@ -370,6 +384,13 @@ export class EditProfileComponent implements OnDestroy {
     return message;
   }
 
+  private _getAutocompleteList(allowed: AccessControlAutocompleteItem[], restricted: AccessControlAutocompleteItem[]): string {
+    const allowedList = Array.isArray(allowed) ? allowed.map(({ value }) => value).join(',') : '';
+    const restrictedList = Array.isArray(restricted) ? restricted.map(({ value }) => value).join(',') : '';
+
+    return allowedList || restrictedList;
+  }
+
   private _getList(allowed: string[], restricted: string[]): string {
     const allowedList = Array.isArray(allowed) ? allowed.join(',') : '';
     const restrictedList = Array.isArray(restricted) ? restricted.join(',') : '';
@@ -387,7 +408,7 @@ export class EditProfileComponent implements OnDestroy {
 
     const { domainsType, allowedDomains, restrictedDomains } = formValue;
     if (domainsType !== null) {
-      const siteList = this._getList(allowedDomains, restrictedDomains);
+      const siteList = this._getAutocompleteList(allowedDomains, restrictedDomains);
       if (siteList) {
         accessControlProfile.restrictions.push(new KalturaSiteRestriction({
           siteList,
@@ -409,7 +430,7 @@ export class EditProfileComponent implements OnDestroy {
 
     const { ipsType, allowedIps, restrictedIps } = formValue;
     if (ipsType !== null) {
-      const ipAddressList = this._getList(allowedIps, restrictedIps);
+      const ipAddressList = this._getAutocompleteList(allowedIps, restrictedIps);
       if (ipAddressList) {
         accessControlProfile.restrictions.push(new KalturaIpAddressRestriction({
           ipAddressList,
@@ -444,6 +465,37 @@ export class EditProfileComponent implements OnDestroy {
     this.onSave.emit(accessControlProfile);
   }
 
+  private _validateDomain(item: string): boolean {
+    if (typeof item === 'string') {
+      return item
+        && !(item.lastIndexOf('.') === -1
+          || item.lastIndexOf('..') !== -1
+          || item.charAt(0) === '.'
+          || item.charAt(item.length - 1) === '.')
+    }
+    return false;
+  }
+
+  private _validateIp(item: string): boolean {
+    const ipRegExp = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    if (typeof item === 'string') {
+      const cidrOrMask = item.split('/');
+      if (cidrOrMask.length === 2) { // x.x.x.x/x or x.x.x.x/m.m.m.m
+        return ipRegExp.test(cidrOrMask[0]) && (ipRegExp.test(cidrOrMask[1]) || /^\d+$/.test(cidrOrMask[1]));
+      }
+
+      const range = item.split('-');
+      if (range.length === 2) { // x.x.x.x-x.x.x.x
+        return ipRegExp.test(range[0]) && (ipRegExp.test(range[1]));
+      }
+
+      return ipRegExp.test(item); // x.x.x.x
+    }
+
+
+    return false;
+  }
+
   public _save(): void {
     if (!this._nameField.value.trim()) {
       this._browserService.alert({
@@ -464,32 +516,22 @@ export class EditProfileComponent implements OnDestroy {
     }
   }
 
-  public _validateDomain(item: string): boolean {
-    return item
-      && !(item.lastIndexOf('.') === -1
-        || item.lastIndexOf('..') !== -1
-        || item.charAt(0) === '.'
-        || item.charAt(item.length - 1) === '.')
+  public _convertDomainsUserInputToValidValue(value: string): any {
+    const isValid = this._validateDomain(value);
+    const __tooltip = isValid
+      ? value
+      : this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.invalidDomainName');
+    const __class = isValid ? '' : 'invalid';
+    return { value, __tooltip, __class };
   }
 
-  public _validateIp(item: string): boolean {
-    const ipRegExp = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    if (typeof item === 'string') {
-      const cidrOrMask = item.split('/');
-      if (cidrOrMask.length === 2) { // x.x.x.x/x or x.x.x.x/m.m.m.m
-        return ipRegExp.test(cidrOrMask[0]) && (ipRegExp.test(cidrOrMask[1]) || /^\d+$/.test(cidrOrMask[1]));
-      }
-
-      const range = item.split('-');
-      if (range.length === 2) { // x.x.x.x-x.x.x.x
-        return ipRegExp.test(range[0]) && (ipRegExp.test(range[1]));
-      }
-
-      return ipRegExp.test(item); // x.x.x.x
-    }
-
-
-    return false;
+  public _convertIpsUserInputToValidValue(value: string): any {
+    const isValid = this._validateIp(value);
+    const __tooltip = isValid
+      ? value
+      : this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.invalidIp');
+    const __class = isValid ? '' : 'invalid';
+    return { value, __tooltip, __class };
   }
 }
 

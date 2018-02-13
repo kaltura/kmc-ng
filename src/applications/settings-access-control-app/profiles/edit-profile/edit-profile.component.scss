@@ -182,7 +182,16 @@
     }
 
     .ui-autocomplete-multiple-container {
+      display: flex;
       height: 60px !important;
+
+      .ui-autocomplete-token {
+        flex: 1 0 auto;
+      }
+
+      .ui-autocomplete-input-token {
+        width: 100%;
+      }
     }
   }
 
