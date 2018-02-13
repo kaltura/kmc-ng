@@ -1,179 +1,193 @@
-
 export interface KmcAppConfig {
-    storageNamespace: string,
-    routing: {
-        errorRoute: string,
-        loginRoute: string
-    },
-    menuItems: {
-        routePath: string,
-        titleToken: string,
-        showSubMenu: boolean,
-        enabled: boolean,
-        children?: {
-            routePath: string,
-            titleToken: string,
-            enabled: boolean,
-            position?: string
-        }[]
-    }[],
-    locales: {
-        id: string,
-        label: string
+  storageNamespace: string,
+  kalturaServer: {
+      expiry: number,
+      privileges: string
+  },
+  routing: {
+    errorRoute: string,
+    loginRoute: string
+  },
+  menuItems: {
+    id: string,
+    routePath: string,
+    titleToken: string,
+    showSubMenu: boolean,
+    children?: {
+      id: string,
+      routePath: string,
+      titleToken: string,
+      position?: string
     }[]
+  }[],
+  locales: {
+    id: string,
+    label: string
+  }[]
 }
 
 
 export const kmcAppConfig: KmcAppConfig = {
-    'storageNamespace': 'kmc-ng',
-    'routing': {
-        'errorRoute': '/error',
-        'loginRoute': '/login',
+  'storageNamespace': 'kmc-ng',
+  'kalturaServer': {
+      "expiry": 86400,
+      "privileges": "disableentitlement"
+  },
+  'routing': {
+    'errorRoute': '/error',
+    'loginRoute': '/login',
+  },
+  'menuItems': [
+    {
+      'id': 'content',
+      'routePath': 'content',
+      'titleToken': 'Content',
+      'showSubMenu': true,
+      'children': [
+        {
+          'id': 'contentEntries',
+          'routePath': 'content/entries',
+          'titleToken': 'Entries',
+          'position': 'left'
+        },
+        {
+          'id': 'contentModeration',
+          'routePath': 'content/moderation',
+          'titleToken': 'Moderation',
+          'position': 'left'
+        },
+        {
+          'id': 'contentPlaylists',
+          'routePath': 'content/playlists',
+          'titleToken': 'Playlists',
+          'position': 'left'
+        },
+        {
+          'id': 'contentSyndication',
+          'routePath': 'content/syndication',
+          'titleToken': 'Syndication',
+          'position': 'left'
+        },
+        {
+          'id': 'contentCategories',
+          'routePath': 'content/categories',
+          'titleToken': 'Categories',
+          'position': 'left'
+        },
+        {
+          'id': 'contentUploadControl',
+          'routePath': 'content/upload-control',
+          'titleToken': 'UploadControl',
+          'position': 'right'
+        },
+        {
+          'id': 'contentBulkUpload',
+          'routePath': 'content/bulk',
+          'titleToken': 'BulkUpload',
+          'position': 'right'
+        },
+        {
+          'id': 'contentDropFolders',
+          'routePath': 'content/drop-folders',
+          'titleToken': 'DropFolders',
+          'position': 'right'
+        }
+      ]
     },
-    'menuItems': [
+    {
+      'id': 'studio',
+      'routePath': 'studio',
+      'titleToken': 'Studio',
+      'showSubMenu': false,
+    },
+    {
+      'id': 'usageDashboard',
+      'routePath': 'usageDashboard',
+      'titleToken': 'Usage Dashboard',
+      'showSubMenu': false,
+    },
+      {
+          'id': 'kava',
+          'routePath': 'kava',
+          'titleToken': 'Analytics',
+          'showSubMenu': false,
+      },
+    {
+      'id': 'settings',
+      'routePath': 'settings',
+      'titleToken': '',
+      'showSubMenu': true,
+      'children': [
         {
-            'routePath': 'content',
-            'titleToken': 'Content',
-            'showSubMenu': true,
-            'enabled': true,
-            'children': [
-                {
-                    'routePath': 'content/entries',
-                    'titleToken': 'Entries',
-                    'enabled': true,
-                    'position': 'left'
-                },
-                {
-                    'routePath': 'content/moderation',
-                    'titleToken': 'Moderation',
-                    'enabled': true,
-                    'position': 'left'
-                },
-                {
-                    'routePath': 'content/playlists',
-                    'titleToken': 'Playlists',
-                    'enabled': true,
-                    'position': 'left'
-                },
-                {
-                    'routePath': 'content/syndication',
-                    'titleToken': 'Syndication',
-                    'enabled': false,
-                    'position': 'left'
-                },
-                {
-                    'routePath': 'content/categories',
-                    'titleToken': 'Categories',
-                    'enabled': true,
-                    'position': 'left'
-                },
-                {
-                    'routePath': 'content/upload-control',
-                    'titleToken': 'UploadControl',
-                    'enabled': true,
-                    'position': 'right'
-                },
-                {
-                    'routePath': 'content/bulk',
-                    'titleToken': 'BulkUpload',
-                    'enabled': true,
-                    'position': 'right'
-                },
-                {
-                    'routePath': 'content/drop-folders',
-                    'titleToken': 'DropFolders',
-                    'enabled': true,
-                    'position': 'right'
-                }
-            ]
+          'id': 'settingsAccountSettings',
+          'routePath': 'settings/accountSettings',
+          'titleToken': 'Account Settings',
         },
         {
-            'routePath': 'studio',
-            'titleToken': 'Studio',
-            'showSubMenu': false,
-            'enabled': true
+          'id': 'settingsIntegrationSettings',
+          'routePath': 'settings/integrationSettings',
+          'titleToken': 'Integration Settings',
         },
         {
-            'routePath': 'analytics',
-            'titleToken': 'Analytics',
-            'showSubMenu': false,
-            'enabled': false
-        }, {
-            'routePath': 'settings',
-            'titleToken': '',
-            'showSubMenu': true,
-            'enabled': true,
-            'children': [
-                {
-                    'routePath': 'settings/accountSettings',
-                    'titleToken': 'Account Settings',
-                    'enabled': true
-                },
-                {
-                    'routePath': 'settings/integrationSettings',
-                    'titleToken': 'Integration Settings',
-                    'enabled': true
-                },
-                {
-                    'routePath': 'settings/accountUpgrade',
-                    'titleToken': 'Account Upgrade',
-                    'enabled': true
-                },
-                {
-                    'routePath': 'settings/metadata',
-                    'titleToken': 'CustomData',
-                    'enabled': true
-                },
-                {
-                    'routePath': 'settings/myUserSettings',
-                    'titleToken': 'My User Settings',
-                    'enabled': true
-                },
-                {
-                    'routePath': 'settings/accessControl',
-                    'titleToken': 'AccessControl',
-                    'enabled': true
-                }
-            ]
-        }, {
-            'routePath': 'administration',
-            'titleToken': '',
-            'showSubMenu': true,
-            'enabled': true,
-            'children': [
-                {
-                    'routePath': 'administration/users',
-                    'titleToken': 'Users',
-                    'enabled': true
-                },
-                {
-                    'routePath': 'administration/roles',
-                    'titleToken': 'Roles',
-                    'enabled': true
-                }
-            ]
+          'id': 'settingsAccountInformation',
+          'routePath': 'settings/accountInformation',
+          'titleToken': 'Account Information',
+        },
+        {
+          'id': 'settingsCustomData',
+          'routePath': 'settings/metadata',
+          'titleToken': 'CustomData',
+        },
+        {
+          'id': 'settingsMyUserSettings',
+          'routePath': 'settings/myUserSettings',
+          'titleToken': 'My User Settings',
+        },
+        {
+          'id': 'settingsAccessControl',
+          'routePath': 'settings/accessControl',
+          'titleToken': 'AccessControl'
         }
-    ],
-    'locales': [
+      ]
+    }, {
+      'id': 'administration',
+      'routePath': 'administration',
+      'titleToken': '',
+      'showSubMenu': true,
+      'children': [
         {
-            'id': 'en',
-            'label': 'English'
+          'id': 'administrationUsers',
+          'routePath': 'administration/users',
+          'titleToken': 'Users',
         },
         {
-            'id': 'de',
-            'label': 'Deutsch'
-        },
-        {
-            'id': 'es',
-            'label': 'Español'
-        },
-        {
-            'id': 'fr',
-            'label': 'Français'
-        },
-        {
-            'id': 'ja',
-            'label': '日本語'
+          'id': 'administrationRoles',
+          'routePath': 'administration/roles',
+          'titleToken': 'Roles',
         }
-    ]
+      ]
+    }
+  ],
+  'locales': [
+    {
+      'id': 'en',
+      'label': 'English'
+    },
+    {
+      'id': 'de',
+      'label': 'Deutsch'
+    },
+    {
+      'id': 'es',
+      'label': 'Español'
+    },
+    {
+      'id': 'fr',
+      'label': 'Français'
+    },
+    {
+      'id': 'ja',
+      'label': '日本語'
+    }
+  ]
 };

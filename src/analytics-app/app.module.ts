@@ -75,6 +75,7 @@ import { CategoriesModule } from 'app-shared/content-shared/categories/categorie
 import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
+import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
 
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
@@ -124,7 +125,8 @@ export function clientConfigurationFactory() {
     PlaylistCreationModule.forRoot(),
     CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
-    AccessControlProfileModule.forRoot()
+    AccessControlProfileModule.forRoot(),
+    ViewCategoryEntriesModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,

@@ -1,0 +1,56 @@
+<k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [bodyScroll]="true">
+  <div class="kFeeds kOverrideFAIcons">
+    <div #feedsTableHolder class="kFeedsHolder kContent">
+      <kSticky stickyId="feedsListFilters" [scrollOffset]="80"
+               [sticksTo]="'header'">
+        <div class="kFeedsTableFilters">
+          <button pButton type="button" label="{{'applications.content.syndication.addFeed' | translate}}"
+                  class="kButtonBranded kAddFeedBtn" [class.kHidden]="_selectedFeeds?.length"
+                  [disabled]="_selectedFeeds?.length" (click)="_addNewFeed()"></button>
+          <span class="kSelectedFeedsNum" *ngIf="_feedsTotalCount">
+             {{'applications.content.syndication.feeds' | translate: {'0': _feedsTotalCount} }}
+          </span>
+
+          <!--Bulk selection-->
+          <div [class.kHidden]="!_selectedFeeds?.length" class="kBulkOperations">
+            <span class="kSelectedFeedsLabel">• {{'applications.content.syndication.selected' | translate:{'0': _selectedFeeds?.length} }}</span>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                    (click)="_deleteSelectedFeeds()"></button>
+
+            <a class="kBulkCancel" (click)="_clearSelection()">
+              {{'app.common.cancel' | translate}}
+            </a>
+          </div>
+        </div>
+      </kSticky>
+
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
+        <kFeedsTable class="kFeedsTable"
+                     [feeds]="(_feedsService.feeds.data$ | async)?.items"
+                     [filter]="_query"
+                     (sortChanged)="_onSortChanged($event)"
+                     (actionSelected)="_onActionSelected($event)"
+                     [(selectedFeeds)]="_selectedFeeds"
+                     [playlists]="_playlists"
+                     (onEditFeed)="_onActionSelected({action: 'edit', feed: $event})">
+        </kFeedsTable>
+      </k-area-blocker>
+      <div class="kFeedsTableFooter kContent" #footer *ngIf="_feedsTotalCount">
+        <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
+                     [first]="_query.pageIndex * _query.pageSize"
+                     [totalRecords]="_feedsTotalCount"
+                     [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
+
+<kPopupWidget #feedDetails [popupWidth]="995" [slider]="true">
+  <ng-template>
+    <kFeedDetails [parentPopupWidget]="feedDetails" [feed]="_currentEditFeed" [playlists]="_playlists"></kFeedDetails>
+  </ng-template>
+</kPopupWidget>
+

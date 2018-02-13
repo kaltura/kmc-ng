@@ -11,12 +11,10 @@ In the coming months we plan to complete adding all the features we have in the 
 
 The following list contains some major features in our road-map:
 - [ ] upgrade to Angular 5
-- [x] add runtime server configuration
 - [ ] embed permission support across views
 - [ ] add multi language translations
-- [ ] add missing views like  content > syndication & distribution, transcoding profile etc
+- [ ] add missing views like  content > distribution, transcoding profile etc
 - [ ] add missing tools like create crop from thumbnail, entry flavor > replace media
-- [ ] add external app integration (like studio, analytics, usage dashboard, entry Clip&Trim etc)
 
 
 ## <a name="issue"></a> Got a question or found an Issue?
@@ -47,15 +45,13 @@ npm run standalone
 # sync dependencies to the new branch
 npm install
 
-# create runtime configuration file by coping a sample one (the code below is written for bash)
-cp src/configuration/server-config.template.json src/configuration/server-config.json
-vim src/configuration/server-config.json
-
 # run the application in the browser (port 4200)
 npm run start -- -o
 ```
 
-> Note: By default the `server-config.template.json` file has setup for Kaltura production server. We advice you to check that the application works as expected with the default configuration before you customize it against your own server.
+> Note: By default, the `server-config.json` file is configured against the Kaltura production server. We advice you to check that the application works as expected using the default configuration before customizing it against your own server.
+>
+> For CI and on-prem server integrations, you can use the template file `server-config.template.json`.
 
 
 ## KMC-ng Configuration
@@ -66,15 +62,16 @@ The configuration of the kmc-ng application is split into several files. Each fi
 
 | Purpose | File Path | import Statement | Can be used by |  Load phase |
 |:-------|:-------|:-------|:-------|:-------|
-| Server configuration | src/configuration/server-config.ts | import { serverConfig } from 'config/server'; | All source base | runtime configuration (1) |
-| General configuration | src/configuration/global-config.ts | import { globalConfig } from 'config/global'; | All source base | transpile into the app bundle (2) |
-| Sub-applications configuration | src/applications/sub-applications-config.ts | import { subApplicationsConfig } from 'config/sub-applications'; | folder 'applications' | transpile into the app bundle (2) |
- | Shared modules configuration | src/shared/modules-config.ts | import { modulesConfig } from 'config/modules'; | folder 'shared' | transpile into the app bundle (2) |
- | KMC application configuration | src/kmc-app/kmc-app-config.ts | import { kmcAppConfig } from '../../kmc-app-config'; (3) | folder 'kmc-app' | transpile into the app bundle (2) |
+| Server configuration | src/configuration/server-config.ts | import { serverConfig } from 'config/server'; | All source base | runtime configuration (1)(2) |
+| General configuration | src/configuration/global-config.ts | import { globalConfig } from 'config/global'; | All source base | transpile into the app bundle (3) |
+| Sub-applications configuration | src/applications/sub-applications-config.ts | import { subApplicationsConfig } from 'config/sub-applications'; | folder 'applications' | transpile into the app bundle (3) |
+ | Shared modules configuration | src/shared/modules-config.ts | import { modulesConfig } from 'config/modules'; | folder 'shared' | transpile into the app bundle (3) |
+ | KMC application configuration | src/kmc-app/kmc-app-config.ts | import { kmcAppConfig } from '../../kmc-app-config'; (4) | folder 'kmc-app' | transpile into the app bundle (3) |
 **remarks:**
-- (1) a matching configuration file `src/configuration/server-config.json` is loaded by the browser. It might be cached by the browsers per app version
-- (2) this configuration file can be modified only before building the application
-- (3) the path is relative to the file that contains the import statement
+- (1) a matching configuration file `src/configuration/server-config.json` is loaded by the browser. By default the file is configured against the Kaltura production server. We advice you to check that the application works as expected using the default configuration before customizing it against your own server.
+- (2) for CI and on-prem server integrations, you can use the template file `server-config.template.json`.
+- (3) this configuration file can be modified only before building the application
+- (4) the path is relative to the file that contains the import statement
 
 
 ### Contributing
@@ -99,12 +96,8 @@ $ npm run build -- --prod
 
 A distributed standalone application will be created in the `dist/` folder.
 
- ### Add the studio application
- You will need to add the studio application to the distribution folder. We recommend you to take the lastest version of v2 (v3 currently doesn't work in the kmc-ng)*[]:
- - goto the the [following link](https://github.com/kaltura/player-studio/releases) and find the latest release (make sure it is not a pre-release)
- - download the attached zip file
- - extract it into folder `dist/studio`
-
+### External (standalone) applications integrations
+The KMC integrates several standalone applications using iFrames. It contains a dedicated bridge component responsible for the communication with between the KMC shell and standalone application. External applications are not part of the KMC deployment process, they are configured at runtime by the server as part of file `src/configuration/server-config.json`. Read [__local_machine_only__/README.md](./__local_machine_only__/README.md) to learn more about standalone applications integration.
 
 
 ### Configuring the server

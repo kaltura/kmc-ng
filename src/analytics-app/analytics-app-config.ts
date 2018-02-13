@@ -1,6 +1,10 @@
 
-export interface KmcAppConfig {
+export interface AnalyticsAppConfig {
     storageNamespace: string,
+    kalturaServer: {
+        expiry: number,
+        privileges: string
+    },
     routing: {
         errorRoute: string,
         loginRoute: string
@@ -23,8 +27,12 @@ export interface KmcAppConfig {
     }[]
 }
 
-export const analyticsAppConfig: KmcAppConfig = {
+export const analyticsAppConfig: AnalyticsAppConfig = {
     'storageNamespace': 'analytics-ng',
+    'kalturaServer': {
+        "expiry": 86400,
+        "privileges": "disableentitlement"
+    },
     'routing': {
         'errorRoute': '/error',
         'loginRoute': '/login',
@@ -114,11 +122,6 @@ export const analyticsAppConfig: KmcAppConfig = {
                     'enabled': true
                 },
                 {
-                    'routePath': 'settings/accountUpgrade',
-                    'titleToken': 'Account Upgrade',
-                    'enabled': true
-                },
-                {
                     'routePath': 'settings/metadata',
                     'titleToken': 'CustomData',
                     'enabled': true
@@ -126,6 +129,11 @@ export const analyticsAppConfig: KmcAppConfig = {
                 {
                     'routePath': 'settings/myUserSettings',
                     'titleToken': 'My User Settings',
+                    'enabled': true
+                },
+                {
+                    'routePath': 'settings/accountInformation',
+                    'titleToken': 'Account Information',
                     'enabled': true
                 }
             ]

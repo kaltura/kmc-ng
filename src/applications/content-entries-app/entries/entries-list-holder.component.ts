@@ -1,14 +1,14 @@
-import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { ContentEntriesAppService } from '../content-entries-app.service';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
+import {Component, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {EntriesListComponent} from 'app-shared/content-shared/entries/entries-list/entries-list.component';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-table/entries-table.component';
+import {ContentEntriesAppService} from '../content-entries-app.service';
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -42,10 +42,15 @@ export class EntriesListHolderComponent {
     {
       label: this._appLocalization.get('applications.content.table.view'),
       commandName: 'view'
+    },
+    {
+      label: this._appLocalization.get('applications.content.table.liveDashboard'),
+      commandName: 'liveDashboard'
     }
   ];
 
   constructor(private _router: Router,
+              private _activatedRoute: ActivatedRoute,
               private _browserService: BrowserService,
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
@@ -70,6 +75,11 @@ export class EntriesListHolderComponent {
               accept: () => this._deleteEntry(entry.id)
             }
         );
+        break;
+      case 'liveDashboard':
+        if (entry && entry.id) {
+          this._router.navigate(['../entry', entry.id, 'live'], {relativeTo: this._activatedRoute});
+        }
         break;
       default:
         break;

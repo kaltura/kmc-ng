@@ -1,7 +1,7 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
-import { PlaylistsFilters, PlaylistsStore } from '../playlists-store/playlists-store.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {PlaylistsFilters, PlaylistsStore} from '../playlists-store/playlists-store.service';
+import {AppLocalization} from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import {DatePipe} from '@kaltura-ng/kaltura-ui';
 
 export interface TagItem {
   type: string,
@@ -60,17 +60,17 @@ export class PlaylistsTagsComponent implements OnInit, OnDestroy {
       this._filterTags.splice(previousItem, 1);
     }
 
-    const { fromDate, toDate } = this._store.cloneFilter('createdAt', { fromDate: null, toDate: null });
+    const {fromDate, toDate} = this._store.cloneFilter('createdAt', {fromDate: null, toDate: null});
     if (fromDate || toDate) {
       let tooltip = '';
       if (fromDate && toDate) {
-        tooltip = `${moment(fromDate).format('MMMM D, YYYY')} - ${moment(toDate).format('MMMM D, YYYY')}`;
+        tooltip = `${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')} - ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       } else if (fromDate) {
-        tooltip = `From ${moment(fromDate).format('MMMM D, YYYY')}`;
+        tooltip = `From ${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')}`;
       } else if (toDate) {
-        tooltip = `Until ${moment(toDate).format('MMMM D, YYYY')}`;
+        tooltip = `Until ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
       }
-      this._filterTags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip });
+      this._filterTags.push({type: 'createdAt', value: null, label: 'Dates', tooltip});
     }
   }
 

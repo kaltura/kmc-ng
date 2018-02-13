@@ -49,7 +49,6 @@
                          [class.hasError]="_allowedDomainsField.enabled && _domainsFormatError"
                          [limitToSuggestions]="false"
                          [minLength]="3"
-                         [validatorFn]="_validateDomain"
                          [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate">
           </kAutoComplete>
           <span class="kInputError" *ngIf="_allowedDomainsField.enabled && _domainsFormatError">
@@ -72,7 +71,6 @@
                          [formControl]="_restrictedDomainsField"
                          [limitToSuggestions]="false"
                          [minLength]="3"
-                         [validatorFn]="_validateDomain"
                          [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate">
           </kAutoComplete>
           <span class="kInputError" *ngIf="_restrictedDomainsField.enabled && _domainsFormatError">
@@ -163,7 +161,6 @@
                          [formControl]="_allowedIpsField"
                          [class.hasError]="_allowedIpsField.enabled && _ipsFormatError"
                          [minLength]="3"
-                         [validatorFn]="_validateIp"
                          [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
           </kAutoComplete>
           <span class="kInputError" *ngIf="_allowedIpsField.enabled && _ipsFormatError">
@@ -186,7 +183,6 @@
                          [class.hasError]="_restrictedIpsField.enabled && _ipsFormatError"
                          [formControl]="_restrictedIpsField"
                          [minLength]="3"
-                         [validatorFn]="_validateIp"
                          [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
           </kAutoComplete>
           <span class="kInputError" *ngIf="_restrictedIpsField.enabled && _ipsFormatError">

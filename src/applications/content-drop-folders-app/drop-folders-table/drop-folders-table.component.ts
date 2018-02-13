@@ -1,8 +1,18 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { Menu, MenuItem } from 'primeng/primeng';
-import * as moment from 'moment';
-import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
+import {Menu, MenuItem} from 'primeng/primeng';
+import {KalturaDropFolderFile} from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
+import {AppLocalization} from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import {DatePipe} from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kDropFoldersListTable',
@@ -93,10 +103,10 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   public _dateTooltip(dropFolder: KalturaDropFolderFile) {
     return this._appLocalization.get('applications.content.dropFolders.table.datesTooltip',
       {
-        0: dropFolder.uploadStartDetectedAt ? moment(dropFolder.uploadStartDetectedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
-        1: dropFolder.uploadEndDetectedAt ? moment(dropFolder.uploadEndDetectedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
-        2: dropFolder.importStartedAt ? moment(dropFolder.importStartedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
-        3: dropFolder.importEndedAt ? moment(dropFolder.importEndedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable')
+        0: dropFolder.uploadStartDetectedAt ? (new DatePipe()).transform(dropFolder.uploadStartDetectedAt.getTime(), 'DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
+        1: dropFolder.uploadEndDetectedAt ? (new DatePipe()).transform(dropFolder.uploadEndDetectedAt.getTime(), 'DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
+        2: dropFolder.importStartedAt ? (new DatePipe()).transform(dropFolder.importStartedAt.getTime(), 'DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
+        3: dropFolder.importEndedAt ? (new DatePipe()).transform(dropFolder.importEndedAt.getTime(), 'DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable')
       }
     );
   }

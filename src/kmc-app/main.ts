@@ -2,7 +2,7 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app.module';
 import { environment } from 'environments/environment';
-import { initializeConfiguration } from '../configuration/server-config';
+import { initializeConfiguration } from '../configuration/server-config-utils';
 import { globalConfig } from 'config/global';
 
 initializeConfiguration()

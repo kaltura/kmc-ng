@@ -6,8 +6,8 @@ import {HttpModule} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
-import { PreviewAndEmbedModule } from '../applications/preview-and-embed/preview-and-embed.module';
+import {KalturaLogger, KalturaLoggerName} from '@kaltura-ng/kaltura-logger';
+import {PreviewAndEmbedModule} from '../applications/preview-and-embed/preview-and-embed.module';
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
@@ -29,11 +29,10 @@ import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltur
 import {KalturaClient, KalturaClientConfiguration} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
-    AccessControlProfileStore,
     AppEventsModule,
     FlavoursStore,
     KalturaServerModule,
-    MetadataProfileModule, PartnerProfileStore,
+    MetadataProfileModule,
 } from 'app-shared/kmc-shared';
 
 import {AppComponent} from './app.component';
@@ -78,6 +77,7 @@ import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-crea
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
 import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
+import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
 
@@ -155,6 +155,7 @@ export function clientConfigurationFactory() {
   exports: [],
   providers: <any>[
       FlavoursStore,
+      PlayersStore,
       KalturaLogger,
       {
           provide: KalturaLoggerName, useValue: 'kmc'

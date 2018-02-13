@@ -13,9 +13,9 @@ const routes: Routes = <Routes>[
     path: '', canActivate: [AppBootstrap],
     children: [
       { path: 'login', component: LoginComponent },
-        {
-            path: '', redirectTo: '/content/entries/list', pathMatch: 'full'
-        },
+      {
+          path: '', redirectTo: '/content/entries/list', pathMatch: 'full'
+      },
       {
         path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
         {
@@ -32,6 +32,10 @@ const routes: Routes = <Routes>[
           {
             path: 'categories',
             loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule'
+          },
+          {
+            path: 'syndication',
+            loadChildren: '../applications/content-syndication-app/content-syndication-app.module#ContentSyndicationAppModule'
           },
           {
             path: 'upload-control',
@@ -62,8 +66,8 @@ const routes: Routes = <Routes>[
             loadChildren: '../applications/settings-integration-settings-app/settings-integration-settings-app.module#SettingsIntegrationSettingsAppModule'
           },
           {
-            path: 'accountUpgrade',
-            loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
+            path: 'accountInformation',
+            loadChildren: '../applications/settings-account-information-app/settings-account-information-app.module#SettingsAccountInformationAppModule'
           },
           {
             path: 'accessControl',
@@ -93,6 +97,8 @@ const routes: Routes = <Routes>[
           ]
         },
         { path: 'studio', loadChildren: '../applications/studio-app/studio-app.module#StudioAppModule' },
+        { path: 'usageDashboard', loadChildren: '../applications/usage-dashboard-app/usage-dashboard-app.module#UsageDashboardAppModule' },
+        { path: 'kava', loadChildren: '../applications/analytics-live-app/analytics-live-app.module#AnalyticsLiveAppModule' }
       ]
       }
     ]
