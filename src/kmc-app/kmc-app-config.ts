@@ -121,22 +121,22 @@ export const kmcAppConfig: KmcAppConfig = {
         {
           'id': 'settingsAccountSettings',
           'routePath': 'settings/accountSettings',
-          'titleToken': 'Account Settings',
+          'titleToken': 'Account Settings'
         },
         {
           'id': 'settingsIntegrationSettings',
           'routePath': 'settings/integrationSettings',
-          'titleToken': 'Integration Settings',
+          'titleToken': 'Integration Settings'
         },
         {
           'id': 'settingsCustomData',
           'routePath': 'settings/metadata',
-          'titleToken': 'CustomData',
+          'titleToken': 'CustomData'
         },
         {
           'id': 'settingsMyUserSettings',
           'routePath': 'settings/myUserSettings',
-          'titleToken': 'My User Settings',
+          'titleToken': 'My User Settings'
         },
         {
             'id': 'settingsAccountInformation',
