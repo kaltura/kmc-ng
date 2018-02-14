@@ -98,7 +98,6 @@
     "codelyzer": "~4.0.1",
     "enhanced-resolve": "~3.3.0",
     "standard-version": "^4.0.0",
-    "ts-helpers": "^1.1.2",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
     "typescript": "2.5.3"
