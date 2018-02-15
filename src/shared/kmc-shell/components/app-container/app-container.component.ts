@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, Input, ElementRef, HostBinding } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import { Observable } from 'rxjs/Observable';
 import { AppShellService } from "../../providers/app-shell.service";
 import * as $ from 'jquery';
 
@@ -12,7 +11,7 @@ import * as $ from 'jquery';
 export class AppContainerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _hostedAppPath: string;
-  @ViewChild('iframe',true) private _iframeRef : ElementRef;
+  @ViewChild('iframe') private _iframeRef : ElementRef;
   private _contentAreaHeightSubscriber : Subscription;
 
   constructor(private appShellService : AppShellService) {}

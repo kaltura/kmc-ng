@@ -127,7 +127,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._items = this.rowActions
 		.filter(item => this._hideMenuItems(entry.sourceType, entry.status, entry.mediaType, item))
 		.map(action =>
-            Object.assign({}, action, {
+            Object.assign({} as CustomMenuItem, action, {
               command: ({ item }) => {
                 this._onActionSelected(item.commandName, entry);
               }

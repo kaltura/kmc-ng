@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AppEventsService } from 'shared/kmc-shared/index';
-import { CreateNewPlaylistEvent, CreateNewPlaylistEventArgs } from 'shared/kmc-shared/events/playlist-creation/index';
+import { AppEventsService } from 'shared/kmc-shared/app-events';
+import { CreateNewPlaylistEvent, CreateNewPlaylistEventArgs } from './create-new-playlist.event';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 
