@@ -36,6 +36,7 @@
     "build": "ng build --aot --preserve-symlinks",
     "prebuild:prod": "node ./scripts/pre-build-prod.js",
     "build:prod": "ng build --prod --preserve-symlinks --aot --extract-licenses",
+    "build:prod:analyze": "node --max_old_space_size=8092 ./node_modules/@angular/cli/bin/ng build --prod --preserve-symlinks --aot --extract-licenses --named-chunks --stats-json  && webpack-bundle-analyzer dist/stats.json",
     "postbuild:prod": "node ./scripts/post-build-prod.js",
     "test": "ng test",
     "lint": "ng lint",
