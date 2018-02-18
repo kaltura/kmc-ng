@@ -16,6 +16,7 @@ import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import {KalturaSourceType} from "kaltura-ngx-client/api/types/KalturaSourceType";
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -40,6 +41,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() set columns(value: EntriesTableColumns) {
     this._columns = value || this._defaultColumns;
   }
+
+  public _columnsMetadata : {[key:string]: { style: SafeStyle}} = {
+  };
 
   @Input() rowActions: { label: string, commandName: string }[] = [];
 
@@ -85,11 +89,16 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _emptyMessage = '';
   public _items: CustomMenuItem[];
 
-  constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef) {
+  constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef, private sanitization: DomSanitizer) {
   }
 
   ngOnInit() {
       this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+
+    Object.keys(this._columns).forEach(columnName =>
+    {
+      this._columnsMetadata[columnName] = { style: this._getColumnStyle(this._columns[columnName])};
+    });
   }
 
   ngOnDestroy() {
@@ -169,8 +178,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.selectedEntriesChange.emit(event);
   }
 
-  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
-    return { 'width': width, 'text-align': align };
+  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): SafeStyle {
+    return this.sanitization.bypassSecurityTrustStyle(`width: ${width};text-align: ${align}`);
   }
 }
 
