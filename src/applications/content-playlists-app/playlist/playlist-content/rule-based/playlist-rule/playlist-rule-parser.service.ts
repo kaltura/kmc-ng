@@ -8,10 +8,13 @@ import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaM
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { MetadataProfile } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { PlaylistRule } from './playlist-rule.interface';
+import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class PlaylistRuleParserService implements OnDestroy {
   constructor(private _metadataProfileService: MetadataProfileStore,
+              private _logger: KalturaLogger,
               public _entriesStore: EntriesStore) {
   }
 
@@ -153,16 +156,22 @@ export class PlaylistRuleParserService implements OnDestroy {
 
     return this._entriesStore.convertFiltersToServerStruct()
       .map(originalFilter => {
-        originalFilter.name = payload.name;
+        if (originalFilter instanceof KalturaMediaEntryFilterForPlaylist) {
+            originalFilter.name = payload.name;
 
-        return Object.assign({}, payload.rule, {
-          name: payload.name,
-          orderBy: payload.orderBy,
-          limit: payload.limit,
-          entriesDuration,
-          entriesCount,
-          originalFilter
-        });
+            return Object.assign({}, payload.rule, {
+                name: payload.name,
+                orderBy: payload.orderBy,
+                limit: payload.limit,
+                entriesDuration,
+                entriesCount,
+                originalFilter
+            });
+        } else
+        {
+          this._logger.error(`cannot build playlist rule. expected filter of type 'KalturaMediaEntryFilterForPlaylist'.`);
+          throw new Error(`cannot build playlist rule. expected filter of type 'KalturaMediaEntryFilterForPlaylist'.`);
+        }
       });
   }
 }

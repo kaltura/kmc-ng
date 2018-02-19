@@ -9,8 +9,8 @@ import { KalturaAccessControlFilter } from 'kaltura-ngx-client/api/types/Kaltura
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { AccessControlProfileUpdatedEvent } from 'app-shared/kmc-shared/events/access-control-profile-updated.event';
+import { AppEventsService } from '../app-events';
+import { AccessControlProfileUpdatedEvent } from '../events/access-control-profile-updated.event';
 
 @Injectable()
 export class AccessControlProfileStore extends PartnerProfileStore implements OnDestroy {

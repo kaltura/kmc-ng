@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
@@ -97,7 +97,7 @@ export function clientConfigurationFactory() {
     CommonModule,
     ConfirmDialogModule,
     DropdownModule,
-    HttpModule,
+    HttpClientModule,
     InputTextModule,
     MetadataProfileModule.forRoot(),
     Ng2PageScrollModule.forRoot(),
