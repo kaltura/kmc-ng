@@ -4,9 +4,12 @@
             scrollHeight="100%"
             [value]="_entries"
             dataKey="id"
+            [sortField]="filter.sortBy"
+            [sortOrder]="filter.sortDirection | kEntriesTableSortDirection"
+            (onSort)="_onSortChanged($event)"
             [(selection)]="selectedEntries"
             (selectionChange)="_onSelectionChange($event)"
-    >
+            kStickyHeader [sticksTo]="'entriesTags'" stickyClass="stickyHeader" [stickyId]="'entriesTable'">
         <ng-template pTemplate="header">
             <tr>
                 <th style="width:44px; padding-left: 14px">
@@ -15,29 +18,35 @@
                 <th [style]="_columnsMetadata.thumbnailUrl.style" *ngIf="_columns.thumbnailUrl">
                     {{'applications.content.table.thumbnail' | translate}}
                 </th>
-                <th [style]="_columnsMetadata.name.style" *ngIf="_columns.name">{{'applications.content.table.name' |
-                    translate}}
+                <th [style]="_columnsMetadata.name.style" *ngIf="_columns.name" [pSortableColumn]="'name'">
+                    {{'applications.content.table.name' | translate}}
+                    <p-sortIcon [field]="'name'"></p-sortIcon>
                 </th>
                 <th [style]="_columnsMetadata.id.style" *ngIf="_columns.id">{{'applications.content.table.id' |
                     translate}}
                 </th>
-                <th [style]="_columnsMetadata.mediaType.style" *ngIf="_columns.mediaType">
+                <th [style]="_columnsMetadata.mediaType.style" *ngIf="_columns.mediaType" [pSortableColumn]="'mediaType'">
                     {{'applications.content.table.type' | translate}}
+                    <p-sortIcon [field]="'mediaType'"></p-sortIcon>
                 </th>
-                <th [style]="_columnsMetadata.plays.style" *ngIf="_columns.plays">{{'applications.content.table.plays' |
-                    translate}}
+                <th [style]="_columnsMetadata.plays.style" *ngIf="_columns.plays" [pSortableColumn]="'plays'">
+                    {{'applications.content.table.plays' | translate}}
+                    <p-sortIcon [field]="'plays'"></p-sortIcon>
                 </th>
-                <th [style]="_columnsMetadata.moderationCount.style" *ngIf="_columns.moderationCount">
+                <th [style]="_columnsMetadata.moderationCount.style" *ngIf="_columns.moderationCount" [pSortableColumn]="'moderationCount'">
                     {{'applications.content.table.flags' | translate}}
+                    <p-sortIcon [field]="'moderationCount'"></p-sortIcon>
                 </th>
-                <th [style]="_columnsMetadata.createdAt.style" *ngIf="_columns.createdAt">
+                <th [style]="_columnsMetadata.createdAt.style" *ngIf="_columns.createdAt" [pSortableColumn]="'createdAt'">
                     {{'applications.content.table.createdOn' | translate}}
+                    <p-sortIcon [field]="'createdAt'"></p-sortIcon>
                 </th>
                 <th [style]="_columnsMetadata.moderationStatus.style" *ngIf="_columns.moderationStatus">
                     {{'applications.content.table.moderationStatus' | translate}}
                 </th>
-                <th [style]="_columnsMetadata.duration.style" *ngIf="_columns.duration">
+                <th [style]="_columnsMetadata.duration.style" *ngIf="_columns.duration" [pSortableColumn]="'duration'">
                     {{'applications.content.table.duration' | translate}}
+                    <p-sortIcon [field]="'duration'"></p-sortIcon>
                 </th>
                 <th [style]="_columnsMetadata.status.style" *ngIf="_columns.status">
                     {{'applications.content.table.status' | translate}}
