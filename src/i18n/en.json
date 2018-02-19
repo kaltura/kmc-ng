@@ -2053,6 +2053,53 @@
           "passwordErr": "Supplied password is invalid",
           "passwordStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules :\n- Must be of length between 8 and 14.\n- Must not contain your name\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols:  %%~!@#$^*=+?[]{}.\n- Must not contain the following characters: < or >."
         }
+      },
+      "transcoding": {
+        "transcodingProfiles": "Transcoding Profiles",
+        "profiles": "{{0}} Profiles",
+        "liveTranscodingProfiles": "Live Transcoding Profiles",
+        "default": "Default",
+        "addProfile": "Add Profile",
+        "setAsDefault": "Set As Default",
+        "edit": "Edit",
+        "delete": "Delete",
+        "addTranscodingProfile": "Add Transcoding Profile",
+        "profileName": "Profile Name",
+        "description": "Description",
+        "defaultMetadataSettings": "Default Metadata Settings",
+        "ingestFromRemoteStorage": "Ingest From Remote Storage",
+        "cancel": "Cancel",
+        "save": "Save",
+        "table": {
+          "name": "Name",
+          "description": "Description",
+          "id": "ID",
+          "flavors": "Flavors"
+        },
+        "profile": {
+          "metadata": "Metadata",
+          "flavor": "Flavor",
+          "id": "ID {{0}}",
+          "creationDate": "Creation Date {{0}}",
+          "flavors": "{{0}} Flavors",
+          "editTranscodingSettings": "Edit Transcoding Settings",
+          "editLiveTranscodingSettings": "Edit Live Transcoding Flavor Settings",
+          "profileName": "Profile Name",
+          "flavorName": "Flavor Name",
+          "impactOnEntryReadiness": "Impact on Entry Readiness",
+          "useKalturaTranscoding": "Use Kaltura Transcoding",
+          "systemName": "System Name:\n(Optional)",
+          "flavorGenerationPolicy": "Flavor Generation Policy",
+          "intermediateFlavorHandling": "Intermediate Flavor Handling",
+          "table": {
+            "flavor": "Flavor",
+            "id": "ID",
+            "format": "Format",
+            "codec": "Codec",
+            "ditrate": "Bitrate (kbps)",
+            "dimentions": "Dimentions"
+          }
+        }
       }
     }
   },

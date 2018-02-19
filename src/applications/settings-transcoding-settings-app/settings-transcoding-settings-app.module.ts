@@ -7,6 +7,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule, DropdownModule, InputTextModule } from 'primeng/primeng';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { TranslateModule } from 'ng2-translate';
+import { TranscodingProfilesComponentsList } from './components-list';
+import { TooltipModule } from '@kaltura-ng/kaltura-ui/tooltip/k-tooltip.module';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -17,9 +20,14 @@ import { TranslateModule } from 'ng2-translate';
     InputTextModule,
     ButtonModule,
     AreaBlockerModule,
-    TranslateModule
+    TranslateModule,
+    TooltipModule,
+    TableModule
   ],
-  declarations: [SettingsTranscodingSettingsComponent]
+  declarations: [
+    SettingsTranscodingSettingsComponent,
+    ...TranscodingProfilesComponentsList
+  ]
 })
 export class SettingsTranscodingSettingsAppModule {
 }

@@ -3,7 +3,7 @@ import { SettingsTranscodingSettingsService } from './settings-transcoding-setti
 
 @Component({
   selector: 'kmc-settings-transcoding-settings',
-  template: '<h1>It works</h1>',
+  template: '<router-outlet></router-outlet>',
   providers: [SettingsTranscodingSettingsService],
 })
 export class SettingsTranscodingSettingsComponent {
