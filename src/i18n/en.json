@@ -24,7 +24,8 @@
       "BulkUpload": "Bulk Upload",
       "DropFolders": "Drop Folders",
       "UploadMonitor": "Upload Monitor",
-      "CustomData": "Custom Data"
+      "CustomData": "Custom Data",
+      "Transcoding settings": "Transcoding settings"
     },
     "userSettings": {
       "changeAccount": "Change Account",

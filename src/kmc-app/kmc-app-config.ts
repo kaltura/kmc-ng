@@ -142,6 +142,11 @@ export const kmcAppConfig: KmcAppConfig = {
             'id': 'settingsAccountInformation',
             'routePath': 'settings/accountInformation',
             'titleToken': 'Account Information'
+        },
+        {
+            'id': 'settingsTranscoding',
+            'routePath': 'settings/transcoding',
+            'titleToken': 'Transcoding settings'
         }
       ]
     }, {
