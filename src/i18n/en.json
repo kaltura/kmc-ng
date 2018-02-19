@@ -2057,6 +2057,7 @@
       "transcoding": {
         "transcodingProfiles": "Transcoding Profiles",
         "profiles": "{{0}} Profiles",
+        "selected": "{{0}} Selected",
         "liveTranscodingProfiles": "Live Transcoding Profiles",
         "default": "Default",
         "addProfile": "Add Profile",

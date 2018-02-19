@@ -4,12 +4,15 @@ import { SettingsTranscodingSettingsComponent } from './settings-transcoding-set
 import { routing } from './settings-transcoding-settings-app.routes';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule, DropdownModule, InputTextModule } from 'primeng/primeng';
+import { ButtonModule, DataTableModule, DropdownModule, InputTextModule, PaginatorModule } from 'primeng/primeng';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { TranslateModule } from 'ng2-translate';
 import { TranscodingProfilesComponentsList } from './components-list';
 import { TooltipModule } from '@kaltura-ng/kaltura-ui/tooltip/k-tooltip.module';
-import { TableModule } from 'primeng/table';
+import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
+import { MenuModule } from 'primeng/menu';
+import { KalturaUIModule } from '@kaltura-ng/kaltura-ui/kaltura-ui.module';
+import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.module';
 
 @NgModule({
   imports: [
@@ -22,7 +25,12 @@ import { TableModule } from 'primeng/table';
     AreaBlockerModule,
     TranslateModule,
     TooltipModule,
-    TableModule
+    DataTableModule,
+    KalturaCommonModule,
+    KalturaUIModule,
+    PaginatorModule,
+    StickyModule,
+    MenuModule
   ],
   declarations: [
     SettingsTranscodingSettingsComponent,

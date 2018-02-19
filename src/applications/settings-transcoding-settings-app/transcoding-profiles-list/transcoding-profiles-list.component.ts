@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./transcoding-profiles-list.component.scss']
 })
 export class TranscodingProfilesListComponent implements OnInit {
+  @Input() title = '';
 
   constructor() { }
 

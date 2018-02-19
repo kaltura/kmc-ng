@@ -1,3 +1,39 @@
-<p>
-  transcoding-profiles-list works!
-</p>
+<div class="kTranscodingProfilesList">
+  <h2 class="kTranscodingProfilesListTitle">{{title}}</h2>
+
+  <div class="kTranscodingProfilesTableHeader kContent">
+    <button
+      pButton
+      type="button"
+      [class.kHidden]="false"
+      [label]="'applications.settings.transcoding.addProfile' | translate"
+      class="kButtonBranded kAddProfileBtn"></button>
+    <span class="kTotalProfilesCount" *ngIf="false">
+      {{'applications.settings.transcoding.profiles' | translate: [0]}}
+    </span>
+
+    <div class="kBulkOperations" [class.kHidden]="true">
+      <span class="kSelectedProfilesLabel">
+        • {{ 'applications.settings.transcoding.selected' | translate: [0]}}
+      </span>
+      <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
+      <a class="kBulkCancel">
+        {{'applications.settings.transcoding.cancel' | translate}}
+      </a>
+    </div>
+  </div>
+
+  <k-area-blocker [showLoader]="false" [message]="null">
+    <k-transcoding-profiles-table></k-transcoding-profiles-table>
+  </k-area-blocker>
+
+  <div class="kProfilesTableFooter" #footer *ngIf="false">
+    <p-paginator
+      [rows]="1"
+      [first]="1"
+      [rowsPerPageOptions]="[25,50,75,100]"
+      [totalRecords]="1"
+      (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+    <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+  </div>
+</div>
