@@ -2120,6 +2120,7 @@
           "selectFlavors": "Select Flavors",
           "selectCountry": "Select Country",
           "findCountry": "Find Country",
+          "findFlavor": "Find Flavor",
           "countriesSelected": "{0} Countries Selected",
           "flavorsSelected": "{0} Flavors Selected",
           "invalidValue": "Invalid Value",

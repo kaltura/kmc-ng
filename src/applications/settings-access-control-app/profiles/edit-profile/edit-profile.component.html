@@ -109,6 +109,8 @@
                        [options]="_countryCodes"
                        [showToggleAll]="false"
                        [maxSelectedLabels]="0"
+                       [resetFilterOnHide]="true"
+                       [filterPlaceHolder]="'applications.settings.accessControl.editForm.findCountry' | translate"
                        [selectedItemsLabel]="'applications.settings.accessControl.editForm.countriesSelected' | translate"
                        [formControl]="_allowedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
@@ -131,7 +133,9 @@
                        [options]="_countryCodes"
                        [maxSelectedLabels]="0"
                        [selectedItemsLabel]="'applications.settings.accessControl.editForm.countriesSelected' | translate"
+                       [filterPlaceHolder]="'applications.settings.accessControl.editForm.findCountry' | translate"
                        [showToggleAll]="false"
+                       [resetFilterOnHide]="true"
                        [formControl]="_restrictedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
           <ng-template let-country pTemplate="item">
@@ -228,6 +232,8 @@
         <p-multiSelect [options]="_store.flavors"
                        [maxSelectedLabels]="0"
                        [formControl]="_allowedFlavorsField"
+                       [resetFilterOnHide]="true"
+                       [filterPlaceHolder]="'applications.settings.accessControl.editForm.findFlavor' | translate"
                        [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
                        [showToggleAll]="false"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate">
@@ -249,6 +255,8 @@
                        [maxSelectedLabels]="0"
                        [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
                        [showToggleAll]="false"
+                       [resetFilterOnHide]="true"
+                       [filterPlaceHolder]="'applications.settings.accessControl.editForm.findFlavor' | translate"
                        [formControl]="_restrictedFlavorsField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate">
           <ng-template let-flavor pTemplate="item">
