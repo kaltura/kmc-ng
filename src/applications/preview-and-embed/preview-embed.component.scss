@@ -141,9 +141,12 @@
           margin-left: 320px;
           margin-top: 10px;
         }
-        qr-code{
+
+        /deep/ .kQRCodeCanvas img {
           margin-left: -10px;
+          width: 80px;
         }
+
         .kAdvancedArrow{
           font-size: 11px;
           margin-top: 2px;

@@ -81,10 +81,10 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
         const responseIncomplete = !Array.isArray(responses)
           || responses.some(response => !!response.error || !Array.isArray(response.result));
         if (responseIncomplete) {
-          return Observable.of({
-            failed: true,
-            error: new Error(this._appLocalization.get('applications.content.playlistDetails.errors.loadError'))
-          });
+            return {
+                failed: true,
+                error: new Error(this._appLocalization.get('applications.content.playlistDetails.errors.loadError'))
+            }
         }
 
         responses.forEach(({ result }, index) => {

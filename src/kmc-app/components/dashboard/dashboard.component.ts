@@ -9,7 +9,7 @@ import * as $ from 'jquery';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('appMenu',true) private _appMenuRef : any;
+  @ViewChild('appMenu') private _appMenuRef : any;
   private onResize : () => void;
 
 

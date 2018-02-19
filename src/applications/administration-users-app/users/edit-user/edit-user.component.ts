@@ -124,32 +124,34 @@ export class EditUserComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe((status) => {
         this._isBusy = false;
-        switch (status) {
-          case IsUserExistsStatuses.kmcUser:
-            this._browserService.alert({
-              message: this._appLocalization.get('applications.administration.users.alreadyExistError', { 0: email })
-            });
-            break;
-          case IsUserExistsStatuses.otherSystemUser:
-            this._isUserAssociated();
-            break;
-          case IsUserExistsStatuses.unknownUser:
-            this._browserService.confirm({
-                header: this._appLocalization.get('applications.administration.users.alreadyExist'),
-                message: this._appLocalization.get('applications.administration.users.userAlreadyExist', { 0: email }),
-                accept: () => this._isUserAssociated()
-              }
-            );
-            break;
-          default:
+
+        if (status !== null) {
+            switch (status) {
+                case IsUserExistsStatuses.kmcUser:
+                    this._browserService.alert({
+                        message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: email})
+                    });
+                    break;
+                case IsUserExistsStatuses.otherSystemUser:
+                    this._isUserAssociated();
+                    break;
+                case IsUserExistsStatuses.unknownUser:
+                    this._browserService.confirm({
+                            header: this._appLocalization.get('applications.administration.users.alreadyExist'),
+                            message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
+                            accept: () => this._isUserAssociated()
+                        }
+                    );
+                    break;
+            }
+        }else {
             this._blockerMessage = new AreaBlockerMessage({
-              message: this._appLocalization.get('applications.administration.users.commonError'),
-              buttons: [{
-                label: this._appLocalization.get('app.common.ok'),
-                action: () => this._blockerMessage = null
-              }]
+                message: this._appLocalization.get('applications.administration.users.commonError'),
+                buttons: [{
+                    label: this._appLocalization.get('app.common.ok'),
+                    action: () => this._blockerMessage = null
+                }]
             });
-            break;
         }
       });
   }
