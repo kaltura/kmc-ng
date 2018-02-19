@@ -6,7 +6,11 @@
   <div class="kDistributedProfileContent">
     <span class="kTitle">
       <span class="kTitleLabel" (click)="_openProfile(_profile)">{{_profile?.name}}</span>
-      <i class="kIconexternal_link kTitleIcon"></i>
+      <a *ngIf="_distributorPageLink" class="kDistributorPageLink" target="_blank"
+         [kTooltip]="'applications.content.entryDetails.distribution.previewDistributorVideo' | translate"
+         [href]="_distributorPageLink">
+        <i class="kIconexternal_link kTitleIcon"></i>
+      </a>
     </span>
     <div class="kMetadata">
       <span class="kStatus" *ngIf="!_profile?.validationErrors?.length">

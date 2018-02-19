@@ -1422,8 +1422,10 @@
           "modified": "Modified",
           "retry": "Retry",
           "refresh": "Refresh",
+          "previewDistributorVideo": "Preview video on distributor page",
           "deleteConfirmTitle": "Delete distribution",
-          "deleteConfirm": "Delete distribution?",
+          "delete": "Delete",
+          "deleteConfirm": "You are about to remove the exported video that was distributed by {{0}}. The video will no longer be available via the video page on the external platform. How do you wish to proceed?",
           "form": {
             "status": "Status",
             "updates": "Updates",

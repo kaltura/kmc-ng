@@ -4,6 +4,7 @@ import { KalturaEntryDistributionFlag } from 'kaltura-ngx-client/api/types/Kaltu
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 @Component({
   selector: 'kEntryDistributedProfile',
@@ -22,6 +23,7 @@ export class DistributedProfileComponent implements OnInit {
   public _actionButtonHidden = true;
   public _deleteButtonHidden = true;
   public _providerType: KalturaDistributionProviderType = null;
+  public _distributorPageLink = '';
 
   constructor(private _appLocalization: AppLocalization,
               private _widgetService: EntryDistributionWidget) {
@@ -40,6 +42,17 @@ export class DistributedProfileComponent implements OnInit {
       this._setupDeleteButton();
       const distributionProfile = this._widgetService.getPartnerProfileById(this.profile.distributionProfileId);
       this._providerType = distributionProfile ? distributionProfile.providerType : null;
+
+      const youtubeDistributorPageLink = this._providerType.equals(KalturaDistributionProviderType.youtube)
+        || this._providerType.equals(KalturaDistributionProviderType.youtubeApi);
+      const facebookDistributorPageLink = this._providerType.equals(KalturaDistributionProviderType.facebook);
+      if (youtubeDistributorPageLink) {
+        this._distributorPageLink = `${subApplicationsConfig.entryDetails.distribution.youtubeExternal}${this._profile.remoteId}`;
+      } else if (facebookDistributorPageLink) {
+        this._distributorPageLink = `${subApplicationsConfig.entryDetails.distribution.facebookExternal}${this._profile.remoteId}`;
+      } else {
+        this._distributorPageLink = '';
+      }
     }
   }
 

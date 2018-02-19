@@ -36,6 +36,7 @@ import { EntryDistributionSubmitAddAction } from 'kaltura-ngx-client/api/types/E
 import { EntryDistributionUpdateAction } from 'kaltura-ngx-client/api/types/EntryDistributionUpdateAction';
 import { EntryDistributionSubmitUpdateAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitUpdateAction';
 import { EntryDistributionRetrySubmitAction } from 'kaltura-ngx-client/api/types/EntryDistributionRetrySubmitAction';
+import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -332,6 +333,110 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     super.updateState({ isDirty: true });
   }
 
+  public getProviderName(type: KalturaDistributionProviderType): string {
+    switch (true) {
+      case type.equals(KalturaDistributionProviderType.attUverse):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
+
+      case type.equals(KalturaDistributionProviderType.avn):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.avn');
+
+      case type.equals(KalturaDistributionProviderType.comcastMrss):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.comcastMrss');
+
+      case type.equals(KalturaDistributionProviderType.crossKaltura):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.crossKaltura');
+
+      case type.equals(KalturaDistributionProviderType.dailymotion):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.dailymotion');
+
+      case type.equals(KalturaDistributionProviderType.doubleclick):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.doubleclick');
+
+      case type.equals(KalturaDistributionProviderType.facebook):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.facebook');
+
+      case type.equals(KalturaDistributionProviderType.freewheel):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.freewheel');
+
+      case type.equals(KalturaDistributionProviderType.freewheelGeneric):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.freewheelGeneric');
+
+      case type.equals(KalturaDistributionProviderType.ftp):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.ftp');
+
+      case type.equals(KalturaDistributionProviderType.ftpScheduled):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.ftpScheduled');
+
+      case type.equals(KalturaDistributionProviderType.generic):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.generic');
+
+      case type.equals(KalturaDistributionProviderType.hulu):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.hulu');
+
+      case type.equals(KalturaDistributionProviderType.idetic):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.idetic');
+
+      case type.equals(KalturaDistributionProviderType.metroPcs):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.metroPcs');
+
+      case type.equals(KalturaDistributionProviderType.msn):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.msn');
+
+      case type.equals(KalturaDistributionProviderType.ndn):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.ndn');
+
+      case type.equals(KalturaDistributionProviderType.podcast):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.podcast');
+
+      case type.equals(KalturaDistributionProviderType.pushToNews):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.pushToNews');
+
+      case type.equals(KalturaDistributionProviderType.quickplay):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.quickplay');
+
+      case type.equals(KalturaDistributionProviderType.synacorHbo):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.synacorHbo');
+
+      case type.equals(KalturaDistributionProviderType.syndication):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.syndication');
+
+      case type.equals(KalturaDistributionProviderType.timeWarner):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.timeWarner');
+
+      case type.equals(KalturaDistributionProviderType.tvcom):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.tvcom');
+
+      case type.equals(KalturaDistributionProviderType.tvinci):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.tvinci');
+
+      case type.equals(KalturaDistributionProviderType.unicorn):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.unicorn');
+
+      case type.equals(KalturaDistributionProviderType.uverse):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.uverse');
+
+      case type.equals(KalturaDistributionProviderType.uverseClickToOrder):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.uverseClickToOrder');
+
+      case type.equals(KalturaDistributionProviderType.verizonVcast):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.verizonVcast');
+
+      case type.equals(KalturaDistributionProviderType.yahoo):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.yahoo');
+
+      case type.equals(KalturaDistributionProviderType.youtube):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.youtube');
+
+      case type.equals(KalturaDistributionProviderType.youtubeApi):
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.youtubeApi');
+
+      default:
+        return '';
+
+    }
+  }
+
   public deleteDistributionProfile(profile: ExtendedKalturaEntryDistribution, closePopupCallback?: () => void): void {
     const entrySubmitted = [
       KalturaEntryDistributionStatus.ready,
@@ -357,12 +462,29 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       return;
     }
 
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirmTitle'),
-        message: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirm', [profile.id]),
-        accept: () => this._performDeleteRequest(action, closePopupCallback)
-      });
+    const partnerProfile = this.getPartnerProfileById(profile.distributionProfileId);
+    const connectorName = partnerProfile ? this.getProviderName(partnerProfile.providerType) : '';
+
+    this.popupMessage = new AreaBlockerMessage({
+      title: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirmTitle'),
+      message: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirm', [connectorName]),
+      buttons: [
+        {
+          label: this._appLocalization.get('applications.content.entryDetails.distribution.delete'),
+          action: () => {
+            this._performDeleteRequest(action, closePopupCallback);
+          }
+        },
+        {
+          label: this._appLocalization.get('applications.content.entryDetails.distribution.cancel'),
+          action: () => {
+            this.popupMessage = null;
+            this._removeBlockerMessage();
+          }
+        }
+      ]
+    });
+    this._showBlockerMessage(this.popupMessage, false);
   }
 
   public loadMissingFlavors(flavors: Partial<Flavor>[]): Observable<{ id: string, name: string }[]> {

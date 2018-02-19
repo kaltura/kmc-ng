@@ -61,6 +61,6 @@ export class DistributionProviderTypeIconPipe implements PipeTransform {
         break;
     }
 
-    return `/assets/distribution connectors/${fileName}.svg`;
+    return `/assets/distribution_connectors/${fileName}.svg`;
   }
 }
