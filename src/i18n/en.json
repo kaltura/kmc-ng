@@ -1337,6 +1337,8 @@
           "dvrStatus": "DVR Status:",
           "dvrWindow": "DVR Window:",
           "activeRec": "Active Recording:",
+          "autoStart": "Auto-start:",
+          "rtsp": "RTSP Broadcasting URLs",
           "hlsStream": "HLS stream URL:",
           "akamaiStream": "Akamai stream ID:",
           "transcoding": "Transcoding Profile Configuration",

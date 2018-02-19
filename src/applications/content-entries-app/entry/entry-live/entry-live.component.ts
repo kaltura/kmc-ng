@@ -51,7 +51,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 		}
 	}
 
-	/*
+
 	_regenerateToken():void{
 		this._browserService.confirm(
 			{
@@ -63,7 +63,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 			}
 		);
 	}
-	*/
+
 
 }
 

@@ -25,6 +25,11 @@
       "uri": "",
       "version": ""
     },
+    "liveAnalytics": {
+      "enabled": false,
+      "uri": "",
+      "version": ""
+    },
     "kava": {
       "enabled": false,
       "version": "",
