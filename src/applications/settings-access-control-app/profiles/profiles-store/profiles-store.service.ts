@@ -41,13 +41,7 @@ export interface AccessControlProfilesFilters {
 
 export interface AccessControlProfileRestriction extends KalturaBaseRestriction {
   isAuthorized: boolean;
-  details: {
-    domains?: string[],
-    countries?: string[],
-    ips?: string[],
-    flavors?: string[],
-    advancedSecurity?: string
-  };
+  details: string[];
   label: string;
 }
 
@@ -56,7 +50,11 @@ export interface ExtendedKalturaAccessControl extends KalturaAccessControl {
   countries: AccessControlProfileRestriction;
   ips: AccessControlProfileRestriction;
   flavors: AccessControlProfileRestriction;
-  advancedSecurity: AccessControlProfileRestriction;
+  advancedSecurity: {
+    isAuthorized: boolean
+    details: { preview?: number, secureVideo?: boolean };
+    label: string;
+  };
 }
 
 @Injectable()

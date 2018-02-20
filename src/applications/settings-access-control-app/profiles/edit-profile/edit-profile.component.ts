@@ -19,9 +19,9 @@ import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaP
 import { globalConfig } from '../../../../configuration/global-config';
 
 export interface AccessControlAutocompleteItem {
-  value: any,
-  __tooltip: any,
-  __class?: string
+  value: any;
+  __tooltip: any;
+  __class?: string;
 }
 
 @Component({
@@ -357,25 +357,25 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     const { domainsType, allowedDomains, restrictedDomains } = formValue;
     if (domainsType === KalturaSiteRestrictionType.allowSiteList && (!allowedDomains || !allowedDomains.length)
       || domainsType === KalturaSiteRestrictionType.restrictSiteList && (!restrictedDomains || !restrictedDomains.length)) {
-      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedDomains') + '\n'
+      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedDomains') + '\n';
     }
 
     const { countriesType, allowedCountries, restrictedCountries } = formValue;
     if (countriesType === KalturaCountryRestrictionType.allowCountryList && (!allowedCountries || !allowedCountries.length)
       || countriesType === KalturaCountryRestrictionType.restrictCountryList && (!restrictedCountries || !restrictedCountries.length)) {
-      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedCountries') + '\n'
+      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedCountries') + '\n';
     }
 
     const { ipsType, allowedIps, restrictedIps } = formValue;
     if (ipsType === KalturaIpAddressRestrictionType.allowList && (!allowedIps || !allowedIps.length)
       || ipsType === KalturaIpAddressRestrictionType.restrictList && (!restrictedIps || !restrictedIps.length)) {
-      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedIps') + '\n'
+      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedIps') + '\n';
     }
 
     const { flavorsType, allowedFlavors, restrictedFlavors } = formValue;
     if (flavorsType === KalturaLimitFlavorsRestrictionType.allowList && (!allowedFlavors || !allowedFlavors.length)
       || flavorsType === KalturaLimitFlavorsRestrictionType.restrictList && (!restrictedFlavors || !restrictedFlavors.length)) {
-      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedFlavors') + '\n'
+      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedFlavors') + '\n';
     }
 
     if (message) {
