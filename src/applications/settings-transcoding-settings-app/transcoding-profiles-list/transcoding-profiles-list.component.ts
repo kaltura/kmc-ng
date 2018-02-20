@@ -1,13 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import {
-  BaseTranscodingProfilesStore, KalturaConversionProfileWithAsset,
+  BaseTranscodingProfilesStore,
+  KalturaConversionProfileWithAsset,
   TranscodingProfilesFilters
 } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { MediaTranscodingProfilesStore } from '../transcoding-profiles-store/media-transcoding-profiles-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles-store/live-transcoding-profiles-store.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -66,7 +68,10 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   private _registerToDataChanges(): void {
-    this._storeService.profiles.state$
+    Observable.merge(
+      this._storeService.flavors.state$,
+      this._storeService.profiles.state$,
+    )
       .cancelOnDestroy(this)
       .subscribe(
         result => {

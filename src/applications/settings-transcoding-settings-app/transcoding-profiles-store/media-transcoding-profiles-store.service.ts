@@ -4,6 +4,7 @@ import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/Kaltu
 import { BaseTranscodingProfilesStore } from './base-transcoding-profiles-store.service';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { FlavoursStore } from '../../../shared/kmc-shared/flavours';
 
 @Injectable()
 export class MediaTranscodingProfilesStore extends BaseTranscodingProfilesStore {
@@ -12,8 +13,9 @@ export class MediaTranscodingProfilesStore extends BaseTranscodingProfilesStore 
 
   constructor(_kalturaServerClient: KalturaClient,
               _browserService: BrowserService,
+              _flavorsStore: FlavoursStore,
               _logger: KalturaLogger) {
-    super(_kalturaServerClient, _browserService, _logger);
+    super(_kalturaServerClient, _browserService, _flavorsStore, _logger);
     this._prepare();
   }
 }
