@@ -8,10 +8,7 @@ import { FiltersStoreBase, NumberTypeAdapter, TypeAdaptersMapping } from '@kaltu
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
 import { SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { FlavorParamsListAction } from 'kaltura-ngx-client/api/types/FlavorParamsListAction';
 import { KalturaAccessControlFilter } from 'kaltura-ngx-client/api/types/KalturaAccessControlFilter';
 import { AccessControlListAction } from 'kaltura-ngx-client/api/types/AccessControlListAction';
 import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestriction';
@@ -25,26 +22,32 @@ import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/Kalt
 import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
 import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
-import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import { AccessControlDeleteAction } from 'kaltura-ngx-client/api/types/AccessControlDeleteAction';
 import { KalturaBaseRestriction } from 'kaltura-ngx-client/api/types/KalturaBaseRestriction';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { AccessControlUpdateAction } from 'kaltura-ngx-client/api/types/AccessControlUpdateAction';
 import { AccessControlAddAction } from 'kaltura-ngx-client/api/types/AccessControlAddAction';
+import { FlavoursStore } from '../../../../shared/kmc-shared/flavours';
 
 const localStoragePageSizeKey = 'accessControlProfiles.list.pageSize';
 
 export interface AccessControlProfilesFilters {
-  pageSize: number,
-  pageIndex: number,
-  sortBy: string,
-  sortDirection: number,
+  pageSize: number;
+  pageIndex: number;
+  sortBy: string;
+  sortDirection: number;
 }
 
 export interface AccessControlProfileRestriction extends KalturaBaseRestriction {
   isAuthorized: boolean;
-  details: any;
+  details: {
+    domains?: string[],
+    countries?: string[],
+    ips?: string[],
+    flavors?: string[],
+    advancedSecurity?: string
+  };
   label: string;
 }
 
@@ -59,7 +62,7 @@ export interface ExtendedKalturaAccessControl extends KalturaAccessControl {
 @Injectable()
 export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlProfilesFilters> implements OnDestroy {
   private _profiles = {
-    data: new BehaviorSubject<{ items: KalturaAccessControl[], totalCount: number }>({ items: [], totalCount: 0 }),
+    data: new BehaviorSubject<{ items: ExtendedKalturaAccessControl[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
 
@@ -77,6 +80,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
   constructor(private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
+              private _flavorsStore: FlavoursStore,
               _logger: KalturaLogger) {
     super(_logger);
     this._prepare();
@@ -141,8 +145,8 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
 
           this._profiles.state.next({ loading: false, errorMessage: null });
           this._profiles.data.next({
-            items: <any[]>accessControlList.objects,
-            totalCount: <number>accessControlList.totalCount
+            items: accessControlList.objects,
+            totalCount: accessControlList.totalCount
           });
           this.flavors = flavorsList.map(flavor => ({ label: flavor.name, value: String(flavor.id) }));
         },
@@ -155,7 +159,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
 
   }
 
-  private _buildQueryRequest(): Observable<{ accessControlList: KalturaAccessControlListResponse, flavorsList: KalturaFlavorParams[] }> {
+  private _buildQueryRequest(): Observable<{ accessControlList: { objects: ExtendedKalturaAccessControl[], totalCount: number }, flavorsList: KalturaFlavorParams[] }> {
     try {
       // create request items
       const filter = new KalturaAccessControlFilter({});
@@ -176,145 +180,130 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
       }
 
       // build the request
-      return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(
-        new AccessControlListAction({ filter, pager }),
-        new FlavorParamsListAction({
-          pager: new KalturaFilterPager({ pageSize: 500 }),
-          responseProfile: new KalturaDetachedResponseProfile({
-            fields: 'id,name',
-            type: KalturaResponseProfileType.includeFields
-          })
-        })
-      )).map(([accessControlResponse, flavorsResponse]) => {
-        const accessControlList = accessControlResponse.result;
-        const flavorsList = flavorsResponse.result.objects;
-
-        accessControlList.objects.forEach(item => {
-          if (item.restrictions && item.restrictions.length) {
-            let domains = [];
-            let countries = [];
-            let ips = [];
-            let flavors = [];
-            let advancedSecurity = '';
-
-            item.restrictions.forEach(restriction => {
-              if (restriction instanceof KalturaSiteRestriction) {
-                const details = restriction.siteList.split(',');
-                const isAuthorized = restriction.siteRestrictionType === KalturaSiteRestrictionType.allowSiteList;
-                const label = isAuthorized
-                  ? this._appLocalization.get('applications.settings.accessControl.restrictions.authorized', [details.length])
-                  : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [details.length]);
-
-                domains = details;
-                item.domain = Object.assign({}, restriction, { label, isAuthorized, details });
-              }
-
-              if (restriction instanceof KalturaCountryRestriction) {
-                const isAuthorized = restriction.countryRestrictionType === KalturaCountryRestrictionType.allowCountryList;
-                const details = restriction.countryList.split(',').map(countryCode => countryCode.toLowerCase());
-                const label = isAuthorized
-                  ? this._appLocalization.get('applications.settings.accessControl.restrictions.authorized', [details.length])
-                  : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [details.length]);
-
-                countries = details;
-                item.countries = Object.assign({}, restriction, { label, isAuthorized, details });
-              }
-
-              if (restriction instanceof KalturaIpAddressRestriction) {
-                const details = restriction.ipAddressList.split(',');
-                const isAuthorized = restriction.ipAddressRestrictionType === KalturaIpAddressRestrictionType.allowList;
-                const label = isAuthorized
-                  ? this._appLocalization.get('applications.settings.accessControl.restrictions.authorized', [details.length])
-                  : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [details.length]);
-
-                ips = details;
-                item.ips = Object.assign({}, restriction, { label, isAuthorized, details });
-              }
-
-              if (restriction instanceof KalturaLimitFlavorsRestriction) {
-                const flavorParamsIds = restriction.flavorParamsIds.split(',');
-                const isAuthorized = restriction.limitFlavorsRestrictionType === KalturaLimitFlavorsRestrictionType.allowList;
-                const label = isAuthorized
-                  ? this._appLocalization.get('applications.settings.accessControl.restrictions.authorized', [flavorParamsIds.length])
-                  : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [flavorParamsIds.length]);
-                const getFlavorNameById = (flavorId) => {
-                  const relevantFlavor = flavorsList.find(({ id }) => Number(flavorId) === id);
-                  return relevantFlavor ? relevantFlavor.name : null;
-                };
-                flavors = flavorParamsIds.map(getFlavorNameById).filter(Boolean);
-
-                item.flavors = Object.assign({}, restriction, { label, isAuthorized, details: flavorParamsIds });
-              }
-
-              const advancedSecurityItem = {
-                label: '',
-                details: {
-                  preview: 0,
-                  secureVideo: false
-                }
-              };
-
-              if (restriction instanceof KalturaSessionRestriction) {
-                advancedSecurityItem.label = this._appLocalization.get('applications.settings.accessControl.restrictions.ks');
-                advancedSecurityItem.details.secureVideo = true;
-              }
-
-              if (restriction instanceof KalturaPreviewRestriction) {
-                advancedSecurityItem.label += this._appLocalization.get('applications.settings.accessControl.restrictions.freePreview');
-                advancedSecurityItem.details.preview = restriction.previewLength;
-                // for expanded panel details
-                const len = restriction.previewLength;
-                const min = Math.floor(len / 60);
-                const sec = len % 60;
-                advancedSecurity = this._appLocalization.get(
-                  'applications.settings.accessControl.restrictions.freePreviewDetails',
-                  [min, sec]
-                );
-              }
-
-              item.advancedSecurity = advancedSecurityItem;
-
-              item.details = Array.from(
-                Array(Math.max(domains.length, countries.length, ips.length, flavors.length, advancedSecurity.length)),
-                (i, index) => {
-                  return {
-                    domain: domains[index],
-                    country: typeof countries[index] === 'string' ? countries[index].toLowerCase() : undefined,
-                    ip: ips[index],
-                    flavor: flavors[index],
-                    advancedSecurity: advancedSecurity[index]
-                  }
-                }
-              );
-
-              item.details = {
-                domains,
-                countries,
-                ips,
-                flavors,
-                advancedSecurity
-              }
-            });
-          }
+      return this._kalturaServerClient.request(new AccessControlListAction({ filter, pager }))
+        .switchMap(
+          () => this._flavorsStore.get(),
+          (accessControlList, flavors) => ({ accessControlList, flavors })
+        )
+        .map(({ accessControlList, flavors }) => {
+          return this._mapProfilesResponse(accessControlList, flavors.items);
         });
-
-        // put default profile on top of the table if there's default profile in the response
-        const defaultProfileIndex = accessControlList.objects.findIndex(profile => profile.isDefault);
-        if (defaultProfileIndex !== -1) {
-          const defaultProfile = accessControlList.objects.splice(defaultProfileIndex, 1);
-          accessControlList.objects.unshift(...defaultProfile);
-        }
-
-        return { accessControlList, flavorsList };
-      });
     } catch (err) {
       return Observable.throw(err);
     }
   }
 
+  private _mapProfilesResponse(accessControlList, flavorsList): any {
+    accessControlList.objects.forEach(item => {
+      if (item.restrictions && item.restrictions.length) {
+        let domains = [];
+        let countries = [];
+        let ips = [];
+        let flavors = [];
+        let advancedSecurity = '';
+
+        item.restrictions.forEach(restriction => {
+          if (restriction instanceof KalturaSiteRestriction) {
+            const details = restriction.siteList.split(',');
+            const isAuthorized = restriction.siteRestrictionType === KalturaSiteRestrictionType.allowSiteList;
+            const label = isAuthorized
+              ? this._appLocalization.get('applications.settings.accessControl.restrictions.authorized', [details.length])
+              : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [details.length]);
+
+            domains = details;
+            item.domain = Object.assign({}, restriction, { label, isAuthorized, details });
+          }
+
+          if (restriction instanceof KalturaCountryRestriction) {
+            const isAuthorized = restriction.countryRestrictionType === KalturaCountryRestrictionType.allowCountryList;
+            const details = restriction.countryList.split(',').map(countryCode => countryCode.toLowerCase());
+            const label = isAuthorized
+              ? this._appLocalization.get('applications.settings.accessControl.restrictions.authorized', [details.length])
+              : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [details.length]);
+
+            countries = details;
+            item.countries = Object.assign({}, restriction, { label, isAuthorized, details });
+          }
+
+          if (restriction instanceof KalturaIpAddressRestriction) {
+            const details = restriction.ipAddressList.split(',');
+            const isAuthorized = restriction.ipAddressRestrictionType === KalturaIpAddressRestrictionType.allowList;
+            const label = isAuthorized
+              ? this._appLocalization.get('applications.settings.accessControl.restrictions.authorized', [details.length])
+              : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [details.length]);
+
+            ips = details;
+            item.ips = Object.assign({}, restriction, { label, isAuthorized, details });
+          }
+
+          if (restriction instanceof KalturaLimitFlavorsRestriction) {
+            const flavorParamsIds = restriction.flavorParamsIds.split(',');
+            const isAuthorized = restriction.limitFlavorsRestrictionType === KalturaLimitFlavorsRestrictionType.allowList;
+            const label = isAuthorized
+              ? this._appLocalization.get('applications.settings.accessControl.restrictions.authorized', [flavorParamsIds.length])
+              : this._appLocalization.get('applications.settings.accessControl.restrictions.blocked', [flavorParamsIds.length]);
+            const getFlavorNameById = (flavorId) => {
+              const relevantFlavor = flavorsList.find(({ id }) => Number(flavorId) === id);
+              return relevantFlavor ? relevantFlavor.name : null;
+            };
+            flavors = flavorParamsIds.map(getFlavorNameById).filter(Boolean);
+
+            item.flavors = Object.assign({}, restriction, { label, isAuthorized, details: flavorParamsIds });
+          }
+
+          const advancedSecurityItem = {
+            label: '',
+            details: {
+              preview: 0,
+              secureVideo: false
+            }
+          };
+
+          if (restriction instanceof KalturaSessionRestriction) {
+            advancedSecurityItem.label = this._appLocalization.get('applications.settings.accessControl.restrictions.ks');
+            advancedSecurityItem.details.secureVideo = true;
+          }
+
+          if (restriction instanceof KalturaPreviewRestriction) {
+            advancedSecurityItem.label += this._appLocalization.get('applications.settings.accessControl.restrictions.freePreview');
+            advancedSecurityItem.details.preview = restriction.previewLength;
+            // for expanded panel details
+            const len = restriction.previewLength;
+            const min = Math.floor(len / 60);
+            const sec = len % 60;
+            advancedSecurity = this._appLocalization.get(
+              'applications.settings.accessControl.restrictions.freePreviewDetails',
+              [min, sec]
+            );
+          }
+
+          item.advancedSecurity = advancedSecurityItem;
+
+          item.details = {
+            domains,
+            countries,
+            ips,
+            flavors,
+            advancedSecurity
+          };
+        });
+      }
+    });
+
+    // put default profile on top of the table if there's default profile in the response
+    const defaultProfileIndex = accessControlList.objects.findIndex(profile => profile.isDefault);
+    if (defaultProfileIndex !== -1) {
+      const defaultProfile = accessControlList.objects.splice(defaultProfileIndex, 1);
+      accessControlList.objects.unshift(...defaultProfile);
+    }
+
+    return { accessControlList, flavorsList };
+  }
+
   protected _createDefaultFiltersValue(): AccessControlProfilesFilters {
+    const pageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey) || 25;
     return {
-      pageSize: 25,
+      pageSize: pageSize,
       pageIndex: 0,
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc,

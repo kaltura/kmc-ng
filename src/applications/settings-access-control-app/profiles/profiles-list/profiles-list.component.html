@@ -24,12 +24,14 @@
           </div>
         </div>
       </kSticky>
-      <kAccessControlProfilesTable class="kAccessControlProfilesTable"
-                                   [list]="(_store.profiles.data$ | async)?.items"
-                                   [filter]="_query"
-                                   (actionSelected)="_onActionSelected($event)"
-                                   (sortChanged)="_onSortChanged($event)"
-                                   [(selectedProfiles)]="_selectedProfiles"></kAccessControlProfilesTable>
+      <k-area-blocker [message]="_tableBlockerMessage" [showLoader]="_tableIsBusy">
+        <kAccessControlProfilesTable class="kAccessControlProfilesTable"
+                                     [list]="(_store.profiles.data$ | async)?.items"
+                                     [filter]="_query"
+                                     (actionSelected)="_onActionSelected($event)"
+                                     (sortChanged)="_onSortChanged($event)"
+                                     [(selectedProfiles)]="_selectedProfiles"></kAccessControlProfilesTable>
+      </k-area-blocker>
 
       <div class="kAccessControlProfilesTableFooter kContent" #footer
            *ngIf="(_store.profiles.data$ | async)?.totalCount">

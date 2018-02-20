@@ -19,6 +19,8 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedProfiles: KalturaAccessControl[] = [];
   public _selectedProfile: KalturaAccessControl;
+  public _tableIsBusy = false;
+  public _tableBlockerMessage: AreaBlockerMessage;
 
   public _query = {
     pageIndex: 0,
@@ -34,6 +36,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
+    this._registerToDataChanges();
   }
 
   ngOnDestroy() {
@@ -47,6 +50,33 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
       ]
     ));
   }
+
+  private _registerToDataChanges(): void {
+    this._store.profiles.state$
+      .cancelOnDestroy(this)
+      .subscribe(
+        result => {
+
+          this._tableIsBusy = result.loading;
+
+          if (result.errorMessage) {
+            this._tableBlockerMessage = this._blockerMessage = new AreaBlockerMessage({
+              message: result.errorMessage || this._appLocalization.get('applications.settings.accessControl.errors.loading'),
+              buttons: [{
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => this._store.reload()
+              }]
+            });
+          } else {
+            this._tableBlockerMessage = null;
+          }
+        },
+        error => {
+          console.warn('[kmcng] -> could not load playlists'); // navigate to error page
+          throw error;
+        });
+  }
+
 
   private _updateAccessControlProfiles(): void {
     this._appEvents.publish(new AccessControlProfileUpdatedEvent());
@@ -88,33 +118,14 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
         (err) => {
           const error = err.error ? err.error : err;
           const message = error.message || this._appLocalization.get('applications.settings.accessControl.errors.delete');
-          let buttons = [
-            {
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => {
-                this._blockerMessage = null;
-                this._executeDeleteProfiles(profiles);
-              }
-            },
-            {
-              label: this._appLocalization.get('app.common.cancel'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const buttons = [{
+            label: this._appLocalization.get('app.common.ok'),
+            action: () => {
+              this._blockerMessage = null;
+              this._store.reload();
+              this._clearSelection();
             }
-          ];
-
-          // do not provide retry button in case user tries to delete default profile
-          if (error.code === 'CANNOT_DELETE_DEFAULT_ACCESS_CONTROL') {
-            buttons = [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._store.reload();
-                this._clearSelection();
-              }
-            }];
-          }
+          }];
 
           this._blockerMessage = new AreaBlockerMessage({ message, buttons });
         }

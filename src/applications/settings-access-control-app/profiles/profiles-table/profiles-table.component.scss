@@ -88,6 +88,12 @@
     max-height: 195px;
     padding: 12px 0;
 
+    .kNoAdditionalInfo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     table {
       border-collapse: collapse;
       width: 100%;
@@ -138,10 +144,6 @@
 :host /deep/ .kAccessControlProfilesTable p-datatable {
   .ui-datatable-scrollable-body {
     margin-bottom: 34px;
-  }
-
-  tr.hide-expandable-row + tr:not(.ui-widget-content) {
-    display: none;
   }
   .stickyHeader {
     z-index: 10;

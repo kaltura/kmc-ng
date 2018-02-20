@@ -1,7 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AccessControlProfilesStore } from '../profiles-store/profiles-store.service';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 
@@ -11,7 +10,6 @@ import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccess
   styleUrls: ['./profiles-table.component.scss']
 })
 export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-  public _blockerMessage: AreaBlockerMessage = null;
   public _profiles: KalturaAccessControl[] = [];
   private _deferredProfiles: KalturaAccessControl[];
 
@@ -25,7 +23,7 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
       this._profiles = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredProfiles = data
+      this._deferredProfiles = data;
     }
   }
 
@@ -39,53 +37,18 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
-  private _profile: KalturaAccessControl;
+  private _profileId: number;
 
   public _deferredLoading = true;
   public _emptyMessage = '';
   public _items: MenuItem[];
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
-
   constructor(private _appLocalization: AppLocalization,
-              private _cdRef: ChangeDetectorRef,
-              public _store: AccessControlProfilesStore) {
+              private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this._store.profiles.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        result => {
-          if (result.errorMessage) {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: result.errorMessage || this._appLocalization.get('applications.settings.accessControl.errors.loading'),
-              buttons: [{
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => this._store.reload()
-              }]
-            })
-          } else {
-            this._blockerMessage = null;
-            if (result.loading) {
-              this._emptyMessage = '';
-              loadedOnce = true;
-            } else {
-              if (loadedOnce) {
-                this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-              }
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load access control profiles'); // navigate to error page
-          throw error;
-        });
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngAfterViewInit() {
@@ -104,15 +67,15 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
     this.actionsMenu.hide();
   }
 
-  private _buildMenu(): void {
+  private _buildMenu(profile: KalturaAccessControl): void {
     this._items = [
       {
         label: this._appLocalization.get('applications.settings.accessControl.table.actions.edit'),
-        command: () => this._onActionSelected('edit', this._profile)
+        command: () => this._onActionSelected('edit', profile)
       },
       {
         label: this._appLocalization.get('applications.settings.accessControl.table.actions.delete'),
-        command: () => this._onActionSelected('delete', this._profile)
+        command: () => this._onActionSelected('delete', profile)
       },
     ];
   }
@@ -124,9 +87,9 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   public _openActionsMenu(event: Event, profile: KalturaAccessControl): void {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (!this._profile || this._profile.id !== profile.id) {
-        this._profile = profile;
-        this._buildMenu();
+      if (this._profileId !== profile.id) {
+        this._profileId = profile.id;
+        this._buildMenu(profile);
         this.actionsMenu.show(event);
       }
     }
@@ -138,10 +101,6 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
 
   public _onSortChanged(event: { field: string, order: number }): void {
     this.sortChanged.emit(event);
-  }
-
-  public _profilesTableRowStyle(rowData: { details: object }): string {
-    return !rowData.details ? 'hide-expandable-row' : '';
   }
 }
 

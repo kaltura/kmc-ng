@@ -61,7 +61,7 @@
       }
       .kRow {
         display: flex;
-        margin-bottom: 20px;
+        margin-bottom: 28px;
         &:last-child {
           margin-bottom: 0;
         }
@@ -116,6 +116,10 @@
         }
         .kCountryList, .kFlavorList {
           vertical-align: middle;
+          display: inline-block;
+          max-width: 275px;
+          overflow: hidden;
+          text-overflow: ellipsis;
 
           .kCountryListFlag {
             margin: 0 .125em 0 .5em;
@@ -145,6 +149,10 @@
 }
 
 :host /deep/ .kEditAccessControlProfile {
+  .ui-multiselect-panel {
+    width: 320px;
+  }
+
   .ui-radiobutton-label {
     font-weight: normal;
     font-size: 15px;

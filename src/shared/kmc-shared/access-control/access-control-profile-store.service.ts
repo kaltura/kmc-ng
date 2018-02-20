@@ -14,7 +14,7 @@ import { AccessControlProfileUpdatedEvent } from '../events/access-control-profi
 
 @Injectable()
 export class AccessControlProfileStore extends PartnerProfileStore implements OnDestroy {
-  private _cachedProfiles: KalturaAccessControl[] = [];
+  private _cachedProfiles$: Observable<{ items: KalturaAccessControl[] }>;
 
   constructor(private _kalturaServerClient: KalturaClient, _appEvents: AppEventsService) {
     super();
@@ -30,21 +30,28 @@ export class AccessControlProfileStore extends PartnerProfileStore implements On
   }
 
   private _clearCache(): void {
-    this._cachedProfiles = [];
+    this._cachedProfiles$ = null;
   }
 
   public get(): Observable<{ items: KalturaAccessControl[] }> {
-    const cachedResults = this._cachedProfiles;
-
-    if (cachedResults && cachedResults.length) {
-      return Observable.of({ items: cachedResults });
+    if (!this._cachedProfiles$) {
+      // execute the request
+      this._cachedProfiles$ = this._buildGetRequest()
+        .cancelOnDestroy(this)
+        .map(
+          response => {
+            return ({items: response ? response.objects : []});
+          })
+        .catch(error => {
+          // re-throw the provided error
+          this._cachedProfiles$ = null;
+          return Observable.throw(new Error('failed to retrieve access control profiles list'));
+        })
+        .publishReplay(1)
+        .refCount();
     }
 
-    return this._buildGetRequest()
-      .do(({ objects }) => {
-        this._cachedProfiles = objects;
-      })
-      .map(({ objects }) => ({ items: objects }));
+    return this._cachedProfiles$;
   }
 
   private _buildGetRequest(): Observable<KalturaAccessControlListResponse> {
