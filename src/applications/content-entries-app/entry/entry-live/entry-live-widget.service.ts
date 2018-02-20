@@ -59,8 +59,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	public _availableBitrates = AVAIL_BITRATES;
 
 	public _autoStartOptions = [
-		{label: 'Disabled', value: true},
-		{label: 'Enabled', value: false}
+		{label: this._appLocalization.get('applications.content.entryDetails.live.disabled'), value: true},
+		{label: this._appLocalization.get('applications.content.entryDetails.live.enabled'), value: false}
 	];
 
 	constructor(private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {

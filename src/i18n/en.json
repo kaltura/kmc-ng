@@ -1339,6 +1339,8 @@
           "activeRec": "Active Recording:",
           "autoStart": "Auto-start:",
           "rtsp": "RTSP Broadcasting URLs",
+          "enabled": "Enabled",
+          "disabled": "Disabled",
           "hlsStream": "HLS stream URL:",
           "akamaiStream": "Akamai stream ID:",
           "transcoding": "Transcoding Profile Configuration",
@@ -1970,7 +1972,7 @@
           },
           "notifications": {
             "title": "Notifications",
-            "message": "For notification setting please contact your PM"
+            "message": "For notification settings please contact your PM"
           }
         },
         "entitlement": {
