@@ -13,7 +13,7 @@ import { KalturaDVRStatus } from 'kaltura-ngx-client/api/types/KalturaDVRStatus'
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { LiveStreamRegenerateStreamTokenAction } from 'kaltura-ngx-client/api/types/LiveStreamRegenerateStreamTokenAction';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 
@@ -63,7 +63,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		{label: 'Enabled', value: false}
 	];
 
-	constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
 		super(EntryWidgetKeys.Live);
 	}
 
@@ -281,11 +281,14 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 
 	public _openLiveReport(): void {
-		const base_url = window.location.protocol + '//' + environment.core.kaltura.legacyKmcUrl;
-		const url = base_url + '/apps/liveanalytics/' + environment.core.kaltura.liveAnalyticsVersion + '/index.html#/entry/' + this.data.id + '/nonav';
-		this._browserService.openLink(url);
+		//const base_url = window.location.protocol + '//' + serverConfig.externalApps.liveAnalytics.uri;
+		//const url = base_url + '/apps/liveanalytics/' + serverConfig.externalApps.liveAnalytics.version + '/index.html#/entry/' + this.data.id + '/nonav/';
+		//this._browserService.openLink(url);
+		this._browserService.alert({
+			header: "Note",
+			message: "Live Analytics Currently Not Supported"
+		});
 	}
-
 
 	ngOnDestroy()
     {
