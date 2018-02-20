@@ -1,7 +1,28 @@
+@import 'app-theme/_variables.scss';
 
 .kTranscodingProfilesTable {
-  .kTranscodingProfileName {
+  .kTranscodingProfileNameWrapper {
+    display: flex;
+    align-items: center;
 
+    .kTranscodingProfileName {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 15px;
+      font-weight: bold;
+      color: $kGrayscale1;
+      cursor: pointer;
+    }
+
+    .kTranscodingProfileNameDefault {
+      font-size: 12px;
+      font-weight: bold;
+      color: #FFFFFF;
+      background-color: $kSecondary;
+      border-radius: 10px;
+      padding: 0 10px;
+      margin-left: 35px;
+    }
   }
 
   .kTranscodingProfilesTableActions {
@@ -10,6 +31,10 @@
     .kMoreActionsButton {
 
     }
+  }
+
+  .kTranscodingProfileDeleteAction {
+    color: $kDandger;
   }
 }
 

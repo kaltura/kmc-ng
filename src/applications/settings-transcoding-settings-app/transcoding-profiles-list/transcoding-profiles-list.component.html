@@ -5,34 +5,35 @@
     <button
       pButton
       type="button"
-      [class.kHidden]="false"
+      [class.kHidden]="_selectedProfiles.length"
       [label]="'applications.settings.transcoding.addProfile' | translate"
       class="kButtonBranded kAddProfileBtn"></button>
-    <span class="kTotalProfilesCount" *ngIf="false">
-      {{'applications.settings.transcoding.profiles' | translate: [0]}}
+    <span class="kTotalProfilesCount" *ngIf="_selectedProfiles.length">
+      {{'applications.settings.transcoding.profiles' | translate: [(_storeService.profiles.data$ | async)?.totalCount]}}
     </span>
 
-    <div class="kBulkOperations" [class.kHidden]="true">
+    <div class="kBulkOperations" [class.kHidden]="!_selectedProfiles.length">
       <span class="kSelectedProfilesLabel">
-        • {{ 'applications.settings.transcoding.selected' | translate: [0]}}
+        • {{ 'applications.settings.transcoding.selected' | translate: [_selectedProfiles.length]}}
       </span>
       <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
-      <a class="kBulkCancel">
+      <a class="kBulkCancel" (click)="_clearSelection()">
         {{'applications.settings.transcoding.cancel' | translate}}
       </a>
     </div>
   </div>
 
-  <k-area-blocker [showLoader]="false" [message]="null">
-    <k-transcoding-profiles-table></k-transcoding-profiles-table>
+  <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage">
+    <k-transcoding-profiles-table [profiles]="(_storeService.profiles.data$ | async)?.items"
+                                  [selectedProfiles]="_selectedProfiles"></k-transcoding-profiles-table>
   </k-area-blocker>
 
-  <div class="kProfilesTableFooter" #footer *ngIf="false">
+  <div class="kProfilesTableFooter" #footer *ngIf="(_storeService.profiles.data$ | async)?.totalCount">
     <p-paginator
-      [rows]="1"
-      [first]="1"
+      [rows]="_query.pageSize"
+      [first]="_query.pageIndex * _query.pageSize"
+      [totalRecords]="(_storeService.profiles.data$ | async)?.totalCount"
       [rowsPerPageOptions]="[25,50,75,100]"
-      [totalRecords]="1"
       (onPageChange)="_onPaginationChanged($event)"></p-paginator>
     <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
   </div>

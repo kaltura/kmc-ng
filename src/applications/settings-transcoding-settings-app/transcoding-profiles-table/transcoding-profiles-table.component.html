@@ -1,7 +1,7 @@
 <div class="kTranscodingProfilesTable" [class.noResults]="!_profiles?.length">
   <p-dataTable
     #dataTable
-    [value]="[]"
+    [value]="_profiles"
     (selectionChange)="_onSelectionChange($event)"
     [(selection)]="selectedProfiles"
     [emptyMessage]="_emptyMessage"
@@ -12,12 +12,17 @@
     <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
     <p-column field="name" [header]="'applications.settings.transcoding.table.name' | translate">
       <ng-template let-col let-profile="rowData" pTemplate="body">
+        <div class="kTranscodingProfileNameWrapper">
           <div class="kTranscodingProfileName"
                [kTooltip]="profile[col.field]"
                [maxWidth]="300"
                (click)="_onActionSelected('view',profile)">
             {{profile[col.field]}}
           </div>
+          <span *ngIf="profile?.isDefault" class="kTranscodingProfileNameDefault">
+            {{'applications.settings.transcoding.table.default' | translate}}
+          </span>
+        </div>
       </ng-template>
     </p-column>
     <p-column field="description" [header]="'applications.settings.transcoding.table.description' | translate"></p-column>

@@ -1,12 +1,14 @@
 <div class="kTranscodingProfilesListsHolderWrapper">
 
   <div class="kTranscodingProfilesListsHolder kContent">
-    <k-transcoding-profiles-list [title]="'applications.settings.transcoding.transcodingProfiles'| translate">
+    <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.media"
+                                 [title]="'applications.settings.transcoding.transcodingProfiles'| translate">
     </k-transcoding-profiles-list>
   </div>
 
   <div class="kTranscodingProfilesListsHolder kContent">
-    <k-transcoding-profiles-list [title]="'applications.settings.transcoding.liveTranscodingProfiles'| translate">
+    <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.liveStream"
+                                 [title]="'applications.settings.transcoding.liveTranscodingProfiles'| translate">
     </k-transcoding-profiles-list>
   </div>
 </div>

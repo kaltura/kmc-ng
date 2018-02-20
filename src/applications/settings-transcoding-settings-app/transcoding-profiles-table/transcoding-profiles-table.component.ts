@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 
 @Component({
   selector: 'k-transcoding-profiles-table',
@@ -9,7 +9,7 @@ import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
   styleUrls: ['./transcoding-profiles-table.component.scss']
 })
 export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() set profiles(data) {
+  @Input() set profiles(data: KalturaConversionProfileWithAsset[]) {
     if (!this._deferredLoading) {
       this._profiles = [];
       this._cdRef.detectChanges();
@@ -20,11 +20,10 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
     }
   }
 
-  @Input() selectedProfiles: any[] = [];
+  @Input() selectedProfiles: KalturaConversionProfileWithAsset[] = [];
 
-  @Output() sortChanged = new EventEmitter<any>();
-  @Output() selectedProfilesChange = new EventEmitter<any>();
-  @Output() actionSelected = new EventEmitter<any>();
+  @Output() selectedProfilesChange = new EventEmitter<KalturaConversionProfileWithAsset[]>();
+  @Output() actionSelected = new EventEmitter<{ action: string, profile: KalturaConversionProfileWithAsset }>();
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
 
@@ -33,7 +32,7 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
   public _items: MenuItem[];
   public _deferredLoading = true;
   public _deferredProfiles = [];
-  public _actionsMenuProfileId = '';
+  public _actionsMenuProfileId: number;
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
@@ -60,7 +59,7 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
     this._actionsMenu.hide();
   }
 
-  private _buildMenu(profile: any): void {
+  private _buildMenu(profile: KalturaConversionProfileWithAsset): void {
     this._items = [
       {
         label: this._appLocalization.get('applications.settings.transcoding.setAsDefault'),
@@ -72,12 +71,13 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
       },
       {
         label: this._appLocalization.get('applications.settings.transcoding.delete'),
+        styleClass: 'kTranscodingProfileDeleteAction',
         command: () => this._onActionSelected('delete', profile)
       }
     ];
   }
 
-  public _openActionsMenu(event: any, profile: KalturaPlaylist): void {
+  public _openActionsMenu(event: any, profile: KalturaConversionProfileWithAsset): void {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
       if (this._actionsMenuProfileId !== profile.id) {
@@ -88,8 +88,8 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
     }
   }
 
-  public _onActionSelected(action: string, profile: any): void {
-    this.actionSelected.emit({ 'action': action, 'playlist': profile });
+  public _onActionSelected(action: string, profile: KalturaConversionProfileWithAsset): void {
+    this.actionSelected.emit({ action, profile });
   }
 
   public _onSelectionChange(event): void {

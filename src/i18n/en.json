@@ -2055,6 +2055,7 @@
         }
       },
       "transcoding": {
+        "errorLoadingProfiles": "Failed to load transcoding profiles",
         "transcodingProfiles": "Transcoding Profiles",
         "profiles": "{{0}} Profiles",
         "selected": "{{0}} Selected",
@@ -2072,6 +2073,7 @@
         "cancel": "Cancel",
         "save": "Save",
         "table": {
+          "default": "Default",
           "name": "Name",
           "description": "Description",
           "id": "ID",
