@@ -7,7 +7,7 @@ import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/Kalt
 import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
 import { AccessControlProfilesStore, ExtendedKalturaAccessControl } from '../profiles-store/profiles-store.service';
-import { countryCodes } from 'app-config/country-codes';
+
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import { KalturaSiteRestriction } from 'kaltura-ngx-client/api/types/KalturaSiteRestriction';
@@ -16,6 +16,7 @@ import { KalturaIpAddressRestriction } from 'kaltura-ngx-client/api/types/Kaltur
 import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestriction';
 import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
 import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
+import { globalConfig } from '../../../../configuration/global-config';
 
 export interface AccessControlAutocompleteItem {
   value: any,
@@ -45,7 +46,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     return this._domainsFormatError || this._ipsFormatError || this._nameField.invalid;
   }
 
-  public _countryCodes: { value: string }[] = countryCodes.map(code => {
+  public _countryCodes: { value: string }[] = globalConfig.client.countriesList.map(code => {
     return {
       value: code, label: this._appLocalization.get(`countries.${code}`)
     }

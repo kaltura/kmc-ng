@@ -1,4 +1,4 @@
-export const countryCodes = [
+export const countryCodes: string[] = [
   'ad',
   'ae',
   'af',
