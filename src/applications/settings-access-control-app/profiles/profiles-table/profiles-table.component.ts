@@ -1,4 +1,7 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output,
+  ViewChild
+} from '@angular/core';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AccessControlProfilesStore } from '../profiles-store/profiles-store.service';
@@ -10,8 +13,10 @@ import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccess
   styleUrls: ['./profiles-table.component.scss']
 })
 export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-  public _profiles: KalturaAccessControl[] = [];
   private _deferredProfiles: KalturaAccessControl[];
+
+  public _profiles: KalturaAccessControl[] = [];
+  public _documentWidth: number = 2000;
 
   @Input()
   set list(data: KalturaAccessControl[]) {
@@ -43,12 +48,18 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   public _emptyMessage = '';
   public _items: MenuItem[];
 
+  @HostListener('window:resize')
+  private _updateDocumentListener(): void {
+    this._documentWidth = document.body.clientWidth;
+  }
+
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
     this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
+    this._documentWidth = document.body.clientWidth;
   }
 
   ngAfterViewInit() {

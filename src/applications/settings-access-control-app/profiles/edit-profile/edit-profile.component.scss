@@ -173,6 +173,10 @@
     }
   }
 
+  .ui-multiselect-items-wrapper {
+    overflow-x: hidden;
+  }
+
   kautocomplete {
     &.hasError {
       .ui-autocomplete-multiple-container {
@@ -192,7 +196,7 @@
 
     .ui-autocomplete-multiple-container {
       display: flex;
-      height: 60px !important;
+      height: 71px !important;
       flex-wrap: wrap;
       overflow-y: auto;
 

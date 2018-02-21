@@ -21,16 +21,21 @@
     <p-column field="name"
               [header]="'applications.settings.accessControl.table.name' | translate">
       <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span class="kAccessControlProfileTableName" (click)="_onActionSelected('edit', profile)">
+          <span class="kAccessControlProfileTableName"
+                [kTooltip]="profile[col.field]"
+                [maxWidth]="400"
+                (click)="_onActionSelected('edit', profile)">
             {{ profile[col.field] }}
           </span>
       </ng-template>
     </p-column>
 
     <p-column field="id"
+              [hidden]="_documentWidth < 1300"
               [header]="'applications.settings.accessControl.table.id' | translate"></p-column>
 
     <p-column field="createdAt"
+              [hidden]="_documentWidth < 1300"
               [header]="'applications.settings.accessControl.table.createdOn' | translate"
               [sortable]="'custom'">
       <ng-template let-col let-profile="rowData" pTemplate="body">
@@ -110,7 +115,7 @@
           <tr>
             <td class="kStub1"></td>
             <td class="kStub1"></td>
-            <td colspan="3">{{profile?.description}}</td>
+            <td [attr.colspan]="_documentWidth < 1300 ? 1 : 3">{{profile?.description}}</td>
             <td>
               <div *ngFor="let domain of profile?.details?.domains" [kTooltip]="domain">{{domain}}</div>
             </td>

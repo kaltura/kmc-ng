@@ -9,6 +9,12 @@
     font-weight: bold;
     color: $kGrayscale1;
     cursor: pointer;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    max-width: 200px;
+    white-space: nowrap;
+    margin-right: 10px;
   }
   .kThumbnailHolder {
     overflow: hidden;
@@ -142,6 +148,12 @@
 }
 
 :host /deep/ .kAccessControlProfilesTable p-datatable {
+  .ui-datatable .ui-datatable-thead>tr>th,
+  .ui-datatable .ui-datatable-tfoot>tr>td,
+  .ui-datatable .ui-datatable-data>tr>td {
+    padding: 0;
+  }
+
   .ui-datatable-scrollable-body {
     margin-bottom: 34px;
   }
