@@ -62,6 +62,7 @@
       "ok": "OK",
       "cancel": "Cancel",
       "retry": "Retry",
+      "dismiss": "Dismiss",
       "reload": "Reload",
       "confirm": "Confirm",
       "close": "Close",

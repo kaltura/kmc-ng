@@ -279,14 +279,20 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 							message: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure'),
 							buttons: [
 								{
-									label: 'Retry',
+									label: this._appLocalization.get('app.common.dismiss'),
+									action: () => {
+										this.sectionBlockerMessage = null;
+									}
+								},
+								{
+									label: this._appLocalization.get('app.common.retry'),
 									action: () => {
 										this.regenerateStreamToken();
 									}
 								}
 							]
 						}
-					), true);
+					), false);
 				}
 			);
 	}
