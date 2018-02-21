@@ -25,6 +25,11 @@
       "uri": "@externalApps.liveDashboard.uri@",
       "version": "@externalApps.liveDashboard.version@"
     },
+    "liveAnalytics": {
+      "enabled": @externalApps.liveAnalytics.enabled@,
+      "uri": "@externalApps.liveAnalytics.uri@",
+      "version": "@externalApps.liveAnalytics.version@"
+    },
     "kava": {
       "enabled": @externalApps.kava.enabled@,
       "version": "@externalApps.kava.version@",
