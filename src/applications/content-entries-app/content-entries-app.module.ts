@@ -45,6 +45,7 @@ import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { ContentEntriesAppService } from './content-entries-app.service';
 import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
+import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
 
 @NgModule({
   imports: [
@@ -85,6 +86,7 @@ import { CategoriesModule } from 'app-shared/content-shared/categories/categorie
     DetailsBarModule,
       EntriesModule,
     StickyModule,
+    CopyToClipboardModule,
     OverlayPanelModule
   ],
   declarations: [
