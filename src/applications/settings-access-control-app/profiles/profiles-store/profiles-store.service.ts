@@ -28,7 +28,7 @@ import { KalturaBaseRestriction } from 'kaltura-ngx-client/api/types/KalturaBase
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { AccessControlUpdateAction } from 'kaltura-ngx-client/api/types/AccessControlUpdateAction';
 import { AccessControlAddAction } from 'kaltura-ngx-client/api/types/AccessControlAddAction';
-import { FlavoursStore } from '../../../../shared/kmc-shared/flavours';
+import { FlavoursStore } from 'app-shared/kmc-shared';
 
 const localStoragePageSizeKey = 'accessControlProfiles.list.pageSize';
 
@@ -92,13 +92,6 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
   private _prepare(): void {
     if (!this._isReady) {
       this._isReady = true;
-
-      const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
-      if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
-        this.filter({
-          pageSize: defaultPageSize
-        });
-      }
 
       this._registerToFilterStoreDataChanges();
       this._executeQuery();

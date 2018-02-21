@@ -136,7 +136,8 @@
             <td class="kStub2"></td>
           </tr>
         </table>
-        <div *ngIf="!profile?.details && !profile?.description" class="kNoAdditionalInfo">
+        <div *ngIf="(!profile?.details || !profile?.details?.advancedSecurity)&& !profile?.description"
+             class="kNoAdditionalInfo">
           {{'applications.settings.accessControl.table.noAdditionalInfo' | translate}}
         </div>
       </div>

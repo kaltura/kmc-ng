@@ -16,10 +16,10 @@ import { KalturaIpAddressRestriction } from 'kaltura-ngx-client/api/types/Kaltur
 import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestriction';
 import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
 import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
-import { globalConfig } from '../../../../configuration/global-config';
+import { globalConfig } from 'config/global';
 
 export interface AccessControlAutocompleteItem {
-  value: any;
+  value: string;
   __tooltip: any;
   __class?: string;
 }

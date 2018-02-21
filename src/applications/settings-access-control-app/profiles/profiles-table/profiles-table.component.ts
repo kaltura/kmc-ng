@@ -42,8 +42,6 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
-  private _profileId: number;
-
   public _deferredLoading = true;
   public _emptyMessage = '';
   public _items: MenuItem[];
@@ -98,14 +96,10 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   public _openActionsMenu(event: Event, profile: KalturaAccessControl): void {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (this._profileId !== profile.id) {
-        this._profileId = profile.id;
-        this._buildMenu(profile);
-        this.actionsMenu.show(event);
-      }
+      this._buildMenu(profile);
+      this.actionsMenu.show(event);
     }
   }
-
   public _onSelectionChange(event: KalturaAccessControl[]): void {
     this.selectedProfilesChange.emit(event);
   }
