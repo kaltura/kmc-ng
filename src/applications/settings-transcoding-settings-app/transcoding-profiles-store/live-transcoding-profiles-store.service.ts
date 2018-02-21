@@ -14,10 +14,8 @@ export class LiveTranscodingProfilesStore extends BaseTranscodingProfilesStore {
 
   constructor(_kalturaServerClient: KalturaClient,
               _browserService: BrowserService,
-              _flavorsStore: FlavoursStore,
-              _storageProfilesStore: StorageProfilesStore,
               _logger: KalturaLogger) {
-    super(_kalturaServerClient, _browserService, _flavorsStore,  _storageProfilesStore, _logger);
+    super(_kalturaServerClient, _browserService, _logger);
     this._prepare();
   }
 }

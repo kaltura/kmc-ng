@@ -16,12 +16,7 @@ import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/t
 import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
-import { FlavoursStore } from 'app-shared/kmc-shared/flavours';
-import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles/storage-profiles-store.service';
-import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
-import { catchError, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export enum SortDirection {
   Desc,
@@ -45,25 +40,11 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     data: new BehaviorSubject<{ items: KalturaConversionProfileWithAsset[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
-  private _flavors = {
-    data: new BehaviorSubject<{ media: KalturaFlavorParams[], live: KalturaLiveParams[] }>({ media: [], live: [] }),
-    state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
-  };
-  private _remoteStorageProfiles = {
-    data: new BehaviorSubject<{ items: KalturaStorageProfile[] }>({ items: [] }),
-    state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
-  };
   private _isReady = false;
   private _querySubscription: ISubscription;
 
   protected abstract localStoragePageSizeKey: string;
   protected abstract transcodingProfilesListType: KalturaConversionProfileType;
-
-  public readonly flavors = {
-    data$: this._flavors.data.asObservable(),
-    state$: this._flavors.state.asObservable(),
-    data: () => this._flavors.data.value
-  };
 
   public readonly profiles = {
     data$: this._profiles.data.asObservable(),
@@ -71,27 +52,15 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     data: () => this._profiles.data.value
   };
 
-  public readonly remoteStorageProfiles = {
-    data$: this._remoteStorageProfiles.data.asObservable(),
-    state$: this._remoteStorageProfiles.state.asObservable(),
-    data: () => this._remoteStorageProfiles.data.value
-  };
-
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
-              private _flavorsStore: FlavoursStore,
-              private _storageProfilesStore: StorageProfilesStore,
               _logger: KalturaLogger) {
     super(_logger);
   }
 
   ngOnDestroy() {
-    this._flavors.data.complete();
     this._profiles.data.complete();
-    this._remoteStorageProfiles.data.complete();
-    this._flavors.state.complete();
     this._profiles.state.complete();
-    this._remoteStorageProfiles.state.complete();
   }
 
   private _registerToFilterStoreDataChanges(): void {
@@ -198,58 +167,6 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     }
   }
 
-  private _loadRemoteStorageProfiles(): void {
-    const getEmptyRemoteStorageProfile = () => {
-      const emptyProfile = new KalturaStorageProfile({ name: 'N/A' });
-      (<any>emptyProfile).id = null;
-      return emptyProfile;
-    };
-    this._remoteStorageProfiles.state.next({ loading: true, errorMessage: null });
-
-    this._storageProfilesStore.get()
-      .cancelOnDestroy(this)
-      .pipe(
-        map(({ items }) => [getEmptyRemoteStorageProfile(), ...items]),
-        catchError(() => Observable.of([getEmptyRemoteStorageProfile()]))
-      )
-      .subscribe(
-        (items) => {
-          this._remoteStorageProfiles.state.next({ loading: false, errorMessage: null });
-          this._remoteStorageProfiles.data.next({ items });
-        });
-  }
-
-  private _loadFlavors(): void {
-    this._flavors.state.next({ loading: true, errorMessage: null });
-
-    this._flavorsStore.get()
-      .cancelOnDestroy(this)
-      .pipe(
-        map(({ items }) => {
-          const live = [];
-          const media = [];
-          items.forEach(flavor => {
-            if (flavor instanceof KalturaLiveParams) {
-              live.push(flavor);
-            } else {
-              media.push(flavor);
-            }
-          });
-
-          return { media, live };
-        })
-      )
-      .subscribe(
-        ({ media, live }) => {
-          this._flavors.state.next({ loading: false, errorMessage: null });
-          this._flavors.data.next({ media, live });
-        },
-        (error) => {
-          const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-          this._flavors.state.next({ loading: false, errorMessage });
-        });
-  }
-
   protected _prepare(): void {
     // NOTICE: do not execute here any logic that should run only once.
     // this function will re-run if preparation failed. execute your logic
@@ -266,8 +183,6 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
       }
 
       this._registerToFilterStoreDataChanges();
-      this._loadFlavors();
-      this._loadRemoteStorageProfiles();
       this._executeQuery();
     }
   }

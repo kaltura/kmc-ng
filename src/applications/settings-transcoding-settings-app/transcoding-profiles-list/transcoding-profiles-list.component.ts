@@ -9,7 +9,6 @@ import { MediaTranscodingProfilesStore } from '../transcoding-profiles-store/med
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles-store/live-transcoding-profiles-store.service';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -39,13 +38,17 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
-    this._registerToDataChanges();
+    this._prepare();
   }
 
   ngOnDestroy() {
 
+  }
+
+  private _prepare(): void {
+    this._restoreFiltersState();
+    this._registerToFilterStoreDataChanges();
+    this._registerToDataChanges();
   }
 
   private _registerToFilterStoreDataChanges(): void {
@@ -68,21 +71,10 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   private _registerToDataChanges(): void {
-    Observable.combineLatest(
-      this._storeService.flavors.state$,
-      this._storeService.remoteStorageProfiles.state$,
-      this._storeService.profiles.state$,
-    )
+    this._storeService.profiles.state$
       .cancelOnDestroy(this)
-      .map(([flavors, remoteStorageProfiles, profiles]) => {
-        return {
-          loading: flavors.loading || remoteStorageProfiles.loading || profiles.loading,
-          errorMessage: flavors.errorMessage || remoteStorageProfiles.errorMessage || profiles.errorMessage
-        };
-      })
       .subscribe(
         result => {
-
           this._tableIsBusy = result.loading;
 
           if (result.errorMessage) {

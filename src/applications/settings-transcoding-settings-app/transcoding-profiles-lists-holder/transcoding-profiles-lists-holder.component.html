@@ -1,14 +1,19 @@
-<div class="kTranscodingProfilesListsHolderWrapper">
+<k-area-blocker [message]="_errorMessage" [showLoader]="_isLoading">
+  <div *ngIf="!_dataLoaded" class="kTranscodingProfilesListsHolderFiller">
 
-  <div class="kTranscodingProfilesListsHolder kContent">
-    <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.media"
-                                 [title]="'applications.settings.transcoding.transcodingProfiles'| translate">
-    </k-transcoding-profiles-list>
   </div>
+  <div *ngIf="_dataLoaded" class="kTranscodingProfilesListsHolderWrapper">
 
-  <div class="kTranscodingProfilesListsHolder kContent">
-    <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.liveStream"
-                                 [title]="'applications.settings.transcoding.liveTranscodingProfiles'| translate">
-    </k-transcoding-profiles-list>
+    <div class="kTranscodingProfilesListsHolder kContent">
+      <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.media"
+                                   [title]="'applications.settings.transcoding.transcodingProfiles'| translate">
+      </k-transcoding-profiles-list>
+    </div>
+
+    <div class="kTranscodingProfilesListsHolder kContent">
+      <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.liveStream"
+                                   [title]="'applications.settings.transcoding.liveTranscodingProfiles'| translate">
+      </k-transcoding-profiles-list>
+    </div>
   </div>
-</div>
+</k-area-blocker>
