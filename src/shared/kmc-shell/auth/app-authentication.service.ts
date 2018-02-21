@@ -20,9 +20,12 @@ import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPas
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { modulesConfig } from 'config/modules';
-import { KmcServerPolls } from 'app-shared/kmc-shared';import { serverConfig } from 'config/server';
+import { KmcServerPolls } from 'app-shared/kmc-shared';
 import { globalConfig } from 'config/global';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
+import { KalturaPermissionListResponse } from 'kaltura-ngx-client/api/types/KalturaPermissionListResponse';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 
 
 export enum AppAuthStatusTypes {
@@ -60,9 +63,16 @@ export class AppAuthentication {
 
   constructor(private kalturaServerClient: KalturaClient,
               private appStorage: AppStorage,
+              private _permissions: NgxPermissionsService,
               private _serverPolls: KmcServerPolls,
+              private _permissionsService: NgxPermissionsService,
               private _pageExitVerificationService: PageExitVerificationService) {
     this._appUser = new AppUser();
+
+      const perm = ["ADMIN", "EDITOR"];
+
+      this._permissionsService.loadPermissions(perm);
+
   }
 
   private _getLoginErrorMessage({error}): ILoginError {
@@ -167,33 +177,7 @@ export class AppAuthentication {
     return <any>(this.kalturaServerClient.multiRequest(request).map(
       response => {
         if (!response.hasErrors()) {
-          const ks = response[0].result;
-          const generalProperties = R.pick([
-            'id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner'
-          ])(response[1].result);
-          const permissions = R.map(R.pick(['id', 'type', 'name', 'status']))(response[2].result.objects);
-          const partnerProperties: any = R.pick(['name', 'partnerPackage', 'landingPage'])(response[3].result);
-          const permissionsFlags: any = response[4].result;
-
-
-          // TODO [kmc] check if ks should be stored in appUser and remove direct call to http configuration
-          this.kalturaServerClient.ks = ks;
-          this.appUser.ks = ks;
-          this.appUser.permissions = permissions;
-          this.appUser.permissionsFlags = permissionsFlags ? permissionsFlags.split(',') : [];
-          this.appUser.partnerInfo = new PartnerInfo(
-            partnerProperties.name,
-            partnerProperties.partnerPackage,
-            partnerProperties.landingPage,
-            partnerProperties.adultContent
-          );
-          Object.assign(this.appUser, generalProperties);
-
-          const value = `${ks}`;
-          this.appStorage.setInSessionStorage('auth.login.ks', value);  // save ks in session storage
-
-          this.onUserLoggedIn();
-
+          this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result, response[4].result);
           return {success: true, error: null};
         }
 
@@ -203,6 +187,35 @@ export class AppAuthentication {
     ));
   }
 
+  private _afterLogin(ks: string, user: KalturaUser, permissionsList: KalturaPermissionListResponse, partner: KalturaPartner, permissionsFlags: string): void {
+      const generalProperties = R.pick([
+          'id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner'
+      ])(user);
+      this.appUser.permissions = R.map(R.pick(['id', 'type', 'name', 'status']))(permissionsList);
+      const partnerProperties: any = R.pick(['name', 'partnerPackage', 'landingPage'])(partner);
+
+      // TODO [kmc] check if ks should be stored in appUser and remove direct call to http configuration
+      this.kalturaServerClient.ks = ks;
+      this.appUser.ks = ks;
+
+      this._permissions.loadPermissions(permissionsFlags ? permissionsFlags.split(',') : []);
+
+      this.appUser.partnerInfo = new PartnerInfo(
+          partnerProperties.name,
+          partnerProperties.partnerPackage,
+          partnerProperties.landingPage,
+          partnerProperties.adultContent
+      );
+      Object.assign(this.appUser, generalProperties);
+
+      this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
+
+      this.kalturaServerClient.ks = this.appUser.ks;
+      this.kalturaServerClient.partnerId = this.appUser.partnerId;
+      this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
+      this._serverPolls.forcePolling();
+  }
+
   isLogged() {
     return this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedIn;
   }
@@ -210,6 +223,8 @@ export class AppAuthentication {
   logout() {
     this.appUser.ks = null;
     this.kalturaServerClient.ks = null;
+
+    this._permissions.flushPermissions();
 
     this.appStorage.removeFromSessionStorage('auth.login.ks');
 
@@ -250,32 +265,11 @@ export class AppAuthentication {
           ];
 
           return this.kalturaServerClient.multiRequest(requests).map(
-            (results) => {
-              // TODO [kmc] this logic is duplicated to the login process.
-              const generalProperties = R.pick([
-                'id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner', 'createdAt'
-              ])(results[0].result);
-              const permissions = R.map(R.pick(['id', 'type', 'name', 'status']))(results[1].result.objects);
-              const partnerProperties: any = R.pick(['name', 'partnerPackage', 'landingPage', 'adultContent'])(results[2].result);
-              const permissionsFlags: any = results[3].result;
-
-              this.appUser.ks = loginToken;
-              this.appUser.permissions = permissions;
-              this.appUser.permissionsFlags = permissionsFlags ? permissionsFlags.split(',') : [];
-              this.appUser.partnerInfo = new PartnerInfo(
-                partnerProperties.name,
-                partnerProperties.partnerPackage,
-                partnerProperties.landingPage,
-                partnerProperties.adultContent
-              );
-              Object.assign(this.appUser, generalProperties);
-
-              this.appStorage.setInSessionStorage('auth.login.ks', loginToken);  // save ks in session storage
-
+            (response) => {
+              this._afterLogin(loginToken, response[0].result, response[1].result, response[2].result, response[3].result);
               return true;
             }).subscribe(
             () => {
-              this.onUserLoggedIn();
               observer.next(true);
               observer.complete();
             },
@@ -292,14 +286,6 @@ export class AppAuthentication {
         }
       }
     });
-  }
-
-  private onUserLoggedIn()
-  {
-      this.kalturaServerClient.ks = this.appUser.ks;
-      this.kalturaServerClient.partnerId = this.appUser.partnerId;
-      this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
-      this._serverPolls.forcePolling();
   }
 
   public loginByKs(requestedPartnerId: number): Observable<void> {

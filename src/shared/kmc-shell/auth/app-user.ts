@@ -13,7 +13,6 @@ export class AppUser {
     roleNames: string;
     isAccountOwner : string;
     permissions : any;
-    permissionsFlags : string[];
     partnerInfo: PartnerInfo;
     createdAt: Date;
 

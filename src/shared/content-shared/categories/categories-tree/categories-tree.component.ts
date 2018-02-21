@@ -6,8 +6,13 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesTreePropagationDirective } from './categories-tree-propagation.directive';
 import { CategoriesTreeService } from './categories-tree.service';
 import { FiltersUtils } from '@kaltura-ng/mc-shared/filters/filters-utils';
+import { Observable } from 'rxjs/Observable';
+import { NgxPermissionsService } from 'ngx-permissions';
+
+
 
 export type TreeSelectionMode = 'single' | 'multiple';
+
 
 @Component({
   selector: 'k-categories-tree',
@@ -41,15 +46,14 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     public _blockerMessage: AreaBlockerMessage = null;
 
     private _categoriesMap: Map<number, CategoriesTreeNode> = new Map<number, CategoriesTreeNode>();
-    private inLazyMode = false;
+
     private _selectedCategory: number;
     private _selectedCategories: number[] = [];
 
     constructor(private _categoriesTreeService: CategoriesTreeService,
-                private _appAuthentication: AppAuthentication,
+                private _permissions: NgxPermissionsService,
                 private _appLocalization: AppLocalization) {
     }
-
 
     ngOnChanges(changes) {
         if (typeof changes.selectedCategories !== 'undefined') {
@@ -68,8 +72,6 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.inLazyMode = this._appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
-
         this._loadCategories();
     }
 
@@ -191,7 +193,7 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     public _onNodeExpand(event: any): void {
         const node: CategoriesTreeNode = event && event.node instanceof CategoriesTreeNode ? event.node : null;
 
-        if (node && this.inLazyMode) {
+        if (node) {
             this._categoriesTreeService.loadNodeChildren(node, () => {
                 if (node.children) {
                     node.children.forEach(nodeChild => {
