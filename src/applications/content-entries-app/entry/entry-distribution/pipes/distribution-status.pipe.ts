@@ -83,7 +83,7 @@ export class DistributionStatusPipe implements PipeTransform {
 
       case KalturaEntryDistributionStatus.removed:
         result.label = this._appLocalization.get('applications.content.entryDetails.distribution.status.removed');
-        result.icon = 'kIconhelp_full'; // TODO [kmcng] replace with relevant icon
+        result.icon = 'kIconinactive';
         break;
 
       default:

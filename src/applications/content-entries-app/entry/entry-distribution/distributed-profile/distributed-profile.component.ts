@@ -86,6 +86,7 @@ export class DistributedProfileComponent implements OnInit {
         break;
       case KalturaEntryDistributionStatus.queued:
       case KalturaEntryDistributionStatus.pending:
+      case KalturaEntryDistributionStatus.removed:
           this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
           this._actionButtonDisabled = false;
         break;
@@ -116,6 +117,8 @@ export class DistributedProfileComponent implements OnInit {
         break;
 
       case KalturaEntryDistributionStatus.pending:
+      case KalturaEntryDistributionStatus.removed:
+      case KalturaEntryDistributionStatus.deleted:
       case KalturaEntryDistributionStatus.queued:
         this.onActionSelected.emit({ action: 'distribute', payload: profile.id });
         break;
