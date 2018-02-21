@@ -73,7 +73,7 @@
       <p-column header="" [style]="{'overflow':'visible', 'width':'60px'}">
         <ng-template let-col let-feed="rowData" pTemplate="body">
           <div class="kColActions">
-            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, feed)"></button>
+            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, feed)"></button>
           </div>
         </ng-template>
       </p-column>
