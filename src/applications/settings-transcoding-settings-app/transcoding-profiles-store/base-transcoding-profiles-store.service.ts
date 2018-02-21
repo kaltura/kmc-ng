@@ -16,9 +16,12 @@ import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/t
 import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
-import { FlavoursStore } from '../../../shared/kmc-shared/flavours';
+import { FlavoursStore } from 'app-shared/kmc-shared/flavours';
 import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles/storage-profiles-store.service';
+import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
+import { catchError, map } from 'rxjs/operators';
 
 export enum SortDirection {
   Desc,
@@ -46,6 +49,10 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     data: new BehaviorSubject<{ media: KalturaFlavorParams[], live: KalturaLiveParams[] }>({ media: [], live: [] }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
+  private _remoteStorageProfiles = {
+    data: new BehaviorSubject<{ items: KalturaStorageProfile[] }>({ items: [] }),
+    state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
+  };
   private _isReady = false;
   private _querySubscription: ISubscription;
 
@@ -64,9 +71,16 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     data: () => this._profiles.data.value
   };
 
+  public readonly remoteStorageProfiles = {
+    data$: this._remoteStorageProfiles.data.asObservable(),
+    state$: this._remoteStorageProfiles.state.asObservable(),
+    data: () => this._remoteStorageProfiles.data.value
+  };
+
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
               private _flavorsStore: FlavoursStore,
+              private _storageProfilesStore: StorageProfilesStore,
               _logger: KalturaLogger) {
     super(_logger);
   }
@@ -74,8 +88,10 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
   ngOnDestroy() {
     this._flavors.data.complete();
     this._profiles.data.complete();
+    this._remoteStorageProfiles.data.complete();
     this._flavors.state.complete();
     this._profiles.state.complete();
+    this._remoteStorageProfiles.state.complete();
   }
 
   private _registerToFilterStoreDataChanges(): void {
@@ -147,57 +163,82 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
 
       // build the request
       return this._kalturaServerClient
-        .multiRequest(
-          new KalturaMultiRequest(conversionProfileAction, conversionProfileAssetParamsAction)
-        ).map(([profilesResponse, assetsResponse]) => {
-          if (profilesResponse.error) {
-            throw Error(profilesResponse.error.message);
-          }
+        .multiRequest(new KalturaMultiRequest(conversionProfileAction, conversionProfileAssetParamsAction))
+        .pipe(
+          map(([profilesResponse, assetsResponse]) => {
+            if (profilesResponse.error) {
+              throw Error(profilesResponse.error.message);
+            }
 
-          if (assetsResponse.error) {
-            throw Error(assetsResponse.error.message);
-          }
+            if (assetsResponse.error) {
+              throw Error(assetsResponse.error.message);
+            }
 
-          const profiles = profilesResponse.result.objects;
-          const assets = assetsResponse.result.objects;
-          const totalCount = profilesResponse.result.totalCount;
+            const profiles = profilesResponse.result.objects;
+            const assets = assetsResponse.result.objects;
+            const totalCount = profilesResponse.result.totalCount;
 
-          const objects = profiles.map(profile => {
-            const relevantAssets = assets.filter(({ conversionProfileId }) => conversionProfileId === profile.id);
-            return Object.assign(profile, { assets: relevantAssets });
-          });
+            const objects = profiles.map(profile => {
+              const relevantAssets = assets.filter(({ conversionProfileId }) => conversionProfileId === profile.id);
+              return Object.assign(profile, { assets: relevantAssets });
+            });
 
-          // put default profile on top of the table if there's default profile in the response
-          const defaultProfileIndex = objects.findIndex(profile => profile.isDefault);
-          if (defaultProfileIndex !== -1) {
-            const defaultProfile = objects.splice(defaultProfileIndex, 1);
-            objects.unshift(...defaultProfile);
-          }
+            // put default profile on top of the table if there's default profile in the response
+            const defaultProfileIndex = objects.findIndex(profile => profile.isDefault);
+            if (defaultProfileIndex !== -1) {
+              const defaultProfile = objects.splice(defaultProfileIndex, 1);
+              objects.unshift(...defaultProfile);
+            }
 
-          return { objects, totalCount };
-        });
+            return { objects, totalCount };
+          })
+        );
     } catch (err) {
       return Observable.throw(err);
     }
+  }
+
+  private _loadRemoteStorageProfiles(): void {
+    const getEmptyRemoteStorageProfile = () => {
+      const emptyProfile = new KalturaStorageProfile({ name: 'N/A' });
+      (<any>emptyProfile).id = null;
+      return emptyProfile;
+    };
+    this._remoteStorageProfiles.state.next({ loading: true, errorMessage: null });
+
+    this._storageProfilesStore.get()
+      .cancelOnDestroy(this)
+      .pipe(
+        map(({ items }) => [getEmptyRemoteStorageProfile(), ...items]),
+        catchError(() => Observable.of([getEmptyRemoteStorageProfile()]))
+      )
+      .subscribe(
+        (items) => {
+          this._remoteStorageProfiles.state.next({ loading: false, errorMessage: null });
+          this._remoteStorageProfiles.data.next({ items });
+        });
   }
 
   private _loadFlavors(): void {
     this._flavors.state.next({ loading: true, errorMessage: null });
 
     this._flavorsStore.get()
-      .map(({ items }) => {
-        const live = [];
-        const media = [];
-        items.forEach(flavor => {
-          if (flavor instanceof KalturaLiveParams) {
-            live.push(flavor);
-          } else {
-            media.push(flavor);
-          }
-        });
+      .cancelOnDestroy(this)
+      .pipe(
+        map(({ items }) => {
+          const live = [];
+          const media = [];
+          items.forEach(flavor => {
+            if (flavor instanceof KalturaLiveParams) {
+              live.push(flavor);
+            } else {
+              media.push(flavor);
+            }
+          });
 
-        return { media, live };
-      })
+          return { media, live };
+        })
+      )
       .subscribe(
         ({ media, live }) => {
           this._flavors.state.next({ loading: false, errorMessage: null });
@@ -226,6 +267,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
 
       this._registerToFilterStoreDataChanges();
       this._loadFlavors();
+      this._loadRemoteStorageProfiles();
       this._executeQuery();
     }
   }
@@ -240,8 +282,9 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
   }
 
   protected _createDefaultFiltersValue(): TranscodingProfilesFilters {
+    const pageSize = this._browserService.getFromLocalStorage(this.localStoragePageSizeKey) || 50;
     return {
-      pageSize: 50,
+      pageSize: pageSize,
       pageIndex: 0,
     };
   }

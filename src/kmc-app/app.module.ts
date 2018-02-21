@@ -81,8 +81,9 @@ import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-cat
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
+import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 
-const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore];
+const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 
 

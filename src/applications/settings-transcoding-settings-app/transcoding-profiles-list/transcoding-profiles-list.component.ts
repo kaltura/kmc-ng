@@ -68,11 +68,18 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   private _registerToDataChanges(): void {
-    Observable.merge(
+    Observable.combineLatest(
       this._storeService.flavors.state$,
+      this._storeService.remoteStorageProfiles.state$,
       this._storeService.profiles.state$,
     )
       .cancelOnDestroy(this)
+      .map(([flavors, remoteStorageProfiles, profiles]) => {
+        return {
+          loading: flavors.loading || remoteStorageProfiles.loading || profiles.loading,
+          errorMessage: flavors.errorMessage || remoteStorageProfiles.errorMessage || profiles.errorMessage
+        };
+      })
       .subscribe(
         result => {
 
@@ -81,13 +88,21 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
           if (result.errorMessage) {
             this._tableBlockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || this._appLocalization.get('applications.settings.transcoding.errorLoadingProfiles'),
-              buttons: [{
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => {
-                  this._tableBlockerMessage = null;
-                  this._storeService.reload();
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this._tableBlockerMessage = null;
+                    this._storeService.reload();
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._tableBlockerMessage = null;
+                  }
                 }
-              }]
+              ]
             });
           } else {
             this._tableBlockerMessage = null;
