@@ -13,6 +13,8 @@ import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
 import { MenuModule } from 'primeng/menu';
 import { KalturaUIModule } from '@kaltura-ng/kaltura-ui/kaltura-ui.module';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.module';
+import { TranscodingProfileComponentsList } from './transcoding-profile/components-list';
+import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar/details-bar.module';
 
 @NgModule({
   imports: [
@@ -30,11 +32,13 @@ import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.m
     KalturaUIModule,
     PaginatorModule,
     StickyModule,
-    MenuModule
+    MenuModule,
+    DetailsBarModule
   ],
   declarations: [
     SettingsTranscodingSettingsComponent,
-    ...TranscodingProfilesComponentsList
+    ...TranscodingProfilesComponentsList,
+    ...TranscodingProfileComponentsList
   ]
 })
 export class SettingsTranscodingSettingsAppModule {

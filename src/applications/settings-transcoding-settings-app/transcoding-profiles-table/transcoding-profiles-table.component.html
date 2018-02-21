@@ -16,7 +16,7 @@
           <div class="kTranscodingProfileName"
                [kTooltip]="profile[col.field]"
                [maxWidth]="300"
-               (click)="_onActionSelected('view',profile)">
+               (click)="_onActionSelected('edit',profile)">
             {{profile[col.field]}}
           </div>
           <span *ngIf="profile?.isDefault" class="kTranscodingProfileNameDefault">

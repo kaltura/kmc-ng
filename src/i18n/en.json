@@ -2115,6 +2115,10 @@
             "ditrate": "Bitrate (kbps)",
             "dimentions": "Dimentions"
           }
+        },
+        "sections": {
+          "metadata": "Metadata",
+          "flavors": "Flavors"
         }
       }
     }

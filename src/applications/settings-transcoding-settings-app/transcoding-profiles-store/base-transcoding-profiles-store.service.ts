@@ -207,13 +207,6 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     if (!this._isReady) {
       this._isReady = true;
 
-      const defaultPageSize = this._browserService.getFromLocalStorage(this.localStoragePageSizeKey);
-      if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
-        this.filter({
-          pageSize: defaultPageSize
-        });
-      }
-
       this._registerToFilterStoreDataChanges();
       this._executeQuery();
     }

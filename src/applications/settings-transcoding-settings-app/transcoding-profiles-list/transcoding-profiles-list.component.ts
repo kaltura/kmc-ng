@@ -9,6 +9,7 @@ import { MediaTranscodingProfilesStore } from '../transcoding-profiles-store/med
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles-store/live-transcoding-profiles-store.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -35,6 +36,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   };
 
   constructor(private _appLocalization: AppLocalization,
+              private _router: Router,
               private _liveTranscodingProfilesStore: LiveTranscodingProfilesStore,
               private _mediaTranscodingProfilesStore: MediaTranscodingProfilesStore) {
   }
@@ -247,6 +249,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
         break;
 
       case 'edit':
+        this._router.navigate(['/settings/transcoding/profile', event.profile.id]);
         break;
 
       case 'delete':
