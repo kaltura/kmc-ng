@@ -1,13 +1,93 @@
-<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage"
-                [bodyScroll]="true">
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
 
-  <div class="kLiveDashboardContainer" *ngIf="_widgetService._liveType === 'kaltura'">
+  <!--div class="kLiveDashboardContainer" *ngIf="_widgetService._liveType === 'kaltura'">
     <kLiveDashboard [entryId]="_widgetService.data.id"></kLiveDashboard>
-  </div>
+  </div-->
 
-  <div class="kLive" *ngIf="_widgetService._liveType === 'universal' || _widgetService._liveType === 'manual'">
+  <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
     <div class="kLiveDetails">
+      <div *ngIf="_widgetService._liveType === 'kaltura'">
+        <div>
+          <span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
+            <span>{{_widgetService.data?.primaryBroadcastingUrl}}</span>
+            <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.primaryBroadcastingUrl" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.backup' | translate}}</span>
+            <span>{{_widgetService.data?.secondaryBroadcastingUrl}}</span>
+            <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.secondaryBroadcastingUrl" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+          </div>
+        </div>
+        <div class="kRow">
+			<span class="kLabels"></span>
+			<button pButton (click)="_regenerateToken()" class="kButtonDefault" label="{{'applications.content.entryDetails.live.regenerate' | translate}}" [kTooltip]="'applications.content.entryDetails.live.regenerateTooltip' | translate"></button>
+        </div>
+        <div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
+            <span>{{_widgetService.data?.streamName.replace('%i', '1')}}</span>
+          </div>
+          <div class="kRow">
+            <span class="kLabels"></span>
+            <span>{{'applications.content.entryDetails.live.note' | translate}}</span>
+          </div>
+          <div class="kRow">
+            <span class="kLabels"></span>
+            <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"
+                    label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
+            <a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" (click)="_widgetService._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
+          </div>
+        </div>
+
+        <div>
+          <span class="kSubTitle">{{'applications.content.entryDetails.live.rtsp' | translate}}</span>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
+            <span>{{_widgetService.data?.primaryRtspBroadcastingUrl.replace('%i','1')}}</span>
+            <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.primaryRtspBroadcastingUrl.replace('%i','1')" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.backup' | translate}}</span>
+            <span>{{_widgetService.data?.secondaryRtspBroadcastingUrl.replace('%i','1')}}</span>
+            <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.secondaryRtspBroadcastingUrl.replace('%i','1')" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+          </div>
+        </div>
+
+        <div>
+          <span class="kSubTitle">{{'applications.content.entryDetails.live.config' | translate}}</span>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.dvrStatus' | translate}}</span>
+            <span>{{_widgetService._DVRStatus}}</span>
+          </div>
+          <div class="kRow" *ngIf="_widgetService._showDVRWindow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.dvrWindow' | translate}}</span>
+            <span *ngIf="_widgetService._dvrWindowAvailable">{{_widgetService.data?.dvrWindow | kTime}} {{'applications.content.entryDetails.live.hours' | translate}}</span>
+            <span *ngIf="!_widgetService._dvrWindowAvailable">{{'app.common.n_a' | translate}}</span>
+          </div>
+          <div class="kRow">
+              <span class="kLabels">{{'applications.content.entryDetails.live.activeRec' | translate}}</span>
+              <span>{{_widgetService._recordStatus}}</span>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.autoStart' | translate}}</span>
+            <p-dropdown (onChange)="_widgetService.setDirty()" [options]="_widgetService._autoStartOptions" [(ngModel)]="_widgetService._explicitLive"></p-dropdown>
+          </div>
+        </div>
+
+
+        <div>
+            <span class="kSubTitle">{{'applications.content.entryDetails.live.transcoding' | translate}}</span>
+            <div class="kRow">
+                <span class="kLabels">{{'applications.content.entryDetails.live.transcodingProfile' | translate}}</span>
+                <p-dropdown (onChange)="_widgetService.setDirty()" [options]="(_widgetService._conversionProfiles$ | async)?.items" [(ngModel)]="_widgetService._selectedConversionProfile"></p-dropdown>
+            </div>
+        </div>
+      </div>
+
+
       <div *ngIf="_widgetService._liveType === 'universal'">
         <div>
           <span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
