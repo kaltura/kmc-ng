@@ -12,17 +12,21 @@ import { EntryLiveWidget } from './entry-live-widget.service';
 })
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
-    public _loadingError = null;
-	public _copyToClipboardEnabled: boolean = false;
+	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
 
 
 	constructor(public _widgetService: EntryLiveWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+		this._copyToClipboardTooltips = {
+			success: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.success'),
+			failure: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.failure'),
+			idle: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.idle'),
+			notSupported: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.notSupported')
+		};
     }
 
 
     ngOnInit() {
 		this._widgetService.attachForm();
-		this._copyToClipboardEnabled = this._browserService.copyToClipboardEnabled();
     }
 
     ngOnDestroy() {
@@ -41,16 +45,6 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
         }
     }
-
-	_copyToClipboard(text: string): void{
-		let copied: boolean = this._browserService.copyToClipboard(text);
-		if (copied){
-      this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('app.common.copySuccess')});
-		}else{
-      this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('app.common.copyFailure')});
-		}
-	}
-
 
 	_regenerateToken():void{
 		this._browserService.confirm(

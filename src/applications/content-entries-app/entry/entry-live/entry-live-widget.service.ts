@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Message } from 'primeng/primeng';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
@@ -16,8 +15,6 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
-
-
 import { LiveXMLExporter } from './live-xml-exporter';
 import { AVAIL_BITRATES } from './bitrates';
 import { EntryWidget } from '../entry-widget';
@@ -27,6 +24,7 @@ import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 export interface bitrate {
 	enabled: boolean,
@@ -42,11 +40,9 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	public _liveType: string = "";
 	private dirty: boolean;
 
-	private _conversionProfiles: BehaviorSubject<{ items: any[], loading: boolean, error?: any}> =
-		new BehaviorSubject<{ items: any[], loading: boolean, error?: any}>({items: [], loading: false});
+	private _conversionProfiles: BehaviorSubject<{ items: any[]}> = new BehaviorSubject<{ items: any[]}>({items: []});
 	public _conversionProfiles$ = this._conversionProfiles.asObservable();
 
-	public _regeneratingToken: boolean = false;
 	public _recordStatus: string = "";
 	public _DVRStatus: string = "";
 	public _showDVRWindow: boolean = false;
@@ -71,6 +67,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		this._DVRStatus = "";
 		this._showDVRWindow = false;
 		this._dvrWindowAvailable = false;
+		this._selectedConversionProfile = null;
 		this._explicitLive = true;
 		this._manualStreamsConfiguration = [];
 		this._bitrates = [];
@@ -107,14 +104,56 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	}
 
 	protected onActivate(firstTimeActivating : boolean) {
-		// set live type
+		// set live type and load data accordingly
 		switch (this.data.sourceType.toString()) {
 			case KalturaSourceType.liveStream.toString():
 				this._liveType = "kaltura";
-				this._fetchConversionProfiles();
 				this._setRecordStatus();
-				this._setDVRStatus();;
-				break;
+				this._setDVRStatus();
+				super._showLoader();
+				this._conversionProfiles.next({items: []});
+
+				return this._kalturaServerClient.request(new ConversionProfileListAction({
+						filter: new KalturaConversionProfileFilter({
+							typeEqual: KalturaConversionProfileType.liveStream
+						}),
+						pager: new KalturaFilterPager({
+							pageIndex: 1,
+							pageSize: 500
+						})
+					}))
+					.cancelOnDestroy(this, this.widgetReset$)
+					.monitor('get conversion profiles')
+
+					.catch((error, caught) =>
+					{
+						super._hideLoader();
+						super._showActivationError();
+						this._conversionProfiles.next({items: []});
+						return Observable.throw(error);
+					})
+					.do(response => {
+						if (response.objects && response.objects.length) {
+							// set the default profile first in the array
+							response.objects.sort(function (a, b) {
+								if (a.isDefault > b.isDefault)
+									return -1;
+								if (a.isDefault < b.isDefault)
+									return 1;
+								return 0;
+							});
+							// create drop down options array
+							let conversionProfiles = [];
+							response.objects.forEach(profile => {
+								conversionProfiles.push({label: profile.name, value: profile.id});
+								if (this.data.conversionProfileId === profile.id) {
+									this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
+								}
+							});
+							this._conversionProfiles.next({items: conversionProfiles});
+							super._hideLoader();
+						}
+					});
 			case KalturaSourceType.akamaiUniversalLive.toString():
 				this._liveType = "universal";
 				this._showDVRWindow = true;
@@ -216,69 +255,41 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		return valid;
 	}
 
-	private _fetchConversionProfiles(): void {
-		this._conversionProfiles.next({items: [], loading: true});
-
-		this._kalturaServerClient.request(new ConversionProfileListAction({
-			filter: new KalturaConversionProfileFilter({
-				typeEqual: KalturaConversionProfileType.liveStream
-			}),
-			pager: new KalturaFilterPager({
-				pageIndex: 1,
-				pageSize: 500
-			})
-		}))
-			.cancelOnDestroy(this, this.widgetReset$)
-			.monitor('get conversion profiles')
-			.subscribe(
-				response => {
-					if (response.objects && response.objects.length) {
-						// set the default profile first in the array
-						response.objects.sort(function (a, b) {
-							if (a.isDefault > b.isDefault)
-								return -1;
-							if (a.isDefault < b.isDefault)
-								return 1;
-							return 0;
-						});
-						// create drop down options array
-						let conversionProfiles = [];
-						response.objects.forEach(profile => {
-							conversionProfiles.push({label: profile.name, value: profile.id});
-							if (this.data.conversionProfileId === profile.id) {
-								this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
-							}
-						});
-						this._conversionProfiles.next({items: conversionProfiles, loading: false});
-					}
-				},
-				error => {
-					this._conversionProfiles.next({items: [], loading: false, error: error});
-				}
-			);
-	}
-
 	public setDirty():void{
 		super.updateState({isValid: true, isDirty: true});
 	}
 
 	public regenerateStreamToken(): void {
-		this._regeneratingToken = true;
+		this.sectionBlockerMessage = null;
 		this._kalturaServerClient.request(new LiveStreamRegenerateStreamTokenAction({entryId: this.data.id}))
 			.cancelOnDestroy(this, this.widgetReset$)
+			.tag('block-shell')
 			.monitor('regenerate stream token')
 			.subscribe(
-				response => {
-					this._regeneratingToken = false;
-					this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateSuccess')});
+				(response: any) => {
+					let entry: KalturaLiveStreamEntry = this.data as KalturaLiveStreamEntry;
+					entry.primaryBroadcastingUrl = response.primaryBroadcastingUrl;
+					entry.primaryRtspBroadcastingUrl = response.primaryRtspBroadcastingUrl;
+					entry.secondaryBroadcastingUrl = response.secondaryBroadcastingUrl;
+					entry.secondaryRtspBroadcastingUrl = response.secondaryRtspBroadcastingUrl;
 				},
 				error => {
-					this._regeneratingToken = false;
-					this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure')});
+					this._showBlockerMessage(new AreaBlockerMessage(
+						{
+							message: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure'),
+							buttons: [
+								{
+									label: 'Retry',
+									action: () => {
+										this.regenerateStreamToken();
+									}
+								}
+							]
+						}
+					), true);
 				}
 			);
 	}
-
 
 	public _openLiveReport(): void {
 		//const base_url = window.location.protocol + '//' + serverConfig.externalApps.liveAnalytics.uri;

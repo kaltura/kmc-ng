@@ -32,7 +32,7 @@
   "scripts": {
     "kws": "kws",
     "ng": "ng",
-    "start": "ng serve --base-href / --deploy-url / --preserve-symlinks",
+    "start": "ng serve --preserve-symlinks",
     "build": "ng build --aot --preserve-symlinks",
     "prebuild:prod": "node ./scripts/pre-build-prod.js",
     "build:prod": "ng build --prod --preserve-symlinks --aot --extract-licenses",
