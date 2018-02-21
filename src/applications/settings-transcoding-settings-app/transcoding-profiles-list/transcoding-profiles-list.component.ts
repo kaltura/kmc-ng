@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import {
   BaseTranscodingProfilesStore,
@@ -21,6 +21,8 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   @Input() set storeFor(value: KalturaConversionProfileType) {
     this._setStoreServiceByType(value);
   }
+
+  @Output() setParentBlockerMessage = new EventEmitter<AreaBlockerMessage>();
 
   public _storeService: BaseTranscodingProfilesStore;
   public _selectedProfiles: KalturaConversionProfileWithAsset[] = [];
@@ -85,6 +87,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
                     this._tableBlockerMessage = null;
+                    this._clearSelection();
                     this._storeService.reload();
                   }
                 },
@@ -135,6 +138,125 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
         pageIndex: state.page,
         pageSize: state.rows
       });
+    }
+  }
+
+  private _setAsDefault(profile: KalturaConversionProfileWithAsset): void {
+    if (!profile.isDefault) {
+      this._storeService.setAsDefault(profile)
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            this._clearSelection();
+            this._storeService.reload();
+          },
+          error => {
+            this.setParentBlockerMessage.emit(
+              new AreaBlockerMessage({
+                message: error.message || this._appLocalization.get('applications.settings.transcoding.failedSetDefault'),
+                buttons: [
+                  {
+                    label: this._appLocalization.get('app.common.retry'),
+                    action: () => {
+                      this.setParentBlockerMessage.emit(null);
+                      this._setAsDefault(profile);
+                    }
+                  },
+                  {
+                    label: this._appLocalization.get('app.common.cancel'),
+                    action: () => this.setParentBlockerMessage.emit(null)
+                  }
+                ]
+              })
+            );
+          }
+        );
+    }
+  }
+
+  private _proceedDeleteProfiles(profiles: KalturaConversionProfileWithAsset[]): void {
+    this._storeService.deleteProfiles(profiles)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this._clearSelection();
+          this._storeService.reload();
+        },
+        error => {
+          this.setParentBlockerMessage.emit(
+            new AreaBlockerMessage({
+              message: error.message || this._appLocalization.get('applications.settings.transcoding.failedDelete'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this.setParentBlockerMessage.emit(null);
+                    this._proceedDeleteProfiles(profiles);
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => this.setParentBlockerMessage.emit(null)
+                }
+              ]
+            })
+          );
+        }
+      );
+  }
+
+  private _deleteProfiles(profiles: KalturaConversionProfileWithAsset[]): void {
+    if (Array.isArray(profiles) && profiles.length) {
+      const profileNames = profiles.map(({ name }) => name).join('\n');
+      const message = profiles.length < 5
+        ? this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfilesNames', [profileNames])
+        : this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfiles');
+      this.setParentBlockerMessage.emit(
+        new AreaBlockerMessage({
+          title: this._appLocalization.get('applications.settings.transcoding.deleteProfiles'),
+          message: message,
+          buttons: [
+            {
+              label: this._appLocalization.get('applications.settings.transcoding.yes'),
+              action: () => {
+                this._proceedDeleteProfiles(profiles);
+                this.setParentBlockerMessage.emit(null);
+              }
+            },
+            {
+              label: this._appLocalization.get('applications.settings.transcoding.no'),
+              action: () => {
+                this.setParentBlockerMessage.emit(null);
+              }
+            }
+          ]
+        })
+      );
+    }
+  }
+
+  public _deleteSelected(): void {
+    const excludingDefault = this._selectedProfiles.filter(({ isDefault }) => !isDefault);
+    this._deleteProfiles(excludingDefault);
+  }
+
+  public _actionSelected(event: { action: string, profile: KalturaConversionProfileWithAsset }): void {
+    switch (event.action) {
+      case 'setAsDefault':
+        this._setAsDefault(event.profile);
+        break;
+
+      case 'edit':
+        break;
+
+      case 'delete':
+        if (!event.profile.isDefault) {
+          this._deleteProfiles([event.profile]);
+        }
+        break;
+
+      default:
+        break;
     }
   }
 }

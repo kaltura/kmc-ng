@@ -2,7 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
@@ -17,6 +17,9 @@ import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/ap
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { map } from 'rxjs/operators';
+import { ConversionProfileSetAsDefaultAction } from 'kaltura-ngx-client/api/types/ConversionProfileSetAsDefaultAction';
+import { subApplicationsConfig } from 'config/sub-applications';
+import { ConversionProfileDeleteAction } from 'kaltura-ngx-client/api/types/ConversionProfileDeleteAction';
 
 export enum SortDirection {
   Desc,
@@ -25,6 +28,7 @@ export enum SortDirection {
 
 export interface KalturaConversionProfileWithAsset extends KalturaConversionProfile {
   assets: KalturaConversionProfileAssetParams[];
+  flavors: number; // number of flavors in flavorParamsIds
 }
 
 export interface TranscodingProfilesFilters {
@@ -149,7 +153,8 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
 
             const objects = profiles.map(profile => {
               const relevantAssets = assets.filter(({ conversionProfileId }) => conversionProfileId === profile.id);
-              return Object.assign(profile, { assets: relevantAssets });
+              const flavorsCount = profile.flavorParamsIds.split(',').length;
+              return Object.assign(profile, { assets: relevantAssets, flavors: flavorsCount });
             });
 
             // put default profile on top of the table if there's default profile in the response
@@ -165,6 +170,33 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     } catch (err) {
       return Observable.throw(err);
     }
+  }
+
+  private _transmitChunkRequest(requests: KalturaRequest<any>[]): Observable<void> {
+    const maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit || requests.length;
+
+    // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest
+    const splitRequests = [];
+    let start = 0;
+    while (start < requests.length) {
+      const end = start + maxRequestsPerMultiRequest;
+      splitRequests.push(requests.slice(start, end));
+      start = end;
+    }
+    const multiRequests = splitRequests
+      .map(reqChunk => this._kalturaServerClient.multiRequest(reqChunk));
+
+    return Observable.forkJoin(multiRequests)
+      .map(responses => {
+        const errorMessage = [].concat.apply([], responses)
+          .filter(response => !!response.error)
+          .reduce((acc, { error }) => `${acc}\n${error.message}`, '')
+          .trim();
+
+        if (!!errorMessage) {
+          throw new Error(errorMessage);
+        }
+      });
   }
 
   protected _prepare(): void {
@@ -223,8 +255,17 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     }
   }
 
-  public deleteProfile(id: string): Observable<void> {
-    return Observable.empty();
+  public setAsDefault(profile: KalturaConversionProfileWithAsset): Observable<void> {
+    return this._kalturaServerClient
+      .request(new ConversionProfileSetAsDefaultAction({ id: profile.id }))
+      .pipe(map(() => {
+      }));
+  }
+
+  public deleteProfiles(profiles: KalturaConversionProfileWithAsset[]): Observable<void> {
+    return this._transmitChunkRequest(
+      profiles.map(profile => new ConversionProfileDeleteAction({ id: profile.id }))
+    );
   }
 }
 

@@ -7,6 +7,7 @@ import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStora
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles/storage-profiles-store.service';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { KalturaClient } from 'kaltura-ngx-client';
 
 @Injectable()
 export class TranscodingProfilesHolderStore implements OnDestroy {
@@ -28,7 +29,8 @@ export class TranscodingProfilesHolderStore implements OnDestroy {
     })
   };
 
-  constructor(private _flavorsStore: FlavoursStore,
+  constructor(private _kalturaClient: KalturaClient,
+              private _flavorsStore: FlavoursStore,
               private _storageProfilesStore: StorageProfilesStore) {
   }
 

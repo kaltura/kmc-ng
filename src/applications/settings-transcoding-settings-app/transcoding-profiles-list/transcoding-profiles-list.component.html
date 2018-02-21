@@ -8,7 +8,7 @@
       [class.kHidden]="_selectedProfiles.length"
       [label]="'applications.settings.transcoding.addProfile' | translate"
       class="kButtonBranded kAddProfileBtn"></button>
-    <span class="kTotalProfilesCount" *ngIf="_selectedProfiles.length">
+    <span class="kTotalProfilesCount" *ngIf="(_storeService.profiles.data$ | async)?.totalCount">
       {{'applications.settings.transcoding.profiles' | translate: [(_storeService.profiles.data$ | async)?.totalCount]}}
     </span>
 
@@ -16,7 +16,7 @@
       <span class="kSelectedProfilesLabel">
         • {{ 'applications.settings.transcoding.selected' | translate: [_selectedProfiles.length]}}
       </span>
-      <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
+      <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteSelected()"></button>
       <a class="kBulkCancel" (click)="_clearSelection()">
         {{'applications.settings.transcoding.cancel' | translate}}
       </a>
@@ -25,7 +25,8 @@
 
   <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage">
     <k-transcoding-profiles-table [profiles]="(_storeService.profiles.data$ | async)?.items"
-                                  [selectedProfiles]="_selectedProfiles"></k-transcoding-profiles-table>
+                                  (actionSelected)="_actionSelected($event)"
+                                  [(selectedProfiles)]="_selectedProfiles"></k-transcoding-profiles-table>
   </k-area-blocker>
 
   <div class="kProfilesTableFooter" #footer *ngIf="(_storeService.profiles.data$ | async)?.totalCount">

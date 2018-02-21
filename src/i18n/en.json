@@ -2060,7 +2060,11 @@
         }
       },
       "transcoding": {
+        "yes": "Yes",
+        "no": "No",
         "errorLoadingProfiles": "Failed to load transcoding profiles",
+        "failedSetDefault": "Failed to set profile as default",
+        "failedDelete": "Failed to delete profile(s)",
         "transcodingProfiles": "Transcoding Profiles",
         "profiles": "{{0}} Profiles",
         "selected": "{{0}} Selected",
@@ -2075,6 +2079,9 @@
         "description": "Description",
         "defaultMetadataSettings": "Default Metadata Settings",
         "ingestFromRemoteStorage": "Ingest From Remote Storage",
+        "deleteProfiles": "Delete profiles",
+        "confirmDeleteProfilesNames": "Are you sure you want to delete the following Transcoding Profile(s):\n{{0}}",
+        "confirmDeleteProfiles": "Are you sure you want to delete the selected Transcoding Profiles?",
         "cancel": "Cancel",
         "save": "Save",
         "table": {
@@ -2101,6 +2108,7 @@
           "intermediateFlavorHandling": "Intermediate Flavor Handling",
           "table": {
             "flavor": "Flavor",
+            "flavors": "{{0}} Flavors",
             "id": "ID",
             "format": "Format",
             "codec": "Codec",

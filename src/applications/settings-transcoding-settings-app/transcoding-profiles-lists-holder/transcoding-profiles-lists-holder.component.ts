@@ -15,7 +15,7 @@ export class TranscodingProfilesListsHolderComponent implements OnInit, OnDestro
 
   public _dataLoaded = false;
   public _isLoading = false;
-  public _errorMessage: AreaBlockerMessage;
+  public _blockerMessage: AreaBlockerMessage;
 
   constructor(private _store: TranscodingProfilesHolderStore,
               private _appLocalization: AppLocalization) {
@@ -37,29 +37,33 @@ export class TranscodingProfilesListsHolderComponent implements OnInit, OnDestro
         () => {
           this._isLoading = false;
           this._dataLoaded = true;
-          this._errorMessage = null;
+          this._blockerMessage = null;
         },
         error => {
           this._isLoading = false;
-          this._errorMessage = new AreaBlockerMessage({
+          this._blockerMessage = new AreaBlockerMessage({
             message: error.message || 'aa',
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
                   this._prepare();
-                  this._errorMessage = null;
+                  this._blockerMessage = null;
                 }
               },
               {
                 label: this._appLocalization.get('app.common.cancel'),
                 action: () => {
-                  this._errorMessage = null;
+                  this._blockerMessage = null;
                 }
               },
             ]
           });
         }
       );
+  }
+
+  public _setBlockerMessage(message: AreaBlockerMessage): void {
+    this._blockerMessage = message;
   }
 }

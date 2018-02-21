@@ -25,9 +25,17 @@
         </div>
       </ng-template>
     </p-column>
-    <p-column field="description" [header]="'applications.settings.transcoding.table.description' | translate"></p-column>
-    <p-column field="id" [style]="{'width':'90px'}" [header]="'applications.settings.transcoding.table.id' | translate"></p-column>
-    <p-column field="flavors" [style]="{'width':'110px'}" [header]="'applications.settings.transcoding.table.flavors' | translate"></p-column>
+    <p-column field="description"
+              [header]="'applications.settings.transcoding.table.description' | translate"></p-column>
+    <p-column field="id" [style]="{'width':'90px'}"
+              [header]="'applications.settings.transcoding.table.id' | translate"></p-column>
+    <p-column field="flavors" [style]="{'width':'110px'}"
+              [header]="'applications.settings.transcoding.table.flavors' | translate">
+      <ng-template let-col let-profile="rowData" pTemplate="body">
+        {{profile[col.field]}}
+        {{'applications.settings.transcoding.table.flavors' | translate}}
+      </ng-template>
+    </p-column>
     <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
       <ng-template let-col let-profile="rowData" pTemplate="body">
         <div class="kTranscodingProfilesTableActions">

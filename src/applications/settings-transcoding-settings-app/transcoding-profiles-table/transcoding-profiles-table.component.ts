@@ -60,21 +60,30 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
   }
 
   private _buildMenu(profile: KalturaConversionProfileWithAsset): void {
-    this._items = [
-      {
-        label: this._appLocalization.get('applications.settings.transcoding.setAsDefault'),
-        command: () => this._onActionSelected('setAsDefault', profile)
-      },
-      {
-        label: this._appLocalization.get('applications.settings.transcoding.edit'),
-        command: () => this._onActionSelected('edit', profile)
-      },
-      {
-        label: this._appLocalization.get('applications.settings.transcoding.delete'),
-        styleClass: 'kTranscodingProfileDeleteAction',
-        command: () => this._onActionSelected('delete', profile)
-      }
-    ];
+    if (profile.isDefault) {
+      this._items = [
+        {
+          label: this._appLocalization.get('applications.settings.transcoding.edit'),
+          command: () => this._onActionSelected('edit', profile)
+        }
+      ];
+    } else {
+      this._items = [
+        {
+          label: this._appLocalization.get('applications.settings.transcoding.setAsDefault'),
+          command: () => this._onActionSelected('setAsDefault', profile)
+        },
+        {
+          label: this._appLocalization.get('applications.settings.transcoding.edit'),
+          command: () => this._onActionSelected('edit', profile)
+        },
+        {
+          label: this._appLocalization.get('applications.settings.transcoding.delete'),
+          styleClass: 'kTranscodingProfileDeleteAction',
+          command: () => this._onActionSelected('delete', profile)
+        }
+      ];
+    }
   }
 
   public _openActionsMenu(event: any, profile: KalturaConversionProfileWithAsset): void {
