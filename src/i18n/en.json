@@ -62,6 +62,7 @@
       "ok": "OK",
       "cancel": "Cancel",
       "retry": "Retry",
+      "dismiss": "Dismiss",
       "reload": "Reload",
       "confirm": "Confirm",
       "close": "Close",
@@ -1337,6 +1338,10 @@
           "dvrStatus": "DVR Status:",
           "dvrWindow": "DVR Window:",
           "activeRec": "Active Recording:",
+          "autoStart": "Auto-start:",
+          "rtsp": "RTSP Broadcasting URLs",
+          "enabled": "Enabled",
+          "disabled": "Disabled",
           "hlsStream": "HLS stream URL:",
           "akamaiStream": "Akamai stream ID:",
           "transcoding": "Transcoding Profile Configuration",
@@ -1968,7 +1973,7 @@
           },
           "notifications": {
             "title": "Notifications",
-            "message": "For notification setting please contact your PM"
+            "message": "For notification settings please contact your PM"
           }
         },
         "entitlement": {
