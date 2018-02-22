@@ -2,7 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaRequest } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
@@ -16,7 +16,6 @@ import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/t
 import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
-import { map } from 'rxjs/operators';
 import { ConversionProfileSetAsDefaultAction } from 'kaltura-ngx-client/api/types/ConversionProfileSetAsDefaultAction';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { ConversionProfileDeleteAction } from 'kaltura-ngx-client/api/types/ConversionProfileDeleteAction';
@@ -137,36 +136,34 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
       // build the request
       return this._kalturaServerClient
         .multiRequest(new KalturaMultiRequest(conversionProfileAction, conversionProfileAssetParamsAction))
-        .pipe(
-          map(([profilesResponse, assetsResponse]) => {
-            if (profilesResponse.error) {
-              throw Error(profilesResponse.error.message);
-            }
+        .map(([profilesResponse, assetsResponse]) => {
+          if (profilesResponse.error) {
+            throw Error(profilesResponse.error.message);
+          }
 
-            if (assetsResponse.error) {
-              throw Error(assetsResponse.error.message);
-            }
+          if (assetsResponse.error) {
+            throw Error(assetsResponse.error.message);
+          }
 
-            const profiles = profilesResponse.result.objects;
-            const assets = assetsResponse.result.objects;
-            const totalCount = profilesResponse.result.totalCount;
+          const profiles = profilesResponse.result.objects;
+          const assets = assetsResponse.result.objects;
+          const totalCount = profilesResponse.result.totalCount;
 
-            const objects = profiles.map(profile => {
-              const relevantAssets = assets.filter(({ conversionProfileId }) => conversionProfileId === profile.id);
-              const flavorsCount = profile.flavorParamsIds.split(',').length;
-              return Object.assign(profile, { assets: relevantAssets, flavors: flavorsCount });
-            });
+          const objects = profiles.map(profile => {
+            const relevantAssets = assets.filter(({ conversionProfileId }) => conversionProfileId === profile.id);
+            const flavorsCount = profile.flavorParamsIds.split(',').length;
+            return Object.assign(profile, { assets: relevantAssets, flavors: flavorsCount });
+          });
 
-            // put default profile on top of the table if there's default profile in the response
-            const defaultProfileIndex = objects.findIndex(profile => profile.isDefault);
-            if (defaultProfileIndex !== -1) {
-              const defaultProfile = objects.splice(defaultProfileIndex, 1);
-              objects.unshift(...defaultProfile);
-            }
+          // put default profile on top of the table if there's default profile in the response
+          const defaultProfileIndex = objects.findIndex(profile => profile.isDefault);
+          if (defaultProfileIndex !== -1) {
+            const defaultProfile = objects.splice(defaultProfileIndex, 1);
+            objects.unshift(...defaultProfile);
+          }
 
-            return { objects, totalCount };
-          })
-        );
+          return { objects, totalCount };
+        });
     } catch (err) {
       return Observable.throw(err);
     }
@@ -251,8 +248,8 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
   public setAsDefault(profile: KalturaConversionProfileWithAsset): Observable<void> {
     return this._kalturaServerClient
       .request(new ConversionProfileSetAsDefaultAction({ id: profile.id }))
-      .pipe(map(() => {
-      }));
+      .map(() => {
+      });
   }
 
   public deleteProfiles(profiles: KalturaConversionProfileWithAsset[]): Observable<void> {

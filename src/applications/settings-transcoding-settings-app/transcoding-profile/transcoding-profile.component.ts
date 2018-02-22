@@ -3,7 +3,6 @@ import { ActionTypes, TranscodingProfileStore } from './transcoding-profile-stor
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
-import { filter } from 'rxjs/operators';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { TranscodingProfileSectionsListWidget } from './transcoding-profile-sections-list/transcoding-profile-sections-list-widget.service';
@@ -62,7 +61,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._profileStore.profile.state$
       .cancelOnDestroy(this)
-      .pipe(filter(Boolean))
+      .filter(Boolean)
       .subscribe(
         status => {
           this._showLoader = false;

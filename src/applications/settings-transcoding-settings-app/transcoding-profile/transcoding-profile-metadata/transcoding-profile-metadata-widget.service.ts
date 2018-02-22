@@ -6,7 +6,6 @@ import { async } from 'rxjs/scheduler/async';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 import { TranscodingProfileWidgetKeys } from '../transcoding-profile-widget-keys';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
-import { observeOn } from 'rxjs/operators';
 
 @Injectable()
 export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -34,7 +33,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
   private _monitorFormChanges(): void {
     Observable.merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
       .cancelOnDestroy(this)
-      .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
+      .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
             isValid: this.metadataForm.status === 'VALID',

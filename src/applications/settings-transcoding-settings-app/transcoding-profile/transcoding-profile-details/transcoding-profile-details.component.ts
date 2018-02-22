@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { TranscodingProfileStore } from '../transcoding-profile-store.service';
-import { filter } from 'rxjs/operators';
 import { TranscodingProfileDetailsWidget } from './transcoding-profile-details-widget.service';
 
 @Component({
@@ -21,7 +20,7 @@ export class TranscodingProfileDetailsComponent implements OnInit, OnDestroy {
 
     this._widgetService.data$
       .cancelOnDestroy(this)
-      .pipe(filter(Boolean))
+      .filter(Boolean)
       .subscribe(
         data => {
           this._currentProfile = data;

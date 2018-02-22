@@ -10,7 +10,6 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { debounce, first } from 'rxjs/operators';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -75,7 +74,7 @@ export class TranscodingProfileStore implements OnDestroy {
     // hard reload the entries upon navigating back from profile (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
     this._profileRoute.queryParams
       .cancelOnDestroy(this)
-      .pipe(first())
+      .first()
       .subscribe(queryParams => {
         const reloadEntriesListOnNavigateOut = !!queryParams['reloadEntriesListOnNavigateOut']; // convert string to boolean
         if (reloadEntriesListOnNavigateOut) {
@@ -87,7 +86,7 @@ export class TranscodingProfileStore implements OnDestroy {
   private _onSectionsStateChanges(): void {
     this._widgetsManager.widgetsState$
       .cancelOnDestroy(this)
-      .pipe(debounce(() => Observable.timer(500)))
+      .debounce(() => Observable.timer(500))
       .subscribe(
         sectionsState => {
           const newDirtyState = Object

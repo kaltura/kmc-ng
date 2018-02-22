@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
 import { FlavoursStore } from 'app-shared/kmc-shared';
 import { Observable } from 'rxjs/Observable';
@@ -43,25 +42,23 @@ export class TranscodingProfilesHolderStore implements OnDestroy {
   private _loadFlavors(): Observable<{ media: KalturaFlavorParams[], live: KalturaLiveParams[] }> {
     return this._flavorsStore.get()
       .cancelOnDestroy(this)
-      .pipe(
-        map(({ items }) => {
-          const live = [];
-          const media = [];
-          items.forEach(flavor => {
-            if (flavor instanceof KalturaLiveParams) {
-              live.push(flavor);
-            } else {
-              media.push(flavor);
-            }
-          });
+      .map(({ items }) => {
+        const live = [];
+        const media = [];
+        items.forEach(flavor => {
+          if (flavor instanceof KalturaLiveParams) {
+            live.push(flavor);
+          } else {
+            media.push(flavor);
+          }
+        });
 
-          return { media, live };
-        }),
-        catchError((error) => {
-          const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-          return Observable.throw(new Error(errorMessage));
-        })
-      );
+        return { media, live };
+      })
+      .catch((error) => {
+        const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+        return Observable.throw(new Error(errorMessage));
+      });
   }
 
   private _loadRemoteStorageProfiles(): Observable<KalturaStorageProfile[]> {
@@ -73,10 +70,8 @@ export class TranscodingProfilesHolderStore implements OnDestroy {
 
     return this._storageProfilesStore.get()
       .cancelOnDestroy(this)
-      .pipe(
-        map(({ items }) => [getEmptyRemoteStorageProfile(), ...items]),
-        catchError(() => Observable.of([getEmptyRemoteStorageProfile()]))
-      );
+      .map(({ items }) => [getEmptyRemoteStorageProfile(), ...items])
+      .catch(() => Observable.of([getEmptyRemoteStorageProfile()]));
   }
 
   public prepare(): Observable<void> {
@@ -85,19 +80,18 @@ export class TranscodingProfilesHolderStore implements OnDestroy {
     }
 
     return this._loadRemoteStorageProfiles()
-      .pipe(
-        switchMap(
-          () => this._loadFlavors(),
-          (remoteStorageProfiles, { media, live }) => ({ remoteStorageProfiles, media, live })
-        ),
-        tap(({ remoteStorageProfiles, media, live }) => {
-          this._data.remoteStorageProfiles.next(remoteStorageProfiles);
-          this._data.mediaFlavors.next(media);
-          this._data.liveFlavors.next(live);
+      .switchMap(
+        () => this._loadFlavors(),
+        (remoteStorageProfiles, { media, live }) => ({ remoteStorageProfiles, media, live })
+      )
+      .do(({ remoteStorageProfiles, media, live }) => {
+        this._data.remoteStorageProfiles.next(remoteStorageProfiles);
+        this._data.mediaFlavors.next(media);
+        this._data.liveFlavors.next(live);
 
-          this._prepared = true;
-        }),
-        map(() => {
-        }));
+        this._prepared = true;
+      })
+      .map(() => {
+      });
   }
 }

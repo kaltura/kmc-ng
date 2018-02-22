@@ -4,8 +4,6 @@ import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/Kaltu
 import { BaseTranscodingProfilesStore } from './base-transcoding-profiles-store.service';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { FlavoursStore } from 'app-shared/kmc-shared/flavours';
-import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles/storage-profiles-store.service';
 
 @Injectable()
 export class LiveTranscodingProfilesStore extends BaseTranscodingProfilesStore {

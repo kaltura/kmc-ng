@@ -1,5 +1,4 @@
 import { AreaBlockerMessage, AreaBlockerMessageButton, WidgetBase } from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';

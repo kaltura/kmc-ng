@@ -4,7 +4,6 @@ import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 
-
 @Injectable()
 export class TranscodingProfileDetailsWidget extends TranscodingProfileWidget {
   public _landingPage: string;
