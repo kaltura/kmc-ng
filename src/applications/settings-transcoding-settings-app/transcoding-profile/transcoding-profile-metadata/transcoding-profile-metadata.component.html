@@ -5,24 +5,41 @@
 
       <form [formGroup]="_widgetService.metadataForm" novalidate>
         <div class="kRow kValign">
-        <span class="kLabel" >
-          {{'applications.settings.transcoding.metadata.name' | translate}}
-        </span>
+          <span class="kLabel">
+            {{'applications.settings.transcoding.metadata.name' | translate}}
+          </span>
           <div class="kControl">
-            <input #metadataNameInput formControlName="name" pInputText
-                    [ngClass]="{'kHasError':!_widgetService.metadataForm.controls['name'].valid &&
-                   _widgetService.metadataForm.controls['name'].touched}">
-            <!--<div *ngIf="_widgetService.metadataForm.controls['name'].touched &&-->
-                 <!--_widgetService.metadataForm.controls['name'].hasError('required')"-->
-                 <!--class="error">-->
-              <!--{{'applications.content.playlistDetails.metadata.nameIsMandatory' | translate}}-->
-            <!--</div>-->
+            <input #metadataNameInput [formControl]="_widgetService.nameField" pInputText
+                   [placeholder]="'applications.settings.transcoding.metadata.namePlaceholder' | translate"
+                   [ngClass]="{'kHasError':!_widgetService.nameField.valid && _widgetService.nameField.touched}">
+            <div *ngIf="_widgetService.nameField.touched && _widgetService.nameField.hasError('required')"
+                 class="error">
+              {{'applications.settings.transcoding.metadata.nameIsMandatory' | translate}}
+            </div>
           </div>
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.transcoding.metadata.description' | translate}}</span>
           <div class="kControl">
-            <textarea formControlName="description" pInputTextarea class="threeRows"></textarea>
+            <textarea [formControl]="_widgetService.descriptionField" pInputTextarea class="threeRows"
+                      [placeholder]="'applications.settings.transcoding.metadata.descriptionPlaceholder' | translate"></textarea>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">
+            {{'applications.settings.transcoding.metadata.defaultMetadataSetting' | translate}}
+          </span>
+          <div class="kControl">
+            <input [formControl]="_widgetService.defaultMetadataSettingsField" pInputText
+                   [placeholder]="'applications.settings.transcoding.metadata.defaultMetadataSettingPlaceholder' | translate">
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">
+            {{'applications.settings.transcoding.metadata.ingestFromRemoteStorage' | translate}}
+          </span>
+          <div class="kControl">
+            <input [formControl]="_widgetService.ingestFromRemoteStorageField" pInputText>
           </div>
         </div>
       </form>

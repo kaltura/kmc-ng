@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { TranscodingProfileStore } from '../transcoding-profile-store.service';
 import { TranscodingProfileDetailsWidget } from './transcoding-profile-details-widget.service';
+import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles-store/base-transcoding-profiles-store.service';
 
 @Component({
   selector: 'kTranscodingProfileDetails',
@@ -9,7 +9,7 @@ import { TranscodingProfileDetailsWidget } from './transcoding-profile-details-w
   styleUrls: ['./transcoding-profile-details.component.scss']
 })
 export class TranscodingProfileDetailsComponent implements OnInit, OnDestroy {
-  public _currentProfile: KalturaConversionProfile;
+  public _currentProfile: KalturaConversionProfileWithAsset;
   public _isNew = false;
 
   constructor(public _widgetService: TranscodingProfileDetailsWidget,

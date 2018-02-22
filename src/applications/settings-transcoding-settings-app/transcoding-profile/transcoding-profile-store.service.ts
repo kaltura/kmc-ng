@@ -8,7 +8,6 @@ import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
@@ -16,6 +15,7 @@ import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/ap
 import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
 import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { ConversionProfileGetAction } from 'kaltura-ngx-client/api/types/ConversionProfileGetAction';
+import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -40,7 +40,7 @@ export class TranscodingProfileStore implements OnDestroy {
   private _pageExitVerificationToken: string;
   private _saveProfileInvoked = false;
   private _profile = {
-    data: new BehaviorSubject<KalturaConversionProfile>(null),
+    data: new BehaviorSubject<KalturaConversionProfileWithAsset>(null),
     state: new BehaviorSubject<StatusArgs>({ action: ActionTypes.ProfileLoading, error: null })
   };
   private _profileId: number;
@@ -174,7 +174,7 @@ export class TranscodingProfileStore implements OnDestroy {
       );
   }
 
-  private _transmitSaveRequest(newProfile: KalturaConversionProfile) {
+  private _transmitSaveRequest(newProfile: KalturaConversionProfileWithAsset) {
     this._profile.state.next({ action: ActionTypes.ProfileSaving });
 
     // const request = new KalturaMultiRequest(

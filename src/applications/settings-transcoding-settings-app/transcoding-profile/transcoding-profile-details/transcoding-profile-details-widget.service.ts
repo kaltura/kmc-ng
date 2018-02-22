@@ -22,7 +22,7 @@ export class TranscodingProfileDetailsWidget extends TranscodingProfileWidget {
   }
 
   protected onActivate(firstTimeActivating: boolean): void {
-    const profile: KalturaConversionProfile = this.data;
+    const profile = this.data;
 
     this._landingPage = null;
 

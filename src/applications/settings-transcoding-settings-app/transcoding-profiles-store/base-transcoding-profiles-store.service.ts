@@ -26,8 +26,8 @@ export enum SortDirection {
 }
 
 export interface KalturaConversionProfileWithAsset extends KalturaConversionProfile {
-  assets: KalturaConversionProfileAssetParams[];
-  flavors: number; // number of flavors in flavorParamsIds
+  assets?: KalturaConversionProfileAssetParams[];
+  flavors?: number; // number of flavors in flavorParamsIds
 }
 
 export interface TranscodingProfilesFilters {

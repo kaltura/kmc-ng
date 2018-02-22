@@ -2223,9 +2223,23 @@
         },
         "metadata": {
           "name": "Name",
+          "namePlaceholder": "Profile Name",
           "description": "Description",
+          "descriptionPlaceholder": "Profile Description",
           "defaultMetadataSetting": "Default Metadata Settings",
-          "ingestFromRemoteStorage": "Ingest from Remote Storage"
+          "defaultMetadataSettingPlaceholder": "Entry ID",
+          "ingestFromRemoteStorage": "Ingest from Remote Storage",
+          "nameIsMandatory": "Name is required"
+        },
+        "flavors": {
+          "table": {
+            "name": "Name",
+            "id": "ID",
+            "format": "Format",
+            "codec": "Codec",
+            "bitrate": "Bitrate (kbps)",
+            "dimensions": "Dimensions"
+          }
         }
       }
     }

@@ -1,0 +1,9 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+  <div class="kTranscodingProfilesFlavorsHolder">
+    <kTranscodingProfileFalvorsTable
+      class="kTranscodingProfilesFlavorsTable"
+      [flavors]="_widgetService.flavors"
+      [(selectedFlavors)]="_selectedFlavors">
+    </kTranscodingProfileFalvorsTable>
+  </div>
+</k-area-blocker>

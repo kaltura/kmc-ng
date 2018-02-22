@@ -8,6 +8,7 @@ import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-
 import { TranscodingProfileSectionsListWidget } from './transcoding-profile-sections-list/transcoding-profile-sections-list-widget.service';
 import { TranscodingProfileDetailsWidget } from './transcoding-profile-details/transcoding-profile-details-widget.service';
 import { TranscodingProfileMetadataWidget } from './transcoding-profile-metadata/transcoding-profile-metadata-widget.service';
+import { TranscodingProfileFlavorsWidget } from './transcoding-profile-flavors/transcoding-profile-flavors-widget.service';
 
 @Component({
   selector: 'kTranscodingProfile',
@@ -18,7 +19,8 @@ import { TranscodingProfileMetadataWidget } from './transcoding-profile-metadata
     TranscodingProfileWidgetsManager,
     TranscodingProfileSectionsListWidget,
     TranscodingProfileDetailsWidget,
-    TranscodingProfileMetadataWidget
+    TranscodingProfileMetadataWidget,
+    TranscodingProfileFlavorsWidget
   ]
 })
 export class TranscodingProfileComponent implements OnInit, OnDestroy {
@@ -36,9 +38,10 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
               widget1: TranscodingProfileSectionsListWidget,
               widget2: TranscodingProfileDetailsWidget,
               widget3: TranscodingProfileMetadataWidget,
+              widget4: TranscodingProfileFlavorsWidget,
               private _appLocalization: AppLocalization,
               public _profileStore: TranscodingProfileStore) {
-    profileWidgetsManager.registerWidgets([widget1, widget2, widget3]);
+    profileWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4]);
   }
 
   ngOnDestroy() {

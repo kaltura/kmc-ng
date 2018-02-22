@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SectionsList } from './sections-list';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles-store/base-transcoding-profiles-store.service';
 
 export interface SectionWidgetItem {
   label: string;
@@ -45,7 +45,7 @@ export class TranscodingProfileSectionsListWidget extends TranscodingProfileWidg
       );
   }
 
-  private _isSectionEnabled(sectionKey: string, profile: KalturaConversionProfile): boolean {
+  private _isSectionEnabled(sectionKey: string, profile: KalturaConversionProfileWithAsset): boolean {
     return true;
   }
 
@@ -59,7 +59,7 @@ export class TranscodingProfileSectionsListWidget extends TranscodingProfileWidg
     }
   }
 
-  protected onDataLoaded(data: KalturaConversionProfile): void {
+  protected onDataLoaded(data: KalturaConversionProfileWithAsset): void {
     this._reloadSections(data);
   }
 
@@ -75,7 +75,7 @@ export class TranscodingProfileSectionsListWidget extends TranscodingProfileWidg
 
   }
 
-  private _reloadSections(profile: KalturaConversionProfile): void {
+  private _reloadSections(profile: KalturaConversionProfileWithAsset): void {
     const sections = [];
     const formWidgetsState = this.form.widgetsState;
 

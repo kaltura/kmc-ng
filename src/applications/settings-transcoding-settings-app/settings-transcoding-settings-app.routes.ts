@@ -5,6 +5,7 @@ import { TranscodingProfileCanDeactivate } from './transcoding-profile/transcodi
 import { TranscodingProfileComponent } from './transcoding-profile/transcoding-profile.component';
 import { TranscodingProfileMetadataComponent } from './transcoding-profile/transcoding-profile-metadata/transcoding-profile-metadata.component';
 import { TranscodingProfileWidgetKeys } from './transcoding-profile/transcoding-profile-widget-keys';
+import { TranscodingProfileFlavorsComponent } from './transcoding-profile/transcoding-profile-flavors/transcoding-profile-flavors.component';
 
 export const routing: Route[] = [
   {
@@ -18,7 +19,7 @@ export const routing: Route[] = [
         children: [
           { path: '', redirectTo: 'metadata', pathMatch: 'full' },
           { path: 'metadata', component: TranscodingProfileMetadataComponent, data: { sectionKey: TranscodingProfileWidgetKeys.Metadata } },
-          // { path: 'flavors', component: EntryFlavours, data: { sectionKey: TranscodingProfileWidgetKeys.Flavors } }
+          { path: 'flavors', component: TranscodingProfileFlavorsComponent, data: { sectionKey: TranscodingProfileWidgetKeys.Flavors } }
         ]
       }
     ]

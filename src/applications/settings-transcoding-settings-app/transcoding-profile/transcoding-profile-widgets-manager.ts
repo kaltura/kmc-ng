@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui';
 import { TranscodingProfileStore } from './transcoding-profile-store.service';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 
 @Injectable()
-export class TranscodingProfileWidgetsManager extends WidgetsManagerBase<KalturaConversionProfile, KalturaMultiRequest> {
+export class TranscodingProfileWidgetsManager extends WidgetsManagerBase<KalturaConversionProfileWithAsset, KalturaMultiRequest> {
   private _profileStore: TranscodingProfileStore;
 
   constructor() {

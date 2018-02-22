@@ -1,9 +1,9 @@
 import { AreaBlockerMessage, AreaBlockerMessageButton, WidgetBase } from '@kaltura-ng/kaltura-ui';
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 
-export abstract class TranscodingProfileWidget extends WidgetBase<TranscodingProfileWidgetsManager, KalturaConversionProfile, KalturaMultiRequest> {
+export abstract class TranscodingProfileWidget extends WidgetBase<TranscodingProfileWidgetsManager, KalturaConversionProfileWithAsset, KalturaMultiRequest> {
   public sectionBlockerMessage: AreaBlockerMessage;
   public showSectionLoader: boolean;
 
