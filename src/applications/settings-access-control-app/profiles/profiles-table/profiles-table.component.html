@@ -48,10 +48,10 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile[col.field]?.isAuthorized || !profile[col.field],
-            'kIconerror blocked': profile[col.field]?.isAuthorized === false
+            'kIconconfirmation authorized': profile.view.domain.isAuthorized,
+            'kIconerror blocked': !profile.view.domain.isAuthorized
             }"></i>
-            <span>{{ profile[col.field]?.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
+            <span>{{ profile.view.domain.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
       </ng-template>
     </p-column>
@@ -61,10 +61,10 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile[col.field]?.isAuthorized || !profile[col.field],
-            'kIconerror blocked': profile[col.field]?.isAuthorized === false
+            'kIconconfirmation authorized': profile.view.countries.isAuthorized,
+            'kIconerror blocked': !profile.view.countries.isAuthorized
             }"></i>
-            <span>{{ profile[col.field]?.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
+            <span>{{ profile.view.countries.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
       </ng-template>
     </p-column>
@@ -74,10 +74,10 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile[col.field]?.isAuthorized || !profile[col.field],
-            'kIconerror blocked': profile[col.field]?.isAuthorized === false
+            'kIconconfirmation authorized': profile.view.ips.isAuthorized,
+            'kIconerror blocked': !profile.view.ips.isAuthorized
             }"></i>
-            <span>{{ profile[col.field]?.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
+            <span>{{ profile.view.ips.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
       </ng-template>
     </p-column>
@@ -87,10 +87,10 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile[col.field]?.isAuthorized || !profile[col.field],
-            'kIconerror blocked': profile[col.field]?.isAuthorized === false
+            'kIconconfirmation authorized': profile.view.flavors.isAuthorized,
+            'kIconerror blocked': !profile.view.flavors.isAuthorized
             }"></i>
-            <span>{{ profile[col.field]?.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
+            <span>{{ profile.view.flavors.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
       </ng-template>
     </p-column>
@@ -98,7 +98,7 @@
     <p-column field="advancedSecurity"
               [header]="'applications.settings.accessControl.table.advancedSecurity' | translate">
       <ng-template let-col let-profile="rowData" pTemplate="body">
-        <span>{{ profile[col.field]?.label }}</span>
+        <span>{{ profile.view.advancedSecurity.label }}</span>
       </ng-template>
     </p-column>
 
@@ -111,32 +111,32 @@
     </p-column>
     <ng-template let-profile pTemplate="rowexpansion">
       <div class="kAccessControlProfilesDetailRow">
-        <table *ngIf="profile?.details || profile?.description">
+        <table *ngIf="profile.view.hasAdditionalInfo">
           <tr>
             <td class="kStub1"></td>
             <td class="kStub1"></td>
-            <td [attr.colspan]="_documentWidth < 1300 ? 1 : 3">{{profile?.description}}</td>
+            <td [attr.colspan]="_documentWidth < 1300 ? 1 : 3">{{profile.description}}</td>
             <td>
-              <div *ngFor="let domain of profile?.details?.domains" [kTooltip]="domain">{{domain}}</div>
+              <div *ngFor="let domain of profile.view.domain.details" [kTooltip]="domain">{{domain}}</div>
             </td>
             <td class="kCountryList">
-              <div *ngFor="let country of profile?.details?.countries"
+              <div *ngFor="let country of profile.view.countries.details"
                    [kTooltip]="country | kCountryFromCode:'label'">
                 <img class="kCountryListFlag" [src]="country | kCountryFromCode:'icon'" [alt]="country">
                 {{country | kCountryFromCode:'label'}}
               </div>
             </td>
             <td>
-              <div *ngFor="let ip of profile?.details?.ips" [kTooltip]="ip">{{ip}}</div>
+              <div *ngFor="let ip of profile.view.ips.details" [kTooltip]="ip">{{ip}}</div>
             </td>
             <td>
-              <div *ngFor="let flavor of profile?.details?.flavors" [kTooltip]="flavor">{{flavor}}</div>
+              <div *ngFor="let flavor of profile.view.flavors.details" [kTooltip]="flavor.label">{{flavor.label}}</div>
             </td>
-            <td>{{profile?.details?.advancedSecurity}}</td>
+            <td>{{profile.view.advancedSecurity.details.label}}</td>
             <td class="kStub2"></td>
           </tr>
         </table>
-        <div *ngIf="(!profile?.details || !profile?.details?.advancedSecurity)&& !profile?.description"
+        <div *ngIf="!profile.view.hasAdditionalInfo"
              class="kNoAdditionalInfo">
           {{'applications.settings.accessControl.table.noAdditionalInfo' | translate}}
         </div>
