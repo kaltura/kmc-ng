@@ -17,7 +17,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
       this._playlists = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredPlaylists = data
+      this._deferredPlaylists = data;
     }
   }
 
