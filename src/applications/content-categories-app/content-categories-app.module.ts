@@ -36,6 +36,7 @@ import {
   TieredMenuModule,
   TreeModule,
 } from 'primeng/primeng';
+import {TableModule} from 'primeng/table';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 
 import {routing} from './content-categories-app.routes';
@@ -106,7 +107,8 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
         DetailsBarModule,
         StickyModule,
         InputHelperModule,
-        InputSwitchModule
+        InputSwitchModule,
+        TableModule
     ],
     declarations: [
         ContentCategoriesComponent,

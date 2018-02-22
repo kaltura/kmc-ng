@@ -57,7 +57,8 @@
                       [bodyScroll]="true">
       <kCategoriesTable class="kCategoriesTable"
                         [categories]="(_categoriesService.categories.data$ | async)?.items"
-                        [filter]="_query"
+                        [sortField]="_query.sortBy"
+                        [sortOrder]="_query.sortDirection"
                         (sortChanged)="_onSortChanged($event)"
                         (actionSelected)="_onActionSelected($event)"
                         [(selectedCategories)]="_selectedCategories">
