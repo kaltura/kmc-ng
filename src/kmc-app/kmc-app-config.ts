@@ -137,7 +137,7 @@ export const kmcAppConfig: KmcAppConfig = {
           'id': 'settingsTranscoding',
           'routePath': 'settings/transcoding',
           'titleToken': 'Transcoding settings'
-        }
+        },
         {
           'id': 'settingsCustomData',
           'routePath': 'settings/metadata',
