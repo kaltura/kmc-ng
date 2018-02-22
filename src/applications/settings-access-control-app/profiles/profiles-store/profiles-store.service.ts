@@ -230,9 +230,8 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
       const result = accessControlList.map(item => this._createExtendedAccessControl(item));
 
       result.forEach((item) => {
+          let hasAdditionalInfo = !!item.description; // default to has additional if has description
           if (item.restrictions && item.restrictions.length) {
-              let hasAdditionalInfo = !!item.description; // default to has additional if has description
-
               item.restrictions.forEach(restriction => {
                   if (restriction instanceof KalturaSiteRestriction) {
                       hasAdditionalInfo = true;
@@ -319,10 +318,10 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
                           [min, sec]
                       );
                   }
-
-                  item.view.hasAdditionalInfo = hasAdditionalInfo;
               });
           }
+
+          item.view.hasAdditionalInfo = hasAdditionalInfo;
       });
 
       // put default profile on top of the table if there's default profile in the response

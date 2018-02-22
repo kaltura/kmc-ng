@@ -1,10 +1,17 @@
 import {
-  AfterViewInit, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AccessControlProfilesStore } from '../profiles-store/profiles-store.service';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 
 @Component({
@@ -16,7 +23,8 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   private _deferredProfiles: KalturaAccessControl[];
 
   public _profiles: KalturaAccessControl[] = [];
-  public _documentWidth: number = 2000;
+  public _documentWidth = 2000;
+  public _rowTrackBy: Function = (index: number, item: any) => item.id;
 
   @Input()
   set list(data: KalturaAccessControl[]) {
@@ -100,6 +108,7 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
       this.actionsMenu.show(event);
     }
   }
+
   public _onSelectionChange(event: KalturaAccessControl[]): void {
     this.selectedProfilesChange.emit(event);
   }
