@@ -12,6 +12,7 @@ import {
   RadioButtonModule,
   SharedModule, TieredMenuModule
 } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -56,7 +57,8 @@ import { PlaylistsTableSortDirectionPipe } from './playlists/playlists-table/pla
         EntriesModule,
     FiltersModule,
     DropdownModule,
-    SliderModule
+    SliderModule,
+      TableModule
   ],declarations: [
       ContentPlaylistsComponent,
       PlaylistsTableSortDirectionPipe,PlaylistsComponentsList,

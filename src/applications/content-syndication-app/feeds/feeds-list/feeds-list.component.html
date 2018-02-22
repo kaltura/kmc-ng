@@ -29,7 +29,8 @@
                       [bodyScroll]="true">
         <kFeedsTable class="kFeedsTable"
                      [feeds]="(_feedsService.feeds.data$ | async)?.items"
-                     [filter]="_query"
+                     [sortField]="_query.sortBy"
+                     [sortOrder]="_query.sortDirection"
                      (sortChanged)="_onSortChanged($event)"
                      (actionSelected)="_onActionSelected($event)"
                      [(selectedFeeds)]="_selectedFeeds"

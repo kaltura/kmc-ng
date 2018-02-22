@@ -54,7 +54,8 @@
         class="kPlaylistsTable"
         [playlists]="(_playlistsStore.playlists.data$ | async)?.items"
         (sortChanged)="_onSortChanged($event)"
-        [filter]="_query"
+        [sortField]="_query.sortBy"
+        [sortOrder]="_query.sortDirection"
         (actionSelected)="_onActionSelected($event)"
         [(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
       </k-area-blocker>
