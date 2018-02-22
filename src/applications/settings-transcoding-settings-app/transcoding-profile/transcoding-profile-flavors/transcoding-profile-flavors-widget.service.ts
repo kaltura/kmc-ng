@@ -8,12 +8,18 @@ import { FlavoursStore } from 'app-shared/kmc-shared';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
+  private _preSelectedFlavors = new BehaviorSubject<KalturaFlavorParams[]>([]);
   public flavors: KalturaFlavorParams[] = [];
+  public readonly preSelectedFlavors$ = this._preSelectedFlavors.asObservable();
 
-  constructor(private _kalturaClient: KalturaClient, private _flavorsStore: FlavoursStore) {
+  constructor(private _kalturaClient: KalturaClient,
+              private _appLocalization: AppLocalization,
+              private _flavorsStore: FlavoursStore) {
     super(TranscodingProfileWidgetKeys.Flavors);
   }
 
@@ -42,13 +48,37 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
       .map((response: { items: KalturaFlavorParams[] }) => {
         const items = response.items;
         const profileType: KalturaConversionProfileType = this.data.type;
+        let flavors = [];
         if (profileType.equals(KalturaConversionProfileType.liveStream)) {
-          this.flavors = items.filter(item => item instanceof KalturaLiveParams);
+          flavors = items.filter(item => item instanceof KalturaLiveParams);
         } else if (profileType.equals(KalturaConversionProfileType.media)) {
-          this.flavors = items.filter(item => !(item instanceof KalturaLiveParams));
+          flavors = items.filter(item => !(item instanceof KalturaLiveParams));
         } else {
-          this.flavors = [];
+          flavors = [];
         }
+
+        this.flavors = flavors.map(flavor => {
+          const codec = !flavor.videoCodec || !flavor.videoCodec.toString() || flavor.videoCodec.toString() === 'copy'
+            ? this._appLocalization.get('applications.settings.transcoding.flavors.na')
+            : flavor.videoCodec;
+          const bitrate = flavor.tags.indexOf('ingest') !== -1 || !flavor.audioBitrate || !flavor.videoBitrate
+            ? this._appLocalization.get('applications.settings.transcoding.flavors.na')
+            : flavor.audioBitrate + flavor.videoBitrate;
+          const width = !flavor.width
+            ? this._appLocalization.get('applications.settings.transcoding.flavors.auto')
+            : flavor.width;
+          const height = !flavor.height
+            ? this._appLocalization.get('applications.settings.transcoding.flavors.auto')
+            : flavor.height;
+          const dimensions = `${width}x${height}`;
+          return Object.assign(flavor, { codec, bitrate, dimensions });
+        });
+
+        const preSelectedFlavors = this.flavors.filter(flavor => {
+          return this.data.flavorParamsIds.indexOf(String(flavor.id)) !== -1;
+        });
+        this._preSelectedFlavors.next(preSelectedFlavors);
+
         super._hideLoader();
         return { failed: false };
       })

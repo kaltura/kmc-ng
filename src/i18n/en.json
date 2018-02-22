@@ -2232,6 +2232,8 @@
           "nameIsMandatory": "Name is required"
         },
         "flavors": {
+          "na": "N/A",
+          "auto": "auto",
           "table": {
             "name": "Name",
             "id": "ID",

@@ -15,13 +15,12 @@ export class TranscodingProfileFlavorsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._widgetService.attachForm();
-    this._widgetService.data$
-      .filter(Boolean)
+    this._widgetService.preSelectedFlavors$
       .cancelOnDestroy(this)
-      .subscribe(() => {
-        this._clearSelection();
+      .subscribe((flavors) => {
+        this._selectedFlavors = flavors;
       });
-  };
+  }
 
   ngOnDestroy() {
     this._widgetService.detachForm();
