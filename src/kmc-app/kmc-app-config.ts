@@ -129,6 +129,11 @@ export const kmcAppConfig: KmcAppConfig = {
           'titleToken': 'Integration Settings'
         },
         {
+          'id': 'settingsAccessControl',
+          'routePath': 'settings/accessControl',
+          'titleToken': 'AccessControl'
+        },
+        {
           'id': 'settingsCustomData',
           'routePath': 'settings/metadata',
           'titleToken': 'CustomData'
@@ -139,9 +144,9 @@ export const kmcAppConfig: KmcAppConfig = {
           'titleToken': 'My User Settings'
         },
         {
-            'id': 'settingsAccountInformation',
-            'routePath': 'settings/accountInformation',
-            'titleToken': 'Account Information'
+          'id': 'settingsAccountInformation',
+          'routePath': 'settings/accountInformation',
+          'titleToken': 'Account Information',
         }
       ]
     }, {
