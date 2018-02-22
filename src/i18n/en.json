@@ -18,13 +18,13 @@
       "Integration Settings": "Integration Settings",
       "Account Information": "Account Information",
       "My User Settings": "My User Settings",
-      "Administration": "Administration",
       "Roles": "Roles",
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
       "DropFolders": "Drop Folders",
       "UploadMonitor": "Upload Monitor",
       "CustomData": "Custom Data",
+      "AccessControl": "Access Control",
       "Transcoding settings": "Transcoding settings"
     },
     "userSettings": {
@@ -2057,6 +2057,96 @@
           "updateUser": "Error occurred during updating user data",
           "passwordErr": "Supplied password is invalid",
           "passwordStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules :\n- Must be of length between 8 and 14.\n- Must not contain your name\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols:  %%~!@#$^*=+?[]{}.\n- Must not contain the following characters: < or >."
+        }
+      },
+      "accessControl": {
+        "selected": "{{0}} Selected",
+        "cancel": "Cancel",
+        "save": "Save",
+        "addProfile": "Add Profile",
+        "addAccessControlProfile": "Add Access Control Profile",
+        "editAccessControlProfile": "Edit Access Control Profile",
+        "deleteProfile": {
+          "header": "Delete Access Control Profile(s)",
+          "messageWithNames": "After delete of Access Control Profile, all entries using it will go back to use the default profile. Are you sure you want to delete the following Access Control Profile(s):\n{{0}}?",
+          "message": "After delete of Access Control Profile, all entries using it will go back to use the default profile. Are you sure you want to delete the selected Access Control Profiles?"
+        },
+        "restrictions": {
+          "authorized": "{{0}} Authorized",
+          "blocked": "{{0}} Blocked",
+          "flavors": "{{0}} Flavors",
+          "ks": "KS",
+          "freePreview": ", Free Preview",
+          "freePreviewDetails": "Free Preview\nFrom ({{0}}m:{{1}}s)"
+        },
+        "table": {
+          "noAdditionalInfo": "No additional information",
+          "header": "{{0}} Profiles",
+          "allowAll": "Allow All",
+          "name": "Name",
+          "id": "ID",
+          "createdOn": "Created On",
+          "domain": "Domain",
+          "countries": "Countries",
+          "ips": "IPs",
+          "flavors": "Flavors",
+          "advancedSecurity": "Advanced Security",
+          "actions": {
+            "delete": "Delete",
+            "edit": "Edit"
+          }
+        },
+        "editForm": {
+          "profileName": "Profile Name",
+          "description": "Description",
+          "authorizedDomains": "Authorized Domains",
+          "allDomains": "All Domains",
+          "selectedDomainsOnly": "Selected Domains Only",
+          "blockSelectedDomains": "Block Selected Domains",
+          "authorizedCountries": "Authorized Countries",
+          "allCountries": "All Countries",
+          "selectedCountriesOnly": "Selected Countries Only",
+          "blockSelectedCountries": "Block Selected Countries",
+          "authorizedIps": "Authorized IPs",
+          "allIps": "All IPs",
+          "selectedIpsOnly": "Selected IPs Only",
+          "blockSelectedIps": "Block Selected IPs",
+          "authorizedFlavors": "Authorized Flavors",
+          "allFlavors": "All Flavors",
+          "selectedFlavorsOnly": "Selected Flavors Only",
+          "blockSelectedFlavors": "Block Selected Flavors",
+          "advancedSecurity": "Advanced Security and Pay per-view",
+          "advancedSecurityHelp": "Provides a higher level of security, relevant for pay-per view models and premium content",
+          "secureVideo": "Secure this video with server side secret",
+          "yes": "Yes",
+          "no": "No",
+          "allowFreePreviewOf": "Allow Free Preview of",
+          "followedByPrompt": "Followed by a prompt to pay for continued viewing",
+          "ipsPlaceholder": "Enter IP",
+          "domainsPlaceholder": "Enter Domain",
+          "selectFlavors": "Select Flavors",
+          "selectCountry": "Select Country",
+          "findCountry": "Find Country",
+          "findFlavor": "Find Flavor",
+          "countriesSelected": "{0} Countries Selected",
+          "flavorsSelected": "{0} Flavors Selected",
+          "invalidValue": "Invalid Value",
+          "validationMessage": {
+            "invalidDomainName": "Invalid domain name",
+            "invalidIp": "Invalid IP",
+            "validationFailed": "Validation Failed",
+            "profileNameRequired": "Profile name is required",
+            "authorizedDomains": "No domains added to the approved or restricted lists. The domain restriction will be: allow all domains.\n",
+            "authorizedCountries": "No countries added to the approved or restricted lists. The country restriction will be: allow all countries.\n",
+            "authorizedIps": "No IPs added to the approved or restricted lists. The IP restriction will be: allow all IPs.\n",
+            "authorizedFlavors": "No flavors added to the approved or restricted lists. The flavors restriction will be: allow all flavors.\n",
+            "confirmSaving": "Are you sure you want to save this Access Control Profile?"
+          }
+        },
+        "errors": {
+          "loading": "Could not load Access Control Profiles",
+          "delete": "Error happened during delete request",
+          "profileWasNotUpdated": "Access Control profile was not updated.\n{{0}}"
         }
       },
       "transcoding": {

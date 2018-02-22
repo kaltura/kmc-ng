@@ -33,8 +33,7 @@ import {
   AppEventsModule,
   FlavoursStore,
   KalturaServerModule,
-  MetadataProfileModule,
-  PartnerProfileStore
+  MetadataProfileModule, PartnerProfileStore,
 } from 'app-shared/kmc-shared';
 
 import {AppComponent} from './app.component';
@@ -78,6 +77,7 @@ import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-cr
 import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
+import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
@@ -136,7 +136,8 @@ export function clientConfigurationFactory() {
     CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
-    ViewCategoryEntriesModule.forRoot()
+    ViewCategoryEntriesModule.forRoot(),
+    AccessControlProfileModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -159,7 +160,7 @@ export function clientConfigurationFactory() {
   ],
   exports: [],
   providers: <any>[
-    ...partnerProviders,
+      ...partnerProviders,
       KalturaLogger,
       {
           provide: KalturaLoggerName, useValue: 'kmc'
