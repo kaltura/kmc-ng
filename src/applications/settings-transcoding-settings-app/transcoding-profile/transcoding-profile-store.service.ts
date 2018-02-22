@@ -4,12 +4,18 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { KalturaClient, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
+import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
+import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
+import { ConversionProfileGetAction } from 'kaltura-ngx-client/api/types/ConversionProfileGetAction';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -291,17 +297,33 @@ export class TranscodingProfileStore implements OnDestroy {
     }
   }
 
-  private _getProfile(profileId: number): Observable<KalturaConversionProfile> {
+  private _getProfile(profileId: number): Observable<KalturaConversionProfileWithAsset> {
     if (profileId) {
-      // return this._kalturaServerClient.request(
-      //   new BaseEntryGetAction({ entryId })
-      // ).map(response => {
-      //   if (response instanceof KalturaConversionProfile) {
-      //     return response;
-      //   } else {
-      //     throw new Error(`invalid type provided, expected KalturaConversionProfile, got ${typeof response}`);
-      //   }
-      // });
+      const conversionProfileAction = new ConversionProfileGetAction({ id: profileId });
+      const conversionProfileAssetParamsAction = new ConversionProfileAssetParamsListAction({
+        filter: new KalturaConversionProfileAssetParamsFilter({
+          conversionProfileIdFilter: new KalturaConversionProfileFilter({ idEqual: profileId })
+        }),
+        pager: new KalturaFilterPager({ pageSize: 1000 })
+      });
+
+      // build the request
+      return this._kalturaServerClient
+        .multiRequest(new KalturaMultiRequest(conversionProfileAction, conversionProfileAssetParamsAction))
+        .map(([profilesResponse, assetsResponse]) => {
+          if (profilesResponse.error) {
+            throw Error(profilesResponse.error.message);
+          }
+
+          if (assetsResponse.error) {
+            throw Error(assetsResponse.error.message);
+          }
+
+          const profile = profilesResponse.result;
+          const assets = assetsResponse.result.objects;
+          const flavors = profile.flavorParamsIds.split(',').length;
+          return Object.assign(profile, { assets, flavors });
+        });
     } else {
       return Observable.throw(new Error('missing profileId'));
     }
@@ -324,8 +346,8 @@ export class TranscodingProfileStore implements OnDestroy {
       if (this._profileIsDirty) {
         this._browserService.confirm(
           {
-            header: this._appLocalization.get('applications.settings.transcoding.profile.cancelEdit'),
-            message: this._appLocalization.get('applications.settings.transcoding.profile.discard'),
+            header: this._appLocalization.get('applications.settings.transcoding.cancelEdit'),
+            message: this._appLocalization.get('applications.settings.transcoding.discard'),
             accept: () => {
               this._profileIsDirty = false;
               observer.next({ allowed: true });

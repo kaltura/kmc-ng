@@ -2209,6 +2209,23 @@
         "sections": {
           "metadata": "Metadata",
           "flavors": "Flavors"
+        },
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "type": {
+          "media": "Media Transcoding Profile",
+          "live": "Live Transcoding Profile"
+        },
+        "details": {
+          "id": "ID",
+          "flavors": "Flavors:",
+          "creationDate": "Creation Date:"
+        },
+        "metadata": {
+          "name": "Name",
+          "description": "Description",
+          "defaultMetadataSetting": "Default Metadata Settings",
+          "ingestFromRemoteStorage": "Ingest from Remote Storage"
         }
       }
     }

@@ -10,6 +10,7 @@ import { TranscodingProfileDetailsWidget } from './transcoding-profile-details-w
 })
 export class TranscodingProfileDetailsComponent implements OnInit, OnDestroy {
   public _currentProfile: KalturaConversionProfile;
+  public _isNew = false;
 
   constructor(public _widgetService: TranscodingProfileDetailsWidget,
               public _profileStore: TranscodingProfileStore) {
@@ -24,6 +25,7 @@ export class TranscodingProfileDetailsComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           this._currentProfile = data;
+          this._isNew = !this._currentProfile.id;
         });
   }
 

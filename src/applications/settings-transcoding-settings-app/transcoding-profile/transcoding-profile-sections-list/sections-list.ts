@@ -6,7 +6,7 @@ export const SectionsList = [
     key: TranscodingProfileWidgetKeys.Metadata
   },
   {
-    label: 'applications.settings.transcoding.sections.flavours',
+    label: 'applications.settings.transcoding.sections.flavors',
     key: TranscodingProfileWidgetKeys.Flavors
   }
 ];
