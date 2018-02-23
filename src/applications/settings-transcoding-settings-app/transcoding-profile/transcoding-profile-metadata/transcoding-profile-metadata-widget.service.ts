@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { async } from 'rxjs/scheduler/async';
@@ -10,6 +10,7 @@ import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/Kaltu
 import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
+import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 
 @Injectable()
 export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -23,6 +24,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
 
   constructor(private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization,
+              private _kalturaClient: KalturaClient,
               private _storageProfilesStore: StorageProfilesStore) {
     super(TranscodingProfileWidgetKeys.Metadata);
     this._buildForm();
@@ -71,11 +73,24 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
       );
   }
 
-  protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
-    // const name = wasActivated ? this.metadataForm.value.name : this.data.name;
-    // const hasValue = (name || '').trim() !== '';
+  protected onValidate(): Observable<{ isValid: boolean }> {
+    const formData = this.metadataForm.value;
+    const name = (formData.name || '').trim();
+    const entryId = (formData.defaultMetadataSettings || '').trim();
+    const hasValue = name !== '';
+
+    if (entryId) { // if user entered entryId check if it exists
+      return this._kalturaClient.request(new BaseEntryGetAction({ entryId }))
+        .map(() => ({ isValid: hasValue }))
+        .catch(
+          error => (error instanceof KalturaAPIException && error.code === 'ENTRY_ID_NOT_FOUND')
+            ? Observable.of({ isValid: false })
+            : Observable.throw(error.message)
+        );
+    }
+
     return Observable.of({
-      isValid: true
+      isValid: hasValue
     });
   }
 
