@@ -9,13 +9,11 @@ import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/Kaltu
 import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
-  private _preSelectedFlavors = new BehaviorSubject<KalturaFlavorParams[]>([]);
   public flavors: KalturaFlavorParams[] = [];
-  public readonly preSelectedFlavors$ = this._preSelectedFlavors.asObservable();
+  public selectedFlavors: KalturaFlavorParams[] = [];
 
   constructor(private _kalturaClient: KalturaClient,
               private _appLocalization: AppLocalization,
@@ -74,10 +72,9 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
           return Object.assign(flavor, { codec, bitrate, dimensions });
         });
 
-        const preSelectedFlavors = this.flavors.filter(flavor => {
+        this.selectedFlavors = this.flavors.filter(flavor => {
           return this.data.flavorParamsIds.indexOf(String(flavor.id)) !== -1;
         });
-        this._preSelectedFlavors.next(preSelectedFlavors);
 
         super._hideLoader();
         return { failed: false };
@@ -95,5 +92,9 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
 
   public onActionSelected(event: { action: string, flavor: KalturaFlavorParams }): void {
 
+  }
+
+  public updateSelectionState(): void {
+    this._setDirty();
   }
 }

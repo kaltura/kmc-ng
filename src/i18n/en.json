@@ -2232,6 +2232,9 @@
           "nameIsMandatory": "Name is required"
         },
         "flavors": {
+          "cancel": "Cancel",
+          "flavors": "{{0}} Flavors",
+          "selected": "{{0}} Selected",
           "na": "N/A",
           "auto": "auto",
           "table": {

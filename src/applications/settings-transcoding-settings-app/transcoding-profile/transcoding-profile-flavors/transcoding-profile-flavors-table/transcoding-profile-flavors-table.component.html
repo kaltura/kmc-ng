@@ -1,43 +1,42 @@
-<k-area-blocker [showLoader]="_deferredLoading">
-  <div class="kTranscodingProfileFlavorsTable" [class.noResults]="!_flavors?.length">
-    <p-dataTable
-      #dataTable
-      dataKey="id"
-      scrollable="true"
-      scrollHeight="100%"
-      [immutable]="false"
-      [value]="_flavors"
-      [emptyMessage]="_emptyMessage"
-      (selectionChange)="_onSelectionChange($event)"
-      [(selection)]="selectedFlavors">
-      <p-column selectionMode="multiple" [style]="{'width': '44px'}"></p-column>
+<div class="kTranscodingProfileFlavorsTable" [class.noResults]="!_flavors?.length">
+  <p-dataTable
+    #dataTable
+    dataKey="id"
+    scrollable="true"
+    scrollHeight="100%"
+    [immutable]="false"
+    [value]="_flavors"
+    [emptyMessage]="_emptyMessage"
+    (selectionChange)="_onSelectionChange($event)"
+    [(selection)]="selectedFlavors">
+    <p-column selectionMode="multiple" [style]="{'width': '44px'}"></p-column>
 
-      <p-column field="name" [header]="'applications.settings.transcoding.flavors.table.name' | translate">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span class="kTitle">{{entry[col.field]}}</span>
-        </ng-template>
-      </p-column>
+    <p-column field="name" [header]="'applications.settings.transcoding.flavors.table.name' | translate">
+      <ng-template let-col let-entry="rowData" pTemplate="body">
+        <span class="kTitle">{{entry[col.field]}}</span>
+      </ng-template>
+    </p-column>
 
-      <p-column field="id" [header]="'applications.settings.transcoding.flavors.table.id' | translate">
-      </p-column>
+    <p-column field="id" [header]="'applications.settings.transcoding.flavors.table.id' | translate">
+    </p-column>
 
-      <p-column field="format" [header]="'applications.settings.transcoding.flavors.table.format' | translate">
-      </p-column>
+    <p-column field="format" [header]="'applications.settings.transcoding.flavors.table.format' | translate">
+    </p-column>
 
-      <p-column field="codec" [header]="'applications.settings.transcoding.flavors.table.codec' | translate">
-      </p-column>
+    <p-column field="codec" [header]="'applications.settings.transcoding.flavors.table.codec' | translate">
+    </p-column>
 
-      <p-column field="bitrate" [header]="'applications.settings.transcoding.flavors.table.bitrate' | translate">
-      </p-column>
+    <p-column field="bitrate" [header]="'applications.settings.transcoding.flavors.table.bitrate' | translate">
+    </p-column>
 
-      <p-column field="dimensions" [header]="'applications.settings.transcoding.flavors.table.dimensions' | translate">
-      </p-column>
+    <p-column field="dimensions" [header]="'applications.settings.transcoding.flavors.table.dimensions' | translate">
+    </p-column>
 
-      <p-column header="" [style]="{'width': '40px'}">
-        <ng-template let-col let-entry="rowData" pTemplate="body" let-i="rowIndex">
+    <p-column header="" [style]="{'width': '40px'}">
+      <ng-template let-col let-entry="rowData" pTemplate="body" let-i="rowIndex">
 
-        </ng-template>
-      </p-column>
-    </p-dataTable>
-  </div>
-</k-area-blocker>
+      </ng-template>
+    </p-column>
+  </p-dataTable>
+</div>
+

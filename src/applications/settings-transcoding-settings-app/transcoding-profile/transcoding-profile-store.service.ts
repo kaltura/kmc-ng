@@ -159,16 +159,17 @@ export class TranscodingProfileStore implements OnDestroy {
         event => {
           if (event instanceof NavigationStart) {
           } else if (event instanceof NavigationEnd) {
-
-            // we must defer the loadProfile to the next event cycle loop to allow components
-            // to init them-selves when entering this module directly.
-            setTimeout(() => {
-              const currentProfileId = this._profileRoute.snapshot.params.id;
-              const profile = this.profile.data();
-              if (!profile || (profile && profile.id !== currentProfileId)) {
-                this._loadProfile(currentProfileId);
-              }
-            });
+            const currentProfileId = Number(this._profileRoute.snapshot.params.id);
+            if (currentProfileId !== this._profileId) {
+              // we must defer the loadProfile to the next event cycle loop to allow components
+              // to init them-selves when entering this module directly.
+              setTimeout(() => {
+                const profile = this.profile.data();
+                if (!profile || (profile && profile.id !== currentProfileId)) {
+                  this._loadProfile(currentProfileId);
+                }
+              });
+            }
           }
         }
       );

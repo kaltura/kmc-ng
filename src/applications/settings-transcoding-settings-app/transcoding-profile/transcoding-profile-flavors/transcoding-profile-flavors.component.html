@@ -1,9 +1,22 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
   <div class="kTranscodingProfilesFlavorsHolder">
+    <div class="kTranscodingProfilesFlavorsTableHeader">
+      <span class="kTotalFlavorsCount" *ngIf="_widgetService.flavors.length">
+       {{'applications.settings.transcoding.flavors.flavors' | translate: [_widgetService.flavors.length]}}
+      </span>
+
+      <div class="kBulkOperations" [class.kHidden]="!_widgetService.selectedFlavors.length">
+        <span class="kSelectedFlavorsLabel">
+          • {{ 'applications.settings.transcoding.flavors.selected' | translate: [_widgetService.selectedFlavors.length]}}
+        </span>
+      </div>
+    </div>
+
     <kTranscodingProfileFalvorsTable
       class="kTranscodingProfilesFlavorsTable"
       [flavors]="_widgetService.flavors"
-      [(selectedFlavors)]="_selectedFlavors">
+      [(selectedFlavors)]="_widgetService.selectedFlavors"
+      (selectedFlavorsChange)="_widgetService.updateSelectionState()">
     </kTranscodingProfileFalvorsTable>
   </div>
 </k-area-blocker>
