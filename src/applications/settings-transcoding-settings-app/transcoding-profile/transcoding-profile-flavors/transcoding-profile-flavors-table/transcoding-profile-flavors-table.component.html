@@ -13,7 +13,7 @@
 
     <p-column field="name" [header]="'applications.settings.transcoding.flavors.table.name' | translate">
       <ng-template let-col let-entry="rowData" pTemplate="body">
-        <span class="kTitle">{{entry[col.field]}}</span>
+        <div class="kTitle" [kTooltip]="entry[col.field]">{{entry[col.field]}}</div>
       </ng-template>
     </p-column>
 
@@ -32,9 +32,11 @@
     <p-column field="dimensions" [header]="'applications.settings.transcoding.flavors.table.dimensions' | translate">
     </p-column>
 
-    <p-column header="" [style]="{'width': '40px'}">
+    <p-column header="" [style]="{'width': '60px'}">
       <ng-template let-col let-entry="rowData" pTemplate="body" let-i="rowIndex">
-
+        <div class="kEditFlavorIconWrapper">
+          <i class="kIconEdit kEditFlavorIcon"></i>
+        </div>
       </ng-template>
     </p-column>
   </p-dataTable>

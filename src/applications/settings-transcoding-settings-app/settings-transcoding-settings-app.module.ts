@@ -8,10 +8,8 @@ import { ButtonModule, DataTableModule, DropdownModule, InputTextModule, Paginat
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { TranslateModule } from 'ng2-translate';
 import { TranscodingProfilesComponentsList } from './components-list';
-import { TooltipModule } from '@kaltura-ng/kaltura-ui/tooltip/k-tooltip.module';
-import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
+import { KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { MenuModule } from 'primeng/menu';
-import { KalturaUIModule } from '@kaltura-ng/kaltura-ui/kaltura-ui.module';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.module';
 import { TranscodingProfileComponentsList } from './transcoding-profile/components-list';
 import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar/details-bar.module';
@@ -34,7 +32,8 @@ import { TranscodingProfileCanDeactivate } from './transcoding-profile/transcodi
     PaginatorModule,
     StickyModule,
     MenuModule,
-    DetailsBarModule
+    DetailsBarModule,
+    TooltipModule
   ],
   declarations: [
     SettingsTranscodingSettingsComponent,

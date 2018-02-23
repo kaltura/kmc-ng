@@ -4,82 +4,29 @@
   background-color: white;
   overflow: hidden;
   position: relative;
-  padding: 0px;
+  padding: 0;
 
-  .kThumbnailHolder {
-    overflow: hidden;
+  .kEditFlavorIconWrapper {
     position: relative;
-    width: 80px;
-    height: 46px;
-    background-color: $kGrayscale6;
-    white-space: nowrap;
-    text-align: center;
-    border-radius: 3px;
-    cursor: pointer;
-    img {
+
+    .kEditFlavorIcon {
+      font-size: 24px;
       position: absolute;
-      left: -100%;
-      right: -100%;
-      top: -100%;
-      bottom: -100%;
-      margin: auto;
-      width: 80px;
-      height: auto;
-      border-radius: 3px;
+      top: -10px;
+      right: 20px;
+      display: none;
+      cursor: pointer;
     }
-  }
-
-  .kPlaylistEntriesTableActions {
-    width: 100%;
-    text-align: center;
-  }
-
-  .kIconvideo {
-    font-size: 20px;
-  }
-
-  .kIconsound {
-    font-size: 22px;
-  }
-
-  .kIconimage {
-    font-size: 24px;
   }
 
   .kTitle {
     color: #333333;
     font-weight: 700;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-}
-
-:host /deep/ .selectionColumn {
-  width: 44px;
-  padding-left: 14px!important;
-}
-
-:host /deep/ .ui-datatable .thumbnailColumn {
-  width: 100px;
-}
-
-:host /deep/ .ui-datatable .mediaTypeColumn {
-  width: 80px;
-  text-align: center;
-}
-
-:host /deep/ .ui-datatable .createdAtColumn {
-  width: 140px;
-  text-align: center;
-}
-
-:host /deep/ .ui-datatable .durationColumn {
-  width: 100px;
-  text-align: center;
-}
-
-:host /deep/ .ui-datatable .actionsColumn {
-  overflow: visible;
-  width: 80px;
 }
 
 :host {
@@ -89,7 +36,13 @@
   flex-direction: column;
 }
 
-:host /deep/ p-datatable .stickyHeader{
-  z-index: 10;
-  display: table;
+:host /deep/ p-datatable {
+  tr.ui-state-highlight .kEditFlavorIcon {
+    display: block !important;
+  }
+
+  .stickyHeader {
+    z-index: 10;
+    display: table;
+  }
 }
