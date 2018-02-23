@@ -34,12 +34,14 @@
                    [placeholder]="'applications.settings.transcoding.metadata.defaultMetadataSettingPlaceholder' | translate">
           </div>
         </div>
-        <div class="kRow">
+        <div class="kRow" *ngIf="!_widgetService.hideIngestFromRemoteStorage">
           <span class="kLabel">
             {{'applications.settings.transcoding.metadata.ingestFromRemoteStorage' | translate}}
           </span>
           <div class="kControl">
-            <input [formControl]="_widgetService.ingestFromRemoteStorageField" pInputText>
+            <p-dropdown [options]="_widgetService.remoteStorageProfilesOptions"
+                        [formControl]="_widgetService.ingestFromRemoteStorageField"
+                        [autoWidth]="false"></p-dropdown>
           </div>
         </div>
       </form>

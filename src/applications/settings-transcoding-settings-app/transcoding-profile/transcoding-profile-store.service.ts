@@ -296,7 +296,7 @@ export class TranscodingProfileStore implements OnDestroy {
       .subscribe(
         response => {
           this._profile.data.next(response);
-          this._profileId = response.id;
+          this._profileId = String(response.id);
 
           const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
           if (dataLoadedResult.errors.length) {

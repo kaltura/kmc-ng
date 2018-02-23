@@ -29,7 +29,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
   public _profileType: KalturaConversionProfileType;
   public _showLoader = false;
   public _areaBlockerMessage: AreaBlockerMessage;
-  public _currentProfileId: number;
+  public _currentProfileId: string;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
   public _profileHasChanges: boolean;
