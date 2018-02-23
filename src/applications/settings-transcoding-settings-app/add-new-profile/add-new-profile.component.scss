@@ -1,0 +1,106 @@
+@import 'app-theme/_variables.scss';
+
+.kAddNewProfile {
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+
+  .kContainer {
+    height: 290px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 28px;
+
+    .kRow {
+      display: flex;
+      margin-bottom: 35px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      &.kHasError {
+        .kRequired {
+          color: $kDandger;
+          font-weight: bold;
+        }
+        .kControl input {
+          border-color: $kDandger;
+          background: initial;
+        }
+      }
+
+      .kLabel {
+        width: 204px;
+        flex: 0 0 auto;
+        height: 18px;
+        color: $kGrayscale1;
+        font-size: 15px;
+        line-height: 18px;
+      }
+
+      .kRequired {
+        width: 20px;
+        margin-left: -28px;
+        font-size: 24px;
+      }
+      .kRequired, .kLabel {
+        padding: 8px 4px;
+        height: 18px;
+      }
+      .kControl {
+        color: $kGrayscale2;
+        height: 34px;
+        border-radius: 3px;
+
+        input {
+          width: 300px;
+        }
+
+        .kInputError {
+          color: $kDandger;
+        }
+      }
+    }
+  }
+
+  .kFooter {
+    padding: 15px 0;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      width: 120px;
+      height: 34px;
+    }
+
+    .kNextBtn {
+      border-width: 0;
+      font-size: 14px;
+      margin-left: 16px;
+
+      &:disabled {
+        border-width: 1px;
+      }
+    }
+  }
+}
+
+:host /deep/ .kAddNewProfile {
+  .ui-dropdown.ui-widget {
+    width: 300px;
+  }
+}

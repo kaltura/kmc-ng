@@ -59,7 +59,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
           const codec = !flavor.videoCodec || !flavor.videoCodec.toString() || flavor.videoCodec.toString() === 'copy'
             ? this._appLocalization.get('applications.settings.transcoding.flavors.na')
             : flavor.videoCodec;
-          const bitrate = flavor.tags.indexOf('ingest') !== -1 || !flavor.audioBitrate || !flavor.videoBitrate
+          const bitrate = (flavor.tags && flavor.tags.indexOf('ingest')) !== -1 || !flavor.audioBitrate || !flavor.videoBitrate
             ? this._appLocalization.get('applications.settings.transcoding.flavors.na')
             : flavor.audioBitrate + flavor.videoBitrate;
           const width = !flavor.width
@@ -73,7 +73,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
         });
 
         this.selectedFlavors = this.flavors.filter(flavor => {
-          return this.data.flavorParamsIds.indexOf(String(flavor.id)) !== -1;
+          return this.data.flavorParamsIds && this.data.flavorParamsIds.indexOf(String(flavor.id)) !== -1;
         });
 
         super._hideLoader();

@@ -76,6 +76,7 @@ import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
+import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
@@ -126,7 +127,8 @@ export function clientConfigurationFactory() {
     CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
     AccessControlProfileModule.forRoot(),
-    ViewCategoryEntriesModule.forRoot()
+    ViewCategoryEntriesModule.forRoot(),
+    TranscodingProfileCreationModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,

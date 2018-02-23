@@ -2152,6 +2152,8 @@
       "transcoding": {
         "yes": "Yes",
         "no": "No",
+        "na": "N/A",
+        "entryNotFound": "Provided entry does not exist (entry ID: {{0}})",
         "errorLoadingProfiles": "Failed to load transcoding profiles",
         "failedSetDefault": "Failed to set profile as default",
         "failedDelete": "Failed to delete profile(s)",
@@ -2183,6 +2185,7 @@
         },
         "profile": {
           "metadata": "Metadata",
+          "backToProfiles": "Back To Profiles",
           "flavor": "Flavor",
           "id": "ID {{0}}",
           "creationDate": "Creation Date {{0}}",

@@ -16,6 +16,7 @@ import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/t
 import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { ConversionProfileGetAction } from 'kaltura-ngx-client/api/types/ConversionProfileGetAction';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { TranscodingProfileCreationService } from 'app-shared/kmc-shared/events/transcoding-profile-creation';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -43,14 +44,14 @@ export class TranscodingProfileStore implements OnDestroy {
     data: new BehaviorSubject<KalturaConversionProfileWithAsset>(null),
     state: new BehaviorSubject<StatusArgs>({ action: ActionTypes.ProfileLoading, error: null })
   };
-  private _profileId: number;
+  private _profileId: string;
   private _profileIsDirty: boolean;
 
   public get profileIsDirty(): boolean {
     return this._profileIsDirty;
   }
 
-  public get profileId(): number {
+  public get profileId(): string {
     return this._profileId;
   }
 
@@ -67,6 +68,7 @@ export class TranscodingProfileStore implements OnDestroy {
               private _profileRoute: ActivatedRoute,
               private _pageExitVerificationService: PageExitVerificationService,
               private _appLocalization: AppLocalization,
+              private _profileCreationService: TranscodingProfileCreationService,
               private _logger: KalturaLogger) {
 
 
@@ -159,16 +161,39 @@ export class TranscodingProfileStore implements OnDestroy {
         event => {
           if (event instanceof NavigationStart) {
           } else if (event instanceof NavigationEnd) {
-            const currentProfileId = Number(this._profileRoute.snapshot.params.id);
+            const currentProfileId = this._profileRoute.snapshot.params.id;
             if (currentProfileId !== this._profileId) {
-              // we must defer the loadProfile to the next event cycle loop to allow components
-              // to init them-selves when entering this module directly.
-              setTimeout(() => {
-                const profile = this.profile.data();
-                if (!profile || (profile && profile.id !== currentProfileId)) {
-                  this._loadProfile(currentProfileId);
+              if (currentProfileId === 'new') {
+                const newData = this._profileCreationService.popNewProfileData();
+                if (newData) {
+                  this._profileId = currentProfileId;
+                  this._profile.data.next(newData.profile);
+
+                  setTimeout(() => {
+                    const profileLoadedResult = this._widgetsManager.notifyDataLoaded(this.profile.data(), { isNewData: true });
+                    if (profileLoadedResult.errors.length) {
+                      this._profile.state.next({
+                        action: ActionTypes.ProfileLoadingFailed,
+                        error: new Error('one of the widgets failed while handling data loaded event')
+                      });
+                    } else {
+                      this._profile.state.next({ action: ActionTypes.ProfileLoaded });
+                    }
+                  }, 0);
+                } else {
+                  this._router.navigate(['settings/transcoding']);
                 }
-              });
+              } else {
+
+                // we must defer the loadProfile to the next event cycle loop to allow components
+                // to init them-selves when entering this module directly.
+                setTimeout(() => {
+                  const profile = this.profile.data();
+                  if (!profile || (profile && profile.id !== currentProfileId)) {
+                    this._loadProfile(currentProfileId);
+                  }
+                });
+              }
             }
           }
         }
@@ -253,7 +278,7 @@ export class TranscodingProfileStore implements OnDestroy {
     }
   }
 
-  private _loadProfile(profileId: number): void {
+  private _loadProfile(profileId: string): void {
     if (this._loadProfileSubscription) {
       this._loadProfileSubscription.unsubscribe();
       this._loadProfileSubscription = null;
@@ -298,12 +323,13 @@ export class TranscodingProfileStore implements OnDestroy {
     }
   }
 
-  private _getProfile(profileId: number): Observable<KalturaConversionProfileWithAsset> {
+  private _getProfile(profileId: string): Observable<KalturaConversionProfileWithAsset> {
     if (profileId) {
-      const conversionProfileAction = new ConversionProfileGetAction({ id: profileId });
+      const id = Number(profileId);
+      const conversionProfileAction = new ConversionProfileGetAction({ id });
       const conversionProfileAssetParamsAction = new ConversionProfileAssetParamsListAction({
         filter: new KalturaConversionProfileAssetParamsFilter({
-          conversionProfileIdFilter: new KalturaConversionProfileFilter({ idEqual: profileId })
+          conversionProfileIdFilter: new KalturaConversionProfileFilter({ idEqual: id })
         }),
         pager: new KalturaFilterPager({ pageSize: 1000 })
       });
@@ -322,7 +348,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
           const profile = profilesResponse.result;
           const assets = assetsResponse.result.objects;
-          const flavors = profile.flavorParamsIds.split(',').length;
+          const flavors = (profile.flavorParamsIds || '').split(',').length;
           return Object.assign(profile, { assets, flavors });
         });
     } else {

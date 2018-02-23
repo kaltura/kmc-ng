@@ -82,6 +82,7 @@ import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
+import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -137,7 +138,8 @@ export function clientConfigurationFactory() {
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
-    AccessControlProfileModule.forRoot()
+    AccessControlProfileModule.forRoot(),
+    TranscodingProfileCreationModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,

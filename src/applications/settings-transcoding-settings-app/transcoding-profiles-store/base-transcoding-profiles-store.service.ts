@@ -151,7 +151,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
 
           const objects = profiles.map(profile => {
             const relevantAssets = assets.filter(({ conversionProfileId }) => conversionProfileId === profile.id);
-            const flavorsCount = profile.flavorParamsIds.split(',').length;
+            const flavorsCount = (profile.flavorParamsIds || '').split(',').length;
             return Object.assign(profile, { assets: relevantAssets, flavors: flavorsCount });
           });
 

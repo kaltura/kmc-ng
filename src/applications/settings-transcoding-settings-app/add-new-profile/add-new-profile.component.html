@@ -1,0 +1,56 @@
+<k-area-blocker [showLoader]="_dataLoading">
+  <div class="kAddNewProfile">
+    <form [formGroup]="_addNewProfileForm" novalidate>
+      <div class="kHeader">
+        <span class="kTitle">{{'applications.settings.transcoding.addTranscodingProfile' | translate}}</span>
+      </div>
+
+      <div class="kContainer">
+        <div class="kRow" [class.kHasError]="_nameField.touched && _nameField.invalid">
+          <span class="kLabel">{{'applications.settings.transcoding.metadata.name' | translate}}</span>
+          <div class="kRequired">*</div>
+          <div class="kControl">
+            <input [formControl]="_nameField" pInputText
+                   [placeholder]="'applications.settings.transcoding.metadata.namePlaceholder' | translate"/>
+          </div>
+        </div>
+
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.transcoding.metadata.description' | translate}}</span>
+          <div class="kControl">
+            <input [formControl]="_descriptionField" pInputText
+                   [placeholder]="'applications.settings.transcoding.metadata.descriptionPlaceholder' | translate"/>
+          </div>
+        </div>
+
+        <div class="kRow">
+          <span
+            class="kLabel">{{'applications.settings.transcoding.metadata.defaultMetadataSetting' | translate}}</span>
+          <div class="kControl">
+            <input [formControl]="_defaultMetadataSettingsField" pInputText
+                   [placeholder]="'applications.settings.transcoding.metadata.defaultMetadataSettingPlaceholder' | translate"/>
+          </div>
+        </div>
+
+        <div class="kRow" *ngIf="!_hideIngestFromRemoteStorage">
+          <span
+            class="kLabel">{{'applications.settings.transcoding.metadata.ingestFromRemoteStorage' | translate}}</span>
+          <div class="kControl">
+            <p-dropdown [options]="_remoteStorageProfilesOptions" [formControl]="_ingestFromRemoteStorageField"
+                        [autoWidth]="false"></p-dropdown>
+          </div>
+        </div>
+      </div>
+
+      <div class="kFooter">
+        <button type="button" pButton class="kButtonDefault"
+                [label]="'applications.settings.transcoding.cancel' | translate"
+                (click)="parentPopupWidget.close()"></button>
+        <button type="button" class="kButtonBranded kNextBtn" pButton
+                [disabled]="_addNewProfileForm.invalid"
+                [label]="'applications.settings.transcoding.save' | translate"
+                (click)="_goNext()"></button>
+      </div>
+    </form>
+  </div>
+</k-area-blocker>

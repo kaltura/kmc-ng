@@ -14,6 +14,7 @@ import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.m
 import { TranscodingProfileComponentsList } from './transcoding-profile/components-list';
 import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar/details-bar.module';
 import { TranscodingProfileCanDeactivate } from './transcoding-profile/transcoding-profile-can-deactivate.service';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.module';
 
 @NgModule({
   imports: [
@@ -33,7 +34,9 @@ import { TranscodingProfileCanDeactivate } from './transcoding-profile/transcodi
     StickyModule,
     MenuModule,
     DetailsBarModule,
-    TooltipModule
+    TooltipModule,
+    PopupWidgetModule,
+    DropdownModule
   ],
   declarations: [
     SettingsTranscodingSettingsComponent,

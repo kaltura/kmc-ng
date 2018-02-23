@@ -5,9 +5,10 @@
     <button
       pButton
       type="button"
+      class="kButtonBranded kAddProfileBtn"
       [class.kHidden]="_selectedProfiles.length"
       [label]="'applications.settings.transcoding.addProfile' | translate"
-      class="kButtonBranded kAddProfileBtn"></button>
+      (click)="addProfile.emit(_profilesType)"></button>
     <span class="kTotalProfilesCount" *ngIf="(_storeService.profiles.data$ | async)?.totalCount">
       {{'applications.settings.transcoding.profiles' | translate: [(_storeService.profiles.data$ | async)?.totalCount]}}
     </span>

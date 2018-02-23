@@ -20,11 +20,16 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   @Input() title = '';
 
   @Input() set storeFor(value: KalturaConversionProfileType) {
-    this._setStoreServiceByType(value);
+    if (value) {
+      this._profilesType = value;
+      this._setStoreServiceByType(value);
+    }
   }
 
+  @Output() addProfile = new EventEmitter<KalturaConversionProfileType>();
   @Output() setParentBlockerMessage = new EventEmitter<AreaBlockerMessage>();
 
+  public _profilesType: KalturaConversionProfileType;
   public _storeService: BaseTranscodingProfilesStore;
   public _selectedProfiles: KalturaConversionProfileWithAsset[] = [];
   public _tableIsBusy = false;
