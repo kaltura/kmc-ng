@@ -92,6 +92,13 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  public _onSortChanged(event) {
+    if (event.field && event.order) {
+      // primeng workaround: must check that field and order was provided to prevent reset of sort value
+      this.sortChanged.emit({field: event.field, order: event.order});
+    }
+  }
+
   public _openActionsMenu(event: any, rowIndex: number, folder: KalturaDropFolderFile) {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);

@@ -73,53 +73,6 @@
         <div class="emptymessage">{{_emptyMessage}}</div>
       </ng-template>
     </p-table>
-    <!--p-dataTable
-      #dataTable
-      [value]="_playlists"
-      (selectionChange)="onSelectionChange($event)"
-      (onSort)="onSortChanged($event)"
-      [(selection)]="selectedPlaylists"
-      [sortField]="filter.sortBy"
-      emptyMessage="{{_emptyMessage}}"
-      scrollable="true"
-      scrollHeight="100%"
-      dataKey="id"
-      [sortOrder]="filter.sortDirection | kPlaylistsTableSortDirectionPipe"
-      [rowTrackBy]="rowTrackBy"
-      kStickyHeader [sticksTo]="'playlistsTags'" stickyClass="stickyHeader" [stickyId]="'playlistsTable'">
-      <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-      <p-column field="name" [sortable]="'custom'" header="{{'applications.content.table.name' | translate}}">
-        <ng-template let-col let-playlist="rowData" pTemplate="body">
-          <div class="kPlaylistsNameWrap">
-            <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
-            <div class="kTitle"
-                 [kTooltip]="playlist[col.field]"
-                 [maxWidth]="300"
-                 (click)="onActionSelected('view',playlist)">
-              {{playlist[col.field]}}
-            </div>
-          </div>
-        </ng-template>
-      </p-column>
-      <p-column field="id" header="{{'applications.content.table.id' | translate}}"></p-column>
-      <p-column field="playlistType" header="{{'applications.content.table.playlistType' | translate}}">
-        <ng-template let-col let-playlist="rowData" pTemplate="body">
-          <span>{{playlist[col.field] | playlistType}}</span>
-        </ng-template>
-      </p-column>
-      <p-column field="createdAt" [sortable]="'custom'" header="{{'applications.content.table.createdOn' | translate}}"
-                [style]="{'width':'140px'}">
-        <ng-template let-col let-playlist="rowData" pTemplate="body">
-          <span>{{playlist[col.field] | kDate}}</span>
-        </ng-template>
-      </p-column>
-      <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
-        <ng-template let-col let-playlist="rowData" pTemplate="body">
-          <div class="kPlaylistsTableActions">
-            <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, playlist)"></button>
-          </div>
-        </ng-template>
-      </p-column>
-    </p-dataTable-->
+
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
   </div>

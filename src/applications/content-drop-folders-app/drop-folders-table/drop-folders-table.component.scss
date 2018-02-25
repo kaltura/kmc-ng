@@ -64,12 +64,12 @@
   color: #333;
 }
 
-:host /deep/ .ui-datatable .actionsColumn {
+:host /deep/ .ui-table .actionsColumn {
   overflow: visible;
   width: 80px;
 }
 
-:host /deep/ p-datatable .stickyHeader {
+:host /deep/ p-table .stickyHeader {
   z-index: 10;
   display: table;
 }

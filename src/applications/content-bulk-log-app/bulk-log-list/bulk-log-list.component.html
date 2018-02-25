@@ -55,7 +55,7 @@
           [rows]="_query.pageSize"
           [first]="_query.pageIndex * _query.pageSize"
           [totalRecords]="(_store.bulkLog.data$ | async)?.totalCount"
-          [rowsPerPageOptions]="[25,50,75,100]"
+          [rowsPerPageOptions]="[25,50,100,250]"
           (onPageChange)="_onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
