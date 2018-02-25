@@ -19,7 +19,7 @@
           </th>
           <th style="width:44px">
           </th>
-          <th style="width:300px" [pSortableColumn]="'name'">
+          <th [pSortableColumn]="'name'">
             {{'applications.content.syndication.table.columns.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
@@ -55,14 +55,14 @@
             </div>
           </td>
 
-          <td style="width:300px">
+          <td>
             <div class="kColName" [kTooltip]="feed.name" (click)="_editFeed(feed)">
               {{feed.name}}
             </div>
           </td>
 
-          <td>
-            <div style="width:110px" class="kColId" [kTooltip]="feed.id">
+          <td style="width:110px">
+            <div class="kColId" [kTooltip]="feed.id">
               {{feed.id}}
             </div>
           </td>
