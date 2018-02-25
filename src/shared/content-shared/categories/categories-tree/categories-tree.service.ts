@@ -36,7 +36,7 @@ export class CategoriesTreeService {
       // load node children, relevant only if 'inLazyMode' and node children weren't loaded already
       this._inLazyMode()
           .subscribe(inLazyMode => {
-              if (this._inLazyMode && node && node instanceof CategoriesTreeNode) {
+              if (inLazyMode && node && node instanceof CategoriesTreeNode) {
 
                   // make sure the node children weren't loaded already.
                   if (node.childrenStatus !== NodeChildrenStatuses.loaded && node.childrenStatus !== NodeChildrenStatuses.loading) {

@@ -24,7 +24,7 @@ import { KmcServerPolls } from 'app-shared/kmc-shared';
 import { globalConfig } from 'config/global';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
-import { KalturaPermissionListResponse } from 'kaltura-ngx-client/api/types/KalturaPermissionListResponse';
+import { KalturaPermission } from 'kaltura-ngx-client/api/types/KalturaPermission';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 
 
@@ -177,7 +177,7 @@ export class AppAuthentication {
     return <any>(this.kalturaServerClient.multiRequest(request).map(
       response => {
         if (!response.hasErrors()) {
-          this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result, response[4].result);
+          this._afterLogin(response[0].result, response[1].result, response[2].result.objects, response[3].result, response[4].result);
           return {success: true, error: null};
         }
 
@@ -187,7 +187,7 @@ export class AppAuthentication {
     ));
   }
 
-  private _afterLogin(ks: string, user: KalturaUser, permissionsList: KalturaPermissionListResponse, partner: KalturaPartner, permissionsFlags: string): void {
+  private _afterLogin(ks: string, user: KalturaUser, permissionsList: KalturaPermission[], partner: KalturaPartner, permissionsFlags: string): void {
       const generalProperties = R.pick([
           'id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner'
       ])(user);
@@ -266,7 +266,7 @@ export class AppAuthentication {
 
           return this.kalturaServerClient.multiRequest(requests).map(
             (response) => {
-              this._afterLogin(loginToken, response[0].result, response[1].result, response[2].result, response[3].result);
+              this._afterLogin(loginToken, response[0].result, response[1].result.objects, response[2].result, response[3].result);
               return true;
             }).subscribe(
             () => {
