@@ -29,12 +29,10 @@ import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltur
 import {KalturaClient, KalturaClientConfiguration} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
-  AccessControlProfileStore,
-  AppEventsModule,
-  FlavoursStore,
-  KalturaServerModule,
-  MetadataProfileModule,
-  PartnerProfileStore
+    AppEventsModule,
+    FlavoursStore,
+    KalturaServerModule,
+    MetadataProfileModule,
 } from 'app-shared/kmc-shared';
 
 import {AppComponent} from './app.component';
@@ -78,13 +76,10 @@ import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-cr
 import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
+import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
-
-const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore];
-
-
 
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
@@ -135,7 +130,8 @@ export function clientConfigurationFactory() {
     CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
-    ViewCategoryEntriesModule.forRoot()
+    ViewCategoryEntriesModule.forRoot(),
+    AccessControlProfileModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -158,7 +154,8 @@ export function clientConfigurationFactory() {
   ],
   exports: [],
   providers: <any>[
-    ...partnerProviders,
+      FlavoursStore,
+      PlayersStore,
       KalturaLogger,
       {
           provide: KalturaLoggerName, useValue: 'kmc'
