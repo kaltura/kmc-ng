@@ -9,6 +9,9 @@ import { TranscodingProfileSectionsListWidget } from './transcoding-profile-sect
 import { TranscodingProfileDetailsWidget } from './transcoding-profile-details/transcoding-profile-details-widget.service';
 import { TranscodingProfileMetadataWidget } from './transcoding-profile-metadata/transcoding-profile-metadata-widget.service';
 import { TranscodingProfileFlavorsWidget } from './transcoding-profile-flavors/transcoding-profile-flavors-widget.service';
+import { BaseTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
+import { MediaTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/media-transcoding-profiles-store.service';
+import { LiveTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/live-transcoding-profiles-store.service';
 
 @Component({
   selector: 'kTranscodingProfile',
@@ -24,6 +27,7 @@ import { TranscodingProfileFlavorsWidget } from './transcoding-profile-flavors/t
   ]
 })
 export class TranscodingProfileComponent implements OnInit, OnDestroy {
+  public _profilesStore: BaseTranscodingProfilesStore;
 
   public _profileName: string;
   public _profileType: KalturaConversionProfileType;
@@ -40,6 +44,8 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
               widget3: TranscodingProfileMetadataWidget,
               widget4: TranscodingProfileFlavorsWidget,
               private _appLocalization: AppLocalization,
+              private _mediaTranscodingProfilesStore: MediaTranscodingProfilesStore,
+              private _liveTranscodingProfilesStore: LiveTranscodingProfilesStore,
               public _profileStore: TranscodingProfileStore) {
     profileWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4]);
   }
@@ -47,18 +53,28 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
+  private _setProfilesStoreServiceByType(serviceType: KalturaConversionProfileType): void {
+    if (serviceType.equals(KalturaConversionProfileType.media)) {
+      this._profilesStore = this._mediaTranscodingProfilesStore;
+    } else if (serviceType.equals(KalturaConversionProfileType.liveStream)) {
+      this._profilesStore = this._liveTranscodingProfilesStore;
+    } else {
+      throw Error('Incorrect serviceType provided. It can be either KalturaConversionProfileType.media or KalturaConversionProfileType.liveStream type');
+    }
+  }
+
   private _updateNavigationState() {
-    // const entries = this._entriesStore.entries.data();
-    // if (entries && this._currentProfileId) {
-    //   const currentEntry = entries.find(entry => entry.id === this._currentProfileId);
-    //   const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
-    //   this._enableNextButton = currentEntryIndex >= 0 && (currentEntryIndex < entries.length - 1);
-    //   this._enablePrevButton = currentEntryIndex > 0;
-    //
-    // } else {
-    //   this._enableNextButton = false;
-    //   this._enablePrevButton = false;
-    // }
+    const profiles = this._profilesStore.profiles.data().items;
+    if (profiles && this._currentProfileId) {
+      const currentProfile = profiles.find(profile => profile.id === Number(this._currentProfileId));
+      const currentProfileIndex = currentProfile ? profiles.indexOf(currentProfile) : -1;
+      this._enableNextButton = currentProfileIndex >= 0 && (currentProfileIndex < profiles.length - 1);
+      this._enablePrevButton = currentProfileIndex > 0;
+
+    } else {
+      this._enableNextButton = false;
+      this._enablePrevButton = false;
+    }
   }
 
   ngOnInit() {
@@ -76,13 +92,14 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
               // reflect the profile that is currently being loaded
               // while 'profile$' stream is null
               this._currentProfileId = this._profileStore.profileId;
-              this._updateNavigationState();
               this._profileHasChanges = false;
               break;
             case ActionTypes.ProfileLoaded:
               const profile = this._profileStore.profile.data();
               this._profileName = profile.name;
               this._profileType = profile.type;
+              this._setProfilesStoreServiceByType(profile.type);
+              this._updateNavigationState();
               break;
             case ActionTypes.ProfileLoadingFailed:
               let message = status.error ? status.error.message : '';
@@ -180,29 +197,29 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToPrevious(): void {
-    // const entries = this._entriesStore.entries.data();
-    //
-    // if (entries && this._currentProfileId) {
-    //   const currentEntry = entries.find(entry => entry.id === this._currentProfileId);
-    //   const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
-    //   if (currentEntryIndex > 0) {
-    //     const prevEntry = entries[currentEntryIndex - 1];
-    //     this._profileStore.openProfile(prevEntry.id);
-    //   }
-    // }
+    const profiles = this._profilesStore.profiles.data().items;
+
+    if (profiles && this._currentProfileId) {
+      const currentProfile = profiles.find(profile => String(profile.id) === this._currentProfileId);
+      const currentProfileIndex = currentProfile ? profiles.indexOf(currentProfile) : -1;
+      if (currentProfileIndex > 0) {
+        const prevProfile = profiles[currentProfileIndex - 1];
+        this._profileStore.openProfile(String(prevProfile.id));
+      }
+    }
   }
 
   public _navigateToNext(): void {
-    // const entries = this._entriesStore.entries.data();
-    //
-    // if (entries && this._currentProfileId) {
-    //   const currentEntry = entries.find(entry => entry.id === this._currentProfileId);
-    //   const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
-    //   if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length - 1)) {
-    //     const nextEntry = entries[currentEntryIndex + 1];
-    //     this._profileStore.openProfile(nextEntry.id);
-    //   }
-    // }
+    const profiles = this._profilesStore.profiles.data().items;;
+
+    if (profiles && this._currentProfileId) {
+      const currentProfile = profiles.find(profile => String(profile.id) === this._currentProfileId);
+      const currentProfileIndex = currentProfile ? profiles.indexOf(currentProfile) : -1;
+      if (currentProfileIndex >= 0 && (currentProfileIndex < profiles.length - 1)) {
+        const nextProfile = profiles[currentProfileIndex + 1];
+        this._profileStore.openProfile(String(nextProfile.id));
+      }
+    }
   }
 
   public canLeave(): Observable<{ allowed: boolean }> {
