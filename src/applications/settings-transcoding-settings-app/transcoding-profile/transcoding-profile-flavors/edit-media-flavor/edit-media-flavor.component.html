@@ -77,9 +77,11 @@
 
     <div class="kFooter">
       <button type="button" pButton class="kButtonDefault"
-              [label]="'applications.settings.transcoding.cancel' | translate"></button>
+              [label]="'applications.settings.transcoding.cancel' | translate"
+              (click)="parentPopupWidget.close()"></button>
       <button type="button" class="kButtonBranded kSaveBtn" pButton
-              [label]="'applications.settings.transcoding.save' | translate"></button>
+              [label]="'applications.settings.transcoding.save' | translate"
+              (click)="_saveFlavor()"></button>
     </div>
   </form>
 </div>

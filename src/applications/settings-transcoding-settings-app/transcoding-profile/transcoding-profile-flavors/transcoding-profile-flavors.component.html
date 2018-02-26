@@ -35,3 +35,16 @@
                       [flavor]="_selectedFlavor"></kEditMediaFlavor>
   </ng-template>
 </kPopupWidget>
+
+<kPopupWidget #editLiveProfileFlavor
+              [popupWidth]="586"
+              [popupHeight]="353"
+              [modal]="true"
+              [closeOnClickOutside]="false"
+              [preventPageScroll]="true">
+  <ng-template>
+    <kEditLiveFlavor [parentPopupWidget]="editLiveProfileFlavor"
+                     [profile]="_widgetService.data"
+                     [flavor]="_selectedFlavor"></kEditLiveFlavor>
+  </ng-template>
+</kPopupWidget>

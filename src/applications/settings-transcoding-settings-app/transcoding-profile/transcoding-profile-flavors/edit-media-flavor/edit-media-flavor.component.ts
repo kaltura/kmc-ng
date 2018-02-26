@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/KalturaFlavorReadyBehaviorType';
@@ -9,6 +9,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { KalturaConversionProfileWithAsset } from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
+import { KalturaTypesFactory } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kEditMediaFlavor',
@@ -19,6 +20,10 @@ export class EditMediaFlavorComponent implements OnInit {
   @Input() profile: KalturaConversionProfileWithAsset;
   @Input() flavor: KalturaFlavorParams;
   @Input() parentPopupWidget: PopupWidgetComponent;
+
+  @Output() saveFlavor = new EventEmitter<KalturaConversionProfileAssetParams>();
+
+  private _assetParams: KalturaConversionProfileAssetParams;
 
   public _availabilityOptions = [
     {
@@ -83,65 +88,69 @@ export class EditMediaFlavorComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._assetParams = null;
+
     if (this.profile && this.flavor) {
       this._prepare();
     }
   }
 
   private _prepare(): void {
-    const assetParam = this._getFlavorAssetParam();
+    const assetParams = this._getFlavorAssetParams();
 
     // default values:
     const isSourceAssetParam = this.flavor.tags && this.flavor.tags.indexOf('source') > -1;
     if (isSourceAssetParam) {
-      assetParam.origin = KalturaAssetParamsOrigin.ingest;
-      if (assetParam.readyBehavior === null) {
-        assetParam.readyBehavior = KalturaFlavorReadyBehaviorType.inheritFlavorParams;
+      assetParams.origin = KalturaAssetParamsOrigin.ingest;
+      if (assetParams.readyBehavior === null) {
+        assetParams.readyBehavior = KalturaFlavorReadyBehaviorType.inheritFlavorParams;
       }
       this._originField.disable({ onlySelf: true });
     }
 
     if (this.flavor.id === 0) {
       this._forceNoneCompliedField.disable({ onlySelf: true });
-      assetParam.forceNoneComplied = KalturaNullableBoolean.falseValue;
+      assetParams.forceNoneComplied = KalturaNullableBoolean.falseValue;
     }
 
-    if (assetParam.readyBehavior === null) {
-      assetParam.readyBehavior = KalturaFlavorReadyBehaviorType.optional;
+    if (assetParams.readyBehavior === null) {
+      assetParams.readyBehavior = KalturaFlavorReadyBehaviorType.optional;
     }
 
-    if (assetParam.origin === null) {
-      assetParam.origin = KalturaAssetParamsOrigin.convert;
+    if (assetParams.origin === null) {
+      assetParams.origin = KalturaAssetParamsOrigin.convert;
     }
 
-    if (!assetParam.systemName) {
-      assetParam.systemName = this.flavor.systemName;
+    if (!assetParams.systemName) {
+      assetParams.systemName = this.flavor.systemName;
     }
 
-    if (assetParam.forceNoneComplied === null) {
-      assetParam.forceNoneComplied = KalturaNullableBoolean.falseValue;
+    if (assetParams.forceNoneComplied === null) {
+      assetParams.forceNoneComplied = KalturaNullableBoolean.falseValue;
     }
 
-    if (assetParam.deletePolicy === null) {
-      assetParam.deletePolicy = KalturaAssetParamsDeletePolicy.keep;
+    if (assetParams.deletePolicy === null) {
+      assetParams.deletePolicy = KalturaAssetParamsDeletePolicy.keep;
     }
+
+    this._assetParams = assetParams;
 
     this._editFlavorForm.setValue({
       profileName: this.profile.name,
       flavorName: this.flavor.name,
-      readyBehavior: assetParam.readyBehavior,
-      origin: assetParam.origin,
-      systemName: assetParam.systemName,
-      forceNoneComplied: assetParam.forceNoneComplied,
-      deletePolicy: assetParam.deletePolicy
+      readyBehavior: assetParams.readyBehavior,
+      origin: assetParams.origin,
+      systemName: assetParams.systemName,
+      forceNoneComplied: assetParams.forceNoneComplied,
+      deletePolicy: assetParams.deletePolicy
     }, { emitEvent: false });
   }
 
-  private _getFlavorAssetParam(): KalturaConversionProfileAssetParams {
+  private _getFlavorAssetParams(): KalturaConversionProfileAssetParams {
     const assets = this.profile.assets || [];
     const relevantAssetParam = assets.find(({ assetParamsId }) => this.flavor.id === assetParamsId);
     if (relevantAssetParam instanceof KalturaConversionProfileAssetParams) {
-      return relevantAssetParam;
+      return Object.assign(KalturaTypesFactory.createObject(relevantAssetParam), relevantAssetParam);
     }
 
     const newAssetParam = new KalturaConversionProfileAssetParams();
@@ -175,4 +184,17 @@ export class EditMediaFlavorComponent implements OnInit {
     this._flavorNameField.disable({ onlySelf: true });
   }
 
+  public _saveFlavor(): void {
+    const assetParams = this._assetParams;
+    const formData = this._editFlavorForm.getRawValue();
+
+    assetParams.readyBehavior = formData.readyBehavior;
+    assetParams.origin = formData.origin;
+    assetParams.systemName = formData.systemName;
+    assetParams.forceNoneComplied = formData.forceNoneComplied;
+    assetParams.deletePolicy = formData.readyBehavior;
+
+    this.saveFlavor.emit(assetParams);
+    this.parentPopupWidget.close();
+  }
 }

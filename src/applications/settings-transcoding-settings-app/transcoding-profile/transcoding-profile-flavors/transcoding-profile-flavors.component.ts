@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { TranscodingProfileFlavorsWidget } from './transcoding-profile-flavors-widget.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 
 @Component({
   selector: 'kTranscodingProfilesFlavors',
@@ -10,6 +11,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 })
 export class TranscodingProfileFlavorsComponent implements OnInit, OnDestroy {
   @ViewChild('editMediaProfileFlavor') _editMediaProfileFlavorPopup: PopupWidgetComponent;
+  @ViewChild('editLiveProfileFlavor') _editLiveProfileFlavorPopup: PopupWidgetComponent;
 
   public _selectedFlavor: KalturaFlavorParams;
 
@@ -30,7 +32,11 @@ export class TranscodingProfileFlavorsComponent implements OnInit, OnDestroy {
 
   public _editFlavor(flavor: KalturaFlavorParams): void {
     this._selectedFlavor = flavor;
-    this._editMediaProfileFlavorPopup.open();
+
+    if (this._widgetService.data.type.equals(KalturaConversionProfileType.media)) {
+      this._editMediaProfileFlavorPopup.open();
+    } else if (this._widgetService.data.type.equals(KalturaConversionProfileType.liveStream)) {
+      this._editLiveProfileFlavorPopup.open();
+    }
   }
 }
-
