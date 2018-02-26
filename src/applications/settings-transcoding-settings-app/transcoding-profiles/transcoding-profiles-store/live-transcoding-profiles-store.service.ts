@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { BaseTranscodingProfilesStore } from './base-transcoding-profiles-store.service';
 import { KalturaClient } from 'kaltura-ngx-client';

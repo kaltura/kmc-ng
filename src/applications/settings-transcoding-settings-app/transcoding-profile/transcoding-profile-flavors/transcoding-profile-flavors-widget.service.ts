@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
-import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles-store/base-transcoding-profiles-store.service';
+import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { TranscodingProfileWidgetKeys } from '../transcoding-profile-widget-keys';
 import { FlavoursStore } from 'app-shared/kmc-shared';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';

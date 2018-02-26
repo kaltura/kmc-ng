@@ -5,7 +5,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { async } from 'rxjs/scheduler/async';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 import { TranscodingProfileWidgetKeys } from '../transcoding-profile-widget-keys';
-import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles-store/base-transcoding-profiles-store.service';
+import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';

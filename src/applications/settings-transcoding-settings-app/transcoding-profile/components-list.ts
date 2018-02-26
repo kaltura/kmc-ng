@@ -5,7 +5,7 @@ import { TranscodingProfileMetadataComponent } from './transcoding-profile-metad
 import { TranscodingProfileTypePipe } from './pipes/transcoding-profile-type-icon.pipe';
 import { TranscodingProfileFlavorsComponent } from './transcoding-profile-flavors/transcoding-profile-flavors.component';
 import { TranscodingProfileFlavorsTableComponent } from './transcoding-profile-flavors/transcoding-profile-flavors-table/transcoding-profile-flavors-table.component';
-import { AddNewProfileComponent } from '../add-new-profile/add-new-profile.component';
+import { AddNewProfileComponent } from '../transcoding-profiles/add-new-profile/add-new-profile.component';
 
 export const TranscodingProfileComponentsList = [
   TranscodingProfileComponent,

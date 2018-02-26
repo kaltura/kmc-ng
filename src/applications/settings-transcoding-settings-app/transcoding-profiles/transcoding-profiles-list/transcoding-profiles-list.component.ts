@@ -6,10 +6,10 @@ import {
   TranscodingProfilesFilters
 } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { MediaTranscodingProfilesStore } from '../transcoding-profiles-store/media-transcoding-profiles-store.service';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles-store/live-transcoding-profiles-store.service';
 import { Router } from '@angular/router';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 
 @Component({
   selector: 'k-transcoding-profiles-list',

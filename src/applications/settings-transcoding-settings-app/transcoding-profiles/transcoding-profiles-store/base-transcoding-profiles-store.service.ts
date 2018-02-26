@@ -4,10 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest, KalturaRequest } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
 import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client/api/types/KalturaConversionProfileOrderBy';
@@ -19,6 +16,9 @@ import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaCo
 import { ConversionProfileSetAsDefaultAction } from 'kaltura-ngx-client/api/types/ConversionProfileSetAsDefaultAction';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { ConversionProfileDeleteAction } from 'kaltura-ngx-client/api/types/ConversionProfileDeleteAction';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
+import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
 
 export enum SortDirection {
   Desc,

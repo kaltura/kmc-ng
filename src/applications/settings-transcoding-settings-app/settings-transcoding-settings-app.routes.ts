@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 import { SettingsTranscodingSettingsComponent } from './settings-transcoding-settings.component';
-import { TranscodingProfilesListsHolderComponent } from './transcoding-profiles-lists-holder/transcoding-profiles-lists-holder.component';
+import { TranscodingProfilesListsHolderComponent } from './transcoding-profiles/transcoding-profiles-lists-holder/transcoding-profiles-lists-holder.component';
 import { TranscodingProfileCanDeactivate } from './transcoding-profile/transcoding-profile-can-deactivate.service';
 import { TranscodingProfileComponent } from './transcoding-profile/transcoding-profile.component';
 import { TranscodingProfileMetadataComponent } from './transcoding-profile/transcoding-profile-metadata/transcoding-profile-metadata.component';

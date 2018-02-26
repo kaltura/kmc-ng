@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SectionsList } from './sections-list';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
-import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles-store/base-transcoding-profiles-store.service';
+import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 
 export interface SectionWidgetItem {
   label: string;
