@@ -8,6 +8,7 @@ import { KalturaAssetParamsDeletePolicy } from 'kaltura-ngx-client/api/types/Kal
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaConversionProfileWithAsset } from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 
 @Component({
   selector: 'kEditMediaFlavor',
@@ -84,17 +85,35 @@ export class EditMediaFlavorComponent implements OnInit {
   ngOnInit() {
     console.warn(this.profile, this.flavor);
     if (this.profile && this.flavor) {
+      const assets = this.profile.assets || [];
+      const flavorId = this.flavor.id;
+      const assetParam = this._getFlavorAssetParam(assets, flavorId);
       this._editFlavorForm.patchValue({
         profileName: this.profile.name,
         flavorName: this.flavor.name,
-        systemName: this.flavor.systemName
+        systemName: assetParam.systemName
       }, { emitEvent: false });
 
-      if (this.flavor.id === 0) { // source flavor
+      if (flavorId === 0) { // source flavor
         this._originField.disable({ onlySelf: true });
         this._generationField.disable({ onlySelf: true });
       }
     }
+  }
+
+  private _getFlavorAssetParam(assets: KalturaConversionProfileAssetParams[], flavorId: number): KalturaConversionProfileAssetParams {
+    const relevantAssetParam = assets.find(({ assetParamsId }) => flavorId === assetParamsId);
+    if (relevantAssetParam instanceof KalturaConversionProfileAssetParams) {
+      return relevantAssetParam;
+    }
+
+    const newAssetParam = new KalturaConversionProfileAssetParams();
+    // bypass readonly mode
+    (<any>newAssetParam).conversionProfileId = this.profile.id;
+    (<any>newAssetParam).assetParamsId = this.flavor.id;
+    newAssetParam.systemName = '';
+
+    return newAssetParam;
   }
 
   private _buildForm(): void {
