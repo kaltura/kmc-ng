@@ -86,7 +86,8 @@
                      [isTagsBarVisible]="_isTagsBarVisible"
                      [entries]="(_entriesStore.entries.data$ | async)?.items"
                      [showBulkSelect]="bulkWrapper.children.length !== 0"
-                     [filter]="_query"
+                     [sortField]="_query.sortBy"
+                     [sortOrder]="_query.sortDirection"
                      [columns]="columns"
                      [rowActions]="rowActions"
                      (actionSelected)="onActionsSelected.emit($event)"
@@ -102,7 +103,7 @@
           [rows]="_query.pageSize"
           [first]="_query.pageIndex * _query.pageSize"
           [totalRecords]="(_entriesStore.entries.data$ | async)?.totalCount | kMaxEntries"
-          [rowsPerPageOptions]="[25,50,75,100]"
+          [rowsPerPageOptions]="[25,50,100,250]"
           (onPageChange)="onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>

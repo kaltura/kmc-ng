@@ -201,8 +201,9 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   }
 
   protected _createDefaultFiltersValue(): PlaylistsFilters {
+    const pageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey) || 50;
     return {
-      pageSize: 50,
+      pageSize: pageSize,
       pageIndex: 0,
       freeText: '',
       sortBy: 'createdAt',

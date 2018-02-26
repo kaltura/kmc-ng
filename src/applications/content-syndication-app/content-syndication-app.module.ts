@@ -15,6 +15,7 @@ import {
   SpinnerModule,
   TieredMenuModule
 } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -59,7 +60,8 @@ import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-cl
     MultiSelectModule,
     StickyModule,
     FormsModule,
-    CopyToClipboardModule
+    CopyToClipboardModule,
+    TableModule
   ],
   declarations: [
     PrimeTableSortDirectionPipe,

@@ -51,11 +51,12 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  @Input() filter: any = {};
+  @Input() sortField: string = null;
+  @Input() sortOrder: number = null;
   @Input() selectedFeeds: KalturaBaseSyndicationFeed[] = [];
 
   @Output()
-  sortChanged = new EventEmitter<any>();
+  sortChanged = new EventEmitter<{ field: string, order: number}>();
   @Output()
   actionSelected = new EventEmitter<{ action: string, feed: KalturaBaseSyndicationFeed }>();
   @Output()
@@ -118,7 +119,10 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public _onSortChanged(event) {
-    this.sortChanged.emit(event);
+    if (event.field && event.order) {
+      // primeng workaround: must check that field and order was provided to prevent reset of sort value
+      this.sortChanged.emit({field: event.field, order: event.order});
+    }
   }
 
   private _onActionSelected(action: string, feed: KalturaBaseSyndicationFeed) {

@@ -16,6 +16,7 @@ import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import {KalturaSourceType} from "kaltura-ngx-client/api/types/KalturaSourceType";
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -41,6 +42,11 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._columns = value || this._defaultColumns;
   }
 
+  public _columnsMetadata: {
+    [key: string]: { style: SafeStyle, sortable: boolean}
+  } = {
+  };
+
   @Input() rowActions: { label: string, commandName: string }[] = [];
 
   @Input()
@@ -58,11 +64,12 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   @Input() showBulkSelect = true;
-  @Input() filter: any = {};
+  @Input() sortField: string = null;
+  @Input() sortOrder: number = null;
   @Input() selectedEntries: any[] = [];
   @Input() isTagsBarVisible = false;
 
-  @Output() sortChanged = new EventEmitter<any>();
+  @Output() sortChanged = new EventEmitter<{ field: string, order: number}>();
   @Output() actionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
 
@@ -85,11 +92,16 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _emptyMessage = '';
   public _items: CustomMenuItem[];
 
-  constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef) {
+  constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef, private sanitization: DomSanitizer) {
   }
 
   ngOnInit() {
       this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+
+    Object.keys(this._columns).forEach(columnName =>
+    {
+      this._columnsMetadata[columnName] = { style: this._getColumnStyle(this._columns[columnName]), sortable: this._columns[columnName].sortable || false};
+    });
   }
 
   ngOnDestroy() {
@@ -162,15 +174,18 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public _onSortChanged(event) {
-    this.sortChanged.emit(event);
+    if (event.field && event.order) {
+        // primeng workaround: must check that field and order was provided to prevent reset of sort value
+        this.sortChanged.emit({field: event.field, order: event.order});
+    }
   }
 
   public _onSelectionChange(event): void {
     this.selectedEntriesChange.emit(event);
   }
 
-  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
-    return { 'width': width, 'text-align': align };
+  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): SafeStyle {
+    return this.sanitization.bypassSecurityTrustStyle(`width: ${width};text-align: ${align}`);
   }
 }
 

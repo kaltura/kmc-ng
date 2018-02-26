@@ -40,11 +40,12 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     }
   }
 
-  @Input() filter: any = {};
+  @Input() sortField: string = null;
+  @Input() sortOrder: number = null;
   @Input() selectedCategories: KalturaCategory[] = [];
 
   @Output()
-  sortChanged = new EventEmitter<any>();
+  sortChanged = new EventEmitter<{ field: string, order: number}>();
   @Output()
   actionSelected = new EventEmitter<{action: string, category: KalturaCategory}>();
   @Output()
@@ -129,7 +130,10 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   }
 
   _onSortChanged(event) {
-    this.sortChanged.emit(event);
+    if (event.field && event.order) {
+      // primeng workaround: must check that field and order was provided to prevent reset of sort value
+      this.sortChanged.emit({field: event.field, order: event.order});
+    }
   }
 }
 
