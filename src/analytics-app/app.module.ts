@@ -1,4 +1,4 @@
-import {NgModule, Provider} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -17,7 +17,6 @@ import {
   NewEntryUploadModule
 } from 'app-shared/kmc-shell';
 import {
-  AppLocalization,
   AppStorage,
   KalturaCommonModule,
   OperationTagModule,
@@ -27,12 +26,10 @@ import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltur
 import {KalturaClient, KalturaClientConfiguration} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
-  AccessControlProfileStore,
   AppEventsModule,
   FlavoursStore,
   KalturaServerModule,
   MetadataProfileModule,
-  PartnerProfileStore
 } from 'app-shared/kmc-shared';
 
 import {AppComponent} from './app.component';
@@ -75,13 +72,10 @@ import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-crea
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
+import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
-
-const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
-
-
 
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
@@ -131,6 +125,7 @@ export function clientConfigurationFactory() {
     PlaylistCreationModule.forRoot(),
     CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
+    AccessControlProfileModule.forRoot(),
     ViewCategoryEntriesModule.forRoot()
   ],
   declarations: <any>[
@@ -152,7 +147,7 @@ export function clientConfigurationFactory() {
   ],
   exports: [],
   providers: <any>[
-    ...partnerProviders,
+      FlavoursStore,
       KalturaLogger,
       {
           provide: KalturaLoggerName, useValue: 'analytics'
