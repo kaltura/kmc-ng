@@ -167,10 +167,10 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
   }
 
   private _handleAutoDistributionMetadataMissing(errors: KalturaDistributionValidationErrorConditionNotMet[]): void {
-    // TODO [kmcng] missing requirement from PRD
+    const details = errors.map(({ conditionName }) => `${conditionName}`).join('\n');
     this._errorInfo = this._appLocalization.get(
       'applications.content.entryDetails.distribution.errorsInfo.autoDistributionMetadataMissing',
-      []
+      [details]
     );
     this._goToLabel = this._appLocalization.get(
       'applications.content.entryDetails.distribution.errorsInfo.goToMetadataTab'
