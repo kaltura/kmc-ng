@@ -15,11 +15,12 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 
 
 import {
-  AppBootstrap,
-  AuthModule,
-  BrowserService,
-  KMCShellModule,
-  NewEntryUploadModule
+    AppBootstrap,
+    AUTH_POST_EVENTS,
+    AuthModule,
+    BrowserService,
+    KMCShellModule,
+    NewEntryUploadModule
 } from 'app-shared/kmc-shell';
 import {
   AppStorage,
@@ -42,8 +43,6 @@ import {
 import {AppComponent} from './app.component';
 import {routing} from './app.routes';
 
-
-import {AppMenuService} from './services/app-menu.service';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {AppMenuComponent} from './components/app-menu/app-menu.component';
 import {ErrorComponent} from './components/error/error.component';
@@ -83,6 +82,7 @@ import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-cat
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
+import { KMCAuthenticationPostEvents } from './auth-post-events';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore];
 
@@ -166,7 +166,9 @@ export function clientConfigurationFactory() {
       {
           provide: KalturaLoggerName, useValue: 'kmc'
       },
-    AppMenuService,
+      {
+          provide: AUTH_POST_EVENTS, useClass: KMCAuthenticationPostEvents
+      },
     { provide: AppStorage, useExisting: BrowserService },
     KalturaClient,
     {
@@ -182,15 +184,16 @@ export class AppModule {
                 uploadManagement: UploadManagement) {
 
         if (globalConfig.client.production) {
-            kalturaLogger.setOptions({level: 'Warn'})
+            kalturaLogger.setOptions({level: 'Warn'});
         } else {
-            kalturaLogger.setOptions({level: 'All'})
+            kalturaLogger.setOptions({level: 'All'});
         }
 
         // TODO [kmcng] move to a relevant location
         uploadManagement.setMaxUploadRequests(globalConfig.kalturaServer.maxConcurrentUploads);
 
         appBootstrap.bootstrap();
+
 
     }
 }
