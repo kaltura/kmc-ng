@@ -37,7 +37,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   @Output() onSave = new EventEmitter<KalturaAccessControl>();
 
   private _profile: ExtendedKalturaAccessControl = null;
-  private _headerTitle: string;
+  public _headerTitle: string;
 
   public _ipsFormatError = false;
   public _domainsFormatError = false;
