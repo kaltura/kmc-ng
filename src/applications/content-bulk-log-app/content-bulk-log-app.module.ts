@@ -18,6 +18,7 @@ import {
   TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -58,7 +59,8 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
     RouterModule.forChild(routing),
     TreeModule,
     StickyModule,
-      FiltersModule
+      FiltersModule,
+    TableModule
   ],
   declarations: [
     ContentBulkLogAppComponent,

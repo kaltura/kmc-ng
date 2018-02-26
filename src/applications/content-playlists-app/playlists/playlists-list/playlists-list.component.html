@@ -54,7 +54,8 @@
         class="kPlaylistsTable"
         [playlists]="(_playlistsStore.playlists.data$ | async)?.items"
         (sortChanged)="_onSortChanged($event)"
-        [filter]="_query"
+        [sortField]="_query.sortBy"
+        [sortOrder]="_query.sortDirection"
         (actionSelected)="_onActionSelected($event)"
         [(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
       </k-area-blocker>
@@ -63,7 +64,7 @@
         <p-paginator
           [rows]="_query.pageSize"
           [first]="_query.pageIndex * _query.pageSize"
-          [rowsPerPageOptions]="[25,50,75,100]"
+          [rowsPerPageOptions]="[25,50,100,250]"
           [totalRecords]="(_playlistsStore.playlists.data$ | async)?.totalCount"
           (onPageChange)="_onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>

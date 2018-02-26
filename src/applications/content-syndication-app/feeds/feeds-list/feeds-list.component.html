@@ -29,7 +29,8 @@
                       [bodyScroll]="true">
         <kFeedsTable class="kFeedsTable"
                      [feeds]="(_feedsService.feeds.data$ | async)?.items"
-                     [filter]="_query"
+                     [sortField]="_query.sortBy"
+                     [sortOrder]="_query.sortDirection"
                      (sortChanged)="_onSortChanged($event)"
                      (actionSelected)="_onActionSelected($event)"
                      [(selectedFeeds)]="_selectedFeeds"
@@ -41,7 +42,7 @@
         <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
                      [first]="_query.pageIndex * _query.pageSize"
                      [totalRecords]="_feedsTotalCount"
-                     [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+                     [rowsPerPageOptions]="[25,50,100,250]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
     </div>
