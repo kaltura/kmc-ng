@@ -53,12 +53,19 @@ export class TranscodingProfileFlavorsTableComponent implements AfterViewInit, O
   ngOnDestroy() {
   }
 
-  public _onSelectionChange(event) {
+  public _onSelectionChange(event: KalturaFlavorParams[]): void {
     this.selectedFlavorsChange.emit(event);
   }
 
   public assignEmptyMessage(): void {
     this._emptyMessage = this._appLocalization.get('applications.content.playlistDetails.errors.addAtLeastOneMedia');
+  }
+
+  public _editFlavor(flavor: KalturaFlavorParams): void {
+    const isSelected = this.selectedFlavors.indexOf(flavor) !== -1;
+    if (isSelected) {
+      this.editFlavor.emit(flavor);
+    }
   }
 }
 

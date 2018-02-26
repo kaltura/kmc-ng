@@ -17,10 +17,11 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
   public metadataForm: FormGroup;
   public nameField: AbstractControl;
   public descriptionField: AbstractControl;
-  public defaultMetadataSettingsField: AbstractControl;
-  public ingestFromRemoteStorageField: AbstractControl;
+  public defaultEntryIdField: AbstractControl;
+  public storageProfileIdField: AbstractControl;
   public remoteStorageProfilesOptions: { label: string, value: number }[] = [];
-  public hideIngestFromRemoteStorage = false;
+  public hideStorageProfileIdField = false;
+  public entryNotFoundErrorParams: string = null;
 
   constructor(private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization,
@@ -50,14 +51,14 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     this.metadataForm = this._formBuilder.group({
       name: ['', Validators.required],
       description: '',
-      defaultMetadataSettings: '',
-      ingestFromRemoteStorage: ''
+      defaultEntryId: '',
+      storageProfileId: null
     });
 
     this.nameField = this.metadataForm.controls['name'];
     this.descriptionField = this.metadataForm.controls['description'];
-    this.defaultMetadataSettingsField = this.metadataForm.controls['defaultMetadataSettings'];
-    this.ingestFromRemoteStorageField = this.metadataForm.controls['ingestFromRemoteStorage'];
+    this.defaultEntryIdField = this.metadataForm.controls['defaultEntryId'];
+    this.storageProfileIdField = this.metadataForm.controls['storageProfileId'];
   }
 
   private _monitorFormChanges(): void {
@@ -73,19 +74,26 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
       );
   }
 
-  protected onValidate(): Observable<{ isValid: boolean }> {
-    const formData = this.metadataForm.value;
+  protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
+    const formData = wasActivated ? this.metadataForm.value : this.data;
     const name = (formData.name || '').trim();
-    const entryId = (formData.defaultMetadataSettings || '').trim();
+    const entryId = (formData.defaultEntryId || '').trim();
     const hasValue = name !== '';
+
+    this.entryNotFoundErrorParams = null;
 
     if (entryId) { // if user entered entryId check if it exists
       return this._kalturaClient.request(new BaseEntryGetAction({ entryId }))
         .map(() => ({ isValid: hasValue }))
         .catch(
-          error => (error instanceof KalturaAPIException && error.code === 'ENTRY_ID_NOT_FOUND')
-            ? Observable.of({ isValid: false })
-            : Observable.throw(error.message)
+          error => {
+            if (error instanceof KalturaAPIException && error.code === 'ENTRY_ID_NOT_FOUND') {
+              this.entryNotFoundErrorParams = entryId;
+              return Observable.of({ isValid: false });
+            } else {
+              return Observable.throw(error.message);
+            }
+          }
         );
     }
 
@@ -95,16 +103,18 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
   }
 
   protected onDataSaving(newData: KalturaConversionProfileWithAsset, request: KalturaMultiRequest): void {
-    // if (this.wasActivated) {
-    //   const metadataFormValue = this.metadataForm.value;
-    //   newData.name = metadataFormValue.name;
-    //   newData.description = metadataFormValue.description;
-    //   newData.tags = (metadataFormValue.tags || []).join(',');
-    // } else {
-    //   newData.name = this.data.name;
-    //   newData.description = this.data.description;
-    //   newData.tags = this.data.tags;
-    // }
+    if (this.wasActivated) {
+      const formData = this.metadataForm.value;
+      newData.name = formData.name;
+      newData.description = formData.description;
+      newData.defaultEntryId = formData.defaultEntryId;
+      newData.storageProfileId = formData.storageProfileId;
+    } else {
+      newData.name = this.data.name;
+      newData.description = this.data.description;
+      newData.defaultEntryId = this.data.defaultEntryId;
+      newData.storageProfileId = this.data.storageProfileId;
+    }
   }
 
   /**
@@ -119,16 +129,16 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     this.metadataForm.reset({
       name: this.data.name,
       description: this.data.description,
-      defaultMetadataSettings: this.data.defaultEntryId,
-      ingestFromRemoteStorage: this.data.storageProfileId || null
+      defaultEntryId: this.data.defaultEntryId,
+      storageProfileId: this.data.storageProfileId || null
     });
 
     if (firstTimeActivating) {
       this._monitorFormChanges();
     }
 
-    this.hideIngestFromRemoteStorage = this.data.type && this.data.type.equals(KalturaConversionProfileType.liveStream);
-    if (!this.hideIngestFromRemoteStorage) {
+    this.hideStorageProfileIdField = this.data.type && this.data.type.equals(KalturaConversionProfileType.liveStream);
+    if (!this.hideStorageProfileIdField) {
       return this._loadRemoteStorageProfiles()
         .cancelOnDestroy(this)
         .map(profiles => {

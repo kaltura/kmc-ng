@@ -22,7 +22,6 @@
   .kTitle {
     color: #333333;
     font-weight: 700;
-    cursor: pointer;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -39,6 +38,10 @@
 :host /deep/ p-datatable {
   tr.ui-state-highlight .kEditFlavorIcon {
     display: block !important;
+  }
+
+  tr.ui-state-highlight .kTitle {
+    cursor: pointer;
   }
 
   .stickyHeader {

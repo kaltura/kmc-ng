@@ -11,9 +11,9 @@
           <div class="kControl">
             <input #metadataNameInput [formControl]="_widgetService.nameField" pInputText
                    [placeholder]="'applications.settings.transcoding.metadata.namePlaceholder' | translate"
-                   [ngClass]="{'kHasError':!_widgetService.nameField.valid && _widgetService.nameField.touched}">
-            <div *ngIf="_widgetService.nameField.touched && _widgetService.nameField.hasError('required')"
-                 class="error">
+                   [ngClass]="{'kHasError':_widgetService.nameField.touched && !_widgetService.nameField.valid}">
+            <div *ngIf="_widgetService.nameField.touched && !_widgetService.nameField.valid"
+                 class="kHasError">
               {{'applications.settings.transcoding.metadata.nameIsMandatory' | translate}}
             </div>
           </div>
@@ -30,17 +30,22 @@
             {{'applications.settings.transcoding.metadata.defaultMetadataSetting' | translate}}
           </span>
           <div class="kControl">
-            <input [formControl]="_widgetService.defaultMetadataSettingsField" pInputText
-                   [placeholder]="'applications.settings.transcoding.metadata.defaultMetadataSettingPlaceholder' | translate">
+            <input [formControl]="_widgetService.defaultEntryIdField" pInputText
+                   [placeholder]="'applications.settings.transcoding.metadata.defaultMetadataSettingPlaceholder' | translate"
+                   [ngClass]="{'kHasError':_widgetService.entryNotFoundErrorParams}">
+            <div *ngIf="_widgetService.entryNotFoundErrorParams"
+                 class="kHasError">
+              {{'applications.settings.transcoding.entryNotFound' | translate:[_widgetService.entryNotFoundErrorParams]}}
+            </div>
           </div>
         </div>
-        <div class="kRow" *ngIf="!_widgetService.hideIngestFromRemoteStorage">
+        <div class="kRow" *ngIf="!_widgetService.hideStorageProfileIdField">
           <span class="kLabel">
             {{'applications.settings.transcoding.metadata.ingestFromRemoteStorage' | translate}}
           </span>
           <div class="kControl">
             <p-dropdown [options]="_widgetService.remoteStorageProfilesOptions"
-                        [formControl]="_widgetService.ingestFromRemoteStorageField"
+                        [formControl]="_widgetService.storageProfileIdField"
                         [autoWidth]="false"></p-dropdown>
           </div>
         </div>

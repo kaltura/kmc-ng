@@ -2207,6 +2207,15 @@
             "codec": "Codec",
             "ditrate": "Bitrate (kbps)",
             "dimentions": "Dimentions"
+          },
+          "errors": {
+            "dismiss": "Dismiss",
+            "reload": "Reload",
+            "loadError": "An error occurred while loading data",
+            "saveError": "An error occurred while saving.",
+            "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+            "busyError": "An operation is still in progress. Please try again in a while.",
+            "savePrepareError": "An error occurred while preparing to save. Please try again."
           }
         },
         "sections": {
@@ -2240,6 +2249,7 @@
           "selected": "{{0}} Selected",
           "na": "N/A",
           "auto": "auto",
+          "noFlavorsSelectedWarning": "No transcoding will apply on entries associated with this profile. Do you want to continue?",
           "table": {
             "name": "Name",
             "id": "ID",

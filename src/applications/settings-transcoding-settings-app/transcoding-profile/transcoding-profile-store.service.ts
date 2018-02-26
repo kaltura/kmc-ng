@@ -17,6 +17,10 @@ import { KalturaConversionProfileWithAsset } from '../transcoding-profiles/trans
 import { ConversionProfileGetAction } from 'kaltura-ngx-client/api/types/ConversionProfileGetAction';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { TranscodingProfileCreationService } from 'app-shared/kmc-shared/events/transcoding-profile-creation';
+import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui/widgets/widgets-manager-base';
+import { ConversionProfileAddAction } from 'kaltura-ngx-client/api/types/ConversionProfileAddAction';
+import { ConversionProfileUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileUpdateAction';
+import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsUpdateAction';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -200,69 +204,99 @@ export class TranscodingProfileStore implements OnDestroy {
       );
   }
 
-  private _transmitSaveRequest(newProfile: KalturaConversionProfileWithAsset) {
+  private _transmitSaveRequest(newProfile: KalturaConversionProfileWithAsset): void {
     this._profile.state.next({ action: ActionTypes.ProfileSaving });
 
-    // const request = new KalturaMultiRequest(
-    //   new BaseEntryUpdateAction({
-    //     entryId: this.profileId,
-    //     baseEntry: newProfile
-    //   })
-    // );
-    //
-    // this._widgetsManager.notifyDataSaving(newProfile, request, this.profile)
-    //   .cancelOnDestroy(this)
-    //   .tag('block-shell')
-    //   .monitor('transcoding-profile store: prepare profile for save')
-    //   .flatMap(
-    //     prepareResponse => {
-    //       if (prepareResponse.ready) {
-    //         this._saveProfileInvoked = true;
-    //
-    //         return this._kalturaServerClient.multiRequest(request)
-    //           .monitor('transcoding-profile store: save profile')
-    //           .tag('block-shell')
-    //           .map(
-    //             saveResponse => {
-    //               if (saveResponse.hasErrors()) {
-    //                 this._profile.state.next({ action: ActionTypes.ProfileSavingFailed });
-    //               } else {
-    //                 this._loadProfile(this.profileId);
-    //               }
-    //
-    //               return Observable.empty();
-    //             }
-    //           );
-    //       } else {
-    //         switch (prepareResponse.reason) {
-    //           case OnDataSavingReasons.validationErrors:
-    //             this._profile.state.next({ action: ActionTypes.ProfileDataIsInvalid });
-    //             break;
-    //           case OnDataSavingReasons.attachedWidgetBusy:
-    //             this._profile.state.next({ action: ActionTypes.ActiveSectionBusy });
-    //             break;
-    //           case OnDataSavingReasons.buildRequestFailure:
-    //             this._profile.state.next({ action: ActionTypes.ProfilePrepareSavingFailed });
-    //             break;
-    //         }
-    //
-    //         return Observable.empty();
-    //       }
-    //     }
-    //   )
-    //   .subscribe(
-    //     response => {
-    //       // do nothing - the service state is modified inside the map functions.
-    //     },
-    //     error => {
-    //       // should not reach here, this is a fallback plan.
-    //       this._profile.state.next({ action: ActionTypes.ProfileSavingFailed });
-    //     }
-    //   );
+    const id = this.profileId;
+    const action = id === 'new'
+      ? new ConversionProfileAddAction({ conversionProfile: newProfile })
+      : new ConversionProfileUpdateAction({ id: Number(id), conversionProfile: newProfile });
+    const request = new KalturaMultiRequest(action);
+
+    this._widgetsManager.notifyDataSaving(newProfile, request, this.profile.data())
+      .cancelOnDestroy(this)
+      .tag('block-shell')
+      .monitor('transcoding-profile store: prepare profile for save')
+      .flatMap(prepareResponse => {
+        if (prepareResponse.ready) {
+          this._saveProfileInvoked = true;
+
+          return this._kalturaServerClient.multiRequest(request)
+            .monitor('transcoding-profile store: save profile')
+            .tag('block-shell')
+            .switchMap(
+              ([res]) => {
+                if (res.error) {
+                  throw Error('saving profile error'); // rethrow error to catch
+                } else {
+                  const isNew = id === 'new';
+                  const conversionProfileId = isNew ? res.result.id : this.profileId;
+                  const flavorParamsIds = res.result.flavorParamsIds;
+
+                  const assetParamsListActions = (flavorParamsIds || '')
+                    .split(',')
+                    .map(assetParamsId => (newProfile.assets || []).find(asset => asset.assetParamsId === Number(assetParamsId)))
+                    .filter(Boolean)
+                    .map(relevantAssetParams => new ConversionProfileAssetParamsUpdateAction({
+                      conversionProfileId,
+                      assetParamsId: relevantAssetParams.assetParamsId,
+                      conversionProfileAssetParams: relevantAssetParams
+                    }));
+                  return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(...assetParamsListActions));
+                }
+              },
+              ([profileResponse], assetsResponse) => {
+                if (assetsResponse && assetsResponse.hasErrors()) {
+                  throw Error('saving assets error'); // rethrow error to catch
+                } else {
+                  const isNew = id === 'new';
+                  if (isNew) {
+                    this._profileIsDirty = false;
+                    this._router.navigate(['profile', profileResponse.result.id], { relativeTo: this._profileRoute.parent });
+                  } else {
+                    this._loadProfile(profileResponse.result.id);
+                  }
+                  return Observable.empty();
+                }
+              })
+            .catch(error => {
+              console.warn(error.message);
+              this._profile.state.next({ action: ActionTypes.ProfileSavingFailed });
+              return Observable.empty();
+            });
+        } else {
+          switch (prepareResponse.reason) {
+            case OnDataSavingReasons.validationErrors:
+              this._profile.state.next({ action: ActionTypes.ProfileDataIsInvalid });
+              break;
+            case OnDataSavingReasons.attachedWidgetBusy:
+              this._profile.state.next({ action: ActionTypes.ActiveSectionBusy });
+              break;
+            case OnDataSavingReasons.buildRequestFailure:
+              this._profile.state.next({ action: ActionTypes.ProfilePrepareSavingFailed });
+              break;
+          }
+
+          return Observable.empty();
+        }
+      })
+      .subscribe(
+        response => {
+          // do nothing - the service state is modified inside the map functions.
+        },
+        error => {
+          // should not reach here, this is a fallback plan.
+          this._profile.state.next({ action: ActionTypes.ProfileSavingFailed });
+        }
+      );
   }
 
   public saveProfile(): void {
-    const newProfile = KalturaTypesFactory.createObject(this.profile.data());
+    const profile = this.profile.data();
+    const newProfile = <KalturaConversionProfileWithAsset>KalturaTypesFactory.createObject(profile);
+    if (this.profileId === 'new') {
+      newProfile.type = profile.type;
+    }
 
     if (newProfile && newProfile instanceof KalturaConversionProfile) {
       this._transmitSaveRequest(newProfile);

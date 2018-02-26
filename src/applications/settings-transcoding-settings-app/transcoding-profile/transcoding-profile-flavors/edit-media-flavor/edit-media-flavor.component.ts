@@ -102,7 +102,7 @@ export class EditMediaFlavorComponent implements OnInit {
     const isSourceAssetParam = this.flavor.tags && this.flavor.tags.indexOf('source') > -1;
     if (isSourceAssetParam) {
       assetParams.origin = KalturaAssetParamsOrigin.ingest;
-      if (assetParams.readyBehavior === null) {
+      if (typeof assetParams.readyBehavior === 'undefined') {
         assetParams.readyBehavior = KalturaFlavorReadyBehaviorType.inheritFlavorParams;
       }
       this._originField.disable({ onlySelf: true });
@@ -113,23 +113,23 @@ export class EditMediaFlavorComponent implements OnInit {
       assetParams.forceNoneComplied = KalturaNullableBoolean.falseValue;
     }
 
-    if (assetParams.readyBehavior === null) {
+    if (typeof assetParams.readyBehavior === 'undefined') {
       assetParams.readyBehavior = KalturaFlavorReadyBehaviorType.optional;
     }
 
-    if (assetParams.origin === null) {
+    if (typeof assetParams.origin === 'undefined') {
       assetParams.origin = KalturaAssetParamsOrigin.convert;
     }
 
     if (!assetParams.systemName) {
-      assetParams.systemName = this.flavor.systemName;
+      assetParams.systemName = this.flavor.systemName || '';
     }
 
-    if (assetParams.forceNoneComplied === null) {
+    if (typeof assetParams.forceNoneComplied === 'undefined') {
       assetParams.forceNoneComplied = KalturaNullableBoolean.falseValue;
     }
 
-    if (assetParams.deletePolicy === null) {
+    if (typeof assetParams.deletePolicy === 'undefined') {
       assetParams.deletePolicy = KalturaAssetParamsDeletePolicy.keep;
     }
 
@@ -192,7 +192,7 @@ export class EditMediaFlavorComponent implements OnInit {
     assetParams.origin = formData.origin;
     assetParams.systemName = formData.systemName;
     assetParams.forceNoneComplied = formData.forceNoneComplied;
-    assetParams.deletePolicy = formData.readyBehavior;
+    assetParams.deletePolicy = formData.deletePolicy;
 
     this.saveFlavor.emit(assetParams);
     this.parentPopupWidget.close();

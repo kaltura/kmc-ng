@@ -46,7 +46,7 @@ export class EditLiveFlavorComponent implements OnInit {
     const assetParams = this._getFlavorAssetParams();
 
     if (!assetParams.systemName) {
-      assetParams.systemName = this.flavor.systemName;
+      assetParams.systemName = this.flavor.systemName || '';
     }
 
     this._assetParams = assetParams;

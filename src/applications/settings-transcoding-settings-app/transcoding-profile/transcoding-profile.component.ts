@@ -160,7 +160,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
               break;
             case ActionTypes.ProfilePrepareSavingFailed:
               this._areaBlockerMessage = new AreaBlockerMessage({
-                message: this._appLocalization.get('applications.settings.transcoding.profile.savePrepareError'),
+                message: this._appLocalization.get('applications.settings.transcoding.profile.errors.savePrepareError'),
                 buttons: [
                   {
                     label: this._appLocalization.get('applications.settings.transcoding.profile.errors.dismiss'),

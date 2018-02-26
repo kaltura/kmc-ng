@@ -32,7 +32,8 @@
   <ng-template>
     <kEditMediaFlavor [parentPopupWidget]="editMediaProfileFlavor"
                       [profile]="_widgetService.data"
-                      [flavor]="_selectedFlavor"></kEditMediaFlavor>
+                      [flavor]="_selectedFlavor"
+                      (saveFlavor)="_widgetService.updateFlavorAssetParams($event)"></kEditMediaFlavor>
   </ng-template>
 </kPopupWidget>
 
@@ -45,6 +46,7 @@
   <ng-template>
     <kEditLiveFlavor [parentPopupWidget]="editLiveProfileFlavor"
                      [profile]="_widgetService.data"
-                     [flavor]="_selectedFlavor"></kEditLiveFlavor>
+                     [flavor]="_selectedFlavor"
+                     (saveFlavor)="_widgetService.updateFlavorAssetParams($event)"></kEditLiveFlavor>
   </ng-template>
 </kPopupWidget>

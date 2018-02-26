@@ -26,10 +26,6 @@ export class TranscodingProfileFlavorsComponent implements OnInit, OnDestroy {
     this._widgetService.detachForm();
   }
 
-  public _onActionSelected(event: { action: string, flavor: KalturaFlavorParams }): void {
-    this._widgetService.onActionSelected(event);
-  }
-
   public _editFlavor(flavor: KalturaFlavorParams): void {
     this._selectedFlavor = flavor;
 

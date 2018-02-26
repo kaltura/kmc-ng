@@ -9,6 +9,8 @@ import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/Kaltu
 import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -17,6 +19,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
 
   constructor(private _kalturaClient: KalturaClient,
               private _appLocalization: AppLocalization,
+              private _browserService: BrowserService,
               private _flavorsStore: FlavoursStore) {
     super(TranscodingProfileWidgetKeys.Flavors);
   }
@@ -25,10 +28,45 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
   }
 
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
-    return Observable.of({ isValid: true });
+    if (this.wasActivated) {
+      if (this.selectedFlavors.length) {
+        return Observable.of({ isValid: true });
+      }
+
+      return Observable.create(observer => {
+        this._browserService.confirm({
+          message: this._appLocalization.get('applications.settings.transcoding.flavors.noFlavorsSelectedWarning'),
+          accept: () => {
+            observer.next({ isValid: true });
+            observer.complete();
+          },
+          reject: () => {
+            observer.next({ isValid: false });
+            observer.complete();
+          }
+        });
+      });
+    }
+
+    if (this.isNewData && (this.data.flavorParamsIds || '').trim().length > 0) {
+      return Observable.of({ isValid: true });
+    }
+
+    return Observable.of({ isValid: false });
   }
 
   protected onDataSaving(data: KalturaConversionProfileWithAsset, request: KalturaMultiRequest): void {
+    data.assets = this.data.assets;
+
+    if (this.wasActivated) {
+      data.flavorParamsIds = this.selectedFlavors.map(({ id }) => id).join(',');
+    } else if (this.isNewData && (this.data.flavorParamsIds || '').trim().length > 0) {
+      data.flavorParamsIds = this.data.flavorParamsIds;
+    } else {
+      // shouldn't reach this part since 'onValidate' should prevent execution of this function
+      // if data is invalid
+      throw new Error('invalid scenario');
+    }
   }
 
   /**
@@ -40,6 +78,10 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
+
+    if (this.isNewData) {
+      this._setDirty();
+    }
 
     return this._flavorsStore.get()
       .cancelOnDestroy(this, this.widgetReset$)
@@ -90,8 +132,21 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
     this.updateState({ isDirty: true });
   }
 
-  public onActionSelected(event: { action: string, flavor: KalturaFlavorParams }): void {
+  public updateFlavorAssetParams(assetParams: KalturaConversionProfileAssetParams): void {
+    if (!Array.isArray(this.data.assets)) {
+      this.data.assets = [];
+    }
 
+    const relevantAssetParamsIndex = this.data.assets.findIndex(({ assetParamsId }) => assetParamsId === assetParams.assetParamsId);
+    const assetParamsExists = relevantAssetParamsIndex !== -1;
+
+    if (assetParamsExists) {
+      this.data.assets.splice(relevantAssetParamsIndex, 1, assetParams);
+    } else {
+      this.data.assets.push(assetParams);
+    }
+
+    this._setDirty();
   }
 
   public updateSelectionState(): void {

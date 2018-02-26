@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 
 @Injectable()
