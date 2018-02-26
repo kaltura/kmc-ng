@@ -15,8 +15,18 @@
     <kTranscodingProfileFalvorsTable
       class="kTranscodingProfilesFlavorsTable"
       [flavors]="_widgetService.flavors"
-      [(selectedFlavors)]="_widgetService.selectedFlavors"
-      (selectedFlavorsChange)="_widgetService.updateSelectionState()">
+      (selectedFlavorsChange)="_widgetService.updateSelectionState()"
+      (editFlavor)="_editFlavor($event)"
+      [(selectedFlavors)]="_widgetService.selectedFlavors">
     </kTranscodingProfileFalvorsTable>
   </div>
 </k-area-blocker>
+
+
+<kPopupWidget #editMediaProfileFlavor [popupWidth]="792" [popupHeight]="571" [modal]="true" [preventPageScroll]="true">
+  <ng-template>
+    <kEditMediaFlavor [parentPopupWidget]="editMediaProfileFlavor"
+                      [profile]="_widgetService.data"
+                      [flavor]="_selectedFlavor"></kEditMediaFlavor>
+  </ng-template>
+</kPopupWidget>

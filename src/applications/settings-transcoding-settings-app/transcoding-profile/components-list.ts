@@ -6,6 +6,7 @@ import { TranscodingProfileTypePipe } from './pipes/transcoding-profile-type-ico
 import { TranscodingProfileFlavorsComponent } from './transcoding-profile-flavors/transcoding-profile-flavors.component';
 import { TranscodingProfileFlavorsTableComponent } from './transcoding-profile-flavors/transcoding-profile-flavors-table/transcoding-profile-flavors-table.component';
 import { AddNewProfileComponent } from '../transcoding-profiles/add-new-profile/add-new-profile.component';
+import { EditMediaFlavorComponent } from './transcoding-profile-flavors/edit-media-flavor/edit-media-flavor.component';
 
 export const TranscodingProfileComponentsList = [
   TranscodingProfileComponent,
@@ -15,5 +16,6 @@ export const TranscodingProfileComponentsList = [
   TranscodingProfileFlavorsComponent,
   TranscodingProfileFlavorsTableComponent,
   AddNewProfileComponent,
+  EditMediaFlavorComponent,
   TranscodingProfileTypePipe
 ];

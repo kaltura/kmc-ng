@@ -33,9 +33,9 @@
     </p-column>
 
     <p-column header="" [style]="{'width': '60px'}">
-      <ng-template let-col let-entry="rowData" pTemplate="body" let-i="rowIndex">
+      <ng-template let-col let-flavor="rowData" pTemplate="body" let-i="rowIndex">
         <div class="kEditFlavorIconWrapper">
-          <i class="kIconEdit kEditFlavorIcon"></i>
+          <i class="kIconEdit kEditFlavorIcon" (click)="editFlavor.emit(flavor)"></i>
         </div>
       </ng-template>
     </p-column>

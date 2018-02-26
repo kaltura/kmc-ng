@@ -2248,6 +2248,28 @@
             "bitrate": "Bitrate (kbps)",
             "dimensions": "Dimensions"
           }
+        },
+        "editFlavor": {
+          "editFlavorSettings": "Edit Flavor Settings",
+          "editLiveFlavorSettings": "Edit Live Flavor Settings",
+          "profileName": "Profile Name",
+          "flavorName": "Flavor Name",
+          "impactOnEntryReadiness": "Impact on Entry Readiness",
+          "useKalturaTranscoding": "Use Kaltura Transcoding",
+          "systemName": "System Name:\n(Optional)",
+          "flavorGenerationPolicy": "Flavor Generation Policy",
+          "intermediateFlavorHandling": "Intermediate-Flavor Handling",
+          "noImpact": "No Impact",
+          "required": "Required",
+          "optional": "Optional",
+          "always": "Always",
+          "asAFallback": "As a Fallback",
+          "never": "Never",
+          "useKalturaOptimization": "Use Kaltura's Optimization",
+          "forceFlavorGeneration": "Force Flavor Generation",
+          "keepFlavor": "Keep Flavor",
+          "deleteFlavor": "Delete Flavor",
+          "systemNamePlaceholder": "Enter System Name"
         }
       }
     }
