@@ -30,6 +30,7 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 import { CategoriesModule } from '../categories/categories.module';
 import { EntriesStoreDataProvider } from 'app-shared/content-shared/entries/entries-store/entries-store-data-provider.service';
 import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
   imports: [
@@ -42,7 +43,7 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     TreeModule,
     KalturaCommonModule,
     KalturaPrimeNgUIModule,
-
+    KPTableModule,
     KalturaUIModule,
     DropdownModule,
     ButtonModule,

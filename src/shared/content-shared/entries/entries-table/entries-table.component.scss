@@ -72,6 +72,11 @@
   margin-bottom: 34px;
 }
 
+:host /deep/ p-table .stickyHeader{
+  z-index: 10;
+  display: table;
+}
+
 :host /deep/ .kButtonAddToBucket .ui-button-text {
   padding: 0;
 }

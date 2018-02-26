@@ -42,7 +42,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._columns = value || this._defaultColumns;
   }
 
-  public _columnsMetadata : {[key:string]: { style: SafeStyle}} = {
+  public _columnsMetadata: {
+    [key: string]: { style: SafeStyle, sortable: boolean}
+  } = {
   };
 
   @Input() rowActions: { label: string, commandName: string }[] = [];
@@ -98,7 +100,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     Object.keys(this._columns).forEach(columnName =>
     {
-      this._columnsMetadata[columnName] = { style: this._getColumnStyle(this._columns[columnName])};
+      this._columnsMetadata[columnName] = { style: this._getColumnStyle(this._columns[columnName]), sortable: this._columns[columnName].sortable || false};
     });
   }
 
