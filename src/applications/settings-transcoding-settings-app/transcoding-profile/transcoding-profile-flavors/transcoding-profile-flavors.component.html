@@ -23,7 +23,12 @@
 </k-area-blocker>
 
 
-<kPopupWidget #editMediaProfileFlavor [popupWidth]="792" [popupHeight]="571" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #editMediaProfileFlavor
+              [popupWidth]="792"
+              [popupHeight]="571"
+              [modal]="true"
+              [closeOnClickOutside]="false"
+              [preventPageScroll]="true">
   <ng-template>
     <kEditMediaFlavor [parentPopupWidget]="editMediaProfileFlavor"
                       [profile]="_widgetService.data"

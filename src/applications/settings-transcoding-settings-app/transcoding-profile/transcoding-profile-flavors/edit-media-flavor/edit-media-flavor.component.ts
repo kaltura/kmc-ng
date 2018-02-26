@@ -71,11 +71,11 @@ export class EditMediaFlavorComponent implements OnInit {
   public _editFlavorForm: FormGroup;
   public _profileNameField: AbstractControl;
   public _flavorNameField: AbstractControl;
-  public _availabilityField: AbstractControl;
+  public _readyBehaviorField: AbstractControl;
   public _originField: AbstractControl;
   public _systemNameField: AbstractControl;
-  public _generationField: AbstractControl;
-  public _handlingField: AbstractControl;
+  public _forceNoneCompliedField: AbstractControl;
+  public _deletePolicyField: AbstractControl;
 
   constructor(private _fb: FormBuilder,
               private _appLocalization: AppLocalization) {
@@ -83,26 +83,63 @@ export class EditMediaFlavorComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.warn(this.profile, this.flavor);
     if (this.profile && this.flavor) {
-      const assets = this.profile.assets || [];
-      const flavorId = this.flavor.id;
-      const assetParam = this._getFlavorAssetParam(assets, flavorId);
-      this._editFlavorForm.patchValue({
-        profileName: this.profile.name,
-        flavorName: this.flavor.name,
-        systemName: assetParam.systemName
-      }, { emitEvent: false });
-
-      if (flavorId === 0) { // source flavor
-        this._originField.disable({ onlySelf: true });
-        this._generationField.disable({ onlySelf: true });
-      }
+      this._prepare();
     }
   }
 
-  private _getFlavorAssetParam(assets: KalturaConversionProfileAssetParams[], flavorId: number): KalturaConversionProfileAssetParams {
-    const relevantAssetParam = assets.find(({ assetParamsId }) => flavorId === assetParamsId);
+  private _prepare(): void {
+    const assetParam = this._getFlavorAssetParam();
+
+    // default values:
+    const isSourceAssetParam = this.flavor.tags && this.flavor.tags.indexOf('source') > -1;
+    if (isSourceAssetParam) {
+      assetParam.origin = KalturaAssetParamsOrigin.ingest;
+      if (assetParam.readyBehavior === null) {
+        assetParam.readyBehavior = KalturaFlavorReadyBehaviorType.inheritFlavorParams;
+      }
+      this._originField.disable({ onlySelf: true });
+    }
+
+    if (this.flavor.id === 0) {
+      this._forceNoneCompliedField.disable({ onlySelf: true });
+      assetParam.forceNoneComplied = KalturaNullableBoolean.falseValue;
+    }
+
+    if (assetParam.readyBehavior === null) {
+      assetParam.readyBehavior = KalturaFlavorReadyBehaviorType.optional;
+    }
+
+    if (assetParam.origin === null) {
+      assetParam.origin = KalturaAssetParamsOrigin.convert;
+    }
+
+    if (!assetParam.systemName) {
+      assetParam.systemName = this.flavor.systemName;
+    }
+
+    if (assetParam.forceNoneComplied === null) {
+      assetParam.forceNoneComplied = KalturaNullableBoolean.falseValue;
+    }
+
+    if (assetParam.deletePolicy === null) {
+      assetParam.deletePolicy = KalturaAssetParamsDeletePolicy.keep;
+    }
+
+    this._editFlavorForm.setValue({
+      profileName: this.profile.name,
+      flavorName: this.flavor.name,
+      readyBehavior: assetParam.readyBehavior,
+      origin: assetParam.origin,
+      systemName: assetParam.systemName,
+      forceNoneComplied: assetParam.forceNoneComplied,
+      deletePolicy: assetParam.deletePolicy
+    }, { emitEvent: false });
+  }
+
+  private _getFlavorAssetParam(): KalturaConversionProfileAssetParams {
+    const assets = this.profile.assets || [];
+    const relevantAssetParam = assets.find(({ assetParamsId }) => this.flavor.id === assetParamsId);
     if (relevantAssetParam instanceof KalturaConversionProfileAssetParams) {
       return relevantAssetParam;
     }
@@ -111,7 +148,6 @@ export class EditMediaFlavorComponent implements OnInit {
     // bypass readonly mode
     (<any>newAssetParam).conversionProfileId = this.profile.id;
     (<any>newAssetParam).assetParamsId = this.flavor.id;
-    newAssetParam.systemName = '';
 
     return newAssetParam;
   }
@@ -120,20 +156,20 @@ export class EditMediaFlavorComponent implements OnInit {
     this._editFlavorForm = this._fb.group({
       profileName: '',
       flavorName: '',
-      availability: null,
+      readyBehavior: null,
       origin: null,
       systemName: '',
-      generation: null,
-      handling: null
+      forceNoneComplied: null,
+      deletePolicy: null
     });
 
     this._profileNameField = this._editFlavorForm.controls['profileName'];
     this._flavorNameField = this._editFlavorForm.controls['flavorName'];
-    this._availabilityField = this._editFlavorForm.controls['availability'];
+    this._readyBehaviorField = this._editFlavorForm.controls['readyBehavior'];
     this._originField = this._editFlavorForm.controls['origin'];
     this._systemNameField = this._editFlavorForm.controls['systemName'];
-    this._generationField = this._editFlavorForm.controls['generation'];
-    this._handlingField = this._editFlavorForm.controls['handling'];
+    this._forceNoneCompliedField = this._editFlavorForm.controls['forceNoneComplied'];
+    this._deletePolicyField = this._editFlavorForm.controls['deletePolicy'];
 
     this._profileNameField.disable({ onlySelf: true });
     this._flavorNameField.disable({ onlySelf: true });
