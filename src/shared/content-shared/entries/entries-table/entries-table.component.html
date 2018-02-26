@@ -1,143 +1,132 @@
 <div class="kEntriesTable" [class.noResults]="!_entries?.length" [class.kTagsVisible]="isTagsBarVisible">
-    <p-dataTable #dataTable
-                 dataKey="id"
-                 scrollable="true"
-                 scrollHeight="100%"
-                 [value]="_entries"
-                 [sortField]="filter.sortBy"
-                 [sortOrder]="filter.sortDirection | kEntriesTableSortDirection"
-                 [emptyMessage]="_emptyMessage"
-                 [rowTrackBy]="_rowTrackBy"
-                 (selectionChange)="_onSelectionChange($event)"
-                 (onSort)="_onSortChanged($event)"
-                 [(selection)]="selectedEntries"
-                 kStickyHeader [sticksTo]="'entriesTags'" stickyClass="stickyHeader" [stickyId]="'entriesTable'">
-      <p-column *ngIf="showBulkSelect"
-                [style]="{'width':'44px', 'padding-left': '14px'}"
-                selectionMode="multiple"></p-column>
-
-      <p-column *ngIf="_columns.thumbnailUrl"
-                field="thumbnailUrl"
-                [header]="'applications.content.table.thumbnail' | translate"
-                [sortable]="_columns.thumbnailUrl?.sortable | kPrimeTableSortTransform"
-                [style]="_getColumnStyle(_columns.thumbnailUrl)">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div class="kThumbnailHolder"
-               [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
-               (click)="_onActionSelected('view',entry)">
-            <img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'">
-          </div>
+    <p-table
+            [scrollable]="true"
+            scrollHeight="100%"
+            [value]="_entries"
+            dataKey="id"
+            [rowTrackBy]="_rowTrackBy"
+            [sortField]="sortField"
+            [sortOrder]="sortOrder | kEntriesTableSortDirection"
+            (sortFunction)="_onSortChanged($event)" [customSort]="true"
+            [(selection)]="selectedEntries"
+            (selectionChange)="_onSelectionChange($event)"
+            kStickyHeader [sticksTo]="'entriesTags'" stickyClass="stickyHeader" [stickyId]="'entriesTable'">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:44px; padding-left: 14px">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th [style]="_columnsMetadata.thumbnailUrl.style" *ngIf="_columnsMetadata.thumbnailUrl">
+                    {{'applications.content.table.thumbnail' | translate}}
+                </th>
+                <th [style]="_columnsMetadata.name.style" *ngIf="_columnsMetadata.name" [kpSortableColumn]="_columnsMetadata.name.sortable ? 'name' : null">
+                    {{'applications.content.table.name' | translate}}
+                    <p-sortIcon [field]="'name'"  ></p-sortIcon>
+                </th>
+                <th [style]="_columnsMetadata.id.style" *ngIf="_columnsMetadata.id">{{'applications.content.table.id' |
+                    translate}}
+                </th>
+                <th [style]="_columnsMetadata.mediaType.style" *ngIf="_columnsMetadata.mediaType" [kpSortableColumn]="_columnsMetadata.mediaType.sortable ? 'mediaType' : null">
+                    {{'applications.content.table.type' | translate}}
+                    <p-sortIcon [field]="'mediaType'"></p-sortIcon>
+                </th>
+                <th [style]="_columnsMetadata.plays.style" *ngIf="_columnsMetadata.plays" [kpSortableColumn]="_columnsMetadata.plays.sortable ? 'plays' : null">
+                    {{'applications.content.table.plays' | translate}}
+                    <p-sortIcon [field]="'plays'"></p-sortIcon>
+                </th>
+                <th [style]="_columnsMetadata.moderationCount.style" *ngIf="_columnsMetadata.moderationCount" [kpSortableColumn]="_columnsMetadata.moderationCount.sortable ? 'moderationCount' : null">
+                    {{'applications.content.table.flags' | translate}}
+                    <p-sortIcon [field]="'moderationCount'"></p-sortIcon>
+                </th>
+                <th [style]="_columnsMetadata.createdAt.style" *ngIf="_columnsMetadata.createdAt" [kpSortableColumn]="_columnsMetadata.createdAt.sortable ? 'createdAt' : null">
+                    {{'applications.content.table.createdOn' | translate}}
+                    <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+                </th>
+                <th [style]="_columnsMetadata.moderationStatus.style" *ngIf="_columnsMetadata.moderationStatus">
+                    {{'applications.content.table.moderationStatus' | translate}}
+                </th>
+                <th [style]="_columnsMetadata.duration.style" *ngIf="_columnsMetadata.duration" [kpSortableColumn]="_columnsMetadata.duration.sortable ? 'duration' : null">
+                    {{'applications.content.table.duration' | translate}}
+                    <p-sortIcon [field]="'duration'"></p-sortIcon>
+                </th>
+                <th [style]="_columnsMetadata.status.style" *ngIf="_columnsMetadata.status">
+                    {{'applications.content.table.status' | translate}}
+                </th>
+                <th *ngIf="rowActions?.length" style="width: 80px"></th>
+                <th [style]="_columnsMetadata.addToBucket.style" *ngIf="_columnsMetadata.addToBucket"></th>
+            </tr>
         </ng-template>
-      </p-column>
 
-      <p-column *ngIf="_columns.name"
-                field="name"
-                [header]="'applications.content.table.name' | translate"
-                [sortable]="_columns.name?.sortable | kPrimeTableSortTransform"
-                [style]="_getColumnStyle(_columns.name)">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div class="kTitle" [kTooltip]="entry[col.field]" [maxWidth]="300"
-                [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
-                (click)="_onActionSelected('view',entry)">
-            {{entry[col.field]}}
-          </div>
+        <ng-template pTemplate="body" let-entry>
+            <tr [pSelectableRow]="entry">
+
+                <td style="width:44px; padding-left: 14px">
+                    <p-tableCheckbox [value]="entry"></p-tableCheckbox>
+                </td>
+
+                <td *ngIf="_columnsMetadata.thumbnailUrl" [style]="_columnsMetadata.thumbnailUrl.style">
+                    <div class="kThumbnailHolder"
+                         [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
+                         (click)="_onActionSelected('view',entry)">
+                        <img src="{{entry.thumbnailUrl}}" onError="this.onerror=null;this.style.display='none'">
+                    </div>
+                </td>
+
+                <td *ngIf="_columnsMetadata.name" [style]="_columnsMetadata.name.style">
+                    <div class="kTitle" [kTooltip]="entry.name" [maxWidth]="300"
+                         [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
+                         (click)="_onActionSelected('view',entry)">
+                        {{entry.name}}
+                    </div>
+                </td>
+
+                <td *ngIf="_columnsMetadata.id" [style]="_columnsMetadata.id.style">{{entry.id}}</td>
+
+                <td *ngIf="_columnsMetadata.mediaType" [style]="_columnsMetadata.mediaType.style">
+                    <div [kTooltip]="entry.mediaType | entryType: true"
+                         [class]="entry.mediaType | entryType: false"></div>
+                </td>
+
+                <td *ngIf="_columnsMetadata.plays" [style]="_columnsMetadata.plays.style">{{entry.plays}}</td>
+
+                <td *ngIf="_columnsMetadata.moderationCount" [style]="_columnsMetadata.moderationCount.style">
+                    {{entry.moderationCount}}
+                </td>
+
+                <td *ngIf="_columnsMetadata.createdAt" [style]="_columnsMetadata.createdAt.style">{{entry.createdAt | kDate}}
+                </td>
+
+                <td *ngIf="_columnsMetadata.moderationStatus" [style]="_columnsMetadata.moderationStatus.style">
+                    {{entry.moderationStatus | kModerationStatus}}
+                </td>
+
+                <td *ngIf="_columnsMetadata.duration" [style]="_columnsMetadata.duration.style">{{entry.duration | kTime |
+                    entryDuration:entry}}
+                </td>
+
+                <td *ngIf="_columnsMetadata.status" [style]="_columnsMetadata.status.style">{{entry | entryStatus}}</td>
+
+                <td *ngIf="rowActions?.length" style="overflow: visible; width: 80px">
+                    <div class="kEntriesTableActions">
+                        <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
+                                (click)="_openActionsMenu($event, entry)"></button>
+                    </div>
+                </td>
+
+                <td *ngIf="_columnsMetadata.addToBucket" style="overflow: visible; width: 80px">
+                    <div class="kEntriesTableActions">
+                        <button type="button" pButton class="kButtonDefault kButtonAddToBucket" label="+"
+                                (click)="_onActionSelected('addToBucket', entry)"></button>
+                    </div>
+                </td>
+
+            </tr>
         </ng-template>
-      </p-column>
 
-      <p-column *ngIf="_columns.id"
-                field="id"
-                [header]="'applications.content.table.id' | translate"
-                [sortable]="_columns.id?.sortable | kPrimeTableSortTransform"
-                [style]="_getColumnStyle(_columns.id)">
-      </p-column>
-
-      <p-column *ngIf="_columns.mediaType"
-                field="mediaType"
-                [header]="'applications.content.table.type' | translate"
-                [sortable]="_columns.mediaType?.sortable | kPrimeTableSortTransform"
-                [style]="_getColumnStyle(_columns.mediaType)">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
+        <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">{{_emptyMessage}}</div>
         </ng-template>
-      </p-column>
-
-      <p-column *ngIf="_columns.plays"
-                field="plays"
-                [header]="'applications.content.table.plays' | translate"
-                [sortable]="_columns.plays?.sortable | kPrimeTableSortTransform"
-                [style]="_getColumnStyle(_columns.plays)">
-      </p-column>
-
-      <p-column *ngIf="_columns.moderationCount"
-                field="moderationCount"
-                [header]="'applications.content.table.flags' | translate"
-                [sortable]="_columns.moderationCount?.sortable | kPrimeTableSortTransform"
-                [style]="_getColumnStyle(_columns.moderationCount)">
-        <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field]}}</ng-template>
-      </p-column>
-
-      <p-column *ngIf="_columns.createdAt"
-                field="createdAt"
-                [header]="'applications.content.table.createdOn' | translate"
-                [sortable]="_columns.createdAt?.sortable | kPrimeTableSortTransform"
-                [style]="_getColumnStyle(_columns.createdAt)">
-        <ng-container>
-          <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | kDate}}</ng-template>
-        </ng-container>
-      </p-column>
-
-      <p-column *ngIf="_columns.moderationStatus"
-                field="moderationStatus"
-                [header]="'applications.content.table.moderationStatus' | translate"
-                [style]="_getColumnStyle(_columns.moderationStatus)">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-           {{entry[col.field] | kModerationStatus}}
-        </ng-template>
-      </p-column>
-
-      <p-column *ngIf="_columns.duration"
-                field="duration"
-                [header]="'applications.content.table.duration' | translate"
-                [sortable]="_columns.duration?.sortable | kPrimeTableSortTransform"
-                [style]="_getColumnStyle(_columns.duration)">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
-        </ng-template>
-      </p-column>
-
-      <p-column *ngIf="_columns.status"
-                field="status"
-                [header]="'applications.content.table.status' | translate"
-                [sortable]="_columns.status?.sortable | kPrimeTableSortTransform"
-                [style]="_getColumnStyle(_columns.status)">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span>{{entry | entryStatus}}</span>
-        </ng-template>
-      </p-column>
-
-      <p-column *ngIf="rowActions?.length"
-                header=""
-                [style]="{'overflow':'visible', 'width':'80px'}">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div class="kEntriesTableActions">
-            <button type="button" pButton class="kMoreActionsButton" icon="kIconmore" (click)="_openActionsMenu($event, entry)"></button>
-          </div>
-        </ng-template>
-      </p-column>
-      <p-column *ngIf="_columns.addToBucket"
-                header=""
-                [style]="{'overflow':'visible', 'width':'80px'}">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div class="kEntriesTableActions">
-            <button type="button"
-                    pButton
-                    class="kButtonDefault kButtonAddToBucket"
-                    label="+"
-                    (click)="_onActionSelected('addToBucket', entry)"></button>
-          </div>
-        </ng-template>
-      </p-column>
-    </p-dataTable>
+    </p-table>
 
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 </div>

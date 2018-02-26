@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
+  ButtonModule, CalendarModule, CheckboxModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
   RadioButtonModule, TieredMenuModule, TreeModule
 } from 'primeng/primeng';
+import {TableModule} from 'primeng/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { AutoCompleteModule, KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
@@ -29,6 +30,7 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 import { CategoriesModule } from '../categories/categories.module';
 import { EntriesStoreDataProvider } from 'app-shared/content-shared/entries/entries-store/entries-store-data-provider.service';
 import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
   imports: [
@@ -41,7 +43,7 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     TreeModule,
     KalturaCommonModule,
     KalturaPrimeNgUIModule,
-
+    KPTableModule,
     KalturaUIModule,
     DropdownModule,
     ButtonModule,
@@ -49,7 +51,7 @@ import { EntriesDataProviderToken } from 'app-shared/content-shared/entries/entr
     RadioButtonModule,
     CheckboxModule,
     PopupWidgetModule,
-    DataTableModule,
+    TableModule,
     MenuModule,
     TagsModule,
     PaginatorModule,

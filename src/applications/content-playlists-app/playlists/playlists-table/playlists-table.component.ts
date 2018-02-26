@@ -21,10 +21,11 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
     }
   }
 
-  @Input() filter: any = {};
+  @Input() sortField: string = null;
+  @Input() sortOrder: number = null;
   @Input() selectedPlaylists: any[] = [];
 
-  @Output() sortChanged = new EventEmitter<any>();
+  @Output() sortChanged = new EventEmitter<{ field: string, order: number}>();
   @Output() selectedPlaylistsChange = new EventEmitter<any>();
   @Output() actionSelected = new EventEmitter<any>();
 
@@ -112,7 +113,10 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   onSortChanged(event) {
-    this.sortChanged.emit(event);
+    if (event.field && event.order) {
+      // primeng workaround: must check that field and order was provided to prevent reset of sort value
+      this.sortChanged.emit({field: event.field, order: event.order});
+    }
   }
 }
 
