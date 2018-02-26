@@ -1529,10 +1529,10 @@
             "goToMetadataTab": "Go to Metadata Tab",
             "goToThumbnailsTab": "Go to Thumbnails Tab",
             "goToFlavorsTab": "Go to Flavors Tab",
-            "metadataError": "The selected entry's metadata doesn't conform with the required specifications:\n{{0}}In order to finalize this distribution, you must fix this error in the relevant tabs:\n",
-            "missingMetadata": "The selected entry is missing content for the following metadata fields:\n{{0}}In order to finalize this distribution, you must go to the relevant tabs and add metadata for each of the fields listed above:\n",
-            "missingFlavor": "The selected entry is missing the following transcoding flavors:\n{{0}}In order to finalize this distribution, you must go to the Flavors tab and select convert for each of the flavors listed above:\n",
-            "missingThumbnail": "The selected entry is missing the following thumbnail dimensions:\n{{0}}In order to finalize this distribution, you must go to the Thumbnails tab and create thumbnails for each of the dimensions listed above:\n",
+            "metadataError": "The selected entry's metadata doesn't conform with the required specifications:\n{{0}}\nIn order to finalize this distribution, you must fix this error in the relevant tabs:\n",
+            "missingMetadata": "The selected entry is missing content for the following metadata fields:\n{{0}}\nIn order to finalize this distribution, you must go to the relevant tabs and add metadata for each of the fields listed above:\n",
+            "missingFlavor": "The selected entry is missing the following transcoding flavors:\n{{0}}\nIn order to finalize this distribution, you must go to the Flavors tab and select convert for each of the flavors listed above:\n",
+            "missingThumbnail": "The selected entry is missing the following thumbnail dimensions:\n{{0}}\n\nIn order to finalize this distribution, you must go to the Thumbnails tab and create thumbnails for each of the dimensions listed above:\n",
             "autoDistributionMetadataMissing": "This entry was set with auto-distribution when certain metadata is filled. the following metadata is currently missing:\n{{0}}In order to finalize this distribution you must add this content in the relevant tab:\n"
           },
           "errorTypes": {

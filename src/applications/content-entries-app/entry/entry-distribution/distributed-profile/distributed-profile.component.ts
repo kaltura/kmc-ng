@@ -40,18 +40,26 @@ export class DistributedProfileComponent implements OnInit {
       this._isModified = this._profile.dirtyStatus === KalturaEntryDistributionFlag.updateRequired;
       this._setupActionButton();
       this._setupDeleteButton();
-      const distributionProfile = this._widgetService.getPartnerProfileById(this.profile.distributionProfileId);
+      this._setupDistributorPageLink();
+    }
+  }
+
+  private _setupDistributorPageLink(): void {
+    const distributionProfile = this._widgetService.getPartnerProfileById(this.profile.distributionProfileId);
+
+    if (distributionProfile) {
       this._providerType = distributionProfile ? distributionProfile.providerType : null;
 
       const youtubeDistributorPageLink = this._providerType.equals(KalturaDistributionProviderType.youtube)
         || this._providerType.equals(KalturaDistributionProviderType.youtubeApi);
       const facebookDistributorPageLink = this._providerType.equals(KalturaDistributionProviderType.facebook);
-      if (youtubeDistributorPageLink) {
-        this._distributorPageLink = `${subApplicationsConfig.entryDetails.distribution.youtubeExternal}${this._profile.remoteId}`;
-      } else if (facebookDistributorPageLink) {
-        this._distributorPageLink = `${subApplicationsConfig.entryDetails.distribution.facebookExternal}${this._profile.remoteId}`;
-      } else {
-        this._distributorPageLink = '';
+      const showLink = (youtubeDistributorPageLink || facebookDistributorPageLink) && this._profile.remoteId;
+
+      if (showLink) {
+        const link = youtubeDistributorPageLink
+          ? subApplicationsConfig.entryDetails.distribution.youtubeExternal
+          : subApplicationsConfig.entryDetails.distribution.facebookExternal;
+        this._distributorPageLink = `${link}${this._profile.remoteId}`;
       }
     }
   }
@@ -87,8 +95,8 @@ export class DistributedProfileComponent implements OnInit {
       case KalturaEntryDistributionStatus.queued:
       case KalturaEntryDistributionStatus.pending:
       case KalturaEntryDistributionStatus.removed:
-          this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
-          this._actionButtonDisabled = false;
+        this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
+        this._actionButtonDisabled = false;
         break;
       default:
         this._actionButtonHidden = true;

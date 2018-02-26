@@ -472,6 +472,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         {
           label: this._appLocalization.get('applications.content.entryDetails.distribution.delete'),
           action: () => {
+            this.popupMessage = null;
             this._performDeleteRequest(action, closePopupCallback);
           }
         },

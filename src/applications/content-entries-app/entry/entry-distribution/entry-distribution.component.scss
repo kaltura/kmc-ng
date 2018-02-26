@@ -23,6 +23,7 @@
       margin-right: -5px;
       &:active {
         box-shadow: none;
+        top: 2px;
         transform: rotate(45deg);
       }
       &:hover {

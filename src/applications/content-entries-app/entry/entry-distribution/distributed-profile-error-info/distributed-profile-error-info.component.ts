@@ -117,7 +117,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
   }
 
   private _handleMissingMetadata(errors: KalturaDistributionValidationErrorMissingMetadata[]): void {
-    const details = errors.map(({ fieldName }) => `${fieldName}\n`);
+    const details = errors.map(({ fieldName }) => `${fieldName}`).join('\n');
     this._errorInfo = this._appLocalization.get(
       'applications.content.entryDetails.distribution.errorsInfo.missingMetadata',
       [details]
@@ -139,9 +139,9 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
         const details = errors.map(error => {
           const relevantFlavor = items.find(flavor => String(flavor.paramsId) === error.flavorParamsId);
           if (relevantFlavor) {
-            return `${relevantFlavor.name}\n`;
+            return `${relevantFlavor.name}`;
           }
-        });
+        }).join('\n');
 
         this._errorInfo = this._appLocalization.get(
           'applications.content.entryDetails.distribution.errorsInfo.missingFlavor',
@@ -155,7 +155,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
   }
 
   private _handleMissingThumbnail(errors: KalturaDistributionValidationErrorMissingThumbnail[]): void {
-    const details = errors.map(({ dimensions }) => `${dimensions.width} X ${dimensions.height}\n`);
+    const details = errors.map(({ dimensions }) => `${dimensions.width} X ${dimensions.height}`).join('\n');
     this._errorInfo = this._appLocalization.get(
       'applications.content.entryDetails.distribution.errorsInfo.missingThumbnail',
       [details]
