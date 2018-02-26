@@ -1393,7 +1393,8 @@
           "offset": "Offset",
           "duration": "Duration",
           "status": "Status",
-          "n_a": "N/A"
+          "n_a": "N/A",
+          "clipTrim": "Clip & Trim"
         },
         "users": {
           "users": "Users",

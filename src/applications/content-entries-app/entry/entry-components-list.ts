@@ -24,6 +24,7 @@ import {LinkedEntriesPopup} from './entry-metadata/entry-selector/linked-entries
 import {CategoriesSelector} from './entry-metadata/category-selector/categories-selector.component';
 import {TagsPipe} from './entry-flavours/tags.pipe';
 import {LiveDashboardComponent} from './entry-live/live-dashboard/live-dashboard.component';
+import {ClipAndTrimComponent} from './entry-clips/clip-and-trim/clip-and-trim.component';
 
 
 export const EntryComponentsList = [
@@ -52,5 +53,6 @@ export const EntryComponentsList = [
     JumpToSection,
     LinkedEntries,
     LinkedEntriesPopup,
-    TagsPipe
+    TagsPipe,
+    ClipAndTrimComponent
 ];

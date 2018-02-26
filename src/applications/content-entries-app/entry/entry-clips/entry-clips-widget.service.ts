@@ -1,26 +1,26 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import {Injectable, OnDestroy} from '@angular/core';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
 
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaClipAttributes } from 'kaltura-ngx-client/api/types/KalturaClipAttributes';
-import { KalturaOperationAttributes } from 'kaltura-ngx-client/api/types/KalturaOperationAttributes';
-import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
-import { AppLocalization, KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaMediaEntryFilter} from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {KalturaClipAttributes} from 'kaltura-ngx-client/api/types/KalturaClipAttributes';
+import {KalturaOperationAttributes} from 'kaltura-ngx-client/api/types/KalturaOperationAttributes';
+import {BaseEntryListAction} from 'kaltura-ngx-client/api/types/BaseEntryListAction';
+import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 
-import { EntryStore } from '../entry-store.service';
-import { EntryWidgetKeys } from '../entry-widget-keys';
-import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
+import {EntryStore} from '../entry-store.service';
+import {EntryWidgetKeys} from '../entry-widget-keys';
+import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
-import { EntryWidget } from '../entry-widget';
+import {EntryWidget} from '../entry-widget';
 
 
 export interface ClipsData
@@ -195,5 +195,10 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
     ngOnDestroy()
     {
 
+    }
+
+    public onClipCreated(): void {
+      this.updateClips();
+      this._store.setRefreshEntriesListUponLeave();
     }
 }

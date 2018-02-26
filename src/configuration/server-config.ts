@@ -1,6 +1,6 @@
-import  'rxjs/add/operator/takeUntil';
-import  'rxjs/add/operator/delay';
-import { globalConfig } from './global-config';
+import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/delay';
+import {globalConfig} from './global-config';
 
 /*************************************
  * Developer Notice:
@@ -75,6 +75,15 @@ export const ServerConfigSchema = {
                     },
                     required: ['enabled', 'uri', 'version'],
                     additionalProperties: false
+                },
+                clipAndTrim: {
+                  properties: {
+                    enabled: {type: 'boolean'},
+                    uri: {type: 'string'},
+                    uiConfId: {type: 'string'},
+                  },
+                  required: ['enabled', 'uri', 'uiConfId'],
+                  additionalProperties: false
                 },
                 kava: {
                     properties: {
@@ -174,6 +183,11 @@ export interface ServerConfig {
             uiConfId: number,
             map_urls: string[],
             map_zoom_levels: string,
+        },
+        clipAndTrim: {
+          enabled: boolean,
+          uri: string,
+          uiConfId: string,
         }
     },
     externalLinks: {

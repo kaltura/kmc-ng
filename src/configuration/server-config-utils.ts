@@ -1,8 +1,8 @@
-import { Observable } from 'rxjs/Observable';
-import { environment } from 'environments/environment';
+import {Observable} from 'rxjs/Observable';
+import {environment} from 'environments/environment';
 import * as Ajv from 'ajv'
-import { serverConfig, ServerConfig, ServerConfigSchema } from 'config/server';
-import { globalConfig } from 'config/global';
+import {serverConfig, ServerConfig, ServerConfigSchema} from 'config/server';
+import {globalConfig} from 'config/global';
 
 function isStudioAppValid(): boolean {
     let isValid = false;
@@ -70,6 +70,22 @@ function isUsageDashboardAppValid(): boolean {
         }
     }
     return isValid;
+}
+
+function isClipAndTrimAppValid(): boolean {
+  let isValid = false;
+  if (serverConfig.externalApps.clipAndTrim.enabled) {
+    isValid =
+      !!serverConfig.externalApps.clipAndTrim.uri &&
+      !serverConfig.externalApps.clipAndTrim.uri.match(/\s/g) && // not contains white spaces
+      serverConfig.externalApps.usageDashboard.uiConfId &&
+      !serverConfig.externalApps.clipAndTrim.uiConfId.match(/\s/g); // not contains white spaces
+
+    if (!isValid) {
+      console.warn('Disabling clipAndTrim (kedit) standalone application - configuration is invalid');
+    }
+  }
+  return isValid;
 }
 
 
@@ -152,6 +168,7 @@ export function initializeConfiguration(): Observable<void> {
                 serverConfig.externalApps.kava.enabled = isKavaAppValid();
                 serverConfig.externalApps.liveDashboard.enabled = isLiveDashboardAppValid();
                 serverConfig.externalApps.usageDashboard.enabled = isUsageDashboardAppValid();
+                serverConfig.externalApps.clipAndTrim.enabled = isClipAndTrimAppValid();
 
             } else {
                 throw Error(validationResult.error || 'Invalid server configuration')
