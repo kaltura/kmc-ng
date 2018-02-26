@@ -1,18 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { CategoriesTreeNode } from './categories-tree-node';
-import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesTreePropagationDirective } from './categories-tree-propagation.directive';
 import { CategoriesTreeService } from './categories-tree.service';
 import { FiltersUtils } from '@kaltura-ng/mc-shared/filters/filters-utils';
-import { Observable } from 'rxjs/Observable';
-import { NgxPermissionsService } from 'ngx-permissions';
-
-
 
 export type TreeSelectionMode = 'single' | 'multiple';
-
 
 @Component({
   selector: 'k-categories-tree',
@@ -51,7 +45,6 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     private _selectedCategories: number[] = [];
 
     constructor(private _categoriesTreeService: CategoriesTreeService,
-                private _permissions: NgxPermissionsService,
                 private _appLocalization: AppLocalization) {
     }
 

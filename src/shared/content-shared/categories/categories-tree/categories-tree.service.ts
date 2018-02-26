@@ -5,20 +5,20 @@ import { CategoriesTreeNode, NodeChildrenStatuses } from './categories-tree-node
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { CategoriesSearchService, CategoryData } from '../categories-search.service';
 import { modulesConfig } from 'config/modules';
-import { NgxPermissionsService } from 'ngx-permissions';
+import { AppPermissionsService } from '@kaltura-ng/mc-shared';
 
 
 @Injectable()
 export class CategoriesTreeService {
 
   constructor(private _categoriesSearchService: CategoriesSearchService,
-              private _permissions: NgxPermissionsService,
+              private _permissions: AppPermissionsService,
               private appLocalization: AppLocalization) {
   }
 
   private _inLazyMode(): Observable<boolean>
   {
-      return Observable.fromPromise(this._permissions.hasPermission('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD'));
+      return Observable.of(this._permissions.hasPermission('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD'));
   }
 
   public getCategories(): Observable<{ categories: CategoriesTreeNode[] }> {

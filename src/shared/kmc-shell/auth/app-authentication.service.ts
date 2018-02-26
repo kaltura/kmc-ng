@@ -22,10 +22,10 @@ import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { KmcServerPolls } from 'app-shared/kmc-shared';
 import { globalConfig } from 'config/global';
-import { NgxPermissionsService } from 'ngx-permissions';
 import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
 import { KalturaPermission } from 'kaltura-ngx-client/api/types/KalturaPermission';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { AppPermissionsService } from '@kaltura-ng/mc-shared';
 
 
 export enum AppAuthStatusTypes {
@@ -70,9 +70,8 @@ export class AppAuthentication {
     constructor(private kalturaServerClient: KalturaClient,
                 @Optional() @Inject(AUTH_POST_EVENTS) private _authenticationPostEvents: AuthenticationPostEvents,
                 private appStorage: AppStorage,
-                private _permissions: NgxPermissionsService,
+                private _permissions: AppPermissionsService,
                 private _serverPolls: KmcServerPolls,
-                private _permissionsService: NgxPermissionsService,
                 private _pageExitVerificationService: PageExitVerificationService) {
         this._appUser = new AppUser();
     }

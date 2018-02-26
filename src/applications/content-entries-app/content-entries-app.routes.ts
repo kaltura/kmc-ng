@@ -15,17 +15,10 @@ import { EntryScheduling } from './entry/entry-scheduling/entry-scheduling.compo
 import { EntryAccessControl } from './entry/entry-access-control/entry-access-control.component';
 import { EntryThumbnails } from './entry/entry-thumbnails/entry-thumbnails.component';
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
-import { NgxPermissionsGuard } from 'ngx-permissions';
 
 export const routing: Route[] = [
   {
-    path: '', component: ContentEntriesComponent, canActivate: [NgxPermissionsGuard],
-      data: {
-          permissions: {
-            only: ['CONTENT_MANAGE_BAS3E', 'CONTENT_MANAGE_M3 ETADATA'],
-            redirectTo: '/content/playlists'
-          }
-      },
+    path: '', component: ContentEntriesComponent,
     children: [
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: 'list', component: EntriesListHolderComponent },

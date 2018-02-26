@@ -11,8 +11,7 @@ import {PreviewAndEmbedModule} from '../applications/preview-and-embed/preview-a
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
-import { NgxPermissionsModule } from 'ngx-permissions';
-
+import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
 
 import {
     AppBootstrap,
@@ -133,8 +132,8 @@ export function clientConfigurationFactory() {
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
-    NgxPermissionsModule.forRoot(),
-    AccessControlProfileModule.forRoot()
+    AccessControlProfileModule.forRoot(),
+    AppPermissionsModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
