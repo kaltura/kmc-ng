@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { AppAuthentication } from 'app-shared/kmc-shell';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 
 @Injectable()
 export class TranscodingProfileDetailsWidget extends TranscodingProfileWidget {
-  public _landingPage: string;
-
-  constructor(kalturaServerClient: KalturaClient,
-              private appAuthentication: AppAuthentication) {
+  constructor() {
     super('profileDetails');
   }
 
@@ -18,20 +13,5 @@ export class TranscodingProfileDetailsWidget extends TranscodingProfileWidget {
    */
   protected onReset(): void {
 
-  }
-
-  protected onActivate(firstTimeActivating: boolean): void {
-    const profile = this.data;
-
-    this._landingPage = null;
-
-    let landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
-    if (landingPage) {
-      landingPage = landingPage.replace('{profileId}', String(profile.id));
-      if (landingPage.indexOf('http') !== 0) {
-        landingPage = 'http://' + landingPage;
-      }
-    }
-    this._landingPage = landingPage;
   }
 }
