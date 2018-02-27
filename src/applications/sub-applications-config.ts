@@ -13,7 +13,7 @@ export interface SubApplicationsConfig {
         includeSeoMetadata: boolean,
         embedType: 'dynamic' | 'iframe' | 'auto' | 'thumb'
     },
-    entryDetails: {
+    contentEntriesApp: {
         distribution: {
           facebookExternal: string,
           youtubeExternal: string
@@ -35,7 +35,7 @@ export const subApplicationsConfig: SubApplicationsConfig = {
         'includeSeoMetadata': false,
         'embedType': 'dynamic'
     },
-    'entryDetails': {
+    'contentEntriesApp': {
         'distribution': {
             'facebookExternal': 'https://www.facebook.com/video.php?v=',
             'youtubeExternal': 'https://www.youtube.com/watch?v='

@@ -58,8 +58,8 @@ export class DistributedProfileComponent implements OnInit {
 
       if (showLink) {
         const link = youtubeDistributorPageLink
-          ? subApplicationsConfig.entryDetails.distribution.youtubeExternal
-          : subApplicationsConfig.entryDetails.distribution.facebookExternal;
+          ? subApplicationsConfig.contentEntriesApp.distribution.youtubeExternal
+          : subApplicationsConfig.contentEntriesApp.distribution.facebookExternal;
         this._distributorPageLink = `${link}${this._profile.remoteId}`;
       }
     }

@@ -1458,6 +1458,7 @@
             "discardChanges": "Discard all changes?"
           },
           "providerTypes": {
+            "unknown": "Unknown provider",
             "attUverse": "AttUverse",
             "avn": "AVN",
             "comcastMrss": "ComcastMrss",

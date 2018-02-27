@@ -44,7 +44,7 @@ export class EntryDistributionComponent implements OnInit, OnDestroy {
   private _updateSelectedProfile(profile: ExtendedKalturaEntryDistribution): void {
     this._widgetService.updateProfile(profile, () => {
       this._editProfilePopup.close();
-    })
+    });
   }
 
   public _openUndistributedProfile(profile: KalturaDistributionProfile): void {

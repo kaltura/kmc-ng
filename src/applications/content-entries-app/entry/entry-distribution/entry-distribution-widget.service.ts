@@ -83,6 +83,9 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   protected onReset() {
     this._flavors.next({ items: [] });
     this._thumbnails.next({ items: [] });
+    this._distributedProfiles.next({ items: [] });
+    this._partnerDistributionProfiles.next({ items: [] });
+    this._undistributedProfiles.next({ items: [] });
   }
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean, error?: Error }> {
@@ -194,9 +197,9 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         : [];
       const sources = [];
       sourceIDs.forEach(sourceId => {
-        allFlavors.forEach(flavor => {
-          if (flavor.flavorParams.id.toString() === sourceId) {
-            sources.push(flavor.flavorParams.name);
+        allFlavors.forEach(flavorItem => {
+          if (flavorItem.flavorParams.id.toString() === sourceId) {
+            sources.push(flavorItem.flavorParams.name);
           }
         });
       });
@@ -248,22 +251,16 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         entryThumbnailsListAction
       ))
       .cancelOnDestroy(this, this.widgetReset$)
-      .map(([partnerDistribution, entryDistribution, entryFlavors, entryThumbnails]) => {
-        if (partnerDistribution.error) {
-          throw Error(partnerDistribution.error.message);
+      .map(response => {
+        if (response.hasErrors()) {
+          response.forEach(item => {
+            if (item.error) {
+              throw Error(item.error.message);
+            }
+          });
         }
 
-        if (entryDistribution.error) {
-          throw Error(entryDistribution.error.message);
-        }
-
-        if (entryFlavors.error) {
-          throw Error(entryFlavors.error.message);
-        }
-
-        if (entryThumbnails.error) {
-          throw Error(entryThumbnails.error.message);
-        }
+        const [partnerDistribution, entryDistribution, entryFlavors, entryThumbnails] = response;
         const flavors = this._mapEntryFlavorsResponse(entryFlavors.result);
         const thumbnails = this._mapThumbnailsResponse(entryThumbnails.result);
         const partnerDistributionProfiles = this._mapPartnerDistributionResponse(partnerDistribution.result);
@@ -316,12 +313,14 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDelete'),
             buttons: [
               {
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => this._performDeleteRequest(action, closePopupCallback)
-              },
-              {
-                label: this._appLocalization.get('app.common.cancel'),
-                action: () => this._removeBlockerMessage()
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  if (typeof closePopupCallback === 'function') {
+                    closePopupCallback();
+                  }
+                  this.refresh();
+                  this._browserService.scrollToTop();
+                }
               }
             ]
           }), false);
@@ -432,7 +431,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.youtubeApi');
 
       default:
-        return '';
+        return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.unknown');
 
     }
   }
@@ -463,7 +462,9 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     }
 
     const partnerProfile = this.getPartnerProfileById(profile.distributionProfileId);
-    const connectorName = partnerProfile ? this.getProviderName(partnerProfile.providerType) : '';
+    const connectorName = partnerProfile
+      ? this.getProviderName(partnerProfile.providerType)
+      : this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.unknown');
 
     this.popupMessage = new AreaBlockerMessage({
       title: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirmTitle'),
@@ -536,11 +537,20 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .subscribe(
         () => {
           this.refresh();
+          this.popupMessage = null;
           closePopupCallback();
         },
         error => {
-          this._browserService.alert({
-            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDistribute')
+          this.popupMessage = new AreaBlockerMessage({
+            message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDistribute'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this.refresh();
+                this.popupMessage = null;
+                closePopupCallback();
+              }
+            }]
           });
         });
 
@@ -564,12 +574,12 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
             buttons: [
               {
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => this.updateProfile(profile, closePopupCallback)
-              },
-              {
-                label: this._appLocalization.get('app.common.cancel'),
-                action: () => this.popupMessage = null
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  this.refresh();
+                  this.popupMessage = null;
+                  closePopupCallback();
+                }
               }
             ]
           });
@@ -583,11 +593,22 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .subscribe(
         () => {
           this.refresh();
+          this.popupMessage = null;
+          this._removeBlockerMessage();
         },
         error => {
-          this._browserService.alert({
+          this.popupMessage = new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this.popupMessage = null;
+                this._removeBlockerMessage();
+                this.refresh();
+              }
+            }]
           });
+          this._showBlockerMessage(this.popupMessage, false);
         });
   }
 
@@ -598,11 +619,22 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .subscribe(
         () => {
           this.refresh();
+          this.popupMessage = null;
+          this._removeBlockerMessage();
         },
         error => {
-          this._browserService.alert({
+          this.popupMessage = new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this.popupMessage = null;
+                this._removeBlockerMessage();
+                this.refresh();
+              }
+            }]
           });
+          this._showBlockerMessage(this.popupMessage, false);
         });
   }
 
@@ -613,11 +645,22 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .subscribe(
         () => {
           this.refresh();
+          this.popupMessage = null;
+          this._removeBlockerMessage();
         },
         error => {
-          this._browserService.alert({
+          this.popupMessage = new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.retryFailed'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this.popupMessage = null;
+                this._removeBlockerMessage();
+                this.refresh();
+              }
+            }]
           });
+          this._showBlockerMessage(this.popupMessage, false);
         });
   }
 
@@ -655,7 +698,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
           super._showBlockerMessage(new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.errorLoading'),
             buttons: [{
-              label: this._appLocalization.get('app.common.retry'),
+              label: this._appLocalization.get('app.common.ok'),
               action: () => this.refresh()
             }]
           }), true);
