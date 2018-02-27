@@ -34,8 +34,8 @@ import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry'
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
 
 export enum SortDirection {
-  Desc,
-  Asc
+  Desc = -1,
+  Asc = 1
 }
 
 export interface EntriesDataProvider {

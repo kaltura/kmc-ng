@@ -15,6 +15,7 @@ import {
   SpinnerModule,
   TieredMenuModule
 } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -25,7 +26,6 @@ import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {FeedsListComponent} from './feeds/feeds-list/feeds-list.component';
 import {FeedsTableComponent} from './feeds/feeds-table/feeds-table.component';
 import {ContentSyndicationComponent} from './content-syndication.component';
-import {PrimeTableSortDirectionPipe} from './pipes/prime-table-sort-direction.pipe';
 import {DestinationLabelPipe} from './pipes/destination-label.pipe';
 import {PlaylistNamePipe} from './pipes/playlist-name.pipe';
 import {PlaylistIconPipe} from './pipes/playlist-icon.pipe';
@@ -59,10 +59,10 @@ import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-cl
     MultiSelectModule,
     StickyModule,
     FormsModule,
-    CopyToClipboardModule
+    CopyToClipboardModule,
+    TableModule
   ],
   declarations: [
-    PrimeTableSortDirectionPipe,
     DestinationIconPipe,
     DestinationLabelPipe,
     ContentSyndicationComponent,

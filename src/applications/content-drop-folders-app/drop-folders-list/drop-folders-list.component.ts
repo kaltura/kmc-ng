@@ -223,10 +223,12 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   public _onSortChanged(event): void {
-    this._dropFoldersStore.filter({
-      sortBy: event.field,
-      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
-    });
+      if (event.field !== this._query.sortBy || event.order !== this._query.sortDirection) {
+          this._dropFoldersStore.filter({
+              sortBy: event.field,
+              sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+          });
+      }
   }
 
   public _reload(): void {

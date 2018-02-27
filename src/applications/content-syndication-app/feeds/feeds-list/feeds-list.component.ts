@@ -64,10 +64,12 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   }
 
   public _onSortChanged(event): void {
-    this._feedsService.filter({
-      sortBy: event.field === 'feedUrl' ? 'createdAt' : event.field,
-      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
-    });
+    if (event.field !== this._query.sortBy || event.order !== this._query.sortDirection) {
+      this._feedsService.filter({
+        sortBy: event.field === 'feedUrl' ? 'createdAt' : event.field,
+        sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+      });
+    }
   }
 
   public _onPaginationChanged(state: any): void {

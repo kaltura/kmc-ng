@@ -22,8 +22,8 @@ import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/nu
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
-  Desc,
-  Asc
+  Desc = -1,
+  Asc = 1
 }
 
 export interface PlaylistsFilters {

@@ -1,82 +1,110 @@
   <div class="kFeedsTable" [class.noResults]="!_feeds?.length">
-    <p-dataTable [value]="_feeds" [sortField]="filter.sortBy"
-                 [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
-                 scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy"
-                 (selectionChange)="_onSelectionChange($event)"
-                 (onSort)="_onSortChanged($event)" [(selection)]="selectedFeeds" emptyMessage="{{_emptyMessage}}"
-                 kStickyHeader [sticksTo]="'feedsListFilters'" stickyClass="stickyHeader" [stickyId]="'feedsTable'">
-      <!--Selection-->
-      <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-      <p-column header="" [style]="{'overflow':'visible', 'width':'44px'}">
-        <ng-template let-col let-feed="rowData" pTemplate="body">
-          <div class="kColFeedIcon">
-            <i class="kIconfeed"></i>
-          </div>
-        </ng-template>
-      </p-column>
-      <!--Name-->
-      <p-column field="name" [header]="'applications.content.syndication.table.columns.name' | translate"
-                [sortable]="'custom'"
-                [style]="{'width':'300px'}">
-        <ng-template let-col let-feed="rowData" pTemplate="body">
-          <div class="kColName" [kTooltip]="feed[col.field]" [maxWidth]="300" (click)="_editFeed(feed)">
-            {{feed[col.field]}}
-          </div>
-        </ng-template>
-      </p-column>
-      <!--ID-->
-      <p-column field="id" [header]="'applications.content.syndication.table.columns.id' | translate"
-                [style]="{'width':'110px'}">
-        <ng-template let-col let-feed="rowData" pTemplate="body">
-          <div class="kColId" [kTooltip]="feed[col.field]" [maxWidth]="300">
-            {{feed[col.field]}}
-          </div>
-        </ng-template>
-      </p-column>
-      <!--Destination-->
-      <p-column field="type" [header]="'applications.content.syndication.table.columns.destination' | translate"
-                [sortable]="'custom'"
-                [style]="{'width':'130px'}">
-        <ng-template let-col let-feed="rowData" pTemplate="body">
-          <div class="kColDestination">
-            <div class="kColDestinationIcon" [ngClass]="feed[col.field] | kDestinationIcon"></div>
-            <div class="kColDestinationText">{{feed[col.field] | kDestinationLabel}}</div>
-          </div>
-        </ng-template>
-      </p-column>
-      <!--Source-->
-      <p-column field="playlistId" [header]="'applications.content.syndication.table.columns.source' | translate"
-                [sortable]="'custom'"
-                [style]="{'width':'150px'}">
-        <ng-template let-col let-feed="rowData" pTemplate="body">
-          <div class="kColSource">
-            <span [ngClass]="feed[col.field] | kToPlaylistIcon: _idToPlaylistMap" class="kPlaylistIcon"></span>
-            <span class="kElipsis" [kTooltip]="feed[col.field] | kToPlaylistName: _idToPlaylistMap" [maxWidth]="300">
-              {{feed[col.field] | kToPlaylistName: _idToPlaylistMap}}
+
+    <p-table
+            [scrollable]="true"
+            scrollHeight="100%"
+            [value]="_feeds"
+            dataKey="id"
+            [rowTrackBy]="rowTrackBy"
+            [sortField]="sortField"
+            [sortOrder]="sortOrder"
+            (sortFunction)="_onSortChanged($event)" [customSort]="true"
+            [(selection)]="selectedFeeds"
+            (selectionChange)="_onSelectionChange($event)"
+            kStickyHeader [sticksTo]="'feedsListFilters'" stickyClass="stickyHeader" [stickyId]="'feedsTable'">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width:44px; padding-left: 14px">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th style="width:44px">
+          </th>
+          <th [pSortableColumn]="'name'">
+            {{'applications.content.syndication.table.columns.name' | translate}}
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+          <th style="width:110px">
+            {{'applications.content.syndication.table.columns.id' | translate}}
+          </th>
+          <th style="width:130px" [pSortableColumn]="'type'">
+            {{'applications.content.syndication.table.columns.destination' | translate}}
+            <p-sortIcon [field]="'type'"></p-sortIcon>
+          </th>
+          <th style="width: 150px" [pSortableColumn]="'playlistId'">
+            {{'applications.content.syndication.table.columns.source' | translate}}
+            <p-sortIcon [field]="'playlistId'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'feedUrl'">
+            {{'applications.content.syndication.table.columns.url' | translate}}
+            <p-sortIcon [field]="'feedUrl'"></p-sortIcon>
+          </th>
+          <th style="width: 80px"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-feed>
+        <tr [pSelectableRow]="feed">
+
+          <td style="width:44px; padding-left: 14px">
+            <p-tableCheckbox [value]="feed"></p-tableCheckbox>
+          </td>
+
+          <td style="width:44px">
+            <div class="kColFeedIcon">
+              <i class="kIconfeed"></i>
+            </div>
+          </td>
+
+          <td>
+            <div class="kColName" [kTooltip]="feed.name" (click)="_editFeed(feed)">
+              {{feed.name}}
+            </div>
+          </td>
+
+          <td style="width:110px">
+            <div class="kColId" [kTooltip]="feed.id">
+              {{feed.id}}
+            </div>
+          </td>
+
+          <td style="width:130px">
+            <div class="kColDestination">
+              <div class="kColDestinationIcon" [ngClass]="feed.type | kDestinationIcon"></div>
+              <div class="kColDestinationText">{{feed.type | kDestinationLabel}}</div>
+            </div>
+          </td>
+
+          <td style="width: 150px">
+            <div class="kColSource">
+              <span [ngClass]="feed.playlistId | kToPlaylistIcon: _idToPlaylistMap" class="kPlaylistIcon"></span>
+              <span class="kElipsis" [kTooltip]="feed.playlistId | kToPlaylistName: _idToPlaylistMap">
+              {{feed.playlistId | kToPlaylistName: _idToPlaylistMap}}
             </span>
-          </div>
-        </ng-template>
-      </p-column>
-      <!--URL-->
-      <p-column field="feedUrl" [header]="'applications.content.syndication.table.columns.url' | translate"
-                [sortable]="'custom'">
-        <ng-template let-col let-feed="rowData" pTemplate="body">
-          <div class="kColUrl">
-            <kCopyToClipboard class="kIcon" [text]="feed[col.field]" [iconSwitchTimeout]="5000"
-                              [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
-            <input readonly="true" class="kElipsis kUrl" type="text" [value]="feed[col.field]" pInputText=""
-                   [kTooltip]="feed[col.field]" [maxWidth]="300"/>
-          </div>
-        </ng-template>
-      </p-column>
-      <!--Actions-->
-      <p-column header="" [style]="{'overflow':'visible', 'width':'60px'}">
-        <ng-template let-col let-feed="rowData" pTemplate="body">
-          <div class="kColActions">
-            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, feed)"></button>
-          </div>
-        </ng-template>
-      </p-column>
-    </p-dataTable>
+            </div>
+          </td>
+
+          <td>
+            <div class="kColUrl">
+              <kCopyToClipboard class="kIcon" [text]="feed.feedUrl" [iconSwitchTimeout]="5000"
+                                [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+              <input readonly="true" class="kElipsis kUrl" type="text" [value]="feed.feedUrl" pInputText=""
+                     [kTooltip]="feed.feedUrl"/>
+            </div>
+          </td>
+
+          <td style="overflow: visible; width: 80px">
+            <div class="kColActions">
+              <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, feed)"></button>
+            </div>
+          </td>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <div class="emptymessage">{{_emptyMessage}}</div>
+      </ng-template>
+    </p-table>
+
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
   </div>
