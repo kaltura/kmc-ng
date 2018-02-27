@@ -18,7 +18,7 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
       this._schemas = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredSchemas = data
+      this._deferredSchemas = data;
     }
   }
 
@@ -29,7 +29,6 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
-  private _actionsMenuSchemaId: number;
   private _deferredSchemas: SettingsMetadataProfile[];
 
   public _deferredLoading = true;
@@ -38,9 +37,7 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
   public _items: MenuItem[];
   public _schemas: SettingsMetadataProfile[] = [];
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
+  public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
               public _schemasStore: SchemasStore,
@@ -90,14 +87,10 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
   public _openActionsMenu(event: any, schema: SettingsMetadataProfile): void {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (this._actionsMenuSchemaId !== schema.id) {
-        this._buildMenu(schema);
-        this._actionsMenuSchemaId = schema.id;
-        this.actionsMenu.show(event);
-      }
+      this._buildMenu(schema);
+      this.actionsMenu.show(event);
     }
   }
-
   public _onSelectionChange(event): void {
     this.selectedSchemasChange.emit(event);
   }

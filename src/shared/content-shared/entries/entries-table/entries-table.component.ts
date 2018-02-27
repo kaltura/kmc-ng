@@ -10,12 +10,12 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {DataTable, Menu, MenuItem} from 'primeng/primeng';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import {KalturaSourceType} from "kaltura-ngx-client/api/types/KalturaSourceType";
+import { DataTable, Menu, MenuItem } from 'primeng/primeng';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 export interface EntriesTableColumns {
@@ -23,12 +23,12 @@ export interface EntriesTableColumns {
     width?: string;
     align?: string;
     sortable?: boolean;
-  }
+  };
 }
 
 export interface CustomMenuItem extends MenuItem {
   metadata: any;
-  commandName: string
+  commandName: string;
 }
 
 @Component({
@@ -43,9 +43,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public _columnsMetadata: {
-    [key: string]: { style: SafeStyle, sortable: boolean}
-  } = {
-  };
+    [key: string]: { style: SafeStyle, sortable: boolean }
+  } = {};
 
   @Input() rowActions: { label: string, commandName: string }[] = [];
 
@@ -59,7 +58,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this._entries = data;
       this.cdRef.detectChanges();
     } else {
-      this._deferredEntries = data
+      this._deferredEntries = data;
     }
   }
 
@@ -69,7 +68,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() selectedEntries: any[] = [];
   @Input() isTagsBarVisible = false;
 
-  @Output() sortChanged = new EventEmitter<{ field: string, order: number}>();
+  @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
   @Output() actionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
 
@@ -77,8 +76,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
   private _deferredEntries: any[];
-  private _actionsMenuEntry: KalturaMediaEntry = null;
-    private _defaultColumns: EntriesTableColumns = {
+  private _defaultColumns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
     id: { width: '100px' }
@@ -96,11 +94,13 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+    this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
 
-    Object.keys(this._columns).forEach(columnName =>
-    {
-      this._columnsMetadata[columnName] = { style: this._getColumnStyle(this._columns[columnName]), sortable: this._columns[columnName].sortable || false};
+    Object.keys(this._columns).forEach(columnName => {
+      this._columnsMetadata[columnName] = {
+        style: this._getColumnStyle(this._columns[columnName]),
+        sortable: this._columns[columnName].sortable || false
+      };
     });
   }
 
@@ -137,14 +137,14 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private _buildMenu(entry: KalturaMediaEntry): void {
     this._items = this.rowActions
-		.filter(item => this._hideMenuItems(entry.sourceType, entry.status, entry.mediaType, item))
-		.map(action =>
-            Object.assign({} as CustomMenuItem, action, {
-              command: ({ item }) => {
-                this._onActionSelected(item.commandName, entry);
-              }
-            })
-        );
+      .filter(item => this._hideMenuItems(entry.sourceType, entry.status, entry.mediaType, item))
+      .map(action =>
+        Object.assign({} as CustomMenuItem, action, {
+          command: ({ item }) => {
+            this._onActionSelected(item.commandName, entry);
+          }
+        })
+      );
   }
 
   public _rowTrackBy(index: number, item: any): string {
@@ -154,14 +154,10 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _openActionsMenu(event: any, entry: KalturaMediaEntry): void {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (!this._actionsMenuEntry || this._actionsMenuEntry.id !== entry.id) {
-        this._actionsMenuEntry = entry;
-        this._buildMenu(entry);
-        this.actionsMenu.show(event);
-      }
+      this._buildMenu(entry);
+      this.actionsMenu.show(event);
     }
   }
-
 
   public _allowDrilldown(mediaType: string, status: string): boolean {
     const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash.toString();
@@ -170,13 +166,13 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public _onActionSelected(action: string, entry: KalturaMediaEntry): void {
-      this.actionSelected.emit({ action, entry });
+    this.actionSelected.emit({ action, entry });
   }
 
   public _onSortChanged(event) {
     if (event.field && event.order) {
-        // primeng workaround: must check that field and order was provided to prevent reset of sort value
-        this.sortChanged.emit({field: event.field, order: event.order});
+      // primeng workaround: must check that field and order was provided to prevent reset of sort value
+      this.sortChanged.emit({ field: event.field, order: event.order });
     }
   }
 

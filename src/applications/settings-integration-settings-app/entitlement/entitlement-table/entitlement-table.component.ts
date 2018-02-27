@@ -49,16 +49,16 @@ export class EntitlementTableComponent implements OnInit, OnDestroy, AfterViewIn
 
   public rowTrackBy: Function = (index: number, item: any) => item;
 
-  public _openActionsMenu(event: any, rowIndex: number, category: KalturaCategory) {
+  public _openActionsMenu(event: any, category: KalturaCategory) {
     if (this.actionsMenu) {
-      this._buildMenu(rowIndex, category);
+      this._buildMenu(category);
       this.actionsMenu.toggle(event);
       this.actionsMenu.show(event);
     }
   }
 
 
-  private _buildMenu(rowIndex: number, entitlement: KalturaCategory): void {
+  private _buildMenu(entitlement: KalturaCategory): void {
     this._items = [
       {
         label: this._appLocalization.get('applications.settings.integrationSettings.entitlement.table.actions.edit'),
