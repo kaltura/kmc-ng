@@ -32,7 +32,6 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
   public _items: MenuItem[];
   public _deferredLoading = true;
   public _deferredProfiles = [];
-  public _actionsMenuProfileId: number;
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
@@ -89,14 +88,10 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
   public _openActionsMenu(event: any, profile: KalturaConversionProfileWithAsset): void {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (this._actionsMenuProfileId !== profile.id) {
-        this._buildMenu(profile);
-        this._actionsMenuProfileId = profile.id;
-        this._actionsMenu.show(event);
-      }
+      this._buildMenu(profile);
+      this._actionsMenu.show(event);
     }
   }
-
   public _onActionSelected(action: string, profile: KalturaConversionProfileWithAsset): void {
     this.actionSelected.emit({ action, profile });
   }

@@ -103,10 +103,10 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
   }
 
   protected onDataSaving(newData: KalturaConversionProfileWithAsset, request: KalturaMultiRequest): void {
-    if (this.wasActivated) {
-      const formData = this.metadataForm.value;
-      newData.name = formData.name;
-      newData.description = formData.description || '';
+    const formData = this.wasActivated ? this.metadataForm.value : this.data;
+    newData.name = formData.name;
+    newData.description = formData.description || '';
+    if (this.isNewData) {
       if (formData.defaultEntryId) {
         newData.defaultEntryId = formData.defaultEntryId;
       }
@@ -114,14 +114,8 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
         newData.storageProfileId = formData.storageProfileId;
       }
     } else {
-      newData.name = this.data.name;
-      newData.description = this.data.description || '';
-      if (this.data.defaultEntryId) {
-        newData.defaultEntryId = this.data.defaultEntryId;
-      }
-      if (this.data.storageProfileId) {
-        newData.storageProfileId = this.data.storageProfileId;
-      }
+      newData.defaultEntryId = formData.defaultEntryId || null;
+      newData.storageProfileId = formData.storageProfileId || null;
     }
   }
 
@@ -130,32 +124,39 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
    */
   protected onReset(): void {
     this.metadataForm.reset();
+    this.remoteStorageProfilesOptions = [];
+    this.hideStorageProfileIdField = false;
+    this.entryNotFoundErrorParams = null;
   }
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> | void {
-    super._showLoader();
-    this.metadataForm.reset({
-      name: this.data.name,
-      description: this.data.description,
-      defaultEntryId: this.data.defaultEntryId,
-      storageProfileId: this.data.storageProfileId || null
-    });
+    const prepare = () => {
+      if (firstTimeActivating) {
+        this._monitorFormChanges();
+      }
 
-    if (firstTimeActivating) {
-      this._monitorFormChanges();
-    }
+      this.metadataForm.reset({
+        name: this.data.name,
+        description: this.data.description,
+        defaultEntryId: this.data.defaultEntryId,
+        storageProfileId: this.data.storageProfileId || null
+      });
+    };
+    super._showLoader();
 
     this.hideStorageProfileIdField = this.data.type && this.data.type.equals(KalturaConversionProfileType.liveStream);
     if (!this.hideStorageProfileIdField) {
       return this._loadRemoteStorageProfiles()
         .cancelOnDestroy(this)
         .map(profiles => {
+          prepare();
           this.remoteStorageProfilesOptions = profiles.map(profile => ({ label: profile.name, value: profile.id }));
 
           super._hideLoader();
           return { failed: false };
         });
     } else {
+      prepare();
       super._hideLoader();
     }
   }

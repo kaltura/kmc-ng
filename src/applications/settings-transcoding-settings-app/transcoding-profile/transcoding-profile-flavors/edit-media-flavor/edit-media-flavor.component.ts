@@ -6,7 +6,10 @@ import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAs
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaAssetParamsDeletePolicy } from 'kaltura-ngx-client/api/types/KalturaAssetParamsDeletePolicy';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { KalturaConversionProfileWithAsset } from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
+import {
+  ExtendedKalturaConversionProfileAssetParams,
+  KalturaConversionProfileWithAsset
+} from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
@@ -21,9 +24,9 @@ export class EditMediaFlavorComponent implements OnInit {
   @Input() flavor: KalturaFlavorParams;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
-  @Output() saveFlavor = new EventEmitter<KalturaConversionProfileAssetParams>();
+  @Output() saveFlavor = new EventEmitter<ExtendedKalturaConversionProfileAssetParams>();
 
-  private _assetParams: KalturaConversionProfileAssetParams;
+  private _assetParams: ExtendedKalturaConversionProfileAssetParams;
 
   public _availabilityOptions = [
     {
@@ -146,7 +149,7 @@ export class EditMediaFlavorComponent implements OnInit {
     }, { emitEvent: false });
   }
 
-  private _getFlavorAssetParams(): KalturaConversionProfileAssetParams {
+  private _getFlavorAssetParams(): ExtendedKalturaConversionProfileAssetParams {
     const assets = this.profile.assets || [];
     const relevantAssetParam = assets.find(({ assetParamsId }) => this.flavor.id === assetParamsId);
     if (relevantAssetParam instanceof KalturaConversionProfileAssetParams) {
@@ -193,6 +196,7 @@ export class EditMediaFlavorComponent implements OnInit {
     assetParams.systemName = formData.systemName;
     assetParams.forceNoneComplied = formData.forceNoneComplied;
     assetParams.deletePolicy = formData.deletePolicy;
+    assetParams.updated = this._editFlavorForm.dirty;
 
     this.saveFlavor.emit(assetParams);
     this.parentPopupWidget.close();

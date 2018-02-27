@@ -12,6 +12,7 @@ import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAct
 import { KalturaAPIException, KalturaClient } from 'kaltura-ngx-client';
 import { CreateNewTranscodingProfileEvent } from 'app-shared/kmc-shared/events/transcoding-profile-creation';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 
 export interface NewTranscodingProfileFormData {
   name: string;
@@ -37,6 +38,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
   public _hideIngestFromRemoteStorage = false;
   public _remoteStorageProfilesOptions: { label: string, value: number }[] = [];
   public _dataLoading = false;
+  public _blockerMessage: AreaBlockerMessage;
 
   constructor(private _formBuilder: FormBuilder,
               private _browserService: BrowserService,
@@ -72,10 +74,32 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
       this._loadRemoteStorageProfiles()
         .cancelOnDestroy(this)
         .map(profiles => profiles.map(profile => ({ label: profile.name, value: profile.id })))
-        .subscribe(profiles => {
-          this._dataLoading = false;
-          this._remoteStorageProfilesOptions = profiles;
-        });
+        .subscribe(
+          profiles => {
+            this._dataLoading = false;
+            this._remoteStorageProfilesOptions = profiles;
+          },
+          error => {
+            this._blockerMessage = new AreaBlockerMessage({
+              message: error.message || this._appLocalization.get('applications.settings.transcoding.errorLoadingRemoteStorageProfiles'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this._blockerMessage = null;
+                    this._prepare();
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                    this.parentPopupWidget.close();
+                  }
+                }
+              ]
+            });
+          });
     }
   }
 
@@ -88,7 +112,12 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
 
     return this._storageProfilesStore.get()
       .map(({ items }) => [createEmptyRemoteStorageProfile(), ...items])
-      .catch(() => Observable.of([createEmptyRemoteStorageProfile()]));
+      .catch((error) => {
+        if (error instanceof KalturaAPIException && error.code === 'SERVICE_FORBIDDEN') {
+          return Observable.of([createEmptyRemoteStorageProfile()]);
+        }
+        return Observable.throw(error);
+      });
   }
 
   private _validateEntryExists(entryId: string): Observable<boolean> {
@@ -112,11 +141,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
       type: this.profileType,
       name: formData.name
     });
-
-    if (formData.description) {
-      newConversionProfile.description = formData.description;
-    }
-
+    newConversionProfile.description = formData.description || '';
     if (formData.defaultMetadataSettings) {
       newConversionProfile.defaultEntryId = formData.defaultMetadataSettings;
     }

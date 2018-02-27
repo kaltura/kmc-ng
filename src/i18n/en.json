@@ -2153,6 +2153,7 @@
         "yes": "Yes",
         "no": "No",
         "na": "N/A",
+        "errorLoadingRemoteStorageProfiles": "Failed to load remote storage profiles",
         "entryNotFound": "Provided entry does not exist (entry ID: {{0}})",
         "errorLoadingProfiles": "Failed to load transcoding profiles",
         "failedSetDefault": "Failed to set profile as default",

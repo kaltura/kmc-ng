@@ -20,13 +20,12 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
 
-export enum SortDirection {
-  Desc,
-  Asc
+export interface ExtendedKalturaConversionProfileAssetParams extends KalturaConversionProfileAssetParams {
+  updated?: boolean;
 }
 
 export interface KalturaConversionProfileWithAsset extends KalturaConversionProfile {
-  assets?: KalturaConversionProfileAssetParams[];
+  assets?: ExtendedKalturaConversionProfileAssetParams[];
   flavors?: number; // number of flavors in flavorParamsIds
 }
 

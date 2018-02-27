@@ -2,12 +2,10 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { PartnerProfileStore } from '../partner-profile';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaStorageProfileStatus } from 'kaltura-ngx-client/api/types/KalturaStorageProfileStatus';
 import { KalturaStorageProfileFilter } from 'kaltura-ngx-client/api/types/KalturaStorageProfileFilter';
 import { StorageProfileListAction } from 'kaltura-ngx-client/api/types/StorageProfileListAction';
 import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaStorageProfileListResponse';
-import { catchError, map, publishReplay, refCount } from 'rxjs/operators';
 import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
 
 @Injectable()
@@ -24,18 +22,16 @@ export class StorageProfilesStore extends PartnerProfileStore implements OnDestr
       // execute the request
       this._getStorageProfiles$ = this._buildGetRequest()
         .cancelOnDestroy(this)
-        .pipe(
-          map(response => ({ items: response ? response.objects : [] })),
-          catchError(
-            error => {
-              // re-throw the provided error
-              this._getStorageProfiles$ = null;
-              return Observable.throw(new Error(error.message || 'failed to retrieve storage profiles list'));
-            }
-          ),
-          publishReplay(1),
-          refCount()
-        );
+        .map(response => ({ items: response ? response.objects : [] }))
+        .catch(
+          error => {
+            // re-throw the provided error
+            this._getStorageProfiles$ = null;
+            return Observable.throw(new Error(error.message || 'failed to retrieve storage profiles list'));
+          }
+        )
+        .publishReplay(1)
+        .refCount();
     }
 
     return this._getStorageProfiles$;

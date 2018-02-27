@@ -2,15 +2,18 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
-import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
+import {
+  ExtendedKalturaConversionProfileAssetParams,
+  KalturaConversionProfileWithAsset
+} from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { TranscodingProfileWidgetKeys } from '../transcoding-profile-widget-keys';
 import { FlavoursStore } from 'app-shared/kmc-shared';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
+import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsUpdateAction';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -32,16 +35,25 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
   }
 
   protected onDataSaving(data: KalturaConversionProfileWithAsset, request: KalturaMultiRequest): void {
-    data.assets = this.data.assets;
+    data.flavorParamsIds = this.wasActivated ? this.selectedFlavors.map(({ id }) => id).join(',') : this.data.flavorParamsIds;
 
-    if (this.wasActivated) {
-      data.flavorParamsIds = this.selectedFlavors.map(({ id }) => id).join(',');
-    } else if (this.isNewData && (this.data.flavorParamsIds || '').trim().length > 0) {
-      data.flavorParamsIds = this.data.flavorParamsIds;
-    } else {
-      // shouldn't reach this part since 'onValidate' should prevent execution of this function
-      // if data is invalid
-      throw new Error('invalid scenario');
+    const flavorParamsIds = (data.flavorParamsIds || '').trim();
+    const updateAssetParams = flavorParamsIds.length > 0;
+
+    if (updateAssetParams) {
+      flavorParamsIds
+        .split(',')
+        .map(assetParamsId => (this.data.assets || []).find(asset => asset.assetParamsId === Number(assetParamsId)))
+        .filter(assetParams => assetParams && assetParams.updated)
+        .forEach(relevantAssetParams => {
+          request.requests.push(
+            new ConversionProfileAssetParamsUpdateAction({
+              conversionProfileId: 0,
+              assetParamsId: relevantAssetParams.assetParamsId,
+              conversionProfileAssetParams: relevantAssetParams
+            }).setDependency(['conversionProfileId', 0, 'id']),
+          );
+        });
     }
   }
 
@@ -50,6 +62,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
    */
   protected onReset(): void {
     this.flavors = [];
+    this.selectedFlavors = [];
   }
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
@@ -91,7 +104,8 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
         });
 
         this.selectedFlavors = this.flavors.filter(flavor => {
-          return this.data.flavorParamsIds && this.data.flavorParamsIds.indexOf(String(flavor.id)) !== -1;
+          const flavorParamsIds = (this.data.flavorParamsIds || '').trim().split(',');
+          return this.data.flavorParamsIds && flavorParamsIds.indexOf(String(flavor.id)) !== -1;
         });
 
         super._hideLoader();
@@ -108,7 +122,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
     this.updateState({ isDirty: true });
   }
 
-  public updateFlavorAssetParams(assetParams: KalturaConversionProfileAssetParams): void {
+  public updateFlavorAssetParams(assetParams: ExtendedKalturaConversionProfileAssetParams): void {
     if (!Array.isArray(this.data.assets)) {
       this.data.assets = [];
     }

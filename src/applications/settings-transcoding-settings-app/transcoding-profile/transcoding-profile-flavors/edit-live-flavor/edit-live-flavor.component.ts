@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/KalturaFlavorReadyBehaviorType';
-import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import { KalturaAssetParamsDeletePolicy } from 'kaltura-ngx-client/api/types/KalturaAssetParamsDeletePolicy';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { KalturaConversionProfileWithAsset } from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
+import {
+  ExtendedKalturaConversionProfileAssetParams,
+  KalturaConversionProfileWithAsset
+} from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
@@ -21,9 +19,9 @@ export class EditLiveFlavorComponent implements OnInit {
   @Input() flavor: KalturaFlavorParams;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
-  @Output() saveFlavor = new EventEmitter<KalturaConversionProfileAssetParams>();
+  @Output() saveFlavor = new EventEmitter<ExtendedKalturaConversionProfileAssetParams>();
 
-  private _assetParams: KalturaConversionProfileAssetParams;
+  private _assetParams: ExtendedKalturaConversionProfileAssetParams;
 
   public _editFlavorForm: FormGroup;
   public _profileNameField: AbstractControl;
@@ -58,17 +56,18 @@ export class EditLiveFlavorComponent implements OnInit {
     }, { emitEvent: false });
   }
 
-  private _getFlavorAssetParams(): KalturaConversionProfileAssetParams {
+  private _getFlavorAssetParams(): ExtendedKalturaConversionProfileAssetParams {
     const assets = this.profile.assets || [];
     const relevantAssetParam = assets.find(({ assetParamsId }) => this.flavor.id === assetParamsId);
     if (relevantAssetParam instanceof KalturaConversionProfileAssetParams) {
       return Object.assign(KalturaTypesFactory.createObject(relevantAssetParam), relevantAssetParam);
     }
 
-    const newAssetParam = new KalturaConversionProfileAssetParams();
+    const newAssetParam: ExtendedKalturaConversionProfileAssetParams = new KalturaConversionProfileAssetParams();
     // bypass readonly mode
     (<any>newAssetParam).conversionProfileId = this.profile.id;
     (<any>newAssetParam).assetParamsId = this.flavor.id;
+    newAssetParam.updated = true;
 
     return newAssetParam;
   }
@@ -93,6 +92,7 @@ export class EditLiveFlavorComponent implements OnInit {
     const formData = this._editFlavorForm.value;
 
     assetParams.systemName = formData.systemName;
+    assetParams.updated = this._editFlavorForm.dirty;
 
     this.saveFlavor.emit(assetParams);
     this.parentPopupWidget.close();
