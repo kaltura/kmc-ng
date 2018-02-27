@@ -13,7 +13,10 @@ import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
 import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
-import { KalturaConversionProfileWithAsset } from '../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
+import {
+  BaseTranscodingProfilesStore,
+  KalturaConversionProfileWithAsset
+} from '../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { ConversionProfileGetAction } from 'kaltura-ngx-client/api/types/ConversionProfileGetAction';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { TranscodingProfileCreationService } from 'app-shared/kmc-shared/events/transcoding-profile-creation';
@@ -21,6 +24,9 @@ import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui/widgets/widgets-mana
 import { ConversionProfileAddAction } from 'kaltura-ngx-client/api/types/ConversionProfileAddAction';
 import { ConversionProfileUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileUpdateAction';
 import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsUpdateAction';
+import { MediaTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/media-transcoding-profiles-store.service';
+import { LiveTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/live-transcoding-profiles-store.service';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -40,6 +46,7 @@ export interface StatusArgs {
 
 @Injectable()
 export class TranscodingProfileStore implements OnDestroy {
+  private _profilesStore: BaseTranscodingProfilesStore;
   private _loadProfileSubscription: ISubscription;
   private _sectionToRouteMapping: { [key: number]: string } = {};
   private _pageExitVerificationToken: string;
@@ -73,6 +80,8 @@ export class TranscodingProfileStore implements OnDestroy {
               private _pageExitVerificationService: PageExitVerificationService,
               private _appLocalization: AppLocalization,
               private _profileCreationService: TranscodingProfileCreationService,
+              private _mediaTranscodingProfilesStore: MediaTranscodingProfilesStore,
+              private _liveTranscodingProfilesStore: LiveTranscodingProfilesStore,
               private _logger: KalturaLogger) {
 
 
@@ -82,17 +91,6 @@ export class TranscodingProfileStore implements OnDestroy {
 
     this._onSectionsStateChanges();
     this._onRouterEvents();
-
-    // hard reload the entries upon navigating back from profile (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
-    this._profileRoute.queryParams
-      .cancelOnDestroy(this)
-      .first()
-      .subscribe(queryParams => {
-        const reloadEntriesListOnNavigateOut = !!queryParams['reloadEntriesListOnNavigateOut']; // convert string to boolean
-        if (reloadEntriesListOnNavigateOut) {
-          this._saveProfileInvoked = reloadEntriesListOnNavigateOut;
-        }
-      });
   }
 
   private _onSectionsStateChanges(): void {
@@ -139,8 +137,8 @@ export class TranscodingProfileStore implements OnDestroy {
       this._pageExitVerificationService.remove(this._pageExitVerificationToken);
     }
 
-    if (this._saveProfileInvoked) {
-      // this._entriesStore.reload();
+    if (this._saveProfileInvoked && this._profilesStore) {
+      this._profilesStore.reload();
     }
   }
 
@@ -158,6 +156,16 @@ export class TranscodingProfileStore implements OnDestroy {
     });
   }
 
+  private _setProfilesStoreServiceByType(serviceType: KalturaConversionProfileType): void {
+    if (serviceType.equals(KalturaConversionProfileType.media)) {
+      this._profilesStore = this._mediaTranscodingProfilesStore;
+    } else if (serviceType.equals(KalturaConversionProfileType.liveStream)) {
+      this._profilesStore = this._liveTranscodingProfilesStore;
+    } else {
+      throw Error('Incorrect serviceType provided. It can be either KalturaConversionProfileType.media or KalturaConversionProfileType.liveStream type');
+    }
+  }
+
   private _onRouterEvents(): void {
     this._router.events
       .cancelOnDestroy(this)
@@ -171,6 +179,7 @@ export class TranscodingProfileStore implements OnDestroy {
                 const newData = this._profileCreationService.popNewProfileData();
                 if (newData) {
                   this._profileId = currentProfileId;
+                  this._setProfilesStoreServiceByType(newData.profile.type);
                   this._profile.data.next(newData.profile);
 
                   setTimeout(() => {
@@ -204,6 +213,26 @@ export class TranscodingProfileStore implements OnDestroy {
       );
   }
 
+  private _checkFlavors(newProfile: KalturaConversionProfileWithAsset): Observable<{ proceedSave: boolean }> {
+    if (newProfile.flavorParamsIds && newProfile.flavorParamsIds.trim().length) {
+      return Observable.of({ proceedSave: true });
+    }
+
+    return Observable.create(observer => {
+      this._browserService.confirm({
+        message: this._appLocalization.get('applications.settings.transcoding.flavors.noFlavorsSelectedWarning'),
+        accept: () => {
+          observer.next({ proceedSave: true });
+          observer.complete();
+        },
+        reject: () => {
+          observer.next({ proceedSave: false });
+          observer.complete();
+        }
+      });
+    });
+  }
+
   private _transmitSaveRequest(newProfile: KalturaConversionProfileWithAsset): void {
     this._profile.state.next({ action: ActionTypes.ProfileSaving });
 
@@ -221,48 +250,55 @@ export class TranscodingProfileStore implements OnDestroy {
         if (prepareResponse.ready) {
           this._saveProfileInvoked = true;
 
-          return this._kalturaServerClient.multiRequest(request)
-            .monitor('transcoding-profile store: save profile')
-            .tag('block-shell')
-            .switchMap(
-              ([res]) => {
-                if (res.error) {
-                  throw Error('saving profile error'); // rethrow error to catch
-                } else {
-                  const isNew = id === 'new';
-                  const conversionProfileId = isNew ? res.result.id : this.profileId;
-                  const flavorParamsIds = res.result.flavorParamsIds;
+          return this._checkFlavors(newProfile)
+            .switchMap(({ proceedSave }) => {
+              if (proceedSave) {
+                return this._kalturaServerClient.multiRequest(request)
+                  .monitor('transcoding-profile store: save profile')
+                  .tag('block-shell')
+                  .switchMap(
+                    ([res]) => {
+                      if (res.error) {
+                        throw Error('saving profile error'); // rethrow error to catch
+                      } else {
+                        const isNew = id === 'new';
+                        const conversionProfileId = isNew ? res.result.id : this.profileId;
+                        const flavorParamsIds = res.result.flavorParamsIds;
 
-                  const assetParamsListActions = (flavorParamsIds || '')
-                    .split(',')
-                    .map(assetParamsId => (newProfile.assets || []).find(asset => asset.assetParamsId === Number(assetParamsId)))
-                    .filter(Boolean)
-                    .map(relevantAssetParams => new ConversionProfileAssetParamsUpdateAction({
-                      conversionProfileId,
-                      assetParamsId: relevantAssetParams.assetParamsId,
-                      conversionProfileAssetParams: relevantAssetParams
-                    }));
-                  return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(...assetParamsListActions));
-                }
-              },
-              ([profileResponse], assetsResponse) => {
-                if (assetsResponse && assetsResponse.hasErrors()) {
-                  throw Error('saving assets error'); // rethrow error to catch
-                } else {
-                  const isNew = id === 'new';
-                  if (isNew) {
-                    this._profileIsDirty = false;
-                    this._router.navigate(['profile', profileResponse.result.id], { relativeTo: this._profileRoute.parent });
-                  } else {
-                    this._loadProfile(profileResponse.result.id);
-                  }
-                  return Observable.empty();
-                }
-              })
-            .catch(error => {
-              console.warn(error.message);
-              this._profile.state.next({ action: ActionTypes.ProfileSavingFailed });
-              return Observable.empty();
+                        const assetParamsListActions = (flavorParamsIds || '')
+                          .split(',')
+                          .map(assetParamsId => (newProfile.assets || []).find(asset => asset.assetParamsId === Number(assetParamsId)))
+                          .filter(Boolean)
+                          .map(relevantAssetParams => new ConversionProfileAssetParamsUpdateAction({
+                            conversionProfileId,
+                            assetParamsId: relevantAssetParams.assetParamsId,
+                            conversionProfileAssetParams: relevantAssetParams
+                          }));
+                        return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(...assetParamsListActions));
+                      }
+                    },
+                    ([profileResponse], assetsResponse) => {
+                      if (assetsResponse && assetsResponse.hasErrors()) {
+                        throw Error('saving assets error'); // rethrow error to catch
+                      } else {
+                        const isNew = id === 'new';
+                        if (isNew) {
+                          this._profileIsDirty = false;
+                          this._router.navigate(['profile', profileResponse.result.id], { relativeTo: this._profileRoute.parent });
+                        } else {
+                          this._loadProfile(profileResponse.result.id);
+                        }
+                        return Observable.empty();
+                      }
+                    })
+                  .catch(error => {
+                    console.warn(error.message);
+                    this._profile.state.next({ action: ActionTypes.ProfileSavingFailed });
+                    return Observable.empty();
+                  });
+              } else {
+                return Observable.empty();
+              }
             });
         } else {
           switch (prepareResponse.reason) {
@@ -331,6 +367,7 @@ export class TranscodingProfileStore implements OnDestroy {
         response => {
           this._profile.data.next(response);
           this._profileId = String(response.id);
+          this._setProfilesStoreServiceByType(response.type);
 
           const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
           if (dataLoadedResult.errors.length) {
@@ -382,7 +419,8 @@ export class TranscodingProfileStore implements OnDestroy {
 
           const profile = profilesResponse.result;
           const assets = assetsResponse.result.objects;
-          const flavors = (profile.flavorParamsIds || '').split(',').length;
+          const flavorParamsIds = (profile.flavorParamsIds || '').trim();
+          const flavors = flavorParamsIds ? flavorParamsIds.split(',').length : 0;
           return Object.assign(profile, { assets, flavors });
         });
     } else {

@@ -106,14 +106,22 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     if (this.wasActivated) {
       const formData = this.metadataForm.value;
       newData.name = formData.name;
-      newData.description = formData.description;
-      newData.defaultEntryId = formData.defaultEntryId;
-      newData.storageProfileId = formData.storageProfileId;
+      newData.description = formData.description || '';
+      if (formData.defaultEntryId) {
+        newData.defaultEntryId = formData.defaultEntryId;
+      }
+      if (formData.storageProfileId) {
+        newData.storageProfileId = formData.storageProfileId;
+      }
     } else {
       newData.name = this.data.name;
-      newData.description = this.data.description;
-      newData.defaultEntryId = this.data.defaultEntryId;
-      newData.storageProfileId = this.data.storageProfileId;
+      newData.description = this.data.description || '';
+      if (this.data.defaultEntryId) {
+        newData.defaultEntryId = this.data.defaultEntryId;
+      }
+      if (this.data.storageProfileId) {
+        newData.storageProfileId = this.data.storageProfileId;
+      }
     }
   }
 

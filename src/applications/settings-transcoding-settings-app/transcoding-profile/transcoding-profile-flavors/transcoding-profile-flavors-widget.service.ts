@@ -28,31 +28,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
   }
 
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
-    if (this.wasActivated) {
-      if (this.selectedFlavors.length) {
-        return Observable.of({ isValid: true });
-      }
-
-      return Observable.create(observer => {
-        this._browserService.confirm({
-          message: this._appLocalization.get('applications.settings.transcoding.flavors.noFlavorsSelectedWarning'),
-          accept: () => {
-            observer.next({ isValid: true });
-            observer.complete();
-          },
-          reject: () => {
-            observer.next({ isValid: false });
-            observer.complete();
-          }
-        });
-      });
-    }
-
-    if (this.isNewData && (this.data.flavorParamsIds || '').trim().length > 0) {
-      return Observable.of({ isValid: true });
-    }
-
-    return Observable.of({ isValid: false });
+    return Observable.of({ isValid: true });
   }
 
   protected onDataSaving(data: KalturaConversionProfileWithAsset, request: KalturaMultiRequest): void {
