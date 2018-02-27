@@ -46,8 +46,8 @@ export interface Feeds {
 }
 
 export enum SortDirection {
-  Desc,
-  Asc
+  Desc = -1,
+  Asc = 1
 }
 
 export interface FeedsFilters {

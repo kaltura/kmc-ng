@@ -6,7 +6,7 @@
             dataKey="id"
             [rowTrackBy]="_rowTrackBy"
             [sortField]="sortField"
-            [sortOrder]="sortOrder | kEntriesTableSortDirection"
+            [sortOrder]="sortOrder"
             (sortFunction)="_onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedEntries"
             (selectionChange)="_onSelectionChange($event)"

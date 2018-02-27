@@ -32,8 +32,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
 export enum SortDirection {
-  Desc,
-  Asc
+  Desc = -1,
+  Asc = 1
 }
 
 export interface DropFoldersFilters {

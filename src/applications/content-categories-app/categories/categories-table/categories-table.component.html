@@ -8,7 +8,7 @@
             dataKey="id"
             [rowTrackBy]="rowTrackBy"
             [sortField]="sortField"
-            [sortOrder]="sortOrder | kCategoriesTableSortDirection"
+            [sortOrder]="sortOrder"
             (sortFunction)="_onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedCategories"
             (selectionChange)="_onSelectionChange($event)"

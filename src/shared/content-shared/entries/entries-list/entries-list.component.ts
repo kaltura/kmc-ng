@@ -267,10 +267,12 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   onSortChanged(event) {
-    this._entriesStore.filter({
-      sortBy: event.field,
-      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
-    });
+      if (event.field !== this._query.sortBy || event.order !== this._query.sortDirection) {
+          this._entriesStore.filter({
+              sortBy: event.field,
+              sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+          });
+      }
   }
 
   onPaginationChanged(state: any): void {

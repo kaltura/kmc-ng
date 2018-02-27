@@ -4,7 +4,6 @@ import {CategoriesBulkAddTags} from './bulk-actions/components/bulk-add-tags/bul
 import {CategoriesTableComponent} from './categories-table/categories-table.component';
 import {CategoriesListComponent} from './categories-list/categories-list.component';
 import {CategoriesBulkActionsComponent} from './bulk-actions/categories-bulk-actions.component';
-import {CategoriesTableSortDirectionPipe} from './pipes/categories-table-sort-direction.pipe';
 import {CategoriesBulkChangeContentPrivacy} from './bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component';
 import {CategoriesBulkChangeCategoryListing} from './bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component';
 import {CategoriesBulkChangeContributionPolicy} from './bulk-actions/components/bulk-change-contribution-policy/bulk-change-contribution-policy.component';
@@ -17,7 +16,6 @@ export const CategoriesComponentsList = [
     CategoriesListTagsComponent,
     CategoriesRefineFiltersComponent,
     CategoriesBulkActionsComponent,
-    CategoriesTableSortDirectionPipe,
     CategoriesBulkAddTags,
     CategoriesBulkRemoveTags,
     CategoriesBulkChangeOwner,
