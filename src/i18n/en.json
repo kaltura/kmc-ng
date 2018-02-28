@@ -2174,8 +2174,9 @@
         "defaultMetadataSettings": "Default Metadata Settings",
         "ingestFromRemoteStorage": "Ingest From Remote Storage",
         "deleteProfiles": "Delete profiles",
-        "confirmDeleteProfilesNames": "Are you sure you want to delete the following Transcoding Profile(s):\n{{0}}",
-        "confirmDeleteProfiles": "Are you sure you want to delete the selected Transcoding Profiles?",
+        "confirmDeleteProfilesNames": "Are you sure you want to delete the following Transcoding Profile(s):\n{{0}}{{1}}",
+        "confirmDeleteProfiles": "Are you sure you want to delete the selected Transcoding Profiles?{{0}}",
+        "deleteDefaultProfileNote": "\n\nNote - default transcoding profile will not be deleted",
         "cancel": "Cancel",
         "save": "Save",
         "table": {

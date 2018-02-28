@@ -10,6 +10,7 @@ import { LiveTranscodingProfilesStore } from '../transcoding-profiles-store/live
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -212,12 +213,15 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _deleteProfiles(profiles: KalturaConversionProfileWithAsset[]): void {
+  private _deleteProfiles(profiles: KalturaConversionProfileWithAsset[], includesDefault = false): void {
     if (Array.isArray(profiles) && profiles.length) {
       const profileNames = profiles.map(({ name }) => name).join('\n');
+      const includesDefaultWarning = includesDefault
+        ? this._appLocalization.get('applications.settings.transcoding.deleteDefaultProfileNote')
+        : '';
       const message = profiles.length < 5
-        ? this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfilesNames', [profileNames])
-        : this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfiles');
+        ? this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfilesNames', [profileNames, includesDefaultWarning])
+        : this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfiles', [includesDefaultWarning]);
       this.setParentBlockerMessage.emit(
         new AreaBlockerMessage({
           title: this._appLocalization.get('applications.settings.transcoding.deleteProfiles'),
@@ -243,8 +247,11 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   public _deleteSelected(): void {
-    const excludingDefault = this._selectedProfiles.filter(({ isDefault }) => !isDefault);
-    this._deleteProfiles(excludingDefault);
+    const includesDefault = this._selectedProfiles.some(({ isDefault }) => isDefault === KalturaNullableBoolean.trueValue);
+    const profiles = includesDefault
+      ? this._selectedProfiles.filter(({ isDefault }) => isDefault !== KalturaNullableBoolean.trueValue)
+      : this._selectedProfiles;
+    this._deleteProfiles(profiles, includesDefault);
   }
 
   public _actionSelected(event: { action: string, profile: KalturaConversionProfileWithAsset }): void {
