@@ -340,7 +340,8 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   public _cancel(): void {
     if (this._fieldForm.dirty) {
       this._browserService.confirm({
-        message: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChanges'),
+        header: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChanges'),
+        message: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChangesMessage'),
         accept: () => {
           this._save();
         },

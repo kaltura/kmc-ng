@@ -1940,7 +1940,8 @@
           "listValuesPlaceholder": "Enter the values, one per line",
           "single": "Single",
           "unlimited": "Unlimited",
-          "saveChanges": "Would you like to save the changes you made?",
+          "saveChanges": "Save changes?",
+          "saveChangesMessage": "Would you like to save the changes you made?",
           "validationErrors": {
             "invalidInput": "Invalid Input",
             "invalidSystemName": "Field system name must be unique, please enter a different name.",
