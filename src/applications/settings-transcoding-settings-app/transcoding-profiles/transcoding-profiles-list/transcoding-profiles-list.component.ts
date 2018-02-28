@@ -214,36 +214,34 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   private _deleteProfiles(profiles: KalturaConversionProfileWithAsset[], includesDefault = false): void {
-    if (Array.isArray(profiles) && profiles.length) {
-      const profileNames = profiles.map(({ name }) => name).join('\n');
-      const includesDefaultWarning = includesDefault
-        ? this._appLocalization.get('applications.settings.transcoding.deleteDefaultProfileNote')
-        : '';
-      const message = profiles.length < 5
-        ? this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfilesNames', [profileNames, includesDefaultWarning])
-        : this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfiles', [includesDefaultWarning]);
-      this.setParentBlockerMessage.emit(
-        new AreaBlockerMessage({
-          title: this._appLocalization.get('applications.settings.transcoding.deleteProfiles'),
-          message: message,
-          buttons: [
-            {
-              label: this._appLocalization.get('applications.settings.transcoding.yes'),
-              action: () => {
-                this._proceedDeleteProfiles(profiles);
-                this.setParentBlockerMessage.emit(null);
-              }
-            },
-            {
-              label: this._appLocalization.get('applications.settings.transcoding.no'),
-              action: () => {
-                this.setParentBlockerMessage.emit(null);
-              }
+    const profileNames = profiles.map(({ name }) => name).join('\n');
+    const includesDefaultWarning = includesDefault
+      ? this._appLocalization.get('applications.settings.transcoding.deleteDefaultProfileNote')
+      : '';
+    const message = profiles.length < 5
+      ? this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfilesNames', [profileNames, includesDefaultWarning])
+      : this._appLocalization.get('applications.settings.transcoding.confirmDeleteProfiles', [includesDefaultWarning]);
+    this.setParentBlockerMessage.emit(
+      new AreaBlockerMessage({
+        title: this._appLocalization.get('applications.settings.transcoding.deleteProfiles'),
+        message: message,
+        buttons: [
+          {
+            label: this._appLocalization.get('applications.settings.transcoding.yes'),
+            action: () => {
+              this._proceedDeleteProfiles(profiles);
+              this.setParentBlockerMessage.emit(null);
             }
-          ]
-        })
-      );
-    }
+          },
+          {
+            label: this._appLocalization.get('applications.settings.transcoding.no'),
+            action: () => {
+              this.setParentBlockerMessage.emit(null);
+            }
+          }
+        ]
+      })
+    );
   }
 
   public _deleteSelected(): void {
@@ -251,7 +249,23 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
     const profiles = includesDefault
       ? this._selectedProfiles.filter(({ isDefault }) => isDefault !== KalturaNullableBoolean.trueValue)
       : this._selectedProfiles;
-    this._deleteProfiles(profiles, includesDefault);
+
+    if (profiles.length) {
+      this._deleteProfiles(profiles, includesDefault);
+    } else if (includesDefault) {
+      this.setParentBlockerMessage.emit(
+        new AreaBlockerMessage({
+          title: this._appLocalization.get('applications.settings.transcoding.deleteProfiles'),
+          message: this._appLocalization.get('applications.settings.transcoding.cannotDeleteDefaultProfile'),
+          buttons: [{
+            label: this._appLocalization.get('app.common.ok'),
+            action: () => {
+              this.setParentBlockerMessage.emit(null);
+            }
+          }]
+        })
+      );
+    }
   }
 
   public _actionSelected(event: { action: string, profile: KalturaConversionProfileWithAsset }): void {
