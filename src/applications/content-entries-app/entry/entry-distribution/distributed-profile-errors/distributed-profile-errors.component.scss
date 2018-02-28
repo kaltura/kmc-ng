@@ -1,0 +1,10 @@
+@import 'app-theme/_variables.scss';
+
+.kValidationError {
+  display: block;
+  margin-bottom: 6px;
+
+  .kValidationErrorMoreInfo {
+    color: $kDandger;
+  }
+}

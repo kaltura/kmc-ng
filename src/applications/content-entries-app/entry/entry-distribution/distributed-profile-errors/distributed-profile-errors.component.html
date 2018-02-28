@@ -1,0 +1,10 @@
+<span class="kValidationError" *ngFor="let key of _errorsKeys">
+  {{('applications.content.entryDetails.distribution.errors.' + key ) | translate}}&nbsp;
+  <a class="kValidationErrorMoreInfo" (click)="_toggleErrorInfo($event, _errors[key], key, errorInfoOverlay)">
+    {{'applications.content.entryDetails.distribution.moreInfo' | translate}}
+  </a>
+</span>
+
+<p-overlayPanel #errorInfoOverlay appendTo="body">
+    <kEntryDistributedProfileErrorInfo [errors]="_selectedErrorGroup"></kEntryDistributedProfileErrorInfo>
+</p-overlayPanel>

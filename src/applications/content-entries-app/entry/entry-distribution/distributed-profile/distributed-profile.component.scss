@@ -1,0 +1,140 @@
+@import 'app-theme/_variables.scss';
+
+$app-styles-path: '../../../styles';
+@import '../../../styles/icons.scss';
+
+.kDistributedProfile {
+  min-height: 52px;
+  display: flex;
+  border-bottom: 1px solid $kGrayscale4;
+  padding: 30px 28px 28px 28px;
+
+  .kDistributedProfileContent {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 52px;
+    margin-left: 16px;
+
+    .kTitle {
+      margin-bottom: 16px;
+      cursor: pointer;
+
+      .kDistributorPageLink {
+        text-decoration: none;
+      }
+
+      .kTitleLabel {
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 18px;
+      }
+
+      .kTitleIcon {
+        color: $kGrayscale3;
+        margin-left: 5px;
+        font-size: 24px;
+        position: relative;
+        top: 4px;
+        line-height: 12px;
+      }
+    }
+
+    .kMetadata {
+      color: $kGrayscale1;
+      line-height: 1.5em;
+
+      .kModified {
+        border-radius: 9px;
+        color: #ffffff;
+        background-color: $kOrange;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 1px 8px;
+        position: relative;
+        bottom: 2px;
+      }
+
+      .kMoreDetails, .kLastUpdate {
+        white-space: nowrap;
+      }
+
+      .kDelimiter {
+        margin: 0 10px;
+
+        &:after {
+          content: '|';
+          font-size: 12px;
+          color: $kGrayscale4;
+          top: -2px;
+          position: relative;
+        }
+      }
+
+      .kStatusUpdateFailed {
+        font-size: 16px;
+        position: relative;
+        top: 1px;
+        margin-right: 5px;
+        color: $kDandger;
+      }
+
+      .kStatus {
+        .kStatusIcon {
+          font-size: 16px;
+          position: relative;
+          top: 1px;
+          margin-right: 5px;
+        }
+
+        .kIconupload2 {
+          color: $kOrange;
+        }
+
+        .kIconcomplete {
+          color: $kSuccess;
+        }
+
+        .kIconsync {
+          color: $kSecondary;
+        }
+
+        .kIconerror {
+          color: $kDandger;
+        }
+      }
+    }
+
+    .kValidationErrors {
+      margin-top: 16px;
+      color: $kDandger;
+    }
+  }
+
+  .kControls {
+    display: flex;
+    position: relative;
+    top: -6px;
+
+    .kDeleteBtn {
+      height: 34px;
+      width: 42px;
+      font-size: 24px;
+      margin-right: 16px;
+    }
+
+    .kUpdateBtn {
+      height: 34px;
+      width: 100px;
+    }
+  }
+}
+
+:host /deep/ .kDistributedProfile {
+  .kDeleteBtn {
+    .kIcontrash {
+      margin-left: -.5em;
+    }
+  }
+}
