@@ -34,9 +34,6 @@ export interface TranscodingProfilesFilters {
   pageIndex: number;
 }
 
-/**
- * DON'T FORGET to call _prepare function in a child class's constructor!
- */
 export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<TranscodingProfilesFilters> implements OnDestroy {
   private _profiles = {
     data: new BehaviorSubject<{ items: KalturaConversionProfileWithAsset[], totalCount: number }>({ items: [], totalCount: 0 }),
@@ -58,6 +55,12 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
               private _browserService: BrowserService,
               _logger: KalturaLogger) {
     super(_logger);
+    setTimeout(() =>
+    {
+        this._prepare();
+    });
+
+
   }
 
   ngOnDestroy() {
@@ -195,7 +198,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
       });
   }
 
-  protected _prepare(): void {
+  private _prepare(): void {
     // NOTICE: do not execute here any logic that should run only once.
     // this function will re-run if preparation failed. execute your logic
     // only after the line where we set isReady to true

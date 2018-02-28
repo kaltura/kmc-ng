@@ -14,7 +14,6 @@ export class MediaTranscodingProfilesStore extends BaseTranscodingProfilesStore 
               _browserService: BrowserService,
               _logger: KalturaLogger) {
     super(_kalturaServerClient, _browserService, _logger);
-    this._prepare();
   }
 }
 
