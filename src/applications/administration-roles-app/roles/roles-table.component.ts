@@ -31,7 +31,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this._roles = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredRoles = data
+      this._deferredRoles = data;
     }
   }
 
@@ -40,7 +40,6 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
 
   private _deferredRoles: KalturaUserRole[];
-  private _actionsMenuRole: KalturaUserRole;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _roles: KalturaUserRole[] = [];
@@ -107,19 +106,19 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.actionSelected.emit({ 'action': action, 'role': role });
   }
 
-  private _buildMenu(): void {
+  private _buildMenu(role: KalturaUserRole): void {
     this._items = [
       {
         label: this._appLocalization.get('applications.administration.roles.actions.edit'),
-        command: () => this._onActionSelected('edit', this._actionsMenuRole)
+        command: () => this._onActionSelected('edit', role)
       },
       {
         label: this._appLocalization.get('applications.administration.roles.actions.duplicate'),
-        command: () => this._onActionSelected('duplicate', this._actionsMenuRole)
+        command: () => this._onActionSelected('duplicate', role)
       },
       {
         label: this._appLocalization.get('applications.administration.roles.actions.delete'),
-        command: () => this._onActionSelected('delete', this._actionsMenuRole)
+        command: () => this._onActionSelected('delete', role)
       }
     ];
   }
@@ -127,11 +126,8 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _openActionsMenu(event: any, role: KalturaUserRole): void {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (!this._actionsMenuRole || this._actionsMenuRole.id !== role.id) {
-        this._buildMenu();
-        this._actionsMenuRole = role;
-        this._actionsMenu.show(event);
-      }
+      this._buildMenu(role);
+      this._actionsMenu.show(event);
     }
   }
 }

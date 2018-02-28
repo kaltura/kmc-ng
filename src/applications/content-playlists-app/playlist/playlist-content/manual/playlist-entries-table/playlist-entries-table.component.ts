@@ -73,7 +73,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.moveUp'),
-        command: (event) => this.onActionSelected.emit({ action: 'moveUp', entry }),
+        command: () => this.onActionSelected.emit({ action: 'moveUp', entry }),
         disabled: rowIndex === 0
       },
       {

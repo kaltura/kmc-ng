@@ -37,7 +37,7 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this._feeds = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredFeeds = data
+      this._deferredFeeds = data;
     }
   }
 
@@ -63,7 +63,6 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   selectedFeedsChange = new EventEmitter<any>();
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
-  private _actionsMenuFeed: KalturaBaseSyndicationFeed;
 
   public _emptyMessage = '';
 
@@ -93,23 +92,15 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
+  public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   public _openActionsMenu(event: any, feed: KalturaBaseSyndicationFeed) {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (!this._actionsMenuFeed || this._actionsMenuFeed.id !== feed.id) {
-        if (!this._items) {
-          this._buildMenu();
-        }
-        this._actionsMenuFeed = feed;
-        this._actionsMenu.show(event);
-      }
+      this._buildMenu(feed);
+      this._actionsMenu.show(event);
     }
   }
-
   public _editFeed(feed: KalturaBaseSyndicationFeed) {
     this._onActionSelected('edit', feed);
   }
@@ -129,19 +120,15 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.actionSelected.emit({'action': action, 'feed': feed});
   }
 
-  private _buildMenu(): void {
+  private _buildMenu(feed: KalturaBaseSyndicationFeed): void {
     this._items = [
       {
         label: this._appLocalization.get('applications.content.syndication.table.actions.edit'),
-        command: (event) => {
-          this._onActionSelected('edit', this._actionsMenuFeed);
-        }
+        command: () => this._onActionSelected('edit', feed)
       },
       {
         label: this._appLocalization.get('applications.content.syndication.table.actions.delete'),
-        command: (event) => {
-          this._onActionSelected('delete', this._actionsMenuFeed);
-        }
+        command: () => this._onActionSelected('delete', feed)
       },
     ];
   }
