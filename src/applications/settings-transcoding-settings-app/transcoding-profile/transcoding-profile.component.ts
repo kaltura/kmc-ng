@@ -210,7 +210,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToNext(): void {
-    const profiles = this._profilesStore.profiles.data().items;;
+    const profiles = this._profilesStore.profiles.data().items;
 
     if (profiles && this._currentProfileId) {
       const currentProfile = profiles.find(profile => String(profile.id) === this._currentProfileId);
