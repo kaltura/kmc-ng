@@ -198,7 +198,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
-                    this.setParentBlockerMessage.emit(null);
+                      this.setParentBlockerMessage.emit(null);
                     this._proceedDeleteProfiles(profiles);
                   }
                 },
@@ -230,8 +230,9 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
             {
               label: this._appLocalization.get('applications.settings.transcoding.yes'),
               action: () => {
+                  this.setParentBlockerMessage.emit(null);
                 this._proceedDeleteProfiles(profiles);
-                this.setParentBlockerMessage.emit(null);
+
               }
             },
             {
