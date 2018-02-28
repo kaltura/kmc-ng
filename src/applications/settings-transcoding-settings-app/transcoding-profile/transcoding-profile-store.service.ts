@@ -309,20 +309,20 @@ export class TranscodingProfileStore implements OnDestroy {
   }
 
   public saveProfile(): void {
-    const profile = this.profile.data();
-    const newProfile = <KalturaConversionProfileWithAsset>KalturaTypesFactory.createObject(profile);
-    if (this.profileId === 'new') {
-      newProfile.type = profile.type;
-    } else {
-      newProfile.flavorParamsIds = profile.flavorParamsIds;
-    }
+      const profile = this.profile.data();
+      const newProfile = <KalturaConversionProfileWithAsset>KalturaTypesFactory.createObject(profile);
+      if (newProfile && newProfile instanceof KalturaConversionProfile) {
+          if (this.profileId === 'new') {
+              newProfile.type = profile.type;
+          }
 
-    if (newProfile && newProfile instanceof KalturaConversionProfile) {
-      this._transmitSaveRequest(newProfile);
-    } else {
-      console.error(new Error(`Failed to create a new instance of the profile type '${this.profile ? typeof this.profile : 'n/a'}`));
-      this._profile.state.next({ action: ActionTypes.ProfilePrepareSavingFailed });
-    }
+          newProfile.flavorParamsIds = profile.flavorParamsIds; // this field is provided always to allow flavor section to modify it as needed with new/removed flavors
+
+          this._transmitSaveRequest(newProfile);
+      } else {
+          console.error(new Error(`Failed to create a new instance of the profile type '${this.profile ? typeof this.profile : 'n/a'}`));
+          this._profile.state.next({action: ActionTypes.ProfilePrepareSavingFailed});
+      }
   }
 
   public reloadProfile(): void {
