@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy } from '@angular/core';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
@@ -17,12 +17,15 @@ import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client/api
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
+  private _flavorParamsIds: string[] = [];
+  private _flavorParasIdsListDiffer: IterableDiffer<string>;
   public flavors: KalturaFlavorParams[] = [];
   public selectedFlavors: KalturaFlavorParams[] = [];
 
   constructor(private _kalturaClient: KalturaClient,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
+              private _listDiffers: IterableDiffers,
               private _flavorsStore: FlavoursStore) {
     super(TranscodingProfileWidgetKeys.Flavors);
   }
@@ -35,25 +38,43 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
   }
 
   protected onDataSaving(data: KalturaConversionProfileWithAsset, request: KalturaMultiRequest): void {
-    data.flavorParamsIds = this.wasActivated ? this.selectedFlavors.map(({ id }) => id).join(',') : this.data.flavorParamsIds;
+    if (this.wasActivated) {
+      if (this._flavorParasIdsListDiffer) {
+        const selectedFlavors = this.selectedFlavors.map(({ id }) => String(id));
+        const changes = this._flavorParasIdsListDiffer.diff(selectedFlavors);
+        if (changes) {
+          changes.forEachAddedItem((record: IterableChangeRecord<string>) => {
+            this._flavorParamsIds.push(record.item);
+          });
 
-    const flavorParamsIds = (data.flavorParamsIds || '').trim();
-    const updateAssetParams = flavorParamsIds.length > 0;
+          changes.forEachRemovedItem((record: IterableChangeRecord<string>) => {
+            const relevantIndex = this._flavorParamsIds.indexOf(record.item);
+            const itemExists = relevantIndex !== -1;
+            if (itemExists) {
+              this._flavorParamsIds.splice(relevantIndex, 1);
+            }
+          });
+        }
 
-    if (updateAssetParams) {
-      flavorParamsIds
-        .split(',')
-        .map(assetParamsId => (this.data.assets || []).find(asset => asset.assetParamsId === Number(assetParamsId)))
-        .filter(assetParams => assetParams && assetParams.updated)
-        .forEach(relevantAssetParams => {
-          request.requests.push(
-            new ConversionProfileAssetParamsUpdateAction({
-              conversionProfileId: 0,
-              assetParamsId: relevantAssetParams.assetParamsId,
-              conversionProfileAssetParams: relevantAssetParams
-            }).setDependency(['conversionProfileId', 0, 'id']),
-          );
-        });
+        data.flavorParamsIds = this._flavorParamsIds.join(',');
+
+        const updateAssetParams = this._flavorParamsIds.length > 0;
+
+        if (updateAssetParams) {
+          this._flavorParamsIds
+            .map(assetParamsId => (this.data.assets || []).find(asset => asset.assetParamsId === Number(assetParamsId)))
+            .filter(assetParams => assetParams && assetParams.updated)
+            .forEach(relevantAssetParams => {
+              request.requests.push(
+                new ConversionProfileAssetParamsUpdateAction({
+                  conversionProfileId: 0,
+                  assetParamsId: relevantAssetParams.assetParamsId,
+                  conversionProfileAssetParams: relevantAssetParams
+                }).setDependency(['conversionProfileId', 0, 'id']),
+              );
+            });
+        }
+      }
     }
   }
 
@@ -63,6 +84,8 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
   protected onReset(): void {
     this.flavors = [];
     this.selectedFlavors = [];
+    this._flavorParamsIds = [];
+    this._flavorParasIdsListDiffer = null;
   }
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
@@ -107,6 +130,10 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
         this.selectedFlavors = this.flavors.filter(flavor => {
           return flavorParamsIds && flavorParamsIds.length && flavorParamsIds.indexOf(String(flavor.id)) !== -1;
         });
+
+        this._flavorParamsIds = flavorParamsIds;
+        this._flavorParasIdsListDiffer = this._listDiffers.find([]).create();
+        this._flavorParasIdsListDiffer.diff(this._flavorParamsIds);
 
         super._hideLoader();
         return { failed: false };
