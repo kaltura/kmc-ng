@@ -49,7 +49,7 @@ export class FlavoursStore extends PartnerProfileStore implements OnDestroy {
 
     const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile(
       {
-        fields: 'id,name',
+        fields: 'id,format,name,width,height,videoCodec,audioBitrate,videoBitrate,tags',
         type: KalturaResponseProfileType.includeFields
       }
     );

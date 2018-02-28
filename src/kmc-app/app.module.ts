@@ -29,10 +29,11 @@ import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltur
 import {KalturaClient, KalturaClientConfiguration} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
-    AppEventsModule,
-    FlavoursStore,
-    KalturaServerModule,
-    MetadataProfileModule,
+  AccessControlProfileStore,
+  AppEventsModule,
+  FlavoursStore,
+  KalturaServerModule,
+  MetadataProfileModule, PartnerProfileStore,
 } from 'app-shared/kmc-shared';
 
 import {AppComponent} from './app.component';
@@ -80,6 +81,12 @@ import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
+import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
+import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
+
+const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
+
+
 
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
@@ -131,7 +138,8 @@ export function clientConfigurationFactory() {
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
-    AccessControlProfileModule.forRoot()
+    AccessControlProfileModule.forRoot(),
+    TranscodingProfileCreationModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -154,8 +162,7 @@ export function clientConfigurationFactory() {
   ],
   exports: [],
   providers: <any>[
-      FlavoursStore,
-      PlayersStore,
+      ...partnerProviders,
       KalturaLogger,
       {
           provide: KalturaLoggerName, useValue: 'kmc'

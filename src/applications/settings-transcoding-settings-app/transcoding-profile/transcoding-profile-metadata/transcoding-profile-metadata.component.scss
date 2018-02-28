@@ -1,0 +1,85 @@
+@import 'app-theme/_variables.scss';
+
+.kMetadataWrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.kMetadataDetails {
+  padding: 26px 20px 20px 20px;
+  width: 100%;
+  position: relative;
+
+  .kSchemaTitle {
+    color: $kGrayscale1;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  /deep/ {
+
+    .kRow {
+      display: flex;
+      padding-top: 16px;
+
+      .kLabel {
+        width: 160px;
+        flex: 0 0 auto;
+        word-wrap: break-word;
+        padding-right: 12px;
+      }
+
+      .kHasError {
+        color: $kDandger
+      }
+
+      input {
+        width: 100%;
+        height: 34px;
+
+        &.kHasError {
+          border-color: $kDandger
+        }
+      }
+
+      textarea {
+        width: 100%;
+        height: 76px;
+      }
+
+      .kControl, k-prime-control {
+        width: 100%;
+      }
+    }
+  }
+
+  .kValign {
+    align-items: center;
+  }
+
+  .extraPadding {
+    padding-bottom: 21px;
+  }
+
+
+
+  /*********************/
+  /* PrimeNG overrides */
+  /*********************/
+
+  textarea.threeRows {
+    background: #FFFFFF;
+    border-radius: 3px;
+    border: 1px solid $kGrayscale4;
+    resize: none;
+    box-sizing: border-box;
+  }
+}
+
+:host /deep/ .kMetadataDetails {
+  .ui-dropdown.ui-widget {
+    width: 100%;
+  }
+}

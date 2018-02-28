@@ -24,7 +24,8 @@
       "DropFolders": "Drop Folders",
       "UploadMonitor": "Upload Monitor",
       "CustomData": "Custom Data",
-      "AccessControl": "Access Control"
+      "AccessControl": "Access Control",
+      "Transcoding settings": "Transcoding settings"
     },
     "userSettings": {
       "changeAccount": "Change Account",
@@ -2146,6 +2147,143 @@
           "loading": "Could not load Access Control Profiles",
           "delete": "Error happened during delete request",
           "profileWasNotUpdated": "Access Control profile was not updated.\n{{0}}"
+        }
+      },
+      "transcoding": {
+        "yes": "Yes",
+        "no": "No",
+        "na": "N/A",
+        "errorLoadingRemoteStorageProfiles": "Failed to load remote storage profiles",
+        "entryNotFound": "Provided entry does not exist (entry ID: {{0}})",
+        "entryValidationGeneralError": "Failed to query the server. Please try again",
+        "errorLoadingProfiles": "Failed to load transcoding profiles",
+        "failedSetDefault": "Failed to set profile as default",
+        "failedDelete": "Failed to delete profile(s)",
+        "transcodingProfiles": "Transcoding Profiles",
+        "profiles": "{{0}} Profiles",
+        "selected": "{{0}} Selected",
+        "liveTranscodingProfiles": "Live Transcoding Profiles",
+        "default": "Default",
+        "addProfile": "Add Profile",
+        "setAsDefault": "Set As Default",
+        "edit": "Edit",
+        "delete": "Delete",
+        "addTranscodingProfile": "Add Transcoding Profile",
+        "profileName": "Profile Name",
+        "description": "Description",
+        "defaultMetadataSettings": "Default Metadata Settings",
+        "ingestFromRemoteStorage": "Ingest From Remote Storage",
+        "deleteProfiles": "Delete profiles",
+        "confirmDeleteProfilesNames": "Are you sure you want to delete the following Transcoding Profile(s):\n{{0}}{{1}}",
+        "confirmDeleteProfiles": "Are you sure you want to delete the selected Transcoding Profiles?{{0}}",
+        "deleteDefaultProfileNote": "\n\nNote - default transcoding profile will not be deleted",
+        "cannotDeleteDefaultProfile": "Can't delete default transcoding profile",
+        "cancel": "Cancel",
+        "save": "Save",
+        "table": {
+          "default": "Default",
+          "name": "Name",
+          "description": "Description",
+          "id": "ID",
+          "flavors": "Flavors"
+        },
+        "profile": {
+          "metadata": "Metadata",
+          "backToProfiles": "Back To Profiles",
+          "flavor": "Flavor",
+          "id": "ID {{0}}",
+          "creationDate": "Creation Date {{0}}",
+          "flavors": "{{0}} Flavors",
+          "editTranscodingSettings": "Edit Transcoding Settings",
+          "editLiveTranscodingSettings": "Edit Live Transcoding Flavor Settings",
+          "profileName": "Profile Name",
+          "flavorName": "Flavor Name",
+          "impactOnEntryReadiness": "Impact on Entry Readiness",
+          "useKalturaTranscoding": "Use Kaltura Transcoding",
+          "systemName": "System Name:\n(Optional)",
+          "flavorGenerationPolicy": "Flavor Generation Policy",
+          "intermediateFlavorHandling": "Intermediate Flavor Handling",
+          "table": {
+            "flavor": "Flavor",
+            "flavors": "{{0}} Flavors",
+            "id": "ID",
+            "format": "Format",
+            "codec": "Codec",
+            "ditrate": "Bitrate (kbps)",
+            "dimentions": "Dimentions"
+          },
+          "errors": {
+            "dismiss": "Dismiss",
+            "reload": "Reload",
+            "loadError": "An error occurred while loading data",
+            "saveError": "An error occurred while saving.",
+            "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+            "busyError": "An operation is still in progress. Please try again in a while.",
+            "savePrepareError": "An error occurred while preparing to save. Please try again."
+          }
+        },
+        "sections": {
+          "metadata": "Metadata",
+          "flavors": "Flavors"
+        },
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "type": {
+          "media": "Media Transcoding Profile",
+          "live": "Live Transcoding Profile"
+        },
+        "details": {
+          "id": "ID",
+          "flavors": "Flavors:",
+          "creationDate": "Creation Date:"
+        },
+        "metadata": {
+          "name": "Name",
+          "namePlaceholder": "Profile Name",
+          "description": "Description",
+          "descriptionPlaceholder": "Profile Description",
+          "defaultMetadataSetting": "Default Metadata Settings",
+          "defaultMetadataSettingPlaceholder": "Entry ID",
+          "ingestFromRemoteStorage": "Ingest from Remote Storage",
+          "nameIsMandatory": "Name is required"
+        },
+        "flavors": {
+          "cancel": "Cancel",
+          "flavors": "{{0}} Flavors",
+          "selected": "{{0}} Selected",
+          "na": "N/A",
+          "auto": "auto",
+          "noFlavorsSelectedWarning": "No transcoding will apply on entries associated with this profile. Do you want to continue?",
+          "table": {
+            "name": "Name",
+            "id": "ID",
+            "format": "Format",
+            "codec": "Codec",
+            "bitrate": "Bitrate (kbps)",
+            "dimensions": "Dimensions"
+          }
+        },
+        "editFlavor": {
+          "editFlavorSettings": "Edit Flavor Settings",
+          "editLiveFlavorSettings": "Edit Live Flavor Settings",
+          "profileName": "Profile Name",
+          "flavorName": "Flavor Name",
+          "impactOnEntryReadiness": "Impact on Entry Readiness",
+          "useKalturaTranscoding": "Use Kaltura Transcoding",
+          "systemName": "System Name:\n(Optional)",
+          "flavorGenerationPolicy": "Flavor Generation Policy",
+          "intermediateFlavorHandling": "Intermediate-Flavor Handling",
+          "noImpact": "No Impact",
+          "required": "Required",
+          "optional": "Optional",
+          "always": "Always",
+          "asAFallback": "As a Fallback",
+          "never": "Never",
+          "useKalturaOptimization": "Use Kaltura's Optimization",
+          "forceFlavorGeneration": "Force Flavor Generation",
+          "keepFlavor": "Keep Flavor",
+          "deleteFlavor": "Delete Flavor",
+          "systemNamePlaceholder": "Enter System Name"
         }
       }
     }

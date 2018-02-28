@@ -134,6 +134,11 @@ export const kmcAppConfig: KmcAppConfig = {
           'titleToken': 'AccessControl'
         },
         {
+          'id': 'settingsTranscoding',
+          'routePath': 'settings/transcoding',
+          'titleToken': 'Transcoding settings'
+        },
+        {
           'id': 'settingsCustomData',
           'routePath': 'settings/metadata',
           'titleToken': 'CustomData'
@@ -144,9 +149,9 @@ export const kmcAppConfig: KmcAppConfig = {
           'titleToken': 'My User Settings'
         },
         {
-          'id': 'settingsAccountInformation',
-          'routePath': 'settings/accountInformation',
-          'titleToken': 'Account Information',
+            'id': 'settingsAccountInformation',
+            'routePath': 'settings/accountInformation',
+            'titleToken': 'Account Information'
         }
       ]
     }, {

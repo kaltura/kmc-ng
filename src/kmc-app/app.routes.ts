@@ -80,6 +80,10 @@ const routes: Routes = <Routes>[
             {
                 path: 'myUserSettings',
                 loadChildren: '../applications/settings-my-user-settings-app/settings-my-user-settings-app.module#SettingsMyUserSettingsAppModule'
+            },
+            {
+              path: 'transcoding',
+              loadChildren: '../applications/settings-transcoding-settings-app/settings-transcoding-settings-app.module#SettingsTranscodingSettingsAppModule'
             }
         ]
         },
