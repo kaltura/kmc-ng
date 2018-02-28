@@ -5,62 +5,62 @@ import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/Ka
 export class DistributionProviderTypeIconPipe implements PipeTransform {
 
   transform(providerType: KalturaDistributionProviderType): string {
-    let fileName;
+    let className;
 
     switch (true) {
       case KalturaDistributionProviderType.comcastMrss.equals(providerType):
-        fileName = 'comcast';
+        className = 'comcast';
         break;
 
       case KalturaDistributionProviderType.dailymotion.equals(providerType):
-        fileName = 'dailymotion';
+        className = 'dailymotion';
         break;
 
       case KalturaDistributionProviderType.doubleclick.equals(providerType):
-        fileName = 'doubleclick';
+        className = 'doubleclick';
         break;
 
       case KalturaDistributionProviderType.facebook.equals(providerType):
-        fileName = 'facebook';
+        className = 'facebook';
         break;
 
       case KalturaDistributionProviderType.freewheel.equals(providerType):
       case KalturaDistributionProviderType.freewheelGeneric.equals(providerType):
-        fileName = 'freewheel';
+        className = 'freewheel';
         break;
 
       case KalturaDistributionProviderType.hulu.equals(providerType):
-        fileName = 'hulu';
+        className = 'hulu';
         break;
 
       case KalturaDistributionProviderType.crossKaltura.equals(providerType):
-        fileName = 'kaltura';
+        className = 'kaltura';
         break;
 
       case KalturaDistributionProviderType.quickplay.equals(providerType):
-        fileName = 'quickplay';
+        className = 'quickplay';
         break;
 
       case KalturaDistributionProviderType.uverse.equals(providerType):
       case KalturaDistributionProviderType.uverseClickToOrder.equals(providerType):
       case KalturaDistributionProviderType.attUverse.equals(providerType):
-        fileName = 'uverse';
+        className = 'uverse';
         break;
 
       case KalturaDistributionProviderType.yahoo.equals(providerType):
-        fileName = 'yahoo';
+        className = 'yahoo';
         break;
 
       case KalturaDistributionProviderType.youtube.equals(providerType):
       case KalturaDistributionProviderType.youtubeApi.equals(providerType):
-        fileName = 'youtube';
+        className = 'youtube';
         break;
 
       default:
-        fileName = 'distribution';
+        className = 'distribution';
         break;
     }
 
-    return `/assets/distribution_connectors/${fileName}.svg`;
+    return className;
   }
 }

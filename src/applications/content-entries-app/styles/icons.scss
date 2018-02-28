@@ -1,0 +1,78 @@
+@import 'app-theme/_variables.scss';
+
+$app-styles-path : './assets' !default;
+
+%k-logo {
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
+}
+
+.kProfileIcon {
+  height: 52px;
+  font-size: 24px;
+  color: $kGrayscale3;
+
+
+  &.comcast {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/comcast.svg');
+  }
+
+  &.dailymotion {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/dailymotion.svg');
+  }
+
+  &.distribution {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/distribution.svg');
+  }
+
+  &.doubleclick {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/doubleclick.svg');
+  }
+
+  &.facebook {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/facebook.svg');
+  }
+
+  &.freewheel {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/freewheel.svg');
+  }
+
+  &.hulu {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/hulu.svg');
+  }
+
+  &.kaltura {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/kaltura.svg');
+  }
+
+  &.quickplay {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/quickplay.svg');
+  }
+
+  &.uverse {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/uverse.svg');
+  }
+
+  &.yahoo {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/yahoo.svg');
+  }
+
+  &.youtube {
+    @extend %k-logo;
+    background: url('#{$app-styles-path}/assets/distribution_connectors/youtube.svg');
+  }
+}

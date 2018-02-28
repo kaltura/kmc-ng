@@ -1,7 +1,5 @@
 <div class="kUndistributedProfile">
-  <div class="kUndistributedProfileIcon">
-    <img [src]="profile?.providerType | kEntriesDistributionProviderTypeIcon" [alt]="profile?.name">
-  </div>
+  <div [class]="'kProfileIcon ' + (profile?.providerType| kEntriesDistributionProviderTypeIcon)"></div>
 
   <div class="kUndistributedProfileContent">
     <span class="kTitle">

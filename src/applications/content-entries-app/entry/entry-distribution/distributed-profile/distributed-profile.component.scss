@@ -1,20 +1,13 @@
 @import 'app-theme/_variables.scss';
 
+$app-styles-path: '../../../styles';
+@import '../../../styles/icons.scss';
+
 .kDistributedProfile {
   min-height: 52px;
   display: flex;
   border-bottom: 1px solid $kGrayscale4;
   padding: 30px 28px 28px 28px;
-
-  .kDistributedProfileIcon {
-    height: 52px;
-    font-size: 24px;
-    color: $kGrayscale3;
-
-    img {
-      width: 24px;
-    }
-  }
 
   .kDistributedProfileContent {
     display: flex;

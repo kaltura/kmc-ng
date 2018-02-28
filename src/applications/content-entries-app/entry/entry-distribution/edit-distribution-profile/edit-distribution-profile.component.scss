@@ -1,8 +1,17 @@
 @import 'app-theme/_variables.scss';
 
+$app-styles-path: '../../../styles';
+@import '../../../styles/icons.scss';
+
 :host {
   width: 100%;
 }
+
+.kProfileIcon
+{
+  margin-right:20px;
+}
+
 .kEditDistributionProfileWrap {
   .kFloater {
     display: flex;

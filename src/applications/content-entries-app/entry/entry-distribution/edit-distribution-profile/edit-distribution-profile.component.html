@@ -2,8 +2,7 @@
   <div class="kFloater">
     <div class="kHeader">
       <div class="kTitle">
-        <img [src]="undistributedProfile?.providerType | kEntriesDistributionProviderTypeIcon"
-             [alt]="undistributedProfile?.name">
+        <div [class]="'kProfileIcon ' + (undistributedProfile?.providerType | kEntriesDistributionProviderTypeIcon)"></div>
         <div class="kTitleNames">
           <span class="kTitleProfileName">{{_profileName}}</span>
           <span *ngIf="!_forDistribution" class="kTitleDistributionName">{{_distributionName}}</span>
