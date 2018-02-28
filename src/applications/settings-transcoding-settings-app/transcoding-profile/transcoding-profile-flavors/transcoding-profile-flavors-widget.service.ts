@@ -103,9 +103,9 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
           return Object.assign(flavor, { codec, bitrate, dimensions });
         });
 
+        const flavorParamsIds = (this.data.flavorParamsIds || '').trim().split(',');
         this.selectedFlavors = this.flavors.filter(flavor => {
-          const flavorParamsIds = (this.data.flavorParamsIds || '').trim().split(',');
-          return this.data.flavorParamsIds && flavorParamsIds.indexOf(String(flavor.id)) !== -1;
+          return flavorParamsIds && flavorParamsIds.length && flavorParamsIds.indexOf(String(flavor.id)) !== -1;
         });
 
         super._hideLoader();
