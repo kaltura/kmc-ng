@@ -32,10 +32,14 @@
           <div class="kControl">
             <input [formControl]="_widgetService.defaultEntryIdField" pInputText
                    [placeholder]="'applications.settings.transcoding.metadata.defaultMetadataSettingPlaceholder' | translate"
-                   [ngClass]="{'kHasError':_widgetService.entryNotFoundErrorParams}">
+                   [ngClass]="{'kHasError':_widgetService.entryNotFoundErrorParams || _widgetService.entryValidationGeneralError}">
             <div *ngIf="_widgetService.entryNotFoundErrorParams"
                  class="kHasError">
               {{'applications.settings.transcoding.entryNotFound' | translate:[_widgetService.entryNotFoundErrorParams]}}
+            </div>
+            <div *ngIf="_widgetService.entryValidationGeneralError"
+                 class="kHasError">
+              {{'applications.settings.transcoding.entryValidationGeneralError' | translate}}
             </div>
           </div>
         </div>
