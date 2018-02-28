@@ -44,7 +44,11 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
         const changes = this._flavorParasIdsListDiffer.diff(selectedFlavors);
         if (changes) {
           changes.forEachAddedItem((record: IterableChangeRecord<string>) => {
-            this._flavorParamsIds.push(record.item);
+              const relevantIndex = this._flavorParamsIds.indexOf(record.item);
+              const itemExists = relevantIndex !== -1;
+              if (!itemExists) {
+                this._flavorParamsIds.push(record.item);
+              }
           });
 
           changes.forEachRemovedItem((record: IterableChangeRecord<string>) => {
