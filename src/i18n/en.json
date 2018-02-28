@@ -2155,6 +2155,7 @@
         "na": "N/A",
         "errorLoadingRemoteStorageProfiles": "Failed to load remote storage profiles",
         "entryNotFound": "Provided entry does not exist (entry ID: {{0}})",
+        "entryValidationGeneralError": "Failed to query the server. Please try again",
         "errorLoadingProfiles": "Failed to load transcoding profiles",
         "failedSetDefault": "Failed to set profile as default",
         "failedDelete": "Failed to delete profile(s)",
