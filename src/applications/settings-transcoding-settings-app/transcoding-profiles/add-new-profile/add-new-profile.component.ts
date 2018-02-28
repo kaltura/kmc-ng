@@ -113,8 +113,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
     return this._storageProfilesStore.get()
       .map(({ items }) => [createEmptyRemoteStorageProfile(), ...items])
       .catch((error) => {
-        // TODO [kmcng] [sakal] check this one in the kalrura-client
-        if (error.message === 'The access to service [storageProfile->list] is forbidden') {
+        if (error.code && error.code === "SERVICE_FORBIDDEN") {
           return Observable.of([createEmptyRemoteStorageProfile()]);
         }
         return Observable.throw(error);

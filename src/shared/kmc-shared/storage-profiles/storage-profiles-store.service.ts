@@ -27,7 +27,7 @@ export class StorageProfilesStore extends PartnerProfileStore implements OnDestr
           error => {
             // re-throw the provided error
             this._getStorageProfiles$ = null;
-            return Observable.throw(new Error(error.message || 'failed to retrieve storage profiles list'));
+            return Observable.throw(error);
           }
         )
         .publishReplay(1)
