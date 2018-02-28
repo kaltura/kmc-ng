@@ -229,8 +229,8 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
           {
             label: this._appLocalization.get('applications.settings.transcoding.yes'),
             action: () => {
-              this._proceedDeleteProfiles(profiles);
               this.setParentBlockerMessage.emit(null);
+              this._proceedDeleteProfiles(profiles);
             }
           },
           {
