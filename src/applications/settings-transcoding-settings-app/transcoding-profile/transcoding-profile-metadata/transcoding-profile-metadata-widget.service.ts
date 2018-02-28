@@ -22,6 +22,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
   public remoteStorageProfilesOptions: { label: string, value: number }[] = [];
   public hideStorageProfileIdField = false;
   public entryNotFoundErrorParams: string = null;
+  public entryValidationGeneralError = false;
 
   constructor(private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization,
@@ -81,6 +82,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     const hasValue = name !== '';
 
     this.entryNotFoundErrorParams = null;
+    this.entryValidationGeneralError = false;
 
     if (entryId) { // if user entered entryId check if it exists
       return this._kalturaClient.request(new BaseEntryGetAction({ entryId }))
@@ -91,7 +93,8 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
               this.entryNotFoundErrorParams = entryId;
               return Observable.of({ isValid: false });
             } else {
-              return Observable.throw(error.message);
+              this.entryValidationGeneralError = true;
+                return Observable.of({ isValid: false });
             }
           }
         );
@@ -106,17 +109,8 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     const formData = this.wasActivated ? this.metadataForm.value : this.data;
     newData.name = formData.name;
     newData.description = formData.description || '';
-    if (this.isNewData) {
-      if (formData.defaultEntryId) {
-        newData.defaultEntryId = formData.defaultEntryId;
-      }
-      if (formData.storageProfileId) {
-        newData.storageProfileId = formData.storageProfileId;
-      }
-    } else {
-      newData.defaultEntryId = formData.defaultEntryId || null;
-      newData.storageProfileId = formData.storageProfileId || null;
-    }
+    newData.defaultEntryId = formData.defaultEntryId || null;
+    newData.storageProfileId = formData.storageProfileId || null;
   }
 
   /**
