@@ -76,6 +76,10 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
   }
 
   protected onActivate(firstTimeActivating: boolean): void {
+    if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
+      this.updateState({ isDirty: true });
+    }
+
     this.metadataForm.reset({
       name: this.data.name,
       description: this.data.description,

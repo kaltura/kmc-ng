@@ -1092,6 +1092,7 @@
         "removeCategoriesNone": "No categories to remove",
         "approve": "Approve",
         "reject": "Reject",
+        "newPlaylist": "New playlist",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
         "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries",
