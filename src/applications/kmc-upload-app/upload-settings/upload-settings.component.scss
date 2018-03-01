@@ -46,6 +46,7 @@
         margin-left: 7px;
 
         .kTranscodingProfileItem {
+          white-space: nowrap;
           display: inline-block;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -149,6 +150,10 @@
 }
 
 :host /deep/ .kTranscodingProfile {
+  .ui-dropdown-panel {
+    width: 250px;
+  }
+
   .ui-dropdown-label {
     text-overflow: ellipsis;
   }
