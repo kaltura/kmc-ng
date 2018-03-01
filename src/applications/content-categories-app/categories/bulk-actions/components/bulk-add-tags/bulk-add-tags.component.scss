@@ -20,8 +20,7 @@
   .kTags{
     padding: 12px;
     height: 330px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
   }
 }
 .kFooter{
@@ -34,14 +33,26 @@
   align-items: center;
   justify-content: center;
 }
-:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
-  padding: 0px;
-  .ui-autocomplete-input-token{
-    padding: 0px;
-    input{
-      height: 34px;
-      padding-left: 8px;
-      width: 472px;
+
+:host /deep/ kautocomplete {
+  .ui-autocomplete {
+    width: 475px;
+  }
+  .ui-autocomplete-multiple-container {
+    max-height: 310px;
+    overflow-y: auto;
+
+    .ui-inputtext{
+      padding: 4px 6px;
+      .ui-autocomplete-input-token{
+        padding: 0;
+        input{
+          height: 34px;
+          padding-left: 8px;
+          width: 472px;
+        }
+      }
     }
   }
 }
+
