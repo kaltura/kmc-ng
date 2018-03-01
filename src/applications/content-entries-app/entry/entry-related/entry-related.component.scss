@@ -41,3 +41,9 @@
 	overflow: visible;
 }
 
+:host /deep/ .kFileName {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  color: $kGrayscale3;
+}
