@@ -205,3 +205,8 @@
   height: 68px;
   width: inherit;
 }
+:host /deep/ .kTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}

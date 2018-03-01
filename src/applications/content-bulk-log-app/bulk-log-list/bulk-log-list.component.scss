@@ -221,3 +221,9 @@
 :host /deep/ .kStickyClass{
   border-bottom: 1px solid $kGrayscale5;
 }
+
+:host /deep/ .kBulkLogTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}
