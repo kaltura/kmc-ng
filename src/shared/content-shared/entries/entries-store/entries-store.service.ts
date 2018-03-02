@@ -1,20 +1,12 @@
-import { Inject, Injectable, InjectionToken, OnDestroy } from '@angular/core';
-
+import { Inject, Injectable, InjectionToken, OnDestroy, Optional } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { MetadataProfileStore } from 'app-shared/kmc-shared';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/subscribeOn';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/throw';
 import { BaseEntryDeleteAction } from 'kaltura-ngx-client/api/types/BaseEntryDeleteAction';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaClient } from 'kaltura-ngx-client';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {
   DatesRangeAdapter,
@@ -41,42 +33,43 @@ export enum SortDirection {
 export interface EntriesDataProvider {
   executeQuery(filters: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }>;
 
-  getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes): EntriesFilters;
+  getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes, pageSize: number): EntriesFilters;
 
-  getServerFilter(filters: EntriesFilters, forRequest?: boolean): Observable<KalturaMediaEntryFilter>
+  getServerFilter(filters: EntriesFilters, forRequest?: boolean): Observable<KalturaMediaEntryFilter>;
 }
 
 export interface MetadataProfileData {
-  id: number,
-  name: string,
-  lists: { id: string, name: string }[]
+  id: number;
+  name: string;
+  lists: { id: string, name: string }[];
 }
 
 export interface EntriesFilters {
-  freetext: string,
-  pageSize: number,
-  pageIndex: number,
-  sortBy: string,
-  sortDirection: SortDirection,
-  createdAt: DatesRangeType,
-  scheduledAt: DatesRangeType,
-  mediaTypes: string[],
-  timeScheduling: string[],
-  ingestionStatuses: string[],
-  durations: string[],
-  originalClippedEntries: string[],
-  moderationStatuses: string[],
-  replacementStatuses: string[],
-  accessControlProfiles: string[],
-  flavors: string[],
-  distributions: string[],
-  categories: number[],
-  categoriesMode: CategoriesModeType,
-  customMetadata: GroupedListType<string>,
-  limits: number
+  freetext: string;
+  pageSize: number;
+  pageIndex: number;
+  sortBy: string;
+  sortDirection: SortDirection;
+  createdAt: DatesRangeType;
+  scheduledAt: DatesRangeType;
+  mediaTypes: string[];
+  timeScheduling: string[];
+  ingestionStatuses: string[];
+  durations: string[];
+  originalClippedEntries: string[];
+  moderationStatuses: string[];
+  replacementStatuses: string[];
+  accessControlProfiles: string[];
+  flavors: string[];
+  distributions: string[];
+  categories: number[];
+  categoriesMode: CategoriesModeType;
+  customMetadata: GroupedListType<string>;
+  limits: number;
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
+export const EntriesStorePaginationCacheToken = new InjectionToken('entries-store-pagination-cache-token');
 
 @Injectable()
 export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements OnDestroy {
@@ -85,7 +78,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
 
-  private _paginationCacheToken = 'default';
   private _isReady = false;
   private _querySubscription: ISubscription;
   private _preFilterSubject = new Subject<Partial<EntriesFilters>>();
@@ -97,16 +89,17 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     data: () => this._entries.data.getValue().items
   };
 
-  public set paginationCacheToken(token: string) {
-    this._paginationCacheToken = typeof token === 'string' && token !== '' ? token : 'default';
-  }
-
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
               private _metadataProfileService: MetadataProfileStore,
               @Inject(EntriesDataProviderToken) private _dataProvider: EntriesDataProvider,
+              @Inject(EntriesStorePaginationCacheToken) @Optional() private _paginationCacheToken: string,
               _logger: KalturaLogger) {
     super(_logger);
+
+    if (!this._paginationCacheToken) {
+      this._paginationCacheToken = 'default';
+    }
     this._prepare();
   }
 
@@ -138,13 +131,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     this._entries.state.next({ loading: true, errorMessage: null });
 
     this._isReady = true;
-
-    const defaultPageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey());
-    if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
-      this.filter({
-        pageSize: defaultPageSize
-      });
-    }
 
     this._registerToFilterStoreDataChanges();
 
@@ -230,7 +216,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
   protected _createDefaultFiltersValue(): EntriesFilters {
     const savedAutoSelectChildren: CategoriesModes = this._browserService.getFromLocalStorage('contentShared.categoriesTree.selectionMode');
-    return this._dataProvider.getDefaultFilterValues(savedAutoSelectChildren);
+    const pageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey()) || 50;
+    return this._dataProvider.getDefaultFilterValues(savedAutoSelectChildren, pageSize);
   }
 
   protected _getTypeAdaptersMapping(): TypeAdaptersMapping<EntriesFilters> {

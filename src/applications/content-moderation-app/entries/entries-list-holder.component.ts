@@ -72,7 +72,6 @@ export class EntriesListHolderComponent implements OnDestroy {
               private _appLocalization: AppLocalization,
               private _entriesStore: EntriesStore,
               private _bulkService: BulkService) {
-    this._entriesStore.paginationCacheToken = 'moderation-entries-list';
   }
 
   ngOnDestroy() {

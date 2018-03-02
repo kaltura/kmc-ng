@@ -298,14 +298,14 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       );
   }
 
-  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes): EntriesFilters {
+  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes, pageSize: number): EntriesFilters {
     const categoriesMode = typeof savedAutoSelectChildren === 'number'
       ? savedAutoSelectChildren
       : CategoriesModes.SelfAndChildren;
 
     return {
       freetext: '',
-      pageSize: 50,
+      pageSize: pageSize,
       pageIndex: 0,
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc,
