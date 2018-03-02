@@ -63,6 +63,18 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   }
 
+  private _mapPrivacyContext(acceptCallback: () => void): void {
+    const selectedCategoriesLength = this.selectedCategories.length;
+    this.selectedCategories = [...this.selectedCategories.filter(category => !!category.privacyContext)];
+    const noPrivacyContext = this.selectedCategories.length !== selectedCategoriesLength;
+    if (noPrivacyContext) {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => acceptCallback()
+      });
+    }
+  }
+
   getBulkActionItems(): MenuItem[] {
     return [
       {
@@ -138,30 +150,50 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   // change content privacy
   onChangeContentPrivacyChanged(privacyMode: PrivacyMode): void {
     let privacyType: KalturaPrivacyType;
-    if (privacyMode === PrivacyMode.NoRestriction)
-      privacyType = KalturaPrivacyType.all;
-    if (privacyMode === PrivacyMode.Private)
-      privacyType = KalturaPrivacyType.membersOnly;
-    if (privacyMode === PrivacyMode.RequiresAuthentication)
-      privacyType = KalturaPrivacyType.authenticatedUsers;
+    switch (true) {
+      case privacyMode === PrivacyMode.NoRestriction:
+        privacyType = KalturaPrivacyType.all;
+        break;
+      case privacyMode === PrivacyMode.Private:
+        privacyType = KalturaPrivacyType.membersOnly;
+        break;
+      case privacyMode === PrivacyMode.RequiresAuthentication:
+        privacyType = KalturaPrivacyType.authenticatedUsers;
+        break;
+      default:
+        break;
+    }
 
-    this.executeService(this._bulkChangeContentPrivacyService, privacyType);
+    this._mapPrivacyContext(() => {
+      if (this.selectedCategories.length) {
+        this.executeService(this._bulkChangeContentPrivacyService, privacyType);
+      }
+    });
   }
 
   // change category listing
   onChangeCategoryListingChanged(appearInList: AppearInListType): void {
     let appearInListType: KalturaAppearInListType;
-    if (appearInList === AppearInListType.NoRestriction)
+    if (appearInList === AppearInListType.NoRestriction) {
       appearInListType = KalturaAppearInListType.partnerOnly;
-    if (appearInList === AppearInListType.Private)
+    } else if (appearInList === AppearInListType.Private) {
       appearInListType = KalturaAppearInListType.categoryMembersOnly;
+    }
 
-    this.executeService(this._bulkChangeCategoryListingService, appearInListType);
+    this._mapPrivacyContext(() => {
+      if (this.selectedCategories.length) {
+        this.executeService(this._bulkChangeCategoryListingService, appearInListType);
+      }
+    });
   }
 
   // change contribution policy
   onChangeContributionPolicyChanged(policyType: KalturaContributionPolicyType): void {
-    this.executeService(this._bulkChangeContributionPolicyService, policyType);
+    this._mapPrivacyContext(() => {
+      if (this.selectedCategories.length) {
+        this.executeService(this._bulkChangeContributionPolicyService, policyType);
+      }
+    });
   }
 
   // bulk delete
