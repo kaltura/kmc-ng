@@ -7,7 +7,7 @@ export class StatusPipe implements PipeTransform {
   constructor(private appLocalization: AppLocalization) {
   }
 
-  transform(value: string): string {
+  transform(value: KalturaUserStatus): string {
     let userStatus: string = '';
 
     if (typeof value !== 'undefined' && value !== null) {

@@ -1,4 +1,5 @@
 import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
+import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
 
 export interface Flavor extends KalturaFlavorAssetWithParams{
     name: string,
@@ -12,7 +13,7 @@ export interface Flavor extends KalturaFlavorAssetWithParams{
     bitrate: string,
     size: string,
     dimensions: string,
-    status: string,
+    status: KalturaFlavorAssetStatus,
     statusLabel: string,
     statusTooltip: string,
     tags: string,

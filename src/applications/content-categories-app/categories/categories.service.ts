@@ -23,6 +23,7 @@ import {
     GroupedListAdapter, GroupedListType,
     NumberTypeAdapter,
     StringTypeAdapter,
+    EnumTypeAdapter,
     TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
 import {
@@ -84,8 +85,8 @@ export interface CategoriesFilters {
   sortDirection: number,
   createdAt: DatesRangeType,
   privacyTypes: string[],
-  categoryListing: string[],
-  contributionPolicy: string[],
+  categoryListing: KalturaAppearInListType[],
+  contributionPolicy: KalturaContributionPolicyType[],
   endUserPermissions: string[],
     categories: number[],
     categoriesMode: CategoriesModeType,
@@ -504,7 +505,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             sortDirection: SortDirection.Desc,
             createdAt: {fromDate: null, toDate: null},
             privacyTypes: [],
-            categoryListing: [],
+            categoryListing: null,
             contributionPolicy: [],
             endUserPermissions: [],
             categories: [],
@@ -522,8 +523,8 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             sortDirection: new NumberTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
             privacyTypes: new ListTypeAdapter<string>(),
-            categoryListing: new ListTypeAdapter<string>(),
-            contributionPolicy: new ListTypeAdapter<string>(),
+            categoryListing: new EnumTypeAdapter<KalturaAppearInListType>(),
+            contributionPolicy: new EnumTypeAdapter<KalturaContributionPolicyType>(),
             endUserPermissions: new ListTypeAdapter<string>(),
             categories: new ListTypeAdapter<number>(),
             categoriesMode: new CategoriesModeAdapter(),

@@ -6,13 +6,13 @@ export class RoleNamePipe implements PipeTransform {
   constructor() {
   }
 
-  transform(userId: string, roles: KalturaUserRole[]): string {
-    let userRoleName: string = '';
+  transform(userId: number, roles: KalturaUserRole[]): string {
+    let userRoleName = '';
 
     if (typeof userId !== 'undefined' && userId !== null && roles != null) {
-      let role = roles.find(role => userId === role.id);
-      if (role) {
-        userRoleName = role.name;
+      const userRole = roles.find(role => userId === role.id);
+      if (userRole) {
+        userRoleName = userRole.name;
       }
     }
     return userRoleName;

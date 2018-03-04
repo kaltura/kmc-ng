@@ -7,7 +7,7 @@ export class FlagTypePipe implements PipeTransform {
   constructor(private appLocalization: AppLocalization) {
   }
 
-  transform(value: string): string {
+  transform(value: KalturaModerationFlagType): string {
     let flagType = '';
     if (value) {
       switch (value) {

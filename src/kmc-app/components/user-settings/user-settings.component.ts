@@ -47,7 +47,7 @@ export class UserSettingsComponent {
     // check if this is a paying partner. If so - open support form. If not - redirect to general support. Use MD5 to pass as a parameter.
     const payingCustomer: boolean = this._userContext.partnerInfo.partnerPackage === PartnerPackageTypes.PartnerPackagePaid;
     const params = {
-      'type': Md5.hashStr(payingCustomer),
+      'type': Md5.hashStr(String(payingCustomer)),
       'pid': this._userContext.partnerId
     };
 

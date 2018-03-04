@@ -5,7 +5,7 @@ import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/Kaltur
 export interface DefaultFilterList {
   label: string;
   name: string;
-  items: { value: string, label: string }[]
+  items: { value: KalturaPrivacyType, label: string }[]
 }
 
 export const DefaultFiltersList: DefaultFilterList[] = [

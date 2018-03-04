@@ -34,7 +34,7 @@ export class CategoriesBulkAddTagsService extends CategoriesBulkActionBaseServic
             categoryTags.push(tag);
           }
         });
-        updatedCategory.tags = categoryTags;
+        updatedCategory.tags = categoryTags.join(',');
         requests.push(new CategoryUpdateAction({
           id: category.id,
           category: updatedCategory
