@@ -20,7 +20,7 @@ export interface GlobalConfig {
 export const globalConfig: GlobalConfig = {
     client: {
         production: environment.production,
-        appVersion: '3.7.0',
+        appVersion: '4.0.0',
         useSecuredProtocol: environment.client.useSecuredProtocol,
         countriesList: countryCodes
     },
