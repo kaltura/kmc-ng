@@ -13,7 +13,7 @@
             kStickyHeader [sticksTo]="'entriesTags'" stickyClass="stickyHeader" [stickyId]="'entriesTable'">
         <ng-template pTemplate="header">
             <tr>
-                <th style="width:44px; padding-left: 14px">
+                <th style="width:44px; padding-left: 14px" *ngIf="showBulkSelect">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
                 <th [style]="_columnsMetadata.thumbnailUrl.style" *ngIf="_columnsMetadata.thumbnailUrl">
@@ -60,7 +60,7 @@
         <ng-template pTemplate="body" let-entry>
             <tr [pSelectableRow]="entry">
 
-                <td style="width:44px; padding-left: 14px">
+                <td style="width:44px; padding-left: 14px" *ngIf="showBulkSelect">
                     <p-tableCheckbox [value]="entry"></p-tableCheckbox>
                 </td>
 

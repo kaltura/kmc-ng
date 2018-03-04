@@ -226,3 +226,8 @@
   border-bottom: 1px solid $kGrayscale5;
 }
 
+:host /deep/ .kFeedsTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}

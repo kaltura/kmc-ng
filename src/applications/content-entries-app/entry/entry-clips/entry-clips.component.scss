@@ -14,3 +14,8 @@
 :host /deep/ .ui-paginator {
 	padding-right: 12px;
 }
+:host /deep/ .kTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}

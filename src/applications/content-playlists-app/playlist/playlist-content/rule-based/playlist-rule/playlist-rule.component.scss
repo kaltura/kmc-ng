@@ -144,8 +144,17 @@
   .kContent {
     width: 992px;
 
-    .ui-datatable-scrollable-body {
-      height: calc(100vh - 450px);
+    .ui-table-scrollable-header-box{
+      padding-left: 22px;
+    }
+
+    .ui-table-scrollable-body {
+      padding-left: 22px;
+      height: calc(100vh - 409px) !important;
+    }
+
+    .kTagsVisible .ui-table-scrollable-body {
+      height: calc(100vh - 450px) !important;
     }
   }
 }

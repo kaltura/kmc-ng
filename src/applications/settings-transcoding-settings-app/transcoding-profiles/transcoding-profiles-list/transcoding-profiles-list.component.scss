@@ -92,3 +92,8 @@
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {
   margin-left: -.5em;
 }
+:host /deep/ .kProfilesTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}

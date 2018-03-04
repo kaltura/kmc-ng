@@ -30,7 +30,7 @@
 			</p-dataTable>
 		</div>
 
-		<p-paginator [rows]="_widgetService.pageSize" (onPageChange)="_onPaginationChanged($event)"
+		<p-paginator class="kTableFooter" [rows]="_widgetService.pageSize" (onPageChange)="_onPaginationChanged($event)"
 					 [totalRecords]="(_widgetService.entries$ | async)?.totalItems"
 					 [rowsPerPageOptions]="_widgetService.pageSizesAvailable"></p-paginator>
 	</div>

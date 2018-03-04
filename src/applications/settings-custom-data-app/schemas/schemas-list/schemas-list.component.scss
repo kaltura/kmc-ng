@@ -84,7 +84,6 @@
     }
   }
   .kBulkOperations {
-    margin-left: 15px;
     width: 400px;
     display: flex;
     align-items: center;
@@ -136,4 +135,9 @@
 
 :host /deep/ .kStickyClass {
   border-bottom: 1px solid $kGrayscale5;
+}
+:host /deep/ .kSchemasTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
 }

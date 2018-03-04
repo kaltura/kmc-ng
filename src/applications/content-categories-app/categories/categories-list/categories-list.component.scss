@@ -108,7 +108,7 @@
   .kAddCategoryBtn {
     margin-left: 14px;
     height: 36px;
-  } 
+  }
   .kBulkCancel {
     margin-left: 10px;
   }
@@ -238,4 +238,10 @@
 
 :host /deep/ .kStickyClass{
   border-bottom: 1px solid $kGrayscale5;
+}
+
+:host /deep/ .kCategoriesTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
 }
