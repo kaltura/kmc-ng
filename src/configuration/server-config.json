@@ -27,8 +27,8 @@
     },
     "liveAnalytics": {
       "enabled": false,
-      "uri": "kmc.kaltura.com",
-      "version": "v2.6"
+      "uri": "",
+      "version": ""
     },
     "kava": {
       "enabled": false,
