@@ -18,10 +18,10 @@ export class PlaylistAddEntryComponent {
   public _addButtonLabelTranslation = '';
   public _enforcedFilters: Partial<EntriesFilters> = {
     'ingestionStatuses': [
-      KalturaEntryStatus.preconvert.toString(),
-      KalturaEntryStatus.ready.toString(),
-      KalturaEntryStatus.moderate.toString(),
-      KalturaEntryStatus.blocked.toString()
+      KalturaEntryStatus.preconvert,
+      KalturaEntryStatus.ready,
+      KalturaEntryStatus.moderate,
+      KalturaEntryStatus.blocked
     ]
   };
 

@@ -96,7 +96,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                                 flavors.push(this.createFlavor(flavor, response)); // this is the source. put it first in the array
                                 this.sourceAvailabale = true;
                             } else if (flavor.flavorAsset && (!flavor.flavorAsset.status ||
-                                    (flavor.flavorAsset.status && flavor.flavorAsset.status.toString() !== KalturaFlavorAssetStatus.temp.toString()))) {
+                                    (flavor.flavorAsset.status && flavor.flavorAsset.status !== KalturaFlavorAssetStatus.temp))) {
                                 flavorsWithAssets.push(this.createFlavor(flavor, response)); // flavors with assets that is not in temp status
                             } else if (!flavor.flavorAsset && flavor.flavorParams && !(flavor.flavorParams instanceof KalturaLiveParams)) {
                                 flavorsWithoutAssets.push(this.createFlavor(flavor, response)); // flavors without assets
@@ -122,9 +122,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         newFlavor.isWeb = flavor.flavorAsset ? flavor.flavorAsset.isWeb : false;
         newFlavor.format = flavor.flavorAsset ? flavor.flavorAsset.fileExt : '';
         newFlavor.codec = flavor.flavorAsset ? flavor.flavorAsset.videoCodecId : '';
-        newFlavor.bitrate = (flavor.flavorAsset && flavor.flavorAsset.bitrate && flavor.flavorAsset.bitrate > 0) ? flavor.flavorAsset.bitrate.toString() : '';
-        newFlavor.size = flavor.flavorAsset ? (flavor.flavorAsset.status.toString() === KalturaFlavorAssetStatus.ready.toString() ? flavor.flavorAsset.size.toString() : '0') : '';
-        newFlavor.status = flavor.flavorAsset ? flavor.flavorAsset.status.toString() : '';
+        newFlavor.bitrate = (flavor.flavorAsset && flavor.flavorAsset.bitrate && flavor.flavorAsset.bitrate > 0) ? flavor.flavorAsset.bitrate : '';
+        newFlavor.size = flavor.flavorAsset ? (flavor.flavorAsset.status === KalturaFlavorAssetStatus.ready ? flavor.flavorAsset.size : '0') : '';
+        newFlavor.status = flavor.flavorAsset ? flavor.flavorAsset.status : '';
         newFlavor.statusLabel = "";
         newFlavor.statusTooltip = "";
         newFlavor.tags = flavor.flavorAsset ? flavor.flavorAsset.tags : '-';
@@ -133,14 +133,14 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         // set dimensions
         const width: number = flavor.flavorAsset ? flavor.flavorAsset.width : flavor.flavorParams.width;
         const height: number = flavor.flavorAsset ? flavor.flavorAsset.height : flavor.flavorParams.height;
-        const w: string = width === 0 ? "[auto]" : width.toString();
-        const h: string = height === 0 ? "[auto]" : height.toString();
+        const w: string = width === 0 ? "[auto]" : width;
+        const h: string = height === 0 ? "[auto]" : height;
         newFlavor.dimensions = w + " x " + h;
 
         // set status
         if (flavor.flavorAsset) {
             newFlavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.' + KalturaFlavorAssetStatus[flavor.flavorAsset.status]);
-            if (flavor.flavorAsset.status.toString() === KalturaFlavorAssetStatus.notApplicable.toString()) {
+            if (flavor.flavorAsset.status === KalturaFlavorAssetStatus.notApplicable) {
                 newFlavor.statusTooltip = this._appLocalization.get('applications.content.entryDetails.flavours.status.naTooltip');
             }
         }
@@ -152,7 +152,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             let sources = [];
             sourceIDs.forEach(sourceId => {
                 allFlavors.forEach(flavor => {
-                    if (flavor.flavorParams.id.toString() === sourceId) {
+                    if (flavor.flavorParams.id === sourceId) {
                         sources.push(flavor.flavorParams.name);
                     }
                 });
@@ -178,16 +178,16 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     private _setEntryStatus() {
-        const status = this.data.status.toString();
+        const status = this.data.status;
         switch (status) {
-            case KalturaEntryStatus.noContent.toString():
+            case KalturaEntryStatus.noContent:
                 this._entryStatusClassName = "kStatusNoContent kIconwarning";
                 break;
-            case KalturaEntryStatus.ready.toString():
+            case KalturaEntryStatus.ready:
                 this._entryStatusClassName = "kStatusReady kIconconfirmation";
                 break;
-            case KalturaEntryStatus.errorConverting.toString():
-            case KalturaEntryStatus.errorImporting.toString():
+            case KalturaEntryStatus.errorConverting:
+            case KalturaEntryStatus.errorImporting:
                 this._entryStatusClassName = "kStatusError kIconwarning";
                 break;
             default:
@@ -249,7 +249,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     public convertFlavor(flavor: Flavor): void {
-        this._convert(flavor, flavor.paramsId.toString(), new FlavorAssetConvertAction({
+        this._convert(flavor, flavor.paramsId, new FlavorAssetConvertAction({
             flavorParamsId: flavor.paramsId,
             entryId: this.data.id
         }));
@@ -262,7 +262,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     private _convert(flavor: Flavor, id: any, request: any): void {
-        flavor.status = KalturaFlavorAssetStatus.waitForConvert.toString();
+        flavor.status = KalturaFlavorAssetStatus.waitForConvert;
         flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.converting');
         this._kalturaServerClient.request(request)
             .cancelOnDestroy(this, this.widgetReset$)
@@ -273,7 +273,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     let flavors: Flavor[] = Array.from(this._flavors.getValue().items);
                     flavors.forEach((fl: Flavor) => {
                         if (parseInt(fl.id) == id) {
-                            fl.status = KalturaFlavorAssetStatus.converting.toString();
+                            fl.status = KalturaFlavorAssetStatus.converting;
                         }
                     });
                     this._flavors.next({items: flavors});
@@ -340,7 +340,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         Observable.of(this._uploadManagement.addFile(new NewEntryFlavourFile(fileData, this.data.id, this.data.mediaType)))
             .subscribe((response) => {
                     flavor.uploadFileId = response.id;
-                    flavor.status = KalturaFlavorAssetStatus.importing.toString();
+                    flavor.status = KalturaFlavorAssetStatus.importing;
                     flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.importing');
                 },
                 () => {
@@ -418,7 +418,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     public importFlavor(flavor: Flavor, url: string): void {
-        flavor.status = KalturaFlavorAssetStatus.importing.toString();
+        flavor.status = KalturaFlavorAssetStatus.importing;
         let resource: KalturaUrlResource = new KalturaUrlResource({
             url: url
         });

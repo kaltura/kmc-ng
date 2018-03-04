@@ -114,8 +114,8 @@ export class LiveXMLExporter
 			});
 		}
 		bitrates.forEach((br: KalturaLiveStreamBitrate) => {
-			bitratesString += br.bitrate.toString() + ";";
-			dimensionsStrings += br.width.toString() + "x" + br.height.toString() + ";";
+			bitratesString += br.bitrate + ";";
+			dimensionsStrings += br.width + "x" + br.height + ";";
 		});
 		const encode = xml.getElementsByTagName("encode")[0];
 		const video = encode.getElementsByTagName("video")[0];
@@ -125,7 +125,7 @@ export class LiveXMLExporter
 		audio.getElementsByTagName("format")[0].appendChild(xml.createTextNode("MP3"));
 		audio.getElementsByTagName("datarate")[0].appendChild(xml.createTextNode("128"));
 		// additional
-		if (entry.sourceType.toString() === KalturaSourceType.liveStream.toString() || entry.sourceType.toString() === KalturaSourceType.akamaiUniversalLive.toString()) {
+		if (entry.sourceType === KalturaSourceType.liveStream || entry.sourceType === KalturaSourceType.akamaiUniversalLive) {
 			video.getElementsByTagName("format")[0].appendChild(xml.createTextNode("H.264"));
 			video.getElementsByTagName("advanced")[0].getElementsByTagName("profile")[0].appendChild(xml.createTextNode("Baseline"));
 			video.getElementsByTagName("advanced")[0].getElementsByTagName("level")[0].appendChild(xml.createTextNode("3.1"));

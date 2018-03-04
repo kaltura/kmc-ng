@@ -285,7 +285,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     if (!event) {
       this._selectedRoleDescription = this._roles[0] ? this._roles[0].description : '';
     } else {
-      const relevantRole = this._roles.find(role => event === role.id.toString() || event.value === role.id);
+      const relevantRole = this._roles.find(role => event === role.id || event.value === role.id);
       if (relevantRole) {
         this._selectedRoleDescription = relevantRole.description;
       }

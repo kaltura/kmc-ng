@@ -117,8 +117,8 @@ export class PlaylistRuleParserService implements OnDestroy {
     };
 
     const getSortDirection = (value) => value === '+' ? SortDirection.Asc : SortDirection.Desc;
-    const sortBy = rule.orderBy ? rule.orderBy.toString().substr(1) : null;
-    const sortDirection = sortBy ? getSortDirection(rule.orderBy.toString().charAt(0)) : null;
+    const sortBy = rule.orderBy ? rule.orderBy.substr(1) : null;
+    const sortDirection = sortBy ? getSortDirection(rule.orderBy.charAt(0)) : null;
     const categoriesIds = (originalFilter.categoryAncestorIdIn || '').split(',')
       .concat(...((originalFilter.categoriesIdsMatchOr || '').split(',')));
     const uniqueCategoriesIds = Array.from(new Set<number>(categoriesIds.filter(Number).map(Number)));

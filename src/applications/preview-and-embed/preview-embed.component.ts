@@ -236,11 +236,11 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       if (isPreview) {
         flashVars['ks'] = this._appAuthentication.appUser.ks;
         if (this.media instanceof KalturaMediaEntry) {
-          const sourceType = this.media.sourceType.toString();
-          const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
-          sourceType === KalturaSourceType.akamaiLive.toString() ||
-          sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
-          sourceType === KalturaSourceType.manualLiveStream.toString());
+          const sourceType = this.media.sourceType;
+          const isLive = (sourceType === KalturaSourceType.liveStream ||
+          sourceType === KalturaSourceType.akamaiLive ||
+          sourceType === KalturaSourceType.akamaiUniversalLive ||
+          sourceType === KalturaSourceType.manualLiveStream);
           if (isLive) {
             flashVars['disableEntryRedirect'] = true;
           }

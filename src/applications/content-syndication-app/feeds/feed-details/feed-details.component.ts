@@ -148,7 +148,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
             return ((flavor && flavor.name) ||
               (this.feed.flavorParamId &&
                 this._appLocalization.get('applications.content.syndication.details.entriesCountData.flavorId',
-                  {0: this.feed.flavorParamId.toString()})));
+                  {0: this.feed.flavorParamId})));
           };
 
           this._entriesCountData = {

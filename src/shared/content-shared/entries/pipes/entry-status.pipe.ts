@@ -18,45 +18,45 @@ export class EntryStatusPipe implements PipeTransform {
       entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
       entry.mediaType === KalturaMediaType.liveStreamWindowsMedia;
     if (typeof(entry) !== 'undefined' && entry !== null) {
-      switch (entry.status.toString()) {
-        case KalturaEntryStatus.errorImporting.toString():
+      switch (entry.status) {
+        case KalturaEntryStatus.errorImporting:
           ret = this.appLocalization.get('applications.content.entryStatus.errorImporting');
           break;
-        case KalturaEntryStatus.errorConverting.toString():
+        case KalturaEntryStatus.errorConverting:
           ret = this.appLocalization.get('applications.content.entryStatus.errorConverting');
           break;
-        case KalturaEntryStatus.scanFailure.toString():
+        case KalturaEntryStatus.scanFailure:
           ret = this.appLocalization.get('applications.content.entryStatus.scanFailure');
           break;
-        case KalturaEntryStatus.import.toString():
+        case KalturaEntryStatus.import:
           if (isLive) {
             ret = this.appLocalization.get('applications.content.entryStatus.provisioning');
           } else {
             ret = this.appLocalization.get('applications.content.entryStatus.import');
           }
           break;
-        case KalturaEntryStatus.infected.toString():
+        case KalturaEntryStatus.infected:
           ret = this.appLocalization.get('applications.content.entryStatus.infected');
           break;
-        case KalturaEntryStatus.preconvert.toString():
+        case KalturaEntryStatus.preconvert:
           ret = this.appLocalization.get('applications.content.entryStatus.preconvert');
           break;
-        case KalturaEntryStatus.ready.toString():
+        case KalturaEntryStatus.ready:
           ret = this.getReadyState(entry);
           break;
-        case KalturaEntryStatus.deleted.toString():
+        case KalturaEntryStatus.deleted:
           ret = this.appLocalization.get('applications.content.entryStatus.deleted');
           break;
-        case KalturaEntryStatus.pending.toString():
+        case KalturaEntryStatus.pending:
           ret = this.appLocalization.get('applications.content.entryStatus.pending');
           break;
-        case KalturaEntryStatus.moderate.toString():
+        case KalturaEntryStatus.moderate:
           ret = this.appLocalization.get('applications.content.entryStatus.moderate');
           break;
-        case KalturaEntryStatus.blocked.toString():
+        case KalturaEntryStatus.blocked:
           ret = this.appLocalization.get('applications.content.entryStatus.blocked');
           break;
-        case KalturaEntryStatus.noContent.toString():
+        case KalturaEntryStatus.noContent:
           ret = this.appLocalization.get('applications.content.entryStatus.noContent');
           break;
       }

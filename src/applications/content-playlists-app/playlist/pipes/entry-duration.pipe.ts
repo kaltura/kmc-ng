@@ -11,11 +11,11 @@ export class EntryDurationPipe implements PipeTransform {
 	transform(value: string, entry: KalturaMediaEntry = null): string {
 	let duration = value;
 	if (entry && entry instanceof KalturaMediaEntry && entry.mediaType){
-  		const type = entry.mediaType.toString();
-		if (type === KalturaMediaType.liveStreamFlash.toString() ||
-				type === KalturaMediaType.liveStreamQuicktime.toString() ||
-				type === KalturaMediaType.liveStreamRealMedia.toString() ||
-				type === KalturaMediaType.liveStreamWindowsMedia.toString()
+  		const type = entry.mediaType;
+		if (type === KalturaMediaType.liveStreamFlash ||
+				type === KalturaMediaType.liveStreamQuicktime ||
+				type === KalturaMediaType.liveStreamRealMedia ||
+				type === KalturaMediaType.liveStreamWindowsMedia
 		){
 			duration = this.appLocalization.get('app.common.n_a');
 		}

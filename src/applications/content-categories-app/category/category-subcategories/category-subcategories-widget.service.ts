@@ -87,7 +87,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
     try {
       const filter: KalturaCategoryFilter = new KalturaCategoryFilter({
         parentIdEqual: parentCategory.id,
-        orderBy: KalturaCategoryOrderBy.partnerSortValueAsc.toString()
+        orderBy: KalturaCategoryOrderBy.partnerSortValueAsc
       });
       const pagination: KalturaFilterPager = new KalturaFilterPager(
         {

@@ -135,7 +135,7 @@ export class RolesService implements OnDestroy {
     try {
       const filter: KalturaUserRoleFilter = new KalturaUserRoleFilter({
         statusEqual: KalturaUserRoleStatus.active,
-        orderBy: KalturaUserRoleOrderBy.idAsc.toString(),
+        orderBy: KalturaUserRoleOrderBy.idAsc,
         tagsMultiLikeOr: 'kmc'
       });
       let pagination: KalturaFilterPager = null;

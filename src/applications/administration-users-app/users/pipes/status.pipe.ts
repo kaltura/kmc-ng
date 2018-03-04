@@ -11,14 +11,14 @@ export class StatusPipe implements PipeTransform {
     let userStatus: string = '';
 
     if (typeof value !== 'undefined' && value !== null) {
-      switch (value.toString()) {
-        case KalturaUserStatus.active.toString():
+      switch (value) {
+        case KalturaUserStatus.active:
           userStatus = this.appLocalization.get('applications.content.userStatus.active');
           break;
-        case KalturaUserStatus.blocked.toString():
+        case KalturaUserStatus.blocked:
           userStatus = this.appLocalization.get('applications.content.userStatus.blocked');
           break;
-        case KalturaUserStatus.deleted.toString():
+        case KalturaUserStatus.deleted:
           userStatus = this.appLocalization.get('applications.content.userStatus.deleted');
           break;
       }

@@ -28,7 +28,7 @@ export class BulkDownloadService extends BulkActionBaseService<number> {
 
       this._kalturaServerClient.request(new XInternalXAddBulkDownloadAction({
         entryIds: entryIds,
-        flavorParamsId: flavorId.toString()
+        flavorParamsId: flavorId
       })).subscribe(
           result => {
             observer.next({'email': result})

@@ -199,7 +199,7 @@ export class BulkUploadMonitorService implements OnDestroy {
         const oldestUploadedOnFile = this._getTrackedFiles().reduce((acc, item) => !acc || item.uploadedOn < acc.uploadedOn ?  item : acc, null);
         const uploadedOnFrom = oldestUploadedOnFile ? oldestUploadedOnFile.uploadedOn : this._browserService.sessionStartedAt;
         if (this._bulkUploadChangesFactory.uploadedOn !== uploadedOnFrom) {
-            this._logger.debug(`updating poll server query request with uploadedOn from ${uploadedOnFrom && uploadedOnFrom.toString()}`);
+            this._logger.debug(`updating poll server query request with uploadedOn from ${uploadedOnFrom && uploadedOnFrom}`);
             this._bulkUploadChangesFactory.uploadedOn = uploadedOnFrom;
         }
     }

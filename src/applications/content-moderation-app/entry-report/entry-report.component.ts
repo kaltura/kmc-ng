@@ -156,19 +156,19 @@ export class EntryReportComponent implements OnInit, OnDestroy {
             }
 
             if (this._entry.sourceType) {
-              const sourceType = this._entry.sourceType.toString();
-              const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
-                sourceType === KalturaSourceType.akamaiLive.toString() ||
-                sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
-                sourceType === KalturaSourceType.manualLiveStream.toString());
+              const sourceType = this._entry.sourceType;
+              const isLive = (sourceType === KalturaSourceType.liveStream ||
+                sourceType === KalturaSourceType.akamaiLive ||
+                sourceType === KalturaSourceType.akamaiUniversalLive ||
+                sourceType === KalturaSourceType.manualLiveStream);
               this._hasDuration = this._entry.status !== KalturaEntryStatus.noContent
                 && !isLive
-                && this._entry.mediaType.toString() !== KalturaMediaType.image.toString();
-              this._isEntryReady = this._entry.status.toString() === KalturaEntryStatus.ready.toString();
+                && this._entry.mediaType !== KalturaMediaType.image;
+              this._isEntryReady = this._entry.status === KalturaEntryStatus.ready;
               if (isLive) {
                 this._playerConfig['flashvars']['disableEntryRedirect'] = true;
               }
-              this._isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
+              this._isRecordedLive = (sourceType === KalturaSourceType.recordedLive);
               this._isClip = !this._isRecordedLive && (this._entry.id !== this._entry.rootEntryId);
             }
             this.player.Embed();

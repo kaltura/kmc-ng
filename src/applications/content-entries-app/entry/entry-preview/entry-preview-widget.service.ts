@@ -48,11 +48,11 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
         // create preview embed code
         if (this.data) {
             const entryId = this.data.id;
-            const sourceType = this.data.sourceType.toString();
-            const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
-                sourceType === KalturaSourceType.akamaiLive.toString() ||
-                sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
-                sourceType === KalturaSourceType.manualLiveStream.toString());
+            const sourceType = this.data.sourceType;
+            const isLive = (sourceType === KalturaSourceType.liveStream ||
+                sourceType === KalturaSourceType.akamaiLive ||
+                sourceType === KalturaSourceType.akamaiUniversalLive ||
+                sourceType === KalturaSourceType.manualLiveStream);
 
             const UIConfID = serverConfig.kalturaServer.previewUIConf;
             const partnerID = this.appAuthentication.appUser.partnerId;

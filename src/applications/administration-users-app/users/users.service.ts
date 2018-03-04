@@ -95,7 +95,7 @@ export class UsersStore implements OnDestroy {
         new UserRoleListAction({
           filter: new KalturaUserRoleFilter({
             statusEqual: KalturaUserRoleStatus.active,
-            orderBy: KalturaUserRoleOrderBy.idAsc.toString(),
+            orderBy: KalturaUserRoleOrderBy.idAsc,
             tagsMultiLikeOr: 'kmc'
           })
         }),
@@ -104,7 +104,7 @@ export class UsersStore implements OnDestroy {
             isAdminEqual: KalturaNullableBoolean.trueValue,
             loginEnabledEqual: KalturaNullableBoolean.trueValue,
             statusIn: KalturaUserStatus.active + ',' + KalturaUserStatus.blocked,
-            orderBy: KalturaUserOrderBy.createdAtAsc.toString()
+            orderBy: KalturaUserOrderBy.createdAtAsc
           }),
           pager: new KalturaFilterPager(this._querySource.value)
         }),

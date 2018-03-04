@@ -122,11 +122,11 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private _hideMenuItems(source, status, mediaType, { commandName }): boolean {
-    const isReadyStatus = status instanceof KalturaEntryStatus && status.toString() === KalturaEntryStatus.ready.toString();
-    const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
+    const isReadyStatus = status instanceof KalturaEntryStatus && status === KalturaEntryStatus.ready;
+    const isLiveStreamFlash = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
     const isPreviewCommand = commandName === 'preview';
     const isViewCommand = commandName === 'view';
-    const isKalturaLive = source instanceof KalturaSourceType && source.toString() === KalturaSourceType.liveStream.toString();
+    const isKalturaLive = source instanceof KalturaSourceType && source === KalturaSourceType.liveStream;
     const isLiveDashboardCommand = commandName === 'liveDashboard';
     return !(
       (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
@@ -160,8 +160,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public _allowDrilldown(mediaType: string, status: string): boolean {
-    const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash.toString();
-    const isReady = status && status !== KalturaEntryStatus.ready.toString();
+    const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
+    const isReady = status && status !== KalturaEntryStatus.ready;
     return !(isLiveStream && isReady);
   }
 

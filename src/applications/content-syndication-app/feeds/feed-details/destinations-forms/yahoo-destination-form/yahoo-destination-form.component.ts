@@ -125,7 +125,7 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
     if (this.contentFlavors && this.contentFlavors.length) {
       this._availableContentFlavors = this.contentFlavors.map(cv => ({
         value: cv.id,
-        label: cv.name || cv.id.toString()
+        label: cv.name || cv.id
       }));
     }
   }
@@ -134,7 +134,7 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
     if (this.players && this.players.length) {
       this._availablePlayers = this.players.map(player => ({
         value: player.id,
-        label: player.name || player.id.toString()
+        label: player.name || player.id
       }));
     }
   }

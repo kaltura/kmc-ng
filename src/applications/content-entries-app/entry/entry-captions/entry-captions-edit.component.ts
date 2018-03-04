@@ -87,7 +87,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 						this._validationErrorMsg = "";
 						this.fileToUpload = null;
 						this.captionsEditForm.get("label").setValue(this.currentCaption.label);
-						this.captionsEditForm.get("language").setValue(KalturaUtils.getCodeByLanguage(this.currentCaption.language.toString()).toUpperCase());
+						this.captionsEditForm.get("language").setValue(KalturaUtils.getCodeByLanguage(this.currentCaption.language).toUpperCase());
 						this.captionsEditForm.get("format").setValue(this.currentCaption.format);
 					}
 					if (event.state === PopupWidgetStates.BeforeClose) {
@@ -135,7 +135,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 			}
 		}
 		if (this.captionsEditForm.get("language").dirty) {
-			let langCode = this.captionsEditForm.get("language").value.toString().toLowerCase();
+			let langCode = this.captionsEditForm.get("language").value.toLowerCase();
 			if (langCode.length === 4) {
 				langCode = langCode.substr(0, 2) + langCode.charAt(2).toUpperCase() + langCode.slice(3);
 			}
@@ -196,7 +196,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 	public _getCaptionFormatLabel(format: KalturaCaptionType): string{
 		let label = "";
 		this._captionFormats.forEach( obj => {
-			if (format && obj.value.toString() === format.toString()){
+			if (format && obj.value === format){
 				label = obj.label;
 			}
 		});

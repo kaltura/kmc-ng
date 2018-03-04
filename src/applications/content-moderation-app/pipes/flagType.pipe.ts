@@ -10,17 +10,17 @@ export class FlagTypePipe implements PipeTransform {
   transform(value: string): string {
     let flagType = '';
     if (value) {
-      switch (value.toString()) {
-        case KalturaModerationFlagType.sexualContent.toString():
+      switch (value) {
+        case KalturaModerationFlagType.sexualContent:
           flagType = this.appLocalization.get('applications.content.moderation.sexualContent');
           break;
-        case KalturaModerationFlagType.harmfulDangerous.toString():
+        case KalturaModerationFlagType.harmfulDangerous:
           flagType = this.appLocalization.get('applications.content.moderation.harmfulOrDangerousAct');
           break;
-        case KalturaModerationFlagType.spamCommercials.toString():
+        case KalturaModerationFlagType.spamCommercials:
           flagType = this.appLocalization.get('applications.content.moderation.spamOrCommercials');
           break;
-        case KalturaModerationFlagType.violentRepulsive.toString():
+        case KalturaModerationFlagType.violentRepulsive:
           flagType = this.appLocalization.get('applications.content.moderation.violentOrRepulsive');
           break;
       }

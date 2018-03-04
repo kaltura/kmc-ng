@@ -10,7 +10,7 @@ export class RoleNamePipe implements PipeTransform {
     let userRoleName: string = '';
 
     if (typeof userId !== 'undefined' && userId !== null && roles != null) {
-      let role = roles.find(role => userId === role.id.toString());
+      let role = roles.find(role => userId === role.id);
       if (role) {
         userRoleName = role.name;
       }

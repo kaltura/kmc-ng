@@ -36,7 +36,7 @@ export class BulkRemoveTagsService extends BulkActionBaseService<string[]> {
             entryTags.splice(index,1);
           }
         });
-        updatedEntry.tags = entryTags.toString();
+        updatedEntry.tags = entryTags;
         requests.push(new BaseEntryUpdateAction({
           entryId: entry.id,
           baseEntry: updatedEntry

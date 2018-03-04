@@ -99,7 +99,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 			    this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
 			    this.buildThumbnailsData(thumbnails);
 			    this.allowGrabFromVideo = (this.data.status
-						&& [KalturaEntryStatus.ready.toString(), KalturaEntryStatus.moderate.toString()].indexOf(this.data.status.toString()) !== -1
+						&& [KalturaEntryStatus.ready, KalturaEntryStatus.moderate].indexOf(this.data.status) !== -1
 						&& this.data.mediaType === KalturaMediaType.video);
 			    super._hideLoader();
 		    });
@@ -111,7 +111,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 	    let thumbs: ThumbnailRow[] = [];
 	    // create a ThumbnailRow data for each of the loaded thumbnails
 	    thumbnails.forEach( (thumbnail: KalturaThumbAsset) => {
-		    if (thumbnail.status.toString() === KalturaThumbAssetStatus.ready.toString()) {
+		    if (thumbnail.status === KalturaThumbAssetStatus.ready) {
 			    let thumb: ThumbnailRow = {
 				    id: thumbnail.id,
 				    status: thumbnail.status,

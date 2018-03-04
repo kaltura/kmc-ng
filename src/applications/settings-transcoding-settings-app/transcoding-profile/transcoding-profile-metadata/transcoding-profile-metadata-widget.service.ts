@@ -138,7 +138,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     };
     super._showLoader();
 
-    this.hideStorageProfileIdField = this.data.type && this.data.type.equals(KalturaConversionProfileType.liveStream);
+    this.hideStorageProfileIdField = this.data.type && this.data.type === KalturaConversionProfileType.liveStream;
     if (!this.hideStorageProfileIdField) {
       return this._loadRemoteStorageProfiles()
         .cancelOnDestroy(this)

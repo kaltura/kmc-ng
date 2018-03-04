@@ -7,23 +7,23 @@ export class ModerationPipe implements PipeTransform {
 	constructor(private appLocalization: AppLocalization) {
 	}
 
-	transform(value: string): string {
+	transform(value: KalturaEntryModerationStatus): string {
 		let moderationStatus: string = "";
 		if (value) {
-			switch (value.toString()) {
-				case KalturaEntryModerationStatus.autoApproved.toString():
+			switch (value) {
+				case KalturaEntryModerationStatus.autoApproved:
 					moderationStatus = this.appLocalization.get("applications.content.entryStatus.autoApprovedStatus");
           break;
-				case KalturaEntryModerationStatus.flaggedForReview.toString():
+				case KalturaEntryModerationStatus.flaggedForReview:
 					moderationStatus = this.appLocalization.get("applications.content.entryStatus.flaggedStatus");
 					break;
-				case KalturaEntryModerationStatus.approved.toString():
+				case KalturaEntryModerationStatus.approved:
 					moderationStatus = this.appLocalization.get("applications.content.entryStatus.approvedStatus");
 					break;
-				case KalturaEntryModerationStatus.pendingModeration.toString():
+				case KalturaEntryModerationStatus.pendingModeration:
 					moderationStatus = this.appLocalization.get("applications.content.entryStatus.pendingStatus");
 					break;
-				case KalturaEntryModerationStatus.rejected.toString():
+				case KalturaEntryModerationStatus.rejected:
 					moderationStatus = this.appLocalization.get("applications.content.entryStatus.rejectedStatus");
 					break;
 			}

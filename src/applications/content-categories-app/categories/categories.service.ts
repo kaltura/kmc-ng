@@ -373,10 +373,10 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       if (data.categoryListing) {
         if (data.categoryListing.length === 1) {
           switch (data.categoryListing[0]) {
-            case KalturaAppearInListType.categoryMembersOnly.toString():
+            case KalturaAppearInListType.categoryMembersOnly:
               filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
               break;
-            case KalturaAppearInListType.partnerOnly.toString():
+            case KalturaAppearInListType.partnerOnly:
               filter.appearInListEqual = KalturaAppearInListType.partnerOnly;
               break;
             default:
@@ -390,10 +390,10 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         if (data.contributionPolicy.length === 1) {
           data.contributionPolicy.forEach(item => {
             switch (item) {
-              case KalturaContributionPolicyType.all.toString():
+              case KalturaContributionPolicyType.all:
                 filter.contributionPolicyEqual = KalturaContributionPolicyType.all;
                 break;
-              case KalturaContributionPolicyType.membersWithContributionPermission.toString():
+              case KalturaContributionPolicyType.membersWithContributionPermission:
                 filter.contributionPolicyEqual = KalturaContributionPolicyType.membersWithContributionPermission;
                 break;
               default:
