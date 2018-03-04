@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import {
+  EntriesFilters, EntriesStore,
+  EntriesStorePaginationCacheToken
+} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
@@ -11,7 +14,10 @@ import { KalturaTypesFactory } from 'kaltura-ngx-client';
   selector: 'kEntriesSelector',
   templateUrl: './entries-selector.component.html',
   styleUrls: ['./entries-selector.component.scss'],
-  providers: [EntriesStore]
+  providers: [
+    EntriesStore,
+    { provide: EntriesStorePaginationCacheToken, useValue: 'entries-selector' }
+  ]
 })
 export class EntriesSelectorComponent {
   @Input() selectedEntries: KalturaMediaEntry[] = [];
@@ -31,7 +37,6 @@ export class EntriesSelectorComponent {
   };
 
   constructor(public _entriesStore: EntriesStore) {
-    this._entriesStore.paginationCacheToken = 'entries-selector';
   }
 
   public _onActionSelected({ action, entry }: { action: string, entry: KalturaMediaEntry }): void {
