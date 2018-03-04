@@ -20,20 +20,16 @@
 
 ### Features
 
-* add external applications development samples ([f164cd9](https://github.com/kaltura/kmc-ng/commit/f164cd9))
-* **content/entries:** add entry details distribution section ([#397](https://github.com/kaltura/kmc-ng/issues/397)) ([1edf248](https://github.com/kaltura/kmc-ng/commit/1edf248))
-* **content/syndication:** add syndication view ([322f0a5](https://github.com/kaltura/kmc-ng/commit/322f0a5))
-* add kava standalone application integration ([c371695](https://github.com/kaltura/kmc-ng/commit/c371695))
-* **settings:** add account information view ([#378](https://github.com/kaltura/kmc-ng/issues/378)) ([d52d327](https://github.com/kaltura/kmc-ng/commit/d52d327))
-* add Kaltura live view in entry details ([#399](https://github.com/kaltura/kmc-ng/issues/399)) ([e15d475](https://github.com/kaltura/kmc-ng/commit/e15d475))
-* add server config validation (POC) ([#394](https://github.com/kaltura/kmc-ng/issues/394)) ([ac0256a](https://github.com/kaltura/kmc-ng/commit/ac0256a))
-* embed usage dashboard, live dashboard and studio external applications ([#391](https://github.com/kaltura/kmc-ng/issues/391)) ([f7ea003](https://github.com/kaltura/kmc-ng/commit/f7ea003))
-* **settings/access control:** add access control views ([#348](https://github.com/kaltura/kmc-ng/issues/348)) ([09c8f51](https://github.com/kaltura/kmc-ng/commit/09c8f51))
-* **settings/transcoding-settings:** add transcoding settings view ([#401](https://github.com/kaltura/kmc-ng/issues/401)) ([42b47a7](https://github.com/kaltura/kmc-ng/commit/42b47a7))
-* move expiry and privileges configuration into app config file ([12a639c](https://github.com/kaltura/kmc-ng/commit/12a639c))
-* performance enhancements for tables in entries list, moderation list, playlists list, syndication list, categories list, bulk upload list, drop folders list and entries selector ([#400](https://github.com/kaltura/kmc-ng/issues/400)) ([56c5859](https://github.com/kaltura/kmc-ng/commit/56c5859))
-* provide server configuration already packed with Kaltura production configuration ([2482080](https://github.com/kaltura/kmc-ng/commit/2482080))
-* upgrade stack to angular@5 and [@angular](https://github.com/angular)/cli@1.7.0 ([5262d13](https://github.com/kaltura/kmc-ng/commit/5262d13))
+* **External application integration:** Add external applications development samples ([f164cd9](https://github.com/kaltura/kmc-ng/commit/f164cd9))
+* **Content/entries:** Add entry details distribution section ([#397](https://github.com/kaltura/kmc-ng/issues/397)) ([1edf248](https://github.com/kaltura/kmc-ng/commit/1edf248))
+* **Content/syndication:** Add syndication view ([322f0a5](https://github.com/kaltura/kmc-ng/commit/322f0a5))
+* **Settings:** Add account information view ([#378](https://github.com/kaltura/kmc-ng/issues/378)) ([d52d327](https://github.com/kaltura/kmc-ng/commit/d52d327))
+* **Content/Entry/Live** Add Kaltura live view in entry details ([#399](https://github.com/kaltura/kmc-ng/issues/399)) ([e15d475](https://github.com/kaltura/kmc-ng/commit/e15d475))
+* **External application integration:** Embed usage dashboard, live dashboard and studio external applications ([#391](https://github.com/kaltura/kmc-ng/issues/391)) ([f7ea003](https://github.com/kaltura/kmc-ng/commit/f7ea003))
+* **Settings/access control:** Add access control views ([#348](https://github.com/kaltura/kmc-ng/issues/348)) ([09c8f51](https://github.com/kaltura/kmc-ng/commit/09c8f51))
+* **Settings/transcoding-settings:** Add transcoding settings view ([#401](https://github.com/kaltura/kmc-ng/issues/401)) ([42b47a7](https://github.com/kaltura/kmc-ng/commit/42b47a7))
+* **Performance enhancements**: Performance enhancements for tables in entries list, moderation list, playlists list, syndication list, categories list, bulk upload list, drop folders list and entries selector ([#400](https://github.com/kaltura/kmc-ng/issues/400)) ([56c5859](https://github.com/kaltura/kmc-ng/commit/56c5859))
+* **Stack upgrade:** Upgrade stack to angular@5 and [@angular](https://github.com/angular)/cli@1.7.0 ([5262d13](https://github.com/kaltura/kmc-ng/commit/5262d13))
 
 
 ### BREAKING CHANGES
