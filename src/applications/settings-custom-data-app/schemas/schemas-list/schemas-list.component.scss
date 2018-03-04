@@ -86,6 +86,8 @@
   .kBulkOperations {
     margin-left: 15px;
     width: 400px;
+    display: flex;
+    align-items: center;
   }
   .kSelectedSchemasLabel {
     font-weight: bold;
