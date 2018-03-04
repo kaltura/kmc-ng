@@ -60,7 +60,7 @@
         <ng-template pTemplate="body" let-entry>
             <tr [pSelectableRow]="entry">
 
-                <td style="width:44px; padding-left: 14px" *ngIf="">
+                <td style="width:44px; padding-left: 14px" *ngIf="showBulkSelect">
                     <p-tableCheckbox [value]="entry"></p-tableCheckbox>
                 </td>
 
