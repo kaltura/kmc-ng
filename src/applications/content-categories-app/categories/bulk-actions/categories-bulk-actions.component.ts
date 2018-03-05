@@ -63,16 +63,12 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   }
 
-  private _mapPrivacyContext(acceptCallback: () => void): void {
+  private _filterPrivacyContext(): { hadNoPrivacyContext: boolean } {
     const selectedCategoriesLength = this.selectedCategories.length;
     this.selectedCategories = [...this.selectedCategories.filter(category => !!category.privacyContext)];
-    const noPrivacyContext = this.selectedCategories.length !== selectedCategoriesLength;
-    if (noPrivacyContext) {
-      this._browserService.alert({
-        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
-        accept: () => acceptCallback()
-      });
-    }
+    const hadNoPrivacyContext = this.selectedCategories.length !== selectedCategoriesLength;
+
+    return { hadNoPrivacyContext };
   }
 
   getBulkActionItems(): MenuItem[] {
@@ -164,11 +160,21 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         break;
     }
 
-    this._mapPrivacyContext(() => {
+    const executeAction = () => {
       if (this.selectedCategories.length) {
         this.executeService(this._bulkChangeContentPrivacyService, privacyType);
       }
-    });
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
+    }
   }
 
   // change category listing
@@ -180,20 +186,40 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       appearInListType = KalturaAppearInListType.categoryMembersOnly;
     }
 
-    this._mapPrivacyContext(() => {
+    const executeAction = () => {
       if (this.selectedCategories.length) {
         this.executeService(this._bulkChangeCategoryListingService, appearInListType);
       }
-    });
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
+    }
   }
 
   // change contribution policy
   onChangeContributionPolicyChanged(policyType: KalturaContributionPolicyType): void {
-    this._mapPrivacyContext(() => {
+    const executeAction = () => {
       if (this.selectedCategories.length) {
         this.executeService(this._bulkChangeContributionPolicyService, policyType);
       }
-    });
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
+    }
   }
 
   // bulk delete
