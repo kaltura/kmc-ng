@@ -161,7 +161,7 @@ export class CategoryService implements OnDestroy {
 					setTimeout(() => {
 						const currentCategoryId = this._categoryRoute.snapshot.params.id;
                         const category = this._category.getValue();
-                        if (!category || (category && category.id !== currentCategoryId)) {
+                        if (!category || (category && category.id.toString() !== currentCategoryId.toString())) {
                           this._loadCategory(currentCategoryId);
                         }
 					});
