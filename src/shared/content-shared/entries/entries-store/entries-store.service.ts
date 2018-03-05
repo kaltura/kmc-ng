@@ -5,6 +5,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { MetadataProfileStore } from 'app-shared/kmc-shared';
 import { BaseEntryDeleteAction } from 'kaltura-ngx-client/api/types/BaseEntryDeleteAction';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaEntryModerationStatus } from 'kaltura-ngx-client/api/types/KalturaEntryModerationStatus';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -57,7 +58,7 @@ export interface EntriesFilters {
   ingestionStatuses: string[];
   durations: string[];
   originalClippedEntries: string[];
-  moderationStatuses: string[];
+  moderationStatuses: KalturaEntryModerationStatus[];
   replacementStatuses: string[];
   accessControlProfiles: string[];
   flavors: string[];
@@ -234,7 +235,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       ingestionStatuses: new ListTypeAdapter<string>(),
       durations: new ListTypeAdapter<string>(),
       originalClippedEntries: new ListTypeAdapter<string>(),
-      moderationStatuses: new ListTypeAdapter<string>(),
+      moderationStatuses: new ListTypeAdapter<KalturaEntryModerationStatus>(),
       replacementStatuses: new ListTypeAdapter<string>(),
       accessControlProfiles: new ListTypeAdapter<string>(),
       flavors: new ListTypeAdapter<string>(),

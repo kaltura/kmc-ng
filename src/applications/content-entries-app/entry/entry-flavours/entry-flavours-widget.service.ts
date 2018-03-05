@@ -122,9 +122,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         newFlavor.isWeb = flavor.flavorAsset ? flavor.flavorAsset.isWeb : false;
         newFlavor.format = flavor.flavorAsset ? flavor.flavorAsset.fileExt : '';
         newFlavor.codec = flavor.flavorAsset ? flavor.flavorAsset.videoCodecId : '';
-        newFlavor.bitrate = (flavor.flavorAsset && flavor.flavorAsset.bitrate && flavor.flavorAsset.bitrate > 0) ? flavor.flavorAsset.bitrate : '';
-        newFlavor.size = flavor.flavorAsset ? (flavor.flavorAsset.status === KalturaFlavorAssetStatus.ready ? flavor.flavorAsset.size : '0') : '';
-        newFlavor.status = flavor.flavorAsset ? flavor.flavorAsset.status : '';
+        newFlavor.bitrate = (flavor.flavorAsset && flavor.flavorAsset.bitrate && flavor.flavorAsset.bitrate > 0) ? String(flavor.flavorAsset.bitrate) : null;
+        newFlavor.size = flavor.flavorAsset ? (flavor.flavorAsset.status === KalturaFlavorAssetStatus.ready ? String(flavor.flavorAsset.size) : '0') : null;
+        newFlavor.status = flavor.flavorAsset ? flavor.flavorAsset.status : null;
         newFlavor.statusLabel = "";
         newFlavor.statusTooltip = "";
         newFlavor.tags = flavor.flavorAsset ? flavor.flavorAsset.tags : '-';
@@ -133,8 +133,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         // set dimensions
         const width: number = flavor.flavorAsset ? flavor.flavorAsset.width : flavor.flavorParams.width;
         const height: number = flavor.flavorAsset ? flavor.flavorAsset.height : flavor.flavorParams.height;
-        const w: string = width === 0 ? "[auto]" : width;
-        const h: string = height === 0 ? "[auto]" : height;
+        const w: string = width === 0 ? "[auto]" : String(width);
+        const h: string = height === 0 ? "[auto]" : String(height);
         newFlavor.dimensions = w + " x " + h;
 
         // set status
@@ -148,7 +148,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         // add DRM details
         if (newFlavor.isWidevine) {
             // get source flavors for DRM
-            const sourceIDs = (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds ? (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds.split(",") : [];
+            const sourceIDs = (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds ? (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds.split(",").map(Number) : [];
             let sources = [];
             sourceIDs.forEach(sourceId => {
                 allFlavors.forEach(flavor => {

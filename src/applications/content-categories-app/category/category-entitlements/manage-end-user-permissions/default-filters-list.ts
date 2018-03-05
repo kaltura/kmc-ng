@@ -14,16 +14,16 @@ export const DefaultFiltersList: DefaultFilterList[] = [
     name: 'permissionLevels', label: 'Permission Levels',
     items: [
       {
-        value: KalturaCategoryUserPermissionLevel.contributor,
+        value: String(KalturaCategoryUserPermissionLevel.contributor),
         label: 'Contributor'
       }, {
-        value: KalturaCategoryUserPermissionLevel.moderator,
+        value: String(KalturaCategoryUserPermissionLevel.moderator),
         label: 'Moderator'
       }, {
-        value: KalturaCategoryUserPermissionLevel.member,
+        value: String(KalturaCategoryUserPermissionLevel.member),
         label: 'Member'
       }, {
-        value: KalturaCategoryUserPermissionLevel.manager,
+        value: String(KalturaCategoryUserPermissionLevel.manager),
         label: 'Manager'
       }
     ]
@@ -31,19 +31,19 @@ export const DefaultFiltersList: DefaultFilterList[] = [
   {
     name: 'status', label: 'Status',
     items: [
-      {value: KalturaCategoryUserStatus.active, label: 'Active'},
-      {value: KalturaCategoryUserStatus.notActive, label: 'Deactivated'}
+      {value: String(KalturaCategoryUserStatus.active), label: 'Active'},
+      {value: String(KalturaCategoryUserStatus.notActive), label: 'Deactivated'}
     ]
   },
   {
     name: 'updateMethod', label: 'Update Method',
     items: [
       {
-        value: KalturaUpdateMethodType.manual,
+        value: String(KalturaUpdateMethodType.manual),
         label: 'Manual'
       },
       {
-        value: KalturaUpdateMethodType.automatic,
+        value: String(KalturaUpdateMethodType.automatic),
         label: 'Automatic'
       }
     ]

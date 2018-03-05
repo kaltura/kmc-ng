@@ -139,7 +139,8 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 			if (langCode.length === 4) {
 				langCode = langCode.substr(0, 2) + langCode.charAt(2).toUpperCase() + langCode.slice(3);
 			}
-			this.currentCaption.language = KalturaLanguage[langCode];
+			// TODO sakal support lookup tables
+			//this.currentCaption.language = KalturaLanguage[langCode];
 		}
 		if (this.captionsEditForm.get("format").dirty) {
 			this.currentCaption.format = this.captionsEditForm.get("format").value;

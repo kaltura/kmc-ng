@@ -175,7 +175,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	private _setDVRStatus(): void {
 		let entry = this.data as KalturaLiveStreamEntry;
-		if (!entry.dvrStatus || entry.dvrStatus === KalturaDVRStatus.disabled) {
+		if (entry.dvrStatus === KalturaDVRStatus.disabled) {
 			this._DVRStatus = this._appLocalization.get('app.common.off');
 		} else if (entry.dvrStatus == KalturaDVRStatus.enabled) {
 			this._DVRStatus = this._appLocalization.get('app.common.on');
@@ -188,8 +188,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	}
 
 	private _setRecordStatus(): void {
-		let entry = this.data as KalturaLiveStreamEntry;
-		if (!entry.recordStatus || entry.recordStatus === KalturaRecordStatus.disabled) {
+		const entry = this.data as KalturaLiveStreamEntry;
+		if (entry.recordStatus === KalturaRecordStatus.disabled) {
 			this._recordStatus = this._appLocalization.get('app.common.off');
 		} else if (entry.recordStatus === KalturaRecordStatus.appended || entry.recordStatus === KalturaRecordStatus.perSession) {
 			this._recordStatus = this._appLocalization.get('app.common.on');
