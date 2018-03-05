@@ -5,6 +5,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import {BrowserService} from "app-shared/kmc-shell";
+import { serverConfig } from 'config/server';
 
 @Component({
   selector: 'kEntitlement',
@@ -124,6 +125,10 @@ export class EntitlementComponent implements OnInit, OnDestroy {
   private _updateAreaBlockerState(isBusy: boolean, areaBlocker: AreaBlockerMessage): void {
     this._isBusy = isBusy;
     this._blockerMessage = areaBlocker;
+  }
+
+  public openLink(): void {
+    this._browserService.openLink(serverConfig.externalLinks.entitlements.manage);
   }
 
 }
