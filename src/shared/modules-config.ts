@@ -3,7 +3,8 @@ export interface ModulesConfig {
     shared: {
         lists: {
             maxItems: number,
-            defaultPageSize: number
+            defaultPageSize: number,
+            defaultSortOrder: number
         }
     }
     contentShared: {
@@ -19,7 +20,8 @@ export const modulesConfig: ModulesConfig = {
     'shared': {
         'lists': {
             'maxItems': 10000,
-            'defaultPageSize': 50
+            'defaultPageSize': 50,
+            'defaultSortOrder': -1
         }
     },
     'contentShared': {

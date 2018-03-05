@@ -4,6 +4,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { ManualContentWidget } from '../manual-content-widget.service';
+import { modulesConfig } from 'config/modules';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -38,6 +39,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   public _emptyMessage: string;
   public _deferredLoading = true;
   public _items: MenuItem[];
+  public _defaultSortOrder = modulesConfig.shared.lists.defaultSortOrder;
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,

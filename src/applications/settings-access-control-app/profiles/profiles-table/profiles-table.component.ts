@@ -13,6 +13,7 @@ import {
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
+import { modulesConfig } from 'config/modules';
 
 @Component({
   selector: 'kAccessControlProfilesTable',
@@ -22,6 +23,7 @@ import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccess
 export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _deferredProfiles: KalturaAccessControl[];
 
+  public _defaultSortOrder = modulesConfig.shared.lists.defaultSortOrder;
   public _profiles: KalturaAccessControl[] = [];
   public _documentWidth = 2000;
   public _rowTrackBy: Function = (index: number, item: any) => item.id;

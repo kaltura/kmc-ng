@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { EntryClipsWidget } from './entry-clips-widget.service';
+import { modulesConfig } from 'config/modules';
 
 
 @Component({
@@ -9,7 +10,7 @@ import { EntryClipsWidget } from './entry-clips-widget.service';
     styleUrls: ['./entry-clips.component.scss']
 })
 export class EntryClips implements OnInit, OnDestroy {
-
+    public _defaultSortOrder = modulesConfig.shared.lists.defaultSortOrder;
     public _loading = false;
     public _loadingError = null;
 

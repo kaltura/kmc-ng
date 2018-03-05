@@ -6,7 +6,7 @@
             [value]="_bulkLog"
             dataKey="id"
             [rowTrackBy]="rowTrackBy"
-            [defaultSortOrder]="-1"
+            [defaultSortOrder]="_defaultSortOrder"
             [(selection)]="selectedBulkLogItems"
             (selectionChange)="_onSelectionChange($event)"
             kStickyHeader [sticksTo]="'bulklogTags'" stickyClass="stickyHeader" [stickyId]="'bulklogTable'">
