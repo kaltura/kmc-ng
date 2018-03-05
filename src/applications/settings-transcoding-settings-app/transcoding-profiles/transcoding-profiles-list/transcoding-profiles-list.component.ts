@@ -152,6 +152,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   private _setAsDefault(profile: KalturaConversionProfileWithAsset): void {
     if (!profile.isDefault) {
       this._storeService.setAsDefault(profile)
+        .tag('block-shell')
         .cancelOnDestroy(this)
         .subscribe(
           () => {
@@ -184,6 +185,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
   private _proceedDeleteProfiles(profiles: KalturaConversionProfileWithAsset[]): void {
     this._storeService.deleteProfiles(profiles)
+      .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
         () => {

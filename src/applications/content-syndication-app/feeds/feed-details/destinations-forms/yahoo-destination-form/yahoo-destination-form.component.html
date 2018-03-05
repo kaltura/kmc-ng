@@ -113,7 +113,9 @@
       <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.yahoo.contentFlavor.label' | translate}}</span>
       <div class="kControlContainer">
         <span class="kControl">
-          <p-multiSelect [options]="_availableCategories" formControlName="selectedCategories" [filter]="false" maxSelectedLabels="2"
+          <p-multiSelect class="kCategories"
+                         [options]="_availableCategories"
+                         formControlName="selectedCategories" [filter]="false" maxSelectedLabels="2"
                          selectedItemsLabel="{{'applications.content.syndication.details.destinationsForms.yahoo.category.itemsSelected' | translate}}"
                          defaultLabel="{{'applications.content.syndication.details.destinationsForms.yahoo.category.promptText' | translate}}"></p-multiSelect>
         </span>

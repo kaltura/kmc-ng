@@ -116,3 +116,8 @@
   margin-left: -.5em;
 }
 
+:host /deep/ .kRolesTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}

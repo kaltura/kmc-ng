@@ -12,7 +12,7 @@
                     [placeholder]="'applications.upload.uploadSettings.profilePlaceholder' | translate"
                     [formControl]="_transcodingProfileField">
           <ng-template let-profile pTemplate="item">
-            <span class="kTranscodingProfileItem">{{profile.label}}</span>
+            <span class="kTranscodingProfileItem" [kTooltip]="profile.label">{{profile.label}}</span>
           </ng-template>
         </p-dropdown>
       </form>

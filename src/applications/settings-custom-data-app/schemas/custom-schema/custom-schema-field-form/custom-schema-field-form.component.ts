@@ -230,7 +230,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       uid[index++] = ALPHA_CHAR_CODES[Math.floor(Math.random() * 16)];
     }
 
-    return String.fromCharCode.apply(null, uid);
+    return `md_${String.fromCharCode.apply(null, uid)}`;
   }
 
   private _create(): MetadataItem {

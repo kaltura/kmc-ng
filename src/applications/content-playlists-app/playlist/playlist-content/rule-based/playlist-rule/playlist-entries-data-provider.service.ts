@@ -253,14 +253,14 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       );
   }
 
-  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes): EntriesFilters {
+  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes, pageSize: number): EntriesFilters {
     const categoriesMode = typeof savedAutoSelectChildren === 'number'
       ? savedAutoSelectChildren
       : CategoriesModes.SelfAndChildren;
 
     return {
       freetext: '',
-      pageSize: 50,
+      pageSize: pageSize,
       pageIndex: 0,
       sortBy: 'plays',
       sortDirection: SortDirection.Desc,

@@ -259,3 +259,9 @@
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
 }
+
+:host /deep/ .kEntriesTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}
