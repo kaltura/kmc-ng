@@ -1,6 +1,6 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kDropFolders kOverrideFAIcons">
-    <div #dropFoldersTableHolder class="kDropFoldersHolder kContent">
+    <div class="kDropFoldersHolder kContent">
       <kSticky stickyId="dropFolderFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kDropFoldersTableFilters kContent">
           <span class="kSelectedDropFoldersNum" *ngIf="(_dropFoldersStore.dropFolders.data$ | async)?.totalCount">
@@ -73,12 +73,12 @@
 
 <!-- popup widgets section -->
 <kPopupWidget #refinePopup
-              [appendTo]="dropFoldersTableHolder"
+              placement="top"
               [popupWidth]="400"
               [popupHeight]="400"
               [closeBtn]="false"
               [targetRef]="statusesFilterBtn"
-              [targetOffset]="{'x':-160, 'y': -15}"
+              [targetOffset]="{'x':-215, 'y': -15}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'statusesFilterPopup'"
               [scrollOffset]="80">
   <ng-template>

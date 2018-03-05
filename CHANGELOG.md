@@ -1,3 +1,43 @@
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/kaltura/kmc-ng/compare/v3.6.1...v4.0.0) (2018-03-04)
+
+
+### Bug Fixes
+
+* **administration/users:** typo fix in error message for "User already exists" ([eac37fb](https://github.com/kaltura/kmc-ng/commit/eac37fb))
+* **content/categories:** navigate to metadata section when saving a category after removing its sub categories ([8605caa](https://github.com/kaltura/kmc-ng/commit/8605caa))
+* **content/categories:** show categories entries when selection category > view entries ([5dcccc4](https://github.com/kaltura/kmc-ng/commit/5dcccc4))
+* **content/drop-folder:** file doesn't display when uploading remote xml ([594e0c2](https://github.com/kaltura/kmc-ng/commit/594e0c2))
+* **content/entries:** incorrect status is displayed when uploading/finish uploading captions ([d9e5646](https://github.com/kaltura/kmc-ng/commit/d9e5646))
+* bulk selection layout fix for IE11 in custom data and transcoding settings ([5e0dbe9](https://github.com/kaltura/kmc-ng/commit/5e0dbe9))
+* close bulk menu upon browser scroll for categories list view, entries moderation view and categories entitlements view  ([#395](https://github.com/kaltura/kmc-ng/issues/395)) ([5d53f13](https://github.com/kaltura/kmc-ng/commit/5d53f13))
+* **content/playlists:** show last item fully in playlist manual > add entry dialog when using filters ([235477b](https://github.com/kaltura/kmc-ng/commit/235477b))
+* fix syndication feed list table actions menu style ([820ff31](https://github.com/kaltura/kmc-ng/commit/820ff31))
+* fix syndication table layout for IE11 ([37ad88e](https://github.com/kaltura/kmc-ng/commit/37ad88e))
+* move syndication assets into the relevant folder ([c87ff15](https://github.com/kaltura/kmc-ng/commit/c87ff15))
+* table rows menu that was executing the actions on old row data ([de308e5](https://github.com/kaltura/kmc-ng/commit/de308e5))
+
+
+### Features
+
+* **External application integration:** Add external applications development samples ([f164cd9](https://github.com/kaltura/kmc-ng/commit/f164cd9))
+* **Content/entries:** Add entry details distribution section ([#397](https://github.com/kaltura/kmc-ng/issues/397)) ([1edf248](https://github.com/kaltura/kmc-ng/commit/1edf248))
+* **Content/syndication:** Add syndication view ([322f0a5](https://github.com/kaltura/kmc-ng/commit/322f0a5))
+* **Settings:** Add account information view ([#378](https://github.com/kaltura/kmc-ng/issues/378)) ([d52d327](https://github.com/kaltura/kmc-ng/commit/d52d327))
+* **Content/Entry/Live** Add Kaltura live view in entry details ([#399](https://github.com/kaltura/kmc-ng/issues/399)) ([e15d475](https://github.com/kaltura/kmc-ng/commit/e15d475))
+* **External application integration:** Embed usage dashboard, live dashboard and studio external applications ([#391](https://github.com/kaltura/kmc-ng/issues/391)) ([f7ea003](https://github.com/kaltura/kmc-ng/commit/f7ea003))
+* **Settings/access control:** Add access control views ([#348](https://github.com/kaltura/kmc-ng/issues/348)) ([09c8f51](https://github.com/kaltura/kmc-ng/commit/09c8f51))
+* **Settings/transcoding-settings:** Add transcoding settings view ([#401](https://github.com/kaltura/kmc-ng/issues/401)) ([42b47a7](https://github.com/kaltura/kmc-ng/commit/42b47a7))
+* **Performance enhancements**: Performance enhancements for tables in entries list, moderation list, playlists list, syndication list, categories list, bulk upload list, drop folders list and entries selector ([#400](https://github.com/kaltura/kmc-ng/issues/400)) ([56c5859](https://github.com/kaltura/kmc-ng/commit/56c5859))
+* **Stack upgrade:** Upgrade stack to angular@5 and [@angular](https://github.com/angular)/cli@1.7.0 ([5262d13](https://github.com/kaltura/kmc-ng/commit/5262d13))
+
+
+### BREAKING CHANGES
+
+* upgrading from v4 to v5 required multiple changes in build scripts and some code adjustments
+
+
+
 <a name="3.6.1"></a>
 ## [3.6.1](https://github.com/kaltura/kmc-ng/compare/v3.6.0...v3.6.1) (2018-02-06)
 
