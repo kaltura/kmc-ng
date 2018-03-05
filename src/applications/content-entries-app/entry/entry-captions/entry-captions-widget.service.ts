@@ -151,7 +151,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         this._updateCaptionsResponse(response);
 
         this._captions.next({ items: response.objects as any[] });
-        this.captionsListDiffer = this._listDiffers.find([]).create(null);
+        this.captionsListDiffer = this._listDiffers.find([]).create();
         this.captionsListDiffer.diff(this._captions.getValue().items);
 
         this.captionDiffer = {};

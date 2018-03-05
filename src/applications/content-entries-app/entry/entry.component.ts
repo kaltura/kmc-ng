@@ -1,7 +1,6 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { EntryStore, ActionTypes } from './entry-store.service';
+import { ActionTypes, EntryStore } from './entry-store.service';
 import { EntrySectionsListWidget } from './entry-sections-list/entry-sections-list-widget.service';
 import { EntryMetadataWidget } from './entry-metadata/entry-metadata-widget.service';
 import { EntryPreviewWidget } from './entry-preview/entry-preview-widget.service';
@@ -20,6 +19,7 @@ import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltur
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
 import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { EntryDistributionWidget } from './entry-distribution/entry-distribution-widget.service';
 
 @Component({
     selector: 'kEntry',
@@ -40,7 +40,8 @@ import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/en
         EntryAccessControlWidget,
         EntryMetadataWidget,
         EntryDetailsWidget,
-        EntryPreviewWidget
+        EntryPreviewWidget,
+        EntryDistributionWidget
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {
@@ -55,26 +56,29 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enableNextButton: boolean;
 	public _entryHasChanges : boolean;
 
-	constructor(
-                entryWidgetsManager: EntryWidgetsManager,
-                widget1: EntrySectionsListWidget,
-                widget2: EntryUsersWidget,
-                widget3: EntryThumbnailsWidget,
-                widget4: EntrySchedulingWidget,
-                widget5: EntryRelatedWidget,
-                widget6: EntryFlavoursWidget,
-                widget7: EntryLiveWidget,
-                widget8: EntryClipsWidget,
-                widget9: EntryCaptionsWidget,
-                widget10: EntryAccessControlWidget,
-                widget11: EntryMetadataWidget,
-				widget12: EntryDetailsWidget,
-				widget13: EntryPreviewWidget,
-				private _entriesStore: EntriesStore,
-				private _appLocalization: AppLocalization,
-    			public _entryStore: EntryStore) {
-        entryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5, widget6, widget7, widget8, widget9, widget10, widget11, widget12, widget13]);
-    }
+  constructor(entryWidgetsManager: EntryWidgetsManager,
+              widget1: EntrySectionsListWidget,
+              widget2: EntryUsersWidget,
+              widget3: EntryThumbnailsWidget,
+              widget4: EntrySchedulingWidget,
+              widget5: EntryRelatedWidget,
+              widget6: EntryFlavoursWidget,
+              widget7: EntryLiveWidget,
+              widget8: EntryClipsWidget,
+              widget9: EntryCaptionsWidget,
+              widget10: EntryAccessControlWidget,
+              widget11: EntryMetadataWidget,
+              widget12: EntryDetailsWidget,
+              widget13: EntryPreviewWidget,
+              widget14: EntryDistributionWidget,
+              private _entriesStore: EntriesStore,
+              private _appLocalization: AppLocalization,
+              public _entryStore: EntryStore) {
+    entryWidgetsManager.registerWidgets([
+      widget1, widget2, widget3, widget4, widget5, widget6, widget7,
+      widget8, widget9, widget10, widget11, widget12, widget13, widget14
+    ]);
+  }
 
 	ngOnDestroy() {
 	}

@@ -1,10 +1,9 @@
-import {RouterModule, Routes} from '@angular/router';
-import {AppBootstrap, AuthCanActivate} from 'app-shared/kmc-shell';
+import { RouterModule, Routes } from '@angular/router';
+import { AppBootstrap, AuthCanActivate } from 'app-shared/kmc-shell';
 
-import {LoginComponent} from './components/login/login.component';
-import {DashboardComponent} from './components/dashboard/dashboard.component';
-import {ErrorComponent} from './components/error/error.component';
-
+import { LoginComponent } from './components/login/login.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ErrorComponent } from './components/error/error.component';
 
 const routes: Routes = <Routes>[
   {
@@ -70,6 +69,10 @@ const routes: Routes = <Routes>[
             path: 'accountInformation',
             loadChildren: '../applications/settings-account-information-app/settings-account-information-app.module#SettingsAccountInformationAppModule'
           },
+          {
+            path: 'accessControl',
+            loadChildren: '../applications/settings-access-control-app/settings-access-control-app.module#SettingsAccessControlAppModule'
+          },
             {
                 path: 'metadata',
                 loadChildren: '../applications/settings-custom-data-app/settings-custom-data-app.module#SettingsCustomDataAppModule'
@@ -77,6 +80,10 @@ const routes: Routes = <Routes>[
             {
                 path: 'myUserSettings',
                 loadChildren: '../applications/settings-my-user-settings-app/settings-my-user-settings-app.module#SettingsMyUserSettingsAppModule'
+            },
+            {
+              path: 'transcoding',
+              loadChildren: '../applications/settings-transcoding-settings-app/settings-transcoding-settings-app.module#SettingsTranscodingSettingsAppModule'
             }
         ]
         },

@@ -1,14 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
@@ -19,11 +9,6 @@ import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUploa
   styleUrls: ['./bulk-log-table.component.scss']
 })
 export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
-
-
-  public _bulkLog: any[] = [];
-  private _deferredEntries: any[];
-
   @Input()
   set list(data: any[]) {
     if (!this._deferredLoading) {
@@ -34,7 +19,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this._bulkLog = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredEntries = data
+      this._deferredEntries = data;
     }
   }
 
@@ -48,23 +33,22 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
-  private bulkLogItem: KalturaBulkUpload;
 
+  private _deferredEntries: any[];
+
+  public _bulkLog: any[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
-
   public _items: MenuItem[];
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
+  public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-      this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngAfterViewInit() {
@@ -83,19 +67,19 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.actionsMenu.hide();
   }
 
-  private _buildMenu(): void {
+  private _buildMenu(bulkLogItem: KalturaBulkUpload): void {
     this._items = [
       {
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
-        command: (event) => this._onActionSelected('delete', this.bulkLogItem)
+        command: () => this._onActionSelected('delete', bulkLogItem)
       },
       {
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),
-        command: (event) => this._onActionSelected('downloadLog', this.bulkLogItem)
+        command: () => this._onActionSelected('downloadLog', bulkLogItem)
       },
       {
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadFile'),
-        command: (event) => this._onActionSelected('downloadFile', this.bulkLogItem)
+        command: () => this._onActionSelected('downloadFile', bulkLogItem)
       }
     ];
   }
@@ -107,11 +91,8 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _openActionsMenu(event: any, bulkLogItem: KalturaBulkUpload): void {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (!this.bulkLogItem || this.bulkLogItem.id !== bulkLogItem.id) {
-        this.bulkLogItem = bulkLogItem;
-        this._buildMenu();
-        this.actionsMenu.show(event);
-      }
+      this._buildMenu(bulkLogItem);
+      this.actionsMenu.show(event);
     }
   }
 

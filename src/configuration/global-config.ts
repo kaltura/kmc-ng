@@ -1,11 +1,13 @@
 
 import { environment } from '../environments/environment';
+import { countryCodes } from './country-codes';
 
 export interface GlobalConfig {
     client: {
         useSecuredProtocol: boolean,
         production: boolean,
-        appVersion: string
+        appVersion: string,
+        countriesList: string[]
     },
     kalturaServer: {
         useSecuredProtocol: boolean,
@@ -18,8 +20,9 @@ export interface GlobalConfig {
 export const globalConfig: GlobalConfig = {
     client: {
         production: environment.production,
-        appVersion: '3.6.1',
-        useSecuredProtocol: environment.client.useSecuredProtocol
+        appVersion: '4.0.0',
+        useSecuredProtocol: environment.client.useSecuredProtocol,
+        countriesList: countryCodes
     },
     kalturaServer: {
         useSecuredProtocol: environment.server.useSecuredProtocol,

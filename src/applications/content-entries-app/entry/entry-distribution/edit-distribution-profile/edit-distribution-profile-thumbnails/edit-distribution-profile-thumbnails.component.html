@@ -1,0 +1,8 @@
+<div class="kEditDistributionProfileThumbnails">
+  <h2 class="kFormHeader">{{'applications.content.entryDetails.distribution.form.thumbnail' | translate}}</h2>
+  <kEditDistributionProfileThumbnailItem *ngFor="let thumbnail of requiredThumbnails"
+                                         [thumbnail]="thumbnail"></kEditDistributionProfileThumbnailItem>
+  <span *ngIf="!requiredThumbnails.length">
+    {{'applications.content.entryDetails.distribution.form.notRequired' | translate}}
+  </span>
+</div>

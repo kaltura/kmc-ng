@@ -150,3 +150,9 @@
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
 }
+
+:host /deep/ .kUsersTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}

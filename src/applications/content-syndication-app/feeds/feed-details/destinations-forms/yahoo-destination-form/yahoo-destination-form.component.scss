@@ -49,3 +49,18 @@
     padding-top: 12px;
   }
 }
+
+:host /deep/ .kCategories {
+  .ui-multiselect {
+    padding-left: 0;
+  }
+
+  .ui-multiselect-label {
+    padding: .5em;
+    line-height: inherit;
+  }
+
+  .ui-widget-header {
+    border-radius: 0;
+  }
+}

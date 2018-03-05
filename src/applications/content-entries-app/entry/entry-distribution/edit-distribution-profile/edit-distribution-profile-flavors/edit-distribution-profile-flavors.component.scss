@@ -1,0 +1,58 @@
+@import 'app-theme/_variables.scss';
+
+.kEditDistributionProfileFlavors {
+  .kFormHeader {
+    margin-top: 32px;
+    margin-bottom: 24px;
+  }
+
+  .kFlavor {
+    margin-bottom: 24px;
+
+    .kFlavorInfo {
+      color: $kGrayscale1;
+      margin-bottom: 14px;
+
+      .kFlavorName {
+        font-weight: bold;
+      }
+
+      .kFlavorIcon {
+        font-size: 24px;
+        color: $kGrayscale3;
+        margin-right: 20px;
+        position: relative;
+        top: 5px;
+      }
+
+    }
+
+    .kFlavorMetadata {
+      color: $kGrayscale2;
+      font-size: 14px;
+
+      .kFlavorMetadataDelimiter {
+        margin: 0 10px;
+
+        &:after {
+          content: '|';
+          font-size: 12px;
+          color: $kGrayscale4;
+          top: -1px;
+          position: relative;
+        }
+      }
+
+      .kFlavorMissingMetadata {
+        color: $kDandger;
+
+        .kFlavorMissingIcon {
+          font-size: 24px;
+          margin-right: 20px;
+          position: relative;
+          top: 5px;
+        }
+      }
+    }
+  }
+}

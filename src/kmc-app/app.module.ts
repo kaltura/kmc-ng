@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
@@ -33,8 +33,7 @@ import {
   AppEventsModule,
   FlavoursStore,
   KalturaServerModule,
-  MetadataProfileModule,
-  PartnerProfileStore
+  MetadataProfileModule, PartnerProfileStore,
 } from 'app-shared/kmc-shared';
 
 import {AppComponent} from './app.component';
@@ -78,11 +77,14 @@ import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-cr
 import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
+import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
+import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
+import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 
-const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore];
+const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 
 
@@ -102,7 +104,7 @@ export function clientConfigurationFactory() {
     CommonModule,
     ConfirmDialogModule,
     DropdownModule,
-    HttpModule,
+    HttpClientModule,
     InputTextModule,
     MetadataProfileModule.forRoot(),
     Ng2PageScrollModule.forRoot(),
@@ -135,7 +137,9 @@ export function clientConfigurationFactory() {
     CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
-    ViewCategoryEntriesModule.forRoot()
+    ViewCategoryEntriesModule.forRoot(),
+    AccessControlProfileModule.forRoot(),
+    TranscodingProfileCreationModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -158,7 +162,7 @@ export function clientConfigurationFactory() {
   ],
   exports: [],
   providers: <any>[
-    ...partnerProviders,
+      ...partnerProviders,
       KalturaLogger,
       {
           provide: KalturaLoggerName, useValue: 'kmc'

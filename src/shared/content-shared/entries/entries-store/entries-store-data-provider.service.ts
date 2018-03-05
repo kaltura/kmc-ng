@@ -20,7 +20,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
-import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
+
 
 
 @Injectable()
@@ -56,10 +56,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
           name: metadataProfile.name,
           lists: (metadataProfile.items || []).map(item => ({ id: item.id, name: item.name }))
         }));
-      }).catch(() => null);
+      });
   }
 
-  public getServerFilter(data: EntriesFilters): Observable<KalturaMediaEntryFilterForPlaylist> {
+  public getServerFilter(data: EntriesFilters): Observable<KalturaMediaEntryFilter> {
     try {
       return this._getMetadataProfiles()
         .map(metadataProfiles => {
@@ -298,14 +298,14 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       );
   }
 
-  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes): EntriesFilters {
+  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes, pageSize: number): EntriesFilters {
     const categoriesMode = typeof savedAutoSelectChildren === 'number'
       ? savedAutoSelectChildren
       : CategoriesModes.SelfAndChildren;
 
     return {
       freetext: '',
-      pageSize: 50,
+      pageSize: pageSize,
       pageIndex: 0,
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc,

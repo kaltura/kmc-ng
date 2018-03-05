@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 @Component({
@@ -20,12 +19,6 @@ import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
   styleUrls: ['./categories-table.component.scss']
 })
 export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-
-
-  public _categories: KalturaCategory[] = [];
-  private _deferredCategories: any[];
-  public _deferredLoading = true;
-
   @Input()
   set categories(data: any[]) {
     if (!this._deferredLoading) {
@@ -36,32 +29,34 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       this._categories = data;
       this.cdRef.detectChanges();
     } else {
-      this._deferredCategories = data
+      this._deferredCategories = data;
     }
   }
 
-  @Input() filter: any = {};
+  @Input() sortField: string = null;
+  @Input() sortOrder: number = null;
   @Input() selectedCategories: KalturaCategory[] = [];
 
   @Output()
-  sortChanged = new EventEmitter<any>();
+  sortChanged = new EventEmitter<{ field: string, order: number}>();
   @Output()
   actionSelected = new EventEmitter<{action: string, category: KalturaCategory}>();
   @Output()
   selectedCategoriesChange = new EventEmitter<any>();
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
-  private _actionsMenuCategory: KalturaCategory;
 
+  private _deferredCategories: KalturaCategory[];
+
+  public _categories: KalturaCategory[] = [];
+  public _deferredLoading = true;
   public _emptyMessage = '';
-
   public _items: MenuItem[];
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
+  public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef, private _browserService: BrowserService) {
+  constructor(private appLocalization: AppLocalization,
+              private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -91,35 +86,27 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   openActionsMenu(event: any, category: KalturaCategory) {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (!this._actionsMenuCategory || this._actionsMenuCategory.id !== category.id) {
-        this.buildMenu();
-        this._actionsMenuCategory = category;
-        this._actionsMenu.show(event);
-      }
+      this.buildMenu(category);
+      this._actionsMenu.show(event);
     }
   }
-
-  buildMenu(): void {
+  buildMenu(category: KalturaCategory): void {
     this._items = [
       {
-        label: this.appLocalization.get('applications.content.categories.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuCategory);
-      }
+        label: this.appLocalization.get('applications.content.categories.edit'),
+        command: () => this.onActionSelected('edit', category)
       },
       {
-        label: this.appLocalization.get('applications.content.categories.delete'), command: (event) => {
-        this.onActionSelected('delete', this._actionsMenuCategory);
-      }
+        label: this.appLocalization.get('applications.content.categories.delete'),
+        command: () => this.onActionSelected('delete', category)
       },
       {
-        label: this.appLocalization.get('applications.content.categories.viewEntries'), command: (event) => {
-        this.onActionSelected('viewEntries', this._actionsMenuCategory);
-      }
+        label: this.appLocalization.get('applications.content.categories.viewEntries'),
+        command: () => this.onActionSelected('viewEntries', category)
       },
       {
-        label: this.appLocalization.get('applications.content.categories.moveCategory'), command: (event) => {
-        this.onActionSelected('moveCategory', this._actionsMenuCategory);
-      }
+        label: this.appLocalization.get('applications.content.categories.moveCategory'),
+        command: () => this.onActionSelected('moveCategory', category)
       }
     ];
   }
@@ -129,7 +116,10 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   }
 
   _onSortChanged(event) {
-    this.sortChanged.emit(event);
+    if (event.field && event.order) {
+      // primeng workaround: must check that field and order was provided to prevent reset of sort value
+      this.sortChanged.emit({field: event.field, order: event.order});
+    }
   }
 }
 

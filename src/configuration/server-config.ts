@@ -76,6 +76,15 @@ export const ServerConfigSchema = {
                     required: ['enabled', 'uri', 'version'],
                     additionalProperties: false
                 },
+                liveAnalytics: {
+                    properties: {
+                        enabled: {type: 'boolean'},
+                        uri: {type: 'string'},
+                        version: {type: 'string'}
+                    },
+                    required: ['enabled', 'uri', 'version'],
+                    additionalProperties: false
+                },
                 clipAndTrim: {
                   properties: {
                     enabled: {type: 'boolean'},
@@ -183,6 +192,11 @@ export interface ServerConfig {
             uiConfId: number,
             map_urls: string[],
             map_zoom_levels: string,
+        },
+        liveAnalytics: {
+            enabled: boolean,
+            version: string,
+            uri: string,
         },
         clipAndTrim: {
           enabled: boolean,

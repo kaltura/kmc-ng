@@ -61,8 +61,8 @@ export interface Categories {
 }
 
 export enum SortDirection {
-  Desc,
-  Asc
+  Desc = -1,
+  Asc = 1
 }
 
 export interface MoveCategoryData {
@@ -630,7 +630,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
 
         // Check that the parent category isn't a descendant of the category
         const selectedParentIsDescendantOfCategoryToMove =
-          moveCategoryData.categoryParent.fullIds.includes(category.id);
+          moveCategoryData.categoryParent.fullIds.indexOf(category.id) !== -1;
         return !selectedCategoryIdSameAsParent && !selectedParentIsDescendantOfCategoryToMove;
       };
 

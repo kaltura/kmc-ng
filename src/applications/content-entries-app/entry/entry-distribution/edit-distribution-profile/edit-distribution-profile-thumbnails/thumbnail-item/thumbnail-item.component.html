@@ -1,0 +1,24 @@
+<div class="kThumbnail">
+  <div class="kThumbnailWrapper">
+    <button  *ngIf="_showNextButton" class="kButtonDefault kThumbnailSpinner" (click)="_nextThumbnail()">
+      <i class="kIconrefresh"></i>
+    </button>
+    <div class="kThumbnailHolder">
+      <img *ngIf="_currentThumbnail" [src]="_currentThumbnail?.url">
+    </div>
+  </div>
+  <div class="kThumbnailInfo">
+    <div class="kThumbnailDimensions">{{thumbnail.width}}x{{thumbnail.height}}</div>
+    <div class="kThumbnailMetadata">
+        <span *ngIf="_currentThumbnail">
+          {{_currentThumbnail?.size | kFileSize}}
+          <span class="kThumbnailMetadataDelimiter"></span>
+          {{_currentThumbnail?.id}}
+        </span>
+      <span *ngIf="!_currentThumbnail" class="kThumbnailMissingMetadata">
+          <i class="kIconwarning kThumbnailMissingIcon"></i>
+          {{'applications.content.entryDetails.distribution.form.missingThumbnail' | translate}}
+       </span>
+    </div>
+  </div>
+</div>

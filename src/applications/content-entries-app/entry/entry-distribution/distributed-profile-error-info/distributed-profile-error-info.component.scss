@@ -1,0 +1,20 @@
+@import 'app-theme/_variables.scss';
+
+.kDistributedProfileErrorInfo {
+  width: 338px;
+  padding: 16px;
+  font-size: 15px;
+  line-height: 18px;
+
+  .kInfo {
+    white-space: pre-line;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .kGoToLink {
+    margin-top: 14px;
+    color: $kTertiary;
+    display: block;
+  }
+}

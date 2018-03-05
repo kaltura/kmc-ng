@@ -237,10 +237,12 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   public _onSortChanged(event): void {
-    this._playlistsStore.filter({
-      sortBy: event.field,
-      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
-    });
+      if (event.field !== this._query.sortBy || event.order !== this._query.sortDirection) {
+          this._playlistsStore.filter({
+              sortBy: event.field,
+              sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+          });
+      }
   }
 
   public _onPaginationChanged(state: any): void {

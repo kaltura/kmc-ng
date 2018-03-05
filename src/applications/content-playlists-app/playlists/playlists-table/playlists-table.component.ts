@@ -17,14 +17,15 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
       this._playlists = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredPlaylists = data
+      this._deferredPlaylists = data;
     }
   }
 
-  @Input() filter: any = {};
+  @Input() sortField: string = null;
+  @Input() sortOrder: number = null;
   @Input() selectedPlaylists: any[] = [];
 
-  @Output() sortChanged = new EventEmitter<any>();
+  @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
   @Output() selectedPlaylistsChange = new EventEmitter<any>();
   @Output() actionSelected = new EventEmitter<any>();
 
@@ -32,24 +33,19 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
   private _deferredPlaylists: KalturaPlaylist[];
 
-  private actionsMenuPlaylistId = '';
-  private actionsMenuPlaylist: KalturaPlaylist;
-
   public _deferredLoading = true;
   public _emptyMessage = '';
   public _playlists: KalturaPlaylist[] = [];
   public _items: MenuItem[];
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
+  public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-      this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngAfterViewInit() {
@@ -67,11 +63,8 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   openActionsMenu(event: any, playlist: KalturaPlaylist) {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (this.actionsMenuPlaylistId !== playlist.id) {
-        this.buildMenu(playlist);
-        this.actionsMenuPlaylistId = playlist.id;
-        this.actionsMenu.show(event);
-      }
+      this.buildMenu(playlist);
+      this.actionsMenu.show(event);
     }
   }
 
@@ -82,22 +75,19 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   buildMenu(playlist: KalturaPlaylist): void {
     this._items = [
       {
-        label: this._appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
-        this.onActionSelected("preview", playlist);
-      }
+        label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
+        command: () => this.onActionSelected('preview', playlist)
       },
       {
-        label: this._appLocalization.get("applications.content.table.delete"), command: (event) => {
-        this.onActionSelected("delete", playlist);
-      }
+        label: this._appLocalization.get('applications.content.table.delete'),
+        command: () => this.onActionSelected('delete', playlist)
       },
       {
-        label: this._appLocalization.get("applications.content.table.view"), command: (event) => {
-        this.onActionSelected("view", playlist);
-      }
+        label: this._appLocalization.get('applications.content.table.view'),
+        command: () => this.onActionSelected('view', playlist)
       }
     ];
-    if (playlist.status instanceof KalturaEntryStatus && playlist.status.toString() != KalturaEntryStatus.ready.toString()) {
+    if (playlist.status instanceof KalturaEntryStatus && !playlist.status.equals(KalturaEntryStatus.ready)) {
       this._items.shift();
     }
   }
@@ -108,11 +98,14 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   onActionSelected(action: string, playlist: KalturaPlaylist) {
-    this.actionSelected.emit({"action": action, "playlist": playlist});
+    this.actionSelected.emit({ 'action': action, 'playlist': playlist });
   }
 
   onSortChanged(event) {
-    this.sortChanged.emit(event);
+    if (event.field && event.order) {
+      // primeng workaround: must check that field and order was provided to prevent reset of sort value
+      this.sortChanged.emit({ field: event.field, order: event.order });
+    }
   }
 }
 
