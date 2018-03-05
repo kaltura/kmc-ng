@@ -5,6 +5,10 @@
     <div class="kHeader">
     <span class="kTitle">
       <span>{{('applications.settings.integrationSettings.entitlement.addEntitlement.title') | translate}}</span>
+      <kInputHelper class="kHelp" trigger="click" [placement]="{'y': 'bottom'}">
+        <span [innerHTML]="'applications.settings.integrationSettings.accountInfo.helpText' | translate">
+        </span>
+      </kInputHelper>
     </span>
     </div>
     <div class="kContainer">

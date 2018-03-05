@@ -15,6 +15,13 @@
       color: $kGrayscale1;
       font-size: 24px;
       font-weight: 700;
+      position: relative;
+
+      .kHelp {
+        position: absolute;
+        top: -4px;
+        right: -25px;
+      }
     }
   }
   .kContainer {
