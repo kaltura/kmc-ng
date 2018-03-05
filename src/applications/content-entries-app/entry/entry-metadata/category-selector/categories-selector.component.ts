@@ -1,9 +1,9 @@
 import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import {ISubscription} from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
-import {AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 
@@ -25,12 +25,12 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
     public _categoriesLoaded = false;
     public _categoriesLocked = false;
-  public _categoriesUpdating = false;
-  public _treeSelection: number[] = [];
+    public _categoriesUpdating = false;
+    public _treeSelection: number[] = [];
 
     private _searchCategoriesSubscription: ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
-  @Input() buttonLabel = '';
+    @Input() buttonLabel = '';
     @Input() set value(value: CategoryData[]) {
         this._selectedCategories = value ? [...value] : [];
         this._treeSelection = value ? [...value.map(item => {
@@ -112,6 +112,10 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
         if (this._categoriesLoaded) {
             this._autoComplete.focusInput();
         }
+
+        this._selectedCategories.forEach((category: CategoryData) => {
+            this._categoriesTree.expandNode(category.id);
+        });
     }
 
 
