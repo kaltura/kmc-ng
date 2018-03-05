@@ -9,6 +9,7 @@
             [rowTrackBy]="rowTrackBy"
             [sortField]="sortField"
             [sortOrder]="sortOrder"
+            [defaultSortOrder]="-1"
             (sortFunction)="_onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedCategories"
             (selectionChange)="_onSelectionChange($event)"
