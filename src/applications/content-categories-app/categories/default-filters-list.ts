@@ -5,30 +5,30 @@ import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/Kaltur
 export interface DefaultFilterList {
   label: string;
   name: string;
-  items: { value: string, label: string }[]
+  items: { value: number | string, label: string }[]
 }
 
 export const DefaultFiltersList: DefaultFilterList[] = [
   {
     name: 'privacyTypes', label: 'All Content Privacy Options',
     items: [
-      {value: String(KalturaPrivacyType.all), label: 'No Restriction'},
-      {value: String(KalturaPrivacyType.authenticatedUsers), label: 'Requires Authentication'},
-      {value: String(KalturaPrivacyType.membersOnly), label: 'Private'}
+      {value: (KalturaPrivacyType.all), label: 'No Restriction'},
+      {value: (KalturaPrivacyType.authenticatedUsers), label: 'Requires Authentication'},
+      {value: (KalturaPrivacyType.membersOnly), label: 'Private'}
     ]
   },
   {
     name: 'categoryListing', label: 'All Category Listing Options',
     items: [
-      {value: String(KalturaAppearInListType.partnerOnly), label: 'No Restriction'},
-      {value: String(KalturaAppearInListType.categoryMembersOnly), label: 'Private'}
+      {value: (KalturaAppearInListType.partnerOnly), label: 'No Restriction'},
+      {value: (KalturaAppearInListType.categoryMembersOnly), label: 'Private'}
     ]
   },
   {
     name: 'contributionPolicy', label: 'All Contribution Policy Options',
     items: [
-      {value: String(KalturaContributionPolicyType.all), label: 'No Restriction'},
-      {value: String(KalturaContributionPolicyType.membersWithContributionPermission), label: 'Private'}
+      {value: (KalturaContributionPolicyType.all), label: 'No Restriction'},
+      {value: (KalturaContributionPolicyType.membersWithContributionPermission), label: 'Private'}
     ]
   },
   {
