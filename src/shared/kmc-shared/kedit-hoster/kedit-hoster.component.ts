@@ -1,13 +1,23 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {AppAuthentication} from 'app-shared/kmc-shell';
 import {getKalturaServerUri} from 'config/server';
 
 export interface KeditHosterConfig {
-  entryId: string,
-  keditUrl: string,
-  tab: 'quiz' | 'editor',
-  playerUiConfId: string,
-  previewPlayerUiConfId: string
+  entryId: string;
+  keditUrl: string;
+  tab: {name: 'quiz' | 'editor' | 'advertisements',
+    permissions: string[],
+    userPermissions: string[],
+    preActivateMessage?: string,
+    preSaveMessage?: string,
+    preSaveAsMessage?: string};
+    playerUiConfId: string;
+    previewPlayerUiConfId: string;
+    callbackActions?: {
+      clipCreated?: (data: {originalEntryId: string, newEntryId: string, newEntryName: string}) => void,
+      advertisementsModified?: (data: {entryId: string}) => void,
+      advertisementsSaved?: (data: {entryId: string}) => void,
+    };
 }
 
 @Component({
@@ -15,22 +25,21 @@ export interface KeditHosterConfig {
   templateUrl: './kedit-hoster.component.html',
   styleUrls: ['./kedit-hoster.component.scss']
 })
-export class KeditHosterComponent implements OnInit, AfterViewInit, OnDestroy {
+export class KeditHosterComponent implements OnInit, OnDestroy {
 
 
   @Input()
   public set config(value: KeditHosterConfig) {
-    this._updateState(value);
+    this._keditHosterConfig = value;
+    this._updateState(this._keditHosterConfig);
   }
-
-  @Output()
-  clipCreated = new EventEmitter<void>();
 
   public keditUrl: string;
   private _windowEventListener = null;
   private _keditConfig: any = null;
+  private _keditHosterConfig: KeditHosterConfig = null;
 
-  constructor(private appAuthentication: AppAuthentication, private _browserService: BrowserService) {
+  constructor(private appAuthentication: AppAuthentication) {
   }
 
   ngOnInit() {
@@ -72,13 +81,37 @@ export class KeditHosterComponent implements OnInit, AfterViewInit, OnDestroy {
             * and message.data is the (localized) text to show the user.
             * */
       if (postMessageData.messageType === 'kea-clip-created') {
-        this.clipCreated.emit();
+        if (this._keditHosterConfig.callbackActions && this._keditHosterConfig.callbackActions.clipCreated) {
+          this._keditHosterConfig.callbackActions.clipCreated(postMessageData.data);
+        }
+
         // send a message to KEA which will show up after clip has been created.
         const message = 'Clip was successfully created.';
         e.source.postMessage({
           'messageType': 'kea-clip-message',
           'data': message
         }, e.origin);
+      }
+
+
+      /*
+      * Fired when modifying advertisements (save not performed yet).
+      * message.data = {entryId}
+      */
+      if (postMessageData.messageType === 'kea-advertisements-modified') {
+        if (this._keditHosterConfig.callbackActions && this._keditHosterConfig.callbackActions.advertisementsModified) {
+          this._keditHosterConfig.callbackActions.advertisementsModified(postMessageData.data);
+        }
+      }
+
+      /*
+       * Fired when saving advertisements
+       * message.data = {entryId}
+       */
+      if (postMessageData.messageType === 'kea-advertisements-saved') {
+        if (this._keditHosterConfig.callbackActions && this._keditHosterConfig.callbackActions.advertisementsSaved) {
+          this._keditHosterConfig.callbackActions.advertisementsSaved(postMessageData.data);
+        }
       }
 
 
@@ -102,13 +135,15 @@ export class KeditHosterComponent implements OnInit, AfterViewInit, OnDestroy {
     const serviceUrl = getKalturaServerUri();
 
     const tabs = {};
-
-    switch (config.tab) {
+    switch (config.tab.name) {
       case 'quiz':
-        tabs['quiz'] = {name: 'quiz', permissions: ['quiz'], userPermissions: ['quiz']};
+        tabs['quiz'] = {name: 'quiz', permissions: config.tab.permissions, userPermissions: config.tab.userPermissions};
         break;
       case 'editor':
-        tabs['edit'] = {name: 'edit', permissions: ['clip', 'trim'], userPermissions: ['clip', 'trim']};
+        tabs['edit'] = {name: 'edit', permissions: config.tab.permissions, userPermissions: config.tab.userPermissions};
+        break;
+      case 'advertisements':
+        tabs['advertisements'] = {name: 'advertisements', permissions: config.tab.permissions, userPermissions: config.tab.userPermissions};
         break;
     }
 
@@ -142,7 +177,7 @@ export class KeditHosterComponent implements OnInit, AfterViewInit, OnDestroy {
         'tabs': tabs,
 
         /* tab to start current session with, should match one of the keys above  */
-        'tab': config.tab,
+        'tab': config.tab.name,
 
         /* URL of an additional css file to load */
         'css_url': '',
@@ -164,9 +199,6 @@ export class KeditHosterComponent implements OnInit, AfterViewInit, OnDestroy {
         'hide_navigation_bar': true
       }
     };
-  }
-
-  ngAfterViewInit() {
   }
 
 

@@ -30,10 +30,13 @@ export class ClipAndTrimComponent implements OnInit, OnDestroy {
     this._keditConfig = {
       entryId: this.entryId,
       keditUrl: serverConfig.externalApps.clipAndTrim.uri,
-      tab: 'editor',
+      tab: {name: 'editor', permissions: ['clip', 'trim'], userPermissions: ['clip', 'trim']},
       playerUiConfId: serverConfig.externalApps.clipAndTrim.uiConfId,
-      previewPlayerUiConfId: serverConfig.externalApps.clipAndTrim.uiConfId
-    }
+      previewPlayerUiConfId: serverConfig.externalApps.clipAndTrim.uiConfId,
+      callbackActions: {
+        clipCreated: this._onClipCreated.bind(this)
+      }
+    };
   }
 
   ngOnDestroy() {
@@ -45,7 +48,9 @@ export class ClipAndTrimComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _onClipCreated() {
-    this._widgetService.onClipCreated();
+  public _onClipCreated(data: {originalEntryId: string, newEntryId: string, newEntryName: string}) {
+    if (data && data.originalEntryId === this.entryId) {
+      this._widgetService.onClipCreated();
+    }
   }
 }

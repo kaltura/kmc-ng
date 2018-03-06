@@ -94,6 +94,15 @@ export const ServerConfigSchema = {
                   required: ['enabled', 'uri', 'uiConfId'],
                   additionalProperties: false
                 },
+                advertisements: {
+                  properties: {
+                    enabled: {type: 'boolean'},
+                    uri: {type: 'string'},
+                    uiConfId: {type: 'string'},
+                  },
+                  required: ['enabled', 'uri', 'uiConfId'],
+                  additionalProperties: false
+                },
                 kava: {
                     properties: {
                         enabled: {type: 'boolean'},
@@ -161,11 +170,11 @@ export interface ServerConfig {
             enabled: boolean,
             trialPeriodInDays: number
         }
-    },
+    };
     cdnServers: {
         serverUri: string,
         securedServerUri: string
-    },
+    };
     externalApps: {
         studio: {
             enabled: boolean,
@@ -202,8 +211,13 @@ export interface ServerConfig {
           enabled: boolean,
           uri: string,
           uiConfId: string,
+        },
+        advertisements: {
+          enabled: boolean,
+          uri: string,
+          uiConfId: string,
         }
-    },
+    };
     externalLinks: {
         previewAndEmbed: {
             embedTypes: string,
@@ -224,18 +238,17 @@ export interface ServerConfig {
         live: {
             akamaiEdgeServerIpURL: string
         }
-    }
+    };
 }
 
 export const serverConfig: ServerConfig = <any>{};
 
-export function getKalturaServerUri(suffix: string = ''): string{
-    if (serverConfig)
-    {
+export function getKalturaServerUri(suffix: string = ''): string {
+    if (serverConfig) {
         const useHttpsProtocol = globalConfig.kalturaServer.useSecuredProtocol;
         const serverEndpoint = serverConfig.kalturaServer.uri;
         return `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}${suffix}`;
-    }else {
+    } else {
         throw new Error('cannot provide kaltura server uri. missing server configuration');
     }
 }

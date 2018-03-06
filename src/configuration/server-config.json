@@ -49,7 +49,12 @@
     },
     "clipAndTrim": {
       "enabled": true,
-      "uri": "http://localhost:4201/editor",
+      "uri": "http://localhost:4200/editor",
+      "uiConfId": "36060752"
+    },
+    "advertisements": {
+      "enabled": true,
+      "uri": "http://localhost:4200/advertisements",
       "uiConfId": "36060752"
     }
   },
