@@ -52,10 +52,10 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
     ngOnInit(){
 	    // load all supported languages
 	    this._languages = [];
-	    let exludedLanguages = ['he', 'id', 'yi']; // duplicated languages [TODO-KMCNG] - should be checked with beckend
+	    let exludedLanguages = ['he', 'id', 'yi']; // duplicated languages TODO [KMCNG] - should be checked with beckend
 	    for (let lang in KalturaLanguage){
 		    if (lang !== "en" && exludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
-			    this._languages.push( {label: this._appLocalization.get("languages." + lang.toUpperCase()), value: lang.toUpperCase() });
+			    this._languages.push( {label: this._appLocalization.get("languages." + lang.toUpperCase()), value: KalturaLanguage[lang] });
 		    }
 	    }
 	    // sort the language array by language alphabetically
@@ -135,12 +135,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 			}
 		}
 		if (this.captionsEditForm.get("language").dirty) {
-			let langCode = this.captionsEditForm.get("language").value.toString().toLowerCase();
-			if (langCode.length === 4) {
-				langCode = langCode.substr(0, 2) + langCode.charAt(2).toUpperCase() + langCode.slice(3);
-			}
-			// TODO sakal should support languages and countries lookup table
-			//this.currentCaption.language = KalturaLanguage[langCode];
+			this.currentCaption.language = this.captionsEditForm.get("language").value;
 		}
 		if (this.captionsEditForm.get("format").dirty) {
 			this.currentCaption.format = this.captionsEditForm.get("format").value;
