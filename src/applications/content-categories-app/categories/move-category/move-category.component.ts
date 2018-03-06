@@ -22,7 +22,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   @Output() onMovedCategories = new EventEmitter<null>();
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedParentCategory: number = null;
+  public _selectedParentCategory = 0;
   public _categoriesUpdating = false;
 
   constructor(private _categoriesService: CategoriesService,
@@ -66,6 +66,13 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   }
 
   public _apply(): void {
+    if (this._selectedParentCategory === 0) {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.moveCategory.noCategorySelected')
+      });
+      return;
+    }
+
     const invalidCategory = this.selectedCategories.find((category) =>
       (!this._validateCategoryMove(category))
     );

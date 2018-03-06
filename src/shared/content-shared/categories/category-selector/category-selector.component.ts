@@ -29,7 +29,7 @@ export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
     @Input() enableNoParentSelection: boolean = true;
 
   public _categoriesLoaded = false;
-  public _selectedCategory: number = null;
+  public _selectedCategory = 0;
   public _selectionTooltip = '';
 
   private _searchCategoriesSubscription: ISubscription;

@@ -24,7 +24,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onApply = new EventEmitter<{ categoryId: number }>();
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedParentCategory: number = null;
+  public _selectedParentCategory = 0;
   public newCategoryForm: FormGroup;
   public _categoriesUpdating = false;
 
@@ -86,7 +86,13 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public _apply(): void {
     this._blockerMessage = null;
-    this._createNewCategory();
+    if (this._selectedParentCategory !== 0) {
+      this._createNewCategory();
+    } else {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.addNewCategory.errors.noParent')
+      });
+    }
   }
 
   private _createNewCategory() {
