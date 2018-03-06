@@ -137,7 +137,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         if (flavor.flavorAsset && flavor.flavorAsset.isOriginal) {
           flavors.push(this._createFlavor(flavor, response)); // this is the source. put it first in the array
         } else if (flavor.flavorAsset && (!flavor.flavorAsset.status ||
-            (flavor.flavorAsset.status && flavor.flavorAsset.status.toString() !== KalturaFlavorAssetStatus.temp.toString()))) {
+            (flavor.flavorAsset.status && flavor.flavorAsset.status !== KalturaFlavorAssetStatus.temp))) {
           flavorsWithAssets.push(this._createFlavor(flavor, response)); // flavors with assets that is not in temp status
         } else if (!flavor.flavorAsset && flavor.flavorParams && !(flavor.flavorParams instanceof KalturaLiveParams)) {
           flavorsWithoutAssets.push(this._createFlavor(flavor, response)); // flavors without assets
@@ -161,12 +161,12 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     newFlavor.format = flavor.flavorAsset ? flavor.flavorAsset.fileExt : '';
     newFlavor.codec = flavor.flavorAsset ? flavor.flavorAsset.videoCodecId : '';
     newFlavor.bitrate = (flavor.flavorAsset && flavor.flavorAsset.bitrate && flavor.flavorAsset.bitrate > 0)
-      ? flavor.flavorAsset.bitrate.toString()
+      ? String(flavor.flavorAsset.bitrate)
       : '';
-    newFlavor.size = flavor.flavorAsset ? (flavor.flavorAsset.status.toString() === KalturaFlavorAssetStatus.ready.toString()
-      ? flavor.flavorAsset.size.toString() : '0')
+    newFlavor.size = flavor.flavorAsset ? (flavor.flavorAsset.status === KalturaFlavorAssetStatus.ready
+      ? String(flavor.flavorAsset.size) : '0')
       : '';
-    newFlavor.status = flavor.flavorAsset ? flavor.flavorAsset.status.toString() : '';
+    newFlavor.status = flavor.flavorAsset ? flavor.flavorAsset.status : null;
     newFlavor.statusLabel = '';
     newFlavor.statusTooltip = '';
     newFlavor.tags = flavor.flavorAsset ? flavor.flavorAsset.tags : '-';
@@ -175,8 +175,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     // set dimensions
     const width: number = flavor.flavorAsset ? flavor.flavorAsset.width : flavor.flavorParams.width;
     const height: number = flavor.flavorAsset ? flavor.flavorAsset.height : flavor.flavorParams.height;
-    const w: string = width === 0 ? '[auto]' : width.toString();
-    const h: string = height === 0 ? '[auto]' : height.toString();
+    const w: string = width === 0 ? '[auto]' : String(width);
+    const h: string = height === 0 ? '[auto]' : String(height);
     newFlavor.dimensions = w + ' x ' + h;
 
     // set status
@@ -184,7 +184,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       newFlavor.statusLabel = this._appLocalization.get(
         'applications.content.entryDetails.flavours.status.' + KalturaFlavorAssetStatus[flavor.flavorAsset.status]
       );
-      if (flavor.flavorAsset.status.toString() === KalturaFlavorAssetStatus.notApplicable.toString()) {
+      if (flavor.flavorAsset.status === KalturaFlavorAssetStatus.notApplicable) {
         newFlavor.statusTooltip = this._appLocalization.get('applications.content.entryDetails.flavours.status.naTooltip');
       }
     }
@@ -193,12 +193,12 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     if (newFlavor.isWidevine) {
       // get source flavors for DRM
       const sourceIDs = (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds
-        ? (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds.split(',')
+        ? (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds.split(',').map(Number)
         : [];
       const sources = [];
       sourceIDs.forEach(sourceId => {
         allFlavors.forEach(flavorItem => {
-          if (flavorItem.flavorParams.id.toString() === sourceId) {
+          if (flavorItem.flavorParams.id === sourceId) {
             sources.push(flavorItem.flavorParams.name);
           }
         });
@@ -334,100 +334,100 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   public getProviderName(type: KalturaDistributionProviderType): string {
     switch (true) {
-      case type.equals(KalturaDistributionProviderType.attUverse):
+      case type === KalturaDistributionProviderType.attUverse:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.attUverse');
 
-      case type.equals(KalturaDistributionProviderType.avn):
+      case type === KalturaDistributionProviderType.avn:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.avn');
 
-      case type.equals(KalturaDistributionProviderType.comcastMrss):
+      case type === KalturaDistributionProviderType.comcastMrss:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.comcastMrss');
 
-      case type.equals(KalturaDistributionProviderType.crossKaltura):
+      case type === KalturaDistributionProviderType.crossKaltura:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.crossKaltura');
 
-      case type.equals(KalturaDistributionProviderType.dailymotion):
+      case type === KalturaDistributionProviderType.dailymotion:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.dailymotion');
 
-      case type.equals(KalturaDistributionProviderType.doubleclick):
+      case type === KalturaDistributionProviderType.doubleclick:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.doubleclick');
 
-      case type.equals(KalturaDistributionProviderType.facebook):
+      case type === KalturaDistributionProviderType.facebook:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.facebook');
 
-      case type.equals(KalturaDistributionProviderType.freewheel):
+      case type === KalturaDistributionProviderType.freewheel:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.freewheel');
 
-      case type.equals(KalturaDistributionProviderType.freewheelGeneric):
+      case type === KalturaDistributionProviderType.freewheelGeneric:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.freewheelGeneric');
 
-      case type.equals(KalturaDistributionProviderType.ftp):
+      case type === KalturaDistributionProviderType.ftp:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.ftp');
 
-      case type.equals(KalturaDistributionProviderType.ftpScheduled):
+      case type === KalturaDistributionProviderType.ftpScheduled:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.ftpScheduled');
 
-      case type.equals(KalturaDistributionProviderType.generic):
+      case type === KalturaDistributionProviderType.generic:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.generic');
 
-      case type.equals(KalturaDistributionProviderType.hulu):
+      case type === KalturaDistributionProviderType.hulu:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.hulu');
 
-      case type.equals(KalturaDistributionProviderType.idetic):
+      case type === KalturaDistributionProviderType.idetic:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.idetic');
 
-      case type.equals(KalturaDistributionProviderType.metroPcs):
+      case type === KalturaDistributionProviderType.metroPcs:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.metroPcs');
 
-      case type.equals(KalturaDistributionProviderType.msn):
+      case type === KalturaDistributionProviderType.msn:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.msn');
 
-      case type.equals(KalturaDistributionProviderType.ndn):
+      case type === KalturaDistributionProviderType.ndn:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.ndn');
 
-      case type.equals(KalturaDistributionProviderType.podcast):
+      case type === KalturaDistributionProviderType.podcast:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.podcast');
 
-      case type.equals(KalturaDistributionProviderType.pushToNews):
+      case type === KalturaDistributionProviderType.pushToNews:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.pushToNews');
 
-      case type.equals(KalturaDistributionProviderType.quickplay):
+      case type === KalturaDistributionProviderType.quickplay:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.quickplay');
 
-      case type.equals(KalturaDistributionProviderType.synacorHbo):
+      case type === KalturaDistributionProviderType.synacorHbo:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.synacorHbo');
 
-      case type.equals(KalturaDistributionProviderType.syndication):
+      case type === KalturaDistributionProviderType.syndication:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.syndication');
 
-      case type.equals(KalturaDistributionProviderType.timeWarner):
+      case type === KalturaDistributionProviderType.timeWarner:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.timeWarner');
 
-      case type.equals(KalturaDistributionProviderType.tvcom):
+      case type === KalturaDistributionProviderType.tvcom:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.tvcom');
 
-      case type.equals(KalturaDistributionProviderType.tvinci):
+      case type === KalturaDistributionProviderType.tvinci:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.tvinci');
 
-      case type.equals(KalturaDistributionProviderType.unicorn):
+      case type === KalturaDistributionProviderType.unicorn:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.unicorn');
 
-      case type.equals(KalturaDistributionProviderType.uverse):
+      case type === KalturaDistributionProviderType.uverse:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.uverse');
 
-      case type.equals(KalturaDistributionProviderType.uverseClickToOrder):
+      case type === KalturaDistributionProviderType.uverseClickToOrder:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.uverseClickToOrder');
 
-      case type.equals(KalturaDistributionProviderType.verizonVcast):
+      case type === KalturaDistributionProviderType.verizonVcast:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.verizonVcast');
 
-      case type.equals(KalturaDistributionProviderType.yahoo):
+      case type === KalturaDistributionProviderType.yahoo:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.yahoo');
 
-      case type.equals(KalturaDistributionProviderType.youtube):
+      case type === KalturaDistributionProviderType.youtube:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.youtube');
 
-      case type.equals(KalturaDistributionProviderType.youtubeApi):
+      case type === KalturaDistributionProviderType.youtubeApi:
         return this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.youtubeApi');
 
       default:

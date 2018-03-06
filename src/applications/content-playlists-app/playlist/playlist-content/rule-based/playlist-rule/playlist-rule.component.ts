@@ -38,14 +38,14 @@ export class PlaylistRuleComponent implements OnInit {
   public _nameRequiredError = false;
   public _enforcedFilters: Partial<EntriesFilters> = {
     'moderationStatuses': [
-      KalturaEntryModerationStatus.pendingModeration.toString(),
-      KalturaEntryModerationStatus.approved.toString(),
-      KalturaEntryModerationStatus.flaggedForReview.toString(),
-      KalturaEntryModerationStatus.autoApproved.toString()
+      KalturaEntryModerationStatus.pendingModeration,
+      KalturaEntryModerationStatus.approved,
+      KalturaEntryModerationStatus.flaggedForReview,
+      KalturaEntryModerationStatus.autoApproved
     ],
     'ingestionStatuses': [
-      KalturaEntryStatus.preconvert.toString(),
-      KalturaEntryStatus.ready.toString()
+      KalturaEntryStatus.preconvert,
+      KalturaEntryStatus.ready
     ],
     'accessControlProfiles': [],
     'timeScheduling': []
@@ -171,7 +171,7 @@ export class PlaylistRuleComponent implements OnInit {
   }
 
   public _onOrderByChange(): void {
-    const orderBy = this._orderBy.toString();
+    const orderBy = this._orderBy;
     const sortDirection = orderBy.charAt(0) === '-' ? SortDirection.Desc : SortDirection.Asc;
     const sortBy = orderBy.substring(1);
 

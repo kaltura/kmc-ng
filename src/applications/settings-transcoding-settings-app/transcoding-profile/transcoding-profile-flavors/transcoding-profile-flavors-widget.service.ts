@@ -105,16 +105,16 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
         const items = response.items;
         const profileType: KalturaConversionProfileType = this.data.type;
         let flavors = [];
-        if (profileType.equals(KalturaConversionProfileType.liveStream)) {
+        if (profileType === KalturaConversionProfileType.liveStream) {
           flavors = items.filter(item => item instanceof KalturaLiveParams);
-        } else if (profileType.equals(KalturaConversionProfileType.media)) {
+        } else if (profileType === KalturaConversionProfileType.media) {
           flavors = items.filter(item => !(item instanceof KalturaLiveParams));
         } else {
           flavors = [];
         }
 
         this.flavors = flavors.map(flavor => {
-          const codec = !flavor.videoCodec || !flavor.videoCodec.toString() || flavor.videoCodec.toString() === 'copy'
+          const codec = !flavor.videoCodec || !flavor.videoCodec || flavor.videoCodec === 'copy'
             ? this._appLocalization.get('applications.settings.transcoding.flavors.na')
             : flavor.videoCodec;
           const bitrate = (flavor.tags && flavor.tags.indexOf('ingest')) !== -1 || !flavor.audioBitrate || !flavor.videoBitrate

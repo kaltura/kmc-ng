@@ -23,6 +23,7 @@ import {
     GroupedListAdapter, GroupedListType,
     NumberTypeAdapter,
     StringTypeAdapter,
+    EnumTypeAdapter,
     TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
 import {
@@ -84,8 +85,8 @@ export interface CategoriesFilters {
   sortDirection: number,
   createdAt: DatesRangeType,
   privacyTypes: string[],
-  categoryListing: string[],
-  contributionPolicy: string[],
+  categoryListing: KalturaAppearInListType[],
+  contributionPolicy: KalturaContributionPolicyType[],
   endUserPermissions: string[],
     categories: number[],
     categoriesMode: CategoriesModeType,
@@ -373,10 +374,10 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       if (data.categoryListing) {
         if (data.categoryListing.length === 1) {
           switch (data.categoryListing[0]) {
-            case KalturaAppearInListType.categoryMembersOnly.toString():
+            case KalturaAppearInListType.categoryMembersOnly:
               filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
               break;
-            case KalturaAppearInListType.partnerOnly.toString():
+            case KalturaAppearInListType.partnerOnly:
               filter.appearInListEqual = KalturaAppearInListType.partnerOnly;
               break;
             default:
@@ -390,10 +391,10 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         if (data.contributionPolicy.length === 1) {
           data.contributionPolicy.forEach(item => {
             switch (item) {
-              case KalturaContributionPolicyType.all.toString():
+              case KalturaContributionPolicyType.all:
                 filter.contributionPolicyEqual = KalturaContributionPolicyType.all;
                 break;
-              case KalturaContributionPolicyType.membersWithContributionPermission.toString():
+              case KalturaContributionPolicyType.membersWithContributionPermission:
                 filter.contributionPolicyEqual = KalturaContributionPolicyType.membersWithContributionPermission;
                 break;
               default:
@@ -522,8 +523,8 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             sortDirection: new NumberTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
             privacyTypes: new ListTypeAdapter<string>(),
-            categoryListing: new ListTypeAdapter<string>(),
-            contributionPolicy: new ListTypeAdapter<string>(),
+            categoryListing: new ListTypeAdapter<KalturaAppearInListType>(),
+            contributionPolicy: new ListTypeAdapter<KalturaContributionPolicyType>(),
             endUserPermissions: new ListTypeAdapter<string>(),
             categories: new ListTypeAdapter<number>(),
             categoriesMode: new CategoriesModeAdapter(),

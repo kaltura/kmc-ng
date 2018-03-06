@@ -148,7 +148,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
     try {
       // default readonly filter
       const filter = new KalturaMetadataProfileFilter({
-        orderBy: KalturaMetadataOrderBy.createdAtDesc.toString(),
+        orderBy: KalturaMetadataOrderBy.createdAtDesc,
         createModeNotEqual: KalturaMetadataProfileCreateMode.app,
         metadataObjectTypeIn: [KalturaMetadataObjectType.entry, KalturaMetadataObjectType.category].join(',')
       });

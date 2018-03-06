@@ -35,7 +35,7 @@ export class BulkAddTagsService extends BulkActionBaseService<string[]> {
             entryTags.push(tag);
           }
         });
-        updatedEntry.tags = entryTags.toString();
+        updatedEntry.tags = entryTags.join(',');
         requests.push(new BaseEntryUpdateAction({
           entryId: entry.id,
           baseEntry: updatedEntry

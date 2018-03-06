@@ -5,7 +5,7 @@ import {KalturaCategoryUserStatus} from "kaltura-ngx-client/api/types/KalturaCat
 export interface DefaultFilterList {
   label: string;
   name: string;
-  items: { value: string, label: string }[]
+  items: { value: string | number, label: string }[]
 }
 
 // TODO [kmcng] - add translations to labels
@@ -14,16 +14,16 @@ export const DefaultFiltersList: DefaultFilterList[] = [
     name: 'permissionLevels', label: 'Permission Levels',
     items: [
       {
-        value: KalturaCategoryUserPermissionLevel.contributor.toString(),
+        value: (KalturaCategoryUserPermissionLevel.contributor),
         label: 'Contributor'
       }, {
-        value: KalturaCategoryUserPermissionLevel.moderator.toString(),
+        value: (KalturaCategoryUserPermissionLevel.moderator),
         label: 'Moderator'
       }, {
-        value: KalturaCategoryUserPermissionLevel.member.toString(),
+        value: (KalturaCategoryUserPermissionLevel.member),
         label: 'Member'
       }, {
-        value: KalturaCategoryUserPermissionLevel.manager.toString(),
+        value: (KalturaCategoryUserPermissionLevel.manager),
         label: 'Manager'
       }
     ]
@@ -31,19 +31,19 @@ export const DefaultFiltersList: DefaultFilterList[] = [
   {
     name: 'status', label: 'Status',
     items: [
-      {value: KalturaCategoryUserStatus.active.toString(), label: 'Active'},
-      {value: KalturaCategoryUserStatus.notActive.toString(), label: 'Deactivated'}
+      {value: (KalturaCategoryUserStatus.active), label: 'Active'},
+      {value: (KalturaCategoryUserStatus.notActive), label: 'Deactivated'}
     ]
   },
   {
     name: 'updateMethod', label: 'Update Method',
     items: [
       {
-        value: KalturaUpdateMethodType.manual.toString(),
+        value: (KalturaUpdateMethodType.manual),
         label: 'Manual'
       },
       {
-        value: KalturaUpdateMethodType.automatic.toString(),
+        value: (KalturaUpdateMethodType.automatic),
         label: 'Automatic'
       }
     ]

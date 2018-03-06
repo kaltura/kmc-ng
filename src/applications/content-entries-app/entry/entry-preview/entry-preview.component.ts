@@ -31,8 +31,8 @@ export class EntryPreview implements OnInit, OnDestroy {
 			data => {
 				if (data) {
 					this._currentEntry = data;
-					this._entryHasContent = this._currentEntry.status.toString() !== KalturaEntryStatus.noContent.toString();
-					this._entryReady = this._currentEntry.status.toString() === KalturaEntryStatus.ready.toString();
+					this._entryHasContent = this._currentEntry.status !== KalturaEntryStatus.noContent;
+					this._entryReady = this._currentEntry.status === KalturaEntryStatus.ready;
 				}
 			}
 		);

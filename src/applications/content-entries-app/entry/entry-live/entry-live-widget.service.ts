@@ -105,8 +105,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	protected onActivate(firstTimeActivating : boolean) {
 		// set live type and load data accordingly
-		switch (this.data.sourceType.toString()) {
-			case KalturaSourceType.liveStream.toString():
+		switch (this.data.sourceType) {
+			case KalturaSourceType.liveStream:
 				this._liveType = "kaltura";
 				this._setRecordStatus();
 				this._setDVRStatus();
@@ -154,13 +154,13 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 							super._hideLoader();
 						}
 					});
-			case KalturaSourceType.akamaiUniversalLive.toString():
+			case KalturaSourceType.akamaiUniversalLive:
 				this._liveType = "universal";
 				this._showDVRWindow = true;
 				this._setDVRStatus();
 				this._setBitrates();
 				break;
-			case KalturaSourceType.manualLiveStream.toString():
+			case KalturaSourceType.manualLiveStream:
 				this._liveType = "manual";
 				this._setManualStreams();
 				break;
@@ -175,9 +175,9 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	private _setDVRStatus(): void {
 		let entry = this.data as KalturaLiveStreamEntry;
-		if (!entry.dvrStatus || entry.dvrStatus.toString() === KalturaDVRStatus.disabled.toString()) {
+		if (entry.dvrStatus === KalturaDVRStatus.disabled) {
 			this._DVRStatus = this._appLocalization.get('app.common.off');
-		} else if (entry.dvrStatus.toString() == KalturaDVRStatus.enabled.toString()) {
+		} else if (entry.dvrStatus == KalturaDVRStatus.enabled) {
 			this._DVRStatus = this._appLocalization.get('app.common.on');
 			if (this._liveType === "kaltura") {
 				this._showDVRWindow = true;
@@ -188,10 +188,10 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	}
 
 	private _setRecordStatus(): void {
-		let entry = this.data as KalturaLiveStreamEntry;
-		if (!entry.recordStatus || entry.recordStatus.toString() === KalturaRecordStatus.disabled.toString()) {
+		const entry = this.data as KalturaLiveStreamEntry;
+		if (entry.recordStatus === KalturaRecordStatus.disabled) {
 			this._recordStatus = this._appLocalization.get('app.common.off');
-		} else if (entry.recordStatus.toString() === KalturaRecordStatus.appended.toString() || entry.recordStatus.toString() === KalturaRecordStatus.perSession.toString()) {
+		} else if (entry.recordStatus === KalturaRecordStatus.appended || entry.recordStatus === KalturaRecordStatus.perSession) {
 			this._recordStatus = this._appLocalization.get('app.common.on');
 		}
 	}
@@ -200,7 +200,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		let entry: KalturaLiveStreamEntry = this.data as KalturaLiveStreamEntry;
 		if (entry.liveStreamConfigurations) {
 			entry.liveStreamConfigurations.forEach(streamConfig => {
-				let protocol = streamConfig.protocol.toString();
+				let protocol = streamConfig.protocol;
 				let postfix = this._appLocalization.get('applications.content.entryDetails.live.streamUrl');
 				this._manualStreamsConfiguration.push({label: protocol + " " + postfix, url: streamConfig.url});
 			});

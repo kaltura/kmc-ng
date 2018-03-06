@@ -153,7 +153,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     try {
       // create request items
       const filter: KalturaBaseSyndicationFeedFilter = new KalturaBaseSyndicationFeedFilter({
-        orderBy: KalturaTubeMogulSyndicationFeedOrderBy.createdAtDesc.toString()
+        orderBy: KalturaTubeMogulSyndicationFeedOrderBy.createdAtDesc
       });
       let pagination: KalturaFilterPager = null;
 
@@ -212,7 +212,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
   }
 
   public getPlaylists(): Observable<KalturaPlaylist[]> {
-    const filter = new KalturaPlaylistFilter({orderBy: KalturaPlaylistOrderBy.createdAtDesc.toString()});
+    const filter = new KalturaPlaylistFilter({orderBy: KalturaPlaylistOrderBy.createdAtDesc});
     const pager = new KalturaFilterPager({pageSize: 500});
 
     return this._kalturaClient.request(

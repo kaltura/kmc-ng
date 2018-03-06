@@ -56,31 +56,31 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 		if (this.actionsMenu){
 			this._actions = [];
 			this._uploadFilter = this._setUploadFilter(this._widgetService.data);
-			if (this._widgetService.sourceAvailabale && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted.toString()))){
+			if (this._widgetService.sourceAvailabale && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted))){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.convert'), command: (event) => {this.actionSelected("convert");}});
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor)) || ( !flavor.isSource && flavor.id !== '' &&
-					(flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString() ))){
+					(flavor.status === KalturaFlavorAssetStatus.exporting || flavor.status === KalturaFlavorAssetStatus.ready ))){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), command: (event) => {this.actionSelected("delete");}});
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.download'), command: (event) => {this.actionSelected("download");}});
 			}
-			if ((flavor.isSource && (this.isSourceReady(flavor) || flavor.status === KalturaFlavorAssetStatus.deleted.toString()))||
-					flavor.id === "" || (flavor.id !== "" && (flavor.status === KalturaFlavorAssetStatus.deleted.toString() ||
-					flavor.status === KalturaFlavorAssetStatus.error.toString() || flavor.status === KalturaFlavorAssetStatus.notApplicable.toString() ||
-					flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString()))
+			if ((flavor.isSource && (this.isSourceReady(flavor) || flavor.status === KalturaFlavorAssetStatus.deleted))||
+					flavor.id === "" || (flavor.id !== "" && (flavor.status === KalturaFlavorAssetStatus.deleted ||
+					flavor.status === KalturaFlavorAssetStatus.error || flavor.status === KalturaFlavorAssetStatus.notApplicable ||
+					flavor.status === KalturaFlavorAssetStatus.exporting || flavor.status === KalturaFlavorAssetStatus.ready))
 			){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.upload'), command: (event) => {this.actionSelected("upload");}});
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.import'), command: (event) => {this.actionSelected("import");}});
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor) && flavor.isWeb) ||
-					(flavor.id !== "" && flavor.isWeb && (flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString()))){
+					(flavor.id !== "" && flavor.isWeb && (flavor.status === KalturaFlavorAssetStatus.exporting || flavor.status === KalturaFlavorAssetStatus.ready))){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.preview'), command: (event) => {this.actionSelected("preview");}});
 			}
-			if (this._widgetService.sourceAvailabale && !flavor.isSource && (flavor.status === KalturaFlavorAssetStatus.error.toString() || flavor.status === KalturaFlavorAssetStatus.exporting.toString() ||
-				flavor.status === KalturaFlavorAssetStatus.ready.toString() || flavor.status === KalturaFlavorAssetStatus.notApplicable.toString())){
+			if (this._widgetService.sourceAvailabale && !flavor.isSource && (flavor.status === KalturaFlavorAssetStatus.error || flavor.status === KalturaFlavorAssetStatus.exporting ||
+				flavor.status === KalturaFlavorAssetStatus.ready || flavor.status === KalturaFlavorAssetStatus.notApplicable)){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.reconvert'), command: (event) => {this.actionSelected("reconvert");}});
 			}
-			if (flavor.isWidevine && flavor.status === KalturaFlavorAssetStatus.ready.toString()){
+			if (flavor.isWidevine && flavor.status === KalturaFlavorAssetStatus.ready){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.drm'), command: (event) => {this.actionSelected("drm");}});
 			}
 			if (this._actions.length) {
@@ -91,9 +91,9 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	private isSourceReady(flavor: Flavor): boolean{
-		return (flavor.isSource && flavor.status !== KalturaFlavorAssetStatus.converting.toString() && flavor.status !== KalturaFlavorAssetStatus.waitForConvert.toString() &&
-			flavor.status !== KalturaFlavorAssetStatus.queued.toString() && flavor.status !== KalturaFlavorAssetStatus.importing.toString() &&
-			flavor.status !== KalturaFlavorAssetStatus.validating.toString());
+		return (flavor.isSource && flavor.status !== KalturaFlavorAssetStatus.converting && flavor.status !== KalturaFlavorAssetStatus.waitForConvert &&
+			flavor.status !== KalturaFlavorAssetStatus.queued && flavor.status !== KalturaFlavorAssetStatus.importing &&
+			flavor.status !== KalturaFlavorAssetStatus.validating);
 	}
 
 	private actionSelected(action: string): void{
@@ -127,10 +127,10 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
 	private _setUploadFilter(entry: KalturaMediaEntry): string{
 		let filter = "";
-		if (entry.mediaType.toString() === KalturaMediaType.video.toString()){
+		if (entry.mediaType === KalturaMediaType.video){
 			filter = ".flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v";
 		}
-		if (entry.mediaType.toString() === KalturaMediaType.audio.toString()){
+		if (entry.mediaType === KalturaMediaType.audio){
 			filter = ".flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav";
 		}
 		return filter;

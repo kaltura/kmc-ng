@@ -121,7 +121,7 @@ export class DropFoldersMonitorService implements OnDestroy {
   private _getDropFolders(): Observable<KalturaDropFolder[]> {
     const dropFolders = new DropFolderListAction({
       filter: new KalturaDropFolderFilter({
-        orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
+        orderBy: KalturaDropFolderOrderBy.createdAtDesc,
         statusEqual: KalturaDropFolderStatus.enabled
       }),
       acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
@@ -132,7 +132,7 @@ export class DropFoldersMonitorService implements OnDestroy {
         if (response && response.objects) {
           return response.objects.reduce((list, object) => {
             if (object instanceof KalturaDropFolder) {
-              if (object.fileHandlerType.equals(KalturaDropFolderFileHandlerType.content)) {
+              if (object.fileHandlerType === KalturaDropFolderFileHandlerType.content) {
                 const cfg = object.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
                 if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
                   list.push(object);
@@ -141,7 +141,7 @@ export class DropFoldersMonitorService implements OnDestroy {
                 } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrAddAsNew) {
                   list.push(object);
                 }
-              } else if (object.fileHandlerType.equals(KalturaDropFolderFileHandlerType.xml)) {
+              } else if (object.fileHandlerType === KalturaDropFolderFileHandlerType.xml) {
                 list.push(object);
               }
 
@@ -229,7 +229,7 @@ export class DropFoldersMonitorService implements OnDestroy {
     const oldestUploadedOnFile = this._getTrackedFiles().reduce((acc, item) => !acc || item.uploadedOn < acc.uploadedOn ? item : acc, null);
     const uploadedOnFrom = oldestUploadedOnFile ? oldestUploadedOnFile.uploadedOn : this._browserService.sessionStartedAt;
     if (this._dropFolderChangesFactory.uploadedOn !== uploadedOnFrom) {
-      this._logger.debug(`updating poll server query request with uploadedOn from ${uploadedOnFrom && uploadedOnFrom.toString()}`);
+      this._logger.debug(`updating poll server query request with uploadedOn from ${uploadedOnFrom && uploadedOnFrom}`);
       this._dropFolderChangesFactory.uploadedOn = uploadedOnFrom;
     }
   }

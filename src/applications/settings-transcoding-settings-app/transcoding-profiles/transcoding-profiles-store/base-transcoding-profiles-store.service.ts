@@ -112,7 +112,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     try {
       // create request items
       const filter = new KalturaConversionProfileFilter({
-        orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
+        orderBy: KalturaConversionProfileOrderBy.createdAtDesc,
         typeEqual: this.transcodingProfilesListType
       });
       let pager: KalturaFilterPager = null;

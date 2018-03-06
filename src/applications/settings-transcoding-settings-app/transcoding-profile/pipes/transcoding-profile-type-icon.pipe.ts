@@ -20,14 +20,14 @@ export class TranscodingProfileTypePipe implements PipeTransform {
     };
 
     switch (true) {
-      case value.equals(KalturaConversionProfileType.media):
+      case value === KalturaConversionProfileType.media:
         result = {
           icon: 'kIcontranscoding',
           label: this._appLocalization.get('applications.settings.transcoding.type.media')
         };
         break;
 
-      case value.equals(KalturaConversionProfileType.liveStream):
+      case value === KalturaConversionProfileType.liveStream:
         result = {
           icon: 'kIconlive_transcoding',
           label: this._appLocalization.get('applications.settings.transcoding.type.live')

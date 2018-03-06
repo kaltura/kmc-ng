@@ -14,6 +14,7 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-t
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaEntryModerationStatus } from 'kaltura-ngx-client/api/types/KalturaEntryModerationStatus';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
@@ -27,7 +28,7 @@ export class EntriesListHolderComponent implements OnDestroy {
   private _shouldConfirmEntryApproval = false; // TODO [kmcng] need to get such permissions from somewhere
   private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
   public _defaultFilters: Partial<EntriesFilters> = {
-    'moderationStatuses': ['1', '5'],
+    'moderationStatuses': [KalturaEntryModerationStatus.flaggedForReview, KalturaEntryModerationStatus.pendingModeration],
       'sortDirection': SortDirection.Asc
   };
 

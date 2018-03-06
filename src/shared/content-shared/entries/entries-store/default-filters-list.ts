@@ -20,12 +20,12 @@ export const DefaultFiltersList: DefaultFilterList[] = [
     {
         name: 'ingestionStatuses', label: 'Ingestion Statuses',
         items: [
-            { value: KalturaEntryStatus.ready.toString(), label: 'Ready' },
-            { value: KalturaEntryStatus.noContent.toString(), label: 'No Media' },
-            { value: KalturaEntryStatus.pending.toString(), label: 'Pending' },
-            { value: KalturaEntryStatus.import.toString(), label: 'Uploading' },
-            { value: KalturaEntryStatus.preconvert.toString(), label: 'Transcoding' },
-            { value: [KalturaEntryStatus.errorConverting.toString(), KalturaEntryStatus.errorImporting.toString()].join(','), label: 'Error' }
+            { value: KalturaEntryStatus.ready, label: 'Ready' },
+            { value: KalturaEntryStatus.noContent, label: 'No Media' },
+            { value: KalturaEntryStatus.pending, label: 'Pending' },
+            { value: KalturaEntryStatus.import, label: 'Uploading' },
+            { value: KalturaEntryStatus.preconvert, label: 'Transcoding' },
+            { value: [KalturaEntryStatus.errorConverting, KalturaEntryStatus.errorImporting].join(','), label: 'Error' }
         ]
     },
     {

@@ -198,14 +198,14 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     public _getCaptionType(captionFormat: KalturaCaptionType): string {
         let type = this._appLocalization.get('app.common.n_a');
-        switch (captionFormat.toString()) {
-            case KalturaCaptionType.srt.toString():
+        switch (captionFormat) {
+            case KalturaCaptionType.srt:
                 type = "SRT";
                 break;
-            case KalturaCaptionType.dfxp.toString():
+            case KalturaCaptionType.dfxp:
                 type = "DFXP";
                 break;
-            case KalturaCaptionType.webvtt.toString():
+            case KalturaCaptionType.webvtt:
                 type = "WEBVTT";
                 break;
         }
@@ -215,11 +215,11 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     public _getCaptionStatus(caption: any): string {
       let status = '';
       if (caption.status) {
-        switch (caption.status.toString()) {
-          case KalturaCaptionAssetStatus.error.toString():
+        switch (caption.status) {
+          case KalturaCaptionAssetStatus.error:
             status = this._appLocalization.get('applications.content.entryDetails.captions.error');
             break;
-          case KalturaCaptionAssetStatus.ready.toString():
+          case KalturaCaptionAssetStatus.ready:
             status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
             break;
           default:

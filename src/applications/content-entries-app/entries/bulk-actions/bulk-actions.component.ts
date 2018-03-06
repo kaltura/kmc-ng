@@ -44,9 +44,9 @@ import { CategoryData } from 'app-shared/content-shared/categories/categories-se
 })
 export class BulkActionsComponent implements OnInit, OnDestroy {
   private _allowedStatusesForPlaylist = [
-    KalturaEntryStatus.ready.toString(),
-    KalturaEntryStatus.moderate.toString(),
-    KalturaEntryStatus.blocked.toString()
+    KalturaEntryStatus.ready,
+    KalturaEntryStatus.moderate,
+    KalturaEntryStatus.blocked
   ];
 
   public _bulkActionsMenu: MenuItem[] = [];
@@ -94,7 +94,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   private _onAddToNewPlaylist(): void {
     const creationEvent = new CreateNewPlaylistEvent({ type: KalturaPlaylistType.staticList, }, 'metadata');
     const invalidEntries = this.selectedEntries.filter(entry => {
-      return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1
+      return this._allowedStatusesForPlaylist.indexOf(entry.status) === -1
     });
 
     if (!invalidEntries.length) {
@@ -117,7 +117,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
         }),
         accept: () => {
           creationEvent.data.playlistContent = this.selectedEntries
-            .filter(({ status }) => this._allowedStatusesForPlaylist.indexOf(status.toString()) !== -1) // include only valid
+            .filter(({ status }) => this._allowedStatusesForPlaylist.indexOf(status) !== -1) // include only valid
             .map(({ id }) => id).join(',');
           this._appEvents.publish(creationEvent);
         }

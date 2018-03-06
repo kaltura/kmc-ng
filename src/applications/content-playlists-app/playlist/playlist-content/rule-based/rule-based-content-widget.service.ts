@@ -93,7 +93,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
 
           this.rules.push({
             name: (<any>filter).name,
-            orderBy: new KalturaPlayableEntryOrderBy(filter.orderBy),
+            orderBy: KalturaPlayableEntryOrderBy[filter.orderBy],
             limit: filter.limit,
             entriesCount: result.length,
             selectionId: this._selectionIdGenerator.generateUnique(this.rules.map(item => item.selectionId)),

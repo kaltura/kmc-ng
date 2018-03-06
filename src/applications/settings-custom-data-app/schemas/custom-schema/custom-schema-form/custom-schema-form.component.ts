@@ -49,8 +49,8 @@ export class CustomSchemaFormComponent {
   public _systemNameField: AbstractControl;
   public _applyToField: AbstractControl;
   public _applyToValues = {
-    entry: KalturaMetadataObjectType.entry.toString(),
-    category: KalturaMetadataObjectType.category.toString()
+    entry: KalturaMetadataObjectType.entry,
+    category: KalturaMetadataObjectType.category
   };
 
   constructor(private _fb: FormBuilder) {
@@ -62,7 +62,7 @@ export class CustomSchemaFormComponent {
       name: ['', Validators.compose([Validators.required, Validators.maxLength(31)])],
       description: '',
       systemName: '',
-      applyTo: KalturaMetadataObjectType.entry.toString()
+      applyTo: KalturaMetadataObjectType.entry
     });
 
     this._nameField = this._schemaForm.controls['name'];
@@ -88,9 +88,8 @@ export class CustomSchemaFormComponent {
       }
 
       if (change.applyTo) {
-        const applyTo = new KalturaMetadataObjectType(change.applyTo);
-        if (!this._schema.applyTo.equals(applyTo)) {
-          this._schema.applyTo = applyTo;
+        if (!this._schema.applyTo === change.applyTo) {
+          this._schema.applyTo = change.applyTo;
           sendUpdate = true;
         }
       }

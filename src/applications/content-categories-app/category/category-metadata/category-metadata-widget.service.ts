@@ -167,7 +167,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             {
                 filter: new KalturaMetadataFilter(
                     {
-                        objectIdEqual: category.id.toString(),
+                        objectIdEqual: String(category.id),
                         metadataObjectTypeEqual: KalturaMetadataObjectType.category
                     }
                 )
@@ -233,7 +233,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                         } else {
                             request.requests.push(new MetadataAddAction({
                                 objectType: KalturaMetadataObjectType.category,
-                                objectId: this.data.id.toString(),
+                                objectId: String(this.data.id),
                                 metadataProfileId: customDataForm.metadataProfile.id,
                                 xmlData: customDataValue.xml
                             }));
