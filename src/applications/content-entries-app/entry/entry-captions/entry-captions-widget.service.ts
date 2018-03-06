@@ -37,18 +37,19 @@ import { EntryWidget } from '../entry-widget';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 
 export interface CaptionRow {
-    uploading: boolean,
-    uploadFileId?: string,
-    serverUploadToken?: string,
-    uploadFailure?: boolean,
+    uploading: boolean;
+    uploadFileId?: string;
+    serverUploadToken?: string;
+    uploadFailure?: boolean;
     progress?: string;
-    uploadUrl: string,
-    id: string,
-    isDefault: number,
-    format: KalturaCaptionType,
-    language: KalturaLanguage,
-    label: string,
-    fileExt: string
+    uploadUrl: string;
+    id: string;
+    isDefault: number;
+    format: KalturaCaptionType;
+    language: KalturaLanguage;
+    label: string;
+    fileExt: string;
+    status?: KalturaCaptionAssetStatus;
 }
 
 @Injectable()
@@ -212,14 +213,14 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         return type;
     }
 
-    public _getCaptionStatus(caption: any): string {
+    public _getCaptionStatus(caption: CaptionRow): string {
       let status = '';
-      if (caption.status) {
-        switch (caption.status.toString()) {
-          case KalturaCaptionAssetStatus.error.toString():
+      if (typeof caption.status !== undefined) {
+        switch (caption.status) {
+          case KalturaCaptionAssetStatus.error:
             status = this._appLocalization.get('applications.content.entryDetails.captions.error');
             break;
-          case KalturaCaptionAssetStatus.ready.toString():
+          case KalturaCaptionAssetStatus.ready:
             status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
             break;
           default:
