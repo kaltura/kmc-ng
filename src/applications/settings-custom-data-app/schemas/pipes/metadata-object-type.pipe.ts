@@ -10,11 +10,11 @@ export class MetadataObjectTypePipe implements PipeTransform {
 
   transform(value: KalturaMetadataObjectType): string {
     if (value) {
-      if (value.equals(KalturaMetadataObjectType.entry)) {
+      if (value === KalturaMetadataObjectType.entry) {
         return this._appLocalization.get('applications.settings.metadata.applyTo.entries');
       }
 
-      if (value.equals(KalturaMetadataObjectType.category)) {
+      if (value === KalturaMetadataObjectType.category) {
         return this._appLocalization.get('applications.settings.metadata.applyTo.categories');
       }
     }
