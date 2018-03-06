@@ -87,7 +87,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 						this._validationErrorMsg = "";
 						this.fileToUpload = null;
 						this.captionsEditForm.get("label").setValue(this.currentCaption.label);
-						this.captionsEditForm.get("language").setValue(KalturaUtils.getCodeByLanguage(this.currentCaption.language.toString()).toUpperCase());
+						this.captionsEditForm.get("language").setValue(this.currentCaption.language);
 						this.captionsEditForm.get("format").setValue(this.currentCaption.format);
 					}
 					if (event.state === PopupWidgetStates.BeforeClose) {
