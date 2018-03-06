@@ -1075,6 +1075,7 @@
         "apply": "Apply to all selected entries",
         "error": "An error occurred during entries update.",
         "errorPlaylists": "An error occurred during playlists update.",
+        "cannotDeletePlaylists": "One or more entries could not be deleted",
         "errorCategories": "An error occurred during categories update.",
         "updated": "Entries updated successfully",
         "note": "Update Note",
