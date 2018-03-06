@@ -68,7 +68,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
-    this._hideIngestFromRemoteStorage = this.profileType && this.profileType.equals(KalturaConversionProfileType.liveStream);
+    this._hideIngestFromRemoteStorage = this.profileType && this.profileType === KalturaConversionProfileType.liveStream;
     if (!this._hideIngestFromRemoteStorage) {
       this._dataLoading = true;
       this._loadRemoteStorageProfiles()
