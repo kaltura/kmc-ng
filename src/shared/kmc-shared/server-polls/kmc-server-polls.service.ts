@@ -24,7 +24,8 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
   }
 
   protected _canExecute(): boolean {
-    return !!this._kalturaClient.ks;
+    // TODO sakal
+    return false;
   }
 
   /*

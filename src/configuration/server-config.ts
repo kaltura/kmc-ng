@@ -216,12 +216,12 @@ export interface ServerConfig {
 export const serverConfig: ServerConfig = <any>{};
 
 export function getKalturaServerUri(suffix: string = ''): string{
-    if (serverConfig)
+    if (serverConfig.kalturaServer)
     {
         const useHttpsProtocol = globalConfig.kalturaServer.useSecuredProtocol;
         const serverEndpoint = serverConfig.kalturaServer.uri;
         return `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}${suffix}`;
     }else {
-        throw new Error('cannot provide kaltura server uri. missing server configuration');
+        throw new Error(`cannot provide kaltura server uri. server configuration wasn't loaded already`);
     }
 }

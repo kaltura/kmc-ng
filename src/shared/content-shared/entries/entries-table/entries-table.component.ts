@@ -159,7 +159,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  public _allowDrilldown(mediaType: string, status: string): boolean {
+  public _allowDrilldown(action: string, mediaType: string, status: string): boolean {
     const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash.toString();
     const isReady = status && status !== KalturaEntryStatus.ready.toString();
     return !(isLiveStream && isReady);

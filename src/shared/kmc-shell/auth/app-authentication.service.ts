@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 import * as R from 'ramda';
-import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
 import {KalturaPermissionFilter} from 'kaltura-ngx-client/api/types/KalturaPermissionFilter';
 import {UserLoginByLoginIdAction} from 'kaltura-ngx-client/api/types/UserLoginByLoginIdAction';
 import {UserGetByLoginIdAction} from 'kaltura-ngx-client/api/types/UserGetByLoginIdAction';
@@ -19,10 +19,8 @@ import {PartnerInfo} from './partner-info';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
-import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { modulesConfig } from 'config/modules';
-import { KmcServerPolls } from 'app-shared/kmc-shared';import { serverConfig } from 'config/server';
-import { globalConfig } from 'config/global';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
+import { KmcServerPolls } from 'app-shared/kmc-shared';
 
 
 export enum AppAuthStatusTypes {
@@ -66,7 +64,9 @@ export class AppAuthentication {
   }
 
   private _getLoginErrorMessage({error}): ILoginError {
-    const {message, code} = error;
+      const message = (error ? error.message : null) || 'Failed to load partner information';
+      const code = error ? error.code : null;
+
     const custom = true;
     const errors = {
       'USER_NOT_FOUND': 'app.login.error.badCredentials',
@@ -133,35 +133,34 @@ export class AppAuthentication {
     const permissionFilter = new KalturaPermissionFilter();
     permissionFilter.nameEqual = 'FEATURE_DISABLE_REMEMBER_ME';
 
-    const partnerId = globalConfig.kalturaServer.limitToPartnerId || undefined;
     const request = new KalturaMultiRequest(
       new UserLoginByLoginIdAction(
         {
           loginId,
           password,
-          partnerId,
           expiry: expiry,
           privileges: privileges
         }),
-      new UserGetByLoginIdAction({loginId, partnerId,
-          ks: '{1:result}'}),
+      new UserGetByLoginIdAction({loginId })
+          .setRequestOptions(
+              new KalturaRequestOptions({})
+                  .setDependency(['ks', 0])
+          ),
       new PermissionListAction(
         {
-          filter: permissionFilter,
-            partnerId,
-            ks: '{1:result}'
+          filter: permissionFilter
         }
+      ).setRequestOptions(
+          new KalturaRequestOptions({})
+              .setDependency(['ks', 0])
       ),
       new PartnerGetInfoAction({
-          partnerId,
-          ks: '{1:result}'
-      })
-        .setDependency(['id', 1, 'partnerId'])
-      ,
-      <any>new PermissionGetCurrentPermissionsAction({
-          partnerId,
-        ks: '{1:result}'
-      })
+      }).setRequestOptions(
+          new KalturaRequestOptions({})
+              .setDependency(['ks', 0])
+              .setDependency(['id', 1, 'partnerId'])
+      ),
+      <any>new PermissionGetCurrentPermissionsAction({}).setDependency(['ks', 0]),
     );
 
     return <any>(this.kalturaServerClient.multiRequest(request).map(
@@ -177,7 +176,9 @@ export class AppAuthentication {
 
 
           // TODO [kmc] check if ks should be stored in appUser and remove direct call to http configuration
-          this.kalturaServerClient.ks = ks;
+          this.kalturaServerClient.overrideDefaultRequestOptions({
+              ks,
+          });
           this.appUser.ks = ks;
           this.appUser.permissions = permissions;
           this.appUser.permissionsFlags = permissionsFlags ? permissionsFlags.split(',') : [];
@@ -209,7 +210,7 @@ export class AppAuthentication {
 
   logout() {
     this.appUser.ks = null;
-    this.kalturaServerClient.ks = null;
+    this.kalturaServerClient.resetDefaultRequestOptions({});
 
     this.appStorage.removeFromSessionStorage('auth.login.ks');
 
@@ -222,30 +223,26 @@ export class AppAuthentication {
       if (this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedOut) {
           const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
         if (loginToken) {
-            const partnerId = globalConfig.kalturaServer.limitToPartnerId || undefined;
-
             const requests = [
             new UserGetAction({
-              ks: loginToken,
-                partnerId
+            }).setRequestOptions({
+                ks: loginToken
             }),
             new PermissionListAction(
               {
-                ks: loginToken,
-                partnerId,
                 filter: new KalturaPermissionFilter({
                   nameEqual: 'FEATURE_DISABLE_REMEMBER_ME'
                 })
               }
-            ),
-            new PartnerGetInfoAction({
-              ks: loginToken,
-                partnerId
+            ).setRequestOptions({
+                ks: loginToken
+            }),
+            new PartnerGetInfoAction({}).setRequestOptions({
+                ks: loginToken
             })
               .setDependency(['id', 0, 'partnerId']),
-            <any>new PermissionGetCurrentPermissionsAction({
-                partnerId,
-                ks: loginToken // we must set the ks manually, only upon successful result we will update the global module
+            <any>new PermissionGetCurrentPermissionsAction({}).setRequestOptions({
+                ks: loginToken
             })
           ];
 
@@ -296,8 +293,10 @@ export class AppAuthentication {
 
   private onUserLoggedIn()
   {
-      this.kalturaServerClient.ks = this.appUser.ks;
-      this.kalturaServerClient.partnerId = this.appUser.partnerId;
+      this.kalturaServerClient.resetDefaultRequestOptions({
+          ks: this.appUser.ks,
+          partnerId: this.appUser.partnerId
+      });
       this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
       this._serverPolls.forcePolling();
   }

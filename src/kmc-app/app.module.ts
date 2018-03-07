@@ -26,7 +26,7 @@ import {
   UploadManagement
 } from '@kaltura-ng/kaltura-common';
 import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
-import {KalturaClient, KalturaClientConfiguration} from 'kaltura-ngx-client';
+import {KalturaClientModule, KALTURA_CLIENT_OPTIONS, KalturaClientOptions} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
   AccessControlProfileStore,
@@ -86,14 +86,16 @@ import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/t
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
-
-
-export function clientConfigurationFactory() {
-    const result = new KalturaClientConfiguration();
-    result.endpointUrl = getKalturaServerUri();
-    result.clientTag = 'KMCng';
-    return result;
+export function kalturaClientOptionsFactory(): KalturaClientOptions {
+  // NOTE: using 'useFactory' instead of 'useValue' defer this function executino
+  // until the application actually loads itself (and getKalturaServerUri is already available
+    return  {
+        endpointUrl: getKalturaServerUri(),
+        clientTag: 'KMCng',
+        chunkFileSize: 5e6
+    };
 }
+
 @NgModule({
   imports: <any>[
     AuthModule,
@@ -139,7 +141,8 @@ export function clientConfigurationFactory() {
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
     AccessControlProfileModule.forRoot(),
-    TranscodingProfileCreationModule.forRoot()
+    TranscodingProfileCreationModule.forRoot(),
+    KalturaClientModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -169,11 +172,7 @@ export function clientConfigurationFactory() {
       },
     AppMenuService,
     { provide: AppStorage, useExisting: BrowserService },
-    KalturaClient,
-    {
-      provide: KalturaClientConfiguration,
-      useFactory: clientConfigurationFactory
-    },
+    { provide: KALTURA_CLIENT_OPTIONS, useFactory: kalturaClientOptionsFactory},
     ConfirmationService
   ]
 })
