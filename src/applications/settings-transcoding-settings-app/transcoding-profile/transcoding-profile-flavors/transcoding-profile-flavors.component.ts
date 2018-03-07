@@ -29,9 +29,9 @@ export class TranscodingProfileFlavorsComponent implements OnInit, OnDestroy {
   public _editFlavor(flavor: KalturaFlavorParams): void {
     this._selectedFlavor = flavor;
 
-    if (this._widgetService.data.type.equals(KalturaConversionProfileType.media)) {
+    if (this._widgetService.data.type === KalturaConversionProfileType.media) {
       this._editMediaProfileFlavorPopup.open();
-    } else if (this._widgetService.data.type.equals(KalturaConversionProfileType.liveStream)) {
+    } else if (this._widgetService.data.type === KalturaConversionProfileType.liveStream) {
       this._editLiveProfileFlavorPopup.open();
     }
   }

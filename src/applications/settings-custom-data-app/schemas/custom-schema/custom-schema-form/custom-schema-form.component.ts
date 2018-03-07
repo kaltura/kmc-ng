@@ -88,8 +88,8 @@ export class CustomSchemaFormComponent {
       }
 
       if (change.applyTo) {
-        const applyTo = new KalturaMetadataObjectType(change.applyTo);
-        if (!this._schema.applyTo.equals(applyTo)) {
+        const applyTo = change.applyTo;
+        if (!this._schema.applyTo === applyTo) {
           this._schema.applyTo = applyTo;
           sendUpdate = true;
         }

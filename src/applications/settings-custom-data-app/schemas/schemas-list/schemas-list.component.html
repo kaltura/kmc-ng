@@ -9,7 +9,7 @@
             *ngIf="!_selectedSchemas.length"
             [label]="'applications.settings.metadata.addCustomSchema' | translate"
             class="kButtonBranded kAddSchemaBtn"
-            (click)="customSchema.open()"></button>
+            (click)="_addNewSchema()"></button>
           <span
             class="kSelectedSchemasNum"
             *ngIf="(_schemasStore.schemas.data$ | async)?.totalCount">
@@ -17,8 +17,9 @@
             </span>
 
           <div class="kBulkOperations" *ngIf="_selectedSchemas.length">
-              <span class="kSelectedSchemasLabel">
-                • {{ 'applications.settings.metadata.selected' | translate : [_selectedSchemas.length] }}</span>
+            <span class="kSelectedSchemasLabel">
+              • {{ 'applications.settings.metadata.selected' | translate : [_selectedSchemas.length] }}
+            </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
                     (click)="_deleteSchemas(_selectedSchemas)"></button>
             <a class="kBulkCancel" (click)="_clearSelection()">
