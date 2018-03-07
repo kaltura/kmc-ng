@@ -237,7 +237,7 @@
       "uploadSettings": {
         "title": "Upload Settings",
         "profile": "Transcoding profile",
-        "addFileBtn": "Add file",
+        "addFileBtn": "Add files",
         "profilePlaceholder": "Default",
         "mediaTypes": {
           "video": "Video",
