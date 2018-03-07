@@ -134,6 +134,9 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
     if (this._categoriesLoaded) {
       this._autoComplete.focusInput();
     }
+	this._selectedCategories.forEach((category: CategoryData) => {
+	  this._categoriesTree.expandNode(category.id);
+    });
   }
 
   public _onAutoCompleteSearch(event): void {
