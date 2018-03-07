@@ -105,9 +105,9 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
         const items = response.items;
         const profileType: KalturaConversionProfileType = this.data.type;
         let flavors = [];
-        if (profileType.equals(KalturaConversionProfileType.liveStream)) {
+        if (profileType === KalturaConversionProfileType.liveStream) {
           flavors = items.filter(item => item instanceof KalturaLiveParams);
-        } else if (profileType.equals(KalturaConversionProfileType.media)) {
+        } else if (profileType === KalturaConversionProfileType.media) {
           flavors = items.filter(item => !(item instanceof KalturaLiveParams));
         } else {
           flavors = [];
