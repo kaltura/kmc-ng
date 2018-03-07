@@ -9,6 +9,7 @@ import {
   CategoriesStatus,
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { SelectedCategory } from 'app-shared/content-shared/categories/category-selector/category-selector.component';
 
 @Component({
   selector: 'kMoveCategory',
@@ -22,7 +23,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   @Output() onMovedCategories = new EventEmitter<null>();
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedParentCategory = 0;
+  public _selectedParentCategory: SelectedCategory = 'missing';
   public _categoriesUpdating = false;
 
   constructor(private _categoriesService: CategoriesService,
@@ -66,7 +67,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   }
 
   public _apply(): void {
-    if (this._selectedParentCategory === 0) {
+    if (this._selectedParentCategory === 'missing') {
       this._browserService.alert({
         message: this._appLocalization.get('applications.content.moveCategory.noCategorySelected')
       });
@@ -92,7 +93,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
 
   private _moveCategory() {
     // TODO sakal - this._selectedParentCategory.fullIdPath
-    const categoryParent = this._selectedParentCategory ?
+    const categoryParent = this._selectedParentCategory && this._selectedParentCategory !== 'missing' ?
       {id: this._selectedParentCategory, fullIds: null} :
       {id: 0, fullIds: []};
     this._categoriesService
@@ -129,8 +130,8 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
 
   private _validateCategoryMove(categoryToMove: KalturaCategory) {
     // if category moved to the same parent or to 'no parent' as it was before
-    if ((!this._selectedParentCategory && !categoryToMove.parentId) ||
-        (this._selectedParentCategory && categoryToMove.parentId === this._selectedParentCategory)) {
+    if (((!this._selectedParentCategory || this._selectedParentCategory === 'missing') && !categoryToMove.parentId) ||
+        (this._selectedParentCategory && this._selectedParentCategory !== 'missing' && categoryToMove.parentId === this._selectedParentCategory)) {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.moveCategory.errors.categoryAlreadyBelongsToParent'),
         buttons: [
@@ -144,7 +145,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
       });
       return false;
       // TODO sakal - this._selectedParentCategory.fullIdPath
-    } else if (this._selectedParentCategory && !this._categoriesService.isParentCategorySelectionValid(
+    } else if (this._selectedParentCategory && this._selectedParentCategory !== 'missing' && !this._categoriesService.isParentCategorySelectionValid(
         {
           categories: this.selectedCategories,
           categoryParent: {id: this._selectedParentCategory, fullIds: null}

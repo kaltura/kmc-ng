@@ -11,6 +11,7 @@ import {
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { SelectedCategory } from 'app-shared/content-shared/categories/category-selector/category-selector.component';
 
 @Component({
   selector: 'kNewCategory',
@@ -24,7 +25,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onApply = new EventEmitter<{ categoryId: number }>();
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedParentCategory = 0;
+  public _selectedParentCategory: SelectedCategory = 'missing';
   public newCategoryForm: FormGroup;
   public _categoriesUpdating = false;
 
@@ -86,7 +87,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public _apply(): void {
     this._blockerMessage = null;
-    if (this._selectedParentCategory !== 0) {
+    if (this._selectedParentCategory !== 'missing') {
       this._createNewCategory();
     } else {
       this._browserService.alert({
@@ -112,7 +113,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this._categoriesService
         .addNewCategory({
-          categoryParentId: this._selectedParentCategory ? this._selectedParentCategory : null,
+          categoryParentId: this._selectedParentCategory !== 'missing' ? this._selectedParentCategory : null,
           name: categoryName,
           linkedEntriesIds: this.linkedEntries.map(entry => entry.entryId)
         })

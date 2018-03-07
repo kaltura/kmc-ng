@@ -17,7 +17,7 @@
     </div>
     <div class="kFooter">
       <button type="button" class="kButtonBranded" pButton
-              [disabled]="_selectedParentCategory === 0"
+              [disabled]="_selectedParentCategory === 'missing'"
               label="{{'applications.content.addNewCategory.apply' | translate}}"
               (click)="_apply()"></button>
       <a class="kLink" (click)="_cancel()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
