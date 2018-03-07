@@ -47,8 +47,8 @@ export class PrepareEntryComponent implements OnInit {
           this.transcodingProfileSelectMenu.close();
         },
         error => {
-          this._browserService.setAppStatus({
-            errorMessage: error.message
+          this._browserService.alert({
+            message: error.message
           });
         });
   }

@@ -253,7 +253,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           const message = error.type === 'bulkDelete'
             ? error.message
             : this._appLocalization.get('applications.content.bulkActions.error');
-          this._browserService.setAppStatus({errorMessage: message });
+          this._browserService.alert({ message });
         }
       );
     };
