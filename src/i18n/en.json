@@ -1297,6 +1297,7 @@
           "uploadSuccess": "Flavor asset was uploaded successfully.",
           "deleteFailure": "Flavor asset deletion failed.",
           "convertFailure": "Flavor conversion failed.",
+          "missingOriginalFlavor": "The original flavor asset is missing",
           "uploadFailure": "Flavor upload failed.",
           "downloadFailure": "Flavor download failed.",
           "importFailure": "Flavor import failed."
