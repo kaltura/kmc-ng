@@ -69,7 +69,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({
-            message: this._appLocalization.get('applications.content.bulkActions.errorPlaylists'),
+            message: this._appLocalization.get('applications.content.bulkActions.cannotDeletePlaylists'),
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {

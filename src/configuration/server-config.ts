@@ -120,6 +120,13 @@ export const ServerConfigSchema = {
                     required: ['userManual', 'support', 'signUp', 'contactUs', 'upgradeAccount', 'contactSalesforce'],
                     additionalProperties: false
                 },
+                entitlements: {
+                    properties: {
+                        manage: {type: 'string'}
+                    },
+                    required: ['manage'],
+                    additionalProperties: false
+                },
                 uploads: {
                     properties: {
                         highSpeedUpload: {type: 'string'},
@@ -194,6 +201,9 @@ export interface ServerConfig {
         previewAndEmbed: {
             embedTypes: string,
             deliveryProtocols: string
+        },
+        entitlements:{
+            manage: string
         },
         kaltura: {
             userManual: string,

@@ -212,6 +212,11 @@ export class SchemasListComponent implements OnInit, OnDestroy {
             }
           });
         }
-      )
+      );
+  }
+
+  public _addNewSchema(): void {
+    this._selectedSchema = null;
+    this._customSchemaPopup.open();
   }
 }
