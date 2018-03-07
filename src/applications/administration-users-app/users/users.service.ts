@@ -222,8 +222,15 @@ export class UsersStore implements OnDestroy {
 
     return this._kalturaServerClient
       .multiRequest(request)
-      .map(() => {
-        return;
+      .map((responses) => {
+        if (responses.hasErrors()) {
+          const errorMessage = responses.map(response => {
+            if (response.error) {
+              return response.error.message + '\n';
+            }
+          }).join('');
+          throw Error(errorMessage);
+        }
       });
   }
 
@@ -260,8 +267,15 @@ export class UsersStore implements OnDestroy {
     );
     return this._kalturaServerClient
       .multiRequest(request)
-      .map(() => {
-        return;
+      .map((responses) => {
+        if (responses.hasErrors()) {
+          const errorMessage = responses.map(response => {
+            if (response.error) {
+              return response.error.message + '\n';
+            }
+          }).join('');
+          throw Error(errorMessage);
+        }
       });
   }
 

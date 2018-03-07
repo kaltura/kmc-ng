@@ -1,4 +1,4 @@
-<div class="kTreeContainer kOverrideFAIcons">
+<div class="kAddCategory kTreeContainer kOverrideFAIcons">
 	<div class="kHeader">
 		<span class="kTitle">{{'applications.content.entryDetails.metadata.selectCategories' | translate}}</span>
 	</div>
@@ -28,7 +28,7 @@
 					   suggestionSelectableField="isSelectable"
 					   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
 					   [minLength]="3"
-					   (onSelect)="_onAutoCompleteSelected($event)"
+					   (onSelect)="_onAutoCompleteSelected()"
 					   [suggestionsProvider]="_categoriesProvider"
 					   (completeMethod)="_onAutoCompleteSearch($event)">
 		</kAutoComplete>

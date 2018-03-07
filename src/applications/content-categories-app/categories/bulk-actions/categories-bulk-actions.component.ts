@@ -235,9 +235,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           }, 0);
         }
       }, error => {
-        this._browserService.setAppStatus({
-          errorMessage: this._appLocalization
-            .get('applications.content.categoryDetails.subcategories.errors.categoriesCouldNotBeDeleted')
+        this._browserService.alert({
+          message: this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.categoriesCouldNotBeDeleted')
         });
       });
   }
@@ -249,8 +248,9 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       });
 
       if (!movingOnlySiblings) {
-        this._browserService.setAppStatus(
-          {errorMessage: this._appLocalization.get('applications.content.moveCategory.errors.onlySiblingsMoveAllowed')});
+        this._browserService.alert({
+          message: this._appLocalization.get('applications.content.moveCategory.errors.onlySiblingsMoveAllowed')
+        });
       } else {
         this.openBulkActionWindow('moveCategories', 586, 580);
       }
@@ -284,7 +284,9 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           this.onBulkChange.emit({ reload: reloadCategories });
         },
         error => {
-          this._browserService.setAppStatus({ errorMessage: this._appLocalization.get('applications.content.bulkActions.errorCategories') });
+          this._browserService.alert({
+            message: this._appLocalization.get('applications.content.bulkActions.errorCategories')
+          });
           this.onBulkChange.emit({ reload: reloadCategories });
         }
       );

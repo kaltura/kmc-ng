@@ -121,12 +121,15 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  private _hideMenuItems(source, status, mediaType, { commandName }): boolean {
-    const isReadyStatus = status instanceof KalturaEntryStatus && status.toString() === KalturaEntryStatus.ready.toString();
-    const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
+  private _hideMenuItems(source: KalturaSourceType,
+                         status: KalturaEntryStatus,
+                         mediaType: KalturaMediaType,
+                         { commandName }: { commandName: string }): boolean {
+    const isReadyStatus = status === KalturaEntryStatus.ready;
+    const isLiveStreamFlash = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
     const isPreviewCommand = commandName === 'preview';
     const isViewCommand = commandName === 'view';
-    const isKalturaLive = source instanceof KalturaSourceType && source.toString() === KalturaSourceType.liveStream.toString();
+    const isKalturaLive = source === KalturaSourceType.liveStream;
     const isLiveDashboardCommand = commandName === 'liveDashboard';
     return !(
       (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
@@ -159,14 +162,21 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  public _allowDrilldown(mediaType: string, status: string): boolean {
-    const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash.toString();
-    const isReady = status && status !== KalturaEntryStatus.ready.toString();
+  public _allowDrilldown(action: string, mediaType: KalturaMediaType, status: KalturaEntryStatus): boolean {
+    if (action !== 'view') {
+      return true;
+    }
+
+    const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
+    const isReady = status !== KalturaEntryStatus.ready;
     return !(isLiveStream && isReady);
   }
 
   public _onActionSelected(action: string, entry: KalturaMediaEntry): void {
-    this.actionSelected.emit({ action, entry });
+    const actionAllowed = this._allowDrilldown(action, entry.mediaType, entry.status);
+    if (actionAllowed) {
+      this.actionSelected.emit({ action, entry });
+    }
   }
 
   public _onSortChanged(event) {
