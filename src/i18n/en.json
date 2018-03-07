@@ -289,7 +289,7 @@
       },
       "prepareLive": {
         "createLiveStreamTitle": "Create Live Stream Entry",
-        "streamTypeLabel": "Stream type",
+        "streamTypeLabel": "Stream Type",
         "streamTypes": {
           "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
           "universal": "Universal Streaming, Flash and Mobile (HDS/HLS)",
@@ -468,7 +468,9 @@
           "delete": "Delete",
           "save": "Save changes",
           "changeOwnerLabel": "Set a new owner for the selected categories",
-          "error": "Categories update failed"
+          "error": "Categories update failed",
+          "cancelEdit": "Cancel Edit",
+          "discard": "Discard all changes?"
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
@@ -554,9 +556,9 @@
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "entryId": "Entry ID: {{0}}",
         "deleteNote": "Please note: the entry will be permanently deleted from your account.",
-        "ruleName": "Rule name",
+        "ruleName": "Rule Name",
         "ruleNamePlaceholder": "Rule Name",
-        "resultsLimit": "Results limit ({{0}})",
+        "resultsLimit": "Results Limit ({{0}})",
         "orderBy": "Order by",
         "totalDuration": "Total duration {{0}}",
         "resultsLimitRange": "1 - 200 Entries",
@@ -1075,6 +1077,7 @@
         "apply": "Apply to all selected entries",
         "error": "An error occurred during entries update.",
         "errorPlaylists": "An error occurred during playlists update.",
+        "cannotDeletePlaylists": "One or more playlists could not be deleted",
         "errorCategories": "An error occurred during categories update.",
         "updated": "Entries updated successfully",
         "note": "Update Note",
@@ -1092,6 +1095,7 @@
         "removeCategoriesNone": "No categories to remove",
         "approve": "Approve",
         "reject": "Reject",
+        "newPlaylist": "New playlist",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
         "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries",
@@ -1563,7 +1567,7 @@
         }
       },
       "categoryDetails": {
-        "referenceIdInUse": "The following entries are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
+        "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
         "headerProps": {
@@ -2072,7 +2076,8 @@
           "listValuesPlaceholder": "Enter the values, one per line",
           "single": "Single",
           "unlimited": "Unlimited",
-          "saveChanges": "Would you like to save the changes you made?",
+          "saveChanges": "Save changes?",
+          "saveChangesMessage": "Would you like to save the changes you made?",
           "validationErrors": {
             "invalidInput": "Invalid Input",
             "invalidSystemName": "Field system name must be unique, please enter a different name.",
@@ -2094,7 +2099,7 @@
       "integrationSettings": {
         "accountInfo": {
           "title": "Account Info",
-          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges. <a href=\"http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/entitlementsettings.htm\">Read More.</a>",
+          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges.",
           "readMore": "Read More.",
           "partnerId": "Partner ID",
           "subPartnerId": "Sub Partner ID",
@@ -2105,13 +2110,13 @@
           },
           "notifications": {
             "title": "Notifications",
-            "message": "For notification settings please contact your PM"
+            "message": " Contact your Kaltura Representative to set up notification settings."
           }
         },
         "entitlement": {
           "title": "Entitlement",
           "helpTip": "",
-          "explanation": "To add entitlement settings for categories click ‘Add Entitlement’ select the root category integrated with your application and label it below.",
+          "explanation": "To add entitlement settings for categories, click ‘Add Entitlement’.",
           "apiDefault": "API default",
           "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
           "entitlementEnforcementEnabled": "Entitlement enforcement enabled",

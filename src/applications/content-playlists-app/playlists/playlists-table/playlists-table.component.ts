@@ -89,7 +89,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
         command: () => this.onActionSelected('view', playlist)
       }
     ];
-    if (playlist.status instanceof KalturaEntryStatus && !playlist.status.equals(KalturaEntryStatus.ready)) {
+    if (playlist.status !== KalturaEntryStatus.ready) {
       this._items.shift();
     }
   }

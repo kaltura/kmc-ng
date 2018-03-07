@@ -39,10 +39,8 @@ export enum UnpermittedActionReasons {
 @Injectable()
 export class BrowserService implements IAppStorage {
 
-  private _appStatus = new BehaviorSubject<{errorMessage : string}>({ errorMessage : null});
   private _growlMessage = new Subject<GrowlMessage>();
   private _sessionStartedAt: Date = new Date();
-  public appStatus$ = this._appStatus.asObservable();
   public growlMessage$ = this._growlMessage.asObservable();
 
 	private _onConfirmationFn : OnShowConfirmationFn = (confirmation : Confirmation) => {
@@ -101,10 +99,6 @@ export class BrowserService implements IAppStorage {
 			this._onConfirmationFn = fn;
 		}
 	}
-
-	public setAppStatus(status: AppStatus): void{
-    this._appStatus.next(status);
-  }
 
 	public confirm(confirmation : Confirmation) {
 		confirmation.key = "confirm";

@@ -50,9 +50,9 @@ export class DistributedProfileComponent implements OnInit {
     if (distributionProfile) {
       this._providerType = distributionProfile ? distributionProfile.providerType : null;
 
-      const youtubeDistributorPageLink = this._providerType.equals(KalturaDistributionProviderType.youtube)
-        || this._providerType.equals(KalturaDistributionProviderType.youtubeApi);
-      const facebookDistributorPageLink = this._providerType.equals(KalturaDistributionProviderType.facebook);
+      const youtubeDistributorPageLink = this._providerType === KalturaDistributionProviderType.youtube
+        || this._providerType === KalturaDistributionProviderType.youtubeApi;
+      const facebookDistributorPageLink = this._providerType === KalturaDistributionProviderType.facebook;
       const isReady = this.profile.status === KalturaEntryDistributionStatus.ready;
       const showLink = isReady && (youtubeDistributorPageLink || facebookDistributorPageLink) && this._profile.remoteId;
 

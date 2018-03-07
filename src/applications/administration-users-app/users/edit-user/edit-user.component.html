@@ -50,7 +50,7 @@
         <div class="kRow kValign">
           <span class="kLabel kExtraWidth">{{'applications.administration.users.publisherUserId' | translate}}</span>
           <div class="kControl">
-            <input [formControl]="_idField" type="text" pInputText/>
+            <input [formControl]="_idField" [ngClass]="{'kHasError': _invalidUserId}" type="text" pInputText/>
           </div>
         </div>
         <div class="kRow kValign">
