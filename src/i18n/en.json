@@ -554,9 +554,9 @@
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "entryId": "Entry ID: {{0}}",
         "deleteNote": "Please note: the entry will be permanently deleted from your account.",
-        "ruleName": "Rule name",
+        "ruleName": "Rule Name",
         "ruleNamePlaceholder": "Rule Name",
-        "resultsLimit": "Results limit ({{0}})",
+        "resultsLimit": "Results Limit ({{0}})",
         "orderBy": "Order by",
         "totalDuration": "Total duration {{0}}",
         "resultsLimitRange": "1 - 200 Entries",
@@ -1563,7 +1563,7 @@
         }
       },
       "categoryDetails": {
-        "referenceIdInUse": "The following entries are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
+        "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
         "headerProps": {

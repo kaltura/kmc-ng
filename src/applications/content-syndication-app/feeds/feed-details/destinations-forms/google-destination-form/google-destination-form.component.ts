@@ -110,7 +110,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
       playback: this.feed ? (this.feed.allowEmbed ? 'fromGoogle' : 'linkback') : 'fromGoogle',
       selectedPlayer: this.feed ? this.feed.playerUiconfId : this.players && this.players.length && this.players[0].id,
       adultContent: this.feed ?
-        this.feed.adultContent.equals(KalturaGoogleSyndicationFeedAdultValues.yes) :
+        this.feed.adultContent === KalturaGoogleSyndicationFeedAdultValues.yes :
         this._appAuthentication.appUser.partnerInfo.adultContent
     });
   }

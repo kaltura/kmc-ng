@@ -30,10 +30,6 @@
                     {{'applications.content.table.type' | translate}}
                     <p-sortIcon [field]="'mediaType'"></p-sortIcon>
                 </th>
-                <th [style]="_columnsMetadata.plays.style" *ngIf="_columnsMetadata.plays" [kpSortableColumn]="_columnsMetadata.plays.sortable ? 'plays' : null">
-                    {{'applications.content.table.plays' | translate}}
-                    <p-sortIcon [field]="'plays'"></p-sortIcon>
-                </th>
                 <th [style]="_columnsMetadata.moderationCount.style" *ngIf="_columnsMetadata.moderationCount" [kpSortableColumn]="_columnsMetadata.moderationCount.sortable ? 'moderationCount' : null">
                     {{'applications.content.table.flags' | translate}}
                     <p-sortIcon [field]="'moderationCount'"></p-sortIcon>
@@ -48,6 +44,10 @@
                 <th [style]="_columnsMetadata.duration.style" *ngIf="_columnsMetadata.duration" [kpSortableColumn]="_columnsMetadata.duration.sortable ? 'duration' : null">
                     {{'applications.content.table.duration' | translate}}
                     <p-sortIcon [field]="'duration'"></p-sortIcon>
+                </th>
+                <th [style]="_columnsMetadata.plays.style" *ngIf="_columnsMetadata.plays" [kpSortableColumn]="_columnsMetadata.plays.sortable ? 'plays' : null">
+                    {{'applications.content.table.plays' | translate}}
+                    <p-sortIcon [field]="'plays'"></p-sortIcon>
                 </th>
                 <th [style]="_columnsMetadata.status.style" *ngIf="_columnsMetadata.status">
                     {{'applications.content.table.status' | translate}}
@@ -87,8 +87,6 @@
                          [class]="entry.mediaType | entryType: false"></div>
                 </td>
 
-                <td *ngIf="_columnsMetadata.plays" [style]="_columnsMetadata.plays.style">{{entry.plays}}</td>
-
                 <td *ngIf="_columnsMetadata.moderationCount" [style]="_columnsMetadata.moderationCount.style">
                     {{entry.moderationCount}}
                 </td>
@@ -100,9 +98,11 @@
                     {{entry.moderationStatus | kModerationStatus}}
                 </td>
 
-                <td *ngIf="_columnsMetadata.duration" [style]="_columnsMetadata.duration.style">{{entry.duration | kTime |
-                    entryDuration:entry}}
+                <td *ngIf="_columnsMetadata.duration" [style]="_columnsMetadata.duration.style">
+                    {{entry.duration | kTime | entryDuration:entry}}
                 </td>
+
+                <td *ngIf="_columnsMetadata.plays" [style]="_columnsMetadata.plays.style">{{entry.plays}}</td>
 
                 <td *ngIf="_columnsMetadata.status" [style]="_columnsMetadata.status.style">{{entry | entryStatus}}</td>
 
