@@ -289,7 +289,7 @@
       },
       "prepareLive": {
         "createLiveStreamTitle": "Create Live Stream Entry",
-        "streamTypeLabel": "Stream type",
+        "streamTypeLabel": "Stream Type",
         "streamTypes": {
           "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
           "universal": "Universal Streaming, Flash and Mobile (HDS/HLS)",
@@ -2096,7 +2096,7 @@
       "integrationSettings": {
         "accountInfo": {
           "title": "Account Info",
-          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges. <a href=\"http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/entitlementsettings.htm\">Read More.</a>",
+          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges.",
           "readMore": "Read More.",
           "partnerId": "Partner ID",
           "subPartnerId": "Sub Partner ID",
@@ -2107,13 +2107,13 @@
           },
           "notifications": {
             "title": "Notifications",
-            "message": "For notification settings please contact your PM"
+            "message": " Contact your Kaltura Representative to set up notification settings."
           }
         },
         "entitlement": {
           "title": "Entitlement",
           "helpTip": "",
-          "explanation": "To add entitlement settings for categories click ‘Add Entitlement’ select the root category integrated with your application and label it below.",
+          "explanation": "To add entitlement settings for categories, click ‘Add Entitlement’.",
           "apiDefault": "API default",
           "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
           "entitlementEnforcementEnabled": "Entitlement enforcement enabled",

@@ -4,8 +4,8 @@
     <div class="kTitle">
       <span>{{'applications.settings.integrationSettings.entitlement.title' | translate}}</span>
       <kInputHelper class="kHelp" trigger="click">
-        <span [innerHTML]="'applications.settings.integrationSettings.accountInfo.helpText' | translate">
-        </span>
+        <span>{{'applications.settings.integrationSettings.accountInfo.helpText' | translate}}</span>
+        <a (click)="openLink()">{{'applications.settings.integrationSettings.accountInfo.readMore' | translate}}</a>
       </kInputHelper>
     </div>
     <div class="kExplanation">{{'applications.settings.integrationSettings.entitlement.explanation' | translate}}</div>
