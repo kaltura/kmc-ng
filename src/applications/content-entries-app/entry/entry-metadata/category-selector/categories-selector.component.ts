@@ -76,11 +76,11 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .subscribe(event => {
           if (event.state === PopupWidgetStates.Open) {
-            this._confirmClose = true;
+            this._confirmClose = false;
           }
           const showConfirmation = event.state === PopupWidgetStates.BeforeClose
             && event.context && event.context.allowClose
-            && this._selectedCategories.length && this._confirmClose;
+            && this._confirmClose;
           if (showConfirmation) {
             event.context.allowClose = false;
             this._browserService.confirm({
@@ -170,6 +170,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public _onAutoCompleteSelected(): void {
+    this._confirmClose = true;
     const selectedItem: CategoryData = this._autoComplete.getValue();
 
     if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
@@ -193,6 +194,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public _onCategoryUnselected(node: number): void {
+    this._confirmClose = true;
     const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
 
     if (requestedCategoryIndex > -1) {
@@ -201,6 +203,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public _onCategorySelected(node: number): void {
+    this._confirmClose = true;
     const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
 
     if (requestedCategoryIndex === -1) {
