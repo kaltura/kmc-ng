@@ -38,14 +38,16 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('autoComplete') private _autoComplete: AutoComplete;
 
   private _confirmClose = true;
-  private _searchCategoriesSubscription: ISubscription;
-
-  public _categoriesLoaded = false;
-  public _categoriesLocked = false;
+  private _searchCategoriesSubscription: ISubscription;  public _categoriesLoaded = false;
+    public _categoriesLocked = false;
   public _categoriesUpdating = false;
   public _treeSelection: number[] = [];
-  public _categoriesProvider = new Subject<SuggestionsProviderData>();
-  public _selectedCategories: CategoryData[] = [];
+
+
+    public _categoriesProvider = new Subject<SuggestionsProviderData>();
+
+
+    public _selectedCategories: CategoryData[] = [];
 
   constructor(private _categoriesSearchService: CategoriesSearchService,
               private _cdRef: ChangeDetectorRef,
@@ -131,10 +133,12 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
   public _onTreeCategoriesLoad({ totalCategories }): void {
     this._categoriesLoaded = totalCategories > 0;
 
-    if (this._categoriesLoaded) {
-      this._autoComplete.focusInput();
-    }
-  }
+        if (this._categoriesLoaded) {
+            this._autoComplete.focusInput();
+        }
+  this._selectedCategories.forEach((category: CategoryData) => {
+            this._categoriesTree.expandNode(category.id);
+        });  }
 
   public _onAutoCompleteSearch(event): void {
     this._categoriesProvider.next({ suggestions: [], isLoading: true });
