@@ -66,7 +66,7 @@
 
                 <td *ngIf="_columnsMetadata.thumbnailUrl" [style]="_columnsMetadata.thumbnailUrl.style">
                     <div class="kThumbnailHolder"
-                         [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
+                         [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
                         <img src="{{entry.thumbnailUrl}}" onError="this.onerror=null;this.style.display='none'">
                     </div>
@@ -74,7 +74,7 @@
 
                 <td *ngIf="_columnsMetadata.name" [style]="_columnsMetadata.name.style">
                     <div class="kTitle" [kTooltip]="entry.name" [maxWidth]="300"
-                         [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
+                         [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
                         {{entry.name}}
                     </div>

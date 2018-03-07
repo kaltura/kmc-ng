@@ -11,6 +11,7 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management/upload-management.service';
 import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -68,6 +69,10 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this._entriesStore.reload();
       });
+
+    this._appEvents.event(UpdateEntriesListEvent)
+      .cancelOnDestroy(this)
+      .subscribe(() => this._entriesStore.reload());
   }
 
   ngOnDestroy() {
