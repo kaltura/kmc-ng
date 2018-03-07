@@ -27,7 +27,8 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 	public _sectionBlockerMessage: AreaBlockerMessage;
 
 	public _usersProvider = new Subject<SuggestionsProviderData>();
-	public _owner: KalturaUser = null;
+	public _owner: KalturaUser[] = null;
+  public _disableApplyButton = true;
 
 	private _searchUsersSubscription: ISubscription;
 	private _parentPopupStateChangeSubscribe: ISubscription;
@@ -122,7 +123,7 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 
 	public _convertUserInputToValidValue(value: string): any {
 		let result = null;
-		let tt = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
+		let tt = this._appLocalization.get('applications.content.entryDetails.users.unknownUser');
 
 		if (value) {
 			result =
@@ -137,9 +138,21 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	public _apply() {
-		this.ownerChanged.emit(this._owner);
-		this._confirmClose = false;
-		this.parentPopupWidget.close();
+    const [owner] = this._owner;
+    if (owner instanceof KalturaUser) {
+      this.ownerChanged.emit(owner);
+      this._confirmClose = false;
+      this.parentPopupWidget.close();
+    } else {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.entryDetails.users.unknownUser')
+      });
+    }
 	}
+
+  public _updateApplyButtonState(): void {
+    const [owner] = this._owner;
+    this._disableApplyButton = !(owner instanceof KalturaUser);
+  }
 }
 
