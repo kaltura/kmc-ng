@@ -92,7 +92,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private _onAddToNewPlaylist(): void {
-    const creationEvent = new CreateNewPlaylistEvent({ type: KalturaPlaylistType.staticList, }, 'metadata');
+    const creationEvent = new CreateNewPlaylistEvent({
+      type: KalturaPlaylistType.staticList,
+      name: this._appLocalization.get('applications.content.bulkActions.newPlaylist'),
+    }, 'metadata');
     const invalidEntries = this.selectedEntries.filter(entry => {
       return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1
     });
@@ -253,7 +256,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           const message = error.type === 'bulkDelete'
             ? error.message
             : this._appLocalization.get('applications.content.bulkActions.error');
-          this._browserService.setAppStatus({errorMessage: message });
+          this._browserService.alert({ message });
         }
       );
     };

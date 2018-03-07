@@ -109,6 +109,9 @@
           color: $kGrayscale3;
           border: 1px solid $kGrayscale4;
         }
+        &.kHasError {
+          border-color: $kDandger;
+        }
       }
 
       .ng-touched.ng-invalid {
