@@ -13,7 +13,7 @@ import {Menu, MenuItem} from 'primeng/primeng';
 import {KalturaDropFolderFile} from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import {AppLocalization} from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
-import { modulesConfig } from 'config/modules';
+import { globalConfig } from 'config/global';
 
 @Component({
   selector: 'kDropFoldersListTable',
@@ -48,7 +48,7 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   public _dropFolders: KalturaDropFolderFile[] = [];
   public _items: MenuItem[];
   public _emptyMessage = '';
-  public _defaultSortOrder = modulesConfig.shared.lists.defaultSortOrder;
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   constructor(private _appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef) {

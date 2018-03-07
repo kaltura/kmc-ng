@@ -34,6 +34,7 @@ import {SyndicationFeedGetEntryCountAction} from "kaltura-ngx-client/api/types/S
 import {SyndicationFeedAddAction} from "kaltura-ngx-client/api/types/SyndicationFeedAddAction";
 import {SyndicationFeedUpdateAction} from "kaltura-ngx-client/api/types/SyndicationFeedUpdateAction";
 import { subApplicationsConfig } from 'config/sub-applications';
+import { globalConfig } from 'config/global';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -306,7 +307,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     const defaultPageSize = this._browserService.getFromLocalStorage(this._pageSizeCacheKey);
 
     return {
-      pageSize: defaultPageSize || 50,
+      pageSize: defaultPageSize || globalConfig.client.views.tables.defaultPageSize,
       pageIndex: 0,
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc

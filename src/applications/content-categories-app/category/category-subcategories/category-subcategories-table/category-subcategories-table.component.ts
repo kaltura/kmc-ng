@@ -13,7 +13,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import { modulesConfig } from 'config/modules';
+import { globalConfig } from 'config/global';
 
 @Component({
   selector: 'kCategorySubcategoriesTable',
@@ -27,7 +27,7 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
   public _items: MenuItem[];
   public deferredLoading = true;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _defaultSortOrder = modulesConfig.shared.lists.defaultSortOrder;
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   @Input() selectedSubcategories: KalturaCategory[] = [];
   @Output() selectedSubcategoriesChange = new EventEmitter<KalturaCategory[]>();

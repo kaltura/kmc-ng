@@ -20,6 +20,7 @@ import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearc
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { globalConfig } from 'config/global';
 
 export enum SortDirection {
   Desc = -1,
@@ -201,7 +202,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   }
 
   protected _createDefaultFiltersValue(): PlaylistsFilters {
-    const pageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey) || 50;
+    const pageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey) || globalConfig.client.views.tables.defaultPageSize;
     return {
       pageSize: pageSize,
       pageIndex: 0,

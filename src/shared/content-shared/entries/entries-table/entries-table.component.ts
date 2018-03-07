@@ -17,7 +17,7 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntrySta
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { modulesConfig } from 'config/modules';
+import { globalConfig } from 'config/global';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -90,7 +90,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _deferredLoading = true;
   public _emptyMessage = '';
   public _items: CustomMenuItem[];
-  public _defaultSortOrder = modulesConfig.shared.lists.defaultSortOrder;
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef, private sanitization: DomSanitizer) {
   }

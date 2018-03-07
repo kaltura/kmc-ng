@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDes
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
-import { modulesConfig } from 'config/modules';
+import { globalConfig } from 'config/global';
 
 @Component({
   selector: 'kBulkLogTable',
@@ -41,7 +41,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _deferredLoading = true;
   public _emptyMessage = '';
   public _items: MenuItem[];
-  public _defaultSortOrder = modulesConfig.shared.lists.defaultSortOrder;
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
