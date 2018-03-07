@@ -21,6 +21,7 @@
               • {{ 'applications.settings.metadata.selected' | translate : [_selectedSchemas.length] }}
             </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                    [kTooltip]="'applications.settings.metadata.deleteProfiles' | translate"
                     (click)="_deleteSchemas(_selectedSchemas)"></button>
             <a class="kBulkCancel" (click)="_clearSelection()">
               {{'applications.settings.metadata.cancel' | translate}}
