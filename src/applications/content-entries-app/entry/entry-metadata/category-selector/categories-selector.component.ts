@@ -107,8 +107,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
     this.valueChange.emit(this._selectedCategories);
 
     if (this.parentPopupWidget) {
-      this.parentPopupWidget.close({ isDirty: true });
       this._confirmClose = false;
+      this.parentPopupWidget.close({ isDirty: true });
     }
   }
 
