@@ -468,7 +468,9 @@
           "delete": "Delete",
           "save": "Save changes",
           "changeOwnerLabel": "Set a new owner for the selected categories",
-          "error": "Categories update failed"
+          "error": "Categories update failed",
+          "cancelEdit": "Cancel Edit",
+          "discard": "Discard all changes?"
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
