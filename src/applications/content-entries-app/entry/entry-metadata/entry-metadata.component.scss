@@ -247,3 +247,7 @@ hr{
 :host /deep/ kautocomplete input{
 	height: auto !important;
 }
+
+:host /deep/ .entryJumpTo{
+  right: 33px;
+}
