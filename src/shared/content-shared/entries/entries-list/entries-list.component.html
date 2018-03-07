@@ -59,7 +59,7 @@
         <span class="kEntriesInfo"
               *ngIf="additionalFilters.children.length !== 0 && !(_entriesStore.entries.state$ | async)?.loading">
           <span *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">
-            {{'applications.content.entries.entries' | translate: [(_entriesStore.entries.data$ | async)?.totalCount]}}
+            {{'applications.content.entries.entries' | translate: [(_entriesStore.entries.data$ | async)?.totalCount]}},
             {{'applications.content.entries.totalDuration' | translate: [(_entriesDuration | kTime)]}}
           </span>
           <span *ngIf="!(_entriesStore.entries.data$ | async)?.totalCount">
