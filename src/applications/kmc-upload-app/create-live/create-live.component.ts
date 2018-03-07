@@ -9,6 +9,8 @@ import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/po
 import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
 import {ManualLive} from './manual-live/manual-live.interface';
 import {UniversalLive} from './universal-live/universal-live.interface';
+import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 
 export enum StreamTypes {
   kaltura,
@@ -71,12 +73,12 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.kaltura')
       },
       {
-        value: StreamTypes.manual,
-        label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')
-      },
-      {
         value: StreamTypes.universal,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.universal')
+      },
+      {
+        value: StreamTypes.manual,
+        label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')
       }
     ];
   }
@@ -162,22 +164,65 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  private _confirmEntryNavigation(id) {
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title'),
-        message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.message'),
-        accept: () => {
-          this._router.navigate(['/content/entries/entry', id], {queryParams: {reloadEntriesListOnNavigateOut: true}})
-          this._showConfirmationOnClose = false;
-          this.parentPopupWidget.close();
-        },
-        reject: () => {
-          this._showConfirmationOnClose = false;
-          this.parentPopupWidget.close();
-        }
-      }
-    );
+  private _confirmEntryNavigation(liveStream: KalturaLiveStreamEntry): void {
+    const header = this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title');
+
+    switch (liveStream.sourceType) {
+      case KalturaSourceType.liveStream:
+        this._browserService.confirm({
+          header,
+          message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.kalturaMessage'),
+          accept: () => {
+            this._router.navigate(
+              ['/content/entries/entry', liveStream.id],
+              { queryParams: { reloadEntriesListOnNavigateOut: true } }
+            );
+            this._showConfirmationOnClose = false;
+            this.parentPopupWidget.close();
+          },
+          reject: () => {
+            this._showConfirmationOnClose = false;
+            this.parentPopupWidget.close();
+          }
+        });
+        break;
+
+      case KalturaSourceType.akamaiUniversalLive:
+        this._browserService.alert({
+          header,
+          message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.universalMessage'),
+          accept: () => {
+            this._showConfirmationOnClose = false;
+            this.parentPopupWidget.close();
+          }
+        });
+        break;
+
+      case KalturaSourceType.manualLiveStream:
+        this._browserService.alert({
+          header,
+          message: this._appLocalization.get(
+            'applications.upload.prepareLive.confirmEntryNavigation.manualMessage',
+            [liveStream.id]
+          ),
+          accept: () => {
+            this._showConfirmationOnClose = false;
+            this.parentPopupWidget.close();
+          }
+        });
+        break;
+
+      default:
+        this._browserService.alert({
+          header,
+          message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.generalMessage'),
+          accept: () => {
+            this._showConfirmationOnClose = false;
+            this.parentPopupWidget.close();
+          }
+        });
+        break;
+    }
   }
 
 
@@ -187,7 +232,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
-          this._confirmEntryNavigation(response.id);
+          this._confirmEntryNavigation(response);
         }, error => {
           this._blockerMessage = new AreaBlockerMessage({
             title: 'Error',
@@ -209,7 +254,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
-          this._confirmEntryNavigation(response.id);
+          this._confirmEntryNavigation(response);
         }, error => {
           this._blockerMessage = new AreaBlockerMessage({
             title: 'Error',
@@ -231,7 +276,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
-          this._confirmEntryNavigation(response.id);
+          this._confirmEntryNavigation(response);
         }, error => {
           this._blockerMessage = new AreaBlockerMessage({
             title: 'Error',
