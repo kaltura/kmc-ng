@@ -14,6 +14,7 @@ import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBase
 import { PlaylistWidget } from '../../playlist-widget';
 import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
   selectionId?: string;
@@ -98,12 +99,12 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
       type: KalturaResponseProfileType.includeFields,
       fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
     });
-
     if (this.isNewData) {
       if (this.data.playlistContent) {
         return this._kalturaClient.request(new BaseEntryListAction({
           filter: new KalturaBaseEntryFilter({ idIn: this.data.playlistContent }),
-          responseProfile: responseProfile
+          responseProfile: responseProfile,
+          pager: new KalturaFilterPager({ pageSize: 500 })
         }))
           .map(response => {
             return response.objects;

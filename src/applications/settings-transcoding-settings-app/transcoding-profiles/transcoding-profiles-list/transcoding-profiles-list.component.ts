@@ -71,9 +71,9 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   private _setStoreServiceByType(serviceType: KalturaConversionProfileType): void {
-    if (serviceType.equals(KalturaConversionProfileType.media)) {
+    if (serviceType === KalturaConversionProfileType.media) {
       this._storeService = this._mediaTranscodingProfilesStore;
-    } else if (serviceType.equals(KalturaConversionProfileType.liveStream)) {
+    } else if (serviceType === KalturaConversionProfileType.liveStream) {
       this._storeService = this._liveTranscodingProfilesStore;
     } else {
       throw Error('Incorrect serviceType provided. It can be either KalturaConversionProfileType.media or KalturaConversionProfileType.liveStream type');
