@@ -11,6 +11,8 @@ import {ManualLive} from './manual-live/manual-live.interface';
 import {UniversalLive} from './universal-live/universal-live.interface';
 import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 
 export enum StreamTypes {
   kaltura,
@@ -62,6 +64,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private createLiveService: CreateLiveService,
               private _appLocalization: AppLocalization,
+              private _appEvents: AppEventsService,
               private _browserService: BrowserService,
               private _router: Router) {
   }
@@ -182,6 +185,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
           },
           reject: () => {
             this._showConfirmationOnClose = false;
+            this._appEvents.publish(new UpdateEntriesListEvent());
             this.parentPopupWidget.close();
           }
         });
@@ -193,6 +197,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
           message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.universalMessage'),
           accept: () => {
             this._showConfirmationOnClose = false;
+            this._appEvents.publish(new UpdateEntriesListEvent());
             this.parentPopupWidget.close();
           }
         });
@@ -207,6 +212,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
           ),
           accept: () => {
             this._showConfirmationOnClose = false;
+            this._appEvents.publish(new UpdateEntriesListEvent());
             this.parentPopupWidget.close();
           }
         });
