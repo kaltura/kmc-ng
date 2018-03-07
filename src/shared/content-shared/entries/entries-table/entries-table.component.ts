@@ -162,14 +162,18 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  public _allowDrilldown(mediaType: KalturaMediaType, status: KalturaEntryStatus): boolean {
+  public _allowDrilldown(action: string, mediaType: KalturaMediaType, status: KalturaEntryStatus): boolean {
+    if (action !== 'view') {
+      return true;
+    }
+
     const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
     const isReady = status !== KalturaEntryStatus.ready;
     return !(isLiveStream && isReady);
   }
 
   public _onActionSelected(action: string, entry: KalturaMediaEntry): void {
-    const actionAllowed = this._allowDrilldown(entry.mediaType, entry.status);
+    const actionAllowed = this._allowDrilldown(action, entry.mediaType, entry.status);
     if (actionAllowed) {
       this.actionSelected.emit({ action, entry });
     }
