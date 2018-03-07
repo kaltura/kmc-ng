@@ -2,23 +2,35 @@
 
 :host /deep/ {
   .ui-treenode-content {
-
-    .kTreeNodeLabel {
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 43px;
-      text-overflow: ellipsis;
-      margin-left: 5px;
-    }
-    .kTreeNodeLabelSingle{
-      color: $kGrayscale1;
+    .ui-treenode-label {
+      width: 100%;
     }
 
-    .kTreeNodeNumChildren {
-      font-size: 14px;
-      font-weight: 400;
-      color: $kGrayscale3;
-      margin-left: 10px;
+    .kTreeNodeLabelWrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .kTreeNodeLabel {
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 43px;
+        text-overflow: ellipsis;
+        margin-left: 5px;
+        width: calc(100% - 80px);
+        display: inline-block;
+        overflow: hidden;
+      }
+      .kTreeNodeLabelSingle {
+        color: $kGrayscale1;
+      }
+
+      .kTreeNodeNumChildren {
+        font-size: 14px;
+        font-weight: 400;
+        color: $kGrayscale3;
+        margin-left: 10px;
+      }
     }
   }
 }
