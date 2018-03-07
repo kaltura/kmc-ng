@@ -249,7 +249,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       language: KalturaLanguage.en,
       label: 'English',
       isDefault: 0,
-      fileExt: ''
+      fileExt: '',
+      status: KalturaCaptionAssetStatus.queued
     };
 
     // create a copy of the captions array without a reference to the original array
