@@ -20,13 +20,8 @@ import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPas
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
-import { KmcServerPolls } from 'app-shared/kmc-shared';
-
-
-export enum AppAuthStatusTypes {
-  UserLoggedIn,
-  UserLoggedOut
-}
+import { AppEventsService, KmcServerPolls } from 'app-shared/kmc-shared';
+import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events/user-login-status-event';
 
 export interface IUpdatePasswordPayload {
   email: string;
@@ -51,13 +46,10 @@ export interface ILoginResponse {
 export class AppAuthentication {
 
   private _appUser: AppUser;
-  private _appAuthStatus = new BehaviorSubject<AppAuthStatusTypes>(AppAuthStatusTypes.UserLoggedOut);
-
-  appEvents$ = this._appAuthStatus.asObservable();
-
-
+    private _isLogged = false;
   constructor(private kalturaServerClient: KalturaClient,
               private appStorage: AppStorage,
+              private _appEvents: AppEventsService,
               private _serverPolls: KmcServerPolls,
               private _pageExitVerificationService: PageExitVerificationService) {
     this._appUser = new AppUser();
@@ -101,10 +93,6 @@ export class AppAuthentication {
     }
 
     return {message, custom, code};
-  }
-
-  get currentAppEvent(): AppAuthStatusTypes {
-    return this._appAuthStatus.getValue();
   }
 
   get appUser(): AppUser {
@@ -205,7 +193,7 @@ export class AppAuthentication {
   }
 
   isLogged() {
-    return this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedIn;
+    return this._isLogged;
   }
 
   logout() {
@@ -214,13 +202,14 @@ export class AppAuthentication {
 
     this.appStorage.removeFromSessionStorage('auth.login.ks');
 
-    this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedOut);
+    this._isLogged = false;
+    this._appEvents.publish(new UserLoginStatusEvent(false));
     this.forceReload();
   }
 
   public loginAutomatically(): Observable<boolean> {
     return Observable.create((observer: any) => {
-      if (this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedOut) {
+      if (!this._isLogged) {
           const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
         if (loginToken) {
             const requests = [
@@ -279,13 +268,11 @@ export class AppAuthentication {
             () => {
               observer.next(false);
               observer.complete();
-              this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedOut);
             }
           );
         } else {
           observer.next(false);
           observer.complete();
-          this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedOut);
         }
       }
     });
@@ -297,7 +284,8 @@ export class AppAuthentication {
           ks: this.appUser.ks,
           partnerId: this.appUser.partnerId
       });
-      this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
+      this._isLogged = true;
+      this._appEvents.publish(new UserLoginStatusEvent(true));
       this._serverPolls.forcePolling();
   }
 
