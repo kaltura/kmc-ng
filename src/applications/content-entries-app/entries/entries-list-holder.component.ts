@@ -1,20 +1,23 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {EntriesListComponent} from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import {BrowserService} from 'app-shared/kmc-shell';
+import { BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import {ContentEntriesAppService} from '../content-entries-app.service';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
+import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management/upload-management.service';
+import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 
 @Component({
   selector: 'kEntriesListHolder',
   templateUrl: './entries-list-holder.component.html'
 })
-export class EntriesListHolderComponent {
+export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
@@ -54,8 +57,26 @@ export class EntriesListHolderComponent {
               private _browserService: BrowserService,
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
+              private _uploadManagement: UploadManagement,
               public _entriesStore: EntriesStore,
               private _contentEntriesAppService: ContentEntriesAppService) {
+  }
+
+  ngOnInit() {
+    this._uploadManagement.onTrackedFileChanged$
+      .cancelOnDestroy(this)
+      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.prepared)
+      .subscribe(() => {
+        this._entriesStore.reload();
+      });
+
+    this._appEvents.event(UpdateEntriesListEvent)
+      .cancelOnDestroy(this)
+      .subscribe(() => this._entriesStore.reload());
+  }
+
+  ngOnDestroy() {
+
   }
 
   public _onActionSelected({ action, entry }) {

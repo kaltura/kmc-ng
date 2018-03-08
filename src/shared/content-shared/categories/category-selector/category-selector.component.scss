@@ -23,6 +23,9 @@
   width: 520px;
 }
 
+:host {
+  width: 100%;
+}
 
 :host /deep/ kautocomplete .kKalturaPrimeUIComponent.ui-autocomplete-multiple {
   width: 100%;

@@ -40,6 +40,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   public _isNewUser = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
+  public _invalidUserId = false;
 
   constructor(public _usersStore: UsersStore,
               private _formBuilder: FormBuilder,
@@ -161,6 +162,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this._invalidUserId = false;
+
     this._usersStore.updateUser(this._userForm, this.user.id)
       .tag('block-shell')
       .cancelOnDestroy(this)
@@ -186,20 +189,21 @@ export class EditUserComponent implements OnInit, OnDestroy {
               }
             }
           ];
-          if (error.message === 'Invalid user id') {
+          if (error.message === 'Invalid user id' || error.code === 'DUPLICATE_USER_BY_ID') {
+            this._invalidUserId = true;
             buttons = [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
                 this._blockerMessage = null;
               }
-            }]
+            }];
           }
           this._blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
               buttons: buttons
             }
-          )
+          );
         }
       );
   }

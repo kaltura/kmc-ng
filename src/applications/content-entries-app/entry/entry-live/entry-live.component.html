@@ -7,6 +7,7 @@
   <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
     <div class="kLiveDetails">
+
       <div *ngIf="_widgetService._liveType === 'kaltura'">
         <div>
           <span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
@@ -30,7 +31,7 @@
             <span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
             <span>{{_widgetService.data?.streamName.replace('%i', '1')}}</span>
           </div>
-          <div class="kRow">
+          <!--div class="kRow">
             <span class="kLabels"></span>
             <span>{{'applications.content.entryDetails.live.note' | translate}}</span>
           </div>
@@ -39,7 +40,7 @@
             <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"
                     label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
             <a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" (click)="_widgetService._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
-          </div>
+          </div-->
         </div>
 
         <div>
@@ -86,7 +87,6 @@
             </div>
         </div>
       </div>
-
 
       <div *ngIf="_widgetService._liveType === 'universal'">
         <div>
@@ -208,6 +208,7 @@
           </div>
         </div>
       </div>
+
       <div *ngIf="_widgetService._liveType === 'manual'">
         <div class="kRow">
           <span class="kWideLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
