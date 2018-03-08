@@ -36,6 +36,7 @@
                     [(ngModel)]="user[col.field]"
                     (onChange)="_onActionSelected({action: 'permissionLevel', users: user, payload: { level: user.permissionLevel}})"
                     appendTo="body"
+                    kDropdownCloseOnScroll
         [disabled]="categoryInheritUserPermissions"></p-dropdown>
       </ng-template>
     </p-column>
@@ -50,6 +51,7 @@
                     [(ngModel)]="user[col.field]"
                     (onChange)="_onActionSelected({action: 'updateMethod', users: user, payload: { method: user.updateMethod} })"
                     appendTo="body"
+                    kDropdownCloseOnScroll
                     [disabled]="categoryInheritUserPermissions"></p-dropdown>
       </ng-template>
     </p-column>
