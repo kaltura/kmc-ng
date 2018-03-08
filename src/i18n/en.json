@@ -994,7 +994,8 @@
           "successFinish": "Finished successfully",
           "errorFinish": "Finished with errors",
           "failed": "Failed",
-          "otherStatuses": "All other statuses"
+          "otherStatuses": "All other statuses",
+          "datesRangeError": "'From Date' must be before 'To Date'"
         }
       },
       "entryStatus": {
