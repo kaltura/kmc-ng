@@ -1107,7 +1107,8 @@
         "viewRule": "View/Edit rule",
         "deleteRule": "Delete rule",
         "noCategoriesOrEntries": "No categories or entries were selected",
-        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}."
+        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}.",
+        "downloadFailed": "Download request failed"
       },
       "entryDetails": {
         "sections": {
