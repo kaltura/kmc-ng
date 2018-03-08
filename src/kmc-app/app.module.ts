@@ -26,7 +26,7 @@ import {
   UploadManagement
 } from '@kaltura-ng/kaltura-common';
 import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
-import {KalturaClientModule, KALTURA_CLIENT_OPTIONS, KalturaClientOptions} from 'kaltura-ngx-client';
+import {KalturaClientModule, KalturaClientOptions} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
   AccessControlProfileStore,
@@ -87,12 +87,9 @@ import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/t
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
-  // NOTE: using 'useFactory' instead of 'useValue' defer this function executino
-  // until the application actually loads itself (and getKalturaServerUri is already available
     return  {
         endpointUrl: getKalturaServerUri(),
-        clientTag: 'KMCng',
-        chunkFileSize: 5e6
+        clientTag: 'KMCng'
     };
 }
 
@@ -142,7 +139,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ViewCategoryEntriesModule.forRoot(),
     AccessControlProfileModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
-    KalturaClientModule.forRoot()
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory)
   ],
   declarations: <any>[
     AppComponent,
@@ -172,7 +169,6 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       },
     AppMenuService,
     { provide: AppStorage, useExisting: BrowserService },
-    { provide: KALTURA_CLIENT_OPTIONS, useFactory: kalturaClientOptionsFactory},
     ConfirmationService
   ]
 })
