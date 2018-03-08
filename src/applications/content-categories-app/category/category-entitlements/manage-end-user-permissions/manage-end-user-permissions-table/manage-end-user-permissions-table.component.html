@@ -1,4 +1,4 @@
-<div class="kTable">
+<div class="kTable kManageEndUserPermissionsTable">
     <p-dataTable #dataTable
                dataKey="id"
                scrollable="true"
@@ -37,7 +37,8 @@
                     (onChange)="_onActionSelected({action: 'permissionLevel', users: user, payload: { level: user.permissionLevel}})"
                     appendTo="body"
                     kDropdownCloseOnScroll
-        [disabled]="categoryInheritUserPermissions"></p-dropdown>
+                    [scrollTarget]="_tableScrollableWrapper"
+                    [disabled]="categoryInheritUserPermissions"></p-dropdown>
       </ng-template>
     </p-column>
 
@@ -52,6 +53,7 @@
                     (onChange)="_onActionSelected({action: 'updateMethod', users: user, payload: { method: user.updateMethod} })"
                     appendTo="body"
                     kDropdownCloseOnScroll
+                    [scrollTarget]="_tableScrollableWrapper"
                     [disabled]="categoryInheritUserPermissions"></p-dropdown>
       </ng-template>
     </p-column>

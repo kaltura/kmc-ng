@@ -56,6 +56,8 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   public _updateMethodOptions: { value: number, label: string }[] = [];
   public _kalturaCategoryUserStatus = KalturaCategoryUserStatus;
   public _emptyMessage = '';
+  public _tableScrollableWrapper: Element;
+
 
   public rowTrackBy: Function = (index: number, item: any) => {
     return item.id
@@ -112,6 +114,9 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
         this._deferredUsers = null;
       }, 0);
     }
+
+    this._tableScrollableWrapper = document.querySelector('.kManageEndUserPermissionsTable .ui-datatable-scrollable-body');
+
   }
 
   _onActionSelected(userActionData: UserActionData) {
