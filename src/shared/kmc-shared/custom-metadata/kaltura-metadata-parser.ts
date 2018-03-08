@@ -95,6 +95,16 @@ export class MetadataProfileParser {
 		let result;
 
 		try {
+      if (kalturaMetadataProfile.xsd === 'false') {
+        return {
+          profile: {
+            id: 0,
+            name: '',
+            isActive: false,
+            items: []
+          }
+        };
+      }
 			if (kalturaMetadataProfile.xsd) {
 
 				const schemaContext: any = XmlParser.toJson(kalturaMetadataProfile.xsd);

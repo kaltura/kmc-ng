@@ -1695,6 +1695,8 @@
             "count": "{{0}} end-users"
           },
           "usersPermissions": {
+            "refine": "Refine",
+            "searchUsers": "Search Users",
             "title":"Manage End-user Permissions",
             "titleView":"View End-user Permissions",
             "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",
