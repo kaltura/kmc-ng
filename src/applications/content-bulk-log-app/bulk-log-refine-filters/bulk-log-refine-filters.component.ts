@@ -231,7 +231,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
     });
 
     if (updateResult.createdAt && updateResult.createdAt.failed) {
-      this._createdAtFilterError = this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError');
+      this._createdAtFilterError = this._appLocalization.get('applications.content.bulkUpload.filters.datesRangeError');
 
       setTimeout(() => {
         const createdAt = this._bulkLogStore.cloneFilter('createdAt', null);
@@ -305,7 +305,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
     }
   }
 
-    
+
   /**
    * Invoke a request to the popup widget container to close the popup widget.
    *
