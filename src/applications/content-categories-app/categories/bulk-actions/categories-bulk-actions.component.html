@@ -10,14 +10,14 @@
 <kPopupWidget #bulkActionsPopup [modal]="true" [popupWidth]="500">
   <ng-template>
     <div [ngSwitch]="_bulkAction">
-      <kMoveCategory *ngSwitchCase="'moveCategories'" [parentPopupWidget]="bulkActionsPopup" [selectedCategories]="selectedCategories" (onMovedCategories)="onBulkChange.emit({reload: false})"></kMoveCategory>
-      <kCategoriesBulkChangeContributionPolicy *ngSwitchCase="'changeContributionPolicy'" [parentPopupWidget]="bulkActionsPopup" (changeContributionPolicyChanged)="onChangeContributionPolicyChanged($event)"></kCategoriesBulkChangeContributionPolicy>
-      <kCategoriesBulkChangeCategoryListing *ngSwitchCase="'changeCategoryListing'" [parentPopupWidget]="bulkActionsPopup" (changeCategoryListingChanged)="onChangeCategoryListingChanged($event)"></kCategoriesBulkChangeCategoryListing>
-      <kCategoriesBulkChangeContentPrivacy *ngSwitchCase="'changeContentPrivacy'" [parentPopupWidget]="bulkActionsPopup" (changeContentPrivacyChanged)="onChangeContentPrivacyChanged($event)"></kCategoriesBulkChangeContentPrivacy>
-      <kCategoriesBulkChangeOwner *ngSwitchCase="'changeOwner'" [parentPopupWidget]="bulkActionsPopup" (ownerChanged)="onOwnerChanged($event)"></kCategoriesBulkChangeOwner>
-      <kCategoriesBulkRemoveTags *ngSwitchCase="'removeTags'" [selectedCategories]="selectedCategories" [parentPopupWidget]="bulkActionsPopup"
-                                 (removeTagsChanged)="onRemoveTagsChanged($event)"></kCategoriesBulkRemoveTags>
       <kCategoriesBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kCategoriesBulkAddTags>
+      <kCategoriesBulkRemoveTags *ngSwitchCase="'removeTags'" [selectedCategories]="selectedCategories" [parentPopupWidget]="bulkActionsPopup"
+        (removeTagsChanged)="onRemoveTagsChanged($event)"></kCategoriesBulkRemoveTags>
+      <kCategoriesBulkChangeOwner *ngSwitchCase="'changeOwner'" [parentPopupWidget]="bulkActionsPopup" (ownerChanged)="onOwnerChanged($event)"></kCategoriesBulkChangeOwner>
+      <kCategoriesBulkChangeContentPrivacy *ngSwitchCase="'changeContentPrivacy'" [parentPopupWidget]="bulkActionsPopup" (changeContentPrivacyChanged)="onChangeContentPrivacyChanged($event)"></kCategoriesBulkChangeContentPrivacy>
+      <kCategoriesBulkChangeCategoryListing *ngSwitchCase="'changeCategoryListing'" [parentPopupWidget]="bulkActionsPopup" (changeCategoryListingChanged)="onChangeCategoryListingChanged($event)"></kCategoriesBulkChangeCategoryListing>
+      <kCategoriesBulkChangeContributionPolicy *ngSwitchCase="'changeContributionPolicy'" [parentPopupWidget]="bulkActionsPopup" (changeContributionPolicyChanged)="onChangeContributionPolicyChanged($event)"></kCategoriesBulkChangeContributionPolicy>
+      <kMoveCategory *ngSwitchCase="'moveCategories'" [parentPopupWidget]="bulkActionsPopup" [selectedCategories]="selectedCategories" (onMovedCategories)="onBulkChange.emit({reload: false})"></kMoveCategory>
     </div>
   </ng-template>
 </kPopupWidget>

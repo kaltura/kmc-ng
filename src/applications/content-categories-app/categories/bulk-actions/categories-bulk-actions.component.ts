@@ -65,23 +65,23 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   getBulkActionItems(): MenuItem[] {
     return [
-      {
-        label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
-          { label: this._appLocalization.get('applications.content.categories.bActions.addTags'),
-            command: () => { this.openBulkActionWindow('addTags', 500, 500) } },
-          { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'),
-            command: () => { this.openBulkActionWindow('removeTags', 500, 500) } }]
-      },
-      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'),
-        command: () => { this._moveCategories() } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'),
-        command: () => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'),
-        command: () => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'),
+        command: () => { this.openBulkActionWindow('changeOwner', 500, 280) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'),
         command: () => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'),
-        command: () => { this.openBulkActionWindow('changeOwner', 500, 280) } }
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'),
+        command: () => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'),
+        command: () => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'),
+        command: () => { this._moveCategories() } },
+      {
+        label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
+        { label: this._appLocalization.get('applications.content.categories.bActions.addTags'),
+          command: () => { this.openBulkActionWindow('addTags', 500, 500) } },
+        { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'),
+          command: () => { this.openBulkActionWindow('removeTags', 500, 500) } }]
+      }
     ];
   }
 
