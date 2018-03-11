@@ -95,6 +95,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               break;
 
             case TrackedFileStatuses.uploadCompleted:
+              relevantRelatedFile.progress = 100;
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = false;
               break;
@@ -111,7 +112,8 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               break;
 
             case TrackedFileStatuses.uploading:
-              relevantRelatedFile.progress = (uploadedFile.progress * 100).toFixed(0);
+              const progress = Number((uploadedFile.progress * 100).toFixed(0));
+              relevantRelatedFile.progress = progress >= 100 ? 100 : progress;
               relevantRelatedFile.uploading = true;
               relevantRelatedFile.uploadFailure = false;
               break;

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { MetadataItem, MetadataItemTypes } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -130,7 +130,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     this._fieldForm = this._fb.group({
       type: MetadataItemTypes.Text,
       allowMultiple: false,
-      label: '',
+      label: ['', Validators.required],
       shortDescription: '',
       description: '',
       searchable: true,

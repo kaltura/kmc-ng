@@ -103,7 +103,7 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 					(data.objects || []).forEach((suggestedUser: KalturaUser) => {
 						let isSelectable = true;
 						suggestions.push({
-							name: suggestedUser.screenName + " (" + suggestedUser.id + ")",
+              name: `${suggestedUser.screenName} (${suggestedUser.id})`,
 							item: suggestedUser,
 							isSelectable: isSelectable
 						});
