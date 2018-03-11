@@ -58,7 +58,7 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
         throw new Error(`unsupported type of request provided '${typeof request}'`);
       }
     });
-    return this._kalturaClient.multiRequest(multiRequest)
+    return this._kalturaClient.multiRequest(multiRequest.setNetworkTag('pr'))
       .map(responses => {
         return requestsMapping.reduce((aggregatedResponses, requestSize) => {
           const response = responses.splice(0, requestSize);

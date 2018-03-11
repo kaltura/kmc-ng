@@ -71,7 +71,7 @@
     "intl": "^1.2.5",
     "jquery": "^3.1.0",
     "jsnlog": "~2.26.1",
-    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-9.0.0-v20180311-101737.tgz",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-9.1.0-v20180311-143916.tgz",
     "moment": "~2.20.1",
     "ng2-page-scroll": "~4.0.0-beta.12",
     "ng2-translate": "~5.0.0",
