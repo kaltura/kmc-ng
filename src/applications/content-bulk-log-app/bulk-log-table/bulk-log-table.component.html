@@ -44,15 +44,19 @@
           </td>
 
           <td style="width:350px">
-            <span class="kBulkLogFileName">{{ bulkLogItem.fileName }}</span>
+            <span class="kBulkLogFileName" [kTooltip]="bulkLogItem.fileName">{{ bulkLogItem.fileName }}</span>
           </td>
 
           <td style="width:90px">
-            <span>{{ bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType }}</span>
+            <span [kTooltip]="bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType">
+              {{ bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType }}
+            </span>
           </td>
 
           <td>
-            <span>{{ bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId }}</span>
+            <span [kTooltip]="bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId">
+              {{ bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId }}
+            </span>
           </td>
 
           <td>

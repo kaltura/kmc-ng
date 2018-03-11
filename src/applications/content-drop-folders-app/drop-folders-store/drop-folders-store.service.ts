@@ -259,8 +259,9 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         filter: new KalturaDropFolderFilter({
           orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
           statusEqual: KalturaDropFolderStatus.enabled
-        }),
-        acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
+        })
+      }).setRequestOptions({
+          acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
       }))
       .map(response => {
         this._dropFolders.state.next({ loading: false, errorMessage: null });
