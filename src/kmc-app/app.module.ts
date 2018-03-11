@@ -89,7 +89,7 @@ const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, Flav
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
     return  {
         endpointUrl: getKalturaServerUri(),
-        clientTag: 'KMCng'
+        clientTag: 'kmcng'
     };
 }
 
