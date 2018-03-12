@@ -103,8 +103,10 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
       if (this.data.playlistContent) {
         return this._kalturaClient.request(new BaseEntryListAction({
           filter: new KalturaBaseEntryFilter({ idIn: this.data.playlistContent }),
-          responseProfile: responseProfile,
+
           pager: new KalturaFilterPager({ pageSize: 500 })
+        }).setRequestOptions({
+            responseProfile
         }))
           .map(response => {
             return response.objects;
@@ -114,9 +116,10 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
       }
     } else {
       return this._kalturaClient.request(new PlaylistExecuteAction({
-        id: this.data.id,
-        acceptedTypes: [KalturaMediaEntry],
-        responseProfile: responseProfile
+        id: this.data.id
+      }).setRequestOptions({
+          acceptedTypes: [KalturaMediaEntry],
+          responseProfile
       }));
     }
   }

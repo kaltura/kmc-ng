@@ -99,7 +99,8 @@ export class EntriesListHolderComponent implements OnDestroy {
     const entriesToApprove = this._entriesList.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`);
     const entries = this._entriesList.selectedEntries.length <= 10 ? entriesToApprove.join(',').replace(/,/gi, '\n') : '';
     const message = this._entriesList.selectedEntries.length > 1 ?
-      this._appLocalization.get('applications.content.moderation.sureToApproveMultiple', { 0: entries }) :
+      (this._entriesList.selectedEntries.length <=10 ? this._appLocalization.get('applications.content.moderation.sureToApproveMultiple', { 0: entries }) :
+          this._appLocalization.get('applications.content.moderation.sureToApproveSelected')) :
       this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: entries });
     if (!this._shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm({
@@ -139,7 +140,8 @@ export class EntriesListHolderComponent implements OnDestroy {
     const entriesToReject = this._entriesList.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`);
     const entries = this._entriesList.selectedEntries.length <= 10 ? entriesToReject.join(',').replace(/,/gi, '\n') : '';
     const message = this._entriesList.selectedEntries.length > 1 ?
-      this._appLocalization.get('applications.content.moderation.sureToRejectMultiple', { 0: entries }) :
+      (this._entriesList.selectedEntries.length <= 10 ? this._appLocalization.get('applications.content.moderation.sureToRejectMultiple', { 0: entries }) :
+            this._appLocalization.get('applications.content.moderation.sureToRejectSelected')) :
       this._appLocalization.get('applications.content.moderation.sureToReject', { 0: entries });
     if (!this._shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm({

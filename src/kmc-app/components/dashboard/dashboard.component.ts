@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { AppAuthentication, AppAuthStatusTypes, AppShellService } from "app-shared/kmc-shell";
+import { AppAuthentication, AppShellService } from "app-shared/kmc-shell";
 
 import * as $ from 'jquery';
 

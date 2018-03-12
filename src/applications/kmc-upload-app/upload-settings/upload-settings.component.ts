@@ -138,11 +138,18 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
       .subscribe(
         profiles => {
           this._transcodingProfileLoading = false;
-          this._transcodingProfiles = profiles.map(({ name: label, id: value }) => ({ label, value }));
-
-          const defaultValue = profiles.find(({ isDefault }) => !!isDefault);
-          if (defaultValue) {
-            this._transcodingProfileField.setValue(defaultValue.id);
+          const transcodingProfiles = [...profiles];
+          const defaultProfileIndex = transcodingProfiles.findIndex(({ isDefault }) => !!isDefault);
+          if (defaultProfileIndex !== -1) {
+            const [defaultProfile] = transcodingProfiles.splice(defaultProfileIndex, 1);
+            this._transcodingProfiles = [
+              { label: defaultProfile.name, value: defaultProfile.id },
+              ...transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }))
+            ];
+            this._transcodingProfileField.setValue(defaultProfile.id);
+          } else {
+            this._transcodingProfiles = transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }));
+            this._transcodingProfileField.setValue(this._transcodingProfiles[0].value);
           }
         },
         (error) => {

@@ -98,7 +98,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 						});
 					}
 					suggestions.push({
-						name: suggestedUser.screenName + " (" + suggestedUser.id + ")",
+            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
 						item: suggestedUser,
 						isSelectable: isSelectable
 					});
