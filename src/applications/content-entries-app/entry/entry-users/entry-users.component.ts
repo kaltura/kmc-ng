@@ -43,18 +43,19 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
     public _openChangeOwner(): void {
       this._disableSaveButton = true;
-      this._widgetService.usersForm.patchValue({owners: null});
+      this._widgetService.usersForm.patchValue({owners: []});
       this.ownerPopup.open();
     }
 
     public _saveAndClose(): void{
       const [owner] = this._widgetService.usersForm.value.owners;
-      if (owner instanceof KalturaUser) {
+      const hasScreenName = owner && (owner.screenName || '').trim() !== '';
+      if (hasScreenName) {
         this._widgetService.saveOwner();
         this.ownerPopup.close();
       } else {
         this._browserService.alert({
-          message: this._appLocalization.get('applications.content.entryDetails.users.unknownUser')
+          message: this._appLocalization.get('applications.content.entryDetails.users.noScreenName')
         });
       }
     }

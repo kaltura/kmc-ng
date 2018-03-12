@@ -192,11 +192,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // owner changed
   onOwnerChanged(owner: KalturaUser): void {
-    if (owner instanceof KalturaUser) {
-      this.executeService(this._bulkChangeOwnerService, owner);
-    }
+    this.executeService(this._bulkChangeOwnerService, owner);
   }
-
   // download changed
   onDownloadChanged(flavorId: number): void {
     const showSuccessMsg = (result) => {
