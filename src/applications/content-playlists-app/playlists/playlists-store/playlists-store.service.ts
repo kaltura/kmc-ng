@@ -178,7 +178,9 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
       // build the request
       return <any>this._kalturaServerClient.request(
-        new PlaylistListAction({ filter, pager, responseProfile })
+        new PlaylistListAction({ filter, pager}).setRequestOptions({
+            responseProfile
+        })
       );
     } catch (err) {
       return Observable.throw(err);

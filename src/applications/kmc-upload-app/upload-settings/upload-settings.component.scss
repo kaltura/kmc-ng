@@ -51,6 +51,7 @@
           overflow: hidden;
           text-overflow: ellipsis;
           width: 190px;
+          font-weight: normal;
         }
       }
 
@@ -156,6 +157,9 @@
 
   .ui-dropdown-label {
     text-overflow: ellipsis;
+    font-weight: normal;
+    font-size: 15px;
+    color: $kGrayscale1;
   }
 
   .ui-dropdown.ui-widget {

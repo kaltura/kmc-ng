@@ -80,7 +80,7 @@
              placement="top"
              (click)="onRetryUpload.emit(file)"></i>
           <i class="kIcontrash kIconRemoveFile"
-             *ngIf="!file.removing"
+             *ngIf="_canRemoveFile(file)"
              [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
              placement="top"
              (click)="onCancelUpload.emit(file)"></i>
