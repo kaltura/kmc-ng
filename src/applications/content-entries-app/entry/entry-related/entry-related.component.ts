@@ -1,12 +1,12 @@
-import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
-import { EntryRelatedWidget } from './entry-related-widget.service';
-import { KalturaAttachmentType } from 'kaltura-ngx-client/api/types/KalturaAttachmentType';
-import { KalturaAttachmentAsset } from 'kaltura-ngx-client/api/types/KalturaAttachmentAsset';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ISubscription} from 'rxjs/Subscription';
+import {EntryRelatedWidget} from './entry-related-widget.service';
+import {KalturaAttachmentType} from 'kaltura-ngx-client/api/types/KalturaAttachmentType';
+import {KalturaAttachmentAsset} from 'kaltura-ngx-client/api/types/KalturaAttachmentAsset';
+import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {Menu, MenuItem, SelectItem} from 'primeng/primeng';
 
 
 @Component({
@@ -54,8 +54,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 		this._actions = [
 			{label: this._appLocalization.get('applications.content.entryDetails.related.edit'), command: (event) => {this.actionSelected("edit");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.related.download'), command: (event) => {this.actionSelected("download");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.related.delete'), command: (event) => {this.actionSelected("delete");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.related.preview'), command: (event) => {this.actionSelected("preview");}}
+			{label: this._appLocalization.get('applications.content.entryDetails.related.delete'), command: (event) => {this.actionSelected("delete");}}
 		];
 	}
 
@@ -78,10 +77,9 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 			if (file.status && file.status.toString() !== KalturaEntryStatus.ready.toString()){
 				this._actions[0].disabled = true;
 			}
-			// disable edit, download and preview for added files that were not saved to the server yet (don't have status)
+			// disable edit, download for added files that were not saved to the server yet (don't have status)
 			this._actions[0].disabled = (file.status === undefined);
 			this._actions[1].disabled = (file.status === undefined);
-			this._actions[3].disabled = (file.status === undefined);
 			this.actionsMenu.toggle(event);
 		}
 	}
@@ -96,9 +94,6 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 				break;
 			case "download":
 				this._widgetService.downloadFile(this._currentFile);
-				break;
-			case "preview":
-				this._widgetService.previewFile(this._currentFile);
 				break;
 		}
 	}
