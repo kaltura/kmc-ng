@@ -143,7 +143,8 @@ export class BulkUploadMonitorService implements OnDestroy {
             bulkUploadFilter: new KalturaBulkUploadFilter({
                 statusIn: this._activeStatuses.join(','),
                 bulkUploadObjectTypeIn: this._bulkUploadObjectTypeIn.join(','),
-            }),
+            })
+        }).setRequestOptions({
             responseProfile: new KalturaDetachedResponseProfile({
                 type: KalturaResponseProfileType.includeFields,
                 fields: 'id,status,uploadedOn'

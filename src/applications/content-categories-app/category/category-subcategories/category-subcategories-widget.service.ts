@@ -103,12 +103,13 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
       // build the request
       return <any>this._kalturaClient.request(
-        new CategoryListAction({
-          filter,
-          pager: pagination,
-          responseProfile
-        })
-      );
+            new CategoryListAction({
+                filter,
+                pager: pagination
+            }).setRequestOptions({
+                responseProfile
+            })
+        );
     } catch (err) {
       return Observable.throw(err);
     }

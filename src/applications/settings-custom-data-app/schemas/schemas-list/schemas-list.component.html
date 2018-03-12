@@ -1,28 +1,28 @@
-<div class="kSchemas kOverrideFAIcons">
-  <div #schemasTableHolder class="kSchemasHolder kContent">
-    <kSticky stickyId="schemasFilters" [scrollOffset]="80" [sticksTo]="'header'">
-      <div class="kContent kFiltersWrapper">
-        <div class="kSchemasTableFilters kContent">
-          <button
-            pButton
-            type="button"
-            *ngIf="!_selectedSchemas.length"
-            [label]="'applications.settings.metadata.addCustomSchema' | translate"
-            class="kButtonBranded kAddSchemaBtn"
-            (click)="_addNewSchema()"></button>
-          <span
-            class="kSelectedSchemasNum"
-            *ngIf="(_schemasStore.schemas.data$ | async)?.totalCount">
-              {{'applications.settings.metadata.schemas' | translate : [(_schemasStore.schemas.data$ | async)?.totalCount] }}
-            </span>
+<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
+  <div class="kSchemas kOverrideFAIcons">
+    <div #schemasTableHolder class="kSchemasHolder kContent">
+      <kSticky stickyId="schemasFilters" [scrollOffset]="80" [sticksTo]="'header'">
+        <div class="kContent kFiltersWrapper">
+          <div class="kSchemasTableFilters kContent">
+            <button
+              pButton
+              type="button"
+              *ngIf="!_selectedSchemas.length"
+              [label]="'applications.settings.metadata.addCustomSchema' | translate"
+              class="kButtonBranded kAddSchemaBtn"
+              (click)="_addNewSchema()"></button>
+            <span
+              class="kSelectedSchemasNum"
+              *ngIf="(_schemasStore.schemas.data$ | async)?.totalCount">
+                {{'applications.settings.metadata.schemas' | translate : [(_schemasStore.schemas.data$ | async)?.totalCount] }}
+              </span>
 
           <div class="kBulkOperations" *ngIf="_selectedSchemas.length">
             <span class="kSelectedSchemasLabel">
               • {{ 'applications.settings.metadata.selected' | translate : [_selectedSchemas.length] }}
             </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
-                    [kTooltip]="'applications.settings.metadata.deleteProfiles' | translate"
-                    (click)="_deleteSchemas(_selectedSchemas)"></button>
+                    [kTooltip]="'applications.settings.metadata.deleteProfiles' | translate"(click)="_deleteSchemas(_selectedSchemas)"></button>
             <a class="kBulkCancel" (click)="_clearSelection()">
               {{'applications.settings.metadata.cancel' | translate}}
             </a>
@@ -40,17 +40,18 @@
         [(selectedSchemas)]="_selectedSchemas"></kSchemasTable>
     </k-area-blocker>
 
-    <div class="kSchemasTableFooter kContent" #footer *ngIf="(_schemasStore.schemas.data$ | async)?.totalCount">
-      <p-paginator
-        [rows]="_query.pageSize"
-        [first]="_query.pageIndex * _query.pageSize"
-        [rowsPerPageOptions]="[25,50,75,100]"
-        [totalRecords]="(_schemasStore.schemas.data$ | async)?.totalCount"
-        (onPageChange)="_onPaginationChanged($event)"></p-paginator>
-      <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      <div class="kSchemasTableFooter kContent" #footer *ngIf="(_schemasStore.schemas.data$ | async)?.totalCount">
+        <p-paginator
+          [rows]="_query.pageSize"
+          [first]="_query.pageIndex * _query.pageSize"
+          [rowsPerPageOptions]="[25,50,75,100]"
+          [totalRecords]="(_schemasStore.schemas.data$ | async)?.totalCount"
+          (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
     </div>
   </div>
-</div>
+</k-area-blocker>
 
 
 <kPopupWidget #customSchema [popupWidth]="995" [slider]="true">
