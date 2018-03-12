@@ -28,5 +28,9 @@ export class UploadListTableComponent {
   public _relatedTableRowStyle(rowData: UploadFileData): string {
     return rowData.status === TrackedFileStatuses.failure ? 'has-error' : '';
   }
+
+  public _canRemoveFile(file: UploadFileData): boolean {
+    return file.status !== TrackedFileStatuses.uploadCompleted;
+  }
 }
 

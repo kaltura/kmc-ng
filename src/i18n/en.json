@@ -73,7 +73,8 @@
       "no": "No",
       "apply": "Apply",
       "done": "Done",
-      "save": "Save"
+      "save": "Save",
+      "connectionError": "Error connecting to server"
     },
     "login": {
       "login": {
@@ -529,7 +530,7 @@
         "errors": {
           "cannotLinkEntries": "Category was created, but failed to link some of the entries, please review the created category",
           "createFailed": "An error occurred while trying to add new category",
-          "requiredName": "You must enter name",
+          "requiredName": "You must enter a name",
           "unableToLoadParentCategoryId" : "Unable to load Parent Category ID",
           "noParent": "No parent category was selected. Select either some category or no parent option"
         }
@@ -804,9 +805,11 @@
         "approveMedia": "Moderation: Approve media",
         "sureToApprove": "Are you sure you want to approve the following entry? \n {{0}}",
         "sureToApproveMultiple": "Are you sure you want to approve the following entries? \n {{0}}",
+        "sureToApproveSelected": "Are you sure you want to approve the selected entries?",
         "rejectMedia": "Moderation: Reject media",
         "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
         "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
+        "sureToRejectSelected": "Are you sure you want to reject the selected entries?",
         "selectAction": "Select Action",
         "errors": {
           "missingIds": "Missing entryIds argument",
@@ -905,7 +908,7 @@
         "edit": "Edit",
         "blockUnblock": "Block / Unblock",
         "ruleName": "Rule Name",
-        "entriesCount": "No.Entries",
+        "entriesCount": "No. Entries",
         "limit": "Limit",
         "orderBy": "Order By"
       },
@@ -1108,7 +1111,8 @@
         "viewRule": "View/Edit rule",
         "deleteRule": "Delete rule",
         "noCategoriesOrEntries": "No categories or entries were selected",
-        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}."
+        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}.",
+        "downloadFailed": "Download request failed"
       },
       "entryDetails": {
         "sections": {
@@ -1567,7 +1571,7 @@
           "thumbnailsUploadError": "Error uploading thumbnail.",
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
-          "flavorsLoadError": "Error loading flavors",
+          "flavorsLoadError": "Could not load data of flavors assets and params for this entry",
           "clipsLoadError": "Error loading clips",
           "datesRangeError": "Day before can't be earlier than day after"
         }
@@ -1620,7 +1624,8 @@
           "title": "Entitlements",
           "description": "Manage your entitlements settings and specific end-user permissions to content in your applications.",
           "privacyContentLabel": {
-            "label" : "Privacy Context Label"
+            "label" : "Privacy Context Label",
+            "help": "In order to enable access to content in this category from the application and enforce its entitlement rules, the privacy context label MUST be set as part of the application session (KS) privileges. \n\nThis label is set as part of the MediaSpace installation/upgrade process. For any other purposes set/edit the context label from the Integration Settings page under the Settings tab."
           },
           "manageUsersPermissionsEditMessage": {
             "title": "Error",
@@ -1653,7 +1658,8 @@
             "private_explanation": "Only end-users with specific permission can add content to this category"
           },
           "moderateContent": {
-            "label": "Moderate Content"
+            "label": "Moderate Content",
+            "help": "Media will not appear in page until by the category manager/moderator."
           },
           "inheritUsersPermissions": {
             "label": "Inherit Users Permissions",
@@ -1696,6 +1702,8 @@
             "count": "{{0}} end-users"
           },
           "usersPermissions": {
+            "refine": "Refine",
+            "searchUsers": "Search Users",
             "title":"Manage End-user Permissions",
             "titleView":"View End-user Permissions",
             "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",
@@ -2007,6 +2015,7 @@
         "errorLoading": "Error loading schemas",
         "addCustomSchema": "Add Custom Schema",
         "editCustomSchema": "Edit Custom Schema",
+        "deleteProfiles": "Delete selected schemas",
         "addCustomField": "Add Custom Field",
         "editCustomField": "Edit Custom Field",
         "downloadSchema": "Download Schema",

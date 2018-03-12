@@ -115,6 +115,10 @@ $autoCompleteWidth: 326px;
     height: 85px;
     overflow: auto;
   }
+
+  .ui-autocomplete-panel {
+    height: 120px;
+  }
 }
 
 :host /deep/ {

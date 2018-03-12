@@ -291,9 +291,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
           new BaseEntryListAction({
             filter,
             pager: pagination,
-            responseProfile,
-            acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
-          })
+          }).setRequestOptions({
+                  responseProfile,
+                  acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
+              })
         )).map(response => ({ entries: response.objects, totalCount: response.totalCount })
       );
   }

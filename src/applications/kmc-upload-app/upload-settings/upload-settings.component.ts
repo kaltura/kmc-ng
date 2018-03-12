@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
@@ -6,10 +6,8 @@ import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType'
 import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { subApplicationsConfig } from 'config/sub-applications';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { globalConfig } from 'config/global';
-import { serverConfig } from 'config/server';
 
 export interface UploadSettingsFile {
   file: File;
@@ -138,11 +136,18 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
       .subscribe(
         profiles => {
           this._transcodingProfileLoading = false;
-          this._transcodingProfiles = profiles.map(({ name: label, id: value }) => ({ label, value }));
-
-          const defaultValue = profiles.find(({ isDefault }) => !!isDefault);
-          if (defaultValue) {
-            this._transcodingProfileField.setValue(defaultValue.id);
+          const transcodingProfiles = [...profiles];
+          const defaultProfileIndex = transcodingProfiles.findIndex(({ isDefault }) => !!isDefault);
+          if (defaultProfileIndex !== -1) {
+            const [defaultProfile] = transcodingProfiles.splice(defaultProfileIndex, 1);
+            this._transcodingProfiles = [
+              { label: defaultProfile.name, value: defaultProfile.id },
+              ...transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }))
+            ];
+            this._transcodingProfileField.setValue(defaultProfile.id);
+          } else {
+            this._transcodingProfiles = transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }));
+            this._transcodingProfileField.setValue(this._transcodingProfiles[0].value);
           }
         },
         (error) => {

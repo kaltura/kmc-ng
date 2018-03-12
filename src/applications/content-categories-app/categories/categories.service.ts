@@ -432,8 +432,9 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       return this._kalturaClient.request(
         new CategoryListAction({
           filter,
-          pager: pagination,
-          responseProfile
+          pager: pagination
+        }).setRequestOptions({
+            responseProfile
         })
       );
     } catch (err) {

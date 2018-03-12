@@ -14,7 +14,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
-import { subApplicationsConfig } from 'config/sub-applications';
+import {subApplicationsConfig} from 'config/sub-applications';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {PrivacyMode} from './components/bulk-change-content-privacy/bulk-change-content-privacy.component';
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
@@ -23,7 +23,7 @@ import {AppearInListType} from './components/bulk-change-category-listing/bulk-c
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import {CategoriesUtilsService} from "../../categories-utils.service";
-import { CategoriesStatusMonitorService } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import {CategoriesStatusMonitorService} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -73,25 +73,23 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   getBulkActionItems(): MenuItem[] {
     return [
-      {
-        label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
-          { label: this._appLocalization.get('applications.content.categories.bActions.addTags'),
-            command: () => { this.openBulkActionWindow('addTags', 500, 500) } },
-          { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'),
-            command: () => { this.openBulkActionWindow('removeTags', 500, 500) } }]
-      },
-      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'),
-        command: () => { this._moveCategories() } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'),
-        command: () => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'),
-        command: () => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'),
-        command: () => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'),
         command: () => { this.openBulkActionWindow('changeOwner', 500, 280) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.delete'),
-        command: () => { this.deleteCategories() } }
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'),
+        command: () => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'),
+        command: () => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'),
+        command: () => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'),
+        command: () => { this._moveCategories() } },
+      {
+        label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
+        { label: this._appLocalization.get('applications.content.categories.bActions.addTags'),
+          command: () => { this.openBulkActionWindow('addTags', 500, 500) } },
+        { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'),
+          command: () => { this.openBulkActionWindow('removeTags', 500, 500) } }]
+      }
     ];
   }
 

@@ -9,7 +9,6 @@ initializeConfiguration()
     .subscribe(
         () =>
         {
-
             platformBrowserDynamic().bootstrapModule(AppModule);
         },
         (error) =>

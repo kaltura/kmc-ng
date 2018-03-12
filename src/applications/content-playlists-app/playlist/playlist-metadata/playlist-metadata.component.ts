@@ -62,5 +62,9 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
       });
   }
 
+  public _trimNameValue(): void {
+    const name = (this._widgetService.metadataForm.controls['name'].value || '').trim();
+    this._widgetService.metadataForm.controls['name'].setValue(name);
+  }
 }
 

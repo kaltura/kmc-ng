@@ -21,10 +21,11 @@ export class DropFoldersRequestFactory implements RequestFactory<DropFolderFileL
       filter: new KalturaDropFolderFileFilter({
         createdAtGreaterThanOrEqual: this.uploadedOn,
         dropFolderIdIn: this.dropFolderIdIn
-      }),
-      responseProfile: new KalturaDetachedResponseProfile({
-        type: KalturaResponseProfileType.includeFields,
-        fields: 'id,status,createdAt'
+      })
+    }).setRequestOptions({
+        responseProfile: new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: 'id,status,createdAt'
       })
     });
   }

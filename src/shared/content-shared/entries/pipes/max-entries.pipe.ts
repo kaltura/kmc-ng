@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { modulesConfig } from 'config/modules';
+import { globalConfig } from 'config/global';
 
 
 @Pipe({ name: 'kMaxEntries' })
@@ -8,7 +8,7 @@ export class MaxEntriesPipe implements PipeTransform {
   }
 
   transform(value: number): number {
-    const maxEntries = modulesConfig.shared.lists.maxItems;
+    const maxEntries = globalConfig.client.views.tables.maxItems;
     return value > maxEntries ? maxEntries : value;
   }
 }

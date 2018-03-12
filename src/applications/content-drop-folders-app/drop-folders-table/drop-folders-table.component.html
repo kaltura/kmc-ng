@@ -6,6 +6,7 @@
               scrollHeight="100%"
               [value]="_dropFolders"
               dataKey="id"
+              [defaultSortOrder]="_defaultSortOrder"
               (sortFunction)="_onSortChanged($event)" [customSort]="true"
               [(selection)]="selectedDropFolders"
               (selectionChange)="selectedDropFoldersChange.emit($event)"
