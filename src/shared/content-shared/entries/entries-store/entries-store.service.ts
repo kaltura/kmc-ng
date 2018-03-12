@@ -24,6 +24,7 @@ import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-
 import { Subject } from 'rxjs/Subject';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
+import { globalConfig } from 'config/global';
 
 export enum SortDirection {
   Desc = -1,
@@ -216,7 +217,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
   protected _createDefaultFiltersValue(): EntriesFilters {
     const savedAutoSelectChildren: CategoriesModes = this._browserService.getFromLocalStorage('contentShared.categoriesTree.selectionMode');
-    const pageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey()) || 50;
+    const pageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey()) || globalConfig.client.views.tables.defaultPageSize;
     return this._dataProvider.getDefaultFilterValues(savedAutoSelectChildren, pageSize);
   }
 
