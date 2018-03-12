@@ -120,6 +120,13 @@ export const ServerConfigSchema = {
                     required: ['userManual', 'support', 'signUp', 'contactUs', 'upgradeAccount', 'contactSalesforce'],
                     additionalProperties: false
                 },
+                entitlements: {
+                    properties: {
+                        manage: {type: 'string'}
+                    },
+                    required: ['manage'],
+                    additionalProperties: false
+                },
                 uploads: {
                     properties: {
                         highSpeedUpload: {type: 'string'},
@@ -195,6 +202,9 @@ export interface ServerConfig {
             embedTypes: string,
             deliveryProtocols: string
         },
+        entitlements:{
+            manage: string
+        },
         kaltura: {
             userManual: string,
             support: string,
@@ -216,12 +226,12 @@ export interface ServerConfig {
 export const serverConfig: ServerConfig = <any>{};
 
 export function getKalturaServerUri(suffix: string = ''): string{
-    if (serverConfig)
+    if (serverConfig.kalturaServer)
     {
         const useHttpsProtocol = globalConfig.kalturaServer.useSecuredProtocol;
         const serverEndpoint = serverConfig.kalturaServer.uri;
         return `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}${suffix}`;
     }else {
-        throw new Error('cannot provide kaltura server uri. missing server configuration');
+        throw new Error(`cannot provide kaltura server uri. server configuration wasn't loaded already`);
     }
 }

@@ -124,7 +124,8 @@ export class DropFoldersMonitorService implements OnDestroy {
         orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
         statusEqual: KalturaDropFolderStatus.enabled
       }),
-      acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
+    }).setRequestOptions({
+        acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
     });
 
     return this._kalturaClient.request(dropFolders)
@@ -132,7 +133,7 @@ export class DropFoldersMonitorService implements OnDestroy {
         if (response && response.objects) {
           return response.objects.reduce((list, object) => {
             if (object instanceof KalturaDropFolder) {
-              if (object.fileHandlerType.equals(KalturaDropFolderFileHandlerType.content)) {
+              if (object.fileHandlerType === KalturaDropFolderFileHandlerType.content) {
                 const cfg = object.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
                 if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
                   list.push(object);
@@ -141,7 +142,7 @@ export class DropFoldersMonitorService implements OnDestroy {
                 } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrAddAsNew) {
                   list.push(object);
                 }
-              } else if (object.fileHandlerType.equals(KalturaDropFolderFileHandlerType.xml)) {
+              } else if (object.fileHandlerType === KalturaDropFolderFileHandlerType.xml) {
                 list.push(object);
               }
 

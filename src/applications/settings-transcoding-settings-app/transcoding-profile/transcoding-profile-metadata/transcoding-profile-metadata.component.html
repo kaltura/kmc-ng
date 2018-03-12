@@ -1,0 +1,59 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+  <div class="kMetadataWrap">
+    <div class="kMetadataDetails">
+      <span class="kSchemaTitle">{{'applications.settings.transcoding.sections.metadata' | translate}}</span>
+
+      <form [formGroup]="_widgetService.metadataForm" novalidate>
+        <div class="kRow kValign">
+          <span class="kLabel">
+            {{'applications.settings.transcoding.metadata.name' | translate}}
+          </span>
+          <div class="kControl">
+            <input #metadataNameInput [formControl]="_widgetService.nameField" pInputText
+                   [placeholder]="'applications.settings.transcoding.metadata.namePlaceholder' | translate"
+                   [ngClass]="{'kHasError':_widgetService.nameField.touched && !_widgetService.nameField.valid}">
+            <div *ngIf="_widgetService.nameField.touched && !_widgetService.nameField.valid"
+                 class="kHasError">
+              {{'applications.settings.transcoding.metadata.nameIsMandatory' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.transcoding.metadata.description' | translate}}</span>
+          <div class="kControl">
+            <textarea [formControl]="_widgetService.descriptionField" pInputTextarea class="threeRows"
+                      [placeholder]="'applications.settings.transcoding.metadata.descriptionPlaceholder' | translate"></textarea>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">
+            {{'applications.settings.transcoding.metadata.defaultMetadataSetting' | translate}}
+          </span>
+          <div class="kControl">
+            <input [formControl]="_widgetService.defaultEntryIdField" pInputText
+                   [placeholder]="'applications.settings.transcoding.metadata.defaultMetadataSettingPlaceholder' | translate"
+                   [ngClass]="{'kHasError':_widgetService.entryNotFoundErrorParams || _widgetService.entryValidationGeneralError}">
+            <div *ngIf="_widgetService.entryNotFoundErrorParams"
+                 class="kHasError">
+              {{'applications.settings.transcoding.entryNotFound' | translate:[_widgetService.entryNotFoundErrorParams]}}
+            </div>
+            <div *ngIf="_widgetService.entryValidationGeneralError"
+                 class="kHasError">
+              {{'applications.settings.transcoding.entryValidationGeneralError' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="kRow" *ngIf="!_widgetService.hideStorageProfileIdField">
+          <span class="kLabel">
+            {{'applications.settings.transcoding.metadata.ingestFromRemoteStorage' | translate}}
+          </span>
+          <div class="kControl">
+            <p-dropdown [options]="_widgetService.remoteStorageProfilesOptions"
+                        [formControl]="_widgetService.storageProfileIdField"
+                        [autoWidth]="false"></p-dropdown>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</k-area-blocker>

@@ -182,7 +182,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
         new BulkListAction({
           bulkUploadFilter: filter,
           pager: pagination,
-          responseProfile: responseProfile
+        }).setRequestOptions({
+            responseProfile
         })
       );
     } catch (err) {

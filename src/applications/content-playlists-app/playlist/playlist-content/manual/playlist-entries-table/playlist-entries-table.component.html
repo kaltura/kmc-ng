@@ -9,7 +9,7 @@
       [value]="_entries"
       [sortField]="filter.sortBy"
       [emptyMessage]="_emptyMessage"
-      [sortOrder]="filter.sortDirection | kPlaylistsTableSortDirectionPipe"
+      [sortOrder]="filter.sortDirection"
       (selectionChange)="_onSelectionChange($event)"
       (onSort)="_onSortChanged($event)"
       [(selection)]="selectedEntries">

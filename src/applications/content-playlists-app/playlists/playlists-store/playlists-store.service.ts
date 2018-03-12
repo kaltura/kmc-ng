@@ -22,8 +22,8 @@ import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/nu
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
-  Desc,
-  Asc
+  Desc = -1,
+  Asc = 1
 }
 
 export interface PlaylistsFilters {
@@ -178,7 +178,9 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
       // build the request
       return <any>this._kalturaServerClient.request(
-        new PlaylistListAction({ filter, pager, responseProfile })
+        new PlaylistListAction({ filter, pager}).setRequestOptions({
+            responseProfile
+        })
       );
     } catch (err) {
       return Observable.throw(err);

@@ -24,7 +24,8 @@
       "DropFolders": "Drop Folders",
       "UploadMonitor": "Upload Monitor",
       "CustomData": "Custom Data",
-      "AccessControl": "Access Control"
+      "AccessControl": "Access Control",
+      "Transcoding settings": "Transcoding settings"
     },
     "userSettings": {
       "changeAccount": "Change Account",
@@ -72,7 +73,8 @@
       "no": "No",
       "apply": "Apply",
       "done": "Done",
-      "save": "Save"
+      "save": "Save",
+      "connectionError": "Error connecting to server"
     },
     "login": {
       "login": {
@@ -236,7 +238,7 @@
       "uploadSettings": {
         "title": "Upload Settings",
         "profile": "Transcoding profile",
-        "addFileBtn": "Add file",
+        "addFileBtn": "Add files",
         "profilePlaceholder": "Default",
         "mediaTypes": {
           "video": "Video",
@@ -288,7 +290,7 @@
       },
       "prepareLive": {
         "createLiveStreamTitle": "Create Live Stream Entry",
-        "streamTypeLabel": "Stream type",
+        "streamTypeLabel": "Stream Type",
         "streamTypes": {
           "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
           "universal": "Universal Streaming, Flash and Mobile (HDS/HLS)",
@@ -338,8 +340,11 @@
           }
         },
         "confirmEntryNavigation": {
-          "title": "Stream has been created successfully.",
-          "message": "Live Stream Entry has been created successfully.\nStream activation for broadcasting with the CDN may take up to 3 hours.\n Do you want to view entry details?"
+          "title": "Stream has been created successfully",
+          "generalMessage": "Live Stream Entry has been created successfully.",
+          "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
+          "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
+          "manualMessage": "The urls provided have been associated with entry {{0}}."
         }
       }
     },
@@ -467,7 +472,9 @@
           "delete": "Delete",
           "save": "Save changes",
           "changeOwnerLabel": "Set a new owner for the selected categories",
-          "error": "Categories update failed"
+          "error": "Categories update failed",
+          "cancelEdit": "Cancel Edit",
+          "discard": "Discard all changes?"
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
@@ -522,12 +529,14 @@
         "errors": {
           "cannotLinkEntries": "Category was created, but failed to link some of the entries, please review the created category",
           "createFailed": "An error occurred while trying to add new category",
-          "requiredName": "You must enter name",
-          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
+          "requiredName": "You must enter a name",
+          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID",
+          "noParent": "No parent category was selected. Select either some category or no parent option"
         }
       },
       "moveCategory":{
         "noParent":"No Parent",
+        "noCategorySelected": "No category was selected",
         "selectCategoryParent": "Select the parent category under which the selected category will appear",
         "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
         "errors": {
@@ -553,9 +562,9 @@
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "entryId": "Entry ID: {{0}}",
         "deleteNote": "Please note: the entry will be permanently deleted from your account.",
-        "ruleName": "Rule name",
+        "ruleName": "Rule Name",
         "ruleNamePlaceholder": "Rule Name",
-        "resultsLimit": "Results limit ({{0}})",
+        "resultsLimit": "Results Limit ({{0}})",
         "orderBy": "Order by",
         "totalDuration": "Total duration {{0}}",
         "resultsLimitRange": "1 - 200 Entries",
@@ -795,9 +804,11 @@
         "approveMedia": "Moderation: Approve media",
         "sureToApprove": "Are you sure you want to approve the following entry? \n {{0}}",
         "sureToApproveMultiple": "Are you sure you want to approve the following entries? \n {{0}}",
+        "sureToApproveSelected": "Are you sure you want to approve the selected entries?",
         "rejectMedia": "Moderation: Reject media",
         "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
         "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
+        "sureToRejectSelected": "Are you sure you want to reject the selected entries?",
         "selectAction": "Select Action",
         "errors": {
           "missingIds": "Missing entryIds argument",
@@ -1074,6 +1085,7 @@
         "apply": "Apply to all selected entries",
         "error": "An error occurred during entries update.",
         "errorPlaylists": "An error occurred during playlists update.",
+        "cannotDeletePlaylists": "One or more playlists could not be deleted",
         "errorCategories": "An error occurred during categories update.",
         "updated": "Entries updated successfully",
         "note": "Update Note",
@@ -1091,13 +1103,15 @@
         "removeCategoriesNone": "No categories to remove",
         "approve": "Approve",
         "reject": "Reject",
+        "newPlaylist": "New playlist",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
         "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries",
         "viewRule": "View/Edit rule",
         "deleteRule": "Delete rule",
         "noCategoriesOrEntries": "No categories or entries were selected",
-        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}."
+        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}.",
+        "downloadFailed": "Download request failed"
       },
       "entryDetails": {
         "sections": {
@@ -1110,7 +1124,8 @@
           "live": "Live Stream",
           "relatedFiles": "Related Files",
           "clips": "Clips",
-          "users": "Users"
+          "users": "Users",
+          "distribution": "Distribution"
         },
         "preview": {
           "pande": "Share & Embed",
@@ -1412,6 +1427,136 @@
           "co-publishers": "Co-Publishers",
           "tooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier"
         },
+        "distribution": {
+          "cancel": "Cancel",
+          "distribution": "Distribution",
+          "export": "Export",
+          "upToDate": "Up To Date",
+          "update": "Update",
+          "lastUpdate": "Last Update {{0}}",
+          "moreDetails": "More Details",
+          "moreInfo": "More Info",
+          "processing": "Processing",
+          "auto": "Auto",
+          "modified": "Modified",
+          "retry": "Retry",
+          "refresh": "Refresh",
+          "previewDistributorVideo": "Preview video on distributor page",
+          "deleteConfirmTitle": "Delete distribution",
+          "delete": "Delete",
+          "deleteConfirm": "You are about to remove the exported video that was distributed by {{0}}. The video will no longer be available via the video page on the external platform. How do you wish to proceed?",
+          "form": {
+            "status": "Status",
+            "updates": "Updates",
+            "updateAutomatically": "Update Automatically",
+            "lastUpdate": "Last Update",
+            "remoteId": "Remote ID",
+            "startDate": "Start Date",
+            "endDate": "End Date",
+            "metadata": "Metadata",
+            "name": "Name",
+            "description": "Description",
+            "tags": "Tags",
+            "delete": "Delete",
+            "videoFlavors": "Video Flavors",
+            "thumbnail": "Thumbnail",
+            "missingFlavor": "Missing Flavor",
+            "format": "Format: {{0}}",
+            "codec": "Codec: {{0}}",
+            "notRequired": "Not Required",
+            "kbps": "{{0}} Kbps",
+            "missingThumbnail": "Missing Thumbnail",
+            "logs": "Logs",
+            "requestXml": "Request XML",
+            "responseXml": "Response XML",
+            "discardChanges": "Discard all changes?"
+          },
+          "providerTypes": {
+            "unknown": "Unknown provider",
+            "attUverse": "AttUverse",
+            "avn": "AVN",
+            "comcastMrss": "ComcastMrss",
+            "crossKaltura": "CrossKaltura",
+            "dailymotion": "Dailymotion",
+            "doubleclick": "Doubleclick",
+            "facebook": "Facebook",
+            "freewheel": "Freewheel",
+            "freewheelGeneric": "FreewheelGeneric",
+            "ftp": "FTP",
+            "ftpScheduled": "FTPScheduled",
+            "generic": "Generic",
+            "hulu": "Hulu",
+            "idetic": "Idetic",
+            "metroPcs": "Metro PCS",
+            "msn": "MSN",
+            "ndn": "NDN",
+            "podcast": "Podcast",
+            "pushToNews": "PushToNews",
+            "quickplay": "Quickplay",
+            "synacorHbo": "SynacorHBO",
+            "syndication": "Syndication",
+            "timeWarner": "TimeWarner",
+            "tvcom": "Tvcom",
+            "tvinci": "Tvinci",
+            "unicorn": "Unicorn",
+            "uverse": "Uverse",
+            "uverseClickToOrder": "UverseClickToOrder",
+            "verizonVcast": "VerizonVcast",
+            "yahoo": "Yahoo",
+            "youtube": "YouTube",
+            "youtubeApi": "YouTubeAPI"
+          },
+          "status": {
+            "readyForDistribution": "Ready for Distribution",
+            "scheduledForDistribution": "Scheduled for Distribution",
+            "queued": "Approved for Distribution",
+            "ready": "Distributed",
+            "readyUpdateRequired": "Distributed, Update Required",
+            "deleted": "Deleted",
+            "submitting": "Distributing",
+            "updating": "Updating",
+            "deleting": "Removing",
+            "errorSubmitting": "Distribution Failed",
+            "errorDeleting": "Removal Failed",
+            "removed": "Removed",
+            "notDistributed": "Not exported",
+            "updateFailed": "Update Failed",
+            "exportFailed": "Export Failed"
+          },
+          "errors": {
+            "errorLoading": "Failed to load entry distribution data",
+            "cannotDelete": "Cannot delete distribution profile",
+            "cannotDistribute": "Cannot distribute profile",
+            "metadataError": "Metadata Error.",
+            "missingMetadata": "Missing Metadata.",
+            "missingFlavor": "Missing Flavor.",
+            "missingThumbnail": "Missing Thumbnail.",
+            "autoDistributionMetadataMissing": "Auto-distribution Metadata is Missing.",
+            "failedLoadMissingFlavors": "Failed to load missing flavors assets: {{0}}",
+            "serverError": "Server error",
+            "datesRangeError": "\"Start Date\" must be before \"End Date\"",
+            "missingThumbnails": "Required thumbnail sizes are missing from entry thumbnails",
+            "missingFlavors": "Required flavors are missing from entry flavors",
+            "updateFailed": "Update failed",
+            "retryFailed": "Retry failed"
+          },
+          "errorsInfo": {
+            "goToMetadataTab": "Go to Metadata Tab",
+            "goToThumbnailsTab": "Go to Thumbnails Tab",
+            "goToFlavorsTab": "Go to Flavors Tab",
+            "metadataError": "The selected entry's metadata doesn't conform with the required specifications:\n{{0}}\nIn order to finalize this distribution, you must fix this error in the relevant tabs:\n",
+            "missingMetadata": "The selected entry is missing content for the following metadata fields:\n{{0}}\nIn order to finalize this distribution, you must go to the relevant tabs and add metadata for each of the fields listed above:\n",
+            "missingFlavor": "The selected entry is missing the following transcoding flavors:\n{{0}}\nIn order to finalize this distribution, you must go to the Flavors tab and select convert for each of the flavors listed above:\n",
+            "missingThumbnail": "The selected entry is missing the following thumbnail dimensions:\n{{0}}\n\nIn order to finalize this distribution, you must go to the Thumbnails tab and create thumbnails for each of the dimensions listed above:\n",
+            "autoDistributionMetadataMissing": "This entry was set with auto-distribution when certain metadata is filled. the following metadata is currently missing:\n{{0}}In order to finalize this distribution you must add this content in the relevant tab:\n"
+          },
+          "errorTypes": {
+            "stringEmpty": "- {{0}} is a required field\n",
+            "stringTooLong": "- {{0}} field exceeds the maximum length of {{1}} characters\n",
+            "stringTooShort": "- {{0}} field must be at least {{1}} characters long\n",
+            "invalidFormat": "- {{0}} field must be in a {{1}} format\n"
+          }
+        },
         "errors": {
           "reload": "Reload",
           "dismiss": "Dismiss",
@@ -1425,13 +1570,13 @@
           "thumbnailsUploadError": "Error uploading thumbnail.",
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
-          "flavorsLoadError": "Error loading flavors",
+          "flavorsLoadError": "Could not load data of flavors assets and params for this entry",
           "clipsLoadError": "Error loading clips",
           "datesRangeError": "Day before can't be earlier than day after"
         }
       },
       "categoryDetails": {
-        "referenceIdInUse": "The following entries are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
+        "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
         "headerProps": {
@@ -1940,7 +2085,8 @@
           "listValuesPlaceholder": "Enter the values, one per line",
           "single": "Single",
           "unlimited": "Unlimited",
-          "saveChanges": "Would you like to save the changes you made?",
+          "saveChanges": "Save changes?",
+          "saveChangesMessage": "Would you like to save the changes you made?",
           "validationErrors": {
             "invalidInput": "Invalid Input",
             "invalidSystemName": "Field system name must be unique, please enter a different name.",
@@ -1962,7 +2108,7 @@
       "integrationSettings": {
         "accountInfo": {
           "title": "Account Info",
-          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges. <a href=\"http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/entitlementsettings.htm\">Read More.</a>",
+          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges.",
           "readMore": "Read More.",
           "partnerId": "Partner ID",
           "subPartnerId": "Sub Partner ID",
@@ -1973,13 +2119,13 @@
           },
           "notifications": {
             "title": "Notifications",
-            "message": "For notification settings please contact your PM"
+            "message": " Contact your Kaltura Representative to set up notification settings."
           }
         },
         "entitlement": {
           "title": "Entitlement",
           "helpTip": "",
-          "explanation": "To add entitlement settings for categories click ‘Add Entitlement’ select the root category integrated with your application and label it below.",
+          "explanation": "To add entitlement settings for categories, click ‘Add Entitlement’.",
           "apiDefault": "API default",
           "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
           "entitlementEnforcementEnabled": "Entitlement enforcement enabled",
@@ -2146,6 +2292,143 @@
           "loading": "Could not load Access Control Profiles",
           "delete": "Error happened during delete request",
           "profileWasNotUpdated": "Access Control profile was not updated.\n{{0}}"
+        }
+      },
+      "transcoding": {
+        "yes": "Yes",
+        "no": "No",
+        "na": "N/A",
+        "errorLoadingRemoteStorageProfiles": "Failed to load remote storage profiles",
+        "entryNotFound": "Provided entry does not exist (entry ID: {{0}})",
+        "entryValidationGeneralError": "Failed to query the server. Please try again",
+        "errorLoadingProfiles": "Failed to load transcoding profiles",
+        "failedSetDefault": "Failed to set profile as default",
+        "failedDelete": "Failed to delete profile(s)",
+        "transcodingProfiles": "Transcoding Profiles",
+        "profiles": "{{0}} Profiles",
+        "selected": "{{0}} Selected",
+        "liveTranscodingProfiles": "Live Transcoding Profiles",
+        "default": "Default",
+        "addProfile": "Add Profile",
+        "setAsDefault": "Set As Default",
+        "edit": "Edit",
+        "delete": "Delete",
+        "addTranscodingProfile": "Add Transcoding Profile",
+        "profileName": "Profile Name",
+        "description": "Description",
+        "defaultMetadataSettings": "Default Metadata Settings",
+        "ingestFromRemoteStorage": "Ingest From Remote Storage",
+        "deleteProfiles": "Delete profiles",
+        "confirmDeleteProfilesNames": "Are you sure you want to delete the following Transcoding Profile(s):\n{{0}}{{1}}",
+        "confirmDeleteProfiles": "Are you sure you want to delete the selected Transcoding Profiles?{{0}}",
+        "deleteDefaultProfileNote": "\n\nNote - default transcoding profile will not be deleted",
+        "cannotDeleteDefaultProfile": "Can't delete default transcoding profile",
+        "cancel": "Cancel",
+        "save": "Save",
+        "table": {
+          "default": "Default",
+          "name": "Name",
+          "description": "Description",
+          "id": "ID",
+          "flavors": "Flavors"
+        },
+        "profile": {
+          "metadata": "Metadata",
+          "backToProfiles": "Back To Profiles",
+          "flavor": "Flavor",
+          "id": "ID {{0}}",
+          "creationDate": "Creation Date {{0}}",
+          "flavors": "{{0}} Flavors",
+          "editTranscodingSettings": "Edit Transcoding Settings",
+          "editLiveTranscodingSettings": "Edit Live Transcoding Flavor Settings",
+          "profileName": "Profile Name",
+          "flavorName": "Flavor Name",
+          "impactOnEntryReadiness": "Impact on Entry Readiness",
+          "useKalturaTranscoding": "Use Kaltura Transcoding",
+          "systemName": "System Name:\n(Optional)",
+          "flavorGenerationPolicy": "Flavor Generation Policy",
+          "intermediateFlavorHandling": "Intermediate Flavor Handling",
+          "table": {
+            "flavor": "Flavor",
+            "flavors": "{{0}} Flavors",
+            "id": "ID",
+            "format": "Format",
+            "codec": "Codec",
+            "ditrate": "Bitrate (kbps)",
+            "dimentions": "Dimentions"
+          },
+          "errors": {
+            "dismiss": "Dismiss",
+            "reload": "Reload",
+            "loadError": "An error occurred while loading data",
+            "saveError": "An error occurred while saving.",
+            "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+            "busyError": "An operation is still in progress. Please try again in a while.",
+            "savePrepareError": "An error occurred while preparing to save. Please try again."
+          }
+        },
+        "sections": {
+          "metadata": "Metadata",
+          "flavors": "Flavors"
+        },
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "type": {
+          "media": "Media Transcoding Profile",
+          "live": "Live Transcoding Profile"
+        },
+        "details": {
+          "id": "ID",
+          "flavors": "Flavors:",
+          "creationDate": "Creation Date:"
+        },
+        "metadata": {
+          "name": "Name",
+          "namePlaceholder": "Profile Name",
+          "description": "Description",
+          "descriptionPlaceholder": "Profile Description",
+          "defaultMetadataSetting": "Default Metadata Settings",
+          "defaultMetadataSettingPlaceholder": "Entry ID",
+          "ingestFromRemoteStorage": "Ingest from Remote Storage",
+          "nameIsMandatory": "Name is required"
+        },
+        "flavors": {
+          "cancel": "Cancel",
+          "flavors": "{{0}} Flavors",
+          "selected": "{{0}} Selected",
+          "na": "N/A",
+          "auto": "auto",
+          "noFlavorsSelectedWarning": "No transcoding will apply on entries associated with this profile. Do you want to continue?",
+          "table": {
+            "name": "Name",
+            "id": "ID",
+            "format": "Format",
+            "codec": "Codec",
+            "bitrate": "Bitrate (kbps)",
+            "dimensions": "Dimensions"
+          }
+        },
+        "editFlavor": {
+          "editFlavorSettings": "Edit Flavor Settings",
+          "editLiveFlavorSettings": "Edit Live Flavor Settings",
+          "profileName": "Profile Name",
+          "flavorName": "Flavor Name",
+          "impactOnEntryReadiness": "Impact on Entry Readiness",
+          "useKalturaTranscoding": "Use Kaltura Transcoding",
+          "systemName": "System Name:\n(Optional)",
+          "flavorGenerationPolicy": "Flavor Generation Policy",
+          "intermediateFlavorHandling": "Intermediate-Flavor Handling",
+          "noImpact": "No Impact",
+          "required": "Required",
+          "optional": "Optional",
+          "always": "Always",
+          "asAFallback": "As a Fallback",
+          "never": "Never",
+          "useKalturaOptimization": "Use Kaltura's Optimization",
+          "forceFlavorGeneration": "Force Flavor Generation",
+          "keepFlavor": "Keep Flavor",
+          "deleteFlavor": "Delete Flavor",
+          "systemNamePlaceholder": "Enter System Name"
         }
       }
     }

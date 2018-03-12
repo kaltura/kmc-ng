@@ -1,6 +1,6 @@
 <k-area-blocker [showLoader]="false" [message]="_blockerMessage" style="height: 100%">
 
-  <div class="kTreeContainer kOverrideFAIcons">
+  <div class="kAddNewCategory kTreeContainer kOverrideFAIcons">
 
     <div class="kHeader">
     <span class="kTitle">
@@ -35,7 +35,7 @@
     <div class="kFooter">
       <button type="button" class="kButtonBranded" pButton
               label="{{'applications.content.addNewCategory.apply' | translate}}"
-              (click)="_apply()" [disabled]="!newCategoryForm.get('name').valid"></button>
+              (click)="_apply()" [disabled]="!newCategoryForm.get('name').valid || _selectedParentCategory === 'missing'"></button>
       <a class="kLink" (click)="_cancel()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
     </div>
   </div>

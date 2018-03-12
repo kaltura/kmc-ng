@@ -85,7 +85,9 @@ export class CategoriesSearchService implements OnDestroy {
       const responseProfile = this._createResponseProfile();
 
       return <any>this.kalturaServerClient.request(
-          new CategoryGetAction({id: categoryId, responseProfile})
+          new CategoryGetAction({id: categoryId}).setRequestOptions({
+              responseProfile
+          })
       ).map(category => {
           return this.parseAndCacheCategories([category])[0];
       })
@@ -220,7 +222,9 @@ export class CategoriesSearchService implements OnDestroy {
     const responseProfile = this._createResponseProfile();
 
     return <any>this.kalturaServerClient.request(
-      new CategoryListAction({ filter, responseProfile })
+      new CategoryListAction({ filter }).setRequestOptions({
+          responseProfile
+      })
     )
   }
 

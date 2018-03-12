@@ -19,6 +19,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   public _selectedSchemas: SettingsMetadataProfile[] = [];
   public _selectedSchema: SettingsMetadataProfile = null;
   public _tableIsBusy = false;
+  public _blockerMessage: AreaBlockerMessage = null;
   public _tableBlockerMessage: AreaBlockerMessage = null;
   public _serverValidationError = null;
 
@@ -106,6 +107,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   }
 
   private _proceedDeleteSchemas(schemas: SettingsMetadataProfile[]): void {
+    this._blockerMessage = null;
     this._schemasStore.deleteProfiles(schemas)
       .tag('block-shell')
       .cancelOnDestroy(this)
@@ -116,12 +118,18 @@ export class SchemasListComponent implements OnInit, OnDestroy {
           this._updateMetadataProfiles();
         },
         error => {
-          this._browserService.alert({
-            message: error.message || this._appLocalization.get('applications.settings.metadata.updateError'),
-            accept: () => {
-              this._clearSelection();
-              this._schemasStore.reload();
-            }
+          const msg: string = error.message ? error.message : this._appLocalization.get('app.common.connectionError');
+          this._blockerMessage = new AreaBlockerMessage({
+            message: msg,
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this._schemasStore.reload();
+                }
+              }
+            ]
           });
         }
       );
@@ -212,6 +220,11 @@ export class SchemasListComponent implements OnInit, OnDestroy {
             }
           });
         }
-      )
+      );
+  }
+
+  public _addNewSchema(): void {
+    this._selectedSchema = null;
+    this._customSchemaPopup.open();
   }
 }

@@ -7,7 +7,7 @@
             dataKey="id"
             [rowTrackBy]="rowTrackBy"
             [sortField]="sortField"
-            [sortOrder]="sortOrder | kPrimeTableSortDirection"
+            [sortOrder]="sortOrder"
             (sortFunction)="_onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedFeeds"
             (selectionChange)="_onSelectionChange($event)"

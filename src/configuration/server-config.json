@@ -27,8 +27,8 @@
     },
     "liveAnalytics": {
       "enabled": false,
-      "uri": "kmc.kaltura.com",
-      "version": "v2.6"
+      "uri": "",
+      "version": ""
     },
     "kava": {
       "enabled": false,
@@ -57,6 +57,9 @@
       "contactUs": "https://corp.kaltura.com/company/contact-us",
       "upgradeAccount":"https://site.kaltura.com/Request-Users.html",
       "contactSalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
+    },
+    "entitlements":{
+      "manage": "https://knowledge.kaltura.com/node/629#managing"
     },
     "uploads": {
       "highSpeedUpload": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",

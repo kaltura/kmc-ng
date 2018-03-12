@@ -23,7 +23,6 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() toggleUserStatus = new EventEmitter<KalturaUser>();
   @Output() deleteUser = new EventEmitter<KalturaUser>();
 
-  private _actionsMenuUserId = '';
   private _partnerInfo: PartnerInfo = { adminLoginUsersQuota: 0, adminUserId: null };
 
   public _users: KalturaUser[] = [];
@@ -137,10 +136,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   public _openActionsMenu(event: any, user: KalturaUser): void {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (this._actionsMenuUserId !== user.id) {
-        this._buildMenu(user);
-        this._actionsMenuUserId = user.id;
-      }
+      this._buildMenu(user);
     }
   }
 }

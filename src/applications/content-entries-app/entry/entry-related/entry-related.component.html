@@ -5,7 +5,7 @@
 		<button type="button" class="kButtonDefault" (click)="fileDialog.open($event)" pButton label="{{'applications.content.entryDetails.related.add' | translate}}"></button>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService._relatedFiles$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_relatedTableRowStyle" >
-				<p-column field="filename" header="{{'applications.content.entryDetails.related.name' | translate}}" [style]="{'padding-left': '24px'}">
+				<p-column styleClass="kFileName" field="filename" header="{{'applications.content.entryDetails.related.name' | translate}}" [style]="{'padding-left': '24px'}">
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}" [style]="{'width':'140px', 'overflow':'visible'}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
@@ -18,15 +18,15 @@
                         (onChange)="_widgetService._setDirty()"></p-dropdown>
 					</ng-template>
 				</p-column>
-				<p-column field="size" header="{{'applications.content.entryDetails.related.size' | translate}}">
+				<p-column field="size" [style]="{'width':'100px'}" header="{{'applications.content.entryDetails.related.size' | translate}}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
 						<span>{{(file.uploading ? file.size : file[col.field]) | kFileSize}}</span>
 					</ng-template>
 				</p-column>
-				<p-column field="id" header="{{'applications.content.entryDetails.related.assetId' | translate}}">
+				<p-column field="id" [style]="{'width':'100px'}" header="{{'applications.content.entryDetails.related.assetId' | translate}}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
 						<div *ngIf="!file.uploadFailure">
-              <span *ngIf="!file.id && file.progress === '100'">{{ 'applications.content.entryDetails.captions.ready' | translate }}</span>
+              <span *ngIf="!file.id && file.progress === 100">{{ 'applications.content.entryDetails.captions.ready' | translate }}</span>
 							<span *ngIf="file.id">{{file[col.field]}}</span>
 						</div>
 						<div *ngIf="file.uploadFailure" class="kError">

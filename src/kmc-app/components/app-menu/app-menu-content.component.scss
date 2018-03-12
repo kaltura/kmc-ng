@@ -49,3 +49,17 @@ a {
     }
   }
 }
+
+@media screen and (max-width: 1310px) {
+  .subMenuContainer {
+    &.kLeft {
+      margin-right: 20px;
+    }
+    &.kRight {
+      margin-left: 20px;
+    }
+    a{
+      font-size: 11px;
+    }
+  }
+}

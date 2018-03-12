@@ -1,0 +1,34 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+  <div class="kDistribution">
+    <div class="kDistributionHeader">
+      <span>{{'applications.content.entryDetails.distribution.distribution' | translate}}</span>
+      <button pButton class="kButtonDefault kRefreshBtn" icon="kIconrefresh"
+              [kTooltip]="'applications.content.entryDetails.distribution.refresh' | translate"
+              (click)="_widgetService.refresh()"></button>
+    </div>
+    <div class="kDistributionList">
+      <kEntryDistributedProfile
+        *ngFor="let profile of (_widgetService.distributionProfiles$.distributed | async).items"
+        [profile]="profile"
+        (onActionSelected)="_onDistributedProfileActionSelected($event)"></kEntryDistributedProfile>
+      <kEntryUndistributedProfile
+        *ngFor="let profile of (_widgetService.distributionProfiles$.undistributed | async).items"
+        [profile]="profile"
+        (onExport)="_openUndistributedProfile($event)"></kEntryUndistributedProfile>
+    </div>
+  </div>
+</k-area-blocker>
+
+<kPopupWidget #editProfile [popupWidth]="995" [slider]="true">
+  <ng-template>
+    <k-area-blocker [message]="_widgetService.popupMessage">
+      <kEditDistributionProfile [parentPopup]="editProfile"
+                                [entry]="_widgetService.data"
+                                [thumbnails]="(_widgetService.thumbnails$ | async)?.items"
+                                [flavors]="(_widgetService.flavors$ | async)?.items"
+                                [undistributedProfile]="_selectedUndistributedProfile"
+                                [distributedProfile]="_selectedDistributedProfile"
+                                (onActionSelected)="_onEditProfileActionSelected($event)"></kEditDistributionProfile>
+    </k-area-blocker>
+  </ng-template>
+</kPopupWidget>

@@ -46,10 +46,12 @@
         margin-left: 7px;
 
         .kTranscodingProfileItem {
+          white-space: nowrap;
           display: inline-block;
           overflow: hidden;
           text-overflow: ellipsis;
-          width: 200px;
+          width: 190px;
+          font-weight: normal;
         }
       }
 
@@ -149,8 +151,15 @@
 }
 
 :host /deep/ .kTranscodingProfile {
+  .ui-dropdown-panel {
+    width: 250px;
+  }
+
   .ui-dropdown-label {
     text-overflow: ellipsis;
+    font-weight: normal;
+    font-size: 15px;
+    color: $kGrayscale1;
   }
 
   .ui-dropdown.ui-widget {

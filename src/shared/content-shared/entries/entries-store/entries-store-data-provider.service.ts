@@ -291,21 +291,22 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
           new BaseEntryListAction({
             filter,
             pager: pagination,
-            responseProfile,
-            acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
-          })
+          }).setRequestOptions({
+                  responseProfile,
+                  acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
+              })
         )).map(response => ({ entries: response.objects, totalCount: response.totalCount })
       );
   }
 
-  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes): EntriesFilters {
+  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes, pageSize: number): EntriesFilters {
     const categoriesMode = typeof savedAutoSelectChildren === 'number'
       ? savedAutoSelectChildren
       : CategoriesModes.SelfAndChildren;
 
     return {
       freetext: '',
-      pageSize: 50,
+      pageSize: pageSize,
       pageIndex: 0,
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc,

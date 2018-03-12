@@ -16,7 +16,7 @@ import {
   InputTextareaModule,
   InputTextModule,
   MenuModule,
-  MultiSelectModule,
+  MultiSelectModule, OverlayPanelModule,
   PaginatorModule,
   RadioButtonModule,
   SharedModule,
@@ -87,7 +87,8 @@ import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-
     DetailsBarModule,
       EntriesModule,
     StickyModule,
-    CopyToClipboardModule
+    CopyToClipboardModule,
+    OverlayPanelModule
   ],
   declarations: [
     ContentEntriesComponent,

@@ -1,37 +1,24 @@
 import {Injectable, Optional, Inject} from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
-import * as R from 'ramda';
-import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
-import {KalturaPermissionFilter} from 'kaltura-ngx-client/api/types/KalturaPermissionFilter';
+import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
 import {UserLoginByLoginIdAction} from 'kaltura-ngx-client/api/types/UserLoginByLoginIdAction';
 import {UserGetByLoginIdAction} from 'kaltura-ngx-client/api/types/UserGetByLoginIdAction';
 import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
-import {PermissionListAction} from 'kaltura-ngx-client/api/types/PermissionListAction';
 import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
 import {PermissionGetCurrentPermissionsAction} from 'kaltura-ngx-client/api/types/PermissionGetCurrentPermissionsAction';
-
-import {AppUser} from './app-user';
+import * as Immutable from 'seamless-immutable';
+import {AppUser, PartnerInfo} from './app-user';
 import {AppStorage} from '@kaltura-ng/kaltura-common';
-import {PartnerInfo} from './partner-info';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { KmcServerPolls } from 'app-shared/kmc-shared';
-import { globalConfig } from 'config/global';
+
 import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
-import { KalturaPermission } from 'kaltura-ngx-client/api/types/KalturaPermission';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { AppPermissionsService } from '@kaltura-ng/mc-shared';
-
-
-export enum AppAuthStatusTypes {
-    UserLoggedIn,
-    UserLoggedOut
-}
 
 export interface IUpdatePasswordPayload {
     email: string;
@@ -52,32 +39,27 @@ export interface ILoginResponse {
     error: ILoginError;
 }
 
-export interface AuthenticationPostEvents {
-    onUserLogIn?: () => Observable<void>;
+export interface AppAuthenticationEvents {
+    onUserLoggedIn: (appUser: Immutable.ImmutableObject<AppUser>) => Observable<void>;
+    onUserLoggedOut: () => void;
 }
-export let AUTH_POST_EVENTS = new InjectionToken<AuthenticationPostEvents>('AUTH_POST_EVENTS');
+export const APP_AUTH_EVENTS = new InjectionToken<AppAuthenticationEvents>('App Authentication Events');
 
 
 @Injectable()
 export class AppAuthentication {
 
-    private _appUser: AppUser;
-    private _appAuthStatus = new BehaviorSubject<AppAuthStatusTypes>(AppAuthStatusTypes.UserLoggedOut);
-
-    appEvents$ = this._appAuthStatus.asObservable();
-
+    private _appUser: Immutable.ImmutableObject<AppUser> = null;
 
     constructor(private kalturaServerClient: KalturaClient,
-                @Optional() @Inject(AUTH_POST_EVENTS) private _authenticationPostEvents: AuthenticationPostEvents,
+                @Inject(APP_AUTH_EVENTS) private _appAuthenticationEvents: AppAuthenticationEvents,
                 private appStorage: AppStorage,
-                private _permissions: AppPermissionsService,
-                private _serverPolls: KmcServerPolls,
                 private _pageExitVerificationService: PageExitVerificationService) {
-        this._appUser = new AppUser();
     }
 
     private _getLoginErrorMessage({error}): ILoginError {
-        const {message, code} = error;
+        const message = (error ? error.message : null) || 'Failed to load partner information';
+        const code = error ? error.code : null;
         const custom = true;
         const errors = {
             'USER_NOT_FOUND': 'app.login.error.badCredentials',
@@ -100,7 +82,7 @@ export class AppAuthentication {
                 custom: false,
                 passwordExpired: true,
                 code
-            }
+            };
         }
 
         if (code in errors) {
@@ -114,21 +96,25 @@ export class AppAuthentication {
         return {message, custom, code};
     }
 
-    get currentAppEvent(): AppAuthStatusTypes {
-        return this._appAuthStatus.getValue();
-    }
-
-    get appUser(): AppUser {
+    get appUser(): Immutable.ImmutableObject<AppUser> {
         return this._appUser;
     }
 
     resetPassword(email: string): Observable<void> {
-        return this.kalturaServerClient.request(new UserResetPasswordAction({email}));
+        if (this.isLogged()) {
+            return this.kalturaServerClient.request(new UserResetPasswordAction({email}));
+        } else {
+            return Observable.throw(new Error('cannot reset password, user is not logged'));
+        }
     }
 
     updatePassword(payload: IUpdatePasswordPayload): Observable<{ email: string, password: string }> {
-        return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
-            .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
+        if (this.isLogged()) {
+            return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
+                .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
+        } else {
+            return Observable.throw(new Error('cannot update password, user is not logged'));
+        }
     }
 
     login(loginId: string, password: string, optional: { privileges?, expiry? } = {
@@ -141,143 +127,106 @@ export class AppAuthentication {
 
         this.appStorage.removeFromSessionStorage('auth.login.ks');  // clear session storage
 
-        const permissionFilter = new KalturaPermissionFilter();
-        permissionFilter.nameEqual = 'FEATURE_DISABLE_REMEMBER_ME';
-
-        const partnerId = globalConfig.kalturaServer.limitToPartnerId || undefined;
         const request = new KalturaMultiRequest(
             new UserLoginByLoginIdAction(
                 {
                     loginId,
                     password,
-                    partnerId,
+
                     expiry: expiry,
                     privileges: privileges
                 }),
-            new UserGetByLoginIdAction({loginId, partnerId,
-                ks: '{1:result}'}),
-            new PermissionListAction(
-                {
-                    filter: permissionFilter,
-                    partnerId,
-                    ks: '{1:result}'
-                }
+            new UserGetByLoginIdAction({loginId})
+                .setRequestOptions(
+                    new KalturaRequestOptions({})
+                        .setDependency(['ks', 0])),
+            new PartnerGetInfoAction({}).setRequestOptions(
+                new KalturaRequestOptions({})
+                    .setDependency(['ks', 0])
+                    .setDependency(['id', 1, 'partnerId'])
             ),
-            new PartnerGetInfoAction({
-                partnerId,
-                ks: '{1:result}'
-            })
-                .setDependency(['id', 1, 'partnerId'])
-            ,
-            <any>new PermissionGetCurrentPermissionsAction({
-                partnerId,
-                ks: '{1:result}'
-            })
+            <any>new PermissionGetCurrentPermissionsAction({}).setRequestOptions(
+                new KalturaRequestOptions({})
+                    .setDependency(['ks', 0])),
         );
 
         return <any>(this.kalturaServerClient.multiRequest(request)
             .switchMap(
                 response => {
                     if (!response.hasErrors()) {
-                        return this._afterLogin(response[0].result, response[1].result, response[2].result.objects, response[3].result, response[4].result)
-                            .map(() =>
-                            {
+                        return this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result)
+                            .map(() => {
                                 return {success: true, error: null};
                             });
                     }
 
-                    const [loginResponse] = response;
-                    return Observable.of({success: false, error: this._getLoginErrorMessage(loginResponse)});
+                    return Observable.of({success: false, error: this._getLoginErrorMessage(response[0])});
                 }
             ));
     }
 
-    private _afterLogin(ks: string, user: KalturaUser, permissionsList: KalturaPermission[], partner: KalturaPartner, permissionsFlags: string): Observable<void> {
-
-        const generalProperties = R.pick([
-            'id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner'
-        ])(user);
-        this.appUser.permissions = R.map(R.pick(['id', 'type', 'name', 'status']))(permissionsList);
-        const partnerProperties: any = R.pick(['name', 'partnerPackage', 'landingPage'])(partner);
-
-        // TODO [kmc] check if ks should be stored in appUser and remove direct call to http configuration
-        this.kalturaServerClient.ks = ks;
-        this.appUser.ks = ks;
-
-        const permissionsFlagsList = permissionsFlags ? permissionsFlags.split(',') : [];
-        this._permissions.loadPermissions(permissionsFlagsList);
-
-        this.kalturaServerClient.ks = this.appUser.ks;
-        this.kalturaServerClient.partnerId = this.appUser.partnerId;
-
-        this.appUser.partnerInfo = new PartnerInfo(
-            partnerProperties.name,
-            partnerProperties.partnerPackage,
-            partnerProperties.landingPage,
-            partnerProperties.adultContent
-        );
-        Object.assign(this.appUser, generalProperties);
+    private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, permissionsFlags: string): Observable<void> {
 
         this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
 
-        this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
-        this._serverPolls.forcePolling(); // TODO kmcng move app.module
+        const appUser: Immutable.ImmutableObject<AppUser> = Immutable({
+            ks,
+            id: user.id,
+            partnerId: user.partnerId,
+            fullName: user.fullName,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            isAccountOwner: user.isAccountOwner,
+            createdAt: user.createdAt,
+            permissions: permissionsFlags ? permissionsFlags.split(',') : [],
+            partnerInfo: {
+                partnerId: user.partnerId,
+                name: partner.name,
+                partnerPackage: partner.partnerPackage,
+                landingPage: partner.landingPage,
+                adultContent: partner.adultContent
+            }
+        });
 
-        const postLogInEvent = this._authenticationPostEvents && this._authenticationPostEvents.onUserLogIn ? this._authenticationPostEvents.onUserLogIn() : Observable.of(undefined);
-        return postLogInEvent;
+        return this._appAuthenticationEvents.onUserLoggedIn(appUser)
+            .do(() => {
+                this._appUser = appUser;
+            });
     }
 
     isLogged() {
-        return this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedIn;
+        return !!this._appUser;
     }
 
     logout() {
-        this.appUser.ks = null;
-        this.kalturaServerClient.ks = null;
-
-        this._permissions.flushPermissions();
-
+        this._appUser = null;
         this.appStorage.removeFromSessionStorage('auth.login.ks');
-
-        this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedOut);
-        this.forceReload();
+        this._logout();
     }
 
     public loginAutomatically(): Observable<boolean> {
         return Observable.create((observer: any) => {
-            if (this._appAuthStatus.getValue() === AppAuthStatusTypes.UserLoggedOut) {
+            if (!this.isLogged()) {
                 const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
                 if (loginToken) {
-                    const partnerId = globalConfig.kalturaServer.limitToPartnerId || undefined;
-
                     const requests = [
-                        new UserGetAction({
-                            ks: loginToken,
-                            partnerId
+                        new UserGetAction({}).setRequestOptions({
+                            ks: loginToken
+
                         }),
-                        new PermissionListAction(
-                            {
-                                ks: loginToken,
-                                partnerId,
-                                filter: new KalturaPermissionFilter({
-                                    nameEqual: 'FEATURE_DISABLE_REMEMBER_ME'
-                                })
-                            }
-                        ),
-                        new PartnerGetInfoAction({
-                            ks: loginToken,
-                            partnerId
+                        new PartnerGetInfoAction({}).setRequestOptions({
+                            ks: loginToken
+
                         })
                             .setDependency(['id', 0, 'partnerId']),
-                        <any>new PermissionGetCurrentPermissionsAction({
-                            partnerId,
-                            ks: loginToken // we must set the ks manually, only upon successful result we will update the global module
+                        <any>new PermissionGetCurrentPermissionsAction({}).setRequestOptions({
+                            ks: loginToken
                         })
                     ];
 
                     return this.kalturaServerClient.multiRequest(requests)
                         .switchMap((response) => {
-                            return this._afterLogin(loginToken, response[0].result, response[1].result.objects, response[2].result, response[3].result);
+                            return this._afterLogin(loginToken, response[0].result, response[1].result, response[2].result);
                         })
                         .subscribe(
                             () => {
@@ -287,29 +236,26 @@ export class AppAuthentication {
                             () => {
                                 observer.next(false);
                                 observer.complete();
-                                this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedOut); // TODO [kmcng] remove
                             }
                         );
                 } else {
                     observer.next(false);
                     observer.complete();
-                    this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedOut); // TODO [kmcng] remove
                 }
             }
         });
     }
 
-    public loginByKs(requestedPartnerId: number): Observable<void> {
+    public switchPartnerId(partnerId: number): Observable<void> {
         return Observable.create((observer: any) => {
-            return this.kalturaServerClient.request(new UserLoginByKsAction({requestedPartnerId}))
+            return this.kalturaServerClient.request(new UserLoginByKsAction({requestedPartnerId: partnerId}))
                 .subscribe(
                     result => {
-                        const ks = result.ks;
-                        this.appUser.ks = ks;
-                        this.appStorage.setInSessionStorage('auth.login.ks', ks);
-                        this.forceReload();
+                        this.appStorage.setInSessionStorage('auth.login.ks', result.ks);
+                        this._logout();
 
-                        // observer next/complete not implemented by design (since we are breaking the stream by reloading the page)
+                        // DEVELOPER NOTICE: observer next/complete not implemented by design
+                        // (since we are breaking the stream by reloading the page)
                     },
                     error => {
                         observer.error(error);
@@ -318,25 +264,25 @@ export class AppAuthentication {
         });
     }
 
-    // reload page
     public reload() {
+        // reload page
         document.location.reload();
     }
 
-    // Prevents the browser to verify page exit before reload
-    private forceReload() {
+    private _logout() {
+        this._appAuthenticationEvents.onUserLoggedOut();
         this._pageExitVerificationService.removeAll();
-        this.reload();
+        document.location.reload();
     }
 
-    // Hack to update user name in the header
     public _updateNameManually(firstName: string, lastName: string, fullName: string): void {
-        if (firstName && lastName) {
-            this._appUser.firstName = firstName;
-            this._appUser.lastName = lastName;
-            this._appUser.fullName = fullName;
-        } else {
-            throw Error('Cannot update the current user. The first, the last name or the fullName is not provided');
+        if (this._appUser) {
+            this._appUser = this._appUser.merge(
+                {
+                    firstName: firstName,
+                    lastName: lastName,
+                    fullName: fullName
+                });
         }
     }
 }

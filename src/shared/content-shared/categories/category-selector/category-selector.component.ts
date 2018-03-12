@@ -15,6 +15,8 @@ import {
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 
+export type SelectedCategory = number | 'missing' | null;
+
 @Component({
     selector: 'kCategorySelector',
     templateUrl: './category-selector.component.html',
@@ -29,7 +31,7 @@ export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
     @Input() enableNoParentSelection: boolean = true;
 
   public _categoriesLoaded = false;
-  public _selectedCategory: number = null;
+  public _selectedCategory: SelectedCategory = 'missing';
   public _selectionTooltip = '';
 
   private _searchCategoriesSubscription: ISubscription;
@@ -62,7 +64,7 @@ export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
 
   private _updateSelectionTooltip(): void {
       let tooltip = '';
-      if (this._selectedCategory) {
+      if (this._selectedCategory && this._selectedCategory !== 'missing') {
           const selectedCategory = this._categoriesSearchService.getCachedCategory(this._selectedCategory);
           tooltip = this._selectedCategory ? selectedCategory.fullName : '';
       } else {
@@ -111,7 +113,7 @@ export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
       this._autoComplete.clearValue();
 
       if (selectedItem && selectedItem.id) {
-          this._selectedCategory = selectedItem.id;
+          this._selectedCategory = <number>selectedItem.id;
           this.onCategorySelected.emit(this._selectedCategory);
 
           this._categoriesTree.expandNode(selectedItem.id);
@@ -128,6 +130,6 @@ export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
   public _clearSelection(): void {
     this._selectedCategory = null;
     this._updateSelectionTooltip();
-    this.onCategorySelected.emit(this._selectedCategory);
+    this.onCategorySelected.emit(null);
   }
 }

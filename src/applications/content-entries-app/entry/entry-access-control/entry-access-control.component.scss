@@ -36,3 +36,7 @@
 :host /deep/ .ui-dropdown-label.ui-inputtext{
 	background-color: #ffffff;
 }
+
+:host /deep/ .ui-dropdown-label {
+  text-overflow: ellipsis;
+}

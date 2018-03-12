@@ -246,21 +246,22 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           new PlaylistExecuteFromFiltersAction({
             filters: [filter],
             totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
-            pager: pagination,
-            responseProfile
+            pager: pagination
+          }).setRequestOptions({
+              responseProfile
           }))
         ).map(response => ({ entries: response, totalCount: response.length })
       );
   }
 
-  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes): EntriesFilters {
+  public getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes, pageSize: number): EntriesFilters {
     const categoriesMode = typeof savedAutoSelectChildren === 'number'
       ? savedAutoSelectChildren
       : CategoriesModes.SelfAndChildren;
 
     return {
       freetext: '',
-      pageSize: 50,
+      pageSize: pageSize,
       pageIndex: 0,
       sortBy: 'plays',
       sortDirection: SortDirection.Desc,

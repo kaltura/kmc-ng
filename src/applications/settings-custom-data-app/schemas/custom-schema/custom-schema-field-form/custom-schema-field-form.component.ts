@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { MetadataItem, MetadataItemTypes } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -130,7 +130,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     this._fieldForm = this._fb.group({
       type: MetadataItemTypes.Text,
       allowMultiple: false,
-      label: '',
+      label: ['', Validators.required],
       shortDescription: '',
       description: '',
       searchable: true,
@@ -230,7 +230,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       uid[index++] = ALPHA_CHAR_CODES[Math.floor(Math.random() * 16)];
     }
 
-    return String.fromCharCode.apply(null, uid);
+    return `md_${String.fromCharCode.apply(null, uid)}`;
   }
 
   private _create(): MetadataItem {
@@ -340,7 +340,8 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   public _cancel(): void {
     if (this._fieldForm.dirty) {
       this._browserService.confirm({
-        message: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChanges'),
+        header: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChanges'),
+        message: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChangesMessage'),
         accept: () => {
           this._save();
         },

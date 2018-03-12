@@ -24,6 +24,18 @@ import {LinkedEntriesPopup} from './entry-metadata/entry-selector/linked-entries
 import {CategoriesSelector} from './entry-metadata/category-selector/categories-selector.component';
 import {TagsPipe} from './entry-flavours/tags.pipe';
 import {LiveDashboardComponent} from './entry-live/live-dashboard/live-dashboard.component';
+import { EntryDistributionComponent } from './entry-distribution/entry-distribution.component';
+import { UndistributedProfileComponent } from './entry-distribution/undistributed-profile/undistributed-profile.component';
+import { DistributedProfileComponent } from './entry-distribution/distributed-profile/distributed-profile.component';
+import { DistributionStatusPipe } from './entry-distribution/pipes/distribution-status.pipe';
+import { DistributedProfileErrorInfoComponent } from './entry-distribution/distributed-profile-error-info/distributed-profile-error-info.component';
+import { DistributedProfileErrorsComponent } from './entry-distribution/distributed-profile-errors/distributed-profile-errors.component';
+import { EditDistributionProfileComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile.component';
+import { DistributionProviderTypeIconPipe } from './entry-distribution/pipes/distribution-provider-type-icon.pipe';
+import { EditDistributionProfileFlavorsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-flavors/edit-distribution-profile-flavors.component';
+import { EditDistributionProfileMetadataComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-metadata/edit-distribution-profile-metadata.component';
+import { EditDistributionProfileThumbnailsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/edit-distribution-profile-thumbnails.component';
+import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';
 
 
 export const EntryComponentsList = [
@@ -52,5 +64,17 @@ export const EntryComponentsList = [
     JumpToSection,
     LinkedEntries,
     LinkedEntriesPopup,
-    TagsPipe
+    TagsPipe,
+    EntryDistributionComponent,
+    DistributedProfileComponent,
+    UndistributedProfileComponent,
+    DistributionStatusPipe,
+    DistributedProfileErrorsComponent,
+    DistributedProfileErrorInfoComponent,
+    EditDistributionProfileComponent,
+    DistributionProviderTypeIconPipe,
+    EditDistributionProfileFlavorsComponent,
+    EditDistributionProfileMetadataComponent,
+    EditDistributionProfileThumbnailsComponent,
+    EditDistributionProfileThumbnailItemComponent
 ];

@@ -32,8 +32,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
 export enum SortDirection {
-  Desc,
-  Asc
+  Desc = -1,
+  Asc = 1
 }
 
 export interface DropFoldersFilters {
@@ -259,8 +259,9 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         filter: new KalturaDropFolderFilter({
           orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
           statusEqual: KalturaDropFolderStatus.enabled
-        }),
-        acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
+        })
+      }).setRequestOptions({
+          acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
       }))
       .map(response => {
         this._dropFolders.state.next({ loading: false, errorMessage: null });
@@ -271,7 +272,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
           response.objects.forEach(object => {
             if (object instanceof KalturaDropFolder) {
               df = object;
-              if (df.fileHandlerType.equals(KalturaDropFolderFileHandlerType.content)) {
+              if (df.fileHandlerType === KalturaDropFolderFileHandlerType.content) {
                 const cfg: KalturaDropFolderContentFileHandlerConfig = df.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
                 if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
                   dropFoldersList.push(df);
@@ -280,7 +281,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
                 } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrAddAsNew) {
                   dropFoldersList.push(df);
                 }
-              } else if (df.fileHandlerType.equals(KalturaDropFolderFileHandlerType.xml)) {
+              } else if (df.fileHandlerType === KalturaDropFolderFileHandlerType.xml) {
                 dropFoldersList.push(df);
               }
             } else {

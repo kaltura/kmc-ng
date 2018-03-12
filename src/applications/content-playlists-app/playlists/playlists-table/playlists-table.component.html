@@ -7,7 +7,7 @@
             dataKey="id"
             [rowTrackBy]="rowTrackBy"
             [sortField]="sortField"
-            [sortOrder]="sortOrder | kPlaylistsTableSortDirectionPipe"
+            [sortOrder]="sortOrder"
             (sortFunction)="onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedPlaylists"
             (selectionChange)="onSelectionChange($event)"

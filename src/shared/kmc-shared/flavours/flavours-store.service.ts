@@ -49,7 +49,7 @@ export class FlavoursStore extends PartnerProfileStore implements OnDestroy {
 
     const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile(
       {
-        fields: 'id,name',
+        fields: 'id,format,name,width,height,videoCodec,audioBitrate,videoBitrate,tags',
         type: KalturaResponseProfileType.includeFields
       }
     );
@@ -57,6 +57,9 @@ export class FlavoursStore extends PartnerProfileStore implements OnDestroy {
     const favourParamsPager = new KalturaFilterPager();
     favourParamsPager.pageSize = 500;
 
-    return this._kalturaServerClient.request(new FlavorParamsListAction({pager: favourParamsPager, responseProfile}));
+    return this._kalturaServerClient.request(new FlavorParamsListAction({pager: favourParamsPager})
+        .setRequestOptions({
+            responseProfile
+        }));
   }
 }

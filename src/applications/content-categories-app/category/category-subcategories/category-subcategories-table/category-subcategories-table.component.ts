@@ -64,7 +64,7 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
     this._items = [
       {
         label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.moveUp'),
-        command: (event) => this.onActionSelected.emit({action: 'moveUp', subcategory}),
+        command: () => this.onActionSelected.emit({action: 'moveUp', subcategory}),
         disabled: rowIndex === 0
       },
       {

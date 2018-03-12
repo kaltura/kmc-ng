@@ -1,0 +1,35 @@
+@import 'app-theme/_variables.scss';
+
+.kDistribution {
+  width: 100%;
+
+  .kDistributionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid $kGrayscale4;
+    padding: 26px 28px;
+    font-size: 20px;
+    color: $kGrayscale1;
+    font-weight: bold;
+    line-height: 24px;
+
+    .kRefreshBtn {
+      font-size: 28px;
+      border: none;
+      width: 28px;
+      outline: 0;
+      color: $kGrayscale3;
+      margin-right: -5px;
+      &:active {
+        box-shadow: none;
+        top: 2px;
+        transform: rotate(45deg);
+      }
+      &:hover {
+        background-color: #ffffff;
+        color: $kPrimary;
+      }
+    }
+  }
+}

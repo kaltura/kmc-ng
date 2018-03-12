@@ -15,7 +15,7 @@ import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
 
 import {
     AppBootstrap,
-    AUTH_POST_EVENTS,
+    APP_AUTH_EVENTS,
     AuthModule,
     BrowserService,
     KMCShellModule,
@@ -28,13 +28,14 @@ import {
   UploadManagement
 } from '@kaltura-ng/kaltura-common';
 import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
-import {KalturaClient, KalturaClientConfiguration} from 'kaltura-ngx-client';
+import {KalturaClientModule, KalturaClientOptions} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
-    AppEventsModule,
-    FlavoursStore,
-    KalturaServerModule,
-    MetadataProfileModule,
+  AccessControlProfileStore,
+  AppEventsModule,
+  FlavoursStore,
+  KalturaServerModule,
+  MetadataProfileModule, PartnerProfileStore,
 } from 'app-shared/kmc-shared';
 
 import {AppComponent} from './app.component';
@@ -80,14 +81,19 @@ import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
-import { KMCAuthenticationPostEvents } from './auth-post-events';
+import { KMCAuthenticationEvents } from './kmc-authentication-events';
+import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
+import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 
-export function clientConfigurationFactory() {
-    const result = new KalturaClientConfiguration();
-    result.endpointUrl = getKalturaServerUri();
-    result.clientTag = 'KMCng';
-    return result;
+const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
+
+export function kalturaClientOptionsFactory(): KalturaClientOptions {
+    return  {
+        endpointUrl: getKalturaServerUri(),
+        clientTag: 'kmcng'
+    };
 }
+
 @NgModule({
   imports: <any>[
     AuthModule,
@@ -133,7 +139,9 @@ export function clientConfigurationFactory() {
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
     AccessControlProfileModule.forRoot(),
-    AppPermissionsModule.forRoot()
+    AppPermissionsModule.forRoot(),
+    TranscodingProfileCreationModule.forRoot(),
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory)
   ],
   declarations: <any>[
     AppComponent,
@@ -156,21 +164,15 @@ export function clientConfigurationFactory() {
   ],
   exports: [],
   providers: <any>[
-      FlavoursStore,
-      PlayersStore,
+      ...partnerProviders,
       KalturaLogger,
       {
           provide: KalturaLoggerName, useValue: 'kmc'
       },
       {
-          provide: AUTH_POST_EVENTS, useClass: KMCAuthenticationPostEvents
+          provide: APP_AUTH_EVENTS, useClass: KMCAuthenticationEvents
       },
     { provide: AppStorage, useExisting: BrowserService },
-    KalturaClient,
-    {
-      provide: KalturaClientConfiguration,
-      useFactory: clientConfigurationFactory
-    },
     ConfirmationService
   ]
 })

@@ -1,0 +1,30 @@
+<k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage" [bodyScroll]="true">
+	<div class="kmcDetailsLayout kOverrideFAIcons">
+		<div class="kContent kDetailsWrapper">
+			<kSticky  stickyId="profileHeader" [sticksTo]="'header'" stickyClass="stickyHeader">
+				<div class="kDetailsHeader">
+					<div class="kContent">
+						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+						<div class="kTitle">{{ _profileName }}</div>
+						<button pButton class="kButtonBranded kSaveBtn" [disabled]="!_profileStore.profileIsDirty" label="Save" (click)="_save()"></button>
+						<button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+						<button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+					</div>
+				</div>
+			</kSticky>
+			<div class="kHeaderDetails">
+				<kTranscodingProfileDetails></kTranscodingProfileDetails>
+			</div>
+			<div class="kDetailsMain">
+        <div class="kSections">
+          <kTranscodingProfileSectionsList></kTranscodingProfileSectionsList>
+        </div>
+				<div class="kDetailsContent">
+					<router-outlet></router-outlet>
+				</div>
+			</div>
+			<div class="kSpacer"></div>
+		</div>
+
+	</div>
+</k-area-blocker>

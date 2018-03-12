@@ -272,10 +272,12 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     _onSortChanged(event): void {
-        this._categoriesService.filter({
-            sortBy: event.field,
-            sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
-        });
+        if (event.field !== this._query.sortBy || event.order !== this._query.sortDirection) {
+            this._categoriesService.filter({
+                sortBy: event.field,
+                sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+            });
+        }
     }
 
     _onPaginationChanged(state: any): void {

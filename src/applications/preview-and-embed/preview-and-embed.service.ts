@@ -37,7 +37,9 @@ export class PreviewEmbedService {
 			fields: 'id,name,html5Url,createdAt,updatedAt,width,height'
 		});
 
-		return this._kalturaClient.request(new UiConfListAction({filter, pager, responseProfile}));
+		return this._kalturaClient.request(new UiConfListAction({filter, pager}).setRequestOptions({
+            responseProfile
+        }));
 	}
 
 	generateShortLink(url: string): Observable<KalturaShortLink>{

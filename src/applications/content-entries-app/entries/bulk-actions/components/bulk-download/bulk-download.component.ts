@@ -98,7 +98,7 @@ export class BulkDownload implements OnInit, OnDestroy, AfterViewInit {
 								event.context.allowClose = false;
 								this._browserService.confirm(
 									{
-										header: this._appLocalization.get('applications.content.entryDetails.captions.cancelEdit'),
+										header: this._appLocalization.get('app.common.cancel'),
 										message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
 										accept: () => {
 											this._confirmClose = false;

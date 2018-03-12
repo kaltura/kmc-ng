@@ -9,5 +9,6 @@ export const EntryWidgetKeys =
         'Live' : 'Live',
         'Related' : 'Related',
         'Clips' : 'Clips',
-        'Users' : 'Users'
+        'Users' : 'Users',
+        'Distribution' : 'Distribution'
     };
