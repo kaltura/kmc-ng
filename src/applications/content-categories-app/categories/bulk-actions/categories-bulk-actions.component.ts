@@ -31,6 +31,7 @@ import {CategoriesStatusMonitorService} from 'app-shared/content-shared/categori
   styleUrls: ['./categories-bulk-actions.component.scss']
 })
 export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
+  private _selectedCateogoriesWithPrivacyContext: KalturaCategory[] = [];
 
   public _bulkActionsMenu: MenuItem[] = [];
   public _bulkAction = '';
@@ -64,9 +65,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private _filterPrivacyContext(): { hadNoPrivacyContext: boolean } {
+    this._selectedCateogoriesWithPrivacyContext = [];
     const selectedCategoriesLength = this.selectedCategories.length;
-    this.selectedCategories = [...this.selectedCategories.filter(category => !!category.privacyContext)];
-    const hadNoPrivacyContext = this.selectedCategories.length !== selectedCategoriesLength;
+    this._selectedCateogoriesWithPrivacyContext = [...this.selectedCategories.filter(category => !!category.privacyContext)];
+    const hadNoPrivacyContext = this._selectedCateogoriesWithPrivacyContext.length !== selectedCategoriesLength;
 
     return { hadNoPrivacyContext };
   }
@@ -126,18 +128,18 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // add tags changed
   onAddTagsChanged(tags: string[]): void {
-    this.executeService(this._bulkAddTagsService, tags);
+    this.executeService(this.selectedCategories, this._bulkAddTagsService, tags);
   }
 
   // remove tags changed
   onRemoveTagsChanged(tags: string[]): void {
-    this.executeService(this._bulkRemoveTagsService, tags);
+    this.executeService(this.selectedCategories, this._bulkRemoveTagsService, tags);
   }
 
   // owner changed
   onOwnerChanged(owners: KalturaUser[]): void {
     if (owners && owners.length) {
-      this.executeService(this._bulkChangeOwnerService, owners[0]);
+      this.executeService(this.selectedCategories, this._bulkChangeOwnerService, owners[0]);
     }
   }
 
@@ -159,8 +161,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     }
 
     const executeAction = () => {
-      if (this.selectedCategories.length) {
-        this.executeService(this._bulkChangeContentPrivacyService, privacyType);
+      if (this._selectedCateogoriesWithPrivacyContext.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeContentPrivacyService, privacyType);
       }
     };
 
@@ -185,8 +187,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     }
 
     const executeAction = () => {
-      if (this.selectedCategories.length) {
-        this.executeService(this._bulkChangeCategoryListingService, appearInListType);
+      if (this._selectedCateogoriesWithPrivacyContext.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeCategoryListingService, appearInListType);
       }
     };
 
@@ -204,8 +206,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   // change contribution policy
   onChangeContributionPolicyChanged(policyType: KalturaContributionPolicyType): void {
     const executeAction = () => {
-      if (this.selectedCategories.length) {
-        this.executeService(this._bulkChangeContributionPolicyService, policyType);
+      if (this._selectedCateogoriesWithPrivacyContext.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeContributionPolicyService, policyType);
       }
     };
 
@@ -228,7 +230,14 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (result.confirmed) {
           setTimeout(() => {
-            this.executeService(this._bulkDeleteService, {}, true, false, () => {this._categoriesStatusMonitorService.updateCategoriesStatus();});
+            this.executeService(
+              this.selectedCategories,
+              this._bulkDeleteService,
+              {},
+              true,
+              false,
+              () => this._categoriesStatusMonitorService.updateCategoriesStatus()
+            );
             // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
           }, 0);
         }
@@ -268,11 +277,16 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
 
-  private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
+  private executeService(selectedCategories: KalturaCategory[],
+                         service: CategoriesBulkActionBaseService<any>,
+                         data: any = {},
+                         reloadCategories: boolean = true,
+                         confirmChunks: boolean = true,
+                         callback?: Function): void {
     this._bulkAction = '';
 
     const execute = () => {
-      service.execute(this.selectedCategories, data)
+      service.execute(selectedCategories, data)
         .tag('block-shell')
         .subscribe(
         result => {
@@ -290,7 +304,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       );
     };
 
-    if (confirmChunks && this.selectedCategories.length > subApplicationsConfig.shared.bulkActionsLimit) {
+    if (confirmChunks && selectedCategories.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
