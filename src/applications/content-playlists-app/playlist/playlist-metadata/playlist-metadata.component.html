@@ -10,6 +10,7 @@
         </span>
           <div class="kControl">
             <input #metadataNameInput formControlName="name" pInputText
+                    (blur)="_trimNameValue()"
                     [ngClass]="{'kHasError':!_widgetService.metadataForm.controls['name'].valid &&
                    _widgetService.metadataForm.controls['name'].touched}">
             <div *ngIf="_widgetService.metadataForm.controls['name'].touched &&

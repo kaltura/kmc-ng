@@ -61,11 +61,13 @@
       <ng-template let-col let-field="rowData" let-i="rowIndex" pTemplate="body">
         <span class="kFieldsTableActions">
           <i class="kIconarrow_up kActionMoveDown"
+             *ngIf="_fields.length > 1"
              [kTooltip]="'applications.settings.metadata.table.moveDown' | translate"
              [class.kActionDisabled]="i + 1 === _fields?.length"
              (click)="i + 1 !== _fields?.length && _moveField(field, 'down')"></i>
 
           <i class="kIconarrow_up"
+             *ngIf="_fields.length > 1"
              [kTooltip]="'applications.settings.metadata.table.moveUp' | translate"
              [class.kActionDisabled]="i === 0"
              (click)="i !== 0 && _moveField(field, 'up')"></i>
