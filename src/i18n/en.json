@@ -1567,7 +1567,7 @@
           "thumbnailsUploadError": "Error uploading thumbnail.",
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
-          "flavorsLoadError": "Error loading flavors",
+          "flavorsLoadError": "Could not load data of flavors assets and params for this entry",
           "clipsLoadError": "Error loading clips",
           "datesRangeError": "Day before can't be earlier than day after"
         }
