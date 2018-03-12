@@ -803,9 +803,11 @@
         "approveMedia": "Moderation: Approve media",
         "sureToApprove": "Are you sure you want to approve the following entry? \n {{0}}",
         "sureToApproveMultiple": "Are you sure you want to approve the following entries? \n {{0}}",
+        "sureToApproveSelected": "Are you sure you want to approve the selected entries?",
         "rejectMedia": "Moderation: Reject media",
         "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
         "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
+        "sureToRejectSelected": "Are you sure you want to reject the selected entries?",
         "selectAction": "Select Action",
         "errors": {
           "missingIds": "Missing entryIds argument",
