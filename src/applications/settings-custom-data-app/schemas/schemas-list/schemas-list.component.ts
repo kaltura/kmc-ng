@@ -118,19 +118,16 @@ export class SchemasListComponent implements OnInit, OnDestroy {
           this._updateMetadataProfiles();
         },
         error => {
+          const msg: string = error.message ? error.message : this._appLocalization.get('app.common.connectionError');
           this._blockerMessage = new AreaBlockerMessage({
-            message: error.message,
+            message: msg,
             buttons: [
               {
-                label: this._appLocalization.get('app.common.retry'),
+                label: this._appLocalization.get('app.common.ok'),
                 action: () => {
                   this._blockerMessage = null;
-                  this._proceedDeleteSchemas(schemas);
+                  this._schemasStore.reload();
                 }
-              },
-              {
-                label: this._appLocalization.get('app.common.cancel'),
-                action: () => this._blockerMessage = null
               }
             ]
           });
