@@ -56,6 +56,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     pageIndex: 0,
     pageSize: null,
   };
+  public _isTagsBarVisible = false;
 
   constructor(private _usersService: ManageEndUserPermissionsService,
               private _refineFiltersService: ManageEndUserPermissionsRefineFiltersService,

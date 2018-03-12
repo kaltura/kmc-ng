@@ -1623,7 +1623,8 @@
           "title": "Entitlements",
           "description": "Manage your entitlements settings and specific end-user permissions to content in your applications.",
           "privacyContentLabel": {
-            "label" : "Privacy Context Label"
+            "label" : "Privacy Context Label",
+            "help": "In order to enable access to content in this category from the application and enforce its entitlement rules, the privacy context label MUST be set as part of the application session (KS) privileges. \n\nThis label is set as part of the MediaSpace installation/upgrade process. For any other purposes set/edit the context label from the Integration Settings page under the Settings tab."
           },
           "manageUsersPermissionsEditMessage": {
             "title": "Error",
@@ -1656,7 +1657,8 @@
             "private_explanation": "Only end-users with specific permission can add content to this category"
           },
           "moderateContent": {
-            "label": "Moderate Content"
+            "label": "Moderate Content",
+            "help": "Media will not appear in page until by the category manager/moderator."
           },
           "inheritUsersPermissions": {
             "label": "Inherit Users Permissions",
@@ -1699,6 +1701,8 @@
             "count": "{{0}} end-users"
           },
           "usersPermissions": {
+            "refine": "Refine",
+            "searchUsers": "Search Users",
             "title":"Manage End-user Permissions",
             "titleView":"View End-user Permissions",
             "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",

@@ -42,6 +42,7 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   @Input() filter: any = {};
   @Input() selectedUsers: EndUserPermissionsUser[] = [];
   @Input() categoryInheritUserPermissions = false;
+  @Input() isTagsBarVisible = false;
 
   @Output()
   sortChanged = new EventEmitter<any>();
