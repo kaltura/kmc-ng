@@ -67,7 +67,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   private _filterPrivacyContext(): { hadNoPrivacyContext: boolean } {
     this._selectedCateogoriesWithPrivacyContext = [];
     const selectedCategoriesLength = this.selectedCategories.length;
-    this._selectedCateogoriesWithPrivacyContext = [...this.selectedCategories.filter(category => !!category.privacyContext)];
+    this._selectedCateogoriesWithPrivacyContext = [...this.selectedCategories.filter(category => !!category.privacyContexts)];
     const hadNoPrivacyContext = this._selectedCateogoriesWithPrivacyContext.length !== selectedCategoriesLength;
 
     return { hadNoPrivacyContext };
@@ -138,8 +138,20 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // owner changed
   onOwnerChanged(owners: KalturaUser[]): void {
-    if (owners && owners.length) {
-      this.executeService(this.selectedCategories, this._bulkChangeOwnerService, owners[0]);
+    const executeAction = () => {
+      if (this._selectedCateogoriesWithPrivacyContext.length && owners && owners.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeOwnerService, owners[0]);
+      }
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
     }
   }
 
