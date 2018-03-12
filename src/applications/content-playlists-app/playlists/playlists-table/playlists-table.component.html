@@ -8,6 +8,7 @@
             [rowTrackBy]="rowTrackBy"
             [sortField]="sortField"
             [sortOrder]="sortOrder"
+            [defaultSortOrder]="_defaultSortOrder"
             (sortFunction)="onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedPlaylists"
             (selectionChange)="onSelectionChange($event)"

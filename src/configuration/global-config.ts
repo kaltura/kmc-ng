@@ -7,14 +7,21 @@ export interface GlobalConfig {
         useSecuredProtocol: boolean,
         production: boolean,
         appVersion: string,
-        countriesList: string[]
-    },
+        countriesList: string[],
+        views: {
+          tables: {
+            maxItems: number,
+            defaultPageSize: number,
+            defaultSortOrder: number
+          }
+        }
+    };
     kalturaServer: {
         useSecuredProtocol: boolean,
         maxUploadFileSize: number,
         maxConcurrentUploads: number,
         limitToPartnerId: number | null
-    }
+    };
 }
 
 export const globalConfig: GlobalConfig = {
@@ -22,7 +29,14 @@ export const globalConfig: GlobalConfig = {
         production: environment.production,
         appVersion: '4.0.0',
         useSecuredProtocol: environment.client.useSecuredProtocol,
-        countriesList: countryCodes
+        countriesList: countryCodes,
+        views: {
+          tables: {
+            'maxItems': 10000,
+            'defaultPageSize': 50,
+            'defaultSortOrder': -1
+          }
+        }
     },
     kalturaServer: {
         useSecuredProtocol: environment.server.useSecuredProtocol,
@@ -30,4 +44,4 @@ export const globalConfig: GlobalConfig = {
         maxConcurrentUploads: 4,
         limitToPartnerId: null
     }
-}
+};

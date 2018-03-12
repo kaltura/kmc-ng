@@ -12,6 +12,7 @@ import {
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { globalConfig } from 'config/global';
 
 @Component({
   selector: 'kCategoriesTable',
@@ -52,6 +53,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   public _deferredLoading = true;
   public _emptyMessage = '';
   public _items: MenuItem[];
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
