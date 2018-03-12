@@ -2014,7 +2014,7 @@
         "errorLoading": "Error loading schemas",
         "addCustomSchema": "Add Custom Schema",
         "editCustomSchema": "Edit Custom Schema",
-        "deleteProfiles": "Delete selected profiles",
+        "deleteProfiles": "Delete selected schemas",
         "addCustomField": "Add Custom Field",
         "editCustomField": "Edit Custom Field",
         "downloadSchema": "Download Schema",
