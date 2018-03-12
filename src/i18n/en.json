@@ -73,7 +73,8 @@
       "no": "No",
       "apply": "Apply",
       "done": "Done",
-      "save": "Save"
+      "save": "Save",
+      "connectionError": "Error connecting to server"
     },
     "login": {
       "login": {
