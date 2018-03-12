@@ -23,9 +23,10 @@ export class ModerationStore implements OnDestroy {
         new BaseEntryGetAction(
           {
             entryId: entryId,
-            acceptedTypes: [KalturaMediaEntry]
           }
-        ),
+        ).setRequestOptions({
+            acceptedTypes: [KalturaMediaEntry]
+        }),
         new MediaListFlagsAction({
           entryId: entryId,
           pager: new KalturaFilterPager({

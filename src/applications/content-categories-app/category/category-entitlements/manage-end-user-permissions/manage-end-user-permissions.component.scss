@@ -154,6 +154,18 @@
   }
 }
 
+
+:host /deep/ {
+  .ui-dropdown {
+    height: 34px;
+    border: 1px solid $kGrayscale4;
+
+    .ui-dropdown-label {
+      color: $kGrayscale1;
+      font-size: 15px;
+    }
+  }
+}
 .kBulkActionsBtn {
   font-size: 15px;
 }
