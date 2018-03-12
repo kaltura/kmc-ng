@@ -71,6 +71,18 @@
         }
       }
 
+      .kRequired {
+        width: 20px;
+        font-size: 24px;
+        color: $kGrayscale3;
+        margin-left: -20px;
+        margin-right: 10px;
+        &.kHasError {
+          color: $kDandger;
+          font-weight: bold;
+        }
+      }
+
       .kLabel {
         -webkit-box-flex: 0;
         -ms-flex: 0 0 auto;
@@ -87,6 +99,11 @@
         width: 335px;
         color: $kGrayscale2;
         border-radius: 3px;
+
+        &.kHasError {
+          border: 1px solid $kDandger;
+          background: initial;
+        }
 
         .kTypeIcon {
           font-size: 20px;

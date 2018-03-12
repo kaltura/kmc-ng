@@ -208,7 +208,8 @@ export class EntriesRefineFiltersService {
                 new DistributionProfileListAction({ pager: distributionProfilePager }),
                 new AccessControlListAction({
                     pager: accessControlPager,
-                    filter: accessControlFilter,
+                    filter: accessControlFilter
+                }).setRequestOptions({
                     responseProfile
                 }),
             );
