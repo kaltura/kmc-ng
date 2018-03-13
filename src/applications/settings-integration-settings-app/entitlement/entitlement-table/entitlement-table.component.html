@@ -25,7 +25,9 @@
       </p-column>
       <p-column styleClass="kActionsColumn" header="" [style]="{'width':'60px'}">
         <ng-template let-entitlement="rowData" let-i="rowIndex" pTemplate="body">
-          <div class="kTableActions">
+          <div class="kTableActions"
+               *kAuthVisibileIfAll="['INTEGRATION_UPDATE_SETTINGS']"
+          >
             <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, entitlement)"></button>
           </div>
         </ng-template>
