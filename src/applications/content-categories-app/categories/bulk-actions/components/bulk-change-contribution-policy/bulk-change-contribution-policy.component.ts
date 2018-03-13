@@ -12,7 +12,7 @@ export class CategoriesBulkChangeContributionPolicy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Output() changeContributionPolicyChanged = new EventEmitter<KalturaContributionPolicyType>();
-  public _selectedPolicy: KalturaContributionPolicyType;
+  public _selectedPolicy: KalturaContributionPolicyType = null;
   public _availablePolicies = KalturaContributionPolicyType;
 
   constructor() {
