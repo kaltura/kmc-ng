@@ -1,7 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
 import {AppLocalization, IAppStorage} from '@kaltura-ng/kaltura-common';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {Router} from "@angular/router";
@@ -17,6 +16,7 @@ export interface Confirmation {
 	rejectVisible?: boolean;
 	acceptEvent?: EventEmitter<any>;
 	rejectEvent?: EventEmitter<any>;
+	alignMessage?: 'default' | 'left' | 'center';
 }
 
 export interface GrowlMessage {
@@ -100,10 +100,31 @@ export class BrowserService implements IAppStorage {
 		}
 	}
 
-	public confirm(confirmation : Confirmation) {
-		confirmation.key = "confirm";
-		this._onConfirmationFn(confirmation);
-	}
+  public confirm(confirmation: Confirmation) {
+    if (!confirmation) {
+      return undefined;
+    }
+
+    confirmation.alignMessage = confirmation.alignMessage || 'default';
+    switch (confirmation.alignMessage) {
+      case 'center':
+        confirmation.key = 'confirm';
+        break;
+      case 'left':
+        confirmation.key = 'confirmAlignLeft';
+        break;
+      case 'default':
+      default: // set confirmation key according to the message
+        if (confirmation.message && /\r|\n/.exec(confirmation.message)) { // if message has line breaks
+          confirmation.key = 'confirmAlignLeft';
+        } else {
+          confirmation.key = 'confirm';
+        }
+        break;
+    }
+
+    this._onConfirmationFn(confirmation);
+  }
 
 	public alert(confirmation : Confirmation) {
 		confirmation.key = "alert";
