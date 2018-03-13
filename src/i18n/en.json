@@ -1165,9 +1165,10 @@
           "delete": "Delete",
           "thumbnail": "Thumbnail",
           "addEntry": "Add Entry",
+          "addEntries": "Add Entries",
           "remove": "Remove",
-          "selected": "Selected",
-          "clear": "Clear Selection",
+          "selected": "{{0}} Selected",
+          "clear": "Clear",
           "addGroup": "Add Group",
           "deleteGroup": "Delete Group",
           "nameRequired": "You must enter an entry name"

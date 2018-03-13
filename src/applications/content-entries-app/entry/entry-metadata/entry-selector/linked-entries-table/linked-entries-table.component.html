@@ -1,0 +1,50 @@
+<div class="kLinkedEntriesTable" [class.noResults]="!_entries?.length">
+  <p-table
+    [value]="_entries"
+    dataKey="id"
+    [rowTrackBy]="_rowTrackBy"
+    [(selection)]="selectedEntries"
+    (selectionChange)="_onSelectionChange($event)">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:44px; padding-left: 14px">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th style="width: 100px">{{'applications.content.entryDetails.metadata.thumbnail' | translate}}</th>
+        <th>{{'applications.content.entryDetails.metadata.entryName' | translate}}</th>
+        <th>{{'applications.content.entryDetails.metadata.entryID' | translate}}</th>
+        <th style="width: 60px"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-entry>
+      <tr [pSelectableRow]="entry">
+
+        <td style="width:44px; padding-left: 14px">
+          <p-tableCheckbox [value]="entry"></p-tableCheckbox>
+        </td>
+
+        <td style="width: 100px">
+          <div class="kThumbnailHolder"><span class="kHelper"></span>
+            <img [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'">
+          </div>
+        </td>
+
+        <td>
+          <span [kTooltip]="entry.name" [maxWidth]="300" class="kTableColumn">{{entry.name}}</span>
+        </td>
+        <td>
+          <span [kTooltip]="entry.id" class="kTableColumn">{{entry.id}}</span>
+        </td>
+        <td style="width: 60px">
+          <button pButton class="kButtonDefault kDeletehBtn small" type="button" icon="kIcontrash"
+                  (click)="deleteEntry.emit(entry)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <div class="emptymessage"></div>
+    </ng-template>
+  </p-table>
+</div>

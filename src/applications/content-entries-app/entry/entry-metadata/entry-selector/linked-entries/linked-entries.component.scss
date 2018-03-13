@@ -1,0 +1,48 @@
+@import 'app-theme/_variables.scss';
+
+.kTableHeader {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 16px;
+  align-items: center;
+
+  button {
+    font-weight: 400;
+    height: 34px;
+  }
+
+  .kBulkActions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .kMoveBtn {
+      width: 40px;
+      height: 34px;
+      margin: 0;
+    }
+
+    .kMoveBtnTop {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .kMoveBtnBottom {
+      margin: 0 12px 0 -4px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    .kBulkDeleteBtn {
+      margin-right: 12px;
+      margin-left: 12px;
+      width: 36px;
+      font-size: 18px;
+    }
+  }
+
+  .kAddEntriesBtn {
+    width: 120px;
+  }
+}
+
