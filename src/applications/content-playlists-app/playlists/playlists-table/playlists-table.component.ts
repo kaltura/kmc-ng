@@ -3,6 +3,7 @@ import { Menu, MenuItem } from 'primeng/primeng';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { globalConfig } from 'config/global';
 
 @Component({
   selector: 'kPlaylistsTable',
@@ -37,6 +38,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   public _emptyMessage = '';
   public _playlists: KalturaPlaylist[] = [];
   public _items: MenuItem[];
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 

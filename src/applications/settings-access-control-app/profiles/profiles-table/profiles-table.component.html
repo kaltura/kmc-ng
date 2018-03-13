@@ -12,6 +12,7 @@
                [emptyMessage]="_emptyMessage"
                [sortField]="filter.sortBy"
                (selectionChange)="_onSelectionChange($event)"
+               [defaultSortOrder]="_defaultSortOrder"
                [rowTrackBy]="_rowTrackBy"
                (onSort)="_onSortChanged($event)"
                [(selection)]="selectedProfiles">

@@ -164,7 +164,7 @@ export class AppAuthentication {
 
 
           // TODO [kmc] check if ks should be stored in appUser and remove direct call to http configuration
-          this.kalturaServerClient.overrideDefaultRequestOptions({
+          this.kalturaServerClient.setDefaultRequestOptions({
               ks,
           });
           this.appUser.ks = ks;
@@ -198,7 +198,7 @@ export class AppAuthentication {
 
   logout() {
     this.appUser.ks = null;
-    this.kalturaServerClient.resetDefaultRequestOptions({});
+    this.kalturaServerClient.setDefaultRequestOptions({});
 
     this.appStorage.removeFromSessionStorage('auth.login.ks');
 
@@ -280,7 +280,7 @@ export class AppAuthentication {
 
   private onUserLoggedIn()
   {
-      this.kalturaServerClient.resetDefaultRequestOptions({
+      this.kalturaServerClient.setDefaultRequestOptions({
           ks: this.appUser.ks,
           partnerId: this.appUser.partnerId
       });
