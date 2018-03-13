@@ -65,7 +65,7 @@
       padding: 20px 28px;
 
       .kAddFileButton {
-        width: 120px;
+        width: 110px;
         height: 34px;
         font-size: 14px;
         color: $kGrayscale1;
@@ -193,6 +193,6 @@
   height: 280px;
 }
 
-button /deep/ .ui-button-icon-left{
+button.kAddFileButton /deep/ .ui-button-icon-left{
   font-size: 18px;
 }
