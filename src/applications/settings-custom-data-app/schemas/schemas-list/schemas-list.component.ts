@@ -162,7 +162,9 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   }
 
   public _deleteSchemas(selectedSchemas: SettingsMetadataProfile[]): void {
-    const schemasToDelete = selectedSchemas.map((playlist, index) => `${index + 1}: ${playlist.name}`);
+    const schemasToDelete = selectedSchemas.map((playlist, index) => {
+      return selectedSchemas.length > 1 ? `${index + 1}: ${playlist.name}` : playlist.name;
+    });
     const schemas = selectedSchemas.length <= 5 ? schemasToDelete.join(',').replace(/,/gi, '\n') : '';
     let message = '';
     if (selectedSchemas.length > 5) {
