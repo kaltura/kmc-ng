@@ -474,7 +474,8 @@
           "changeOwnerLabel": "Set a new owner for the selected categories",
           "error": "Categories update failed",
           "cancelEdit": "Cancel Edit",
-          "discard": "Discard all changes?"
+          "discard": "Discard all changes?",
+          "noPrivacyContext": "Some of the selected categories don't have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page under the Settings tab."
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
@@ -907,7 +908,7 @@
         "edit": "Edit",
         "blockUnblock": "Block / Unblock",
         "ruleName": "Rule Name",
-        "entriesCount": "No.Entries",
+        "entriesCount": "No. Entries",
         "limit": "Limit",
         "orderBy": "Order By"
       },
@@ -997,7 +998,8 @@
           "successFinish": "Finished successfully",
           "errorFinish": "Finished with errors",
           "failed": "Failed",
-          "otherStatuses": "All other statuses"
+          "otherStatuses": "All other statuses",
+          "datesRangeError": "'From Date' must be before 'To Date'"
         }
       },
       "entryStatus": {
@@ -1623,7 +1625,8 @@
           "title": "Entitlements",
           "description": "Manage your entitlements settings and specific end-user permissions to content in your applications.",
           "privacyContentLabel": {
-            "label" : "Privacy Context Label"
+            "label" : "Privacy Context Label",
+            "help": "In order to enable access to content in this category from the application and enforce its entitlement rules, the privacy context label MUST be set as part of the application session (KS) privileges. \n\nThis label is set as part of the MediaSpace installation/upgrade process. For any other purposes set/edit the context label from the Integration Settings page under the Settings tab."
           },
           "manageUsersPermissionsEditMessage": {
             "title": "Error",
@@ -1656,7 +1659,8 @@
             "private_explanation": "Only end-users with specific permission can add content to this category"
           },
           "moderateContent": {
-            "label": "Moderate Content"
+            "label": "Moderate Content",
+            "help": "Media will not appear in page until by the category manager/moderator."
           },
           "inheritUsersPermissions": {
             "label": "Inherit Users Permissions",
@@ -1699,6 +1703,8 @@
             "count": "{{0}} end-users"
           },
           "usersPermissions": {
+            "refine": "Refine",
+            "searchUsers": "Search Users",
             "title":"Manage End-user Permissions",
             "titleView":"View End-user Permissions",
             "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",
@@ -2010,6 +2016,7 @@
         "errorLoading": "Error loading schemas",
         "addCustomSchema": "Add Custom Schema",
         "editCustomSchema": "Edit Custom Schema",
+        "deleteProfiles": "Delete selected schemas",
         "addCustomField": "Add Custom Field",
         "editCustomField": "Edit Custom Field",
         "downloadSchema": "Download Schema",
@@ -2067,9 +2074,9 @@
         "unlimited": "Unlimited",
         "deleteSchema": "Delete Custom Data Schema",
         "deleteSchemas": "Delete Custom Data Schemas",
-        "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema: {{0}} ?",
+        "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema:\n {{0}} ?",
         "confirmDeleteMultipleNames": "Are you sure you want to delete the following custom data schemas:\n {{0}} ?",
-        "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas",
+        "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas?",
         "updateError": "An error occurred during custom data schemas update",
         "discardChanges": "Discard Changes",
         "discardWarning": "You will lose any unsaved changes. Continue?",

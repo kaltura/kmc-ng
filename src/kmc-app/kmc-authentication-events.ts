@@ -24,17 +24,17 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
 
 
     onUserLoggedOut(): void {
-        this.kalturaServerClient.resetDefaultRequestOptions({});
+        this.kalturaServerClient.setDefaultRequestOptions({});
         this._permissions.flushPermissions();
     }
 
     onUserLoggedIn(appUser: Immutable.ImmutableObject<AppUser>): Observable<void> {
-        this.kalturaServerClient.resetDefaultRequestOptions({
+        this.kalturaServerClient.setDefaultRequestOptions({
             ks: appUser.ks
         });
 
         this._syncAppMenuConfigWithPermissions();
-        this._permissions.loadPermissions(appUser.permissions);
+        this._permissions.loadPermissions(Array.from(appUser.permissions));
         this._serverPolls.forcePolling();
         return Observable.of(undefined);
     }
@@ -73,11 +73,11 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
             }
         }
 
-        kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => isItemEnabled(item));
-
-        kmcAppConfig.menuItems.forEach(item => {
-            item.children = item.children.filter(childItem => hasViewPermission(childItem));
-        });
+        // kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => isItemEnabled(item));
+        //
+        // kmcAppConfig.menuItems.forEach(item => {
+        //     item.children = item.children.filter(childItem => hasViewPermission(childItem));
+        // });
 
         kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => item.children ? item.children.length > 0 : false);
 

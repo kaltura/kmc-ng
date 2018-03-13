@@ -21,6 +21,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {CategoryService} from '../category.service';
 import { modulesConfig } from 'config/modules';
+import { globalConfig } from 'config/global';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -77,7 +78,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
 
   private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
-    const subcategoriesLimit: number = modulesConfig.contentShared.categories.subCategoriesLimit || 50;
+    const subcategoriesLimit: number = modulesConfig.contentShared.categories.subCategoriesLimit || globalConfig.client.views.tables.defaultPageSize;
     if (!parentCategory) {
       return Observable.throw(new Error('parentCategory to get subcategories for is not defined'));
     }

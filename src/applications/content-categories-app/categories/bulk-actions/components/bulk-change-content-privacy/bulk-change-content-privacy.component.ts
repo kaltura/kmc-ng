@@ -1,15 +1,10 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
-
 import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { UserListAction } from 'kaltura-ngx-client/api/types/UserListAction';
 
 export enum PrivacyMode {
   NoRestriction = 0,
@@ -36,7 +31,7 @@ export class CategoriesBulkChangeContentPrivacy implements OnInit, OnDestroy, Af
 
   // expose enum to the template
   public _privacyModes = PrivacyMode;
-  public _privacyMode = PrivacyMode.NoRestriction;
+  public _privacyMode = null;
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
   }
@@ -79,7 +74,6 @@ export class CategoriesBulkChangeContentPrivacy implements OnInit, OnDestroy, Af
 
 
   public _apply() {
-    console.warn(this._privacyMode);
     this.changeContentPrivacyChanged.emit(this._privacyMode);
     this._confirmClose = false;
     this.parentPopupWidget.close();

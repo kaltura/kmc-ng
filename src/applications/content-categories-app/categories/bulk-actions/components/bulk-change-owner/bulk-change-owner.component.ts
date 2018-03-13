@@ -33,7 +33,10 @@ export class CategoriesBulkChangeOwner implements OnInit, OnDestroy, AfterViewIn
   private _parentPopupStateChangeSubscribe : ISubscription;
   private _confirmClose: boolean = true;
 
-  constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+  constructor(private _kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService) {
+    this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this);
   }
 
   ngOnInit() {
@@ -118,16 +121,17 @@ export class CategoriesBulkChangeOwner implements OnInit, OnDestroy, AfterViewIn
       );
   }
 
-  public _convertUserInputToValidValue(value : string) : KalturaUser {
+  public _convertUserInputToValidValue(value: string): KalturaUser {
     let result = null;
+    const tooltip = this._appLocalization.get('applications.content.entryDetails.users.tooltip', [value]);
 
     if (value) {
-      result = new KalturaUser(
-        {
-          id : value,
-          screenName: value
-        }
-      );
+      result = {
+        id: value,
+        screenName: value,
+        __tooltip: tooltip,
+        __class: 'userAdded'
+      };
     }
     return result;
   }

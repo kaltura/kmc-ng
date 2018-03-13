@@ -7,9 +7,17 @@ import {UserLoginByLoginIdAction} from 'kaltura-ngx-client/api/types/UserLoginBy
 import {UserGetByLoginIdAction} from 'kaltura-ngx-client/api/types/UserGetByLoginIdAction';
 import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
 import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
-import {PermissionGetCurrentPermissionsAction} from 'kaltura-ngx-client/api/types/PermissionGetCurrentPermissionsAction';
+import {PermissionListAction} from 'kaltura-ngx-client/api/types/PermissionListAction';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import {KalturaPermissionFilter} from 'kaltura-ngx-client/api/types/KalturaPermissionFilter';
+import {KalturaPermissionListResponse} from 'kaltura-ngx-client/api/types/KalturaPermissionListResponse';
+import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaPermissionStatus} from 'kaltura-ngx-client/api/types/KalturaPermissionStatus';
+import {UserRoleGetAction} from 'kaltura-ngx-client/api/types/UserRoleGetAction';
 import * as Immutable from 'seamless-immutable';
-import {AppUser, PartnerInfo} from './app-user';
+import {AppUser} from './app-user';
 import {AppStorage} from '@kaltura-ng/kaltura-common';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
@@ -18,7 +26,6 @@ import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-veri
 
 import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { AppPermissionsService } from '@kaltura-ng/mc-shared';
 
 export interface IUpdatePasswordPayload {
     email: string;
@@ -139,22 +146,44 @@ export class AppAuthentication {
             new UserGetByLoginIdAction({loginId})
                 .setRequestOptions(
                     new KalturaRequestOptions({})
-                        .setDependency(['ks', 0])),
+                        .setDependency(['ks', 0])
+                ),
             new PartnerGetInfoAction({}).setRequestOptions(
                 new KalturaRequestOptions({})
                     .setDependency(['ks', 0])
                     .setDependency(['id', 1, 'partnerId'])
             ),
-            <any>new PermissionGetCurrentPermissionsAction({}).setRequestOptions(
-                new KalturaRequestOptions({})
-                    .setDependency(['ks', 0])),
+            new UserRoleGetAction({ userRoleId: 0})
+                .setRequestOptions(
+                    new KalturaRequestOptions({})
+                    .setDependency(['ks', 0])
+                )
+                .setDependency(['userRoleId', 0, 'roleIds']),
+            new PermissionListAction({
+                filter: new KalturaPermissionFilter({
+                    statusEqual: KalturaPermissionStatus.active,
+                    typeIn: '2,3'
+                }),
+                pager: new KalturaFilterPager({
+                    pageSize: 500
+                })
+            })
+                .setRequestOptions(
+                    new KalturaRequestOptions({
+                        responseProfile: new KalturaDetachedResponseProfile({
+                            type: KalturaResponseProfileType.includeFields,
+                            fields: 'name'
+                        })
+                    })
+                        .setDependency(['ks', 0])
+                )
         );
 
         return <any>(this.kalturaServerClient.multiRequest(request)
             .switchMap(
                 response => {
                     if (!response.hasErrors()) {
-                        return this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result)
+                        return this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result, response[4].result)
                             .map(() => {
                                 return {success: true, error: null};
                             });
@@ -165,9 +194,12 @@ export class AppAuthentication {
             ));
     }
 
-    private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, permissionsFlags: string): Observable<void> {
+    private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): Observable<void> {
 
         this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
+
+        const userRoleList = userRole.permissionNames.split(',')
+        const partnerPermissionList = permissionList.objects.map(item => item.name);
 
         const appUser: Immutable.ImmutableObject<AppUser> = Immutable({
             ks,
@@ -178,7 +210,7 @@ export class AppAuthentication {
             lastName: user.lastName,
             isAccountOwner: user.isAccountOwner,
             createdAt: user.createdAt,
-            permissions: permissionsFlags ? permissionsFlags.split(',') : [],
+            permissions: Array.from(new Set<string>([...userRoleList, ...partnerPermissionList ])),
             partnerInfo: {
                 partnerId: user.partnerId,
                 name: partner.name,
@@ -210,23 +242,41 @@ export class AppAuthentication {
                 const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
                 if (loginToken) {
                     const requests = [
-                        new UserGetAction({}).setRequestOptions({
+                        new UserGetAction({})
+                            .setRequestOptions({
                             ks: loginToken
-
                         }),
-                        new PartnerGetInfoAction({}).setRequestOptions({
+                        new PartnerGetInfoAction({})
+                            .setRequestOptions({
                             ks: loginToken
-
                         })
                             .setDependency(['id', 0, 'partnerId']),
-                        <any>new PermissionGetCurrentPermissionsAction({}).setRequestOptions({
-                            ks: loginToken
+                        new UserRoleGetAction({ userRoleId: 0})
+                            .setRequestOptions({
+                                ks: loginToken
+                            })
+                            .setDependency(['userRoleId', 0, 'roleIds']),
+                        new PermissionListAction({
+                            filter: new KalturaPermissionFilter({
+                                statusEqual: KalturaPermissionStatus.active,
+                                typeIn: '2,3'
+                            }),
+                            pager: new KalturaFilterPager({
+                                pageSize: 500
+                            })
                         })
+                            .setRequestOptions({
+                                ks: loginToken,
+                                responseProfile: new KalturaDetachedResponseProfile({
+                                    type: KalturaResponseProfileType.includeFields,
+                                    fields: 'name'
+                                })
+                            })
                     ];
 
                     return this.kalturaServerClient.multiRequest(requests)
                         .switchMap((response) => {
-                            return this._afterLogin(loginToken, response[0].result, response[1].result, response[2].result);
+                            return this._afterLogin(loginToken, response[0].result, response[1].result, response[2].result, response[3].result);
                         })
                         .subscribe(
                             () => {

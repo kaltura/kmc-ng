@@ -14,6 +14,7 @@ import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {NewEntitlementComponent} from './entitlement/new-entitlement/new-entitlement.component';
 import {EditEntitlementComponent} from './entitlement/edit-entitlement/edit-entitlement.component';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
+import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import {CategoriesModule} from 'app-shared/content-shared/categories/categories.
     PopupWidgetModule,
     StickyModule,
     CategoriesModule,
+    AppPermissionsModule,
     InputHelperModule
   ],
   declarations: [

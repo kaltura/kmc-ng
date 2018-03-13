@@ -17,28 +17,28 @@
                 {{'applications.settings.metadata.schemas' | translate : [(_schemasStore.schemas.data$ | async)?.totalCount] }}
               </span>
 
-            <div class="kBulkOperations" *ngIf="_selectedSchemas.length">
-              <span class="kSelectedSchemasLabel">
-                • {{ 'applications.settings.metadata.selected' | translate : [_selectedSchemas.length] }}
-              </span>
-              <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
-                      (click)="_deleteSchemas(_selectedSchemas)"></button>
-              <a class="kBulkCancel" (click)="_clearSelection()">
-                {{'applications.settings.metadata.cancel' | translate}}
-              </a>
-            </div>
+          <div class="kBulkOperations" *ngIf="_selectedSchemas.length">
+            <span class="kSelectedSchemasLabel">
+              • {{ 'applications.settings.metadata.selected' | translate : [_selectedSchemas.length] }}
+            </span>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                    [kTooltip]="'applications.settings.metadata.deleteProfiles' | translate"(click)="_deleteSchemas(_selectedSchemas)"></button>
+            <a class="kBulkCancel" (click)="_clearSelection()">
+              {{'applications.settings.metadata.cancel' | translate}}
+            </a>
           </div>
         </div>
-      </kSticky>
-      <k-area-blocker [showLoader]="_tableIsBusy"
-                      [message]="_tableBlockerMessage"
-                      [bodyScroll]="true">
-        <kSchemasTable
-          class="kSchemasTable"
-          [schemas]="(_schemasStore.schemas.data$ | async)?.items"
-          (actionSelected)="_onActionSelected($event)"
-          [(selectedSchemas)]="_selectedSchemas"></kSchemasTable>
-      </k-area-blocker>
+      </div>
+    </kSticky>
+    <k-area-blocker [showLoader]="_tableIsBusy"
+                    [message]="_tableBlockerMessage"
+                    [bodyScroll]="true">
+      <kSchemasTable
+        class="kSchemasTable"
+        [schemas]="(_schemasStore.schemas.data$ | async)?.items"
+        (actionSelected)="_onActionSelected($event)"
+        [(selectedSchemas)]="_selectedSchemas"></kSchemasTable>
+    </k-area-blocker>
 
       <div class="kSchemasTableFooter kContent" #footer *ngIf="(_schemasStore.schemas.data$ | async)?.totalCount">
         <p-paginator
