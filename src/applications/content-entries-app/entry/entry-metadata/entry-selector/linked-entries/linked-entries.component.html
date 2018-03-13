@@ -28,7 +28,7 @@
                 [label]="_addBtnTitle"></button>
       </div>
       <k-linked-entries-table [entries]="_entries"
-                              [allowMultiple]="control?.allowMultiple"
+                              [allowMultiple]="control?.allowMultipleEntries"
                               (deleteEntry)="_deleteEntry($event)"
                               [(selectedEntries)]="_selectedEntries"></k-linked-entries-table>
     </div>

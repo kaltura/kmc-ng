@@ -9,12 +9,14 @@
     (selectionChange)="_onSelectionChange($event)">
     <ng-template pTemplate="header">
       <tr>
-        <th style="width:64px; padding-left: 24px">
+        <th *ngIf="allowMultiple" style="width:64px; padding-left: 24px">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th style="width: 100px">{{'applications.content.entryDetails.metadata.thumbnail' | translate}}</th>
+        <th style="width: 100px" [ngStyle]="{'padding-left': allowMultiple ? '0' : '24px'}">
+          {{'applications.content.entryDetails.metadata.thumbnail' | translate}}
+        </th>
         <th>{{'applications.content.entryDetails.metadata.entryName' | translate}}</th>
-        <th>{{'applications.content.entryDetails.metadata.entryID' | translate}}</th>
+        <th style="width: 120px">{{'applications.content.entryDetails.metadata.entryID' | translate}}</th>
         <th style="width: 60px"></th>
       </tr>
     </ng-template>
@@ -22,11 +24,11 @@
     <ng-template pTemplate="body" let-entry>
       <tr [pSelectableRow]="entry">
 
-        <td style="width:64px; padding-left: 24px">
+        <td *ngIf="allowMultiple" style="width:64px; padding-left: 24px">
           <p-tableCheckbox [value]="entry"></p-tableCheckbox>
         </td>
 
-        <td style="width: 100px">
+        <td style="width: 100px" [ngStyle]="{'padding-left': allowMultiple ? '0' : '24px'}">
           <div class="kThumbnailHolder"><span class="kHelper"></span>
             <img [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'">
           </div>
@@ -35,7 +37,7 @@
         <td>
           <span [kTooltip]="entry.name" [maxWidth]="300" class="kTableColumn">{{entry.name}}</span>
         </td>
-        <td>{{entry.id}}</td>
+        <td style="width: 120px">{{entry.id}}</td>
         <td style="width: 60px">
           <button pButton class="kButtonDefault kDeletehBtn small" type="button" icon="kIcontrash"
                   [kTooltip]="'applications.content.entryDetails.metadata.removeEntry' | translate"
