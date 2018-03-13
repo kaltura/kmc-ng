@@ -8,7 +8,6 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { LinkedEntriesControl } from 'app-shared/kmc-shared/dynamic-metadata-form/linked-entries-control';
 
-
 @Component({
   selector: 'k-linked-entries',
   templateUrl: './linked-entries.component.html',
@@ -32,10 +31,8 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   public _isReady = false;
   public _addBtnTitle: string;
 
-  private onTouchedCallback: () => void = () => {
-  };
-  private onChangeCallback: (_: any) => void = () => {
-  };
+  private onTouchedCallback: () => void = () => {};
+  private onChangeCallback: (_: any) => void = () => {};
 
   constructor(private _kalturaClient: KalturaClient,
               private _appLocalization: AppLocalization) {
@@ -54,7 +51,7 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   ngOnDestroy() {
   }
 
-  private _updateEntries() {
+  private _updateEntries(): void {
     this._entries = [];
 
     if (this._innerValue && this._innerValue.length) {
@@ -89,7 +86,7 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
     }
   }
 
-  private _propogateChanges() {
+  private _propogateChanges(): void {
     this._innerValue = (this._entries || []).map(entry => entry.id);
     this.onChangeCallback(this._innerValue);
   }
