@@ -1172,7 +1172,9 @@
           "clear": "Clear",
           "addGroup": "Add Group",
           "deleteGroup": "Delete Group",
-          "nameRequired": "You must enter an entry name"
+          "nameRequired": "You must enter an entry name",
+          "customDataError": "\"{{0}}\" Custom Data Error",
+          "missingEntriesWarning": "The following entries were not found: {{0}}"
         },
         "thumbnails": {
           "thumbnails": "Thumbnails",

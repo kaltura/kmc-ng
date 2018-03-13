@@ -7,6 +7,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { LinkedEntriesControl } from 'app-shared/kmc-shared/dynamic-metadata-form/linked-entries-control';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'k-linked-entries',
@@ -21,6 +22,7 @@ import { LinkedEntriesControl } from 'app-shared/kmc-shared/dynamic-metadata-for
 export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() control: LinkedEntriesControl;
   @Input() form: FormGroup;
+  @Input() profileName: string;
 
   private _innerValue: string[] = [];
 
@@ -31,10 +33,13 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   public _isReady = false;
   public _addBtnTitle: string;
 
-  private onTouchedCallback: () => void = () => {};
-  private onChangeCallback: (_: any) => void = () => {};
+  private onTouchedCallback: () => void = () => {
+  };
+  private onChangeCallback: (_: any) => void = () => {
+  };
 
   constructor(private _kalturaClient: KalturaClient,
+              private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
   }
 
@@ -52,8 +57,6 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   }
 
   private _updateEntries(): void {
-    this._entries = [];
-
     if (this._innerValue && this._innerValue.length) {
       this._blockerMessage = null;
       this._showLoader = true;
@@ -63,7 +66,8 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
       this._kalturaClient.multiRequest(requests)
         .subscribe(
           responses => {
-            if (responses.hasErrors()) {
+            const missingEntryIds = [];
+            if (responses.hasErrors() && !responses.every(({ error }) => !error || error.code === 'ENTRY_ID_NOT_FOUND')) {
               this._blockerMessage = new AreaBlockerMessage({
                 message: this._appLocalization.get('applications.content.entryDetails.errors.entriesLoadError'),
                 buttons: [{
@@ -74,11 +78,33 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
                 }]
               });
             } else {
-              this._entries = responses.map((response) => ({
-                id: response.result.id,
-                name: response.result.name,
-                thumbnailUrl: response.result.thumbnailUrl
-              }));
+              this._entries = [];
+
+              responses.forEach((response, index) => {
+                if (response.error && response.error.code === 'ENTRY_ID_NOT_FOUND') {
+                  missingEntryIds.push(this._innerValue[index]); // TODO [kmcng] replace with args value after client lib fixed
+                } else {
+                  this._entries.push({
+                    id: response.result.id,
+                    name: response.result.name,
+                    thumbnailUrl: response.result.thumbnailUrl
+                  });
+                }
+              });
+
+              if (missingEntryIds.length > 0) {
+                this._browserService.alert({
+                  header: this._appLocalization.get(
+                    'applications.content.entryDetails.metadata.customDataError',
+                    [this.profileName]
+                  ),
+                  message: this._appLocalization.get(
+                    'applications.content.entryDetails.metadata.missingEntriesWarning',
+                    [missingEntryIds.join(', ')]
+                  ),
+                  accept: () => this._propogateChanges()
+                });
+              }
               this._showLoader = false;
             }
           }
