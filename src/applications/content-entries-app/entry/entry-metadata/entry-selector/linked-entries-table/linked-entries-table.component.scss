@@ -1,5 +1,10 @@
 @import 'app-theme/_variables.scss';
 
+:host {
+  margin-left: -24px;
+  margin-right: -138px;
+}
+
 .kLinkedEntriesTable {
   .kTableColumn {
     display: inline-block;
@@ -34,7 +39,6 @@
     white-space: nowrap;
     text-align: center;
     border-radius: 3px;
-    cursor: pointer;
     &.disable {
       cursor: auto;
     }
@@ -56,12 +60,14 @@
     height: 100%;
     vertical-align: middle;
   }
+
+  .emptymessage {
+    line-height: 75px;
+  }
 }
 
 :host /deep/ .kLinkedEntriesTable {
-  .ui-table .ui-table-thead > tr > th {
-    border: 1px solid $kGrayscale5;
-    border-right: none;
-    border-left: none;
+  .ui-table .ui-table-scrollable-body {
+    max-height: 142px !important;
   }
 }

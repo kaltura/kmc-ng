@@ -40,6 +40,14 @@ hr{
 			display: flex;
 			padding-top: 16px;
 
+      &.kLinkedEntries {
+        flex-direction: column;
+
+        .kFormLabelContainer {
+          margin-bottom: 15px;
+        }
+      }
+
 			.kFormLabelContainer{
 				width:190px;
 				display: flex;

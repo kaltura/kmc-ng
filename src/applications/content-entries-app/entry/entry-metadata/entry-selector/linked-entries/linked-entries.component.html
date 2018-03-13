@@ -25,9 +25,10 @@
 
         <button *ngIf="!_selectedEntries?.length"
                 pButton class="kButtonDefault kAddEntriesBtn"
-                [label]="'applications.content.entryDetails.metadata.addEntries' | translate"></button>
+                [label]="_addBtnTitle"></button>
       </div>
       <k-linked-entries-table [entries]="_entries"
+                              [allowMultiple]="control?.allowMultipleEntries"
                               (deleteEntry)="_deleteEntry($event)"
                               [(selectedEntries)]="_selectedEntries"></k-linked-entries-table>
     </div>

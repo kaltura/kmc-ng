@@ -1166,6 +1166,7 @@
           "thumbnail": "Thumbnail",
           "addEntry": "Add Entry",
           "addEntries": "Add Entries",
+          "removeEntry": "Remove Entry",
           "remove": "Remove",
           "selected": "{{0}} Selected",
           "clear": "Clear",

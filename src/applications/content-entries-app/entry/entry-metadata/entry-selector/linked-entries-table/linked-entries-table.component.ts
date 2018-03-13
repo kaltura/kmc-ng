@@ -8,8 +8,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
   styleUrls: ['./linked-entries-table.component.scss']
 })
 export class LinkedEntriesTableComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Input() allowMultiple = false;
   @Input() selectedEntries: KalturaMediaEntry[] = [];
-
   @Input()
   set entries(data: any[]) {
     if (!this._deferredLoading) {
@@ -40,7 +40,9 @@ export class LinkedEntriesTableComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngOnInit() {
-    this.assignEmptyMessage();
+    this._emptyMessage = this.allowMultiple
+      ? this._appLocalization.get('applications.content.entryDetails.metadata.addEntries')
+      : this._appLocalization.get('applications.content.entryDetails.metadata.addEntry');
   }
 
   ngAfterViewInit() {
@@ -60,9 +62,5 @@ export class LinkedEntriesTableComponent implements OnInit, OnDestroy, AfterView
 
   public _onSelectionChange(event: KalturaMediaEntry[]): void {
     this.selectedEntriesChange.emit(event);
-  }
-
-  public assignEmptyMessage(): void {
-    this._emptyMessage = 'Add entry';
   }
 }

@@ -2,11 +2,11 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { DynamicFormControlBase } from '@kaltura-ng/kaltura-ui/dynamic-form/dynamic-form-control-base';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { LinkedEntriesControl } from 'app-shared/kmc-shared/dynamic-metadata-form/linked-entries-control';
 
 
 @Component({
@@ -20,7 +20,7 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
   }]
 })
 export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAccessor {
-  @Input() control: DynamicFormControlBase<any>;
+  @Input() control: LinkedEntriesControl;
   @Input() form: FormGroup;
 
   private _innerValue: string[] = [];
@@ -30,9 +30,12 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   public _selectedEntries: KalturaMediaEntry[] = [];
   public _entries = [];
   public _isReady = false;
+  public _addBtnTitle: string;
 
-  private onTouchedCallback: () => void = () => {};
-  private onChangeCallback: (_: any) => void = () => {};
+  private onTouchedCallback: () => void = () => {
+  };
+  private onChangeCallback: (_: any) => void = () => {
+  };
 
   constructor(private _kalturaClient: KalturaClient,
               private _appLocalization: AppLocalization) {
@@ -40,6 +43,12 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
 
   ngOnInit() {
     this._isReady = true;
+
+    if (this.control) {
+      this._addBtnTitle = this.control.allowMultipleEntries
+        ? this._appLocalization.get('applications.content.entryDetails.metadata.addEntries')
+        : this._appLocalization.get('applications.content.entryDetails.metadata.addEntry');
+    }
   }
 
   ngOnDestroy() {
@@ -59,14 +68,13 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
           responses => {
             if (responses.hasErrors()) {
               this._blockerMessage = new AreaBlockerMessage({
-                message: this._appLocalization.get('applications.content.entryDetails.errors.entriesLoadError'), buttons: [
-                  {
-                    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
-                    action: () => {
-                      this._updateEntries();
-                    }
+                message: this._appLocalization.get('applications.content.entryDetails.errors.entriesLoadError'),
+                buttons: [{
+                  label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+                  action: () => {
+                    this._updateEntries();
                   }
-                ]
+                }]
               });
             } else {
               this._entries = responses.map((response) => ({
