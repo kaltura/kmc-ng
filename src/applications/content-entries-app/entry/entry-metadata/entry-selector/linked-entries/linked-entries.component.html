@@ -27,7 +27,9 @@
                 pButton class="kButtonDefault kAddEntriesBtn"
                 [label]="'applications.content.entryDetails.metadata.addEntries' | translate"></button>
       </div>
-      <k-linked-entries-table [entries]="_entries" [(selectedEntries)]="_selectedEntries"></k-linked-entries-table>
+      <k-linked-entries-table [entries]="_entries"
+                              (deleteEntry)="_deleteEntry($event)"
+                              [(selectedEntries)]="_selectedEntries"></k-linked-entries-table>
     </div>
   </k-area-blocker>
 </div>

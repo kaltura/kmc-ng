@@ -109,26 +109,26 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
     this.onTouchedCallback = fn;
   }
 
-  public _deleteEntry(entry) {
+  public _deleteEntry(entry: KalturaMediaEntry): void {
     this._clearSelection();
     this._entries.splice(this._entries.indexOf(entry), 1);
     this._propogateChanges();
   }
 
 
-  public _moveUpSelections() {
+  public _moveUpSelections(): void {
     if (KalturaUtils.moveUpItems(this._entries, this._selectedEntries)) {
       this._propogateChanges();
     }
   }
 
-  public _moveDownSelections() {
+  public _moveDownSelections(): void {
     if (KalturaUtils.moveDownItems(this._entries, this._selectedEntries)) {
       this._propogateChanges();
     }
   }
 
-  public _deleteSelections() {
+  public _deleteSelections(): void {
     if (this._selectedEntries && this._selectedEntries.length) {
       this._selectedEntries.forEach(selectedEntry => {
         const selectedEntryIndex = this._entries.indexOf(selectedEntry);
