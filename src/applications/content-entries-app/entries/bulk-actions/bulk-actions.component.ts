@@ -25,6 +25,7 @@ import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-cr
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
+import { AppPermissionsService } from '@kaltura-ng/mc-shared/app-permissions';
 
 @Component({
   selector: 'kBulkActions',
@@ -73,7 +74,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkDownloadService: BulkDownloadService,
     private _bulkDeleteService: BulkDeleteService,
     private _appEvents: AppEventsService,
-    private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+    private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+              private _permissionsService: AppPermissionsService) {
 
   }
 
@@ -291,26 +293,79 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   getBulkActionItems(): MenuItem[] {
-    return [
-      { label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.downloadEntries() } },
-      { label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.openBulkActionWindow('changeOwner', 500, 280) } },
-      {
-        label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
-        { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this._addSelectedEntriesToNewCategory(); } },
-        { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.performBulkAction('addToNewPlaylist') } }]
-      },
-      {
-        label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
-        { label: this._appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.openBulkActionWindow('addToCategories', 560, 586) } },
-        { label: this._appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.openBulkActionWindow('removeFromCategories', 500, 500) } }]
-      },
-      {
-        label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
-        { label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.openBulkActionWindow('addTags', 500, 500) } },
-        { label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.openBulkActionWindow('removeTags', 500, 500) } }]
-      },
-      { label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.openBulkActionWindow('setAccessControl', 500, 550) } },
-      { label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.openBulkActionWindow('setScheduling', 500, 500) } }
-    ];
+      let result: MenuItem[] = [
+          {
+              label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => {
+              this.downloadEntries()
+          }
+          },
+          {
+              label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => {
+              this.openBulkActionWindow('changeOwner', 500, 280)
+          }
+          },
+          {
+              label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
+              {
+                  label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'),
+                  command: (event) => {
+                      this._addSelectedEntriesToNewCategory();
+                  }
+              },
+              {
+                  label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'),
+                  command: (event) => {
+                      this.performBulkAction('addToNewPlaylist')
+                  }
+              }]
+          },
+          {
+              label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
+              {
+                  label: this._appLocalization.get('applications.content.bulkActions.addToCategories'),
+                  command: (event) => {
+                      this.openBulkActionWindow('addToCategories', 560, 586)
+                  }
+              },
+              {
+                  label: this._appLocalization.get('applications.content.bulkActions.removeFromCategories'),
+                  command: (event) => {
+                      this.openBulkActionWindow('removeFromCategories', 500, 500)
+                  }
+              }]
+          },
+          {
+              label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
+              {
+                  label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => {
+                  this.openBulkActionWindow('addTags', 500, 500)
+              }
+              },
+              {
+                  label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => {
+                  this.openBulkActionWindow('removeTags', 500, 500)
+              }
+              }]
+          },
+          {
+              id: 'setAccessControl',
+              label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'),
+              command: (event) => {
+                  this.openBulkActionWindow('setAccessControl', 500, 550)
+              }
+          },
+          {
+              label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => {
+              this.openBulkActionWindow('setScheduling', 500, 500)
+          }
+          }
+      ];
+
+      if (!this._permissionsService.hasPermission('CONTENT_MANAGE_ACCESS_CONTROL')) {
+          result.splice(
+              result.findIndex(item => item.id === 'setAccessControl'),
+              1);
+      }
+      return result;
   }
 }
