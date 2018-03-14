@@ -297,7 +297,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           {
               label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => {
               this.downloadEntries()
-          }
+          },
+              disabled: !this._permissionsService.hasPermission('CONTENT_MANAGE_DOWNLOAD')
           },
           {
               label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => {
