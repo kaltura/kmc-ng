@@ -1,11 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { EntriesStore, EntriesStorePaginationCacheToken } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 
 @Component({
   selector: 'k-linked-entries-add-entries-popup',
   templateUrl: './linked-entries-add-entries.component.html',
-  styleUrls: ['./linked-entries-add-entries.component.scss']
+  styleUrls: ['./linked-entries-add-entries.component.scss'],
+  providers: [
+    EntriesStore,
+    { provide: EntriesStorePaginationCacheToken, useValue: 'linked-entries-selector' }
+  ]
 })
-export class LinkedEntriesAddEntriesComponent {
+export class LinkedEntriesAddEntriesComponent implements OnInit {
+  @Input() parentPopup: PopupWidgetComponent;
+  @Input() selectedEntries: KalturaMediaEntry[];
+  @Input() allowMultiple: boolean;
 
+  @Output() addEntries = new EventEmitter<KalturaMediaEntry[]>();
 
+  public _title: string;
+  public _columns: EntriesTableColumns = {
+    thumbnailUrl: { width: '100px' },
+    id: { sortable: true },
+    name: { sortable: true },
+    mediaType: { sortable: true, width: '80px', align: 'center' },
+    plays: { sortable: true, width: '76px' },
+    duration: { sortable: true, width: '76px' }
+  };
+
+  constructor(private _appLocalization: AppLocalization) {
+
+  }
+
+  ngOnInit() {
+    this._title = this.allowMultiple
+      ? this._appLocalization.get('applications.content.entryDetails.metadata.addEntries')
+      : this._appLocalization.get('applications.content.entryDetails.metadata.addEntry');
+  }
+
+  public _addEntries(): void {
+    this.addEntries.emit(this.selectedEntries);
+    this.parentPopup.close();
+  }
 }

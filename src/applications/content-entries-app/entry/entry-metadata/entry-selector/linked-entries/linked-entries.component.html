@@ -1,4 +1,4 @@
-<div [formGroup]="form">
+<div class="kLinkedEntriesList" [formGroup]="form">
   <k-area-blocker [showLoader]="_showLoader" [message]="_blockerMessage">
 
     <!-- Entries table -->
@@ -25,7 +25,8 @@
 
         <button *ngIf="!_selectedEntries?.length"
                 pButton class="kButtonDefault kAddEntriesBtn"
-                [label]="_addBtnTitle"></button>
+                [label]="_addBtnTitle"
+                (click)="addEntries.open()"></button>
       </div>
       <k-linked-entries-table [entries]="_entries"
                               [allowMultiple]="control?.allowMultipleEntries"
@@ -34,3 +35,12 @@
     </div>
   </k-area-blocker>
 </div>
+
+<kPopupWidget #addEntries [popupWidth]="995" [slider]="true">
+  <ng-template>
+    <k-linked-entries-add-entries-popup [parentPopup]="addEntries"
+                                        [allowMultiple]="control?.allowMultipleEntries"
+                                        [selectedEntries]="_entries"
+                                        (addEntries)="_entries = $event"></k-linked-entries-add-entries-popup>
+  </ng-template>
+</kPopupWidget>
