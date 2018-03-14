@@ -26,7 +26,7 @@
         <button *ngIf="!_selectedEntries?.length"
                 pButton class="kButtonDefault kAddEntriesBtn"
                 [label]="_addBtnTitle"
-                (click)="addEntries.open()"></button>
+                (click)="_openEntriesSelector()"></button>
       </div>
       <k-linked-entries-table [entries]="_entries"
                               [allowMultiple]="control?.allowMultipleEntries"
@@ -41,6 +41,6 @@
     <k-linked-entries-add-entries-popup [parentPopup]="addEntries"
                                         [allowMultiple]="control?.allowMultipleEntries"
                                         [selectedEntries]="_entries"
-                                        (addEntries)="_entries = $event"></k-linked-entries-add-entries-popup>
+                                        (addEntries)="_addEntries($event)"></k-linked-entries-add-entries-popup>
   </ng-template>
 </kPopupWidget>

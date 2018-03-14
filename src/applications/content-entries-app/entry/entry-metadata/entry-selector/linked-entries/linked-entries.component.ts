@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
@@ -8,6 +8,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { LinkedEntriesControl } from 'app-shared/kmc-shared/dynamic-metadata-form/linked-entries-control';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'k-linked-entries',
@@ -24,12 +25,14 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   @Input() form: FormGroup;
   @Input() profileName: string;
 
+  @ViewChild('addEntries') entriesSelector: PopupWidgetComponent;
+
   private _innerValue: string[] = [];
 
   public _blockerMessage: AreaBlockerMessage;
   public _showLoader = false;
   public _selectedEntries: KalturaMediaEntry[] = [];
-  public _entries = [];
+  public _entries: Partial<KalturaMediaEntry>[] = [];
   public _isReady = false;
   public _addBtnTitle: string;
 
@@ -175,5 +178,21 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
 
   public _clearSelection(): void {
     this._selectedEntries = [];
+  }
+
+  public _addEntries(entries: KalturaMediaEntry[]): void {
+    this._entries = entries;
+    this._propogateChanges();
+  }
+
+  public _openEntriesSelector(): void {
+    if (!this.control.allowMultipleEntries && this._entries.length > 0) {
+      this._browserService.confirm({
+        message: this._appLocalization.get('applications.content.entryDetails.metadata.replaceLinkedEntry'),
+        accept: () => this.entriesSelector.open()
+      });
+    } else {
+      this.entriesSelector.open();
+    }
   }
 }
