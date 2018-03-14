@@ -158,7 +158,7 @@ export class AppAuthentication {
                     new KalturaRequestOptions({})
                     .setDependency(['ks', 0])
                 )
-                .setDependency(['userRoleId', 0, 'roleIds']),
+                .setDependency(['userRoleId', 1, 'roleIds']),
             new PermissionListAction({
                 filter: new KalturaPermissionFilter({
                     statusEqual: KalturaPermissionStatus.active,
