@@ -22,13 +22,10 @@
     </div>
     <div class="kAddEntitlement">
             <button type="button" class="kButtonDefault" (click)="addNewEntitlement.open()" pButton
-                    *kAuthVisibileIfAll="['FEATURE_ENTITLEMENT']"
-                    [kAuthEnableIfAll]="['INTEGRATION_UPDATE_SETTINGS']"
                   label="{{'applications.settings.integrationSettings.entitlement.addEntitlement.buttonText' | translate}}"></button>
     </div>
     <div class="kEntitlementsHolder">
       <kEntitlementsTable
-        *kAuthVisibileIfAll="['FEATURE_ENTITLEMENT']"
         [entitlements]="_entitlements"
         (onActionSelected)="_onActionSelected($event)">
       </kEntitlementsTable>

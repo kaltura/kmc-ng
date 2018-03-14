@@ -4,7 +4,6 @@
       <kSticky [stickyClass]="'kStickyClass'" stickyId="profilesFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kAccessControlProfileTableFilters kContent">
             <button pButton
-                    *kAuthVisibileIfAll="['ACCESS_CONTROL_ADD']"
                     class="kButtonBranded kAddProfileBtn"
                     [class.kHidden]="_selectedProfiles.length"
                     [label]="'applications.settings.accessControl.addProfile' | translate"

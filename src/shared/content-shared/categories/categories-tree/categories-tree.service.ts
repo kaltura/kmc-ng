@@ -18,7 +18,7 @@ export class CategoriesTreeService {
 
   private _inLazyMode(): Observable<boolean>
   {
-      return Observable.of(this._permissions.hasPermission('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD'));
+      return Observable.of(false);
   }
 
   public getCategories(): Observable<{ categories: CategoriesTreeNode[] }> {

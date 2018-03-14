@@ -361,11 +361,6 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           }
       ];
 
-      if (!this._permissionsService.hasPermission('CONTENT_MANAGE_ACCESS_CONTROL')) {
-          result.splice(
-              result.findIndex(item => item.id === 'setAccessControl'),
-              1);
-      }
       return result;
   }
 }
