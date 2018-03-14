@@ -11,13 +11,15 @@ import {PreviewAndEmbedModule} from '../applications/preview-and-embed/preview-a
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
+import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
 
 import {
-  AppBootstrap,
-  AuthModule,
-  BrowserService,
-  KMCShellModule,
-  NewEntryUploadModule
+    AppBootstrap,
+    APP_AUTH_EVENTS,
+    AuthModule,
+    BrowserService,
+    KMCShellModule,
+    NewEntryUploadModule
 } from 'app-shared/kmc-shell';
 import {
   AppStorage,
@@ -39,8 +41,6 @@ import {
 import {AppComponent} from './app.component';
 import {routing} from './app.routes';
 
-
-import {AppMenuService} from './services/app-menu.service';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {AppMenuComponent} from './components/app-menu/app-menu.component';
 import {ErrorComponent} from './components/error/error.component';
@@ -81,6 +81,7 @@ import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
+import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 
@@ -138,6 +139,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
     AccessControlProfileModule.forRoot(),
+    AppPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory)
   ],
@@ -167,7 +169,9 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       {
           provide: KalturaLoggerName, useValue: 'kmc'
       },
-    AppMenuService,
+      {
+          provide: APP_AUTH_EVENTS, useClass: KMCAuthenticationEvents
+      },
     { provide: AppStorage, useExisting: BrowserService },
     ConfirmationService
   ]
@@ -178,15 +182,16 @@ export class AppModule {
                 uploadManagement: UploadManagement) {
 
         if (globalConfig.client.production) {
-            kalturaLogger.setOptions({level: 'Warn'})
+            kalturaLogger.setOptions({level: 'Warn'});
         } else {
-            kalturaLogger.setOptions({level: 'All'})
+            kalturaLogger.setOptions({level: 'All'});
         }
 
         // TODO [kmcng] move to a relevant location
         uploadManagement.setMaxUploadRequests(globalConfig.kalturaServer.maxConcurrentUploads);
 
         appBootstrap.bootstrap();
+
 
     }
 }
