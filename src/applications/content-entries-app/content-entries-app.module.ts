@@ -47,6 +47,7 @@ import { ContentEntriesAppService } from './content-entries-app.service';
 import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
 import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
 
+
 @NgModule({
   imports: [
     AccordionModule,
