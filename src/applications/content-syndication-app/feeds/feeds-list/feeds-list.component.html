@@ -4,9 +4,11 @@
       <kSticky stickyId="feedsListFilters" [scrollOffset]="80"
                [sticksTo]="'header'">
         <div class="kFeedsTableFilters">
-          <button pButton type="button" label="{{'applications.content.syndication.addFeed' | translate}}"
-                  class="kButtonBranded kAddFeedBtn" [class.kHidden]="_selectedFeeds?.length"
-                  [disabled]="_selectedFeeds?.length" (click)="_addNewFeed()"></button>
+          <button pButton type="button" class="kButtonBranded kAddFeedBtn"
+                  [label]="'applications.content.syndication.addFeed' | translate"
+                  [class.kHidden]="_selectedFeeds?.length"
+                  [kEnableIfAllPermitted]="['SYNDICATION_ADD']"
+                  (click)="_addNewFeed()"></button>
           <span class="kSelectedFeedsNum" *ngIf="_feedsTotalCount">
              {{'applications.content.syndication.feeds' | translate: {'0': _feedsTotalCount} }}
           </span>
