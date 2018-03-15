@@ -13,6 +13,7 @@ import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { globalConfig } from 'config/global';
+import { AppPermissionsService } from '@kaltura-ng/mc-shared/app-permissions/app-permissions.service';
 
 @Component({
   selector: 'kCategoriesTable',
@@ -58,7 +59,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private appLocalization: AppLocalization,
-              private cdRef: ChangeDetectorRef) {
+              private cdRef: ChangeDetectorRef,
+              private _permissionsService: AppPermissionsService) {
   }
 
   ngOnInit() {
@@ -95,22 +97,37 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   buildMenu(category: KalturaCategory): void {
     this._items = [
       {
+        id: 'edit',
         label: this.appLocalization.get('applications.content.categories.edit'),
         command: () => this.onActionSelected('edit', category)
       },
       {
+        id: 'delete',
         label: this.appLocalization.get('applications.content.categories.delete'),
         command: () => this.onActionSelected('delete', category)
       },
       {
+        id: 'viewEntries',
         label: this.appLocalization.get('applications.content.categories.viewEntries'),
         command: () => this.onActionSelected('viewEntries', category)
       },
       {
+        id: 'moveCategory',
         label: this.appLocalization.get('applications.content.categories.moveCategory'),
         command: () => this.onActionSelected('moveCategory', category)
       }
     ];
+
+    if (!this._permissionsService.hasPermission('CONTENT_MANAGE_EDIT_CATEGORIES')) {
+      this._items.splice(
+        this._items.findIndex(item => item.id === 'edit'),
+        1
+      );
+      this._items.splice(
+        this._items.findIndex(item => item.id === 'delete'),
+        1
+      );
+    }
   }
 
   _onSelectionChange(event) {

@@ -1,7 +1,10 @@
 <div class="kBulkActions">
-  <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deleteCategories()"></button>
+  <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+          [kEnableIfAllPermitted]="['CONTENT_MANAGE_EDIT_CATEGORIES']"
+          (click)="deleteCategories()"></button>
   <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.categories.bulkActions' | translate}}"
-    (click)="menu.toggle($event)"></button>
+          [kEnableIfAllPermitted]="['CONTENT_MANAGE_EDIT_CATEGORIES']"
+          (click)="menu.toggle($event)"></button>
 </div>
 
 <!--since we append the menu to the body, any styling modifications are currently not available-->
