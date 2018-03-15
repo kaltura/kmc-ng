@@ -98,12 +98,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
       this._items.shift();
     }
 
-    if (!this._permissionsService.hasPermission('PLAYLIST_DELETE')) {
-      this._items.splice(
-        this._items.findIndex(item => item.id === 'delete'),
-        1);
-    }
-
+    this._permissionsService.filterList(<{id: string}[]>this._items, { 'delete': 'PLAYLIST_DELETE' });
   }
 
 
