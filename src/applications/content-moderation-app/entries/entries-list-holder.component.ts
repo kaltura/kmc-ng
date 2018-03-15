@@ -14,6 +14,7 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-t
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { AppPermissionsService } from '@kaltura-ng/mc-shared/app-permissions/app-permissions.service';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
@@ -71,7 +72,11 @@ export class EntriesListHolderComponent implements OnDestroy {
   constructor(private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _entriesStore: EntriesStore,
+              private _permissionsService: AppPermissionsService,
               private _bulkService: BulkService) {
+    if (!this._permissionsService.hasPermission('CONTENT_MODERATE_APPROVE_REJECT')) {
+      this._rowActions = [];
+    }
   }
 
   ngOnDestroy() {
