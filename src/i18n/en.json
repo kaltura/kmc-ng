@@ -1957,6 +1957,7 @@
         "description": "Description",
         "save": "Save",
         "add": "Add",
+        "cancel": "Cancel",
         "errors": {
           "required": "This field is required"
         }

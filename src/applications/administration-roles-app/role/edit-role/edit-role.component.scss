@@ -1,85 +1,100 @@
 @import 'app-theme/_variables.scss';
 
-.kEditWin {
+.kEditRole {
   width: 100%;
 
-  .kHeader {
-    height: 78px;
-    width: 100%;
-    text-align: center;
-    padding-top: 24px;
-    box-sizing: border-box;
-    border-bottom: 1px solid $kGrayscale4;
-    .kTitle {
-      color: #333333;
-      font-size: 24px;
-      font-weight: 700;
-    }
-  }
-
-  .kContainer {
-    margin: 12px;
-    height: 232px;
-  }
-
-  .kFooter {
-    height: 66px;
-    border-top: 1px solid $kGrayscale4;
+  .kFloater {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    button {
-      height: 34px;
-    }
-  }
+    flex-direction: column;
 
-  .kRow {
-
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    padding-top: 20px;
-
-    .kLabel {
-      width: 179px;
-      -webkit-box-flex: 0;
-      -ms-flex: 0 0 auto;
+    .kHeader {
+      height: 78px;
+      width: 100%;
+      padding: 0 24px;
+      box-sizing: border-box;
+      border-bottom: 1px solid $kGrayscale4;
       flex: 0 0 auto;
-      height: 18px;
-      color: $kGrayscale1;
-      font-size: 15px;
-      line-height: 18px;
-    }
+      display: flex;
+      align-items: center;
 
-    .kRequired {
-      width: 20px;
-      font-size: 24px;
-      color: $kGrayscale3;
-      &.kHasError {
-        color: $kDandger;
-        font-weight: bold;
-      }
-    }
-    .kRequired, .kLabel {
-      padding: 8px 4px;
-      height: 18px;
-    }
-    .kControl {
-      height: 34px;
-      width: 300px;
-      &.kHasError {
-        border: 1px solid $kDandger;
-        background: initial;
+      .kTitle {
+        color: #333333;
+        font-size: 15px;
+        font-weight: 700;
       }
 
-      &.threeRows {
-        height: 76px;
+      .kButtons {
+        display: flex;
+        margin-left: auto;
+
+        .kSaveBtn {
+          width: 100px;
+        }
+
+        .kCancel {
+          font-size: 15px;
+          color: #333333;
+          align-self: center;
+          margin-right: 24px;
+        }
+
+        .kButtonDefault {
+          font-weight: normal;
+        }
       }
     }
 
-    .error {
-      color: $kDandger;
-      padding-top: 8px;
+    .kContainer {
+      flex: 1 1 auto;
+
+      .kRoleForm {
+        padding: 0 28px;
+      }
+
+      .kRow {
+        display: flex;
+        padding-top: 24px;
+
+        .kLabel {
+          width: 200px;
+          flex: 0 0 auto;
+          height: 18px;
+          color: $kGrayscale1;
+          font-size: 15px;
+          line-height: 18px;
+        }
+
+        .kRequired {
+          width: 20px;
+          font-size: 24px;
+          color: $kGrayscale3;
+          &.kHasError {
+            color: $kDandger;
+            font-weight: bold;
+          }
+        }
+        .kRequired, .kLabel {
+          padding: 8px 4px;
+          height: 18px;
+        }
+        .kControl {
+          height: 34px;
+          width: 500px;
+          &.kHasError {
+            border: 1px solid $kDandger;
+            background: initial;
+          }
+        }
+
+        textarea.kControl {
+          height: 76px;
+        }
+
+        .kError {
+          color: $kDandger;
+          padding-top: 8px;
+        }
+      }
     }
   }
 }

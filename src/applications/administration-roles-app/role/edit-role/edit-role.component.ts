@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -18,35 +18,54 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   @Input() role: KalturaUserRole;
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() duplicatedRole: boolean;
-  @Output() onRoleSaved = new EventEmitter<void>();
+  @Output() roleSaved = new EventEmitter<void>();
 
   public _editRoleForm: FormGroup;
-  public _editMode: 'edit' | 'new' = 'edit';
-  public _isBusy = false;
+  public _nameField: AbstractControl;
+  public _descriptionField: AbstractControl;
+  public _title: string;
+  public _actionBtnLabel: string;
   public _blockerMessage: AreaBlockerMessage = null;
 
   constructor(private _fb: FormBuilder,
               private _roleService: RoleService,
               private _appLocalization: AppLocalization) {
+    this._buildForm();
   }
 
   ngOnInit() {
-    if (!this.role) {
-      this._editMode = 'new';
-    }
-    this._createForm();
+    this._prepare();
   }
 
   ngOnDestroy() {
 
   }
 
-  // Create empty structured form on loading
-  private _createForm(): void {
+  private _prepare(): void {
+    this._title = this.role
+      ? this._appLocalization.get('applications.administration.role.titleEdit')
+      : this._appLocalization.get('applications.administration.role.titleAdd');
+
+    this._actionBtnLabel = this.role
+      ? this._appLocalization.get('applications.administration.role.save')
+      : this._appLocalization.get('applications.administration.role.add');
+
+    if (this.role) {
+      this._editRoleForm.setValue({
+        name: this.role.name,
+        description: this.role.description
+      }, { emitEvent: false });
+    }
+  }
+
+  private _buildForm(): void {
     this._editRoleForm = this._fb.group({
-      name: [this.role ? this.role.name : '', Validators.required],
-      description: [this.role ? this.role.description : '', Validators.required],
+      name: ['', Validators.required],
+      description: ['', Validators.required],
     });
+
+    this._nameField = this._editRoleForm.controls['name'];
+    this._descriptionField = this._editRoleForm.controls['description'];
   }
 
   private _markFormFieldsAsTouched() {
@@ -58,7 +77,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     return <Observer<void>>{
       next: () => {
         this.parentPopupWidget.close();
-        this.onRoleSaved.emit();
+        this.roleSaved.emit();
       },
       error: (error) => {
         this._blockerMessage = new AreaBlockerMessage(
@@ -82,15 +101,10 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       complete: () => {
         // empty by design
       }
-    }
+    };
   }
 
   public _updateRole(): void {
-    if (!this._editRoleForm.valid) {
-      this._markFormFieldsAsTouched();
-      return;
-    }
-
     // no need to reload the table since the duplicated role remained intact
     if (this.duplicatedRole && this._editRoleForm.pristine) {
       this.parentPopupWidget.close();
@@ -113,10 +127,6 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
 
   public _addRole(): void {
-    if (!this._editRoleForm.valid) {
-      this._markFormFieldsAsTouched();
-      return;
-    }
     this._blockerMessage = null;
 
     const retryFn = () => this._addRole();
@@ -127,5 +137,18 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(this._getObserver(retryFn));
+  }
+
+  public _performAction(): void {
+    if (!this._editRoleForm.valid) {
+      this._markFormFieldsAsTouched();
+      return;
+    }
+
+    if (this.role) {
+      this._updateRole();
+    } else {
+      this._addRole();
+    }
   }
 }

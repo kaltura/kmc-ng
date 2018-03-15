@@ -1,62 +1,48 @@
-<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
-  <div class="kEditWin">
-    <form [formGroup]="_editRoleForm" novalidate>
+<k-area-blocker [message]="_blockerMessage">
+  <div class="kEditRole">
+    <div class="kFloater">
       <div class="kHeader">
-        <span class="kTitle">{{ (_editMode === 'new' ?  'applications.administration.role.titleAdd' : 'applications.administration.role.titleEdit') | translate}}</span>
+        <span class="kTitle">{{_title}}</span>
+        <div class="kButtons">
+          <a class="kCancel" (click)="parentPopupWidget.close()">
+            {{'applications.administration.role.cancel' | translate}}
+          </a>
+          <button pButton class="kButtonBranded kSaveBtn"
+                  [label]="_actionBtnLabel"
+                  [disabled]="_editRoleForm.pristine && !duplicatedRole"
+                  (click)="_performAction()"></button>
+        </div>
       </div>
-
       <div class="kContainer">
-
-        <div class="kRow">
-          <span class="kLabel">{{'applications.administration.role.name' | translate}}</span>
-          <div class="kRequired" [ngClass]="{'kHasError':!_editRoleForm.controls['name'].valid &&
-                   _editRoleForm.controls['name'].touched}">*
-          </div>
-          <div>
-            <input class="kControl" formControlName="name" pInputText
-                   [ngClass]="{'kHasError':!_editRoleForm.controls['name'].valid &&
-                   _editRoleForm.controls['name'].touched}">
-            <div *ngIf="_editRoleForm.controls['name'].touched &&
-                 _editRoleForm.controls['name'].hasError('required')"
-                 class="error">
-              {{'applications.administration.role.errors.required' | translate}}
+        <form class="kRoleForm" [formGroup]="_editRoleForm" novalidate>
+          <div class="kRow">
+            <span class="kLabel">{{'applications.administration.role.name' | translate}}</span>
+            <div class="kRequired" [class.kHasError]="_nameField.invalid && _nameField.touched">*</div>
+            <div>
+              <input class="kControl" pInputText
+                     [formControl]="_nameField"
+                     [class.kHasError]="_nameField.invalid && _nameField.touched">
+              <div *ngIf="_nameField.invalid && _nameField.touched" class="kError">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
             </div>
           </div>
-        </div>
 
-
-        <div class="kRow">
-          <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
-          <div class="kRequired" [ngClass]="{'kHasError':!_editRoleForm.controls['description'].valid &&
-                   _editRoleForm.controls['description'].touched}">*
-          </div>
-          <div>
-              <textarea class="kControl threeRows" formControlName="description" pInputTextarea
-                        [ngClass]="{'kHasError':!_editRoleForm.controls['description'].valid && _editRoleForm.controls['description'].touched}">
-             </textArea>
-            <div *ngIf="_editRoleForm.controls['description'].touched &&
-                   _editRoleForm.controls['description'].hasError('required')"
-                 class="error">
-              {{'applications.administration.role.errors.required' | translate}}
+          <div class="kRow">
+            <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
+            <div class="kRequired" [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">*</div>
+            <div>
+              <textarea class="kControl" pInputTextarea
+                        [formControl]="_descriptionField"
+                        [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">
+              </textArea>
+              <div *ngIf="_descriptionField.invalid && _descriptionField.touched" class="kError">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
-
-      <div class="kFooter">
-        <button *ngIf="role"
-                pButton class="kButtonBranded kSaveBtn"
-                label="{{'applications.administration.role.save' | translate}}"
-                (click)="_updateRole()"
-                [disabled]="_editRoleForm.pristine && !duplicatedRole"></button>
-
-        <button *ngIf="!role"
-                pButton class="kButtonBranded kSaveBtn"
-                label="Add"
-                (click)="_addRole()"
-                [disabled]="_editRoleForm.pristine"></button>
-      </div>
-    </form>
+    </div>
   </div>
-
 </k-area-blocker>

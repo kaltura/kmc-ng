@@ -25,9 +25,9 @@
       </div>
     </div>
   </div>
-  <kPopupWidget #editPopup [popupWidth]="600" [popupHeight]="400" [modal]="true" [preventPageScroll]="true">
+  <kPopupWidget #editPopup [popupWidth]="995" [slider]="true">
     <ng-template>
-      <kEditRole (onRoleSaved)="_reload()" [role]="_currentEditRole" [parentPopupWidget]="editPopup"
+      <kEditRole (roleSaved)="_reload()" [role]="_currentEditRole" [parentPopupWidget]="editPopup"
                  [duplicatedRole]="_currentEditRoleIsDuplicated"></kEditRole>
     </ng-template>
   </kPopupWidget>
