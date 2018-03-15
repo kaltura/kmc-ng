@@ -118,16 +118,13 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       }
     ];
 
-    if (!this._permissionsService.hasPermission('CONTENT_MANAGE_EDIT_CATEGORIES')) {
-      this._items.splice(
-        this._items.findIndex(item => item.id === 'edit'),
-        1
-      );
-      this._items.splice(
-        this._items.findIndex(item => item.id === 'delete'),
-        1
-      );
-    }
+    this._permissionsService.filterList(
+      <{ id: string }[]>this._items,
+      {
+        'edit': 'CONTENT_MANAGE_EDIT_CATEGORIES',
+        'delete': 'CONTENT_MANAGE_EDIT_CATEGORIES'
+      }
+    );
   }
 
   _onSelectionChange(event) {
