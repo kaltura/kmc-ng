@@ -316,7 +316,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'),
                   command: (event) => {
                       this.performBulkAction('addToNewPlaylist')
-                  }
+                  },
+                disabled: !this._permissionsService.hasPermission('PLAYLIST_ADD')
               }]
           },
           {
