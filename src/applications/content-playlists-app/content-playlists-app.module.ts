@@ -26,6 +26,7 @@ import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.servic
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui/slider/slider.module';
+import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
 
 @NgModule({
     imports: [
@@ -57,7 +58,8 @@ import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui/slider/slider.modul
     FiltersModule,
     DropdownModule,
     SliderModule,
-      TableModule
+      TableModule,
+      AppPermissionsModule
   ],declarations: [
       ContentPlaylistsComponent,
       PlaylistsComponentsList,
