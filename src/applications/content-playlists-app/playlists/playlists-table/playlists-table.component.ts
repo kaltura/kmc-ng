@@ -4,6 +4,7 @@ import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { globalConfig } from 'config/global';
+import { AppPermissionsService } from '@kaltura-ng/mc-shared/app-permissions/app-permissions.service';
 
 @Component({
   selector: 'kPlaylistsTable',
@@ -43,6 +44,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: AppPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -77,14 +79,17 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   buildMenu(playlist: KalturaPlaylist): void {
     this._items = [
       {
+        id: 'previewAndEmbed',
         label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
         command: () => this.onActionSelected('preview', playlist)
       },
       {
+        id: 'delete',
         label: this._appLocalization.get('applications.content.table.delete'),
         command: () => this.onActionSelected('delete', playlist)
       },
       {
+        id: 'view',
         label: this._appLocalization.get('applications.content.table.view'),
         command: () => this.onActionSelected('view', playlist)
       }
@@ -92,6 +97,13 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
     if (playlist.status !== KalturaEntryStatus.ready) {
       this._items.shift();
     }
+
+    if (!this._permissionsService.hasPermission('PLAYLIST_DELETE')) {
+      this._items.splice(
+        this._items.findIndex(item => item.id === 'delete'),
+        1);
+    }
+
   }
 
 
