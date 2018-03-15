@@ -20,7 +20,7 @@
   }
 
   .kPlaylistRulesTableDuration {
-    margin-right: 14px;
+    margin-right: 20px;
     margin-left: auto;
   }
 
@@ -29,8 +29,12 @@
     display: flex;
     align-items: center;
 
-    .kBulkDeleteBtn {
-      padding: 0 8px;
+    .kBulkDeleteBtn{
+      width: 44px;
+      font-size: 18px;
+      /deep/ .fa {
+        margin-left: -0.5em;
+      }
     }
   }
 
@@ -40,15 +44,15 @@
   }
 
   .kSelectedRulesNum {
-    margin: 0 5px 0 20px;
+    margin: 0 0px 0 20px;
   }
 
   .kSelectedRulesLabel {
+    padding-left:5px;
     font-weight: bold;
   }
 
   .kBulkCancel {
-    margin-left: 20px;
     color: #333333;
   }
 
