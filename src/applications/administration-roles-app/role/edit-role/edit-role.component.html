@@ -1,7 +1,7 @@
 <k-area-blocker [message]="_blockerMessage">
   <div class="kEditRole">
     <div class="kFloater">
-      <div class="kHeader">
+      <div class="kHeader" kStickyHeader [stickyId]="'editRoleHeader'">
         <span class="kTitle">{{_title}}</span>
         <div class="kButtons">
           <a class="kCancel" (click)="parentPopupWidget.close()">
@@ -42,6 +42,7 @@
             </div>
           </div>
         </form>
+        <kRolePermissionsTable [permissions]="[]"></kRolePermissionsTable>
       </div>
     </div>
   </div>

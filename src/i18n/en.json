@@ -1960,6 +1960,13 @@
         "cancel": "Cancel",
         "errors": {
           "required": "This field is required"
+        },
+        "permissionsTable": {
+          "featureSet": "Feature Set",
+          "permissions": "Permissions",
+          "viewOnly": "View Only",
+          "allPermissions": "All Permissions",
+          "custom": "Custom ({{0}} Selected)"
         }
       },
       "paginator": {

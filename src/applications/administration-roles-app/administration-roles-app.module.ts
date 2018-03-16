@@ -11,7 +11,7 @@ import {
   CheckboxModule,
   ConfirmDialogModule,
   DataTableModule,
-  DropdownModule,
+  DropdownModule, InputSwitchModule,
   InputTextareaModule,
   InputTextModule,
   MenuModule,
@@ -39,6 +39,8 @@ import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
 import { RolesComponentsList } from './roles/roles-components-list';
 import { EditRoleComponent } from './role/edit-role/edit-role.component';
+import { PermissionsTableComponent } from './role/permissions-table/permissions-table.component';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -75,12 +77,15 @@ import { EditRoleComponent } from './role/edit-role/edit-role.component';
     TieredMenuModule,
     TooltipModule,
     TreeModule,
-    StickyModule
+    StickyModule,
+    TableModule,
+    InputSwitchModule
   ],
   declarations: [
     AdministrationRolesComponent,
     RolesComponentsList,
-    EditRoleComponent
+    EditRoleComponent,
+    PermissionsTableComponent
   ],
   exports: [],
   providers: [],
