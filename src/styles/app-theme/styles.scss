@@ -237,3 +237,29 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
     margin-right: 12px;
   }
 }
+
+.kPermissionsListPanel {
+  width: 320px;
+
+  .ui-widget-header {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .ui-multiselect-item {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+  }
+
+  .ui-chkbox {
+    margin-right: 15px;
+  }
+
+  .kPermissionItem {
+    font-size: 15px;
+  }
+}

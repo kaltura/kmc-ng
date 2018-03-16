@@ -1966,7 +1966,9 @@
           "permissions": "Permissions",
           "viewOnly": "View Only",
           "allPermissions": "All Permissions",
-          "custom": "Custom ({{0}} Selected)"
+          "custom": "Custom ({0} Selected)",
+          "disabled": "Disabled",
+          "selectPermissions": "Select Permissions"
         }
       },
       "paginator": {

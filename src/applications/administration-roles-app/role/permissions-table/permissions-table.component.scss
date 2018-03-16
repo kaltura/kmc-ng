@@ -29,6 +29,20 @@
     border: 1px solid $kGrayscale6;
     border-left: none;
     border-right: none;
-    padding: 10px 0;
+    padding: 10px auto;
+  }
+
+  .kPermissionsList {
+    .ui-multiselect {
+      width: 320px;
+    }
+
+    .ui-multiselect-label {
+      padding: .25em .5em;
+    }
+
+    .ui-multiselect-trigger {
+      padding: .25em !important;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { APP_PERMISSIONS, AppPermission } from './permissions-list';
 
 @Component({
@@ -7,9 +7,24 @@ import { APP_PERMISSIONS, AppPermission } from './permissions-list';
   styleUrls: ['./permissions-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PermissionsTableComponent {
+export class PermissionsTableComponent implements OnInit {
   @Input() permissions: any[];
 
-  public _appPermissions: AppPermission[] = APP_PERMISSIONS;
+  public _appPermissionsOptions: AppPermission[] = APP_PERMISSIONS;
+  public _appPermissions: any[] = [];
+
+  ngOnInit() {
+    this._appPermissions = this._appPermissionsOptions.map(permission => {
+      return Object.assign({}, permission, {
+        enabled: false,
+        formValue: null
+      });
+    });
+  }
+
+  public _togglePermission(event: any, permission: any): void {
+    permission.enabled = event.checked;
+    permission.formValue = permission.enabled && permission.items ? permission.items.map(({ value }) => value) : null;
+  }
 }
 

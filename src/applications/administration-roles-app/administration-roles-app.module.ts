@@ -15,7 +15,6 @@ import {
   InputTextareaModule,
   InputTextModule,
   MenuModule,
-  MultiSelectModule,
   PaginatorModule,
   RadioButtonModule,
   SharedModule,
@@ -41,6 +40,7 @@ import { RolesComponentsList } from './roles/roles-components-list';
 import { EditRoleComponent } from './role/edit-role/edit-role.component';
 import { PermissionsTableComponent } from './role/permissions-table/permissions-table.component';
 import { TableModule } from 'primeng/table';
+import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui/multi-select/multi-select.module';
 
 @NgModule({
   imports: [
