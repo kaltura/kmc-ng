@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AppAuthenticationEvents, AppUser } from 'app-shared/kmc-shell';
-import { appRoutePermissionsMapping } from 'app-shared/kmc-shared/app-permissions/app-route-permissions-mapping';
+import { appRoutePermissionsMapping } from 'app-shared/kmc-shared/kmc-permissions/app-route-permissions-mapping';
 import { kmcAppConfig, KMCAppMenuItem, KMCAppSubMenuItem } from './kmc-app-config';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { AppPermissionsService } from '@kaltura-ng/mc-shared';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import { KmcServerPolls } from 'app-shared/kmc-shared';
 import {KalturaClient} from 'kaltura-ngx-client';
 import * as Immutable from 'seamless-immutable';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions';
 
 @Injectable()
 export class KMCAuthenticationEvents implements AppAuthenticationEvents {
@@ -16,7 +17,7 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
     private _logger: KalturaLogger;
 
     constructor(private kalturaServerClient: KalturaClient,
-                private _permissions: AppPermissionsService,
+                private _permissions: KMCPermissionsService,
                 private _serverPolls: KmcServerPolls,
                 logger: KalturaLogger) {
         this._logger = logger.subLogger('KMCAuthenticationPostEvents');
@@ -34,7 +35,7 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
         });
 
         this._syncAppMenuConfigWithPermissions();
-        this._permissions.loadPermissions(Array.from(appUser.permissions));
+        this._permissions.loadPermissions(Array.from(appUser.permissions).map(permission => KMCPermissions[permission]));
         this._serverPolls.forcePolling();
         return Observable.of(undefined);
     }

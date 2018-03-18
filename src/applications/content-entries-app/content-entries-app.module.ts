@@ -46,7 +46,7 @@ import { EntriesModule } from 'app-shared/content-shared/entries/entries.module'
 import { ContentEntriesAppService } from './content-entries-app.service';
 import { CategoriesModule } from 'app-shared/content-shared/categories/categories.module';
 import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
-import { AppPermissionsModule } from '@kaltura-ng/mc-shared/app-permissions/app-permissions.module';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @NgModule({
@@ -90,7 +90,7 @@ import { AppPermissionsModule } from '@kaltura-ng/mc-shared/app-permissions/app-
     StickyModule,
     CopyToClipboardModule,
     OverlayPanelModule,
-    AppPermissionsModule
+      KMCPermissionsModule
   ],
   declarations: [
     ContentEntriesComponent,
