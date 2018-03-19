@@ -1,6 +1,5 @@
 <div class="kPermissionsTable">
-  <p-table dataKey="value"
-           [value]="_appPermissions">
+  <p-table [value]="_appPermissions">
     <ng-template pTemplate="header">
       <tr>
         <th [ngStyle]="{'width': '350px', 'padding-left': '28px'}">
@@ -20,8 +19,10 @@
 
         <td>
           <kMultiSelect *ngIf="permission.items"
+                        kMultiselectCloseOnScroll
                         class="kPermissionsList"
                         panelStyleClass="kPermissionsListPanel"
+                        menuItemDisplayStyle="flex"
                         [options]="permission.items"
                         [disabled]="!permission.enabled"
                         [showToggleAll]="true"
