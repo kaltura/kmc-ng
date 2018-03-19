@@ -10,6 +10,10 @@
       <div class="kRow">
         <span class="kLabel">
          <span class="kLabelText">{{'applications.content.categoryDetails.entitlements.privacyContentLabel.label' | translate}}</span>
+          <kInputHelper icon="kIconlife_donut"
+                        [title]="'applications.content.categoryDetails.entitlements.privacyContentLabel.label' | translate" class="kHelp">
+             <span>{{'applications.content.categoryDetails.entitlements.privacyContentLabel.help' | translate}}</span>
+          </kInputHelper>
         </span>
         <div class="kControl">
           {{_widgetService.data.privacyContexts}}
@@ -130,6 +134,10 @@
         <span
           class="kLabel">
           <span class="kLabelText">{{'applications.content.categoryDetails.entitlements.moderateContent.label' | translate}}</span>
+          <kInputHelper icon="kIconlife_donut"
+                        [title]="'applications.content.categoryDetails.entitlements.moderateContent.label' | translate" class="kHelp">
+             <span>{{'applications.content.categoryDetails.entitlements.moderateContent.help' | translate}}</span>
+          </kInputHelper>
         </span>
         <div class="kControl">
           <p-inputSwitch class="kInputSwitch" formControlName="moderateContent"></p-inputSwitch>

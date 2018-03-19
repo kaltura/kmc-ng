@@ -124,7 +124,8 @@ export class DropFoldersMonitorService implements OnDestroy {
         orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
         statusEqual: KalturaDropFolderStatus.enabled
       }),
-      acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
+    }).setRequestOptions({
+        acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
     });
 
     return this._kalturaClient.request(dropFolders)

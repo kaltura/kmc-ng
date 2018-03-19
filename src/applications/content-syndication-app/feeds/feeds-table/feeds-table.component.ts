@@ -13,6 +13,7 @@ import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { globalConfig } from 'config/global';
 
 @Component({
   selector: 'kFeedsTable',
@@ -67,6 +68,7 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _emptyMessage = '';
 
   public _items: MenuItem[];
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef) {
