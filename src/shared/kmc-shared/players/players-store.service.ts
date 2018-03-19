@@ -119,6 +119,8 @@ export class PlayersStore implements OnDestroy {
 
     const pager = new KalturaFilterPager({pageSize: 500, pageIndex});
 
-    return this._kalturaServerClient.request(new UiConfListAction({filter, pager, responseProfile}));
+    return this._kalturaServerClient.request(new UiConfListAction({filter, pager}).setRequestOptions({
+        responseProfile
+    }));
   }
 }

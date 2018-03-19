@@ -11,6 +11,7 @@
                  [class.noResults]="!_subcategories?.length"
                  (selectionChange)="_onSelectionChange($event)"
                  [rowTrackBy]="rowTrackBy"
+                 [defaultSortOrder]="_defaultSortOrder"
                  [(selection)]="selectedSubcategories">
       <p-column styleClass="selectionColumn"
                 selectionMode="multiple"></p-column>

@@ -51,6 +51,7 @@
           overflow: hidden;
           text-overflow: ellipsis;
           width: 190px;
+          font-weight: normal;
         }
       }
 
@@ -64,7 +65,7 @@
       padding: 20px 28px;
 
       .kAddFileButton {
-        width: 95px;
+        width: 110px;
         height: 34px;
         font-size: 14px;
         color: $kGrayscale1;
@@ -156,6 +157,9 @@
 
   .ui-dropdown-label {
     text-overflow: ellipsis;
+    font-weight: normal;
+    font-size: 15px;
+    color: $kGrayscale1;
   }
 
   .ui-dropdown.ui-widget {
@@ -189,3 +193,6 @@
   height: 280px;
 }
 
+button.kAddFileButton /deep/ .ui-button-icon-left{
+  font-size: 18px;
+}

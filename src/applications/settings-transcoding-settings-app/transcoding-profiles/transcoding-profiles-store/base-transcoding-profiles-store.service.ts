@@ -19,6 +19,7 @@ import { ConversionProfileDeleteAction } from 'kaltura-ngx-client/api/types/Conv
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { globalConfig } from 'config/global';
 
 export interface ExtendedKalturaConversionProfileAssetParams extends KalturaConversionProfileAssetParams {
   updated?: boolean;
@@ -221,7 +222,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
   }
 
   protected _createDefaultFiltersValue(): TranscodingProfilesFilters {
-    const pageSize = this._browserService.getFromLocalStorage(this.localStoragePageSizeKey) || 50;
+    const pageSize = this._browserService.getFromLocalStorage(this.localStoragePageSizeKey) || globalConfig.client.views.tables.defaultPageSize;
     return {
       pageSize: pageSize,
       pageIndex: 0,

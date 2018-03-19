@@ -8,51 +8,51 @@ export class DistributionProviderTypeIconPipe implements PipeTransform {
     let className;
 
     switch (true) {
-      case KalturaDistributionProviderType.comcastMrss.equals(providerType):
+      case KalturaDistributionProviderType.comcastMrss === providerType:
         className = 'comcast';
         break;
 
-      case KalturaDistributionProviderType.dailymotion.equals(providerType):
+      case KalturaDistributionProviderType.dailymotion === providerType:
         className = 'dailymotion';
         break;
 
-      case KalturaDistributionProviderType.doubleclick.equals(providerType):
+      case KalturaDistributionProviderType.doubleclick === providerType:
         className = 'doubleclick';
         break;
 
-      case KalturaDistributionProviderType.facebook.equals(providerType):
+      case KalturaDistributionProviderType.facebook === providerType:
         className = 'facebook';
         break;
 
-      case KalturaDistributionProviderType.freewheel.equals(providerType):
-      case KalturaDistributionProviderType.freewheelGeneric.equals(providerType):
+      case KalturaDistributionProviderType.freewheel === providerType:
+      case KalturaDistributionProviderType.freewheelGeneric === providerType:
         className = 'freewheel';
         break;
 
-      case KalturaDistributionProviderType.hulu.equals(providerType):
+      case KalturaDistributionProviderType.hulu === providerType:
         className = 'hulu';
         break;
 
-      case KalturaDistributionProviderType.crossKaltura.equals(providerType):
+      case KalturaDistributionProviderType.crossKaltura === providerType:
         className = 'kaltura';
         break;
 
-      case KalturaDistributionProviderType.quickplay.equals(providerType):
+      case KalturaDistributionProviderType.quickplay === providerType:
         className = 'quickplay';
         break;
 
-      case KalturaDistributionProviderType.uverse.equals(providerType):
-      case KalturaDistributionProviderType.uverseClickToOrder.equals(providerType):
-      case KalturaDistributionProviderType.attUverse.equals(providerType):
+      case KalturaDistributionProviderType.uverse === providerType:
+      case KalturaDistributionProviderType.uverseClickToOrder === providerType:
+      case KalturaDistributionProviderType.attUverse === providerType:
         className = 'uverse';
         break;
 
-      case KalturaDistributionProviderType.yahoo.equals(providerType):
+      case KalturaDistributionProviderType.yahoo === providerType:
         className = 'yahoo';
         break;
 
-      case KalturaDistributionProviderType.youtube.equals(providerType):
-      case KalturaDistributionProviderType.youtubeApi.equals(providerType):
+      case KalturaDistributionProviderType.youtube === providerType:
+      case KalturaDistributionProviderType.youtubeApi === providerType:
         className = 'youtube';
         break;
 

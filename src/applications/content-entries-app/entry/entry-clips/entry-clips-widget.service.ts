@@ -133,13 +133,14 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
                         pageSize : this.pageSize,
                         pageIndex : this.pageIndex + 1
                     }
-                ),
+                )
+            }).setRequestOptions({
                 responseProfile: new KalturaDetachedResponseProfile({
                     type : KalturaResponseProfileType.includeFields,
                     fields : 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus'
                 })
             }))
-                .cancelOnDestroy(this,this.widgetReset$)
+                .cancelOnDestroy(this, this.widgetReset$)
                 .monitor('get entry clips')
                 .subscribe(
                     response => {

@@ -1,6 +1,6 @@
 import {Observable} from 'rxjs/Observable';
 import {environment} from 'environments/environment';
-import * as Ajv from 'ajv'
+import * as Ajv from 'ajv';
 import {serverConfig, ServerConfig, ServerConfigSchema} from 'config/server';
 import {globalConfig} from 'config/global';
 
@@ -168,10 +168,6 @@ function getConfiguration(): Observable<ServerConfig> {
         }
     });
 }
-
-
-
-
 
 export function initializeConfiguration(): Observable<void> {
 

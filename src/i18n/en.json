@@ -73,7 +73,8 @@
       "no": "No",
       "apply": "Apply",
       "done": "Done",
-      "save": "Save"
+      "save": "Save",
+      "connectionError": "Error connecting to server"
     },
     "login": {
       "login": {
@@ -237,7 +238,7 @@
       "uploadSettings": {
         "title": "Upload Settings",
         "profile": "Transcoding profile",
-        "addFileBtn": "Add file",
+        "addFileBtn": "Add files",
         "profilePlaceholder": "Default",
         "mediaTypes": {
           "video": "Video",
@@ -289,7 +290,7 @@
       },
       "prepareLive": {
         "createLiveStreamTitle": "Create Live Stream Entry",
-        "streamTypeLabel": "Stream type",
+        "streamTypeLabel": "Stream Type",
         "streamTypes": {
           "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
           "universal": "Universal Streaming, Flash and Mobile (HDS/HLS)",
@@ -339,8 +340,11 @@
           }
         },
         "confirmEntryNavigation": {
-          "title": "Stream has been created successfully.",
-          "message": "Live Stream Entry has been created successfully.\nStream activation for broadcasting with the CDN may take up to 3 hours.\n Do you want to view entry details?"
+          "title": "Stream has been created",
+          "generalMessage": "Live Stream Entry has been created successfully.",
+          "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
+          "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
+          "manualMessage": "The urls provided have been associated with entry {{0}}."
         }
       }
     },
@@ -468,7 +472,10 @@
           "delete": "Delete",
           "save": "Save changes",
           "changeOwnerLabel": "Set a new owner for the selected categories",
-          "error": "Categories update failed"
+          "error": "Categories update failed",
+          "cancelEdit": "Cancel Edit",
+          "discard": "Discard all changes?",
+          "noPrivacyContext": "Some of the selected categories don't have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page under the Settings tab."
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
@@ -523,12 +530,14 @@
         "errors": {
           "cannotLinkEntries": "Category was created, but failed to link some of the entries, please review the created category",
           "createFailed": "An error occurred while trying to add new category",
-          "requiredName": "You must enter name",
-          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
+          "requiredName": "You must enter a name",
+          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID",
+          "noParent": "No parent category was selected. Select either some category or no parent option"
         }
       },
       "moveCategory":{
         "noParent":"No Parent",
+        "noCategorySelected": "No category was selected",
         "selectCategoryParent": "Select the parent category under which the selected category will appear",
         "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
         "errors": {
@@ -554,9 +563,9 @@
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "entryId": "Entry ID: {{0}}",
         "deleteNote": "Please note: the entry will be permanently deleted from your account.",
-        "ruleName": "Rule name",
+        "ruleName": "Rule Name",
         "ruleNamePlaceholder": "Rule Name",
-        "resultsLimit": "Results limit ({{0}})",
+        "resultsLimit": "Results Limit ({{0}})",
         "orderBy": "Order by",
         "totalDuration": "Total duration {{0}}",
         "resultsLimitRange": "1 - 200 Entries",
@@ -796,9 +805,11 @@
         "approveMedia": "Moderation: Approve media",
         "sureToApprove": "Are you sure you want to approve the following entry? \n {{0}}",
         "sureToApproveMultiple": "Are you sure you want to approve the following entries? \n {{0}}",
+        "sureToApproveSelected": "Are you sure you want to approve the selected entries?",
         "rejectMedia": "Moderation: Reject media",
         "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
         "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
+        "sureToRejectSelected": "Are you sure you want to reject the selected entries?",
         "selectAction": "Select Action",
         "errors": {
           "missingIds": "Missing entryIds argument",
@@ -897,7 +908,7 @@
         "edit": "Edit",
         "blockUnblock": "Block / Unblock",
         "ruleName": "Rule Name",
-        "entriesCount": "No.Entries",
+        "entriesCount": "No. Entries",
         "limit": "Limit",
         "orderBy": "Order By"
       },
@@ -987,7 +998,8 @@
           "successFinish": "Finished successfully",
           "errorFinish": "Finished with errors",
           "failed": "Failed",
-          "otherStatuses": "All other statuses"
+          "otherStatuses": "All other statuses",
+          "datesRangeError": "'From Date' must be before 'To Date'"
         }
       },
       "entryStatus": {
@@ -1075,6 +1087,7 @@
         "apply": "Apply to all selected entries",
         "error": "An error occurred during entries update.",
         "errorPlaylists": "An error occurred during playlists update.",
+        "cannotDeletePlaylists": "One or more playlists could not be deleted",
         "errorCategories": "An error occurred during categories update.",
         "updated": "Entries updated successfully",
         "note": "Update Note",
@@ -1092,13 +1105,15 @@
         "removeCategoriesNone": "No categories to remove",
         "approve": "Approve",
         "reject": "Reject",
+        "newPlaylist": "New playlist",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
         "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries",
         "viewRule": "View/Edit rule",
         "deleteRule": "Delete rule",
         "noCategoriesOrEntries": "No categories or entries were selected",
-        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}."
+        "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}.",
+        "downloadFailed": "Download request failed"
       },
       "entryDetails": {
         "sections": {
@@ -1566,13 +1581,13 @@
           "thumbnailsUploadError": "Error uploading thumbnail.",
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
-          "flavorsLoadError": "Error loading flavors",
+          "flavorsLoadError": "Could not load data of flavors assets and params for this entry",
           "clipsLoadError": "Error loading clips",
           "datesRangeError": "Day before can't be earlier than day after"
         }
       },
       "categoryDetails": {
-        "referenceIdInUse": "The following entries are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
+        "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
         "headerProps": {
@@ -1619,7 +1634,8 @@
           "title": "Entitlements",
           "description": "Manage your entitlements settings and specific end-user permissions to content in your applications.",
           "privacyContentLabel": {
-            "label" : "Privacy Context Label"
+            "label" : "Privacy Context Label",
+            "help": "In order to enable access to content in this category from the application and enforce its entitlement rules, the privacy context label MUST be set as part of the application session (KS) privileges. \n\nThis label is set as part of the MediaSpace installation/upgrade process. For any other purposes set/edit the context label from the Integration Settings page under the Settings tab."
           },
           "manageUsersPermissionsEditMessage": {
             "title": "Error",
@@ -1652,7 +1668,8 @@
             "private_explanation": "Only end-users with specific permission can add content to this category"
           },
           "moderateContent": {
-            "label": "Moderate Content"
+            "label": "Moderate Content",
+            "help": "Media will not appear in page until by the category manager/moderator."
           },
           "inheritUsersPermissions": {
             "label": "Inherit Users Permissions",
@@ -1695,6 +1712,8 @@
             "count": "{{0}} end-users"
           },
           "usersPermissions": {
+            "refine": "Refine",
+            "searchUsers": "Search Users",
             "title":"Manage End-user Permissions",
             "titleView":"View End-user Permissions",
             "inheritanceMessage":"Permissions are inherited from: {{0}}, and can not be edited from this page.",
@@ -2006,6 +2025,7 @@
         "errorLoading": "Error loading schemas",
         "addCustomSchema": "Add Custom Schema",
         "editCustomSchema": "Edit Custom Schema",
+        "deleteProfiles": "Delete selected schemas",
         "addCustomField": "Add Custom Field",
         "editCustomField": "Edit Custom Field",
         "downloadSchema": "Download Schema",
@@ -2063,9 +2083,9 @@
         "unlimited": "Unlimited",
         "deleteSchema": "Delete Custom Data Schema",
         "deleteSchemas": "Delete Custom Data Schemas",
-        "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema: {{0}} ?",
+        "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema:\n {{0}} ?",
         "confirmDeleteMultipleNames": "Are you sure you want to delete the following custom data schemas:\n {{0}} ?",
-        "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas",
+        "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas?",
         "updateError": "An error occurred during custom data schemas update",
         "discardChanges": "Discard Changes",
         "discardWarning": "You will lose any unsaved changes. Continue?",
@@ -2081,7 +2101,8 @@
           "listValuesPlaceholder": "Enter the values, one per line",
           "single": "Single",
           "unlimited": "Unlimited",
-          "saveChanges": "Would you like to save the changes you made?",
+          "saveChanges": "Save changes?",
+          "saveChangesMessage": "Would you like to save the changes you made?",
           "validationErrors": {
             "invalidInput": "Invalid Input",
             "invalidSystemName": "Field system name must be unique, please enter a different name.",
@@ -2103,7 +2124,7 @@
       "integrationSettings": {
         "accountInfo": {
           "title": "Account Info",
-          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges. <a href=\"http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/entitlementsettings.htm\">Read More.</a>",
+          "helpText": "The Privacy Context Label of each category defined here, will be automatically applied to its sub categories.\nThe same label should be set as part of the application's session (KS) privileges.",
           "readMore": "Read More.",
           "partnerId": "Partner ID",
           "subPartnerId": "Sub Partner ID",
@@ -2114,13 +2135,13 @@
           },
           "notifications": {
             "title": "Notifications",
-            "message": "For notification settings please contact your PM"
+            "message": " Contact your Kaltura Representative to set up notification settings."
           }
         },
         "entitlement": {
           "title": "Entitlement",
           "helpTip": "",
-          "explanation": "To add entitlement settings for categories click ‘Add Entitlement’ select the root category integrated with your application and label it below.",
+          "explanation": "To add entitlement settings for categories, click ‘Add Entitlement’.",
           "apiDefault": "API default",
           "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
           "entitlementEnforcementEnabled": "Entitlement enforcement enabled",

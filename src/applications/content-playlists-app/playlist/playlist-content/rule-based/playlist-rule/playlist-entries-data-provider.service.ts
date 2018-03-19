@@ -246,8 +246,9 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           new PlaylistExecuteFromFiltersAction({
             filters: [filter],
             totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
-            pager: pagination,
-            responseProfile
+            pager: pagination
+          }).setRequestOptions({
+              responseProfile
           }))
         ).map(response => ({ entries: response, totalCount: response.length })
       );

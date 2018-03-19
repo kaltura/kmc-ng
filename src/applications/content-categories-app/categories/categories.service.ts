@@ -276,7 +276,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       // update desired fields of entries
       const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
-        fields: 'id, name, createdAt, directSubCategoriesCount, entriesCount, fullName, tags, parentId'
+        fields: 'id, name, createdAt, directSubCategoriesCount, entriesCount, fullName, tags, parentId, privacyContexts'
       });
 
       const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
@@ -432,8 +432,9 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       return this._kalturaClient.request(
         new CategoryListAction({
           filter,
-          pager: pagination,
-          responseProfile
+          pager: pagination
+        }).setRequestOptions({
+            responseProfile
         })
       );
     } catch (err) {

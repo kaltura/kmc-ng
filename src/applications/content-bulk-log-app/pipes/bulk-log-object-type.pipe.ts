@@ -11,16 +11,16 @@ export class BulkLogObjectTypePipe implements PipeTransform {
 
   transform(value: KalturaBulkUploadObjectType): string {
     switch (true) {
-      case KalturaBulkUploadObjectType.category.equals(value):
+      case KalturaBulkUploadObjectType.category === value:
         return this._appLocalization.get('applications.content.bulkUpload.objectType.category');
 
-      case KalturaBulkUploadObjectType.categoryUser.equals(value):
+      case KalturaBulkUploadObjectType.categoryUser === value:
         return this._appLocalization.get('applications.content.bulkUpload.objectType.categoryUser');
 
-      case KalturaBulkUploadObjectType.entry.equals(value):
+      case KalturaBulkUploadObjectType.entry === value:
         return this._appLocalization.get('applications.content.bulkUpload.objectType.entry');
 
-      case KalturaBulkUploadObjectType.user.equals(value):
+      case KalturaBulkUploadObjectType.user === value:
         return this._appLocalization.get('applications.content.bulkUpload.objectType.user');
 
       default:

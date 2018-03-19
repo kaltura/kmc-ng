@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
+import { globalConfig } from 'config/global';
 import {EntryClipsWidget} from './entry-clips-widget.service';
 import {serverConfig} from 'config/server';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
@@ -11,6 +12,9 @@ import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
     styleUrls: ['./entry-clips.component.scss']
 })
 export class EntryClips implements OnInit, OnDestroy {
+    public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+    public _loading = false;
+    public _loadingError = null;
 
     public _clipAndTrimEnabled = false;
 

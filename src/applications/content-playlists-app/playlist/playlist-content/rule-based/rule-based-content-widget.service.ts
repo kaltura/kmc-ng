@@ -67,11 +67,12 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     const rules = this.data.filters.map(filter => {
       return new PlaylistExecuteFromFiltersAction({
         totalResults: filter.limit,
-        filters: [filter],
-        responseProfile: new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: 'duration'
-        })
+        filters: [filter]
+      }).setRequestOptions({
+          responseProfile: new KalturaDetachedResponseProfile({
+              type: KalturaResponseProfileType.includeFields,
+              fields: 'duration'
+          })
       });
     });
 
@@ -93,7 +94,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
 
           this.rules.push({
             name: (<any>filter).name,
-            orderBy: new KalturaPlayableEntryOrderBy(filter.orderBy),
+            orderBy: <KalturaPlayableEntryOrderBy>filter.orderBy,
             limit: filter.limit,
             entriesCount: result.length,
             selectionId: this._selectionIdGenerator.generateUnique(this.rules.map(item => item.selectionId)),
