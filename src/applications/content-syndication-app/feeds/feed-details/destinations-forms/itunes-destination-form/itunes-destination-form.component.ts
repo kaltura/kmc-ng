@@ -6,6 +6,8 @@ import { KalturaValidators } from '@kaltura-ng/kaltura-ui/validators/validators'
 import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { KalturaITunesSyndicationFeedAdultValues } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeedAdultValues';
+import { AppAuthentication } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kItunesDestinationForm',
@@ -103,11 +105,26 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   public _adultContentField: AbstractControl;
 
   public _languages = [];
-  public _adultContentOptions: { value: any, label: string }[] = [];
+  public _adultContentOptions: { value: any, label: string }[] = [
+    {
+      label: this._appLocalization.get('applications.content.syndication.details.destinationsForms.itunes.adultContent.options.yes'),
+      value: KalturaITunesSyndicationFeedAdultValues.yes
+    },
+    {
+      label: this._appLocalization.get('applications.content.syndication.details.destinationsForms.itunes.adultContent.options.no'),
+      value: KalturaITunesSyndicationFeedAdultValues.no
+    },
+    {
+      label: this._appLocalization.get('applications.content.syndication.details.destinationsForms.itunes.adultContent.options.clean'),
+      value: KalturaITunesSyndicationFeedAdultValues.clean
+    }
+  ];
   public _availableCategories: { value: string, label: string }[] = [];
   public _availableContentFlavors: { value: number, label: string }[] = [];
 
-  constructor(private _fb: FormBuilder, private _appLocalization: AppLocalization) {
+  constructor(private _fb: FormBuilder,
+              private _appLocalization: AppLocalization,
+              private _appAuth: AppAuthentication) {
     super();
 
     this._buildForm();
@@ -126,9 +143,30 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
       isDirty: false
     });
 
+    this._form.valueChanges
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this.onFormStateChanged.emit({
+            isValid: this._form.status === 'VALID',
+            isDirty: this._form.dirty
+          });
+        }
+      );
+
     this._fillAvailableCategories();
     this._fillAvailableLanguages();
     this._fillAvailableContentFlavors();
+    this._fillFormData();
+  }
+
+  private _markFormFieldsAsTouched(): void {
+    for (const control in this._form.controls) {
+      if (this._form.controls.hasOwnProperty(control)) {
+        this._form.get(control).markAsTouched();
+        this._form.get(control).updateValueAndValidity();
+      }
+    }
   }
 
   private _fillAvailableLanguages(): void {
@@ -150,7 +188,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
     this._languages.unshift({ label: this._appLocalization.get('languages.EN'), value: 'EN' });
   }
 
-  private _fillAvailableCategories() {
+  private _fillAvailableCategories(): void {
     this._availableCategories = this._categories.map(category => ({
       value: category,
       label: this._appLocalization
@@ -164,6 +202,31 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
         value: cv.id,
         label: cv.name || cv.id.toString()
       }));
+    }
+  }
+
+  private _fillFormData(): void {
+    if (this.feed) {
+      this._form.setValue({
+        contentFlavor: this.feed.flavorParamId,
+        addToDefaultTranscodingProfile: this.feed.addToDefaultConversionProfile,
+        landingPage: this.feed.landingPage,
+        feedAuthor: this.feed.feedAuthor,
+        website: this.feed.feedLandingPage,
+        feedDescription: this.feed.feedDescription || '',
+        categories: this.feed.categories.split(','),
+        feedImageUrl: this.feed.feedImageUrl,
+        feedOwnerName: this.feed.ownerName,
+        feedOwnerEmail: this.feed.ownerEmail,
+        language: this.feed.language,
+        adultContent: this.feed.adultContent
+      });
+    } else {
+      this._form.patchValue({
+        adultContent: this._appAuth.appUser.partnerInfo.adultContent
+          ? KalturaITunesSyndicationFeedAdultValues.yes
+          : KalturaITunesSyndicationFeedAdultValues.no
+      }, { emitEvent: false });
     }
   }
 
@@ -198,6 +261,25 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   }
 
   public getData(): KalturaITunesSyndicationFeed {
-    return new KalturaITunesSyndicationFeed();
+    if (!this._form.valid) {
+      this._markFormFieldsAsTouched();
+      return null;
+    }
+
+    const formData = this._form.value;
+    return new KalturaITunesSyndicationFeed({
+      flavorParamId: formData.contentFlavor,
+      addToDefaultConversionProfile: formData.addToDefaultTranscodingProfile,
+      landingPage: formData.landingPage,
+      feedAuthor: formData.feedAuthor,
+      feedLandingPage: formData.website,
+      feedDescription: formData.feedDescription,
+      categories: formData.categories.join(','),
+      feedImageUrl: formData.feedImageUrl,
+      ownerName: formData.feedOwnerName,
+      ownerEmail: formData.feedOwnerEmail,
+      language: formData.language,
+      adultContent: formData.adultContent
+    });
   }
 }
