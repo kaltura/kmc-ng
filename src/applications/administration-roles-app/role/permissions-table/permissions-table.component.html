@@ -23,6 +23,7 @@
                         class="kPermissionsList"
                         panelStyleClass="kPermissionsListPanel"
                         menuItemDisplayStyle="flex"
+                        [hideOnScroll]="scrollableContainer"
                         [options]="permission.items"
                         [disabled]="!permission.enabled"
                         [showToggleAll]="true"
@@ -32,8 +33,9 @@
                         [allSelectedLabel]="'applications.administration.role.permissionsTable.allPermissions' | translate"
                         [selectedItemsLabel]="'applications.administration.role.permissionsTable.custom' | translate"
                         [appendTo]="'body'"
-                        [(ngModel)]="permission.formValue"
-                        [resetFilterOnHide]="true">
+                        [resetFilterOnHide]="true"
+                        (onPanelHide)="null"
+                        [(ngModel)]="permission.formValue">
             <ng-template let-item pTemplate="item">
               <span class="kPermissionItem">
                 {{item.label}}

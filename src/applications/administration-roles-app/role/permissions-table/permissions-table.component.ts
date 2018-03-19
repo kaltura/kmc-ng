@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit } from '@angular/core';
 import { APP_PERMISSIONS, AppPermission } from './permissions-list';
 
 @Component({
@@ -9,6 +9,7 @@ import { APP_PERMISSIONS, AppPermission } from './permissions-list';
 })
 export class PermissionsTableComponent implements OnInit {
   @Input() permissions: any[];
+  @Input() scrollableContainer: ElementRef;
 
   public _appPermissionsOptions: AppPermission[] = APP_PERMISSIONS;
   public _appPermissions: any[] = [];

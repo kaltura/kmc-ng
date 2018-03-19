@@ -13,7 +13,7 @@
                   (click)="_performAction()"></button>
         </div>
       </div>
-      <div class="kContainer">
+      <div class="kContainer" #scrollableContainer>
         <form class="kRoleForm" [formGroup]="_editRoleForm" novalidate>
           <div class="kRow">
             <span class="kLabel">{{'applications.administration.role.name' | translate}}</span>
@@ -42,7 +42,8 @@
             </div>
           </div>
         </form>
-        <kRolePermissionsTable [permissions]="[]"></kRolePermissionsTable>
+        <kRolePermissionsTable [permissions]="[]"
+                               [scrollableContainer]="scrollableContainer"></kRolePermissionsTable>
       </div>
     </div>
   </div>
