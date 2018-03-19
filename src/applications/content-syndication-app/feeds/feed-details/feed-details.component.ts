@@ -99,11 +99,11 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
         label: this._appLocalization
           .get('applications.content.syndication.details.availableDestinations.yahoo')
       },
-      // {
-      //   value: KalturaSyndicationFeedType.itunes,
-      //   label: this._appLocalization
-      //     .get('applications.content.syndication.details.availableDestinations.itunes')
-      // },
+      {
+        value: KalturaSyndicationFeedType.itunes,
+        label: this._appLocalization
+          .get('applications.content.syndication.details.availableDestinations.itunes')
+      },
       {
         value: KalturaSyndicationFeedType.rokuDirectPublisher,
         label: this._appLocalization
