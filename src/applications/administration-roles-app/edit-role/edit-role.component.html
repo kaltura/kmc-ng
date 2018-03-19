@@ -42,8 +42,9 @@
             </div>
           </div>
         </form>
-        <kRolePermissionsTable [permissions]="[]"
-                               [scrollableContainer]="scrollableContainer"></kRolePermissionsTable>
+        <kRolePermissionsTable [permissions]="_permissions"
+                               [scrollableContainer]="scrollableContainer"
+                               (rolePermissionsChange)="_updateRolePermissions($event)"></kRolePermissionsTable>
       </div>
     </div>
   </div>

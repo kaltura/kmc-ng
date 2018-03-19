@@ -1,13 +1,13 @@
-export interface AppPermission {
+export interface RolePermission {
   value: string;
   label: string;
   isAdvancedGroup?: boolean;
   dependsOnFeature?: string;
-  items?: AppPermission[];
+  items?: RolePermission[];
   disabled?: boolean;
 }
 
-export const APP_PERMISSIONS: AppPermission[] = [
+export const APP_PERMISSIONS: RolePermission[] = [
   {
     value: 'CONTENT_INGEST_BASE',
     label: 'Content Ingestion',

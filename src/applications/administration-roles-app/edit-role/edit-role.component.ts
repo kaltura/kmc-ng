@@ -1,24 +1,22 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { RoleService } from './role.service';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { Observer } from 'rxjs/Observer';
+import { RolePermissionFormValue } from '../permissions-table/permissions-table.component';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { RolesStoreService } from '../roles-store/roles-store.service';
 
 @Component({
   selector: 'kEditRole',
   templateUrl: './edit-role.component.html',
-  styleUrls: ['./edit-role.component.scss'],
-  providers: [RoleService]
+  styleUrls: ['./edit-role.component.scss']
 })
 export class EditRoleComponent implements OnInit, OnDestroy {
   @Input() role: KalturaUserRole;
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() duplicatedRole: boolean;
-  @Output() roleSaved = new EventEmitter<void>();
 
   public _editRoleForm: FormGroup;
   public _nameField: AbstractControl;
@@ -26,9 +24,11 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _title: string;
   public _actionBtnLabel: string;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _permissions: string[];
+  public _rolePermissions: RolePermissionFormValue[] = [];
 
   constructor(private _fb: FormBuilder,
-              private _roleService: RoleService,
+              private _rolesService: RolesStoreService,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -51,6 +51,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       : this._appLocalization.get('applications.administration.role.add');
 
     if (this.role) {
+      this._permissions = (this.role.permissionNames || '').split(',');
       this._editRoleForm.setValue({
         name: this.role.name,
         description: this.role.description
@@ -77,7 +78,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     return <Observer<void>>{
       next: () => {
         this.parentPopupWidget.close();
-        this.roleSaved.emit();
+        this._rolesService.reload();
       },
       error: (error) => {
         this._blockerMessage = new AreaBlockerMessage(
@@ -119,12 +120,11 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     });
     const retryFn = () => this._updateRole();
 
-    this._roleService.updateRole(this.role.id, editedRole)
+    this._rolesService.updateRole(this.role.id, editedRole)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(this._getObserver(retryFn));
   }
-
 
   public _addRole(): void {
     this._blockerMessage = null;
@@ -133,7 +133,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     const { name, description } = this._editRoleForm.value;
     this.role = new KalturaUserRole({ name, description });
 
-    this._roleService.addRole(this.role)
+    this._rolesService.addRole(this.role)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(this._getObserver(retryFn));
@@ -150,5 +150,9 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     } else {
       this._addRole();
     }
+  }
+
+  public _updateRolePermissions(permissions: RolePermissionFormValue[]): void {
+    this._rolePermissions = permissions;
   }
 }
