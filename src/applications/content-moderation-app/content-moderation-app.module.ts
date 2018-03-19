@@ -37,7 +37,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { DynamicMetadataFormModule } from 'app-shared/kmc-shared';
-import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -75,7 +75,7 @@ import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
     PrimeDynamicFormModule,
     ReactiveFormsModule,
     TagsModule,
-    AppPermissionsModule
+    KMCPermissionsModule
   ],
   declarations: [
     ContentModerationComponent,
