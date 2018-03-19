@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
-import { CategoriesTreeNode } from './categories-tree-node';
-import { AppAuthentication } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { CategoriesTreePropagationDirective } from './categories-tree-propagation.directive';
-import { CategoriesTreeService } from './categories-tree.service';
-import { FiltersUtils } from '@kaltura-ng/mc-shared/filters/filters-utils';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild} from '@angular/core';
+import {CategoriesTreeNode} from './categories-tree-node';
+import {AppAuthentication} from 'app-shared/kmc-shell';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {CategoriesTreePropagationDirective} from './categories-tree-propagation.directive';
+import {CategoriesTreeService} from './categories-tree.service';
+import {FiltersUtils} from '@kaltura-ng/mc-shared/filters/filters-utils';
 
 export type TreeSelectionMode = 'single' | 'multiple';
 
@@ -179,10 +179,16 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     private _addCategoryToMap(category: CategoriesTreeNode): void {
         if (category) {
             this._categoriesMap.set(category.value, category);
-
             if (category.children) {
-                category.children.forEach((child) => {
-                    this._addCategoryToMap(child);
+              category.children
+                .sort((a, b) => {
+                  if (a.origin && b.origin) {
+                    return a.origin.sortValue - b.origin.sortValue; // ascending fashion
+                  }
+                  return 0;
+                })
+                .forEach((child) => {
+                  this._addCategoryToMap(child);
                 });
             }
         }
