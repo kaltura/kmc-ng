@@ -1,6 +1,6 @@
-import  'rxjs/add/operator/takeUntil';
-import  'rxjs/add/operator/delay';
-import { globalConfig } from './global-config';
+import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/delay';
+import {globalConfig} from './global-config';
 
 /*************************************
  * Developer Notice:
@@ -80,7 +80,8 @@ export const ServerConfigSchema = {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
-                        version: {type: 'string'}
+                      uiConfId: {type: 'number'},
+                      version: {type: 'string'}
                     },
                     required: ['enabled', 'uri', 'version'],
                     additionalProperties: false
@@ -194,7 +195,8 @@ export interface ServerConfig {
         liveAnalytics: {
             enabled: boolean,
             version: string,
-            uri: string,
+            uiConfId: number,
+            uri: string
         }
     },
     externalLinks: {
