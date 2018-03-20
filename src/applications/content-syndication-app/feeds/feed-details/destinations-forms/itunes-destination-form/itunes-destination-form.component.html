@@ -74,6 +74,7 @@
     <!--Categories-->
     <div class="kRow">
       <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.itunes.categories.label' | translate}}</span>
+      <div class="kAsterix" [ngClass]="{'kHasError':_categoriesField.touched && _categoriesField.invalid}">*</div>
       <div class="kControlContainer">
         <span class="kControl">
           <p-multiSelect class="kCategories"

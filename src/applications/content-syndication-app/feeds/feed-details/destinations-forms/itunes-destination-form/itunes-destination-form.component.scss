@@ -87,3 +87,17 @@
     border-radius: 0;
   }
 }
+
+:host /deep/ {
+  .ui-dropdown .ui-dropdown-label {
+    text-overflow: ellipsis;
+  }
+
+  .ui-dropdown-item > span {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 210px;
+    text-overflow: ellipsis;
+  }
+}

@@ -37,6 +37,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
     'Business/Shopping',
     'Comedy',
     'Education',
+    'Education/Education Technology',
     'Education/Higher Education',
     'Education/K-12',
     'Education/Language Courses',
