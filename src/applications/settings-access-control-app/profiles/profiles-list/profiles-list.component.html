@@ -16,7 +16,9 @@
             <span class="kSelectedEntriesLabel">
               • {{'applications.settings.accessControl.selected' | translate:[_selectedProfiles.length]}}
             </span>
-            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteProfiles()"></button>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                    [class.kHidden]="_kmcPermissions.ACCESS_CONTROL_DELETE | kHiddenIfNotPermitted"
+                    (click)="_deleteProfiles()"></button>
 
             <a class="kAccessControlProfilesCancel" (click)="_clearSelection()">
               {{'applications.settings.accessControl.cancel' | translate}}
