@@ -49,6 +49,11 @@
       "enabled": @externalApps.clipAndTrim.enabled@,
       "uiConfId": "@externalApps.clipAndTrim.uiConfId@",
       "uri": "@externalApps.clipAndTrim.uri@"
+    },
+    "advertisements": {
+      "enabled": @externalApps.advertisements.enabled@,
+      "uri": "@externalApps.advertisements.uri@",
+      "uiConfId": "@externalApps.advertisements.uiConfId@"
     }
   },
   "externalLinks": {
