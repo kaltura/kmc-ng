@@ -8,6 +8,7 @@
                 class="kButtonBranded KButtonSave"
                 pButton
                 [disabled]="!_isDirty"
+                [class.kHidden]="_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted)"
                 [label]="'app.common.save' | translate"
                 (click)="_saveSchema()"></button>
       </div>
@@ -49,6 +50,7 @@
             <button
               pButton
               class="kButtonDefault"
+              [class.kHidden]="_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted)"
               type="button"
               icon="kIconplus"
               iconPos="left"
@@ -61,6 +63,7 @@
               class="kButtonDefault"
               icon="kIconupload"
               iconPos="left"
+              [class.kHidden]="_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted)"
               [disabled]="_schema?.isNew || !_schema?.downloadUrl"
               [label]="'applications.settings.metadata.downloadSchema' | translate"
               (click)="_downloadSchema()"></button>

@@ -8,6 +8,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { KalturaAPIException, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCustomSchema',
@@ -31,6 +32,7 @@ export class CustomSchemaComponent implements OnInit {
   public _selectedField: MetadataItem;
   public _isDirty = false;
   public _profileFields: MetadataItem[];
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
