@@ -35,6 +35,12 @@
   width: 500px;
 }
 
+.kHasError {
+  /deep/ .ui-multiselect {
+    border: 1px solid $kDandger;
+  }
+}
+
 .kLandingPageExplanation {
   color: $kGrayscale1;
   width: 710px;

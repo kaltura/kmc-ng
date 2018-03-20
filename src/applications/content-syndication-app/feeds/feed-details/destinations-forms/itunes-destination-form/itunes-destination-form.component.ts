@@ -16,7 +16,7 @@ import { AppAuthentication } from 'app-shared/kmc-shell';
   providers: [{ provide: DestinationComponentBase, useExisting: ItunesDestinationFormComponent }]
 })
 export class ItunesDestinationFormComponent extends DestinationComponentBase implements OnInit, OnDestroy {
-  @Input() public contentFlavors: KalturaFlavorParams[] = null;
+  @Input() contentFlavors: KalturaFlavorParams[] = null;
   @Input() feed: KalturaITunesSyndicationFeed = null;
 
   @Output() onFormStateChanged = new EventEmitter<{ isValid: boolean, isDirty: boolean }>();
@@ -104,6 +104,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   public _languageField: AbstractControl;
   public _adultContentField: AbstractControl;
 
+  public _contentFlavors: KalturaFlavorParams[] = [];
   public _languages = [];
   public _adultContentOptions: { value: any, label: string }[] = [
     {
@@ -154,6 +155,11 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
         }
       );
 
+    if (Array.isArray(this.contentFlavors)) {
+      const allowedFlavorFormats = ['m4a', 'mp3', 'mov', 'mp4', 'm4v'];
+      this._contentFlavors = this.contentFlavors.filter(({ format }) => allowedFlavorFormats.indexOf(format) !== -1);
+    }
+
     this._fillAvailableCategories();
     this._fillAvailableLanguages();
     this._fillAvailableContentFlavors();
@@ -197,8 +203,8 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   }
 
   private _fillAvailableContentFlavors() {
-    if (this.contentFlavors && this.contentFlavors.length) {
-      this._availableContentFlavors = this.contentFlavors.map(cv => ({
+    if (this._contentFlavors.length) {
+      this._availableContentFlavors = this._contentFlavors.map(cv => ({
         value: cv.id,
         label: cv.name || cv.id.toString()
       }));
@@ -213,7 +219,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
         landingPage: this.feed.landingPage,
         feedAuthor: this.feed.feedAuthor,
         website: this.feed.feedLandingPage,
-        feedDescription: this.feed.feedDescription || '',
+        feedDescription: this.feed.feedDescription,
         categories: this.feed.categories.split(','),
         feedImageUrl: this.feed.feedImageUrl,
         feedOwnerName: this.feed.ownerName,
@@ -241,7 +247,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
       categories: ['', Validators.required],
       feedImageUrl: '',
       feedOwnerName: ['', Validators.required],
-      feedOwnerEmail: ['', Validators.required],
+      feedOwnerEmail: ['', [Validators.required, Validators.email]],
       language: '',
       adultContent: ''
     });

@@ -667,7 +667,7 @@
               },
               "landingPage": {
                 "label": "Landing page",
-                "explanation": "Enter the URL template that you would like to appear in the Yahoo search results for each video in this feed.  The system will append the specific entry id for each entry. For example: \"http://mysite.com?videoid=\""
+                "explanation": "Enter the URL template that you would like to appear in the iTunes Store Podcast for each video in this feed. The system will append the specific entry id for each entry. For example:\"http://mysite.com?videoid=\""
               },
               "feedAuthor": "Feed Author",
               "website": "Website",
@@ -758,9 +758,10 @@
                 "invalidLandingPage": "Landing Page URL is not valid",
                 "requiredLandingPage": "Landing Page is required",
                 "invalidWebsite": "Website URL is not valid",
-                "requiredWebsite": "Website is required",
-                "requiredFeedOwnerName": "Feed Owner Name is required",
-                "requiredFeedOwnerEmail": "Feed Owner Email is required"
+                "requiredCategories": "Categories are required",
+                "requiredFeedOwnerName": "Feed owner name is required",
+                "requiredFeedOwnerEmail": "Feed owner email is required",
+                "invalidFeedOwnerEmail": "Owner email is not valid"
               },
               "feedImageUrl": {
                 "label": "Feed Image URL",

@@ -49,7 +49,8 @@
 
     <!--Website-->
     <div class="kRow">
-      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.itunes.website' | translate}}</span>
+      <span
+        class="kLabel">{{'applications.content.syndication.details.destinationsForms.itunes.website' | translate}}</span>
       <div class="kControlContainer">
         <input class="kControl" [formControl]="_websiteField" pInputText placeholder="http://"
                [ngClass]="{'kHasError':_websiteField.touched && _websiteField.invalid}">
@@ -64,7 +65,8 @@
       <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.itunes.description' | translate}}</span>
       <div class="kControlContainer">
         <span class="kControl">
-          <textarea [formControl]="_feedDescriptionField" class="threeRows" [rows]="6" [cols]="60" pInputTextarea></textarea>
+          <textarea [formControl]="_feedDescriptionField" class="threeRows" [rows]="6" [cols]="60"
+                    pInputTextarea></textarea>
         </span>
       </div>
     </div>
@@ -75,11 +77,15 @@
       <div class="kControlContainer">
         <span class="kControl">
           <p-multiSelect class="kCategories"
+                         [ngClass]="{'kHasError':_categoriesField.touched && _categoriesField.invalid}"
                          [options]="_availableCategories"
                          [formControl]="_categoriesField" [filter]="false" maxSelectedLabels="2"
                          [selectedItemsLabel]="'applications.content.syndication.details.destinationsForms.itunes.categories.itemsSelected' | translate"
                          [defaultLabel]="'applications.content.syndication.details.destinationsForms.itunes.categories.promptText' | translate"></p-multiSelect>
         </span>
+        <div *ngIf="_categoriesField.touched && _categoriesField.invalid" class="error">
+          {{'applications.content.syndication.details.destinationsForms.itunes.errors.requiredCategories' | translate}}
+        </div>
       </div>
     </div>
 
@@ -117,8 +123,11 @@
       <div class="kControlContainer">
         <input class="kControl" [formControl]="_feedOwnerEmailField" pInputText
                [ngClass]="{'kHasError':_feedOwnerEmailField.touched && _feedOwnerEmailField.invalid}">
-        <div *ngIf="_feedOwnerEmailField.touched && _feedOwnerEmailField.invalid" class="error">
+        <div *ngIf="_feedOwnerEmailField.touched && _feedOwnerEmailField.hasError('required')" class="error">
           {{'applications.content.syndication.details.destinationsForms.itunes.errors.requiredFeedOwnerEmail' | translate}}
+        </div>
+        <div *ngIf="_feedOwnerEmailField.touched && _feedOwnerEmailField.hasError('email')" class="error">
+          {{'applications.content.syndication.details.destinationsForms.itunes.errors.invalidFeedOwnerEmail' | translate}}
         </div>
         <div class="kHint">
           {{'applications.content.syndication.details.destinationsForms.itunes.feedOwnerEmail.hint' | translate}}
@@ -145,7 +154,12 @@
 
     <!--Adult Content-->
     <div class="kRow kMultiLine">
-      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.itunes.adultContent.label' | translate}}</span>
+      <span class="kLabel">
+        {{'applications.content.syndication.details.destinationsForms.itunes.adultContent.label' | translate}}
+        <kInputHelper icon="kIconhelp_full" class="kHelp">
+           <span>{{'applications.content.syndication.details.destinationsForms.itunes.adultContent.hint' | translate}}</span>
+        </kInputHelper>
+      </span>
       <div class="kControlContainer">
         <span class="kControl">
           <p-dropdown class="kControl"
