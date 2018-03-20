@@ -1341,6 +1341,7 @@
         },
         "live": {
           "live": "Live Stream",
+          "liveDashboard": "Live Dashabord",
           "urls": "Broadcasting URLs",
           "primary": "Primary URL:",
           "backup": "Backup URL:",
@@ -1839,7 +1840,9 @@
           "fieldRequired": "This field is required"
         }
       },
-
+      "liveDashboard": {
+        "title": "Live Dashboard"
+      },
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",

@@ -33,7 +33,7 @@ Follow these instructions to test external apps integration:
     },
     "liveDashboard": {
       "enabled": true,
-      "uri": "__local_machine_only__/live_dashboard_v1_4_1/index.html",
+      "uri": "__local_machine_only__/live-dashboard_v1_4_1/index.html",
       "version": "v1.4.1"
     },
     "kava": {

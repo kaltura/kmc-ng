@@ -50,7 +50,6 @@ import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-cl
 import {KeditHosterModule} from 'app-shared/kmc-shared/kedit-hoster/kedit-hoster.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
-
 @NgModule({
   imports: [
     AccordionModule,
