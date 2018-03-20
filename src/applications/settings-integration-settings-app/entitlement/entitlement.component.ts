@@ -6,6 +6,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import {BrowserService} from "app-shared/kmc-shell";
 import { serverConfig } from 'config/server';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kEntitlement',
@@ -20,6 +21,7 @@ export class EntitlementComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
   public _currentEditEntitlement: KalturaCategory = null;
+  public _kmcPermissions = KMCPermissions;
   @ViewChild('editEntitlementPopup') editEntitlementPopup: PopupWidgetComponent;
 
 
