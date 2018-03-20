@@ -55,12 +55,12 @@ Follow these instructions to test external apps integration:
     },
     "clipAndTrim": {
       "enabled": true,
-      "uri": "http://localhost:4200/editor",
+      "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
       "uiConfId": "36060752"
     },
     "advertisements": {
       "enabled": true,
-      "uri": "http://localhost:4200/advertisements",
+      "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
       "uiConfId": "36060752"
     }
 ```
