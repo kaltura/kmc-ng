@@ -12,6 +12,7 @@ import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheri
 import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
@@ -24,6 +25,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   constructor(private _kalturaClient: KalturaClient,
               private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _categoryService: CategoryService) {
     super(CategoryWidgetKeys.Entitlements);
 
@@ -44,6 +46,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
+    if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS)) {
+      this.entitlementsForm.disable({ emitEvent: false });
+    }
 
     super._showLoader();
 
@@ -51,10 +56,10 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       .monitor('get category parent category')
       .cancelOnDestroy(this, this.widgetReset$)
       .map(({owner, parentCategory}) => {
+        super._hideLoader();
         this.parentCategory = parentCategory || null;
         this._resetFormData(owner);
         this._monitorFormChanges();
-        super._hideLoader();
         return {failed: false};
       })
       .catch(error => {
