@@ -26,10 +26,10 @@
       "version": ""
     },
     "liveAnalytics": {
-      "enabled": true,
-      "uri": "__local_machine_only__/live-analytics-front-end-v2_6/index.html",
-      "uiConfId": 36060752,
-      "version": "2.6"
+      "enabled": false,
+      "uri": "",
+      "uiConfId": 0,
+      "version": ""
     },
     "kava": {
       "enabled": false,
@@ -41,9 +41,18 @@
       "version": "",
       "uri": "",
       "uiConfId": 0,
-      "map_urls": [
-      ],
+      "map_urls": [],
       "map_zoom_levels": ""
+    },
+    "clipAndTrim": {
+      "enabled": false,
+      "uri": "",
+      "uiConfId": ""
+    },
+    "advertisements": {
+      "enabled": false,
+      "uri": "",
+      "uiConfId": ""
     }
   },
   "externalLinks": {

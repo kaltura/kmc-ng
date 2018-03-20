@@ -86,6 +86,24 @@ export const ServerConfigSchema = {
                     required: ['enabled', 'uri', 'version'],
                     additionalProperties: false
                 },
+                clipAndTrim: {
+                  properties: {
+                    enabled: {type: 'boolean'},
+                    uri: {type: 'string'},
+                    uiConfId: {type: 'string'},
+                  },
+                  required: ['enabled', 'uri', 'uiConfId'],
+                  additionalProperties: false
+                },
+                advertisements: {
+                  properties: {
+                    enabled: {type: 'boolean'},
+                    uri: {type: 'string'},
+                    uiConfId: {type: 'string'},
+                  },
+                  required: ['enabled', 'uri', 'uiConfId'],
+                  additionalProperties: false
+                },
                 kava: {
                     properties: {
                         enabled: {type: 'boolean'},
@@ -160,11 +178,11 @@ export interface ServerConfig {
             enabled: boolean,
             trialPeriodInDays: number
         }
-    },
+    };
     cdnServers: {
         serverUri: string,
         securedServerUri: string
-    },
+    };
     externalApps: {
         studio: {
             enabled: boolean,
@@ -197,8 +215,18 @@ export interface ServerConfig {
             version: string,
             uiConfId: number,
             uri: string
+        },
+        clipAndTrim: {
+          enabled: boolean,
+          uri: string,
+          uiConfId: string,
+        },
+        advertisements: {
+          enabled: boolean,
+          uri: string,
+          uiConfId: string,
         }
-    },
+    };
     externalLinks: {
         previewAndEmbed: {
             embedTypes: string,
@@ -222,18 +250,17 @@ export interface ServerConfig {
         live: {
             akamaiEdgeServerIpURL: string
         }
-    }
+    };
 }
 
 export const serverConfig: ServerConfig = <any>{};
 
-export function getKalturaServerUri(suffix: string = ''): string{
-    if (serverConfig.kalturaServer)
-    {
+export function getKalturaServerUri(suffix: string = ''): string {
+    if (serverConfig.kalturaServer) {
         const useHttpsProtocol = globalConfig.kalturaServer.useSecuredProtocol;
         const serverEndpoint = serverConfig.kalturaServer.uri;
         return `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}${suffix}`;
-    }else {
+    } else {
         throw new Error(`cannot provide kaltura server uri. server configuration wasn't loaded already`);
     }
 }

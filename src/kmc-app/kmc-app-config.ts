@@ -1,29 +1,33 @@
+export interface KMCAppSubMenuItem {
+    id: string;
+    routePath: string;
+    titleToken: string;
+    position?: string;
+}
+
+export interface KMCAppMenuItem {
+    id: string;
+    routePath: string;
+    titleToken: string;
+    showSubMenu: boolean;
+    children?: KMCAppSubMenuItem[];
+}
+
 export interface KmcAppConfig {
-  storageNamespace: string,
+  storageNamespace: string;
   kalturaServer: {
-      expiry: number,
-      privileges: string
+      expiry: number;
+      privileges: string;
   },
   routing: {
-    errorRoute: string,
-    loginRoute: string
+    errorRoute: string;
+    loginRoute: string;
   },
-  menuItems: {
-    id: string,
-    routePath: string,
-    titleToken: string,
-    showSubMenu: boolean,
-    children?: {
-      id: string,
-      routePath: string,
-      titleToken: string,
-      position?: string
-    }[]
-  }[],
+  menuItems: KMCAppMenuItem[];
   locales: {
-    id: string,
-    label: string
-  }[]
+    id: string;
+    label: string;
+  }[];
 }
 
 
