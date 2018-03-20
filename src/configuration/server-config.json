@@ -40,9 +40,18 @@
       "version": "",
       "uri": "",
       "uiConfId": 0,
-      "map_urls": [
-      ],
+      "map_urls": [],
       "map_zoom_levels": ""
+    },
+    "clipAndTrim": {
+      "enabled": false,
+      "uri": "",
+      "uiConfId": ""
+    },
+    "advertisements": {
+      "enabled": false,
+      "uri": "",
+      "uiConfId": ""
     }
   },
   "externalLinks": {

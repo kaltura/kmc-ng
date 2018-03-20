@@ -1,21 +1,22 @@
-import { Route } from '@angular/router';
-
-import { ContentEntriesComponent } from './content-entries.component';
-import { EntriesListHolderComponent } from './entries/entries-list-holder.component';
-import { EntryComponent } from './entry/entry.component';
-import { EntryMetadata } from './entry/entry-metadata/entry-metadata.component';
-import { EntryUsers } from './entry/entry-users/entry-users.component';
-import { EntryWidgetKeys } from './entry/entry-widget-keys';
-import { EntryClips } from './entry/entry-clips/entry-clips.component';
-import { EntryRelated } from './entry/entry-related/entry-related.component';
-import { EntryLive } from './entry/entry-live/entry-live.component';
-import { EntryCaptions } from './entry/entry-captions/entry-captions.component';
-import { EntryFlavours } from './entry/entry-flavours/entry-flavours.component';
-import { EntryScheduling } from './entry/entry-scheduling/entry-scheduling.component';
-import { EntryAccessControl } from './entry/entry-access-control/entry-access-control.component';
-import { EntryThumbnails } from './entry/entry-thumbnails/entry-thumbnails.component';
-import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
-import { EntryDistributionComponent } from './entry/entry-distribution/entry-distribution.component';
+import {Route} from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {ContentEntriesComponent} from './content-entries.component';
+import {EntriesListHolderComponent} from './entries/entries-list-holder.component';
+import {EntryComponent} from './entry/entry.component';
+import {EntryMetadata} from './entry/entry-metadata/entry-metadata.component';
+import {EntryUsers} from './entry/entry-users/entry-users.component';
+import {EntryWidgetKeys} from './entry/entry-widget-keys';
+import {EntryClips} from './entry/entry-clips/entry-clips.component';
+import {EntryRelated} from './entry/entry-related/entry-related.component';
+import {EntryLive} from './entry/entry-live/entry-live.component';
+import {EntryCaptions} from './entry/entry-captions/entry-captions.component';
+import {EntryFlavours} from './entry/entry-flavours/entry-flavours.component';
+import {EntryScheduling} from './entry/entry-scheduling/entry-scheduling.component';
+import {EntryAccessControl} from './entry/entry-access-control/entry-access-control.component';
+import {EntryThumbnails} from './entry/entry-thumbnails/entry-thumbnails.component';
+import {EntryCanDeactivate} from './entry/entry-can-deactivate.service';
+import {EntryDistributionComponent} from './entry/entry-distribution/entry-distribution.component';
+import {EntryAdvertisementsComponent} from './entry/entry-advertisements/entry-advertisements.component';
 
 export const routing: Route[] = [
   {
@@ -39,6 +40,7 @@ export const routing: Route[] = [
           { path: 'live', component: EntryLive, data: { sectionKey: EntryWidgetKeys.Live } },
           { path: 'related', component: EntryRelated, data: { sectionKey: EntryWidgetKeys.Related } },
           { path: 'clips', component: EntryClips, data: { sectionKey: EntryWidgetKeys.Clips } },
+          { path: 'advertisements', component: EntryAdvertisementsComponent, data: { sectionKey: EntryWidgetKeys.Advertisements } },
           { path: 'users', component: EntryUsers, data: { sectionKey: EntryWidgetKeys.Users } },
           { path: 'distribution', component: EntryDistributionComponent, data: { sectionKey: EntryWidgetKeys.Distribution } },
         ]
