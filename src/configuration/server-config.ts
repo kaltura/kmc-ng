@@ -80,7 +80,8 @@ export const ServerConfigSchema = {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
-                        version: {type: 'string'}
+                      uiConfId: {type: 'number'},
+                      version: {type: 'string'}
                     },
                     required: ['enabled', 'uri', 'version'],
                     additionalProperties: false
@@ -212,7 +213,8 @@ export interface ServerConfig {
         liveAnalytics: {
             enabled: boolean,
             version: string,
-            uri: string,
+            uiConfId: number,
+            uri: string
         },
         clipAndTrim: {
           enabled: boolean,

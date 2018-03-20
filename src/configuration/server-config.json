@@ -28,6 +28,7 @@
     "liveAnalytics": {
       "enabled": false,
       "uri": "",
+      "uiConfId": 0,
       "version": ""
     },
     "kava": {
