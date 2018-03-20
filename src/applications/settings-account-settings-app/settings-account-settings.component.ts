@@ -6,6 +6,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 function phoneValidator(): ValidatorFn {
@@ -29,7 +30,7 @@ function phoneValidator(): ValidatorFn {
 })
 export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
-
+  public _kmcPermissions = KMCPermissions;
   public accountSettingsForm: FormGroup;
   public nameOfAccountOwnerOptions: SelectItem[] = [];
   public describeYourselfOptions: SelectItem[] = [];
@@ -40,6 +41,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _fb: FormBuilder) {
   }
 
@@ -174,5 +176,9 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
         this.describeYourselfOptions[this.describeYourselfOptions.length - 1].label,
       referenceId: partner.referenceId
     });
-  }
+
+    if (!this._permissionsService.hasPermission(KMCPermissions.ACCOUNT_UPDATE_SETTINGS)) {
+      this.accountSettingsForm.disable({ emitEvent: false });
+    }
+   }
 }
