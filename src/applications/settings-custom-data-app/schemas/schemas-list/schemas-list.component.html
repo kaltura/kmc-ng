@@ -7,7 +7,7 @@
             <button
               pButton
               type="button"
-              [class.kHidden]="!_selectedSchemas.length || (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted)"
+              [class.kHidden]="_selectedSchemas.length || (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted)"
               [label]="'applications.settings.metadata.addCustomSchema' | translate"
               class="kButtonBranded kAddSchemaBtn"
               (click)="_addNewSchema()"></button>

@@ -57,7 +57,7 @@
       </ng-template>
     </p-column>
 
-    <p-column *ngIf="!(_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted))">
+    <p-column *ngIf="(isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kNgIfPermitted)) || (!isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kNgIfPermitted))">
       <ng-template let-col let-field="rowData" let-i="rowIndex" pTemplate="body">
         <span class="kFieldsTableActions">
           <i class="kIconarrow_up kActionMoveDown"

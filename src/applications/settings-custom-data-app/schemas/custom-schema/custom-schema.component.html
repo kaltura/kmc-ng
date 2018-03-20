@@ -8,7 +8,7 @@
                 class="kButtonBranded KButtonSave"
                 pButton
                 [disabled]="!_isDirty"
-                [class.kHidden]="_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted)"
+                [class.kHidden]="_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted) || !_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kHiddenIfNotPermitted)"
                 [label]="'app.common.save' | translate"
                 (click)="_saveSchema()"></button>
       </div>
@@ -50,7 +50,7 @@
             <button
               pButton
               class="kButtonDefault"
-              [class.kHidden]="_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted)"
+              [class.kHidden]="_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kHiddenIfNotPermitted) || !_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kHiddenIfNotPermitted)"
               type="button"
               icon="kIconplus"
               iconPos="left"
@@ -72,6 +72,7 @@
       </div>
       <div class="kSchemaTableWrapper">
         <kCustomSchemaFieldsTable [fields]="_profileFields"
+                                  [isNew]="_schema?.isNew"
                                   (onActionSelected)="_actionSelected($event)"
                                   [(selectedFields)]="_selectedFields"></kCustomSchemaFieldsTable>
       </div>
