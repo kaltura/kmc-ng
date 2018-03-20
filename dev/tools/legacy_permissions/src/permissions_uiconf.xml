@@ -1,0 +1,775 @@
+<root>
+    <permissions>
+        <!-- Content Ingestion -->
+        <permissionGroup text="Content Ingestion" id="CONTENT_INGEST_BASE">
+            <permission text="Upload from Desktop" id="CONTENT_INGEST_UPLOAD">
+                <ui id="entryAssets" allowUpload="false"/>
+                <ui id="addPanel.btnUpload" visible="false" includeInLayout="false"/>
+                <ui id="addPanel.btnAsperaUpgrade" visible="false" includeInLayout="false"/>
+                <ui id="dashboard.uploadPanel.uploadOption2Button" enabled="false" buttonMode="false"/>
+            </permission>
+            <!-- Bulk Upload -->
+            <permission text="Import Files &amp; Bulk Upload" id="CONTENT_INGEST_BULK_UPLOAD">
+                <ui id="dashboard.uploadPanel.uploadOption1Button" enabled="false" buttonMode="false"/>
+                <ui id="dashboard.uploadPanel.bulkSamplesLinkButton" visible="false"/>
+                <ui id="entryAssets" allowImport="false"/>
+                <ui id="addPanel.bulkBox" allowMedia="false"/>
+            </permission>
+            <!-- Remote Storage -->
+            <permission text="Set Link to Files on Remote Storage" id="CONTENT_INGEST_REMOTE_STORAGE"
+                        dependsOnFeature="FEATURE_REMOTE_STORAGE_INGEST">
+                <ui id="entryAssets" allowLink="false"/>
+                <ui id="content.generalPermissions" enableRemoteStorage="false"/>
+            </permission>
+            <!-- drop folder -->
+            <permission text="Match Media Files from Drop Folder" id="dropFolder.CONTENT_INGEST_DROP_FOLDER_MATCH"
+                        dependsOnFeature="CONTENT_INGEST_DROP_FOLDER_MATCH">
+                <ui id="entryAssets" allowMatchFromDrop="false"/>
+            </permission>
+            <!-- KCW: online services -->
+            <permission text="Import from Web" id="CONTENT_INGEST_EXTERNAL_SEARCH">
+                <ui id="addPanel.btnServices" visible="false" includeInLayout="false"/>
+            </permission>
+            <!-- KCW: webcam -->
+            <permission text="Record from Webcam" id="CONTENT_INGEST_WEBCAM">
+                <ui id="addPanel.btnWebcam" visible="false" includeInLayout="false"/>
+            </permission>
+            <!-- create empty video entry -->
+            <permission text="Prepare Video Entry" id="CONTENT_INGEST_ORPHAN_VIDEO">
+                <ui id="addPanel.btnVideo" visible="false" includeInLayout="false"/>
+            </permission>
+            <!-- create empty audio entry -->
+            <permission text="Prepare Audio Entry" id="CONTENT_INGEST_ORPHAN_AUDIO">
+                <ui id="addPanel.btnAudio" visible="false" includeInLayout="false"/>
+            </permission>
+            <!-- live stream -->
+            <permission text="Prepare Live Stream Entry" id="LIVE_STREAM_ADD" dependsOnFeature="FEATURE_LIVE_STREAM">
+                <ui id="addPanel.btnLive" visible="false" includeInLayout="false"/>
+            </permission>
+        </permissionGroup>
+
+        <!-- Content Management -->
+        <permissionGroup text="Content Management" id="CONTENT_MANAGE_BASE" isAdvancedGroup="true">
+            <ui id="manualPlaylistDrilldown_edit" showLinks="false"/>
+            <ui id="manualPlaylistDrilldown_add" showLinks="false"/>
+            <ui id="ruleBasedPlaylistDrilldown_edit.simpleRule.entries" showLinks="false"/>
+            <ui id="ruleBasedPlaylistDrilldown_add.simpleRule.entries" showLinks="false"/>
+
+            <permission text="Modify Metadata" id="CONTENT_MANAGE_METADATA">
+                <ui id="entryMetaData.name_input" editable="false" enabled="false" mouseEnabled="false"/>
+                <ui id="entryMetaData.descriptionTi" editable="false" enabled="false"
+                    mouseEnabled="false"/>
+                <ui id="entryMetaData.tagsComplete" enabled="false" />
+                <ui id="entryDrilldown" saveEnabled="false"/>
+                <ui id="content.manage.bulkActions" includeTags="false"/>
+            </permission>
+
+            <permission text="View / Modify Reference ID" id="CONTENT_INGEST_REFERENCE_MODIFY">
+                <ui id="entryMetaData.referenceId" visible="false" includeInLayout="false"/>
+                <ui id="matchFromDropWin" allowSetRefid="false" />
+            </permission>
+
+            <permission text="Modify Entry's Category" id="CONTENT_MANAGE_ASSIGN_CATEGORIES">
+                <ui id="entryMetaData" categoriesEditable="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+            </permission>
+            <permission text="Modify Thumbnail" id="CONTENT_MANAGE_THUMBNAIL">
+                <ui id="entryThumbnails" editable="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+            </permission>
+            <permission text="Modify Scheduling" id="CONTENT_MANAGE_SCHEDULE">
+                <ui id="entrySch.anyTimeRBtn" enabled="false"/>
+                <ui id="entrySch.spcificRangeRBtn" enabled="false"/>
+                <ui id="entrySch.clearDatesBtn" visible="false"/>
+                <ui id="entrySch" editable="false"/>
+                <ui id="content.manage.bulkActions" includeScheduling="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+            </permission>
+            <permission text="Modify Access Control" id="CONTENT_MANAGE_ACCESS_CONTROL">
+                <ui id="entryAcp.acProfsCB" enabled="false"/>
+                <ui id="entryAcp.addBtn" visible="false"/>
+                <ui id="content.manage.bulkActions" includeAccessControl="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+            </permission>
+            <permission text="Modify Custom Data" id="CONTENT_MANAGE_CUSTOM_DATA"
+                        dependsOnFeature="METADATA_PLUGIN_PERMISSION">
+                <ui id="entryMetaData" customDataEditable="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+                <ui id="content.generalPermissions" enableUpdateCustomData="false"/>
+            </permission>
+            <permission text="Modify Entry's User Settings" id="CONTENT_MANAGE_ENTRY_USERS" dependsOnFeature="FEATURE_END_USER_MANAGE">
+                <ui id="content.manage.bulkActions" includeOwner="false"/>
+                <ui id="entryUsers" changesEnabled="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+            </permission>
+
+            <permission text="Delete Content" id="CONTENT_MANAGE_DELETE">
+                <ui id="content.manage.entryTable" showDelete="false"/>
+                <ui id="content.moderation.entryTable" showDelete="false"/>
+                <ui id="content.manage.bulkActions" includeDelete="false"/>
+            </permission>
+            <permission text="Grab Embed Code" id="CONTENT_MANAGE_EMBED_CODE">
+                <ui id="content.generalPermissions" showSinglePlayerEmbedCode="false"/>
+                <ui id="dashboard.embedPanel.embedOption1Button" enabled="false" buttonMode="false"/>
+            </permission>
+            <permission text="Add Media to an Entry" id="CONTENT_INGEST_INTO_ORPHAN">
+                <ui id="entryAssets" allowAddMedia="false"/>
+            </permission>
+
+            <permission text="Replace Entry's Media" id="CONTENT_INGEST_INTO_READY"
+                        dependsOnFeature="FEATURE_ENTRY_REPLACEMENT">
+                <ui id="entryAssets" allowReplaceMedia="false"/>
+                <ui id="content.generalPermissions" allowTrimming="false"/>
+
+            </permission>
+
+            <permission text="Approve Media Replacement" id="CONTENT_INGEST_REPLACE"
+                        dependsOnFeature="FEATURE_ENTRY_REPLACEMENT_APPROVAL">
+                <ui id="entryAssets.replacementActionsHBox" visible="false" includeInLayout="false"/>
+            </permission>
+
+            <permission text="Manage Flavors" id="CONTENT_MANAGE_RECONVERT">
+                <ui id="entryAssets" hideColumns="actionCol"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+            </permission>
+
+            <!-- clip media -->
+            <permission text="Clipping" id="CONTENT_INGEST_CLIP_MEDIA" dependsOnFeature="FEATURE_CLIP_MEDIA">
+                <ui id="content.generalPermissions" allowClipping="false"/>
+            </permission>
+
+            <permission text="Edit Categories" id="CONTENT_MANAGE_EDIT_CATEGORIES">
+                <ui id="content.categories.bulkActions" enabled="false"/>
+                <ui id="content.categories.actionsBox" visible="false" includeInLayout="false"/>
+                <ui id="content.categories.categoriesTable" showMove="false" showDelete="false"/>
+                <ui id="categoryDrilldown.parent" enableSave="false"/>
+                <ui id="categoryDrilldown.metadata.nameInput" enabled="false"/>
+                <ui id="categoryDrilldown.metadata.descriptionInput" enabled="false"/>
+                <ui id="categoryDrilldown.metadata.tagsInput" enabled="false"/>
+                <ui id="categoryDrilldown.metadata.referenceIdInput" enabled="false"/>
+                <ui id="categoryDrilldown.metadata" customDataEditable="false"/>
+                <ui id="addPanel.bulkBox" allowCategories="false"/>
+            </permission>
+
+            <permission text="Edit Category's Entitlement Settings" id="CONTENT_MANAGE_CATEGORY_USERS" dependsOnFeature="FEATURE_ENTITLEMENT">
+                <ui id="categoryDrilldown.endUsers" changesEnabled="false" />
+                <ui id="endUserPermissionsWin" changesEnabled="false" />
+                <ui id="content.categories.bulkActions" includeCategoryUserActions="false" />
+                <ui id="addPanel.bulkBox" allowMembers="false"/>
+            </permission>
+
+            <permission text="Update Live Stream" id="LIVE_STREAM_UPDATE" dependsOnFeature="FEATURE_LIVE_STREAM">
+                <ui id="liveStream.bitrateConfig.bitrate1Info" enabled="false"/>
+                <ui id="liveStream.bitrateConfig.bitrate2Info" enabled="false"/>
+                <ui id="liveStream.bitrateConfig.bitrate3Info" enabled="false"/>
+                <ui id="liveStream.convprofConfig.convProf" enabled="false"/>
+                <ui id="liveStream.exportBtn" visible="false" includeInLayout="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+            </permission>
+            <!--permission text="Create Remix" id="CONTENT_MANAGE_MIX" >
+                 <ui id="entryMetaData" showEditorLinks="false" />
+                 </permission-->
+            <permission text="Download Files" id="CONTENT_MANAGE_DOWNLOAD">
+                <ui id="content.manage.bulkActions" includeDownload="false"/>
+            </permission>
+            <permission text="Edit Entry Advertisement" id="cuePoint.MANAGE" dependsOnFeature="ADCUEPOINT_PLUGIN_PERMISSION">
+                <ui id="ads" editable="false" />
+            </permission>
+            <permission text="Edit Entry Captions" id="CAPTION_MODIFY" dependsOnFeature="CAPTION_PLUGIN_PERMISSION">
+                <ui id="entryCaptions" editable="false" />
+            </permission>
+            <permission text="Edit Related Files" id="ATTACHMENT_MODIFY" dependsOnFeature="ATTACHMENT_PLUGIN_PERMISSION">
+                <ui id="entryRelated" editable="false" />
+                <ui id="entryRelated" hideColumns="actions" />
+            </permission>
+        </permissionGroup>
+
+        <!-- Import Log Control -->
+        <permissionGroup text="Bulk Upload Log" id="BULK_LOG_BASE" isAdvancedGroup="true" >
+            <permission text="Download Bulk Upload Files" id="BULK_LOG_DOWNLOAD">
+                <ui id="bulk" allowDownload="false"/>
+            </permission>
+            <permission text="Delete Bulk Upload Items" id="BULK_LOG_DELETE">
+                <ui id="bulk" allowDelete="false"/>
+            </permission>
+        </permissionGroup>
+
+        <!-- Content Moderation -->
+        <permissionGroup text="Content Moderation" id="CONTENT_MODERATE_BASE" isAdvancedGroup="true">
+            <permission text="Approve/Reject Content" id="CONTENT_MODERATE_APPROVE_REJECT">
+                <ui id="content.moderation.bulkActions" includeInLayout="false" visible="false"/>
+                <ui id="content.moderation" showActions="false"/>
+            </permission>
+            <permission text="Moderate Metadata" id="CONTENT_MODERATE_METADATA">
+                <ui id="entryMetaData.name_input" editable="false" enabled="false" mouseEnabled="false"/>
+                <ui id="entryMetaData.descriptionTi" editable="false" enabled="false"
+                    mouseEnabled="false"/>
+                <ui id="entryMetaData.tagsComplete" enabled="false" />
+                <ui id="entryDrilldown" saveEnabled="false"/>
+                <ui id="content.manage.bulkActions" includeTags="false"/>
+            </permission>
+            <permission text="Moderate Custom Metadata" id="CONTENT_MODERATE_CUSTOM_DATA"
+                        dependsOnFeature="METADATA_PLUGIN_PERMISSION">
+                <ui id="entryMetaData" customDataEditable="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+            </permission>
+        </permissionGroup>
+
+        <!-- Playlist management -->
+        <permissionGroup text="Playlist Management" id="PLAYLIST_BASE" isAdvancedGroup="true">
+            <permission text="Create Playlists" id="PLAYLIST_ADD">
+                <ui id="content.playlists.actionsBox" visible="false" includeInLayout="false"/>
+                <ui id="content.manage.bulkActions" includePlaylist="false"/>
+            </permission>
+            <permission text="Modify Playlists" id="PLAYLIST_UPDATE">
+                <ui id="ruleBasedPlaylistDrilldown_edit" editable="false"/>
+                <ui id="manualPlaylistDrilldown_edit" editable="false"/>
+            </permission>
+            <permission text="Delete Playlists" id="PLAYLIST_DELETE">
+                <ui id="content.playlists.playlistTable" showDelete="false"/>
+                <ui id="content.playlists.deleteBtn" visible="false" includeInLayout="false"/>
+            </permission>
+            <permission text="Grab Playlist Embed Code" id="PLAYLIST_EMBED_CODE">
+                <ui id="content.generalPermissions" showPlaylistEmbedCode="false"/>
+                <ui id="dashboard.embedPanel.embedOption2Button" enabled="false" buttonMode="false"/>
+                <ui id="studio.playerList" canPreviewAndEmbed="false"/>
+                <ui id="content.playlists" showEmbed="false"/>
+            </permission>
+        </permissionGroup>
+
+        <!-- Syndication management -->
+        <permissionGroup text="Syndication Management" id="SYNDICATION_BASE" isAdvancedGroup="true">
+            <permission text="Create Syndication Feeds" id="SYNDICATION_ADD">
+                <ui id="content.syndication.addBtn" enabled="false" buttonMode="false"/>
+            </permission>
+            <permission text="Modify Syndication Feeds" id="SYNDICATION_UPDATE">
+                <ui id="externalSyndicationDrilldown_edit" editable="false"/>
+            </permission>
+            <permission text="Delete Syndication Feeds" id="SYNDICATION_DELETE">
+                <ui id="content.syndication.deleteExSynBtn" visible="false"/>
+            </permission>
+        </permissionGroup>
+        <!-- Distribution management -->
+        <permissionGroup text="Content Distribution" id="CONTENT_MANAGE_DISTRIBUTION_BASE"
+                         dependsOnFeature="CONTENTDISTRIBUTION_PLUGIN_PERMISSION" isAdvancedGroup="true">
+            <permission text="Select Distribution Points" id="CONTENT_MANAGE_DISTRIBUTION_WHERE"
+                        dependsOnFeature="CONTENTDISTRIBUTION_PLUGIN_PERMISSION">
+                <ui id="entryDistribution.selectDistributors" visible="false" includeInLayout="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+                <ui id="selectDistributorsWindow" enableAddDistribution="false"/>
+                <ui id="distributionDetailsWindow" enableChanges="false"/>
+            </permission>
+            <permission text="Distribute" id="CONTENT_MANAGE_DISTRIBUTION_SEND"
+                        dependsOnFeature="CONTENTDISTRIBUTION_PLUGIN_PERMISSION">
+                <ui id="entryDistribution" showActions="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+                <ui id="selectDistributorsWindow" enableDistribution="false"/>
+            </permission>
+            <permission text="Remove Distributed Content" id="CONTENT_MANAGE_DISTRIBUTION_REMOVE"
+                        dependsOnFeature="CONTENTDISTRIBUTION_PLUGIN_PERMISSION">
+                <ui id="selectDistributorsWindow" enableRemoveDistribution="false"/>
+                <ui id="entryDistribution.selectDistributors" visible="false" includeInLayout="false"/>
+            </permission>
+        </permissionGroup>
+        <!-- Drop Folder Control -->
+        <permissionGroup text="Drop Folders Control" id="dropFolder.CONTENT_INGEST_DROP_FOLDER_BASE"
+                         dependsOnFeature="DROPFOLDER_PLUGIN_PERMISSION" isAdvancedGroup="true">
+            <permission text="Delete Files" id="dropFolder.CONTENT_INGEST_DROP_FOLDER_DELETE"
+                        dependsOnFeature="DROPFOLDER_PLUGIN_PERMISSION">
+                <ui id="content.dropFolders.deleteFilesBtn" visible="false" includeInLayout="false"/>
+            </permission>
+        </permissionGroup>
+        <!-- Studio -->
+        <permissionGroup text="Studio" id="STUDIO_BASE" isAdvancedGroup="true">
+            <ui id="dashboard.customizePanel.customizeOptionButton" enabled="false" buttonMode="false"/>
+            <permission text="Create Players" id="STUDIO_ADD_UICONF">
+                <ui id="studio.playerList" enableDuplicate="false"/>
+                <ui id="studio.playerList.templatesHolder" visible="false" includeInLayout="false"/>
+            </permission>
+            <permission text="Modify Players" id="STUDIO_UPDATE_UICONF">
+                <ui id="wizard_edit.stylePage.all" enabled="false"/>
+                <ui id="wizard_edit.templatePage.all" enabled="false"/>
+                <ui id="wizard_edit.previewPlayerPage.kdpWidth" enabled="false"/>
+                <ui id="wizard_edit.previewPlayerPage.kdpHeight" enabled="false"/>
+                <ui id="wizard_edit.contentPage.removeBtn" enabled="false"/>
+                <ui id="wizard_edit.contentPage.addBtn" enabled="false" buttonMode="false"/>
+                <ui id="wizard_edit.contentPage.upBtn" visible="false"/>
+                <ui id="wizard_edit.contentPage.downBtn" visible="false"/>
+                <ui id="wizard_edit.featurePage" editable="false"/>
+                <ui id="wizard_edit.wizardSaveBtn" visible="false"/>
+            </permission>
+            <permission text="Delete Players" id="STUDIO_DELETE_UICONF">
+                <ui id="studio.playerList" enableDelete="false"/>
+            </permission>
+            <permission text="Select Player Content" id="STUDIO_SELECT_CONTENT">
+                <ui id="studio.playerList" enableSelectContent="false"/>
+                <ui id="wizard_edit" hideTabs="contentPage"/>
+                <ui id="wizard_add" hideTabs="contentPage"/>
+            </permission>
+        </permissionGroup>
+        <!-- advertising -->
+        <permissionGroup text="Set Advertising Settings" id="ADVERTISING_UPDATE_SETTINGS"
+                         dependsOnFeature="FEATURE_VAST">
+            <ui id="wizard_add.advertizingPage" editable="false"/>
+            <ui id="wizard_edit.advertizingPage" editable="false"/>
+        </permissionGroup>
+        <!-- Video Analytics -->
+        <permissionGroup text="Video Analytics" id="ANALYTICS_BASE" dependsOnFeature="FEATURE_ANALYTICS_TAB">
+            <ui id="dashboard.chartsPanel.OptionsComboBox" enabled="false" buttonMode="false"/>
+            <ui id="dashboard.chartsPanel.viewReportsBtn" enabled="false" buttonMode="false"/>
+            <ui id="dashboard.chartsPanel" visible="false"/>
+            <ui id="dashboard" showGraphs="false"/>
+            <ui id="liveStream" showLiveReportsButton="false"/>
+        </permissionGroup>
+        <!-- Account settings -->
+        <permissionGroup text="Account Settings" id="ACCOUNT_BASE" isAdvancedGroup="true">
+            <permission text="Modify Account Settings" id="ACCOUNT_UPDATE_SETTINGS">
+                <ui id="account.overview.infoBox" enabled="false"/>
+                <ui id="account.overview.saveChangesBtn" visible="false"/>
+            </permission>
+        </permissionGroup>
+        <!-- Integration settings -->
+        <permissionGroup text="Integration Settings" id="INTEGRATION_BASE" isAdvancedGroup="true">
+            <permission text="Modify Integration Settings" id="INTEGRATION_UPDATE_SETTINGS">
+                <ui id="account.integration" enableNotificationsTable="false"/>
+                <ui id="account.integration.advCont" enabled="false"/>
+                <ui id="account.integration.entitlements" enabled="false"/>
+                <ui id="account.integration.notifications" enabled="false"/>
+                <ui id="account.integration.saveChangesBtn" visible="false"/>
+            </permission>
+        </permissionGroup>
+        <!-- Access control settings -->
+        <permissionGroup text="Access Control Settings" id="ACCESS_CONTROL_BASE" isAdvancedGroup="true">
+            <permission text="Create Access Control Profiles" id="ACCESS_CONTROL_ADD">
+                <ui id="account.accessControl.actionBox" visible="false" includeInLayout="false"/>
+                <ui id="entryAcp.addBtn" enabled="false"/>
+                <ui id="entryDrilldown" saveEnabled="false"/>
+            </permission>
+            <permission text="Modify Access Control Profiles" id="ACCESS_CONTROL_UPDATE">
+                <ui id="acDrilldown_edit" editable="false"/>
+            </permission>
+            <permission text="Delete Access Control Profiles" id="ACCESS_CONTROL_DELETE">
+                <ui id="account.accessControl.deleteProfilesBtn" visible="false" includeInLayout="false"/>
+            </permission>
+        </permissionGroup>
+        <!-- Transcoding settings -->
+        <permissionGroup text="Transcoding Settings" id="TRANSCODING_BASE" isAdvancedGroup="true">
+            <permission text="Create Transcoding Profiles" id="TRANSCODING_ADD">
+                <ui id="account.transcoding.advancedMode.actionBox" visible="false" includeInLayout="false"/>
+                <ui id="account.transcoding.liveMode.actionBox" visible="false" includeInLayout="false"/>
+            </permission>
+            <permission text="Modify Transcoding Profiles" id="TRANSCODING_UPDATE">
+                <ui id="account.transcoding.simpleTable" dataEditable="false"/>
+                <ui id="account.transcoding.saveButton" visible="false"/>
+                <ui id="conversionProfileDrilldown_edit.conversionNameTextInput" enabled="false"/>
+                <ui id="conversionProfileDrilldown_edit.conversionDescTextArea" enabled="false"/>
+                <ui id="conversionProfileDrilldown_edit.flavorsTable" dataEditable="false"/>
+                <ui id="conversionProfileDrilldown_edit.submitBtn" visible="false"/>
+            </permission>
+            <permission text="Delete Transcoding Profiles" id="TRANSCODING_DELETE">
+                <ui id="account.transcoding.advancedMode.deleteProfileBtn" visible="false" includeInLayout="false"/>
+                <ui id="account.transcoding.liveMode.deleteProfileBtn" visible="false" includeInLayout="false"/>
+            </permission>
+        </permissionGroup>
+        <!-- Custom data settings -->
+        <permissionGroup text="Custom Metadata Settings" id="CUSTOM_DATA_PROFILE_BASE"
+                         dependsOnFeature="METADATA_PLUGIN_PERMISSION" isAdvancedGroup="true">
+            <permission text="Add Custom Metadata Schemas" id="CUSTOM_DATA_PROFILE_ADD" dependsOnFeature="METADATA_PLUGIN_PERMISSION">
+                <ui id="account.metadata.actionBox" visible="false" includeInLayout="false"/>
+                <ui id="addCustomDataProfilePopup_add.actionBox" visible="false" includeInLayout="false"/>
+                <ui id="addCustomDataProfilePopup_add.saveChangesBtn" visible="false" includeInLayout="false"/>
+                <ui id="addCustomDataProfilePopup_add.customFieldsTable" hideColumns="customFieldsPositions" />
+                <ui id="addCustomDataProfilePopup_edit.downloadXSDBtn" visible="false" includeInLayout="false"/>
+            </permission>
+            <permission text="Modify Custom Metadata Schemas" id="CUSTOM_DATA_PROFILE_UPDATE" dependsOnFeature="METADATA_PLUGIN_PERMISSION">
+                <ui id="addCustomDataProfilePopup_edit.actionBox" visible="false" includeInLayout="false"/>
+                <ui id="addCustomDataProfilePopup_edit.saveChangesBtn" visible="false" includeInLayout="false"/>
+                <ui id="addCustomDataProfilePopup_edit.customFieldsTable" hideColumns="customFieldsPositions" />
+                <ui id="customDataDrilldown_edit" editable="false" />
+            </permission>
+            <permission text="Delete Custom Metadata Schemas" id="CUSTOM_DATA_PROFILE_DELETE" dependsOnFeature="METADATA_PLUGIN_PERMISSION">
+                <ui id="account.metadata.deleteProfilesBtn" visible="false" includeInLayout="false"/>
+            </permission>
+        </permissionGroup>
+
+        <!-- Administration -->
+        <permissionGroup text="Administration" id="ADMIN_BASE" >
+            <permission text="Create Users" id="ADMIN_USER_ADD">
+                <ui id="admin.users.actionButtonsContainer" visible="false" includeInLayout="false"/>
+            </permission>
+            <permission text="Modify Users" id="ADMIN_USER_UPDATE">
+                <ui id="admin.users.table" enableBlock="false"/>
+                <ui id="admin.users.table" enableEdit="false"/>
+                <ui id="userDrilldown_edit.emailTi" enabled="false"/>
+                <ui id="userDrilldown_edit.firstNameTi" enabled="false"/>
+                <ui id="userDrilldown_edit.lastNameTi" enabled="false"/>
+                <ui id="userDrilldown_edit.idTi" enabled="false"/>
+                <ui id="userDrilldown_edit.roleCb" enabled="false"/>
+                <ui id="userDrilldown_edit.addRoleBtn" visible="false"/>
+                <ui id="userDrilldown_edit.saveBtn" visible="false" includeInLayout="false"/>
+            </permission>
+            <permission text="Delete Users" id="ADMIN_USER_DELETE">
+                <ui id="admin.users.table" enableDelete="false"/>
+            </permission>
+            <permission text="Create Roles" id="ADMIN_ROLE_ADD">
+                <ui id="admin.roles.actionButtonsContainer" visible="false" includeInLayout="false"/>
+                <ui id="admin.roles.table" enableDuplicate="false"/>
+            </permission>
+            <permission text="Modify Roles" id="ADMIN_ROLE_UPDATE">
+                <ui id="roleDrilldown_edit.nameTi" enabled="false"/>
+                <ui id="roleDrilldown_edit.descriptionTi" enabled="false"/>
+                <ui id="roleDrilldown_edit.saveBtn" visible="false"/>
+                <ui id="roleDrilldown_edit" roleEditEnabled="false"/>
+            </permission>
+            <permission text="Delete Roles" id="ADMIN_ROLE_DELETE">
+                <ui id="admin.roles.table" enableDelete="false"/>
+            </permission>
+            <permission text="End-User Bulk Upload" id="ADMIN_USER_BULK" dependsOnFeature="FEATURE_END_USER_MANAGE">
+                <ui id="addPanel.bulkBox" allowUsers="false"/>
+            </permission>
+        </permissionGroup>
+
+        <!-- -->
+    </permissions>
+
+    <!-- partner features - not relevant to form, only to ui -->
+    <partnerPermissions>
+        <!-- custom metadata -->
+        <permissionGroup id="METADATA_PLUGIN_PERMISSION">
+            <ui id="content.generalPermissions" enableCustomData="false"/>
+        </permissionGroup>
+        <!-- content analytics -->
+        <permissionGroup id="FEATURE_ANALYTICS_TAB">
+            <ui id="dashboard.chartsPanel.OptionsComboBox" enabled="false" buttonMode="false"/>
+            <ui id="dashboard.chartsPanel.viewReportsBtn" enabled="false" buttonMode="false"/>
+            <ui id="dashboard.chartsPanel" visible="false" includeInLayout="false"/>
+            <ui id="dashboard" showGraphs="false"/>
+        </permissionGroup>
+        <!-- content distribution -->
+        <permissionGroup id="CONTENTDISTRIBUTION_PLUGIN_PERMISSION">
+            <ui id="content.generalPermissions" enableDistribution="false"/>
+            <ui id="distributionDetailsWindow" enableXMLViews="false"/>
+            <ui id="content.manage.filter" enableDistribution="false"/>
+            <ui id="content.moderation.filter" enableDistribution="false"/>
+            <ui id="manualPlaylistDrilldown_edit.filter" enableDistribution="false"/>
+            <ui id="manualPlaylistDrilldown_add.filter" enableDistribution="false"/>
+            <ui id="addRuleWin.singleRule.filter" enableDistribution="false"/>
+        </permissionGroup>
+        <!-- vast advertising in appstudio -->
+        <permissionGroup id="FEATURE_VAST">
+            <ui id="wizard_add" hideTabs="advertizingPage"/>
+            <ui id="wizard_edit" hideTabs="advertizingPage"/>
+        </permissionGroup>
+        <!-- vast cuepoints without ad tag url -->
+        <permissionGroup id="FEATURE_ALLOW_VAST_CUE_POINT_NO_URL">
+            <ui id="ads" allowVastWithoutAdTag="false" />
+        </permissionGroup>
+        <!-- broadcast livestream entries -->
+        <permissionGroup id="FEATURE_LIVE_STREAM">
+            <ui id="content.manage.filter" enableLiveStream="false"/>
+            <ui id="content.moderation.filter" enableLiveStream="false"/>
+            <ui id="manualPlaylistDrilldown_edit.filter" enableLiveStream="false"/>
+            <ui id="manualPlaylistDrilldown_add.filter" enableLiveStream="false"/>
+            <ui id="addRuleWin.singleRule.filter" enableLiveStream="false"/>
+        </permissionGroup>
+        <!-- ingestion of multiple flavours -->
+        <permissionGroup id="FEATURE_MULTI_FLAVOR_INGESTION">
+            <ui id="entryAssets" multiFlavorsIngestionAllowed="false"/>
+            <ui id="conversionFlavorDrilldown.tiSystemName" enabled="false"/>
+            <ui id="conversionFlavorDrilldown.cbConvertPolicy" enabled="false"/>
+        </permissionGroup>
+        <!-- media replacement workflow -->
+        <permissionGroup id="FEATURE_ENTRY_REPLACEMENT">
+            <ui id="entryAssets.replacementInfoHBox" visible="false" includeInLayout="false"/>
+        </permissionGroup>
+        <!-- remote storage -->
+        <permissionGroup id="FEATURE_REMOTE_STORAGE_INGEST">
+            <ui id="content.generalPermissions" enableRemoteStorage="false"/>
+            <ui id="conversionProfileDrilldown_edit" allowStorageProfiles="false" />
+            <ui id="conversionProfileDrilldown_add" allowStorageProfiles="false" />
+        </permissionGroup>
+        <!-- disable thumb resize -->
+        <permissionGroup id="FEATURE_DISABLE_KMC_DRILL_DOWN_THUMB_RESIZE">
+            <ui id="content.generalPermissions" enableThumbResize="true"/>
+        </permissionGroup>
+        <!-- hide thumbnail list -->
+        <permissionGroup id="FEATURE_DISABLE_KMC_LIST_THUMBNAILS">
+            <ui id="content.manage.entryTable" showThumbnails="true"/>
+            <ui id="content.moderation.entryTable" showThumbnails="true"/>
+        </permissionGroup>
+        <!-- IP2Location -->
+        <!--permissionGroup id="FEATURE_IP2LOCATION">
+            <ui id="analytics.community" showMapOverlay="false"/>
+            <ui id="acDrilldown_add.countries" editable="false"/>
+            <ui id="acDrilldown_edit.countries" editable="false"/>
+            <ui id="accessControl.accessControlProfilesTable" showIp2Loc="false"/>
+        </permissionGroup-->
+        <!-- Shows tags columns for entry flavors and thumbnails -->
+        <permissionGroup id="FEATURE_KMC_DRILLDOWN_TAGS_COLUMN">
+            <ui id="entryAssets" showTagsColumn="false"/>
+            <ui id="entryThumbnails" showTagsColumn="false"/>
+        </permissionGroup>
+        <!-- manage categories in small chunks (for partners with many categories) -->
+        <permissionGroup id="DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD">
+            <ui id="content.generalPermissions" lotsOfCategoriesFlag="false"/>
+        </permissionGroup>
+        <!-- allow up to 200 categories per entry (instead of 32) -->
+        <permissionGroup id="FEATURE_DISABLE_CATEGORY_LIMIT">
+            <ui id="content.generalPermissions" setCategoriesLimit="true" />
+        </permissionGroup>
+        <!-- show moderation approval popup -->
+        <permissionGroup id="FEATURE_KMC_VERIFY_MODERATION">
+            <ui id="content.generalPermissions" confirmModeration="false"/>
+        </permissionGroup>
+        <!-- content entitlements -->
+        <permissionGroup id="FEATURE_ENTITLEMENT">
+            <ui id="content.categories.filter" enableEntitlement="false"/>
+            <ui id="content.categories.bulkActions" includeEntitlement="false"/>
+            <ui id="categoryDrilldown.tabsNav" showEndUsersTab="false"/>
+            <ui id="account.integration.entitlements" visible="false"/>
+            <ui id="bulk.filter.itemsType" enableEntitlement="false"/>
+        </permissionGroup>
+        <!-- end users management -->
+        <permissionGroup id="FEATURE_END_USER_MANAGE">
+            <ui id="addPanel.bulkBox" allowUsers="false"/>
+            <ui id="bulk.filter.itemsType" enableEndUsersManagement="false"/>
+        </permissionGroup>
+        <!-- end users reports -->
+        <permissionGroup id="FEATURE_END_USER_REPORTS">
+            <ui id="analytics" entitlementEnabled="false"/>
+        </permissionGroup>
+        <!-- don't show errors from KDP in entry drilldown -->
+        <permissionGroup id="FEATURE_DISABLE_KMC_KDP_ALERTS">
+            <ui id="entryMetaData" disableKDPAlerts="false" />
+            <ui id="ads" disableKDPAlerts="false" />
+            <ui id="content.moderation" disableKDPAlerts="false" />
+        </permissionGroup>
+        <!-- Aspera upgrade link -->
+        <permissionGroup id="FEATURE_HIDE_ASPERA_LINK">
+            <ui id="addPanel" showAsperaUpgrade="true" />
+        </permissionGroup>
+        <!-- Aspera upload page link -->
+        <permissionGroup id="FEATURE_SHOW_ASPERA_UPLOAD_BUTTON">
+            <ui id="addPanel" showAsperaHomepage="false"/>
+        </permissionGroup>
+        <!-- live stream: HLS/HDS, manual (Akamai) -->
+        <permissionGroup id="FEATURE_KMC_AKAMAI_UNIVERSAL_LIVE_STREAM_PROVISION">
+            <ui id="content.generalPermissions" enableAkamaiLive="false" />
+        </permissionGroup>
+        <!-- live stream: Kaltura -->
+        <permissionGroup id="FEATURE_KALTURA_LIVE_STREAM">
+            <ui id="content.generalPermissions" enableKalturaLive="false" />
+            <ui id="liveStream" enableKalturaLive="false" />
+            <ui id="account.transcoding.advancedMode" showLiveBtn="false" />
+        </permissionGroup>
+        <!-- live stream record default: Kaltura -->
+        <permissionGroup id="FEATURE_LIVE_STREAM_RECORD">
+            <ui id="content.generalPermissions" enableKalturaRecording="false" />
+        </permissionGroup>
+        <!-- live stream: Kaltura Multicast -->
+        <permissionGroup id="FEATURE_PUSH_PUBLISH">
+            <ui id="content.generalPermissions" enableKalturaMulticast="false" />
+        </permissionGroup>
+        <!-- DRM -->
+        <permissionGroup id="WIDEVINE_PLUGIN_PERMISSION">
+            <ui id="conversionFlavorDrilldown" isDrmEnabled="false"/>
+        </permissionGroup>
+        <!-- select conversion profile for draft entries -->
+        <permissionGroup id="FEATURE_DRAFT_ENTRY_CONV_PROF_SELECTION">
+            <ui id="addPanel" draftSelectProfile="false"/>
+        </permissionGroup>
+        <!-- flash studio -->
+        <permissionGroup id="FEATURE_SHOW_FLASH_STUDIO">
+            <ui id="studio" showFlashStudio="false"/>
+        </permissionGroup>
+        <!-- html studio -->
+        <permissionGroup id="FEATURE_SHOW_HTML_STUDIO">
+            <ui id="studio" showUniversalStudio="false"/>
+        </permissionGroup>
+        <!-- studio v3 -->
+        <permissionGroup id="FEATURE_V3_STUDIO_PERMISSION">
+            <ui id="studio" showStudioV3="false"/>
+        </permissionGroup>
+
+
+    </partnerPermissions>
+
+    <!-- -->
+    <!-- -->
+
+    <!-- this section determines the hiding of whole tabs and whole modules in the UI
+-->
+    <uimapping>
+        <module id="admin">
+            <permission id="ADMIN_BASE"/>
+            <tab id="users">
+                <permission id="ADMIN_USER_ADD"/>
+                <permission id="ADMIN_USER_UPDATE"/>
+                <permission id="ADMIN_USER_DELETE"/>
+            </tab>
+            <tab id="roles">
+                <permission id="ADMIN_ROLE_ADD"/>
+                <permission id="ADMIN_ROLE_UPDATE"/>
+                <permission id="ADMIN_ROLE_DELETE"/>
+            </tab>
+        </module>
+        <module id="content">
+            <tab id="manage">
+                <permission id="CONTENT_MANAGE_BASE"/>
+                <permission id="CONTENT_MANAGE_METADATA"/>
+                <permission id="CONTENT_MANAGE_ASSIGN_CATEGORIES"/>
+                <permission id="CONTENT_MANAGE_THUMBNAIL"/>
+                <permission id="CONTENT_MANAGE_SCHEDULE"/>
+                <permission id="CONTENT_MANAGE_ACCESS_CONTROL"/>
+                <permission id="CONTENT_MANAGE_CUSTOM_DATA"/>
+                <permission id="CONTENT_MANAGE_EMBED_CODE"/>
+                <permission id="CONTENT_MANAGE_DELETE"/>
+                <permission id="CONTENT_MANAGE_RECONVERT"/>
+                <permission id="CONTENT_MANAGE_EDIT_CATEGORIES"/>
+            </tab>
+            <tab id="moderation">
+                <permission id="CONTENT_MODERATE_BASE"/>
+                <permission id="CONTENT_MODERATE_METADATA"/>
+                <permission id="CONTENT_MODERATE_CUSTOM_DATA"/>
+            </tab>
+            <tab id="playlists">
+                <permission id="PLAYLIST_BASE"/>
+                <permission id="PLAYLIST_ADD"/>
+                <permission id="PLAYLIST_UPDATE"/>
+                <permission id="PLAYLIST_DELETE"/>
+                <permission id="PLAYLIST_EMBED_CODE"/>
+            </tab>
+            <tab id="syndication">
+                <permission id="SYNDICATION_BASE"/>
+                <permission id="SYNDICATION_ADD"/>
+                <permission id="SYNDICATION_UPDATE"/>
+                <permission id="SYNDICATION_DELETE"/>
+            </tab>
+            <tab id="uploads">
+                <permission id="CONTENT_INGEST_BASE"/>
+                <permission id="CONTENT_INGEST_UPLOAD"/>
+                <permission id="CONTENT_INGEST_BULK_UPLOAD"/>
+            </tab>
+            <tab id="bulk">
+                <permission id="BULK_LOG_BASE"/>
+            </tab>
+            <tab id="dropFolders">
+                <permission id="dropFolder.CONTENT_INGEST_DROP_FOLDER_BASE"/>
+            </tab>
+        </module>
+        <module id="studio" >
+            <permission id="STUDIO_BASE" />
+            <permission id="STUDIO_ADD_UICONF" />
+            <permission id="STUDIO_UPDATE_UICONF" />
+            <permission id="STUDIO_DELETE_UICONF" />
+            <tab id="flashStudio">
+                <permission id="FEATURE_SHOW_FLASH_STUDIO" />
+            </tab>
+            <tab id="universalStudio">
+                <permission id="FEATURE_SHOW_HTML_STUDIO" />
+            </tab>
+        </module>
+        <module id="analytics" keepOnEmpty="true">
+            <permission id="ANALYTICS_BASE"/>
+            <tab id="platform">
+                <permission id="FEATURE_PLATFORM_REPORTS" />
+            </tab>
+            <tab id="liveContent">
+                <permission id="FEATURE_LIVE_STREAM" />
+            </tab>
+            <tab id="realTimeDashboard">
+                <permission id="FEATURE_LIVE_STREAM" />
+            </tab>
+        </module>
+        <module id="add">
+            <permission id="CONTENT_INGEST_UPLOAD"/>
+            <permission id="CONTENT_INGEST_BULK_UPLOAD"/>
+            <permission id="CONTENT_INGEST_EXTERNAL_SEARCH"/>
+            <permission id="CONTENT_INGEST_WEBCAM"/>
+            <permission id="CONTENT_INGEST_ORPHAN_VIDEO"/>
+            <permission id="CONTENT_INGEST_ORPHAN_AUDIO"/>
+            <permission id="LIVE_STREAM_ADD"/>
+        </module>
+
+        <!-- this module is not removed even if all specified tabs are removed
+             (it has more tabs that don't require any permissions)
+-->
+        <module id="account" keepOnEmpty="true">
+            <tab id="overview">
+                <permission id="ACCOUNT_BASE"/>
+                <permission id="ACCOUNT_UPDATE_SETTINGS"/>
+            </tab>
+            <tab id="integration">
+                <permission id="INTEGRATION_BASE"/>
+                <permission id="INTEGRATION_UPDATE_SETTINGS"/>
+            </tab>
+            <tab id="accessControl">
+                <permission id="ACCESS_CONTROL_BASE"/>
+                <permission id="ACCESS_CONTROL_ADD"/>
+                <permission id="ACCESS_CONTROL_UPDATE"/>
+                <permission id="ACCESS_CONTROL_DELETE"/>
+            </tab>
+            <tab id="transcoding">
+                <permission id="TRANSCODING_BASE"/>
+                <permission id="TRANSCODING_ADD"/>
+                <permission id="TRANSCODING_UPDATE"/>
+                <permission id="TRANSCODING_DELETE"/>
+            </tab>
+            <tab id="metadata">
+                <permission id="CUSTOM_DATA_PROFILE_BASE"/>
+                <permission id="CUSTOM_DATA_PROFILE_ADD"/>
+                <permission id="CUSTOM_DATA_PROFILE_UPDATE"/>
+                <permission id="CUSTOM_DATA_PROFILE_DELETE"/>
+            </tab>
+        </module>
+
+        <!-- this module requires at least 3 of 4 boxes -->
+        <module id="dashboard" min="3">
+            <!-- embed player -->
+            <permission id="CONTENT_MANAGE_BASE"/>
+            <permission id="PLAYLIST_BASE"/>
+            <!-- studio permission -->
+            <permission id="STUDIO_BASE"/>
+            <!-- analytics permission -->
+            <permission id="ANALYTICS_BASE"/>
+            <!-- upload permission -->
+            <permission id="CONTENT_INGEST_UPLOAD"/>
+            <permission id="CONTENT_INGEST_BULK_UPLOAD"/>
+        </module>
+
+        <!-- this module is not removed even if all specified tabs are removed
+             (it has more tabs that don't require any permissions)
+-->
+        <module id="entryDrilldown" keepOnEmpty="true">
+            <tab id="liveStream">
+                <permission id="FEATURE_LIVE_STREAM"/>
+            </tab>
+            <tab id="customData">
+                <permission id="METADATA_PLUGIN_PERMISSION"/>
+            </tab>
+            <tab id="entryDistribution">
+                <permission id="CONTENT_MANAGE_DISTRIBUTION_BASE"/>
+            </tab>
+            <tab id="entryCaptions">
+                <permission id="CAPTION_PLUGIN_PERMISSION"/>
+            </tab>
+            <tab id="ads">
+                <permission id="ADCUEPOINT_PLUGIN_PERMISSION"/>
+            </tab>
+            <tab id="entryRelated">
+                <permission id="ATTACHMENT_PLUGIN_PERMISSION"/>
+            </tab>
+            <tab id="entryUsers">
+                <permission id="FEATURE_END_USER_MANAGE"/>
+            </tab>
+            <tab id="contentTab">
+                <permission id="FEATURE_MIX_TAB"/>
+            </tab>
+        </module>
+
+        <module id="usageDashboard" min="2">
+            <permission id="FEATURE_ENABLE_USAGE_DASHBOARD"/>
+            <permission id="ANALYTICS_BASE"/>
+        </module>
+    </uimapping>
+</root>

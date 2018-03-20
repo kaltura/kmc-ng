@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { ContentEntriesComponent } from './content-entries.component';
 import { EntriesListHolderComponent } from './entries/entries-list-holder.component';
 import { EntryComponent } from './entry/entry.component';
