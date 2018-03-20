@@ -2,11 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { AppAuthentication, AppUser, AppNavigator } from 'app-shared/kmc-shell';
-import { AppMenuConfig } from '../../services/app-menu-config';
-import { AppMenuService } from '../../services/app-menu.service';
-import { AppMenuItem } from "../../services/app-menu-config";
+
 
 import * as R from 'ramda';
+import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -19,8 +18,12 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _showChangelog = false;
     public _helpMenuOpened = false;
 
+    menuConfig: KMCAppMenuItem[];
+    selectedMenuItem: KMCAppMenuItem;
+    showSubMenu: boolean = true;
+
+
     constructor(private userAuthentication: AppAuthentication,
-                private appMenuService: AppMenuService,
                 private appNavigator: AppNavigator,
                 private router: Router) {
         this.sub = router.events.subscribe((event) => {
@@ -29,7 +32,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
             }
         });
         this._userContext = userAuthentication.appUser;
-        this.menuConfig = this.appMenuService.getMenuConfig();
+        this.menuConfig = kmcAppConfig.menuItems;
 
         if (router.navigated)
         {
@@ -39,10 +42,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     ngOnInit() {
     }
-
-    menuConfig: AppMenuConfig;
-    selectedMenuItem: AppMenuItem;
-    showSubMenu: boolean = true;
 
     setSelectedRoute(path) {
 

@@ -66,6 +66,7 @@ import {NewCategoryComponent} from './categories/new-category/new-category.compo
 import {MoveCategoryComponent} from './categories/move-category/move-category.component';
 import {CategoriesRefineFiltersService} from './categories/categories-refine-filters.service';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
     imports: [
@@ -108,7 +109,8 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
         StickyModule,
         InputHelperModule,
         InputSwitchModule,
-        TableModule
+        TableModule,
+        KMCPermissionsModule
     ],
     declarations: [
         ContentCategoriesComponent,

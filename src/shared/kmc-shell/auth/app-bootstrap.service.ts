@@ -1,10 +1,9 @@
-import { Injectable, InjectionToken, Inject, Optional, Type } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization, AppStorage } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from './app-authentication.service';
-import { modulesConfig } from 'config/modules';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { globalConfig } from 'config/global';
 
