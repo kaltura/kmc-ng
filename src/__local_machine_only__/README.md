@@ -52,5 +52,15 @@ Follow these instructions to test external apps integration:
         "cf3.kaltura.com/content/static/maps/v1"
       ],
       "map_zoom_levels": "12"
+    },
+    "clipAndTrim": {
+      "enabled": true,
+      "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
+      "uiConfId": "36060752"
+    },
+    "advertisements": {
+      "enabled": true,
+      "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
+      "uiConfId": "36060752"
     }
 ```

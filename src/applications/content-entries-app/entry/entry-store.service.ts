@@ -8,17 +8,16 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
 import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import {BaseEntryUpdateAction} from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryWidgetsManager } from './entry-widgets-manager';
-import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import {EntryWidgetsManager} from './entry-widgets-manager';
+import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
 
 export enum ActionTypes
 {
@@ -56,7 +55,7 @@ export class EntryStore implements  OnDestroy {
 
 
 
-	private _saveEntryInvoked = false;
+	private _refreshEntriesListUponLeave = false;
 	private _entry : BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
 	public entry$ = this._entry.asObservable();
 	private _entryId : string;
@@ -92,7 +91,7 @@ export class EntryStore implements  OnDestroy {
       .subscribe(queryParams => {
          const reloadEntriesListOnNavigateOut = !!queryParams['reloadEntriesListOnNavigateOut']; // convert string to boolean
          if (reloadEntriesListOnNavigateOut) {
-           this._saveEntryInvoked = reloadEntriesListOnNavigateOut;
+           this._refreshEntriesListUponLeave = reloadEntriesListOnNavigateOut;
          }
        });
     }
@@ -140,7 +139,7 @@ export class EntryStore implements  OnDestroy {
             this._pageExitVerificationService.remove(this._pageExitVerificationToken);
         }
 
-		if (this._saveEntryInvoked)
+		if (this._refreshEntriesListUponLeave)
 		{
 			this._entriesStore.reload();
 		}
@@ -203,7 +202,7 @@ export class EntryStore implements  OnDestroy {
             .flatMap(
 				(response) => {
 					if (response.ready) {
-						this._saveEntryInvoked = true;
+						this._refreshEntriesListUponLeave = true;
 
 						return this._kalturaServerClient.multiRequest(request)
                             .monitor('entry store: save entry')
@@ -381,5 +380,10 @@ export class EntryStore implements  OnDestroy {
 	{
 		this._router.navigate(['content/entries']);
 	}
+
+
+	public setRefreshEntriesListUponLeave() {
+	  this._refreshEntriesListUponLeave = true;
+  }
 
 }
