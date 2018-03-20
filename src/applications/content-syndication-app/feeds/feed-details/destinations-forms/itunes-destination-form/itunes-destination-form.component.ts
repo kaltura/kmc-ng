@@ -178,10 +178,12 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   private _fillAvailableLanguages(): void {
     // load all supported languages
     this._languages = [];
-    const excludedLanguages = ['he', 'id', 'yi']; // duplicated languages TODO [KMCNG] - should be checked with beckend
+    const excludedLanguages = ['he', 'id', 'yi']; // duplicated languages TODO [KMCNG] - should be checked with backend
     for (const lang in KalturaLanguage) {
       if (lang !== 'en' && excludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
-        this._languages.push({ label: this._appLocalization.get('languages.' + lang.toUpperCase()), value: KalturaLanguage[lang] });
+        const value = lang.toUpperCase();
+        const label = this._appLocalization.get(`languages.${value}`);
+        this._languages.push({ value, label});
       }
     }
     // sort the language array by language alphabetically
