@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EntryAccessControlWidget } from './entry-access-control-widget.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -11,6 +12,7 @@ export class EntryAccessControl implements  OnInit, OnDestroy {
 
 	public _loading = false;
 	public _loadingError = null;
+  public _kmcPermissions = KMCPermissions;
 
 	constructor(public _widgetService: EntryAccessControlWidget) {
 	}

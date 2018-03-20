@@ -5,7 +5,7 @@
         <div class="kAccessControlProfileTableFilters kContent">
             <button pButton
                     class="kButtonBranded kAddProfileBtn"
-                    [class.kHidden]="_selectedProfiles.length || ('ACCESS_CONTROL_ADD' | kHiddenIfNotPermitted)"
+                    [class.kHidden]="_selectedProfiles.length || (_kmcPermissions.ACCESS_CONTROL_ADD | kHiddenIfNotPermitted)"
                     [label]="'applications.settings.accessControl.addProfile' | translate"
                     (click)="_editProfile(null)"></button>
           <span class="kSelectedEntriesNum" *ngIf="(_store.profiles.data$ | async)?.totalCount">

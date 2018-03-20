@@ -5,7 +5,7 @@
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.profile' | translate}}</span>
 				<p-dropdown [options]="(_widgetService._accessControlProfiles$ | async)?.items"
-                    [disabled]="'ACCESS_CONTROL_ADD' | kDisabledIfNotPermitted"
+                    [disabled]="_kmcPermissions.ACCESS_CONTROL_ADD | kDisabledIfNotPermitted"
                     [(ngModel)]="_widgetService.selectedProfile"
                     (onChange)="_widgetService.setDirty()"></p-dropdown>
 			</div>
