@@ -7,6 +7,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kSchemasList',
@@ -22,6 +23,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableBlockerMessage: AreaBlockerMessage = null;
   public _serverValidationError = null;
+  public _kmcPermissions = KMCPermissions;
 
   public _query = {
     pageIndex: 0,
