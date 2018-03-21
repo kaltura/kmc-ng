@@ -3,6 +3,7 @@ import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { globalConfig } from 'config/global';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kBulkLogTable',
@@ -46,6 +47,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -72,18 +74,23 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _buildMenu(bulkLogItem: KalturaBulkUpload): void {
     this._items = [
       {
+        id: 'delete',
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
         command: () => this._onActionSelected('delete', bulkLogItem)
       },
       {
+        id: 'downloadLog',
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),
         command: () => this._onActionSelected('downloadLog', bulkLogItem)
       },
       {
+        id: 'downloadFile',
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadFile'),
         command: () => this._onActionSelected('downloadFile', bulkLogItem)
       }
     ];
+
+    this._permissionsService.filterList(<{ id: string }[]>this._items, { 'delete': KMCPermissions.BULK_LOG_DELETE });
   }
 
   private _onActionSelected(action: string, bulkLogItem: KalturaBulkUpload): void {
