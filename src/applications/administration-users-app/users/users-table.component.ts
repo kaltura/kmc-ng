@@ -5,6 +5,7 @@ import { UsersStore } from './users.service';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -55,6 +56,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(public _usersStore: UsersStore,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
               private _cdRef: ChangeDetectorRef) {
   }
@@ -106,8 +108,8 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private _buildMenu(user: KalturaUser): void {
-    // TODO [kmcng] add support for permission manager
     this._items = [{
+      id: 'edit',
       label: this._appLocalization.get('applications.content.table.edit'),
       command: () => this.editUser.emit(user)
     }];
@@ -116,10 +118,12 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!isCurrentUser || !isAdminUser) {
       this._items.push(
         {
+          id: 'blockUnblock',
           label: this._appLocalization.get('applications.content.table.blockUnblock'),
           command: () => this.toggleUserStatus.emit(user)
         },
         {
+          id: 'delete',
           label: this._appLocalization.get('applications.content.table.delete'),
           command: () => {
             this._browserService.confirm({
@@ -131,6 +135,8 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       );
     }
+
+    this._permissionsService.filterList(<{ id: string }[]>this._items, { 'delete': KMCPermissions.ADMIN_USER_DELETE });
   }
 
   public _openActionsMenu(event: any, user: KalturaUser): void {
