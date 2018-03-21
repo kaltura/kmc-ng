@@ -162,8 +162,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 tags: (this.data.tags ? this.data.tags.split(',').map(item => item.trim()) : null), // for backward compatibility we handle values separated with ',{space}'
                 categories: this._entryCategories,
                 offlineMessage: this.data instanceof KalturaLiveStreamEntry ? (this.data.offlineMessage || null) : '',
-                referenceId: this.data.referenceId || null,
-                entriesIdList : ['1_rbyysqbe','0_hp3s3647','1_4gs7ozgq']
+                referenceId: this.data.referenceId || null
             }
         );
 
