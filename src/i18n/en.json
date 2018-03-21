@@ -10,6 +10,8 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
+      "Kava": "Kava",
+      "Live Analytics": "Live Real-Time Dashboard",
       "Usage Dashboard": "Usage Dashboard",
       "Administration": "Administration",
       "Settings": "Settings",
@@ -340,7 +342,7 @@
           }
         },
         "confirmEntryNavigation": {
-          "title": "Stream has been created successfully",
+          "title": "Stream has been created",
           "generalMessage": "Live Stream Entry has been created successfully.",
           "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
           "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
@@ -474,7 +476,8 @@
           "changeOwnerLabel": "Set a new owner for the selected categories",
           "error": "Categories update failed",
           "cancelEdit": "Cancel Edit",
-          "discard": "Discard all changes?"
+          "discard": "Discard all changes?",
+          "noPrivacyContext": "Some of the selected categories don't have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page under the Settings tab."
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
@@ -997,7 +1000,8 @@
           "successFinish": "Finished successfully",
           "errorFinish": "Finished with errors",
           "failed": "Failed",
-          "otherStatuses": "All other statuses"
+          "otherStatuses": "All other statuses",
+          "datesRangeError": "'From Date' must be before 'To Date'"
         }
       },
       "entryStatus": {
@@ -1125,7 +1129,8 @@
           "relatedFiles": "Related Files",
           "clips": "Clips",
           "users": "Users",
-          "distribution": "Distribution"
+          "distribution": "Distribution",
+          "advertisements": "Advertisements"
         },
         "preview": {
           "pande": "Share & Embed",
@@ -1338,6 +1343,7 @@
         },
         "live": {
           "live": "Live Stream",
+          "liveDashboard": "Live Dashabord",
           "urls": "Broadcasting URLs",
           "primary": "Primary URL:",
           "backup": "Backup URL:",
@@ -1413,7 +1419,15 @@
           "offset": "Offset",
           "duration": "Duration",
           "status": "Status",
-          "n_a": "N/A"
+          "n_a": "N/A",
+          "clipTrim": "Clip & Trim"
+        },
+        "advertisements": {
+          "title":"Advertisement",
+          "description": "Create and manage time-based advertisements by using the Video Editor Tool.",
+          "manageAdvertisements": "Manage Advertisements",
+          "cancelEdit": "Cancel Edit",
+          "discard": "Discard all changes?"
         },
         "users": {
           "users": "Users",
@@ -1828,7 +1842,9 @@
           "fieldRequired": "This field is required"
         }
       },
-
+      "liveDashboard": {
+        "title": "Live Dashboard"
+      },
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",
@@ -2072,9 +2088,9 @@
         "unlimited": "Unlimited",
         "deleteSchema": "Delete Custom Data Schema",
         "deleteSchemas": "Delete Custom Data Schemas",
-        "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema: {{0}} ?",
+        "confirmDeleteSingle": "Are you sure you want to delete the following custom data schema:\n {{0}} ?",
         "confirmDeleteMultipleNames": "Are you sure you want to delete the following custom data schemas:\n {{0}} ?",
-        "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas",
+        "confirmDeleteMultiple": "Are you sure you want to delete the selected custom data schemas?",
         "updateError": "An error occurred during custom data schemas update",
         "discardChanges": "Discard Changes",
         "discardWarning": "You will lose any unsaved changes. Continue?",

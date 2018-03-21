@@ -43,4 +43,8 @@
   .ui-autocomplete-input-token{
     width:100%;
   }
+
+  li.userAdded{
+    background-color: transparentize($kPrimary, 0.5) !important;
+  }
 }

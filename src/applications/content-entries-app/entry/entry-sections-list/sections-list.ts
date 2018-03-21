@@ -1,4 +1,4 @@
-import { EntryWidgetKeys } from '../entry-widget-keys';
+import {EntryWidgetKeys} from '../entry-widget-keys';
 
 export const SectionsList = [
     {
@@ -44,5 +44,9 @@ export const SectionsList = [
     {
         label : 'applications.content.entryDetails.sections.users',
         key : EntryWidgetKeys.Users
+    },
+    {
+      label : 'applications.content.entryDetails.sections.advertisements',
+      key : EntryWidgetKeys.Advertisements
     }
 ];

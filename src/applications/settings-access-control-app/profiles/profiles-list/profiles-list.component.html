@@ -3,11 +3,11 @@
     <div #entriesTableHolder class="kAccessControlProfilesHolder kContent">
       <kSticky [stickyClass]="'kStickyClass'" stickyId="profilesFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kAccessControlProfileTableFilters kContent">
-          <button pButton
-                  class="kButtonBranded kAddProfileBtn"
-                  [class.kHidden]="_selectedProfiles.length"
-                  [label]="'applications.settings.accessControl.addProfile' | translate"
-                  (click)="_editProfile(null)"></button>
+            <button pButton
+                    class="kButtonBranded kAddProfileBtn"
+                    [class.kHidden]="_selectedProfiles.length"
+                    [label]="'applications.settings.accessControl.addProfile' | translate"
+                    (click)="_editProfile(null)"></button>
           <span class="kSelectedEntriesNum" *ngIf="(_store.profiles.data$ | async)?.totalCount">
             {{'applications.settings.accessControl.table.header' | translate:[(_store.profiles.data$ | async)?.totalCount]}}
           </span>
