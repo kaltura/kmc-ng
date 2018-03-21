@@ -39,6 +39,7 @@ import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
 import { RolesComponentsList } from './roles/roles-components-list';
 import { EditRoleComponent } from './role/edit-role/edit-role.component';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -75,7 +76,8 @@ import { EditRoleComponent } from './role/edit-role/edit-role.component';
     TieredMenuModule,
     TooltipModule,
     TreeModule,
-    StickyModule
+    StickyModule,
+    KMCPermissionsModule
   ],
   declarations: [
     AdministrationRolesComponent,

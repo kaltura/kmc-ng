@@ -14,6 +14,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {RolesService} from './roles.service';
 import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kRolesTable',
@@ -50,6 +51,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
+              private _permissionsService: KMCPermissionsService,
               public rolesService: RolesService) {
   }
 
@@ -109,18 +111,29 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _buildMenu(role: KalturaUserRole): void {
     this._items = [
       {
+        id: 'edit',
         label: this._appLocalization.get('applications.administration.roles.actions.edit'),
         command: () => this._onActionSelected('edit', role)
       },
       {
+        id: 'duplicate',
         label: this._appLocalization.get('applications.administration.roles.actions.duplicate'),
         command: () => this._onActionSelected('duplicate', role)
       },
       {
+        id: 'delete',
         label: this._appLocalization.get('applications.administration.roles.actions.delete'),
         command: () => this._onActionSelected('delete', role)
       }
     ];
+
+    this._permissionsService.filterList(
+      <{ id: string }[]>this._items,
+      {
+        'duplicate': KMCPermissions.ADMIN_ROLE_ADD,
+        'delete': KMCPermissions.ADMIN_ROLE_DELETE
+      }
+    );
   }
 
   public _openActionsMenu(event: any, role: KalturaUserRole): void {

@@ -5,6 +5,7 @@
         <kSticky stickyId="rolesFilters" [sticksTo]="'header'" [scrollOffset]="80">
           <div class="kRolesTableFilters kContent">
             <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}"
+                    *ngIf="_kmcPermisssions.ADMIN_ROLE_ADD | kNgIfPermitted"
                     class="kButtonBranded kAddRoleBtn"
                     (click)="_addRole()"></button>
             <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
