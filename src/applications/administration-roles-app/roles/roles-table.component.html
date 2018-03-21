@@ -12,9 +12,8 @@
       <p-column field="name" styleClass="kTableFullName"
                 header="{{'applications.administration.roles.tableColumns.role' | translate}}" [sortable]="false">
         <ng-template let-col let-role="rowData" pTemplate="body">
-          <span class="kRoleName">
-            {{role[col.field]}}
-          </span>
+          <span class="kRoleName">{{role[col.field]}}</span>
+          <i *ngIf="role.partnerId === 0" class="kIconuser kIconAdminRole" [kTooltip]="role[col.field]"></i>
         </ng-template>
       </p-column>
       <p-column field="description"
