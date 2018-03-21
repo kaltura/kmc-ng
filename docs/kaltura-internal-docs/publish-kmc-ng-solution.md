@@ -147,7 +147,7 @@ zip -r kmc-ng-vX.X.X.zip .
 
 7. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 
-#### Step 2.1: create debug version
+#### provide debug version
 1. Rebuild the application **without** production flag.
 ```
 npm run build

@@ -53,6 +53,9 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
                 case 'kava':
                     this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
                     return serverConfig.externalApps.kava.enabled;
+                case 'liveAnalytics':
+                    this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
+                    return serverConfig.externalApps.liveAnalytics.enabled;
                 default:
                     return true;
             }
@@ -74,11 +77,11 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
             }
         }
 
-        // kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => isItemEnabled(item));
-        //
-        // kmcAppConfig.menuItems.forEach(item => {
-        //     item.children = item.children.filter(childItem => hasViewPermission(childItem));
-        // });
+        kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => isItemEnabled(item));
+
+        kmcAppConfig.menuItems.forEach(item => {
+            item.children = item.children.filter(childItem => isItemEnabled(childItem));
+        });
 
         kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => item.children ? item.children.length > 0 : false);
 

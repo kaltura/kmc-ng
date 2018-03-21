@@ -10,6 +10,8 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
+      "Kava": "Kava",
+      "Live Analytics": "Live Real-Time Dashboard",
       "Usage Dashboard": "Usage Dashboard",
       "Administration": "Administration",
       "Settings": "Settings",
@@ -1127,7 +1129,8 @@
           "relatedFiles": "Related Files",
           "clips": "Clips",
           "users": "Users",
-          "distribution": "Distribution"
+          "distribution": "Distribution",
+          "advertisements": "Advertisements"
         },
         "preview": {
           "pande": "Share & Embed",
@@ -1340,6 +1343,7 @@
         },
         "live": {
           "live": "Live Stream",
+          "liveDashboard": "Live Dashabord",
           "urls": "Broadcasting URLs",
           "primary": "Primary URL:",
           "backup": "Backup URL:",
@@ -1415,7 +1419,15 @@
           "offset": "Offset",
           "duration": "Duration",
           "status": "Status",
-          "n_a": "N/A"
+          "n_a": "N/A",
+          "clipTrim": "Clip & Trim"
+        },
+        "advertisements": {
+          "title":"Advertisement",
+          "description": "Create and manage time-based advertisements by using the Video Editor Tool.",
+          "manageAdvertisements": "Manage Advertisements",
+          "cancelEdit": "Cancel Edit",
+          "discard": "Discard all changes?"
         },
         "users": {
           "users": "Users",
@@ -1830,7 +1842,9 @@
           "fieldRequired": "This field is required"
         }
       },
-
+      "liveDashboard": {
+        "title": "Live Dashboard"
+      },
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",
