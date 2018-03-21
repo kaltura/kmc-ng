@@ -1972,6 +1972,7 @@
         "save": "Save",
         "add": "Add",
         "cancel": "Cancel",
+        "newRole": "newRole",
         "errors": {
           "required": "This field is required",
           "emptyGroup": "{{0}} permission group requires items. Please select!"

@@ -63,7 +63,10 @@ export class EditRoleComponent implements OnInit, OnDestroy {
         description: this.role.description
       }, { emitEvent: false });
     } else {
-      this._editRoleForm.patchValue({ name: '' }, { emitEvent: false });
+      this._editRoleForm.patchValue(
+        { name: this._appLocalization.get('applications.administration.role.newRole') },
+        { emitEvent: false }
+      );
     }
   }
 
