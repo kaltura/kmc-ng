@@ -1973,7 +1973,8 @@
         "add": "Add",
         "cancel": "Cancel",
         "errors": {
-          "required": "This field is required"
+          "required": "This field is required",
+          "emptyGroup": "{{0}} permission group requires items. Please select!"
         },
         "permissionsTable": {
           "featureSet": "Feature Set",
@@ -1982,7 +1983,7 @@
           "allPermissions": "All Permissions",
           "custom": "Custom ({0} Selected)",
           "disabled": "Disabled",
-          "selectPermissions": "Select Permissions"
+          "selectPermissions": "Choose"
         }
       },
       "paginator": {

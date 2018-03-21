@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, IterableDiffers, OnDestroy, OnInit } from '@angular/core';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observer } from 'rxjs/Observer';
@@ -26,8 +26,14 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _permissions: string[];
   public _rolePermissions: RolePermissionFormValue[] = [];
+  public _permissionChanged = false;
+
+  public get _saveDisabled(): boolean {
+    return this._editRoleForm.pristine && !this.duplicatedRole && !this._permissionChanged;
+  }
 
   constructor(private _fb: FormBuilder,
+              private _listDiffers: IterableDiffers,
               private _rolesService: RolesStoreService,
               private _appLocalization: AppLocalization) {
     this._buildForm();
@@ -56,6 +62,8 @@ export class EditRoleComponent implements OnInit, OnDestroy {
         name: this.role.name,
         description: this.role.description
       }, { emitEvent: false });
+    } else {
+      this._editRoleForm.patchValue({ name: '' }, { emitEvent: false });
     }
   }
 
@@ -105,6 +113,19 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     };
   }
 
+  private _getPermissionsValues(): string[] {
+    return this._rolePermissions.reduce((acc, val) => {
+      const formValue = val.formValue || [];
+      const result = [...acc];
+
+      if (formValue.length > 0 || (val.enabled && val.isAdvancedGroup) || (val.enabled && val.formValue === null)) {
+        result.push(val.value);
+      }
+
+      return result;
+    }, []);
+  }
+
   public _updateRole(): void {
     // no need to reload the table since the duplicated role remained intact
     if (this.duplicatedRole && this._editRoleForm.pristine) {
@@ -114,10 +135,9 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
     this._blockerMessage = null;
 
-    const editedRole = new KalturaUserRole({
-      name: this._editRoleForm.get('name').value,
-      description: this._editRoleForm.get('description').value
-    });
+    const permissionNames = this._getPermissionsValues().join(',');
+    const { name, description } = this._editRoleForm.value;
+    const editedRole = new KalturaUserRole({ name, description, permissionNames });
     const retryFn = () => this._updateRole();
 
     this._rolesService.updateRole(this.role.id, editedRole)
@@ -127,11 +147,13 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   }
 
   public _addRole(): void {
+    const defaultPermissions = ['KMC_ACCESS', 'KMC_READ_ONLY', 'BASE_USER_SESSION_PERMISSION', 'WIDGET_SESSION_PERMISSION'];
     this._blockerMessage = null;
 
     const retryFn = () => this._addRole();
     const { name, description } = this._editRoleForm.value;
-    this.role = new KalturaUserRole({ name, description });
+    const permissionNames = [...this._getPermissionsValues(), ...defaultPermissions].join(',');
+    this.role = new KalturaUserRole({ name, description, permissionNames });
 
     this._rolesService.addRole(this.role)
       .cancelOnDestroy(this)
@@ -140,7 +162,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   }
 
   public _performAction(): void {
-    if (!this._editRoleForm.valid) {
+    if (!this._editRoleForm.valid || !this._validateRoles()) {
       this._markFormFieldsAsTouched();
       return;
     }
@@ -154,5 +176,29 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
   public _updateRolePermissions(permissions: RolePermissionFormValue[]): void {
     this._rolePermissions = permissions;
+  }
+
+  public _setDirty(): void {
+    this._permissionChanged = true;
+  }
+
+  public _validateRoles(): boolean {
+    const groupWithoutChildren = this._rolePermissions.filter(permission => {
+      return permission.enabled && !permission.isAdvancedGroup && Array.isArray(permission.formValue) && !permission.formValue.length;
+    });
+    if (groupWithoutChildren.length) {
+      this._blockerMessage = new AreaBlockerMessage({
+        message: this._appLocalization.get(
+          'applications.administration.role.errors.emptyGroup',
+          [groupWithoutChildren.map(({ label }) => label).join(', ')]
+        ),
+        buttons: [{
+          label: this._appLocalization.get('app.common.ok'),
+          action: () => this._blockerMessage = null
+        }]
+      });
+    }
+
+    return !groupWithoutChildren.length;
   }
 }

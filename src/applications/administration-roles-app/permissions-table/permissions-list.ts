@@ -7,7 +7,7 @@ export interface RolePermission {
   disabled?: boolean;
 }
 
-export const APP_PERMISSIONS: RolePermission[] = [
+export const ROLE_PERMISSIONS: RolePermission[] = [
   {
     value: 'CONTENT_INGEST_BASE',
     label: 'Content Ingestion',

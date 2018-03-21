@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { APP_PERMISSIONS, RolePermission } from './permissions-list';
+import { ROLE_PERMISSIONS, RolePermission } from './permissions-list';
 
 export interface RolePermissionFormValue extends RolePermission {
   enabled: boolean;
@@ -16,8 +16,9 @@ export class PermissionsTableComponent implements OnInit {
   @Input() scrollableContainer: ElementRef;
 
   @Output() rolePermissionsChange = new EventEmitter<RolePermissionFormValue[]>();
+  @Output() setDirty = new EventEmitter<void>();
 
-  public _rolePermissionsOptions: RolePermission[] = APP_PERMISSIONS;
+  public _rolePermissionsOptions: RolePermission[] = ROLE_PERMISSIONS;
   public _rolePermissions: RolePermissionFormValue[] = [];
 
   ngOnInit() {
@@ -42,10 +43,12 @@ export class PermissionsTableComponent implements OnInit {
     permission.formValue = permission.enabled && permission.items ? permission.items.map(({ value }) => value) : null;
 
     this.rolePermissionsChange.emit(this._rolePermissions);
+    this.setDirty.emit();
   }
 
   public _onChange(): void {
     this.rolePermissionsChange.emit(this._rolePermissions);
+    this.setDirty.emit();
   }
 }
 
