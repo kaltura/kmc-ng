@@ -5,6 +5,7 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {KMCPermissions, KMCPermissionsService} from "app-shared/kmc-shared/kmc-permissions";
 
 @Component({
   selector: 'kAdvertisements',
@@ -24,7 +25,8 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
 
   constructor(private _logger: KalturaLogger,
               private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _permissionService: KMCPermissionsService) {
   }
 
   ngOnInit() {
@@ -33,7 +35,8 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
       return undefined;
     }
 
-    const permissions: string[] = []; // todo: eran sakal - need to implement permissions array after permissions branch is merged
+    const permissions: string[] = ['FEATURE_ALLOW_VAST_CUE_POINT_NO_URL', 'CUEPOINT_MANAGE', 'FEATURE_DISABLE_KMC_KDP_ALERTS']
+      .filter(permission => this._permissionService.hasAnyPermissions([KMCPermissions[permission]]));
 
     this._keditConfig = {
       entryId: this.entryId,
