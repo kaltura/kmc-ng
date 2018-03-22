@@ -13,6 +13,7 @@ import {UploadManagement} from '@kaltura-ng/kaltura-common/upload-management/upl
 import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {serverConfig} from "config/server";
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -51,7 +52,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
     },
     {
       label: this._appLocalization.get('applications.content.table.liveDashboard'),
-      commandName: 'liveDashboard'
+      commandName: 'liveDashboard',
+      disabled: !serverConfig.externalApps.liveDashboard.enabled
     }
   ];
 

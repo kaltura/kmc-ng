@@ -40,8 +40,7 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
       keditUrl: serverConfig.externalApps.advertisements.uri,
       tab: {
         name: 'advertisements',
-        // put 'vastUrlValidationNotRequired' permission if permissions contains 'FEATURE_ALLOW_VAST_CUE_POINT_NO_URL'
-        permissions: [...(permissions.indexOf('FEATURE_ALLOW_VAST_CUE_POINT_NO_URL') > -1 ? ['vastUrlValidationNotRequired'] : [] )],
+        permissions,
         userPermissions: []
       },
       playerUiConfId: serverConfig.externalApps.advertisements.uiConfId,

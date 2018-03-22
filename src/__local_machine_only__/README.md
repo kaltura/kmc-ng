@@ -62,11 +62,13 @@ Follow these instructions to test external apps integration:
     "clipAndTrim": {
       "enabled": true,
       "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
-      "uiConfId": "36060752"
+      "uiConfId": "36060752",
+      "version": "v2.21.1"
     },
     "advertisements": {
       "enabled": true,
       "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
-      "uiConfId": "36060752"
+      "uiConfId": "36060752",
+      "version": "future version above v2.22.3"
     }
 ```
