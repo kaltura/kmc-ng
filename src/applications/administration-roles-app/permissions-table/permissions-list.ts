@@ -1,423 +1,481 @@
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions';
+
 export interface RolePermission {
-  value: string;
+  name: string;
+  value: KMCPermissions;
   label: string;
   isAdvancedGroup?: boolean;
-  dependsOnFeature?: string;
   items?: RolePermission[];
   disabled?: boolean;
 }
 
 export const ROLE_PERMISSIONS: RolePermission[] = [
   {
-    value: 'CONTENT_INGEST_BASE',
+    name: 'CONTENT_INGEST_BASE',
+    value: KMCPermissions.CONTENT_INGEST_BASE,
     label: 'Content Ingestion',
     isAdvancedGroup: false,
     items: [
       {
-        value: 'CONTENT_INGEST_BULK_UPLOAD',
-        label: 'Import Files & Bulk Upload',
-        disabled: true
+        value: KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
+        name: 'CONTENT_INGEST_BULK_UPLOAD',
+        label: 'Import Files & Bulk Upload'
       },
       {
-        value: 'CONTENT_INGEST_REMOTE_STORAGE',
-        label: 'Set Link to Files on Remote Storage',
-        dependsOnFeature: 'FEATURE_REMOTE_STORAGE_INGEST'
+        value: KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE,
+        name: 'CONTENT_INGEST_REMOTE_STORAGE',
+        label: 'Set Link to Files on Remote Storage'
       },
       {
-        value: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_MATCH',
-        label: 'Match Media Files from Drop Folder',
-        dependsOnFeature: 'CONTENT_INGEST_DROP_FOLDER_MATCH'
+        value: KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE,
+        name: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_MATCH',
+        label: 'Match Media Files from Drop Folder'
       },
       {
-        value: 'CONTENT_INGEST_EXTERNAL_SEARCH',
+        value: KMCPermissions.CONTENT_INGEST_EXTERNAL_SEARCH,
+        name: 'CONTENT_INGEST_EXTERNAL_SEARCH',
         label: 'Import from Web',
       },
       {
-        value: 'CONTENT_INGEST_WEBCAM',
+        value: KMCPermissions.CONTENT_INGEST_WEBCAM,
+        name: 'CONTENT_INGEST_WEBCAM',
         label: 'Record from Webcam',
       },
       {
-        value: 'CONTENT_INGEST_ORPHAN_VIDEO',
-        label: 'Prepare Vvalueeo Entry',
+        value: KMCPermissions.CONTENT_INGEST_ORPHAN_VIDEO,
+        name: 'CONTENT_INGEST_ORPHAN_VIDEO',
+        label: 'Prepare Video Entry',
       },
       {
-        value: 'CONTENT_INGEST_ORPHAN_AUDIO',
+        value: KMCPermissions.CONTENT_INGEST_ORPHAN_AUDIO,
+        name: 'CONTENT_INGEST_ORPHAN_AUDIO',
         label: 'Prepare Audio Entry',
       },
       {
-        value: 'LIVE_STREAM_ADD',
-        label: 'Prepare Live Stream Entry',
-        dependsOnFeature: 'FEATURE_LIVE_STREAM'
+        value: KMCPermissions.LIVE_STREAM_ADD,
+        name: 'LIVE_STREAM_ADD',
+        label: 'Prepare Live Stream Entry'
       },
     ]
   },
   {
-    value: 'CONTENT_MANAGE_BASE',
+    value: KMCPermissions.CONTENT_MANAGE_BASE,
+    name: 'CONTENT_MANAGE_BASE',
     label: 'Content Management',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'CONTENT_MANAGE_METADATA',
+        value: KMCPermissions.CONTENT_MANAGE_METADATA,
+        name: 'CONTENT_MANAGE_METADATA',
         label: 'Modify Metadata'
       },
       {
-        value: 'CONTENT_INGEST_REFERENCE_MODIFY',
-        label: 'View / Modify Reference value'
+        value: KMCPermissions.CONTENT_INGEST_REFERENCE_MODIFY,
+        name: 'CONTENT_INGEST_REFERENCE_MODIFY',
+        label: 'View / Modify Reference name'
       },
       {
-        value: 'CONTENT_MANAGE_ASSIGN_CATEGORIES',
+        value: KMCPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES,
+        name: 'CONTENT_MANAGE_ASSIGN_CATEGORIES',
         label: 'Modify Entry\'s Category'
       },
       {
-        value: 'CONTENT_MANAGE_THUMBNAIL',
+        value: KMCPermissions.CONTENT_MANAGE_THUMBNAIL,
+        name: 'CONTENT_MANAGE_THUMBNAIL',
         label: 'Modify Thumbnail'
       },
       {
-        value: 'CONTENT_MANAGE_SCHEDULE',
+        value: KMCPermissions.CONTENT_MANAGE_SCHEDULE,
+        name: 'CONTENT_MANAGE_SCHEDULE',
         label: 'Modify Scheduling'
       },
       {
-        value: 'CONTENT_MANAGE_ACCESS_CONTROL',
+        value: KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL,
+        name: 'CONTENT_MANAGE_ACCESS_CONTROL',
         label: 'Modify Access Control'
       },
       {
-        value: 'CONTENT_MANAGE_CUSTOM_DATA',
-        label: 'Modify Custom Data',
-        dependsOnFeature: 'CONTENT_MANAGE_CUSTOM_DATA'
+        value: KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
+        name: 'CONTENT_MANAGE_CUSTOM_DATA',
+        label: 'Modify Custom Data'
       },
       {
-        value: 'CONTENT_MANAGE_ENTRY_USERS',
-        label: 'Modify Entry\'s User Settings',
-        dependsOnFeature: 'FEATURE_END_USER_MANAGE'
+        value: KMCPermissions.CONTENT_MANAGE_ENTRY_USERS,
+        name: 'CONTENT_MANAGE_ENTRY_USERS',
+        label: 'Modify Entry\'s User Settings'
       },
       {
-        value: 'CONTENT_MANAGE_DELETE',
+        value: KMCPermissions.CONTENT_MANAGE_DELETE,
+        name: 'CONTENT_MANAGE_DELETE',
         label: 'Delete Content'
       },
       {
-        value: 'CONTENT_MANAGE_EMBED_CODE',
+        value: KMCPermissions.CONTENT_MANAGE_EMBED_CODE,
+        name: 'CONTENT_MANAGE_EMBED_CODE',
         label: 'Grab Embed Code'
       },
       {
-        value: 'CONTENT_INGEST_INTO_ORPHAN',
+        value: KMCPermissions.CONTENT_INGEST_INTO_ORPHAN,
+        name: 'CONTENT_INGEST_INTO_ORPHAN',
         label: 'Add Media to an Entry'
       },
       {
-        value: 'CONTENT_INGEST_INTO_READY',
-        label: 'Replace Entry\'s Media',
-        dependsOnFeature: 'FEATURE_ENTRY_REPLACEMENT'
+        value: KMCPermissions.CONTENT_INGEST_INTO_READY,
+        name: 'CONTENT_INGEST_INTO_READY',
+        label: 'Replace Entry\'s Media'
       },
       {
-        value: 'CONTENT_INGEST_REPLACE',
-        label: 'Approve Media Replacement',
-        dependsOnFeature: 'FEATURE_ENTRY_REPLACEMENT_APPROVAL'
+        value: KMCPermissions.CONTENT_INGEST_REPLACE,
+        name: 'CONTENT_INGEST_REPLACE',
+        label: 'Approve Media Replacement'
       },
       {
-        value: 'CONTENT_MANAGE_RECONVERT',
+        value: KMCPermissions.CONTENT_MANAGE_RECONVERT,
+        name: 'CONTENT_MANAGE_RECONVERT',
         label: 'Manage Flavors'
       },
       {
-        value: 'CONTENT_INGEST_CLIP_MEDIA',
-        label: 'Clipping',
-        dependsOnFeature: 'FEATURE_CLIP_MEDIA'
+        value: KMCPermissions.CONTENT_INGEST_CLIP_MEDIA,
+        name: 'CONTENT_INGEST_CLIP_MEDIA',
+        label: 'Clipping'
       },
       {
-        value: 'CONTENT_MANAGE_EDIT_CATEGORIES',
+        value: KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
+        name: 'CONTENT_MANAGE_EDIT_CATEGORIES',
         label: 'Edit Categories'
       },
       {
-        value: 'CONTENT_MANAGE_CATEGORY_USERS',
-        label: 'Edit Category\'s Entitlement Settings',
-        dependsOnFeature: 'FEATURE_ENTITLEMENT'
+        value: KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS,
+        name: 'CONTENT_MANAGE_CATEGORY_USERS',
+        label: 'Edit Category\'s Entitlement Settings'
       },
       {
-        value: 'LIVE_STREAM_UPDATE',
-        label: 'Update Live Stream',
-        dependsOnFeature: 'FEATURE_LIVE_STREAM'
+        value: KMCPermissions.LIVE_STREAM_UPDATE,
+        name: 'LIVE_STREAM_UPDATE',
+        label: 'Update Live Stream'
       },
       {
-        value: 'CONTENT_MANAGE_DOWNLOAD',
+        value: KMCPermissions.CONTENT_MANAGE_DOWNLOAD,
+        name: 'CONTENT_MANAGE_DOWNLOAD',
         label: 'Download Files'
       },
       {
-        value: 'cuePoint.MANAGE',
-        label: 'Edit Entry Advertisement',
-        dependsOnFeature: 'ADCUEPOINT_PLUGIN_PERMISSION'
+        value: KMCPermissions.CUEPOINT_MANAGE,
+        name: 'cuePoint.MANAGE',
+        label: 'Edit Entry Advertisement'
       },
       {
-        value: 'CAPTION_MODIFY',
-        label: 'Edit Entry Captions',
-        dependsOnFeature: 'CAPTION_PLUGIN_PERMISSION'
+        value: KMCPermissions.CAPTION_MODIFY,
+        name: 'CAPTION_MODIFY',
+        label: 'Edit Entry Captions'
       },
       {
-        value: 'ATTACHMENT_MODIFY',
-        label: 'Edit Related Files',
-        dependsOnFeature: 'ATTACHMENT_PLUGIN_PERMISSION'
+        name: 'ATTACHMENT_MODIFY',
+        label: 'Edit Related Files'
       }
     ]
   },
   {
-    value: 'BULK_LOG_BASE',
+    value: KMCPermissions.BULK_LOG_BASE,
+    name: 'BULK_LOG_BASE',
     label: 'Bulk Upload Log',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'BULK_LOG_DOWNLOAD',
+        value: KMCPermissions.BULK_LOG_DOWNLOAD,
+        name: 'BULK_LOG_DOWNLOAD',
         label: 'Download Bulk Upload Files'
       },
       {
-        value: 'BULK_LOG_DELETE',
+        value: KMCPermissions.BULK_LOG_DELETE,
+        name: 'BULK_LOG_DELETE',
         label: 'Delete Bulk Upload Items'
       }
     ]
   },
   {
-    value: 'CONTENT_MODERATE_BASE',
+    value: KMCPermissions.CONTENT_MODERATE_BASE,
+    name: 'CONTENT_MODERATE_BASE',
     label: 'Content Moderation',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'CONTENT_MODERATE_APPROVE_REJECT',
+        value: KMCPermissions.CONTENT_MODERATE_APPROVE_REJECT,
+        name: 'CONTENT_MODERATE_APPROVE_REJECT',
         label: 'Approve/Reject Content'
       },
       {
-        value: 'CONTENT_MODERATE_METADATA',
+        value: KMCPermissions.CONTENT_MODERATE_METADATA,
+        name: 'CONTENT_MODERATE_METADATA',
         label: 'Moderate Metadata'
       },
       {
-        value: 'CONTENT_MODERATE_CUSTOM_DATA',
-        label: 'Moderate Custom Metadata',
-        dependsOnFeature: 'METADATA_PLUGIN_PERMISSION'
+        value: KMCPermissions.CONTENT_MODERATE_CUSTOM_DATA,
+        name: 'CONTENT_MODERATE_CUSTOM_DATA',
+        label: 'Moderate Custom Metadata'
       }
     ]
   },
   {
-    value: 'PLAYLIST_BASE',
+    value: KMCPermissions.PLAYLIST_BASE,
+    name: 'PLAYLIST_BASE',
     label: 'Playlist Management',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'PLAYLIST_ADD',
+        value: KMCPermissions.PLAYLIST_ADD,
+        name: 'PLAYLIST_ADD',
         label: 'Create Playlists'
       },
       {
-        value: 'PLAYLIST_UPDATE',
+        value: KMCPermissions.PLAYLIST_UPDATE,
+        name: 'PLAYLIST_UPDATE',
         label: 'Modify Playlists'
       },
       {
-        value: 'PLAYLIST_DELETE',
+        value: KMCPermissions.PLAYLIST_DELETE,
+        name: 'PLAYLIST_DELETE',
         label: 'Delete Playlists'
       },
       {
-        value: 'PLAYLIST_EMBED_CODE',
+        value: KMCPermissions.PLAYLIST_EMBED_CODE,
+        name: 'PLAYLIST_EMBED_CODE',
         label: 'Grab Playlist Embed Code'
       }
     ]
   },
   {
-    value: 'SYNDICATION_BASE',
+    value: KMCPermissions.SYNDICATION_BASE,
+    name: 'SYNDICATION_BASE',
     label: 'Syndication Management',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'SYNDICATION_ADD',
+        value: KMCPermissions.SYNDICATION_ADD,
+        name: 'SYNDICATION_ADD',
         label: 'Create Syndication Feeds'
       },
       {
-        value: 'SYNDICATION_UPDATE',
+        value: KMCPermissions.SYNDICATION_UPDATE,
+        name: 'SYNDICATION_UPDATE',
         label: 'Modify Syndication Feeds'
       },
       {
-        value: 'SYNDICATION_DELETE',
+        value: KMCPermissions.SYNDICATION_DELETE,
+        name: 'SYNDICATION_DELETE',
         label: 'Delete Syndication Feeds'
       }
     ]
   },
   {
-    value: 'CONTENT_MANAGE_DISTRIBUTION_BASE',
+    value: KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_BASE,
+    name: 'CONTENT_MANAGE_DISTRIBUTION_BASE',
     label: 'Content Distribution',
     isAdvancedGroup: true,
-    dependsOnFeature: 'CONTENTDISTRIBUTION_PLUGIN_PERMISSION',
     items: [
       {
-        value: 'CONTENT_MANAGE_DISTRIBUTION_WHERE',
-        label: 'Select Distribution Points',
-        dependsOnFeature: 'CONTENT_MANAGE_DISTRIBUTION_WHERE'
+        value: KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE,
+        name: 'CONTENT_MANAGE_DISTRIBUTION_WHERE',
+        label: 'Select Distribution Points'
       },
       {
-        value: 'CONTENT_MANAGE_DISTRIBUTION_SEND',
-        label: 'Distribute',
-        dependsOnFeature: 'CONTENTDISTRIBUTION_PLUGIN_PERMISSION'
+        value: KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND,
+        name: 'CONTENT_MANAGE_DISTRIBUTION_SEND',
+        label: 'Distribute'
       },
       {
-        value: 'CONTENT_MANAGE_DISTRIBUTION_REMOVE',
-        label: 'Remove Distributed Content',
-        dependsOnFeature: 'CONTENTDISTRIBUTION_PLUGIN_PERMISSION'
+        value: KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_REMOVE,
+        name: 'CONTENT_MANAGE_DISTRIBUTION_REMOVE',
+        label: 'Remove Distributed Content'
       }
     ]
   },
   {
-    value: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_BASE',
+    value: KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_BASE,
+    name: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_BASE',
     label: 'Drop Folders Control',
     isAdvancedGroup: true,
-    dependsOnFeature: 'DROPFOLDER_PLUGIN_PERMISSION',
     items: [
       {
-        value: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_DELETE',
-        label: 'Delete Files',
-        dependsOnFeature: 'DROPFOLDER_PLUGIN_PERMISSION'
+        value: KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE,
+        name: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_DELETE',
+        label: 'Delete Files'
       }
     ]
   },
   {
-    value: 'STUDIO_BASE',
+    value: KMCPermissions.STUDIO_BASE,
+    name: 'STUDIO_BASE',
     label: 'Studio',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'STUDIO_ADD_UICONF',
+        value: KMCPermissions.STUDIO_ADD_UICONF,
+        name: 'STUDIO_ADD_UICONF',
         label: 'Create Players'
       },
       {
-        value: 'STUDIO_UPDATE_UICONF',
+        value: KMCPermissions.STUDIO_UPDATE_UICONF,
+        name: 'STUDIO_UPDATE_UICONF',
         label: 'Modify Players'
       },
       {
-        value: 'STUDIO_DELETE_UICONF',
+        value: KMCPermissions.STUDIO_DELETE_UICONF,
+        name: 'STUDIO_DELETE_UICONF',
         label: 'Delete Players'
       },
       {
-        value: 'STUDIO_SELECT_CONTENT',
+        value: KMCPermissions.STUDIO_SELECT_CONTENT,
+        name: 'STUDIO_SELECT_CONTENT',
         label: 'Select Player Content'
       }
     ]
   },
   {
-    value: 'ADVERTISING_UPDATE_SETTINGS',
-    label: 'Set Advertising Settings',
-    dependsOnFeature: 'FEATURE_VAST'
+    value: KMCPermissions.ADVERTISING_UPDATE_SETTINGS,
+    name: 'ADVERTISING_UPDATE_SETTINGS',
+    label: 'Set Advertising Settings'
   },
   {
-    value: 'ANALYTICS_BASE',
-    label: 'Video Analytics',
-    dependsOnFeature: 'FEATURE_ANALYTICS_TAB'
+    value: KMCPermissions.ANALYTICS_BASE,
+    name: 'ANALYTICS_BASE',
+    label: 'Video Analytics'
   },
   {
-    value: 'ACCOUNT_BASE',
+    value: KMCPermissions.ACCOUNT_BASE,
+    name: 'ACCOUNT_BASE',
     label: 'Account Settings',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'ACCOUNT_UPDATE_SETTINGS',
+        value: KMCPermissions.ACCOUNT_UPDATE_SETTINGS,
+        name: 'ACCOUNT_UPDATE_SETTINGS',
         label: 'Modify Account Settings'
       }
     ]
   },
   {
-    value: 'INTEGRATION_BASE',
+    value: KMCPermissions.INTEGRATION_BASE,
+    name: 'INTEGRATION_BASE',
     label: 'Integration Settings',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'INTEGRATION_UPDATE_SETTINGS',
+        value: KMCPermissions.INTEGRATION_UPDATE_SETTINGS,
+        name: 'INTEGRATION_UPDATE_SETTINGS',
         label: 'Modify Integration Settings'
       }
     ]
   },
   {
-    value: 'ACCESS_CONTROL_BASE',
+    value: KMCPermissions.ACCESS_CONTROL_BASE,
+    name: 'ACCESS_CONTROL_BASE',
     label: 'Access Control Settings',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'ACCESS_CONTROL_ADD',
+        value: KMCPermissions.ACCESS_CONTROL_ADD,
+        name: 'ACCESS_CONTROL_ADD',
         label: 'Create Access Control Profiles'
       },
       {
-        value: 'ACCESS_CONTROL_UPDATE',
+        value: KMCPermissions.ACCESS_CONTROL_UPDATE,
+        name: 'ACCESS_CONTROL_UPDATE',
         label: 'Modify Access Control Profiles'
       },
       {
-        value: 'ACCESS_CONTROL_DELETE',
+        value: KMCPermissions.ACCESS_CONTROL_DELETE,
+        name: 'ACCESS_CONTROL_DELETE',
         label: 'Delete Access Control Profiles'
       }
     ]
   },
   {
-    value: 'TRANSCODING_BASE',
+    value: KMCPermissions.TRANSCODING_BASE,
+    name: 'TRANSCODING_BASE',
     label: 'Transcoding Settings',
     isAdvancedGroup: true,
     items: [
       {
-        value: 'TRANSCODING_ADD',
+        value: KMCPermissions.TRANSCODING_ADD,
+        name: 'TRANSCODING_ADD',
         label: 'Create Transcoding Profiles'
       },
       {
-        value: 'TRANSCODING_UPDATE',
+        value: KMCPermissions.TRANSCODING_UPDATE,
+        name: 'TRANSCODING_UPDATE',
         label: 'Modify Transcoding Profiles'
       },
       {
-        value: 'TRANSCODING_DELETE',
+        value: KMCPermissions.TRANSCODING_DELETE,
+        name: 'TRANSCODING_DELETE',
         label: 'Delete Transcoding Profiles'
       }
     ]
   },
   {
-    value: 'CUSTOM_DATA_PROFILE_BASE',
+    value: KMCPermissions.CUSTOM_DATA_PROFILE_BASE,
+    name: 'CUSTOM_DATA_PROFILE_BASE',
     label: 'Custom Metadata Settings',
     isAdvancedGroup: true,
-    dependsOnFeature: 'METADATA_PLUGIN_PERMISSION',
     items: [
       {
-        value: 'CUSTOM_DATA_PROFILE_ADD',
-        label: 'Add Custom Metadata Schemas',
-        dependsOnFeature: 'METADATA_PLUGIN_PERMISSION'
+        value: KMCPermissions.CUSTOM_DATA_PROFILE_ADD,
+        name: 'CUSTOM_DATA_PROFILE_ADD',
+        label: 'Add Custom Metadata Schemas'
       },
       {
-        value: 'CUSTOM_DATA_PROFILE_UPDATE',
-        label: 'Modify Custom Metadata Schemas',
-        dependsOnFeature: 'METADATA_PLUGIN_PERMISSION'
+        value: KMCPermissions.CUSTOM_DATA_PROFILE_UPDATE,
+        name: 'CUSTOM_DATA_PROFILE_UPDATE',
+        label: 'Modify Custom Metadata Schemas'
       },
       {
-        value: 'CUSTOM_DATA_PROFILE_DELETE',
-        label: 'Delete Custom Metadata Schemas',
-        dependsOnFeature: 'METADATA_PLUGIN_PERMISSION'
+        value: KMCPermissions.CUSTOM_DATA_PROFILE_DELETE,
+        name: 'CUSTOM_DATA_PROFILE_DELETE',
+        label: 'Delete Custom Metadata Schemas'
       }
     ]
   },
   {
-    value: 'ADMIN_BASE',
+    value: KMCPermissions.ADMIN_BASE,
+    name: 'ADMIN_BASE',
     label: 'Administration',
     isAdvancedGroup: false,
     items: [
       {
-        value: 'ADMIN_USER_ADD',
+        value: KMCPermissions.ADMIN_USER_ADD,
+        name: 'ADMIN_USER_ADD',
         label: 'Create Users'
       },
       {
-        value: 'ADMIN_USER_UPDATE',
+        value: KMCPermissions.ADMIN_USER_UPDATE,
+        name: 'ADMIN_USER_UPDATE',
         label: 'Modify Users'
       },
       {
-        value: 'ADMIN_USER_DELETE',
+        value: KMCPermissions.ADMIN_USER_DELETE,
+        name: 'ADMIN_USER_DELETE',
         label: 'Delete Users'
       },
       {
-        value: 'ADMIN_ROLE_ADD',
+        value: KMCPermissions.ADMIN_ROLE_ADD,
+        name: 'ADMIN_ROLE_ADD',
         label: 'Create Roles'
       },
       {
-        value: 'ADMIN_ROLE_UPDATE',
+        value: KMCPermissions.ADMIN_ROLE_UPDATE,
+        name: 'ADMIN_ROLE_UPDATE',
         label: 'Modify Roles'
       },
       {
-        value: 'ADMIN_ROLE_DELETE',
+        value: KMCPermissions.ADMIN_ROLE_DELETE,
+        name: 'ADMIN_ROLE_DELETE',
         label: 'Delete Roles'
       },
       {
-        value: 'ADMIN_USER_BULK',
-        label: 'End-User Bulk Upload',
-        dependsOnFeature: 'FEATURE_END_USER_MANAGE'
+        value: KMCPermissions.ADMIN_USER_BULK,
+        name: 'ADMIN_USER_BULK',
+        label: 'End-User Bulk Upload'
       }
     ]
   },

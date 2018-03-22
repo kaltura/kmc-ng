@@ -25,7 +25,7 @@
                         menuItemDisplayStyle="flex"
                         [hideOnScroll]="scrollableContainer"
                         [options]="permission.items"
-                        [disabled]="!permission.enabled"
+                        [disabled]="!permission.checked || permission.disabled"
                         [showToggleAll]="true"
                         [maxSelectedLabels]="0"
                         [defaultLabel]="permission.isAdvancedGroup ? ('applications.administration.role.permissionsTable.viewOnly' | translate) : ('applications.administration.role.permissionsTable.selectPermissions' | translate)"
@@ -45,7 +45,7 @@
         </td>
 
         <td [ngStyle]="{'width': '80px'}">
-          <p-inputSwitch [(ngModel)]="permission.enabled" (onChange)="_togglePermission($event, permission)"></p-inputSwitch>
+          <p-inputSwitch [(ngModel)]="permission.checked" (onChange)="_togglePermission($event, permission)"></p-inputSwitch>
         </td>
 
       </tr>

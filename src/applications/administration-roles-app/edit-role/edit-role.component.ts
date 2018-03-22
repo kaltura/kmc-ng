@@ -27,6 +27,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _permissions: string[];
   public _rolePermissions: RolePermissionFormValue[] = [];
   public _permissionChanged = false;
+  public _isNewRole: boolean;
 
   public get _saveDisabled(): boolean {
     return this._editRoleForm.pristine && !this.duplicatedRole && !this._permissionChanged;
@@ -48,25 +49,23 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
-    this._title = this.role
-      ? this._appLocalization.get('applications.administration.role.titleEdit')
-      : this._appLocalization.get('applications.administration.role.titleAdd');
+    this._isNewRole = !this.role;
 
-    this._actionBtnLabel = this.role
-      ? this._appLocalization.get('applications.administration.role.save')
-      : this._appLocalization.get('applications.administration.role.add');
-
-    if (this.role) {
+    if (this._isNewRole) {
+      this._title = this._appLocalization.get('applications.administration.role.titleAdd');
+      this._actionBtnLabel = this._appLocalization.get('applications.administration.role.add');
+      this._editRoleForm.patchValue(
+        { name: this._appLocalization.get('applications.administration.role.newRole') },
+        { emitEvent: false }
+      );
+    } else {
+      this._title = this._appLocalization.get('applications.administration.role.titleEdit');
+      this._actionBtnLabel = this._appLocalization.get('applications.administration.role.save');
       this._permissions = (this.role.permissionNames || '').split(',');
       this._editRoleForm.setValue({
         name: this.role.name,
         description: this.role.description
       }, { emitEvent: false });
-    } else {
-      this._editRoleForm.patchValue(
-        { name: this._appLocalization.get('applications.administration.role.newRole') },
-        { emitEvent: false }
-      );
     }
   }
 
@@ -121,7 +120,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       const formValue = val.formValue || [];
       const result = [...acc];
 
-      if (formValue.length > 0 || (val.enabled && val.isAdvancedGroup) || (val.enabled && val.formValue === null)) {
+      if (formValue.length > 0 || (val.checked && val.isAdvancedGroup) || (val.checked && val.formValue === null)) {
         result.push(val.value);
       }
 
@@ -187,7 +186,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
   public _validateRoles(): boolean {
     const groupWithoutChildren = this._rolePermissions.filter(permission => {
-      return permission.enabled && !permission.isAdvancedGroup && Array.isArray(permission.formValue) && !permission.formValue.length;
+      return permission.checked && !permission.isAdvancedGroup && Array.isArray(permission.formValue) && !permission.formValue.length;
     });
     if (groupWithoutChildren.length) {
       this._blockerMessage = new AreaBlockerMessage({
