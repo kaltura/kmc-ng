@@ -23,9 +23,9 @@
     <p-column field="name"
               [header]="'applications.settings.accessControl.table.name' | translate">
       <ng-template let-col let-profile="rowData" pTemplate="body">
-          <span class="kAccessControlProfileTableName"
+          <span class="kAccessControlProfileTableName kTableColumn"
                 [kTooltip]="profile[col.field]"
-                [maxWidth]="400"
+                [maxWidth]="300"
                 (click)="_onActionSelected('edit', profile)">
             {{ profile[col.field] }}
           </span>
