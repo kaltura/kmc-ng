@@ -35,7 +35,6 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
         });
 
         this._syncAppMenuConfigWithPermissions();
-        this._permissions.loadPermissions(Array.from(appUser.permissions).map(permission => KMCPermissions[permission]));
         this._serverPolls.forcePolling();
         return Observable.of(undefined);
     }
