@@ -4,7 +4,8 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 
 export interface RolePermissionFormValue extends RolePermission {
   checked?: boolean;
-  formValue?: string[];
+  formValue?: KMCPermissions[];
+  items?: RolePermissionFormValue[];
 }
 
 @Component({
@@ -54,17 +55,23 @@ export class PermissionsTableComponent implements OnInit {
     this.rolePermissionsChange.emit(this._rolePermissions);
   }
 
-  public _togglePermission(event: any, permission: any): void {
+  public _togglePermission(event: { originalEvent: Event, checked: boolean }, permission: RolePermissionFormValue): void {
     permission.checked = event.checked;
-    permission.formValue = permission.checked ? permission.items.map(({ value }) => value) : [];
+    permission.formValue = permission.checked ? (permission.items || []).map(({ value }) => value) : [];
+    (permission.items || []).forEach(item => {
+      item.checked = !item.disabled && permission.checked;
+    });
 
     this.rolePermissionsChange.emit(this._rolePermissions);
     this.setDirty.emit();
   }
 
-  public _onChange(): void {
-    // TODO create permissionNames list
-    console.warn(this._rolePermissions);
+  public _onChange(event: { originalEvent: Event, value: number[], itemValue?: number }, items: RolePermissionFormValue[]): void {
+    items.forEach(item => {
+      const isChecked = event.value.indexOf(item.value) !== -1;
+      item.checked = isChecked && !item.disabled;
+    });
+
     this.rolePermissionsChange.emit(this._rolePermissions);
     this.setDirty.emit();
   }

@@ -34,7 +34,7 @@
                         [selectedItemsLabel]="'applications.administration.role.permissionsTable.custom' | translate"
                         [appendTo]="'body'"
                         [resetFilterOnHide]="true"
-                        (onChange)="_onChange()"
+                        (onChange)="_onChange($event, permission.items)"
                         [(ngModel)]="permission.formValue">
             <ng-template let-item pTemplate="item">
               <span class="kPermissionItem">

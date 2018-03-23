@@ -86,7 +86,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   }
 
   private _markFormFieldsAsTouched() {
-    this._editRoleForm.markAsUntouched();
+    this._editRoleForm.markAsTouched();
     this._editRoleForm.updateValueAndValidity();
   }
 
@@ -121,17 +121,36 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     };
   }
 
-  private _getPermissionsValues(): string[] {
-    return this._rolePermissions.reduce((acc, val) => {
-      const formValue = val.formValue || [];
-      const result = [...acc];
+  private _getUpdatedPermission(): string {
+    let updatedPermissions = [];
+    // current permissions list
+    if (!this._isNewRole) {
+      // for edit:
+      updatedPermissions = this._permissions;
+    }
 
-      if (formValue.length > 0 || (val.checked && val.isAdvancedGroup) || (val.checked && val.formValue === null)) {
-        result.push(val.value);
+    const updateList = (value) => {
+      if (value.checked) {
+        const notInList = updatedPermissions.indexOf(value.name) === -1;
+        if (notInList) { // if new checked value
+          updatedPermissions.push(value.name);
+        }
+      } else {
+        const inListIndex = updatedPermissions.indexOf(value.name);
+        const inList = inListIndex !== -1;
+        if (inList) { // if existing unchecked value
+          updatedPermissions.splice(inListIndex, 1);
+        }
       }
+    };
 
-      return result;
-    }, []);
+    this._rolePermissions.forEach(permissionGroup => {
+      updateList(permissionGroup);
+      (permissionGroup.items || []).forEach(updateList);
+    });
+
+    // return comma separated string
+    return updatedPermissions.join(',');
   }
 
   public _updateRole(): void {
@@ -143,7 +162,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
     this._blockerMessage = null;
 
-    const permissionNames = this._getPermissionsValues().join(',');
+    const permissionNames = this._getUpdatedPermission();
     const { name, description } = this._editRoleForm.value;
     const editedRole = new KalturaUserRole({ name, description, permissionNames });
     const retryFn = () => this._updateRole();
@@ -160,7 +179,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
     const retryFn = () => this._addRole();
     const { name, description } = this._editRoleForm.value;
-    const permissionNames = [...this._getPermissionsValues(), ...defaultPermissions].join(',');
+    const permissionNames = `${this._getUpdatedPermission()},${defaultPermissions.join(',')}`;
     this.role = new KalturaUserRole({ name, description, permissionNames });
 
     this._rolesService.addRole(this.role)
