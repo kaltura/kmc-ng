@@ -7,6 +7,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { RolesStoreService } from '../roles-store/roles-store.service';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 @Component({
   selector: 'kEditRole',
@@ -28,6 +30,8 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _rolePermissions: RolePermissionFormValue[] = [];
   public _permissionChanged = false;
   public _isNewRole: boolean;
+  public _hasDisabledPermissions: boolean;
+  public _contactUsLink = subApplicationsConfig.administrationRolesApp.contactUsLink;
 
   public get _saveDisabled(): boolean {
     return this._editRoleForm.pristine && !this.duplicatedRole && !this._permissionChanged;
@@ -36,6 +40,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   constructor(private _fb: FormBuilder,
               private _listDiffers: IterableDiffers,
               private _rolesService: RolesStoreService,
+              private _permissionsService: KMCPermissionsService,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -50,6 +55,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
   private _prepare(): void {
     this._isNewRole = !this.role;
+    this._hasDisabledPermissions = this._permissionsService.restrictionsApplied;
 
     if (this._isNewRole) {
       this._title = this._appLocalization.get('applications.administration.role.titleAdd');

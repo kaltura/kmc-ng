@@ -49,6 +49,10 @@
       overflow-y: auto;
       max-height: calc(100vh - 158px);
 
+      .kHasDisabledPermissions {
+        padding: 0 0 20px 30px;
+      }
+
       .kRoleForm {
         padding: 0 28px 53px 28px;
       }

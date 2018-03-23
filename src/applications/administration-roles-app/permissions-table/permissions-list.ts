@@ -11,8 +11,8 @@ export interface RolePermission {
 
 export const ROLE_PERMISSIONS: RolePermission[] = [
   {
-    name: 'CONTENT_INGEST_BASE',
     value: KMCPermissions.CONTENT_INGEST_BASE,
+    name: 'CONTENT_INGEST_BASE',
     label: 'Content Ingestion',
     isAdvancedGroup: false,
     items: [
@@ -170,6 +170,7 @@ export const ROLE_PERMISSIONS: RolePermission[] = [
         label: 'Edit Entry Captions'
       },
       {
+        value: KMCPermissions.ATTACHMENT_MODIFY,
         name: 'ATTACHMENT_MODIFY',
         label: 'Edit Related Files'
       }

@@ -1973,6 +1973,8 @@
         "add": "Add",
         "cancel": "Cancel",
         "newRole": "newRole",
+        "contactUs": "Contact us",
+        "contactUsText": " to learn more about adding any disabled items below to your account.",
         "errors": {
           "required": "This field is required",
           "emptyGroup": "{{0}} permission group requires items. Please select!"

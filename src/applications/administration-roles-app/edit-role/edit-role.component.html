@@ -42,6 +42,10 @@
             </div>
           </div>
         </form>
+        <div *ngIf="_hasDisabledPermissions" class="kHasDisabledPermissions">
+          <a [href]="_contactUsLink" target="_blank">{{'applications.administration.role.contactUs' | translate}}</a>
+          {{'applications.administration.role.contactUsText' | translate}}
+        </div>
         <kRolePermissionsTable [permissions]="_permissions"
                                [isNewRole]="_isNewRole"
                                [scrollableContainer]="scrollableContainer"
