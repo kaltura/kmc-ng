@@ -25,7 +25,7 @@ import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-cr
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import { AppPermissionsService } from '@kaltura-ng/mc-shared/app-permissions';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kBulkActions',
@@ -75,7 +75,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkDeleteService: BulkDeleteService,
     private _appEvents: AppEventsService,
     private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
-              private _permissionsService: AppPermissionsService) {
+              private _permissionsService: KMCPermissionsService) {
 
   }
 

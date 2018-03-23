@@ -24,7 +24,8 @@
       </p-column>
       <p-column field="name" header="{{'applications.content.table.name' | translate}}" sortable="custom">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span class="kTitle" (click)="_goToEntry(entry.id)">{{entry[col.field]}}</span>
+          <span class="kTitle kTableColumn" [kTooltip]="entry[col.field]" [maxWidth]="300"
+                (click)="_goToEntry(entry.id)">{{entry[col.field]}}</span>
         </ng-template>
       </p-column>
       <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" styleClass="mediaTypeColumn" sortable="custom">
