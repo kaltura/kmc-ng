@@ -1590,6 +1590,7 @@
         }
       },
       "categoryDetails": {
+        "save": "Save",
         "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",

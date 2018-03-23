@@ -13,7 +13,7 @@ import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { globalConfig } from 'config/global';
-import { AppPermissionsService } from '@kaltura-ng/mc-shared/app-permissions/app-permissions.service';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCategoriesTable',
@@ -60,7 +60,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
   constructor(private appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
-              private _permissionsService: AppPermissionsService) {
+              private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
@@ -121,8 +121,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     this._permissionsService.filterList(
       <{ id: string }[]>this._items,
       {
-        'edit': 'CONTENT_MANAGE_EDIT_CATEGORIES',
-        'delete': 'CONTENT_MANAGE_EDIT_CATEGORIES'
+        'edit': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
+        'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
       }
     );
   }

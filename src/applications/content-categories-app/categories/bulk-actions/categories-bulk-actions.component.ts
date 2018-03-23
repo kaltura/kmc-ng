@@ -24,6 +24,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import {CategoriesUtilsService} from "../../categories-utils.service";
 import {CategoriesStatusMonitorService} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -34,6 +35,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   private _selectedCateogoriesWithPrivacyContext: KalturaCategory[] = [];
 
   public _bulkActionsMenu: MenuItem[] = [];
+  public _kmcPermissions = KMCPermissions;
   public _bulkAction = '';
 
   @Input() selectedCategories: KalturaCategory[];

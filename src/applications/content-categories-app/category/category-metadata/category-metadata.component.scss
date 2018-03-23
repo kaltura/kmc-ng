@@ -223,6 +223,10 @@ hr{
 
 		  kAutoComplete{
 			width: 100%;
+
+      .ui-state-disabled {
+        background-color: $kGrayscale5;
+      }
 		}
 
 		  p-dropdown{
