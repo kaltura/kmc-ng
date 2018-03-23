@@ -20,6 +20,8 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() duplicatedRole: boolean;
 
+  private _defaultPermissionNames = ['KMC_ACCESS', 'KMC_READ_ONLY', 'BASE_USER_SESSION_PERMISSION', 'WIDGET_SESSION_PERMISSION'];
+
   public _editRoleForm: FormGroup;
   public _nameField: AbstractControl;
   public _descriptionField: AbstractControl;
@@ -60,6 +62,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     if (this._isNewRole) {
       this._title = this._appLocalization.get('applications.administration.role.titleAdd');
       this._actionBtnLabel = this._appLocalization.get('applications.administration.role.add');
+      this._permissions = this._defaultPermissionNames;
       this._editRoleForm.patchValue(
         { name: this._appLocalization.get('applications.administration.role.newRole') },
         { emitEvent: false }
@@ -174,12 +177,11 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   }
 
   public _addRole(): void {
-    const defaultPermissions = ['KMC_ACCESS', 'KMC_READ_ONLY', 'BASE_USER_SESSION_PERMISSION', 'WIDGET_SESSION_PERMISSION'];
     this._blockerMessage = null;
 
     const retryFn = () => this._addRole();
     const { name, description } = this._editRoleForm.value;
-    const permissionNames = `${this._getUpdatedPermission()},${defaultPermissions.join(',')}`;
+    const permissionNames = this._getUpdatedPermission();
     this.role = new KalturaUserRole({ name, description, permissionNames });
 
     this._rolesService.addRole(this.role)
