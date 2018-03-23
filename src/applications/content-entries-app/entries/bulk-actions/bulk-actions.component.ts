@@ -25,7 +25,7 @@ import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-cr
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kBulkActions',
@@ -300,6 +300,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           }
           },
           {
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS),
               label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => {
               this.openBulkActionWindow('changeOwner', 500, 280)
           }
