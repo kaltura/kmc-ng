@@ -33,6 +33,7 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 import { EntryWidget } from '../entry-widget';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Injectable()
@@ -50,6 +51,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 private _categoriesSearchService : CategoriesSearchService,
                 private _formBuilder : FormBuilder,
                 private _iterableDiffers : IterableDiffers,
+                private _permissionsService: KMCPermissionsService,
                 private _dynamicMetadataFormFactory : DynamicMetadataFormFactory,
                 private _metadataProfileStore : MetadataProfileStore)
     {
@@ -116,6 +118,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         super._removeBlockerMessage();
 
         this.isLiveEntry = this.data instanceof KalturaLiveStreamEntry;
+
+        if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES)) {
+          this.metadataForm.get('categories').disable({ onlySelf: true });
+        }
 
         const actions: Observable<{failed: boolean, error?: Error}>[] = [
             this._loadEntryCategories(this.data),
