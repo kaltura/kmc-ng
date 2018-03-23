@@ -125,12 +125,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   }
 
   private _getUpdatedPermission(): string {
-    let updatedPermissions = [];
-    // current permissions list
-    if (!this._isNewRole) {
-      // for edit:
-      updatedPermissions = this._permissions;
-    }
+    const updatedPermissions = [...this._permissions];
 
     const updateList = (value) => {
       if (value.checked) {
