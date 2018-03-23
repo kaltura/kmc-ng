@@ -33,6 +33,7 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 import { EntryWidget } from '../entry-widget';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Injectable()
@@ -51,6 +52,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 private _formBuilder : FormBuilder,
                 private _iterableDiffers : IterableDiffers,
                 private _dynamicMetadataFormFactory : DynamicMetadataFormFactory,
+                private _permissionsService: KMCPermissionsService,
                 private _metadataProfileStore : MetadataProfileStore)
     {
         super(EntryWidgetKeys.Metadata);
@@ -65,9 +67,12 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             tags: null,
             categories: null,
             offlineMessage: '',
-            referenceId: '',
             entriesIdList: null
         });
+
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REFERENCE_MODIFY)) {
+          this.metadataForm.addControl('referenceId', this._formBuilder.control(''));
+        }
     }
 
     private _monitorFormChanges() {

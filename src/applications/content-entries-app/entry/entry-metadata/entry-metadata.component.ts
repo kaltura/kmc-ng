@@ -15,6 +15,7 @@ import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/catego
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kEntryMetadata',
@@ -28,6 +29,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     private _searchTagsSubscription : ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     public _tagsProvider = new Subject<SuggestionsProviderData>();
+    public _kmcPermissions = KMCPermissions;
 	public _jumpToMenu: MenuItem[] = [];
 	@ViewChild('categoriesPopup') public categoriesPopup: PopupWidgetComponent;
 	private _popupStateChangeSubscribe: ISubscription;
