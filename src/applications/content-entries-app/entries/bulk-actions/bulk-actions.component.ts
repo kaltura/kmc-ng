@@ -3,10 +3,18 @@ import {MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import {
+  CategoriesStatus,
+  CategoriesStatusMonitorService
+} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 import {
- BulkAccessControlService,  BulkAddCategoriesService, BulkAddTagsService, BulkChangeOwnerService,  BulkDeleteService, BulkDownloadService ,
+  BulkAccessControlService,
+  BulkAddCategoriesService,
+  BulkAddTagsService,
+  BulkChangeOwnerService,
+  BulkDeleteService,
+  BulkDownloadService,
   BulkRemoveCategoriesService,
   BulkRemoveTagsService,
   BulkSchedulingService,
@@ -14,18 +22,22 @@ import {
 } from './services'
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import {BulkActionBaseService} from './services/bulk-action-base.service';
-import { subApplicationsConfig } from 'config/sub-applications';
+import {subApplicationsConfig} from 'config/sub-applications';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CreateNewCategoryEvent} from 'app-shared/kmc-shared/events/category-creation';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import {CreateNewPlaylistEvent} from 'app-shared/kmc-shared/events/playlist-creation';
+import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import {CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
+import {KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {BulkAddPublishersService} from "./services/bulk-add-publishers.service";
+import {BulkAddEditorsService} from "./services/bulk-add-editors.service";
+import {BulkRemoveEditorsService} from "./services/bulk-remove-editors.service";
+import {BulkRemovePublishersService} from "./services/bulk-remove-publishers.service";
 
 @Component({
   selector: 'kBulkActions',
@@ -34,6 +46,8 @@ import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
     providers: [
         BulkSchedulingService,
         BulkAccessControlService,
+        BulkAddPublishersService,
+        BulkAddEditorsService,
         BulkAddTagsService,
         BulkRemoveTagsService,
         BulkAddCategoriesService,
@@ -67,6 +81,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkSchedulingService: BulkSchedulingService,
     private _bulkAccessControlService: BulkAccessControlService,
     private _bulkAddTagsService: BulkAddTagsService,
+    private _bulkAddEditorsService: BulkAddEditorsService,
+    private _bulkRemoveEditorsService: BulkRemoveEditorsService,
+    private _bulkAddPublishersService: BulkAddPublishersService,
+    private _bulkRemovePublishersService: BulkRemovePublishersService,
     private _bulkRemoveTagsService: BulkRemoveTagsService,
     private _bulkAddCategoriesService: BulkAddCategoriesService,
     private _bulkChangeOwnerService: BulkChangeOwnerService,
@@ -180,6 +198,26 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // remove tags changed
   onRemoveTagsChanged(tags: string[]): void {
     this.executeService(this._bulkRemoveTagsService, tags);
+  }
+
+  // add editors changed
+  onAddEditorsChanged(editors: string[]): void {
+    this.executeService(this._bulkAddEditorsService, editors);
+  }
+
+  // remove editors changed
+  onRemoveEditorsChanged(editors: string[]): void {
+    this.executeService(this._bulkRemoveEditorsService, editors);
+  }
+
+  // add publishers changed
+  onAddPublishersChanged(publishers: string[]): void {
+    this.executeService(this._bulkAddPublishersService, publishers);
+  }
+
+  // remove publishers changed
+  onRemovePublishersChanged(publishers: string[]): void {
+    this.executeService(this._bulkRemovePublishersService, publishers);
   }
 
   // add to categories changed
@@ -304,6 +342,32 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               this.openBulkActionWindow('changeOwner', 500, 280)
           }
           },
+        {
+          label: this._appLocalization.get('applications.content.bulkActions.addRemovePublishers'), items: [
+          {
+            label: this._appLocalization.get('applications.content.bulkActions.addPublishers'), command: (event) => {
+            this.openBulkActionWindow('addPublishers', 500, 500);
+          }
+          },
+          {
+            label: this._appLocalization.get('applications.content.bulkActions.removePublishers'), command: (event) => {
+            this.openBulkActionWindow('removePublishers', 500, 500);
+          }
+          }]
+        },
+        {
+          label: this._appLocalization.get('applications.content.bulkActions.addRemoveEditors'), items: [
+          {
+            label: this._appLocalization.get('applications.content.bulkActions.addEditors'), command: (event) => {
+            this.openBulkActionWindow('addEditors', 500, 500);
+          }
+          },
+          {
+            label: this._appLocalization.get('applications.content.bulkActions.removeEditors'), command: (event) => {
+            this.openBulkActionWindow('removeEditors', 500, 500);
+          }
+          }]
+        },
           {
               label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
               {

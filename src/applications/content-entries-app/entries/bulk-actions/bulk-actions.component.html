@@ -12,6 +12,8 @@
       <kBulkScheduling *ngSwitchCase="'setScheduling'" [parentPopupWidget]="bulkActionsPopup" (schedulingChanged)="onSchedulingChanged($event)"></kBulkScheduling>
       <kBulkAccessControl *ngSwitchCase="'setAccessControl'" [parentPopupWidget]="bulkActionsPopup" (accessControlChangedChanged)="onAccessControlChanged($event)"></kBulkAccessControl>
       <kBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kBulkAddTags>
+      <kBulkAddPublishers *ngSwitchCase="'addPublishers'" [parentPopupWidget]="bulkActionsPopup" (addPublishersChanged)="onAddPublishersChanged($event)"></kBulkAddPublishers>
+      <!--<kBulkRemovePublishers *ngSwitchCase="'removePublishers'" [parentPopupWidget]="bulkActionsPopup" (removePublishersChanged)="onRemovePublishersChanged($event)"></kBulkRemovePublishers>-->
       <kBulkRemoveTags *ngSwitchCase="'removeTags'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (removeTagsChanged)="onRemoveTagsChanged($event)"></kBulkRemoveTags>
       <kCategoriesSelector *ngSwitchCase="'addToCategories'" [parentPopupWidget]="bulkActionsPopup" (valueChange)="onAddToCategoriesChanged($event)" [buttonLabel]="'applications.content.bulkActions.apply' | translate"></kCategoriesSelector>
       <kBulkRemoveCategories *ngSwitchCase="'removeFromCategories'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (removeCategoriesChanged)="onRemoveCategoriesChanged($event)"></kBulkRemoveCategories>
