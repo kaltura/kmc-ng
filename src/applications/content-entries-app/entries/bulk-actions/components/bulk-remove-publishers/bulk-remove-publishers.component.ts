@@ -1,54 +1,56 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
+
+import {KalturaClient} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
+import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 
 @Component({
-  selector: 'kBulkRemoveTags',
-  templateUrl: './bulk-remove-tags.component.html',
-  styleUrls: ['./bulk-remove-tags.component.scss']
+  selector: 'kBulkRemovePublishers',
+  templateUrl: './bulk-remove-publishers.component.html',
+  styleUrls: ['./bulk-remove-publishers.component.scss']
 })
-export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
+export class BulkRemovePublishersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() selectedEntries: KalturaMediaEntry[];
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() removeTagsChanged = new EventEmitter<string[]>();
+  @Output() removePublishersChanged = new EventEmitter<string[]>();
 
   public _loading = false;
   public _sectionBlockerMessage: AreaBlockerMessage;
 
-  public tags: any[] = [];
-  public tagsToRemove: string[] = [];
+  public users: KalturaUser[] = [];
+  public usersToRemove: string[] = [];
 
-  private _parentPopupStateChangeSubscribe : ISubscription;
-  private _confirmClose: boolean = true;
+  private _parentPopupStateChangeSubscribe: ISubscription;
+  private _confirmClose = true;
 
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+  constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
   }
 
   ngOnInit() {
-    const tags = [];
-    // create unique tags array from all selected entries tags
+    const users = [];
+    // create unique users array from all selected entries users
     this.selectedEntries.forEach(entry => {
-      if (entry.tags && entry.tags.length){
-        const entryTags = entry.tags.split(',').map(tag => {
-          return tag.trim();
+      if (entry.entitledUsersPublish && entry.entitledUsersPublish.length) {
+        const entryPublishers = entry.entitledUsersPublish.split(',').map(publisher => {
+          return publisher.trim();
         });
-        entryTags.forEach(tag => {
-          if (tags.indexOf(tag) === -1){
-            tags.push(tag);
+        entryPublishers.forEach(publisher => {
+          if (users.indexOf(publisher) === -1) {
+            users.push(publisher);
           }
         });
       }
     });
-
-    this.tags = tags.sort();
+    this.users = users.sort();
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     if (this.parentPopupWidget) {
       this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
         .subscribe(event => {
@@ -56,8 +58,8 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
             this._confirmClose = true;
           }
           if (event.state === PopupWidgetStates.BeforeClose) {
-            if (event.context && event.context.allowClose){
-              if (this.tagsToRemove.length && this._confirmClose){
+            if (event.context && event.context.allowClose) {
+              if (this.usersToRemove.length && this._confirmClose) {
                 event.context.allowClose = false;
                 this._browserService.confirm(
                   {
@@ -76,16 +78,16 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this._parentPopupStateChangeSubscribe.unsubscribe();
   }
 
-  public _removeTag(user: string) {
-    this.tagsToRemove.push(user);
+  public _removeUser(user: string) {
+    this.usersToRemove.push(user);
   }
 
-  public _apply(){
-    this.removeTagsChanged.emit(this.tagsToRemove);
+  public _apply() {
+    this.removePublishersChanged.emit(this.usersToRemove);
     this._confirmClose = false;
     this.parentPopupWidget.close();
   }

@@ -14,14 +14,14 @@ import {KalturaUserFilter} from 'kaltura-ngx-client/api/types/KalturaUserFilter'
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 
 @Component({
-  selector: 'kBulkAddPublishers',
-  templateUrl: './bulk-add-publishers.component.html',
-  styleUrls: ['./bulk-add-publishers.component.scss']
+  selector: 'kBulkAddEditors',
+  templateUrl: './bulk-add-editors.component.html',
+  styleUrls: ['./bulk-add-editors.component.scss']
 })
-export class BulkAddPublishersComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BulkAddEditorsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() addPublishersChanged = new EventEmitter<KalturaUser[]>();
+  @Output() addEditorsChanged = new EventEmitter<KalturaUser[]>();
 
   public _loading = false;
   public _sectionBlockerMessage: AreaBlockerMessage;
@@ -29,7 +29,7 @@ export class BulkAddPublishersComponent implements OnInit, OnDestroy, AfterViewI
   public _usersProvider = new Subject<SuggestionsProviderData>();
   public users: KalturaUser[] = [];
 
-  private _searchPublishersSubscription: ISubscription;
+  private _searchEditorsSubscription: ISubscription;
   private _parentPopupStateChangeSubscribe: ISubscription;
   private _confirmClose: boolean = true;
 
@@ -78,10 +78,10 @@ export class BulkAddPublishersComponent implements OnInit, OnDestroy, AfterViewI
   _searchUsers(event): void {
     this._usersProvider.next({suggestions: [], isLoading: true});
 
-    if (this._searchPublishersSubscription) {
+    if (this._searchEditorsSubscription) {
       // abort previous request
-      this._searchPublishersSubscription.unsubscribe();
-      this._searchPublishersSubscription = null;
+      this._searchEditorsSubscription.unsubscribe();
+      this._searchEditorsSubscription = null;
     }
 
     this._kalturaServerClient.request(new UserListAction({
@@ -136,7 +136,7 @@ export class BulkAddPublishersComponent implements OnInit, OnDestroy, AfterViewI
 
 
   public _apply() {
-    this.addPublishersChanged.emit(this.users);
+    this.addEditorsChanged.emit(this.users);
     this._confirmClose = false;
     this.parentPopupWidget.close();
   }

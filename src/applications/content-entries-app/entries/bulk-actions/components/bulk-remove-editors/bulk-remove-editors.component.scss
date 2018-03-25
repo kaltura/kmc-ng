@@ -18,10 +18,10 @@
     display: block;
     margin-bottom: 12px;
   }
-  .kTag{
+  .kEditor{
     margin-bottom: 12px;
   }
-  .kTags{
+  .kEditors{
     padding: 12px;
     height: 330px;
     overflow-y: auto;
@@ -54,3 +54,4 @@
 :host /deep/ .ui-autocomplete {
   width: 100%;
 }
+

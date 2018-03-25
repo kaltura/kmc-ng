@@ -1062,6 +1062,20 @@
       "bulkActions": {
         "setScheduling": "Set Scheduling",
         "setAccessControl": "Set Access Control",
+
+        "addRemovePublishers": "Add / Remove Publishers",
+        "addPublishers": "Add Publishers",
+        "addPublishersLabel": "Enter publishers to be appended to all selected entries",
+        "removePublishers": "Remove Publishers",
+        "removePublishersLabel": "Select the publishers you wish to remove from the selected entries",
+
+        "userTooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier",
+        "addRemoveEditors": "Add / Remove Editors",
+        "addEditors": "Add Editors",
+        "addEditorsLabel": "Enter editors to be appended to all selected entries",
+        "removeEditors": "Remove Editors",
+        "removeEditorsLabel": "Select the editors you wish to remove from the selected entries",
+
         "addRemoveTags": "Add / Remove Tags",
         "addTags": "Add Tags",
         "addTagsLabel": "Enter tags to be appended to all selected entries",

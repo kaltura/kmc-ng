@@ -14,7 +14,7 @@ export class BulkAddEditorsService extends BulkActionBaseService<string[]> {
     super(_kalturaServerClient);
   }
 
-  public execute(selectedEntries: KalturaMediaEntry[], editors: string[]): Observable<{}> {
+  public execute(selectedEntries: KalturaMediaEntry[], editorsIds: string[]): Observable<{}> {
     return Observable.create(observer => {
 
       const requests: BaseEntryUpdateAction[] = [];
@@ -30,12 +30,12 @@ export class BulkAddEditorsService extends BulkActionBaseService<string[]> {
           });
         }
         // add selected editors only if unique
-        editors.forEach(editor => {
+        editorsIds.forEach(editor => {
           if (entryEditors.indexOf(editor) === -1) {
             entryEditors.push(editor);
           }
         });
-        updatedEntry.entitledUsersEdit = entryEditors.toString();
+        updatedEntry.entitledUsersEdit = entryEditors.join(',');
         requests.push(new BaseEntryUpdateAction({
           entryId: entry.id,
           baseEntry: updatedEntry
