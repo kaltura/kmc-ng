@@ -9,9 +9,11 @@
     [emptyMessage]="_emptyMessage"
     (selectionChange)="_onSelectionChange($event)"
     [(selection)]="selectedFlavors">
-    <p-column selectionMode="multiple" [style]="{'width': '44px'}"></p-column>
+    <p-column *ngIf="_isEditAllowed" selectionMode="multiple" [style]="{'width': '44px'}"></p-column>
 
-    <p-column field="name" [header]="'applications.settings.transcoding.flavors.table.name' | translate">
+    <p-column field="name"
+              [style]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}"
+              [header]="'applications.settings.transcoding.flavors.table.name' | translate">
       <ng-template let-col let-flavor="rowData" pTemplate="body">
         <div class="kTitle kTableColumn" [kTooltip]="flavor[col.field]" [maxWidth]="300"
              (click)="_editFlavor(flavor)">{{flavor[col.field]}}</div>
@@ -33,7 +35,7 @@
     <p-column field="dimensions" [header]="'applications.settings.transcoding.flavors.table.dimensions' | translate">
     </p-column>
 
-    <p-column header="" [style]="{'width': '60px'}">
+    <p-column header="" [style]="{'width': '60px'}" *ngIf="_isEditAllowed">
       <ng-template let-col let-flavor="rowData" pTemplate="body" let-i="rowIndex">
         <div class="kEditFlavorIconWrapper">
           <i class="kIconEdit kEditFlavorIcon" (click)="_editFlavor(flavor)"></i>

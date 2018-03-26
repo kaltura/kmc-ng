@@ -11,6 +11,7 @@ import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStora
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Injectable()
 export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -27,6 +28,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
   constructor(private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization,
               private _kalturaClient: KalturaClient,
+              private _permissionsService: KMCPermissionsService,
               private _storageProfilesStore: StorageProfilesStore) {
     super(TranscodingProfileWidgetKeys.Metadata);
     this._buildForm();
@@ -125,7 +127,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> | void {
     const prepare = () => {
-      if (firstTimeActivating) {
+      if (firstTimeActivating && (this.isNewData || this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE))) {
         this._monitorFormChanges();
       }
 
@@ -135,6 +137,12 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
         defaultEntryId: this.data.defaultEntryId,
         storageProfileId: this.data.storageProfileId || null
       });
+
+      if (!this.isNewData && !this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE)) {
+        this.metadataForm.get('name').disable({ onlySelf: true });
+        this.metadataForm.get('description').disable({ onlySelf: true });
+        this.metadataForm.markAsUntouched();
+      }
     };
     super._showLoader();
 
