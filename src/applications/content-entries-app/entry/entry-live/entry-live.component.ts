@@ -3,6 +3,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryLiveWidget } from './entry-live-widget.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { EntryLiveWidget } from './entry-live-widget.service';
     styleUrls: ['./entry-live.component.scss']
 })
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
-
+  public _kmcPermissions = KMCPermissions;
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
 
 

@@ -21,6 +21,7 @@ import {Observable} from 'rxjs/Observable';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import {EntryDistributionWidget} from './entry-distribution/entry-distribution-widget.service';
 import {EntryAdvertisementsWidget} from './entry-advertisements/entry-advertisements-widget.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kEntry',
@@ -57,6 +58,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
 	public _entryHasChanges : boolean;
+	public _kmcPermissions = KMCPermissions;
 
   constructor(entryWidgetsManager: EntryWidgetsManager,
               widget1: EntrySectionsListWidget,
