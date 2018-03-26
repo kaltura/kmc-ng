@@ -12,6 +12,10 @@
 		font-size: 20px;
 		font-weight: 700;
 	}
+  .kButtons{
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
 	.kLiveDetails{
 		box-sizing: border-box;
 		width: 100%;
@@ -25,6 +29,10 @@
 			font-weight: 700;
 			margin-top: 48px;
 			line-height: 48px;
+
+      &:first-child {
+        margin-top:0;
+      }
 		}
 		.kRow{
 			display: flex;

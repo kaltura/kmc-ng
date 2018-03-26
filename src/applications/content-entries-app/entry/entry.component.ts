@@ -1,25 +1,26 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { ActionTypes, EntryStore } from './entry-store.service';
-import { EntrySectionsListWidget } from './entry-sections-list/entry-sections-list-widget.service';
-import { EntryMetadataWidget } from './entry-metadata/entry-metadata-widget.service';
-import { EntryPreviewWidget } from './entry-preview/entry-preview-widget.service';
-import { EntryDetailsWidget } from './entry-details/entry-details-widget.service';
-import { EntryCaptionsWidget } from './entry-captions/entry-captions-widget.service';
-import { EntryAccessControlWidget } from './entry-access-control/entry-access-control-widget.service';
-import { EntryClipsWidget } from './entry-clips/entry-clips-widget.service';
-import { EntryRelatedWidget } from './entry-related/entry-related-widget.service';
-import { EntryLiveWidget } from './entry-live/entry-live-widget.service';
-import { EntryFlavoursWidget } from './entry-flavours/entry-flavours-widget.service';
-import { EntryThumbnailsWidget } from './entry-thumbnails/entry-thumbnails-widget.service';
-import { EntrySchedulingWidget } from './entry-scheduling/entry-scheduling-widget.service';
-import { EntryUsersWidget } from './entry-users/entry-users-widget.service';
-import { EntryWidgetsManager } from './entry-widgets-manager';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { Observable } from 'rxjs/Observable';
-import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { EntryDistributionWidget } from './entry-distribution/entry-distribution-widget.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {ActionTypes, EntryStore} from './entry-store.service';
+import {EntrySectionsListWidget} from './entry-sections-list/entry-sections-list-widget.service';
+import {EntryMetadataWidget} from './entry-metadata/entry-metadata-widget.service';
+import {EntryPreviewWidget} from './entry-preview/entry-preview-widget.service';
+import {EntryDetailsWidget} from './entry-details/entry-details-widget.service';
+import {EntryCaptionsWidget} from './entry-captions/entry-captions-widget.service';
+import {EntryAccessControlWidget} from './entry-access-control/entry-access-control-widget.service';
+import {EntryClipsWidget} from './entry-clips/entry-clips-widget.service';
+import {EntryRelatedWidget} from './entry-related/entry-related-widget.service';
+import {EntryLiveWidget} from './entry-live/entry-live-widget.service';
+import {EntryFlavoursWidget} from './entry-flavours/entry-flavours-widget.service';
+import {EntryThumbnailsWidget} from './entry-thumbnails/entry-thumbnails-widget.service';
+import {EntrySchedulingWidget} from './entry-scheduling/entry-scheduling-widget.service';
+import {EntryUsersWidget} from './entry-users/entry-users-widget.service';
+import {EntryWidgetsManager} from './entry-widgets-manager';
+import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {Observable} from 'rxjs/Observable';
+import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import {EntryDistributionWidget} from './entry-distribution/entry-distribution-widget.service';
+import {EntryAdvertisementsWidget} from './entry-advertisements/entry-advertisements-widget.service';
 
 @Component({
     selector: 'kEntry',
@@ -41,7 +42,8 @@ import { EntryDistributionWidget } from './entry-distribution/entry-distribution
         EntryMetadataWidget,
         EntryDetailsWidget,
         EntryPreviewWidget,
-        EntryDistributionWidget
+        EntryDistributionWidget,
+        EntryAdvertisementsWidget
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {
@@ -71,12 +73,14 @@ export class EntryComponent implements OnInit, OnDestroy {
               widget12: EntryDetailsWidget,
               widget13: EntryPreviewWidget,
               widget14: EntryDistributionWidget,
+              widget15: EntryAdvertisementsWidget,
               private _entriesStore: EntriesStore,
               private _appLocalization: AppLocalization,
               public _entryStore: EntryStore) {
     entryWidgetsManager.registerWidgets([
       widget1, widget2, widget3, widget4, widget5, widget6, widget7,
-      widget8, widget9, widget10, widget11, widget12, widget13, widget14
+      widget8, widget9, widget10, widget11, widget12, widget13, widget14,
+      widget15
     ]);
   }
 
