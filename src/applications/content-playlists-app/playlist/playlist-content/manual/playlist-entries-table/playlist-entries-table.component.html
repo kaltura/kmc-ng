@@ -45,7 +45,7 @@
           <span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
         </ng-template>
       </p-column>
-      <p-column header="" styleClass="actionsColumn">
+      <p-column header="" styleClass="actionsColumn" *ngIf="isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)">
         <ng-template let-col let-entry="rowData" pTemplate="body" let-i="rowIndex">
           <div class="kPlaylistEntriesTableActions">
             <button type="button" pButton class="kMoreActionsButton" icon="kIconmore" (click)="_openActionsMenu($event, i, entry)"></button>

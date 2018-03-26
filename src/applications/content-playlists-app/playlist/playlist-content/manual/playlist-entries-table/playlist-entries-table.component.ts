@@ -5,6 +5,7 @@ import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { ManualContentWidget } from '../manual-content-widget.service';
 import { globalConfig } from 'config/global';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -17,6 +18,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
+  @Input() isNewPlaylist: boolean;
 
   @Input()
   set entries(data: any[]) {
@@ -40,6 +42,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   public _deferredLoading = true;
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
