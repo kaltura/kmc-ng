@@ -13,7 +13,7 @@
 
     <button pButton class="kSaveBtn kButtonBranded"
             (click)="_save()"
-            [disabled]="!_form.valid || !_currentDestinationFormState.isValid || (!_form.dirty && !_currentDestinationFormState.isDirty)"
+            [disabled]="_saveBtnDisabled"
             label="{{'applications.content.syndication.details.header.save' | translate}}">
     </button>
   </div>

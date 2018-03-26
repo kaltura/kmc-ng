@@ -58,6 +58,12 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   public _mode: FeedFormMode = 'new';
   public _newFeedText = 'New Feed';
 
+  public get _saveBtnDisabled(): boolean {
+    return !this._form.valid || !this._currentDestinationFormState.isValid
+      || (!this._form.dirty && !this._currentDestinationFormState.isDirty)
+      || (this._newFeedText === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE));
+  }
+
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
               private _feedsService: FeedsService,
