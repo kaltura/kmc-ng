@@ -2,7 +2,6 @@ import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output
 import {ISubscription} from 'rxjs/Subscription';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 
@@ -18,7 +17,6 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
   @Output() removeTagsChanged = new EventEmitter<string[]>();
 
   public _loading = false;
-  public _sectionBlockerMessage: AreaBlockerMessage;
 
   public tags: any[] = [];
   public tagsToRemove: string[] = [];

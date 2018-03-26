@@ -3,7 +3,8 @@
     <span class="kTitle">{{'applications.content.bulkActions.removeEditors' | translate}}</span>
     <div class="kEditors">
       <span class="kLabel">{{'applications.content.bulkActions.removeEditorsLabel' | translate}}</span>
-      <kAutoComplete [ngModel]="users"
+      <span  *ngIf="!users || !users.length" class="kNoItems">{{'applications.content.bulkActions.noEditorsToRemove' | translate}}</span>
+      <kAutoComplete  *ngIf="users && users.length" [ngModel]="users"
                      [tooltipResolver]="'__tooltip'"
                      [classField]="'__class'"
                      [multiple]="true"

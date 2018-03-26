@@ -1,14 +1,20 @@
-<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+<k-area-blocker [showLoader]="_loading">
   <div class="kContent kOverrideFAIcons">
     <span class="kTitle">{{'applications.content.categories.bActions.removeTags' | translate}}</span>
     <div class="kTags">
       <span class="kLabel">{{'applications.content.categories.bActions.removeTagsLabel' | translate}}</span>
-      <div *ngFor="let tag of tags; let index = index" class="kTag">
-        <p-checkbox label="{{tag.label}}" [(ngModel)]="tag.selected"  binary="true" (onChange)="updateSelectedTags()"></p-checkbox>
-      </div>
+      <span  *ngIf="!tags || !tags.length" class="kNoItems">{{'applications.content.categories.bActions.noTagsToRemove' | translate}}</span>
+      <kAutoComplete *ngIf="tags && tags.length" [ngModel]="tags"
+                     [tooltipResolver]="'__tooltip'"
+                     [classField]="'__class'"
+                     [multiple]="true"
+                     [limitToSuggestions]="false"
+                     readonly="true"
+                     (onUnselect)="_removeTag($event)">
+      </kAutoComplete>
     </div>
     <div class="kFooter">
-      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.categories.bActions.save' | translate}}" (click)="_apply()"></button>
+      <button type="button" [disabled]="tagsToRemove.length === 0" class="kButtonBranded" pButton label="{{'applications.content.categories.bActions.save' | translate}}" (click)="_apply()"></button>
     </div>
   </div>
 </k-area-blocker>
