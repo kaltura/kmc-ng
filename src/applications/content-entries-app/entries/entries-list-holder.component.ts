@@ -1,17 +1,18 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {EntriesListComponent} from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import { BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
+import {BrowserService, NewEntryUploadFile} from 'app-shared/kmc-shell';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import {ContentEntriesAppService} from '../content-entries-app.service';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
-import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management/upload-management.service';
-import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
-import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
+import {UploadManagement} from '@kaltura-ng/kaltura-common/upload-management/upload-management.service';
+import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -19,7 +20,9 @@ import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entr
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
+  @ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
 
+  public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
 
   public _columns: EntriesTableColumns = {
@@ -98,7 +101,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
       case 'liveDashboard':
         if (entry && entry.id) {
-          this._router.navigate(['../entry', entry.id, 'live'], {relativeTo: this._activatedRoute});
+          this._entryId = entry.id;
+          this._liveDashboard.open();
         }
         break;
       default:

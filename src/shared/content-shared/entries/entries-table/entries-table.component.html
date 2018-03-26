@@ -74,11 +74,11 @@
                 </td>
 
                 <td *ngIf="_columnsMetadata.name" [ngStyle]="_columnsMetadata.name.style">
-                    <div class="kTitle" [kTooltip]="entry.name" [maxWidth]="300"
+                    <span class="kTitle kTableColumn" [kTooltip]="entry.name" [maxWidth]="300"
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
                         {{entry.name}}
-                    </div>
+                    </span>
                 </td>
 
                 <td *ngIf="_columnsMetadata.id" [ngStyle]="_columnsMetadata.id.style">{{entry.id}}</td>

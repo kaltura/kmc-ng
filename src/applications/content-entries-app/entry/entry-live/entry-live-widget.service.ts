@@ -25,6 +25,7 @@ import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPa
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 
 export interface bitrate {
 	enabled: boolean,
@@ -261,38 +262,46 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	public regenerateStreamToken(): void {
 		this.sectionBlockerMessage = null;
-		this._kalturaServerClient.request(new LiveStreamRegenerateStreamTokenAction({entryId: this.data.id}))
+
+		const multiRequest = new KalturaMultiRequest(
+			new LiveStreamRegenerateStreamTokenAction({entryId: this.data.id}),
+			new BaseEntryGetAction({entryId: this.data.id})
+		);
+
+
+		this._kalturaServerClient.multiRequest(multiRequest)
 			.cancelOnDestroy(this, this.widgetReset$)
 			.tag('block-shell')
 			.monitor('regenerate stream token')
 			.subscribe(
-				(response: any) => {
-					let entry: KalturaLiveStreamEntry = this.data as KalturaLiveStreamEntry;
-					entry.primaryBroadcastingUrl = response.primaryBroadcastingUrl;
-					entry.primaryRtspBroadcastingUrl = response.primaryRtspBroadcastingUrl;
-					entry.secondaryBroadcastingUrl = response.secondaryBroadcastingUrl;
-					entry.secondaryRtspBroadcastingUrl = response.secondaryRtspBroadcastingUrl;
-				},
-				error => {
-					this._showBlockerMessage(new AreaBlockerMessage(
-						{
-							message: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure'),
-							buttons: [
-								{
-									label: this._appLocalization.get('app.common.dismiss'),
-									action: () => {
-										this.sectionBlockerMessage = null;
+				response => {
+					if (response.hasErrors()) {
+						this._showBlockerMessage(new AreaBlockerMessage(
+							{
+								message: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure'),
+								buttons: [
+									{
+										label: this._appLocalization.get('app.common.dismiss'),
+										action: () => {
+											this.sectionBlockerMessage = null;
+										}
+									},
+									{
+										label: this._appLocalization.get('app.common.retry'),
+										action: () => {
+											this.regenerateStreamToken();
+										}
 									}
-								},
-								{
-									label: this._appLocalization.get('app.common.retry'),
-									action: () => {
-										this.regenerateStreamToken();
-									}
-								}
-							]
-						}
-					), false);
+								]
+							}
+						), false);
+					}else {
+						let entry: KalturaLiveStreamEntry = this.data as KalturaLiveStreamEntry;
+						entry.primaryBroadcastingUrl = response[1].result.primaryBroadcastingUrl;
+						entry.primaryRtspBroadcastingUrl =  response[1].result.primaryRtspBroadcastingUrl;
+						entry.secondaryBroadcastingUrl =  response[1].result.secondaryBroadcastingUrl;
+						entry.secondaryRtspBroadcastingUrl =  response[1].result.secondaryRtspBroadcastingUrl;
+					}
 				}
 			);
 	}
