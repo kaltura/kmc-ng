@@ -116,26 +116,31 @@
             <kGoogleDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.googleVideo" [feed]="feed"
               [contentFlavors]="_flavors" [players]="_players"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kGoogleDestinationForm>
             <!--Yahoo-->
             <kYahooDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.yahoo" [feed]="feed"
               [contentFlavors]="_flavors" [players]="_players"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kYahooDestinationForm>
             <!--Roku-->
             <kRokuDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.rokuDirectPublisher"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kRokuDestinationForm>
             <!--Opera-->
             <kOperaDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.operaTvSnap"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kOperaDestinationForm>
             <!--Flexible Format (xsl code)-->
             <kFlexibleFormatDestinationForm
+              [mode]="_mode"
               *ngSwitchCase="_kalturaSyndicationFeedType.kalturaXslt" [feed]="feed"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kFlexibleFormatDestinationForm>

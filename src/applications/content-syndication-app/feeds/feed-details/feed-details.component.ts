@@ -16,12 +16,14 @@ import {PlayersStore} from 'app-shared/kmc-shared/players/players-store.service'
 import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {PlayerTypes} from 'app-shared/kmc-shared/players';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 export abstract class DestinationComponentBase {
   abstract getData(): KalturaBaseSyndicationFeed;
 }
 
+export type FeedFormMode = 'edit' | 'new';
 
 @Component({
   selector: 'kFeedDetails',
@@ -53,7 +55,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isReady = false; // determined when received entryCount, feed, flavors and players
-  public _mode: 'edit' | 'new' = 'new';
+  public _mode: FeedFormMode = 'new';
   public _newFeedText = 'New Feed';
 
   constructor(private _appLocalization: AppLocalization,
@@ -61,6 +63,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
               private _feedsService: FeedsService,
               private _flavorsStore: FlavoursStore,
               private _playersStore: PlayersStore,
+              private _permissionsService: KMCPermissionsService,
               private _logger: KalturaLogger) {
     // prepare form
     this._createForm();
@@ -228,7 +231,11 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
         disabled: this._mode === 'edit'
       },
     });
-  }
+
+    if (this._mode === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+      this._form.disable({ emitEvent: false });
+    }
+ }
 
   public _clearPlaylist(): void {
     this._form.patchValue({selectedPlaylist: null});
