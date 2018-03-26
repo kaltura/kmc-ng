@@ -21,6 +21,7 @@ import {Observable} from 'rxjs/Observable';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import {EntryDistributionWidget} from './entry-distribution/entry-distribution-widget.service';
 import {EntryAdvertisementsWidget} from './entry-advertisements/entry-advertisements-widget.service';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kEntry',
@@ -58,6 +59,11 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enableNextButton: boolean;
 	public _entryHasChanges : boolean;
 
+  public get _isSaveDisabled(): boolean {
+    const editAccessControlAllowed = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL);
+    return !this._entryStore.entryIsDirty || !editAccessControlAllowed;
+  }
+
   constructor(entryWidgetsManager: EntryWidgetsManager,
               widget1: EntrySectionsListWidget,
               widget2: EntryUsersWidget,
@@ -74,6 +80,7 @@ export class EntryComponent implements OnInit, OnDestroy {
               widget13: EntryPreviewWidget,
               widget14: EntryDistributionWidget,
               widget15: EntryAdvertisementsWidget,
+              private _permissionsService: KMCPermissionsService,
               private _entriesStore: EntriesStore,
               private _appLocalization: AppLocalization,
               public _entryStore: EntryStore) {
