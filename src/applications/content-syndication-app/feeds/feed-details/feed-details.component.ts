@@ -22,6 +22,7 @@ export abstract class DestinationComponentBase {
   abstract getData(): KalturaBaseSyndicationFeed;
 }
 
+export type FeedFormMode = 'edit' | 'new';
 
 @Component({
   selector: 'kFeedDetails',
@@ -53,7 +54,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isReady = false; // determined when received entryCount, feed, flavors and players
-  public _mode: 'edit' | 'new' = 'new';
+  public _mode: FeedFormMode = 'new';
   public _newFeedText = 'New Feed';
 
   constructor(private _appLocalization: AppLocalization,

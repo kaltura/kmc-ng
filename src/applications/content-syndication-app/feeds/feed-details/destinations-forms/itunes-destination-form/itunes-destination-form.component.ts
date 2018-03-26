@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { DestinationComponentBase } from '../../feed-details.component';
+import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
 import { KalturaITunesSyndicationFeed } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeed';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KalturaValidators } from '@kaltura-ng/kaltura-ui/validators/validators';
@@ -8,6 +8,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaITunesSyndicationFeedAdultValues } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeedAdultValues';
 import { AppAuthentication } from 'app-shared/kmc-shell';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kItunesDestinationForm',
@@ -16,6 +17,7 @@ import { AppAuthentication } from 'app-shared/kmc-shell';
   providers: [{ provide: DestinationComponentBase, useExisting: ItunesDestinationFormComponent }]
 })
 export class ItunesDestinationFormComponent extends DestinationComponentBase implements OnInit, OnDestroy {
+  @Input() mode: FeedFormMode;
   @Input() contentFlavors: KalturaFlavorParams[] = null;
   @Input() feed: KalturaITunesSyndicationFeed = null;
 
@@ -125,6 +127,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   public _availableContentFlavors: { value: number, label: string }[] = [];
 
   constructor(private _fb: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
               private _appLocalization: AppLocalization,
               private _appAuth: AppAuthentication) {
     super();
@@ -140,22 +143,6 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   }
 
   private _prepare(): void {
-    this.onFormStateChanged.emit({
-      isValid: true,
-      isDirty: false
-    });
-
-    this._form.valueChanges
-      .cancelOnDestroy(this)
-      .subscribe(
-        () => {
-          this.onFormStateChanged.emit({
-            isValid: this._form.status === 'VALID',
-            isDirty: this._form.dirty
-          });
-        }
-      );
-
     if (Array.isArray(this.contentFlavors)) {
       const allowedFlavorFormats = ['m4a', 'mp3', 'mov', 'mp4', 'm4v'];
       this._contentFlavors = this.contentFlavors.filter(({ format }) => allowedFlavorFormats.indexOf(format) !== -1);
@@ -165,6 +152,26 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
     this._fillAvailableLanguages();
     this._fillAvailableContentFlavors();
     this._fillFormData();
+
+    if (this.mode === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+      this._form.disable({ emitEvent: false });
+    } else {
+      this.onFormStateChanged.emit({
+        isValid: true,
+        isDirty: false
+      });
+
+      this._form.valueChanges
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            this.onFormStateChanged.emit({
+              isValid: this._form.status === 'VALID',
+              isDirty: this._form.dirty
+            });
+          }
+        );
+    }
   }
 
   private _markFormFieldsAsTouched(): void {

@@ -128,6 +128,7 @@
             <kItunesDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.itunes"
               [feed]="feed"
+              [mode]="_mode"
               [contentFlavors]="_flavors"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kItunesDestinationForm>
