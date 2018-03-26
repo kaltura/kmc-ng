@@ -23,6 +23,7 @@ export class PermissionsTableComponent implements OnInit {
 
   public _rolePermissionsOptions: RolePermission[] = ROLE_PERMISSIONS;
   public _rolePermissions: RolePermissionFormValue[] = [];
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _permissionsService: KMCPermissionsService) {
   }

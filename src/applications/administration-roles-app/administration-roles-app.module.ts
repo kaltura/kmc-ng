@@ -42,6 +42,7 @@ import { TableModule } from 'primeng/table';
 import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui/multi-select/multi-select.module';
 import { RolesListComponent } from './roles-list/roles-list.component';
 import { RolesTableComponent } from './roles-table/roles-table.component';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -80,7 +81,8 @@ import { RolesTableComponent } from './roles-table/roles-table.component';
     TreeModule,
     StickyModule,
     TableModule,
-    InputSwitchModule
+    InputSwitchModule,
+    KMCPermissionsModule
   ],
   declarations: [
     AdministrationRolesComponent,

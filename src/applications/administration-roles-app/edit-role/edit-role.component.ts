@@ -7,7 +7,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { RolesStoreService } from '../roles-store/roles-store.service';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';
 
 @Component({
@@ -34,6 +34,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _isNewRole: boolean;
   public _hasDisabledPermissions: boolean;
   public _contactUsLink = subApplicationsConfig.administrationRolesApp.contactUsLink;
+  public _kmcPermissions = KMCPermissions;
 
   public get _saveDisabled(): boolean {
     return this._editRoleForm.pristine && !this.duplicatedRole && !this._permissionChanged;
@@ -75,6 +76,10 @@ export class EditRoleComponent implements OnInit, OnDestroy {
         name: this.role.name,
         description: this.role.description
       }, { emitEvent: false });
+    }
+
+    if (!this._permissionsService.hasPermission(KMCPermissions.ADMIN_ROLE_UPDATE)) {
+      this._editRoleForm.disable({ emitEvent: false });
     }
   }
 

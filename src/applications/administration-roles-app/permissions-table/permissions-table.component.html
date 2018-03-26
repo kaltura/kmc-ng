@@ -25,7 +25,7 @@
                         menuItemDisplayStyle="flex"
                         [hideOnScroll]="scrollableContainer"
                         [options]="permission.items"
-                        [disabled]="!permission.checked || permission.disabled"
+                        [disabled]="!permission.checked || permission.disabled || _kmcPermissions.ADMIN_ROLE_UPDATE | kDisabledIfNotPermitted"
                         [showToggleAll]="true"
                         [maxSelectedLabels]="0"
                         [defaultLabel]="permission.isAdvancedGroup ? ('applications.administration.role.permissionsTable.viewOnly' | translate) : ('applications.administration.role.permissionsTable.selectPermissions' | translate)"
@@ -45,7 +45,9 @@
         </td>
 
         <td [ngStyle]="{'width': '80px'}">
-          <p-inputSwitch [(ngModel)]="permission.checked" (onChange)="_togglePermission($event, permission)"></p-inputSwitch>
+          <p-inputSwitch [disabled]="_kmcPermissions.ADMIN_ROLE_UPDATE | kDisabledIfNotPermitted"
+                         [(ngModel)]="permission.checked"
+                         (onChange)="_togglePermission($event, permission)"></p-inputSwitch>
         </td>
 
       </tr>
