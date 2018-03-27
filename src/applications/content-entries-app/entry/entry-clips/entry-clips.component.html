@@ -1,7 +1,9 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
 	<div class="kClips">
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
-
+    <div class="kButtons" *ngIf="_clipAndTrimEnabled">
+      <button pButton class="kButtonDefault" (click)="clipAndTrim.open()" icon="kIconimage" label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
+    </div>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService.entries$ | async)?.items"
                    scrollable="true"
@@ -15,6 +17,9 @@
 					</ng-template>
 				</p-column>
 				<p-column field="name" header="{{'applications.content.entryDetails.clips.name' | translate}}" [sortable]="'custom'">
+          <ng-template let-col let-entry="rowData" pTemplate="body">
+            <span class="kTableColumn" [kTooltip]="entry[col.field]" [maxWidth]="300">{{entry[col.field]}}</span>
+          </ng-template>
 				</p-column>
 				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'50px'}">
 				</p-column>
@@ -40,3 +45,9 @@
 					 [rowsPerPageOptions]="_widgetService.pageSizesAvailable"></p-paginator>
 	</div>
 </k-area-blocker>
+
+<kPopupWidget #clipAndTrim [fullScreen]="true">
+  <ng-template>
+    <kClipAndTrim [entryId]="_widgetService.data.id" [parentPopupWidget]="clipAndTrim"></kClipAndTrim>
+  </ng-template>
+</kPopupWidget>

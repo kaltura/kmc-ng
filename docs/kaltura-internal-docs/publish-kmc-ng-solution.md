@@ -138,16 +138,29 @@ npm run standalone:update
 npm run build:prod
 ```
 
-6. Update `configuration/server-config.json` file with relevant external applications configuration.
-
-7. Create a version deployable zip
+6. Create a version deployable zip
 ```
 cd dist
 zip -r kmc-ng-vX.X.X.zip .
 ```
    * replace `vX.X.X` with the actual version number
 
-8. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
+7. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
+
+#### provide debug version
+1. Rebuild the application **without** production flag.
+```
+npm run build
+```
+
+2. Create a version deployable zip, **add a suffix** `-DEBUG-ONLY` to the zip file name
+```
+cd dist
+zip -r kmc-ng-vX.X.X-DEBUG-ONLY.zip .
+```
+   * replace `vX.X.X` with the actual version number
+
+3. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 
 ## Step 3: deploy kaltura to the dev server
 
