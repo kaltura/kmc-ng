@@ -33,13 +33,19 @@ Follow these instructions to test external apps integration:
     },
     "liveDashboard": {
       "enabled": true,
-      "uri": "__local_machine_only__/live_dashboard_v1_4_1/index.html",
+      "uri": "__local_machine_only__/live-dashboard_v1_4_1/index.html",
       "version": "v1.4.1"
     },
     "kava": {
       "enabled": false,
       "version": "",
       "uri": ""
+    },
+     "liveAnalytics": {
+        "enabled": true,
+        "uri": "__local_machine_only__/live-analytics-front-end-v2_6/index.html",
+        "uiConfId": 36060752,
+        "version": "2.6"
     },
     "usageDashboard": {
       "enabled": true,
@@ -52,5 +58,15 @@ Follow these instructions to test external apps integration:
         "cf3.kaltura.com/content/static/maps/v1"
       ],
       "map_zoom_levels": "12"
+    },
+    "clipAndTrim": {
+      "enabled": true,
+      "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
+      "uiConfId": "36060752"
+    },
+    "advertisements": {
+      "enabled": true,
+      "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
+      "uiConfId": "36060752"
     }
 ```
