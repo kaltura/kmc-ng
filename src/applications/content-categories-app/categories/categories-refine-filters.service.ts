@@ -16,6 +16,7 @@ import {
 import {DefaultFiltersList} from './default-filters-list';
 
 import * as R from 'ramda';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface RefineGroupListItem {
   value: string,
@@ -42,6 +43,7 @@ export class CategoriesRefineFiltersService {
   private _getRefineFilters$: Observable<RefineGroup[]>;
 
   constructor(private kalturaServerClient: KalturaClient,
+              private _permissionsService: KMCPermissionsService,
               private _metadataProfileStore: MetadataProfileStore) {
   }
 
@@ -55,9 +57,15 @@ export class CategoriesRefineFiltersService {
       })
         .map(
           (response) => {
+            const result = [];
+            if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_ENTITLEMENT)) {
+              result.push(this._buildDefaultFiltersGroup());
+            }
+
             const metadataData = this._buildMetadataFiltersGroups(response.items);
-            const defaultFilterGroup = this._buildDefaultFiltersGroup();
-            return [defaultFilterGroup, ...metadataData.groups];
+            result.push(...metadataData.groups);
+
+            return result;
           })
         .catch(err => {
           console.log(`log: [warn] [categories-refine-filters] failed to create refine filters: ${err}`);
