@@ -18,7 +18,17 @@
       "version": "",
       "uiConfId": "",
       "html5_version":"",
-      "html5lib":""
+      "html5lib":"",
+      "showStudioV3": false
+    },
+    "studioV3": {
+      "enabled": false,
+      "uri": "",
+      "version": "",
+      "uiConfId": "",
+      "html5_version":"",
+      "html5lib":"",
+      "showHTMLStudio": false
     },
     "liveDashboard": {
       "enabled": false,

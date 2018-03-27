@@ -23,7 +23,6 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
         this.browserService.handleUnpermittedAction(UnpermittedActionReasons.InvalidConfiguration)
         return undefined;
       }
-      this.studioUrl = serverConfig.externalApps.studio.uri;
       window['kmc'] = {
         'version': '3',
         'preview_embed': {
@@ -34,15 +33,45 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
         'vars': {
           'ks': this.appAuthentication.appUser.ks,
           'api_url': getKalturaServerUri(),
-          'studio': {
-            'config': '{"version":' + serverConfig.externalApps.studio.version + ', "name":"Video Studio V2", "tags":"studio_v2", "html5_version":' + serverConfig.externalApps.studio.html5_version + ', "html5lib":' + serverConfig.externalApps.studio.html5lib + '}',
+          'studio':{
+            'config': {
+              'version': serverConfig.externalApps.studio.version,
+              'name': 'Video Studio V2',
+              'tags': 'studio_v2',
+              'html5_version': serverConfig.externalApps.studio.html5_version,
+              'html5lib': serverConfig.externalApps.studio.html5lib
+            },
             'showFlashStudio': false,
-            'showHTMLStudio': true,
+            'showStudioV3': serverConfig.externalApps.studio.showStudioV3,
             'uiConfID': +serverConfig.externalApps.studio.uiConfId,
             'version': serverConfig.externalApps.studio.version
+          },
+          'studioV3':{
+            'config': {
+              'version': serverConfig.externalApps.studioV3.version,
+              'name': 'Video Studio V3',
+              'tags': 'studio_v3',
+              'html5_version': serverConfig.externalApps.studioV3.html5_version,
+              'html5lib': serverConfig.externalApps.studioV3.html5lib
+            },
+            'publisherEnvType': this.appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
+            'html5_version': serverConfig.externalApps.studioV3.html5_version,
+            'showFlashStudio': false,
+            'showStudio': serverConfig.externalApps.studioV3.showHTMLStudio,
+            'uiConfID': +serverConfig.externalApps.studioV3.uiConfId,
+            'version': serverConfig.externalApps.studioV3.version
+          }
+        },
+        'functions':{
+          'openStudioV3': () => {
+            this._openV3Studio();
+          },
+          'openStudio': () => {
+            this._openV2Studio();
           }
         }
       }
+      this._openV2Studio();
     } catch (ex) {
       this.logger.warn(`Could not load Studio, please check that Studio configurations are loaded correctly\n error: ${ex}`);
       this.studioUrl = null;
@@ -60,6 +89,14 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.studioUrl = '';
     window['kmc'] = null;
+  }
+
+  private _openV2Studio(){
+    this.studioUrl = serverConfig.externalApps.studio.uri;
+  }
+
+  private _openV3Studio(){
+    this.studioUrl = serverConfig.externalApps.studioV3.uri;
   }
 
 }
