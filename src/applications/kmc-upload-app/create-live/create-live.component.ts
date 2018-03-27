@@ -13,6 +13,7 @@ import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLive
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export enum StreamTypes {
   kaltura,
@@ -33,7 +34,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     description: '',
     transcodingProfile: null,
     liveDVR: false,
-    enableRecording: false,
+    enableRecording: this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM),
     enableRecordingSelectedOption: KalturaRecordStatus.appended,
     previewMode: false
   };
@@ -66,6 +67,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
               private _appLocalization: AppLocalization,
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
+              private _permissionsService: KMCPermissionsService,
               private _router: Router) {
   }
 
