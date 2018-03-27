@@ -302,6 +302,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD)
           },
           {
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS),
               label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => {
               this.openBulkActionWindow('changeOwner', 500, 280)
           }
