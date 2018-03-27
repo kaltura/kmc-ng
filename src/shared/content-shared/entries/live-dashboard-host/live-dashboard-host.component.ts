@@ -4,11 +4,11 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 
 @Component({
-  selector: 'kLiveDashboard',
-  templateUrl: './live-dashboard.component.html',
-  styleUrls: ['./live-dashboard.component.scss']
+  selector: 'kLiveDashboardHost',
+  templateUrl: './live-dashboard-host.component.html',
+  styleUrls: ['./live-dashboard-host.component.scss']
 })
-export class LiveDashboardComponent implements OnInit, OnDestroy {
+export class LiveDashboardHostComponent implements OnInit, OnDestroy {
 
   @Input()
   entryId: string = null;
@@ -32,7 +32,7 @@ export class LiveDashboardComponent implements OnInit, OnDestroy {
       this._liveDashboardUrl = serverConfig.externalApps.liveDashboard.uri;
 
       const currentLang = this._browserService.getFromLocalStorage('kmc_lang');
-      window['lang'] =  currentLang || 'en';
+      window['lang'] = currentLang || 'en';
       window['kmc'] = {
         'vars': {
           'ks': this.appAuthentication.appUser.ks,
@@ -42,7 +42,7 @@ export class LiveDashboardComponent implements OnInit, OnDestroy {
             'version': serverConfig.externalApps.liveDashboard.version
           }
         }
-      }
+      };
     } catch (ex) {
       this.logger.warn(`Could not load live dashboard, please check that live dashboard configurations are loaded correctly\n error: ${ex}`);
       this._liveDashboardUrl = null;
