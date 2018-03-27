@@ -22,7 +22,7 @@ export class EntryAccessControl implements  OnInit, OnDestroy {
 
 	ngOnInit() {
         this._widgetService.attachForm();
-    this._canSetAccessControl = this._permissionsService.hasAnyPermissions([KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL, KMCPermissions.ACCESS_CONTROL_ADD]);
+    this._canSetAccessControl = this._permissionsService.hasAnyPermissions([KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL]);
 	}
 
 	ngOnDestroy() {
