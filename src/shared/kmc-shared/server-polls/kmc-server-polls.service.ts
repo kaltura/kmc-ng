@@ -28,7 +28,7 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
   }
 
   protected _createGlobalError(error?: Error): KalturaAPIException {
-      return new KalturaAPIException('kmc-server_polls_global_error', error ? error.message : '');
+      return new KalturaAPIException( error ? error.message : '','kmc-server_polls_global_error', null);
   }
 
   protected _canExecute(): boolean {

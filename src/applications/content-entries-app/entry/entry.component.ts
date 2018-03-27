@@ -58,7 +58,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
 	public _entryHasChanges : boolean;
-  public _kmcPermissions = KMCPermissions;
+	public _kmcPermissions = KMCPermissions;
 
   constructor(entryWidgetsManager: EntryWidgetsManager,
               widget1: EntrySectionsListWidget,
