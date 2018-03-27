@@ -5,7 +5,7 @@
               (onActionsSelected)="_onActionSelected($event)">
   <div class="kBulkActions bulk-actions">
     <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton
-            *kVisibleIfAllPermitted="['CONTENT_MODERATE_APPROVE_REJECT']"
+            [disabled]="_kmcPermissions.CONTENT_MODERATE_APPROVE_REJECT | kDisabledIfNotPermitted"
             [label]="'applications.content.moderation.selectAction' | translate"
             (click)="menu.toggle($event)"></button>
   </div>

@@ -14,7 +14,7 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-t
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { AppPermissionsService } from '@kaltura-ng/mc-shared/app-permissions/app-permissions.service';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
@@ -25,6 +25,7 @@ export class EntriesListHolderComponent implements OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
   @ViewChild('moderationDetails') private _moderationDetails: PopupWidgetComponent;
 
+	public _kmcPermissions = KMCPermissions;
   private _shouldConfirmEntryApproval = false; // TODO [kmcng] need to get such permissions from somewhere
   private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
   public _defaultFilters: Partial<EntriesFilters> = {
@@ -72,9 +73,9 @@ export class EntriesListHolderComponent implements OnDestroy {
   constructor(private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _entriesStore: EntriesStore,
-              private _permissionsService: AppPermissionsService,
+              private _permissionsService: KMCPermissionsService,
               private _bulkService: BulkService) {
-    if (!this._permissionsService.hasPermission('CONTENT_MODERATE_APPROVE_REJECT')) {
+    if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MODERATE_APPROVE_REJECT)) {
       this._rowActions = [];
     }
   }
