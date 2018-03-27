@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kFeedsList',
@@ -17,6 +18,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 
 export class FeedsListComponent implements OnInit, OnDestroy {
 
+  public _kmcPermissions = KMCPermissions;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isReady = false; // prevents from calling prepare function twice
