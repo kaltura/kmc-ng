@@ -50,6 +50,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     KalturaEntryStatus.blocked.toString()
   ];
 
+  public _kmcPermissions = KMCPermissions;
   public _bulkActionsMenu: MenuItem[] = [];
   public _bulkWindowWidth = 500;
   public _bulkWindowHeight = 500;
@@ -297,7 +298,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           {
               label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => {
               this.downloadEntries()
-          }
+          },
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD)
           },
           {
               label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => {
