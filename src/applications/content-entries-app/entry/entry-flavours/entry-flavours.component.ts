@@ -13,6 +13,7 @@ import { Flavor } from './flavor';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { globalConfig } from 'config/global';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -32,6 +33,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
 	public _actions: MenuItem[] = [];
+	public _kmcPermissions = KMCPermissions;
 
 	public _selectedFlavor: Flavor;
 	public _uploadFilter: string = "";

@@ -1134,6 +1134,7 @@
         "downloadFailed": "Download request failed"
       },
       "entryDetails": {
+        "save": "Save",
         "sections": {
           "metadata": "Metadata",
           "thumbnails": "Thumbnails",

@@ -29,12 +29,11 @@ import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessCo
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CreateNewCategoryEvent} from 'app-shared/kmc-shared/events/category-creation';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import {CreateNewPlaylistEvent} from 'app-shared/kmc-shared/events/playlist-creation';
-import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import {CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
-import {KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
-import {BulkAddPublishersService} from './services/bulk-add-publishers.service';
+import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
+import { KMCPermissions,KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';import {BulkAddPublishersService} from './services/bulk-add-publishers.service';
 import {BulkAddEditorsService} from './services/bulk-add-editors.service';
 import {BulkRemoveEditorsService} from './services/bulk-remove-editors.service';
 import {BulkRemovePublishersService} from './services/bulk-remove-publishers.service';
@@ -66,6 +65,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     KalturaEntryStatus.blocked.toString()
   ];
 
+  public _kmcPermissions = KMCPermissions;
   public _bulkActionsMenu: MenuItem[] = [];
   public _bulkWindowWidth = 500;
   public _bulkWindowHeight = 500;
@@ -337,9 +337,11 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           {
               label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => {
               this.downloadEntries();
-          }
+          },
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD)
           },
           {
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS),
               label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => {
               this.openBulkActionWindow('changeOwner', 500, 280);
           }
@@ -401,6 +403,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               }]
           },
           {
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA),
               label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
               {
                   label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => {
@@ -418,9 +421,11 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'),
               command: (event) => {
                   this.openBulkActionWindow('setAccessControl', 500, 550);
-              }
+              },
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL)
           },
           {
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_SCHEDULE),
               label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => {
               this.openBulkActionWindow('setScheduling', 500, 500);
           }
