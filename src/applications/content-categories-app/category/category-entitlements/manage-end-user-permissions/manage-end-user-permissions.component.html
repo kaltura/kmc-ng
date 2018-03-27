@@ -16,7 +16,7 @@
     <div class="kBulkActionsContainer">
 
       <button class="kButtonBranded kAddItemBtn"
-              *ngIf="!_selectedUsers.length || _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kNgIfPermitted"
+              *ngIf="!_selectedUsers.length && _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kNgIfPermitted"
               pButton
               type="button"
               label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.addUsers' | translate}}"

@@ -166,11 +166,9 @@
       </div>
 
       <!--Default Permission Level-->
-      <!--TODO [kmcng] p-dropdown is not disabled by form, need to use attr, bug with p-dropdown itself-->
       <div class="kRow">
         <span class="kLabel"><span class="kLabelText">{{'applications.content.categoryDetails.entitlements.defaultPermissionLevel.label' | translate}}</span></span>
         <p-dropdown class="kControl" formControlName="defaultPermissionLevel"
-                    [disabled]="_kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kDisabledIfNotPermitted"
                     [options]="_defaultPermissionLevelOptions" [autoWidth]="false"></p-dropdown>
       </div>
 

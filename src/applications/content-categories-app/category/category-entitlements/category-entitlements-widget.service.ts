@@ -47,7 +47,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
     if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS)) {
-      this.entitlementsForm.disable({ emitEvent: false });
+	    this.entitlementsForm.disable({emitEvent: false});
     }
 
     super._showLoader();
@@ -117,7 +117,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       contentPublishPermissions: null,
       moderateContent: null,
       inheritUsersPermissions: null, // no
-      defaultPermissionLevel: {value: null, disabled: true},
+      defaultPermissionLevel: {value: null},
       owner: null,
       permittedUsers: []
     });
@@ -147,6 +147,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   private _resetFormData(owner: KalturaUser) {
+
+      const hasCanModifyPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS);
+
     this.inheritUsersPermissionsOriginalValue = this.parentCategory && this.data.inheritanceType === KalturaInheritanceType.inherit;
     this.entitlementsForm.reset(
       {
@@ -157,11 +160,11 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
         inheritUsersPermissions: this.inheritUsersPermissionsOriginalValue,
         defaultPermissionLevel: {
           value: this.data.defaultPermissionLevel,
-          disabled: this.inheritUsersPermissionsOriginalValue
+          disabled: !hasCanModifyPermission || this.inheritUsersPermissionsOriginalValue
         },
         owner: {
           value: owner,
-          disabled: this.inheritUsersPermissionsOriginalValue
+          disabled: !hasCanModifyPermission || this.inheritUsersPermissionsOriginalValue
         },
         permittedUsers: []
       }
