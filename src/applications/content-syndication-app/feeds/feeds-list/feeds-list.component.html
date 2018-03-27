@@ -7,7 +7,7 @@
           <button pButton type="button" class="kButtonBranded kAddFeedBtn"
                   [label]="'applications.content.syndication.addFeed' | translate"
                   [class.kHidden]="_selectedFeeds?.length"
-                  [kEnableIfAllPermitted]="['SYNDICATION_ADD']"
+                  [disabled]="_kmcPermissions.SYNDICATION_ADD | kDisabledIfNotPermitted"
                   (click)="_addNewFeed()"></button>
           <span class="kSelectedFeedsNum" *ngIf="_feedsTotalCount">
              {{'applications.content.syndication.feeds' | translate: {'0': _feedsTotalCount} }}
