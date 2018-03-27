@@ -320,7 +320,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
                   command: (event) => {
                       this.performBulkAction('addToNewPlaylist')
                   },
-                disabled: !this._permissionsService.hasPermission('PLAYLIST_ADD')
+                disabled: !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_ADD)
               }]
           },
           {

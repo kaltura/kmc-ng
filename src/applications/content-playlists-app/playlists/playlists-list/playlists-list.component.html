@@ -9,7 +9,7 @@
               type="button"
               label="{{'applications.content.playlists.addPlaylist' | translate}}"
               class="kButtonBranded kAddPlaylistBtn" [class.kHidden]="_selectedPlaylists.length"
-              *kVisibleIfAllPermitted="['PLAYLIST_ADD']"
+              *ngIf="_kmcPermissions.PLAYLIST_ADD | kNgIfPermitted"
               (click)="_addPlaylist()"></button>
             <span
               class="kSelectedPlaylistsNum"
