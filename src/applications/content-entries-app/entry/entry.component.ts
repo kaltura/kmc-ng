@@ -58,9 +58,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
 	public _entryHasChanges : boolean;
+	public _kmcPermissions = KMCPermissions;
 
   public get _isSaveDisabled(): boolean {
-    const editAccessControlAllowed = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL);
+    const editAccessControlAllowed = this._permissionsService.hasAnyPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS, KMCPermissions.CONTENT_MANAGE_METADATA, KMCPermissions.CONTENT_MANAGE_SCHEDULE, KMCPermissions.CONTENT_MANAGE_THUMBNAIL, KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL);
     return !this._entryStore.entryIsDirty || !editAccessControlAllowed;
   }
 
