@@ -39,7 +39,7 @@
 						<span>{{flavor.tags | tags}}</span>
 					</ng-template>
 				</p-column>
-				<p-column [style]="{'width':'80px'}">
+				<p-column *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted" [style]="{'width':'80px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<div *ngIf="flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8' && flavor.status !== '0'" class="kFlavorsTableActions">
 							<button type="button" class="kMoreActionsButton" pButton icon="kIconmore" (click)="openActionsMenu($event, flavor)"></button>

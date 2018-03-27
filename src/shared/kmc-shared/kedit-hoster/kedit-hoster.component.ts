@@ -35,9 +35,9 @@ export class KeditHosterComponent implements OnInit, OnDestroy {
   }
 
   public keditUrl: string;
-  private _windowEventListener = null;
-  private _keditConfig: any = null;
-  private _keditHosterConfig: KeditHosterConfig = null;
+  public _windowEventListener = null;
+  public _keditConfig: any = null;
+  public _keditHosterConfig: KeditHosterConfig = null;
 
   constructor(private appAuthentication: AppAuthentication) {
   }
