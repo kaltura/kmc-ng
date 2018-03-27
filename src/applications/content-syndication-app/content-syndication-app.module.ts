@@ -32,7 +32,7 @@ import {PlaylistIconPipe} from './pipes/playlist-icon.pipe';
 import {DestinationIconPipe} from './pipes/destination-icon.pipe';
 import {FeedDetailsComponentsList} from './feeds/feed-details/feed-details-components-list';
 import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
-import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -62,7 +62,7 @@ import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
     FormsModule,
     CopyToClipboardModule,
     TableModule,
-    AppPermissionsModule
+    KMCPermissionsModule
   ],
   declarations: [
     DestinationIconPipe,
