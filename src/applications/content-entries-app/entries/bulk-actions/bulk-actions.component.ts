@@ -356,7 +356,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'),
               command: (event) => {
                   this.openBulkActionWindow('setAccessControl', 500, 550)
-              }
+              },
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL)
           },
           {
               disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_SCHEDULE),

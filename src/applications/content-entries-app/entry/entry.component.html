@@ -8,7 +8,7 @@
 						<div class="kTitle">{{ _entryName }}</div>
 						<button pButton class="kButtonBranded kSaveBtn"
                     label="Save"
-                    [disabled]="!_entryStore.entryIsDirty || [_kmcPermissions.CONTENT_MANAGE_ENTRY_USERS, _kmcPermissions.CONTENT_MANAGE_METADATA, _kmcPermissions.CONTENT_MANAGE_SCHEDULE, _kmcPermissions.CONTENT_MANAGE_THUMBNAIL] | kDisabledIfNotPermitted"
+                    [disabled]="_isSaveDisabled"
                     (click)="_save()"></button>
 						<button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
 						<button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
