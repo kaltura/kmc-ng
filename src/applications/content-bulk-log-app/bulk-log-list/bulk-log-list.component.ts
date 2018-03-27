@@ -12,6 +12,7 @@ import {
     BulkLogRefineFiltersService,
     RefineList
 } from '../bulk-log-store/bulk-log-refine-filters.service';
+import { BulkLogReloadListEvent } from 'app-shared/kmc-shared/events/bulk-log-reload-list.event';
 
 
 @Component({
@@ -42,9 +43,8 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               public _store: BulkLogStoreService,
               appEvents: AppEventsService) {
-    appEvents.event(BulkLogUploadingStartedEvent)
+    appEvents.event(BulkLogReloadListEvent)
       .cancelOnDestroy(this)
-      .delay(2000) // Component specific - need to wait due to updating the list on the server side
       .subscribe(() => this._store.reload());
   }
 
