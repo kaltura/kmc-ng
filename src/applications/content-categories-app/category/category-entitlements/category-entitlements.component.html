@@ -188,7 +188,7 @@
             <span *ngIf="_widgetService.parentCategory?.owner" class="kOwner" [kTooltip]="_widgetService.parentCategory.owner">{{_widgetService.parentCategory.owner}}</span>
             <span *ngIf="!_widgetService.parentCategory?.owner" class="kOwner" >{{'applications.content.categoryDetails.entitlements.owner.notSpecified' | translate}}</span>
           </span>
-          <a [class.disabled]="_widgetService.entitlementsForm.get('owner').disabled" class="kActionLink"
+          <a [class.disabled]="_widgetService.entitlementsForm.get('owner').disabled || (_kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kDisabledIfNotPermitted)" class="kActionLink"
              (click)="changeOwnerPopup.open()">{{'applications.content.categoryDetails.entitlements.owner.changeOwner' | translate}}</a>
         </div>
       </div>
@@ -205,7 +205,8 @@
         {{'applications.content.categoryDetails.entitlements.permittedUsers.loading' | translate}} </span>
           <span *ngIf="!_membersCount.loading && !_membersCount.hasError && !_membersCount.value">
         {{'applications.content.categoryDetails.entitlements.permittedUsers.none' | translate}} </span>
-          <a class="kActionLink" (click)="mananageUsersPermissions()">
+          <a class="kActionLink"
+             (click)="mananageUsersPermissions()">
             <span *ngIf="!_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value">{{'applications.content.categoryDetails.entitlements.permittedUsers.manageUsers' | translate}}</span>
             <span *ngIf="_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value">{{'applications.content.categoryDetails.entitlements.permittedUsers.viewUsers' | translate}}</span>
           </a>

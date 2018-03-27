@@ -21,30 +21,30 @@ import {Observable} from 'rxjs/Observable';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import {EntryDistributionWidget} from './entry-distribution/entry-distribution-widget.service';
 import {EntryAdvertisementsWidget} from './entry-advertisements/entry-advertisements-widget.service';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
-    selector: 'kEntry',
-    templateUrl: './entry.component.html',
-    styleUrls: ['./entry.component.scss'],
+	selector: 'kEntry',
+	templateUrl: './entry.component.html',
+	styleUrls: ['./entry.component.scss'],
 	providers : [
 		EntryStore,
 		EntryWidgetsManager,
-        EntrySectionsListWidget,
-        EntryUsersWidget,
-        EntryThumbnailsWidget,
-        EntrySchedulingWidget,
-        EntryRelatedWidget,
-        EntryFlavoursWidget,
-        EntryLiveWidget,
-        EntryClipsWidget,
-        EntryCaptionsWidget,
-        EntryAccessControlWidget,
-        EntryMetadataWidget,
-        EntryDetailsWidget,
-        EntryPreviewWidget,
-        EntryDistributionWidget,
-        EntryAdvertisementsWidget
+		EntrySectionsListWidget,
+		EntryUsersWidget,
+		EntryThumbnailsWidget,
+		EntrySchedulingWidget,
+		EntryRelatedWidget,
+		EntryFlavoursWidget,
+		EntryLiveWidget,
+		EntryClipsWidget,
+		EntryCaptionsWidget,
+		EntryAccessControlWidget,
+		EntryMetadataWidget,
+		EntryDetailsWidget,
+		EntryPreviewWidget,
+		EntryDistributionWidget,
+		EntryAdvertisementsWidget
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {
@@ -57,34 +57,40 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _currentEntryId: string;
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
-	public _entryHasChanges : boolean;
+	public _entryHasChanges: boolean;
 	public _kmcPermissions = KMCPermissions;
 
-  constructor(entryWidgetsManager: EntryWidgetsManager,
-              widget1: EntrySectionsListWidget,
-              widget2: EntryUsersWidget,
-              widget3: EntryThumbnailsWidget,
-              widget4: EntrySchedulingWidget,
-              widget5: EntryRelatedWidget,
-              widget6: EntryFlavoursWidget,
-              widget7: EntryLiveWidget,
-              widget8: EntryClipsWidget,
-              widget9: EntryCaptionsWidget,
-              widget10: EntryAccessControlWidget,
-              widget11: EntryMetadataWidget,
-              widget12: EntryDetailsWidget,
-              widget13: EntryPreviewWidget,
-              widget14: EntryDistributionWidget,
-              widget15: EntryAdvertisementsWidget,
-              private _entriesStore: EntriesStore,
-              private _appLocalization: AppLocalization,
-              public _entryStore: EntryStore) {
-    entryWidgetsManager.registerWidgets([
-      widget1, widget2, widget3, widget4, widget5, widget6, widget7,
-      widget8, widget9, widget10, widget11, widget12, widget13, widget14,
-      widget15
-    ]);
-  }
+	public get _isSaveDisabled(): boolean {
+		const editAccessControlAllowed = this._permissionsService.hasAnyPermissions([KMCPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES, KMCPermissions.CONTENT_MANAGE_RECONVERT, KMCPermissions.CONTENT_MANAGE_ENTRY_USERS, KMCPermissions.CONTENT_MANAGE_METADATA, KMCPermissions.CONTENT_MANAGE_SCHEDULE, KMCPermissions.CONTENT_MANAGE_THUMBNAIL, KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL]);
+		return !this._entryStore.entryIsDirty || !editAccessControlAllowed;
+	}
+
+	constructor(entryWidgetsManager: EntryWidgetsManager,
+	            widget1: EntrySectionsListWidget,
+	            widget2: EntryUsersWidget,
+	            widget3: EntryThumbnailsWidget,
+	            widget4: EntrySchedulingWidget,
+	            widget5: EntryRelatedWidget,
+	            widget6: EntryFlavoursWidget,
+	            widget7: EntryLiveWidget,
+	            widget8: EntryClipsWidget,
+	            widget9: EntryCaptionsWidget,
+	            widget10: EntryAccessControlWidget,
+	            widget11: EntryMetadataWidget,
+	            widget12: EntryDetailsWidget,
+	            widget13: EntryPreviewWidget,
+	            widget14: EntryDistributionWidget,
+	            widget15: EntryAdvertisementsWidget,
+	            private _permissionsService: KMCPermissionsService,
+	            private _entriesStore: EntriesStore,
+	            private _appLocalization: AppLocalization,
+	            public _entryStore: EntryStore) {
+		entryWidgetsManager.registerWidgets([
+			widget1, widget2, widget3, widget4, widget5, widget6, widget7,
+			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
+			widget15
+		]);
+	}
 
 	ngOnDestroy() {
 	}
@@ -105,8 +111,8 @@ export class EntryComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._entryStore.state$
-            .cancelOnDestroy(this)
-            .subscribe(
+			.cancelOnDestroy(this)
+			.subscribe(
 				status => {
 
 					this._showLoader = false;
@@ -222,48 +228,42 @@ export class EntryComponent implements OnInit, OnDestroy {
 		};
 	}
 
-    public _backToList(){
-    	this._entryStore.returnToEntries();
-    }
+	public _backToList() {
+		this._entryStore.returnToEntries();
+	}
 
-    public _save()
-	{
+	public _save() {
 		this._entryStore.saveEntry();
 	}
 
-    public _navigateToPrevious() : void
-	{
+	public _navigateToPrevious(): void {
 		const entries = this._entriesStore.entries.data();
 
 		if (entries && this._currentEntryId) {
 			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
-			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
-			if (currentEntryIndex > 0)
-			{
-				const prevEntry = entries[currentEntryIndex-1];
+			const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
+			if (currentEntryIndex > 0) {
+				const prevEntry = entries[currentEntryIndex - 1];
 				this._entryStore.openEntry(prevEntry.id);
 			}
 		}
 	}
 
-	public _navigateToNext() : void
-	{
+	public _navigateToNext(): void {
 		const entries = this._entriesStore.entries.data();
 
 		if (entries && this._currentEntryId) {
 			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
-			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
-			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length - 1))
-			{
-				const nextEntry = entries[currentEntryIndex+1];
+			const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
+			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length - 1)) {
+				const nextEntry = entries[currentEntryIndex + 1];
 				this._entryStore.openEntry(nextEntry.id);
 			}
 		}
 	}
 
-	public canLeave(): Observable<{ allowed : boolean}>{
-    	return this._entryStore.canLeave();
+	public canLeave(): Observable<{ allowed: boolean }> {
+		return this._entryStore.canLeave();
 	}
-
 }
 

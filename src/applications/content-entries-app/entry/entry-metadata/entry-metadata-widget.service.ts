@@ -132,6 +132,12 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             actions.push(this._loadProfileMetadata());
         }
 
+        if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) {
+          this.metadataForm.get('name').disable({ onlySelf: true });
+          this.metadataForm.get('description').disable({ onlySelf: true });
+          this.metadataForm.get('tags').disable({ onlySelf: true });
+        }
+
 
         return Observable.forkJoin(actions)
             .catch((error, caught) => {
