@@ -15,6 +15,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -51,6 +52,7 @@ export class EditDistributionProfileComponent implements OnInit {
   public _missingThumbnailError = '';
   public _requestXmlLink = '';
   public _responseXmlLink = '';
+  public _kmcPermissions = KMCPermissions;
 
   public _distributionForm: FormGroup;
   public _updatesField: AbstractControl;

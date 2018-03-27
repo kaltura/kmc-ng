@@ -27,6 +27,9 @@ import { DefaultFiltersList } from './default-filters-list';
 
 import * as R from 'ramda';
 import { KalturaAccessControlProfile } from 'kaltura-ngx-client/api/types/KalturaAccessControlProfile';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
+import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileListResponse';
 
 export interface RefineGroupListItem
 { value: string, label: string }
@@ -52,7 +55,9 @@ export class EntriesRefineFiltersService {
     private _getRefineFilters$: Observable<RefineGroup[]>;
 
     constructor(private kalturaServerClient: KalturaClient,
-                private _metadataProfileStore: MetadataProfileStore, private _flavoursStore: FlavoursStore) {
+                private _kmcPermissionsService: KMCPermissionsService,
+                private _metadataProfileStore: MetadataProfileStore,
+                private _flavoursStore: FlavoursStore) {
     }
 
     public getFilters(): Observable<RefineGroup[]> {
@@ -63,7 +68,7 @@ export class EntriesRefineFiltersService {
                 type: MetadataProfileTypes.Entry,
                 ignoredCreateMode: MetadataProfileCreateModes.App
             });
-            const otherData$ = this.buildQueryRequest();
+            const otherData$ = this._buildQueryRequest();
             const getFlavours$ = this._flavoursStore.get();
             this._getRefineFilters$ = Observable.forkJoin(getMetadata$, otherData$, getFlavours$)
                 .map(
@@ -145,22 +150,6 @@ export class EntriesRefineFiltersService {
 
         });
 
-        // build access control profile filters
-
-        if (responses[1].result.objects.length > 0) {
-          const group = new RefineGroupList(
-            'accessControlProfiles',
-            'Access Control Profiles'
-          );
-          result.lists.push(group);
-          responses[1].result.objects.forEach((accessControlProfile) => {
-            group.items.push({
-                value: accessControlProfile.id + '',
-                label: accessControlProfile.name
-            });
-          });
-        }
-
         // build flavors filters
         if (flavours.length > 0) {
           const group = new RefineGroupList(
@@ -172,32 +161,46 @@ export class EntriesRefineFiltersService {
           });
         }
 
-        // build distributions filters
-        if (responses[0].result.objects.length > 0) {
-          const group = new RefineGroupList(
-            'distributions',
-            'Destinations');
-          result.lists.push(group);
-          responses[0].result.objects.forEach((distributionProfile) => {
-            group.items.push({ value: distributionProfile.id + '', label: distributionProfile.name });
-          });
-        }
+        responses.forEach(response => {
+          if (!response.result.objects.length) {
+            return;
+          }
+
+          if (response.result instanceof KalturaAccessControlListResponse) { // build access control profile filters
+            const group = new RefineGroupList(
+              'accessControlProfiles',
+              'Access Control Profiles'
+            );
+            result.lists.push(group);
+            response.result.objects.forEach((accessControlProfile) => {
+              group.items.push({
+                value: accessControlProfile.id + '',
+                label: accessControlProfile.name
+              });
+            });
+          } else if (response.result instanceof KalturaDistributionProfileListResponse) { // build distributions filters
+            const group = new RefineGroupList(
+              'distributions',
+              'Destinations');
+            result.lists.push(group);
+            response.result.objects.forEach((distributionProfile) => {
+              group.items.push({ value: distributionProfile.id + '', label: distributionProfile.name });
+            });
+          }
+        });
 
         return result;
     }
 
 
-    private buildQueryRequest(): Observable<KalturaMultiResponse> {
+    private _buildQueryRequest(): Observable<KalturaMultiResponse> {
 
         try {
             const accessControlFilter = new KalturaAccessControlFilter({});
             accessControlFilter.orderBy = '-createdAt';
 
-            const distributionProfilePager = new KalturaFilterPager({});
-            distributionProfilePager.pageSize = 500;
-
             const accessControlPager = new KalturaFilterPager({});
-            distributionProfilePager.pageSize = 1000;
+            accessControlPager.pageSize = 1000;
 
             const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
                 fields: 'id,name',
@@ -205,7 +208,6 @@ export class EntriesRefineFiltersService {
             });
 
             const request = new KalturaMultiRequest(
-                new DistributionProfileListAction({ pager: distributionProfilePager }),
                 new AccessControlListAction({
                     pager: accessControlPager,
                     filter: accessControlFilter
@@ -213,6 +215,14 @@ export class EntriesRefineFiltersService {
                     responseProfile
                 }),
             );
+
+            if (this._kmcPermissionsService.hasPermission(KMCPermissions.CONTENTDISTRIBUTION_PLUGIN_PERMISSION)) {
+              const distributionProfilePager = new KalturaFilterPager({});
+              distributionProfilePager.pageSize = 500;
+              const distributionProfileListAction = new DistributionProfileListAction({ pager: distributionProfilePager });
+
+              request.requests.push(distributionProfileListAction);
+            }
 
             return <any>this.kalturaServerClient.multiRequest(request);
         } catch (error) {
