@@ -31,16 +31,17 @@ import { globalConfig } from 'config/global';
 import { serverConfig } from 'config/server';
 
 export interface ThumbnailRow {
-	id: string,
-	width: number,
-	height: number,
-	size: number,
-	distributors: string,
-	isDefault: boolean,
-	url: string,
-	status: KalturaThumbAssetStatus,
-	uploadStatus: boolean,
-	fileExt: string
+  id: string;
+  width: number;
+  height: number;
+  size: number;
+  distributors: string;
+  isDefault: boolean;
+  url: string;
+  status: KalturaThumbAssetStatus;
+  uploadStatus: boolean;
+  fileExt: string;
+  tags: string;
 }
 
 @Injectable()
@@ -122,7 +123,8 @@ export class EntryThumbnailsWidget extends EntryWidget
 				    distributors: "",
 				    url: "",
 				    uploadStatus: false,
-				    fileExt: thumbnail.fileExt
+				    fileExt: thumbnail.fileExt,
+            tags: thumbnail.tags
 			    };
 			    thumb.isDefault = thumbnail.tags.indexOf("default_thumb") > -1;
 			    thumb.url = serverConfig.cdnServers.serverUri + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;

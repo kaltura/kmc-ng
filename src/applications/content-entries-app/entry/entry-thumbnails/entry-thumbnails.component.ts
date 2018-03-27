@@ -1,4 +1,4 @@
-import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from 'app-shared/kmc-shell';
@@ -23,16 +23,23 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	public _actions: MenuItem[] = [];
 	public _kmcPermissions = KMCPermissions;
+  public _documentWidth: number;
 
 	private currentThumb: ThumbnailRow;
 	private _popupStateChangeSubscribe: ISubscription;
+
+  @HostListener('window:resize', [])
+  onWindowResize() {
+    this._documentWidth = document.body.clientWidth;
+  }
 
 	constructor(public _widgetService: EntryThumbnailsWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService,
                 private _appAuthentication: AppAuthentication) {
     }
 
     ngOnInit() {
-        this._widgetService.attachForm();
+      this._documentWidth = document.body.clientWidth;
+      this._widgetService.attachForm();
 
 	    this._actions = [
 		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.download'), command: (event) => {this.actionSelected("download");}},

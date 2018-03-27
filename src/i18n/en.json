@@ -1177,6 +1177,7 @@
           "nameRequired": "You must enter an entry name"
         },
         "thumbnails": {
+          "tags": "Tags",
           "thumbnails": "Thumbnails",
           "upload": "Upload",
           "capture": {
