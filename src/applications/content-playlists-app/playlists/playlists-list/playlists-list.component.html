@@ -9,6 +9,7 @@
               type="button"
               label="{{'applications.content.playlists.addPlaylist' | translate}}"
               class="kButtonBranded kAddPlaylistBtn" [class.kHidden]="_selectedPlaylists.length"
+              *ngIf="_kmcPermissions.PLAYLIST_ADD | kNgIfPermitted"
               (click)="_addPlaylist()"></button>
             <span
               class="kSelectedPlaylistsNum"
@@ -20,6 +21,7 @@
               <span class="kSelectedPlaylistsLabel">
                 • {{ 'applications.content.playlists.selected' | translate : [_selectedPlaylists.length] }}</span>
               <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                      [disabled]="_kmcPermissions.PLAYLIST_DELETE | kDisabledIfNotPermitted"
                       (click)="_deletePlaylists(_selectedPlaylists)"></button>
               <a class="kBulkCancel" (click)="_clearSelection()">
                 {{'applications.content.playlists.cancel' | translate}}

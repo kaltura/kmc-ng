@@ -11,7 +11,7 @@ import {PreviewAndEmbedModule} from '../applications/preview-and-embed/preview-a
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
-import { AppPermissionsModule } from '@kaltura-ng/mc-shared';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 import {
     AppBootstrap,
@@ -139,7 +139,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
     AccessControlProfileModule.forRoot(),
-    AppPermissionsModule.forRoot(),
+      KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory)
   ],

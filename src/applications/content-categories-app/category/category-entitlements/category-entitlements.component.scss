@@ -79,6 +79,11 @@
         padding-left: 20px;
         font-size: 15px;
       }
+
+      .kDisabled {
+        cursor: none;
+        color: $kGrayscale3;
+      }
     }
   }
 

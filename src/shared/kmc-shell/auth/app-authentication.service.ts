@@ -23,9 +23,12 @@ import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPas
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-
+import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
 import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface IUpdatePasswordPayload {
     email: string;
@@ -56,12 +59,17 @@ export const APP_AUTH_EVENTS = new InjectionToken<AppAuthenticationEvents>('App 
 @Injectable()
 export class AppAuthentication {
 
+    private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
 
     constructor(private kalturaServerClient: KalturaClient,
                 @Inject(APP_AUTH_EVENTS) private _appAuthenticationEvents: AppAuthenticationEvents,
                 private appStorage: AppStorage,
-                private _pageExitVerificationService: PageExitVerificationService) {
+                private _pageExitVerificationService: PageExitVerificationService,
+                logger: KalturaLogger,
+                private _permissionsService: KMCPermissionsService,
+                private _appEvents: AppEventsService) {
+        this._logger = logger.subLogger('AppAuthentication');
     }
 
     private _getLoginErrorMessage({error}): ILoginError {
@@ -198,8 +206,9 @@ export class AppAuthentication {
 
         this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
 
-        const userRoleList = userRole.permissionNames.split(',')
         const partnerPermissionList = permissionList.objects.map(item => item.name);
+        const userRolePermissionList = userRole.permissionNames.split(',');
+        this._permissionsService.load(userRolePermissionList, partnerPermissionList);
 
         const appUser: Immutable.ImmutableObject<AppUser> = Immutable({
             ks,
@@ -210,7 +219,6 @@ export class AppAuthentication {
             lastName: user.lastName,
             isAccountOwner: user.isAccountOwner,
             createdAt: user.createdAt,
-            permissions: Array.from(new Set<string>([...userRoleList, ...partnerPermissionList ])),
             partnerInfo: {
                 partnerId: user.partnerId,
                 name: partner.name,
@@ -223,6 +231,7 @@ export class AppAuthentication {
         return this._appAuthenticationEvents.onUserLoggedIn(appUser)
             .do(() => {
                 this._appUser = appUser;
+                this._appEvents.publish(new UserLoginStatusEvent(true));
             });
     }
 
@@ -233,6 +242,7 @@ export class AppAuthentication {
     logout() {
         this._appUser = null;
         this.appStorage.removeFromSessionStorage('auth.login.ks');
+        this._appEvents.publish(new UserLoginStatusEvent(false));
         this._logout();
     }
 

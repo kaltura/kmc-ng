@@ -5,14 +5,14 @@ import { CategoriesTreeNode, NodeChildrenStatuses } from './categories-tree-node
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { CategoriesSearchService, CategoryData } from '../categories-search.service';
 import { modulesConfig } from 'config/modules';
-import { AppPermissionsService } from '@kaltura-ng/mc-shared';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Injectable()
 export class CategoriesTreeService {
 
   constructor(private _categoriesSearchService: CategoriesSearchService,
-              private _permissions: AppPermissionsService,
+              private _permissions: KMCPermissionsService,
               private appLocalization: AppLocalization) {
   }
 
