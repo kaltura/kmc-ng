@@ -17,7 +17,7 @@
           <div [class.kHidden]="!_selectedFeeds?.length" class="kBulkOperations">
             <span class="kSelectedFeedsLabel">• {{'applications.content.syndication.selected' | translate:{'0': _selectedFeeds?.length} }}</span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
-                    *ngIf="_kmcPermissions.SYNDICATION_DELETE | kNgIfPermitted"
+                    [disabled]="_kmcPermissions.SYNDICATION_DELETE | kDisabledIfNotPermitted"
                     (click)="_deleteSelectedFeeds()"></button>
 
             <a class="kBulkCancel" (click)="_clearSelection()">

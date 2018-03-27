@@ -14,7 +14,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { globalConfig } from 'config/global';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissionsService, KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kFeedsTable',
@@ -138,7 +138,7 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
       },
     ];
 
-    this._permissionsService.filterList(<{ id: string }[]>this._items, { 'delete': 'SYNDICATION_DELETE' });
+    this._permissionsService.filterList(<{ id: string }[]>this._items, { 'delete': KMCPermissions.SYNDICATION_DELETE });
   }
 
   private _fillCopyToClipboardTooltips(): void {
