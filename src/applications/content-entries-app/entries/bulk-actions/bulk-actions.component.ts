@@ -359,6 +359,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               }
           },
           {
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_SCHEDULE),
               label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => {
               this.openBulkActionWindow('setScheduling', 500, 500)
           }
