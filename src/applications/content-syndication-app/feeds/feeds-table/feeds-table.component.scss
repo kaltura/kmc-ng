@@ -13,24 +13,6 @@
   height: auto;
   padding: 0px;
   width: 100%;
-  .kTitle {
-    color: $kGrayscale1;
-    font-weight: 700;
-    cursor: pointer;
-    overflow: hidden;
-    max-height: 45px;
-    &:hover {
-      color: #000000;
-    }
-    &.disable {
-      color: $kGrayscale4;
-      cursor: auto;
-    }
-  }
-  .kFeedsTableActions {
-    width: 100%;
-    text-align: center;
-  }
 
   /deep/ {
     .kElipsis {
@@ -50,6 +32,7 @@
       cursor: pointer;
       font-weight: bold;
       color: $kGrayscale1;
+      max-width: 100%;
     }
 
     .kColDestination {

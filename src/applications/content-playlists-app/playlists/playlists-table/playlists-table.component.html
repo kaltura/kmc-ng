@@ -46,7 +46,7 @@
           <td>
             <div class="kPlaylistsNameWrap">
               <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
-              <div class="kTitle"
+              <div class="kTitle kTableColumn"
                    [kTooltip]="playlist.name"
                    (click)="onActionSelected('view',playlist)">
                 {{playlist.name}}

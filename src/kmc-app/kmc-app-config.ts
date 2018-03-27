@@ -110,12 +110,24 @@ export const kmcAppConfig: KmcAppConfig = {
       'titleToken': 'Usage Dashboard',
       'showSubMenu': false,
     },
-      {
-          'id': 'kava',
-          'routePath': 'kava',
-          'titleToken': 'Analytics',
-          'showSubMenu': false,
-      },
+    {
+        'id': 'analytics',
+        'routePath': 'analytics',
+        'titleToken': 'Analytics',
+        'showSubMenu': true,
+        'children': [
+            {
+              'id': 'liveAnalytics',
+              'routePath': 'analytics/liveAnalytics',
+              'titleToken': 'Live Analytics'
+            },
+            {
+              'id': 'kava',
+              'routePath': 'analytics/kava',
+              'titleToken': 'Kava'
+            }
+        ]
+    },
     {
       'id': 'settings',
       'routePath': 'settings',
