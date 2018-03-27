@@ -14,7 +14,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { globalConfig } from 'config/global';
-import { AppPermissionsService } from '@kaltura-ng/mc-shared/app-permissions/app-permissions.service';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kFeedsTable',
@@ -72,7 +72,7 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   constructor(private _appLocalization: AppLocalization,
-              private _permissionsService: AppPermissionsService,
+              private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
     this._fillCopyToClipboardTooltips();
   }
