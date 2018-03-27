@@ -1,6 +1,6 @@
 <div class="kBulkActions">
   <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
-          [kEnableIfAllPermitted]="['CONTENT_MANAGE_DELETE']"
+          [disabled]="_kmcPermissions.CONTENT_MANAGE_DELETE | kDisabledIfNotPermitted"
           (click)="deleteEntries()"></button>
   <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.entries.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
 </div>
