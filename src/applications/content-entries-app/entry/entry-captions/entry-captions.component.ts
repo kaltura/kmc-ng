@@ -12,6 +12,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
 
 import { getKalturaServerUri, serverConfig } from 'config/server';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { getKalturaServerUri, serverConfig } from 'config/server';
     styleUrls: ['./entry-captions.component.scss']
 })
 export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
+  public _kmcPermissions = KMCPermissions;
 
     public _loadingError = null;
 	public _actions: MenuItem[] = [];
