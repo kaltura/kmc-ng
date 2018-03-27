@@ -4,7 +4,8 @@ import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { globalConfig } from 'config/global';
-import { AppPermissionsService } from '@kaltura-ng/mc-shared/app-permissions/app-permissions.service';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPlaylistsTable',
@@ -44,7 +45,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
-              private _permissionsService: AppPermissionsService,
+              private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -98,7 +99,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
       this._items.shift();
     }
 
-    this._permissionsService.filterList(<{id: string}[]>this._items, { 'delete': 'PLAYLIST_DELETE' });
+    this._permissionsService.filterList(<{id: string}[]>this._items, { 'delete': KMCPermissions.PLAYLIST_DELETE });
   }
 
 
