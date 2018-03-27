@@ -61,7 +61,7 @@
                     </kAutoComplete>
                 </div>
             </div>
-			<div class="kRow kValign">
+			<div class="kRow kValign" *ngIf="_kmcPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES | kNgIfPermitted">
 				<span class="kLabel"></span>
 				<a (click)="openCategoriesBrowser()" class="kLink">{{'applications.content.entryDetails.metadata.browse' | translate}}</a>
 			</div>

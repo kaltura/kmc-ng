@@ -119,6 +119,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
         this.isLiveEntry = this.data instanceof KalturaLiveStreamEntry;
 
+        if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES)) {
+          this.metadataForm.get('categories').disable({ onlySelf: true });
+        }
+
         const actions: Observable<{failed: boolean, error?: Error}>[] = [
             this._loadEntryCategories(this.data),
             this._loadEntryMetadata(this.data)
