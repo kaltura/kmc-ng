@@ -13,6 +13,7 @@ import {UploadManagement} from '@kaltura-ng/kaltura-common/upload-management/upl
 import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -61,11 +62,16 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               private _uploadManagement: UploadManagement,
+              private _permissionsService: KMCPermissionsService,
               public _entriesStore: EntriesStore,
               private _contentEntriesAppService: ContentEntriesAppService) {
   }
 
   ngOnInit() {
+    if (!this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS)) {
+      delete this._columns.thumbnailUrl;
+    }
+
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.prepared)
