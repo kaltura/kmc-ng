@@ -8,6 +8,7 @@ import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppea
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCategoryEntitlements',
@@ -18,10 +19,12 @@ export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnD
 
   @ViewChild('manageUsersPopup') manageUsersPopup: PopupWidgetComponent;
   public _defaultPermissionLevelOptions: { value: number, label: string }[] = [];
+  public _kmcPermissions = KMCPermissions;
 
   public _membersCount: { loading: boolean, value: number, hasError?: boolean } = { loading: true, value: 0, hasError : false };
   constructor(public _widgetService: CategoryEntitlementsWidget,
               private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService) {
   }
 
