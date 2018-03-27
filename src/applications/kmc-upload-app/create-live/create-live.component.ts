@@ -13,6 +13,7 @@ import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLive
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export enum StreamTypes {
   kaltura,
@@ -27,6 +28,8 @@ export enum StreamTypes {
   providers: [CreateLiveService]
 })
 export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
+  private _showConfirmationOnClose = true;
+
   public _selectedStreamType: StreamTypes = StreamTypes.kaltura;
   public kalturaLiveStreamData: KalturaLive = {
     name: '',
@@ -52,10 +55,10 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     broadcastPassword: '',
     liveDvr: false
   };
-  public _availableStreamTypes: Array<{ value: StreamTypes, label: string }>;
+  public _availableStreamTypes: Array<{ id: string, value: StreamTypes, label: string }>;
   public _streamTypes = StreamTypes;
   public _blockerMessage: AreaBlockerMessage;
-  private _showConfirmationOnClose = true;
+  public _manualStreamOnly = false;
 
   @ViewChild('kalturaLiveStreamComponent') kalturaLiveStreamComponent;
   @ViewChild('manualLiveComponent') manualLiveComponent;
@@ -65,6 +68,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(private createLiveService: CreateLiveService,
               private _appLocalization: AppLocalization,
               private _appEvents: AppEventsService,
+              private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
               private _router: Router) {
   }
@@ -72,18 +76,34 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this._availableStreamTypes = [
       {
+        id: 'kaltura',
         value: StreamTypes.kaltura,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.kaltura')
       },
       {
+        id: 'universal',
         value: StreamTypes.universal,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.universal')
       },
       {
+        id: 'manual',
         value: StreamTypes.manual,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')
       }
     ];
+
+    this._permissionsService.filterList(
+      this._availableStreamTypes,
+      {
+        'kaltura': KMCPermissions.FEATURE_KALTURA_LIVE_STREAM,
+        'universal': KMCPermissions.FEATURE_KMC_AKAMAI_UNIVERSAL_LIVE_STREAM_PROVISION
+      }
+    );
+
+    if (this._availableStreamTypes.length === 1) {
+      this._manualStreamOnly = true;
+      this._selectedStreamType = StreamTypes.manual;
+    }
   }
 
   ngAfterViewInit() {

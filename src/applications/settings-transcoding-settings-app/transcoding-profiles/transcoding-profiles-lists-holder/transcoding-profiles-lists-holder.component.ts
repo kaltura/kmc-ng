@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'k-transcoding-profiles-lists-holder',
@@ -14,6 +15,7 @@ export class TranscodingProfilesListsHolderComponent {
   public _kalturaConversionProfileType = KalturaConversionProfileType;
   public _blockerMessage: AreaBlockerMessage;
   public _newProfileType: KalturaConversionProfileType;
+  public _kmcPermissions = KMCPermissions;
 
   public _setBlockerMessage(message: AreaBlockerMessage): void {
     this._blockerMessage = message;

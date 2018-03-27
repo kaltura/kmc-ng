@@ -26,6 +26,7 @@ import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/Kaltu
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface bitrate {
 	enabled: boolean,
@@ -60,7 +61,11 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		{label: this._appLocalization.get('applications.content.entryDetails.live.enabled'), value: false}
 	];
 
-	constructor(private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(private _kalturaServerClient: KalturaClient,
+              private _appAuthentication: AppAuthentication,
+              private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
+              private _browserService: BrowserService) {
 		super(EntryWidgetKeys.Live);
 	}
 
@@ -114,47 +119,53 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 				super._showLoader();
 				this._conversionProfiles.next({items: []});
 
-				return this._kalturaServerClient.request(new ConversionProfileListAction({
-						filter: new KalturaConversionProfileFilter({
-							typeEqual: KalturaConversionProfileType.liveStream
-						}),
-						pager: new KalturaFilterPager({
-							pageIndex: 1,
-							pageSize: 500
-						})
-					}))
-					.cancelOnDestroy(this, this.widgetReset$)
-					.monitor('get conversion profiles')
+        if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KALTURA_LIVE_STREAM)) {
+          return this._kalturaServerClient.request(new ConversionProfileListAction({
+            filter: new KalturaConversionProfileFilter({
+              typeEqual: KalturaConversionProfileType.liveStream
+            }),
+            pager: new KalturaFilterPager({
+              pageIndex: 1,
+              pageSize: 500
+            })
+          }))
+            .cancelOnDestroy(this, this.widgetReset$)
+            .monitor('get conversion profiles')
 
-					.catch((error, caught) =>
-					{
-						super._hideLoader();
-						super._showActivationError();
-						this._conversionProfiles.next({items: []});
-						return Observable.throw(error);
-					})
-					.do(response => {
-						if (response.objects && response.objects.length) {
-							// set the default profile first in the array
-							response.objects.sort(function (a, b) {
-								if (a.isDefault > b.isDefault)
-									return -1;
-								if (a.isDefault < b.isDefault)
-									return 1;
-								return 0;
-							});
-							// create drop down options array
-							let conversionProfiles = [];
-							response.objects.forEach(profile => {
-								conversionProfiles.push({label: profile.name, value: profile.id});
-								if (this.data.conversionProfileId === profile.id) {
-									this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
-								}
-							});
-							this._conversionProfiles.next({items: conversionProfiles});
-							super._hideLoader();
-						}
-					});
+            .catch((error, caught) => {
+              super._hideLoader();
+              super._showActivationError();
+              this._conversionProfiles.next({ items: [] });
+              return Observable.throw(error);
+            })
+            .do(response => {
+              if (response.objects && response.objects.length) {
+                // set the default profile first in the array
+                response.objects.sort((a, b) => {
+                  if (a.isDefault > b.isDefault) {
+                    return -1;
+                  }
+                  if (a.isDefault < b.isDefault) {
+                    return 1;
+                  }
+                  return 0;
+                });
+                // create drop down options array
+                const conversionProfiles = [];
+                response.objects.forEach(profile => {
+                  conversionProfiles.push({ label: profile.name, value: profile.id });
+                  if (this.data.conversionProfileId === profile.id) {
+                    this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
+                  }
+                });
+                this._conversionProfiles.next({ items: conversionProfiles });
+                super._hideLoader();
+              }
+            });
+        } else {
+          super._hideLoader();
+          break;
+        }
 			case KalturaSourceType.akamaiUniversalLive.toString():
 				this._liveType = "universal";
 				this._showDVRWindow = true;
