@@ -50,6 +50,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     KalturaEntryStatus.blocked.toString()
   ];
 
+  public _kmcPermissions = KMCPermissions;
   public _bulkActionsMenu: MenuItem[] = [];
   public _bulkWindowWidth = 500;
   public _bulkWindowHeight = 500;
