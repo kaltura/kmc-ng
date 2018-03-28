@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {AppAuthentication, BrowserService, UnpermittedActionReasons} from 'app-shared/kmc-shell';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {getKalturaServerUri, serverConfig} from 'config/server';
@@ -15,7 +15,7 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public studioUrl = '';
 
-  constructor(private appAuthentication: AppAuthentication, private _appEvents: AppEventsService, private logger: KalturaLogger, private browserService: BrowserService, private _permissionsService: KMCPermissionsService) {
+  constructor(private _cdr: ChangeDetectorRef,private appAuthentication: AppAuthentication, private _appEvents: AppEventsService, private logger: KalturaLogger, private browserService: BrowserService, private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
@@ -100,12 +100,14 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
     window['kmc'] = null;
   }
 
-  private _openV2Studio(){
+  private _openV2Studio() {
     this.studioUrl = serverConfig.externalApps.studio.uri;
+    this._cdr.detectChanges(); // invoke change detection as the original click came from outside the zone and Angular can't track this change automatically
   }
 
-  private _openV3Studio(){
+  private _openV3Studio() {
     this.studioUrl = serverConfig.externalApps.studioV3.uri;
+    this._cdr.detectChanges(); // invoke change detection as the original click came from outside the zone and Angular can't track this change automatically
   }
 
 }
