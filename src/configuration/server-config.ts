@@ -205,8 +205,7 @@ export interface ServerConfig {
             uiConfId: string,
             html5_version: string,
             html5lib: string,
-            showFlashStudio: boolean,
-            showStudioV3: boolean,
+            showFlashStudio: boolean
         },
         studioV3: {
             enabled: boolean,
@@ -215,8 +214,7 @@ export interface ServerConfig {
             uiConfId: string,
             html5_version: string,
             html5lib: string,
-            showFlashStudio: boolean,
-            showHTMLStudio: boolean,
+            showFlashStudio: boolean
         },
         liveDashboard: {
             enabled: boolean,

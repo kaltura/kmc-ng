@@ -13,7 +13,6 @@ function isStudioAppValid(): boolean {
             !!serverConfig.externalApps.studio.version &&
             !!serverConfig.externalApps.studio.uiConfId &&
             !!serverConfig.externalApps.studio.html5_version &&
-            typeof serverConfig.externalApps.studio.showStudioV3 !== "undefined" &&
             !!serverConfig.externalApps.studio.html5lib;
 
         if (!isValid) {

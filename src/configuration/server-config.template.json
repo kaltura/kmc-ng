@@ -18,8 +18,7 @@
       "version": "@externalApps.studio.vesrion@",
       "uiConfId": "@externalApps.studio.uiConfId@",
       "html5_version":"@externalApps.studio.html5_version@",
-      "html5lib":"@externalApps.studio.html5lib@",
-      "showStudioV3": "@externalApps.studio.showStudioV3@"
+      "html5lib":"@externalApps.studio.html5lib@"
     },
     "studioV3": {
       "enabled": @externalApps.studioV3.enabled@,
@@ -27,8 +26,7 @@
       "version": "@externalApps.studioV3.vesrion@",
       "uiConfId": "@externalApps.studioV3.uiConfId@",
       "html5_version":"@externalApps.studioV3.html5_version@",
-      "html5lib":"@externalApps.studioV3.html5lib@",
-      "showHTMLStudio": "@externalApps.studioV3.showHTMLStudio@"
+      "html5lib":"@externalApps.studioV3.html5lib@"
     },
     "liveDashboard": {
       "enabled": @externalApps.liveDashboard.enabled@,

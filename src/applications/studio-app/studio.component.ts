@@ -4,6 +4,7 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { PlayersUpdatedEvent } from 'app-shared/kmc-shared/events';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kStudio',
@@ -14,7 +15,7 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public studioUrl = '';
 
-  constructor(private appAuthentication: AppAuthentication, private _appEvents: AppEventsService, private logger: KalturaLogger, private browserService: BrowserService) {
+  constructor(private appAuthentication: AppAuthentication, private _appEvents: AppEventsService, private logger: KalturaLogger, private browserService: BrowserService, private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
@@ -42,7 +43,7 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
               'html5lib': serverConfig.externalApps.studio.html5lib
             },
             'showFlashStudio': false,
-            'showStudioV3': serverConfig.externalApps.studio.showStudioV3,
+            'showStudioV3': this._permissionsService.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION),
             'uiConfID': +serverConfig.externalApps.studio.uiConfId,
             'version': serverConfig.externalApps.studio.version
           },
@@ -57,21 +58,29 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
             'publisherEnvType': this.appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
             'html5_version': serverConfig.externalApps.studioV3.html5_version,
             'showFlashStudio': false,
-            'showStudio': serverConfig.externalApps.studioV3.showHTMLStudio,
+            'showHTMLStudio': this._permissionsService.hasPermission(KMCPermissions.FEATURE_SHOW_HTML_STUDIO),
             'uiConfID': +serverConfig.externalApps.studioV3.uiConfId,
             'version': serverConfig.externalApps.studioV3.version
           }
         },
         'functions':{
           'openStudioV3': () => {
-            this._openV3Studio();
+            if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION)){
+              this._openV3Studio();
+            }
           },
           'openStudio': () => {
-            this._openV2Studio();
+            if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_SHOW_HTML_STUDIO)) {
+              this._openV2Studio();
+            }
           }
         }
       }
-      this._openV2Studio();
+      if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_SHOW_HTML_STUDIO)) {
+        this._openV2Studio();
+      }else if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION)){
+        this._openV3Studio();
+      }
     } catch (ex) {
       this.logger.warn(`Could not load Studio, please check that Studio configurations are loaded correctly\n error: ${ex}`);
       this.studioUrl = null;
