@@ -38,7 +38,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
 
   public get _saveDisabled(): boolean {
-    return this._editRoleForm.pristine && !this.duplicatedRole && !this._permissionChanged || this._permissionsError;
+    return this._editRoleForm.pristine && !this.duplicatedRole && !this._permissionChanged;
   }
 
   constructor(private _fb: FormBuilder,
@@ -157,6 +157,16 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     return updatedPermissions.join(',');
   }
 
+  private _showPermissionsErrorMessage(): void {
+    this._blockerMessage = new AreaBlockerMessage({
+      message: this._appLocalization.get('applications.administration.role.errors.validationError'),
+      buttons: [{
+        label: this._appLocalization.get('app.common.ok'),
+        action: () => this._blockerMessage = null
+      }]
+    });
+  }
+
   public _updateRole(): void {
     // no need to reload the table since the duplicated role remained intact
     if (this.duplicatedRole && this._editRoleForm.pristine) {
@@ -194,6 +204,11 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _performAction(): void {
     if (!this._editRoleForm.valid) {
       this._markFormFieldsAsTouched();
+      return;
+    }
+
+    if (this._permissionsError) {
+      this._showPermissionsErrorMessage();
       return;
     }
 
