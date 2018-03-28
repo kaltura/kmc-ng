@@ -13,6 +13,7 @@ import {
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kEditMediaFlavor',
@@ -86,6 +87,7 @@ export class EditMediaFlavorComponent implements OnInit {
   public _deletePolicyField: AbstractControl;
 
   constructor(private _fb: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -147,6 +149,11 @@ export class EditMediaFlavorComponent implements OnInit {
       forceNoneComplied: assetParams.forceNoneComplied,
       deletePolicy: assetParams.deletePolicy
     }, { emitEvent: false });
+
+    if (!this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
+      this._editFlavorForm.get('systemName').disable({ onlySelf: true });
+      this._editFlavorForm.get('forceNoneComplied').disable({ onlySelf: true });
+    }
   }
 
   private _getFlavorAssetParams(): ExtendedKalturaConversionProfileAssetParams {
