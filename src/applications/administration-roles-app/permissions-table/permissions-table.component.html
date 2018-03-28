@@ -21,6 +21,7 @@
           <kMultiSelect *ngIf="permission.items"
                         kMultiselectCloseOnScroll
                         class="kPermissionsList"
+                        [class.kHasError]="permission.hasError"
                         panelStyleClass="kPermissionsListPanel"
                         menuItemDisplayStyle="flex"
                         [hideOnScroll]="scrollableContainer"
@@ -31,10 +32,11 @@
                         [defaultLabel]="permission.isAdvancedGroup ? ('applications.administration.role.permissionsTable.viewOnly' | translate) : ('applications.administration.role.permissionsTable.selectPermissions' | translate)"
                         [disabledLabel]="'applications.administration.role.permissionsTable.disabled' | translate"
                         [allSelectedLabel]="'applications.administration.role.permissionsTable.allPermissions' | translate"
+                        [selectAllLabel]="'applications.administration.role.permissionsTable.allPermissions' | translate"
                         [selectedItemsLabel]="'applications.administration.role.permissionsTable.custom' | translate"
                         [appendTo]="'body'"
                         [resetFilterOnHide]="true"
-                        (onChange)="_onChange($event, permission.items)"
+                        (onChange)="_onChange($event, permission)"
                         [(ngModel)]="permission.formValue">
             <ng-template let-item pTemplate="item">
               <span class="kPermissionItem">
@@ -42,6 +44,10 @@
               </span>
             </ng-template>
           </kMultiSelect>
+
+          <i *ngIf="permission.hasError"
+             class="kIconerror kIconError"
+             [kTooltip]="'applications.administration.role.permissionsTable.requiredError' | translate"></i>
         </td>
 
         <td [ngStyle]="{'width': '80px'}">

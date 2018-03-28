@@ -7,6 +7,7 @@ export interface RolePermission {
   isAdvancedGroup?: boolean;
   items?: RolePermission[];
   disabled?: boolean;
+  noChildren?: boolean;
 }
 
 export const ROLE_PERMISSIONS: RolePermission[] = [
@@ -335,12 +336,14 @@ export const ROLE_PERMISSIONS: RolePermission[] = [
   {
     value: KMCPermissions.ADVERTISING_UPDATE_SETTINGS,
     name: 'ADVERTISING_UPDATE_SETTINGS',
-    label: 'Set Advertising Settings'
+    label: 'Set Advertising Settings',
+    noChildren: true
   },
   {
     value: KMCPermissions.ANALYTICS_BASE,
     name: 'ANALYTICS_BASE',
-    label: 'Video Analytics'
+    label: 'Video Analytics',
+    noChildren: true
   },
   {
     value: KMCPermissions.ACCOUNT_BASE,
@@ -441,7 +444,7 @@ export const ROLE_PERMISSIONS: RolePermission[] = [
     value: KMCPermissions.ADMIN_BASE,
     name: 'ADMIN_BASE',
     label: 'Administration',
-    isAdvancedGroup: false,
+    isAdvancedGroup: true,
     items: [
       {
         value: KMCPermissions.ADMIN_USER_ADD,

@@ -6,6 +6,7 @@ export interface RolePermissionFormValue extends RolePermission {
   checked?: boolean;
   formValue?: KMCPermissions[];
   items?: RolePermissionFormValue[];
+  hasError?: boolean;
 }
 
 @Component({
@@ -36,6 +37,7 @@ export class PermissionsTableComponent implements OnInit {
     const hasPermissionInList = (value) => this.permissions.indexOf(value) !== -1;
 
     this._rolePermissions = this._rolePermissionsOptions.map(permission => {
+      let hasError = false;
       let checked = false;
       let formValue = [];
       const permissionItems = (permission.items || [])
@@ -47,16 +49,18 @@ export class PermissionsTableComponent implements OnInit {
       } else {
         checked = hasPermissionInList(permission.name); // check permission group according to permissionNames list
         formValue = permissionItems.filter(({ name }) => hasPermissionInList(name)); // check permission group's items according to permissionNames list
+        hasError = checked && !permission.isAdvancedGroup && !permission.noChildren && !formValue.length;
       }
 
       formValue = formValue.map(({ value }) => value);
-      return <RolePermissionFormValue>Object.assign(permission, { checked, formValue });
+      return <RolePermissionFormValue>Object.assign(permission, { checked, formValue, hasError });
     });
 
     this.rolePermissionsChange.emit(this._rolePermissions);
   }
 
   public _togglePermission(event: { originalEvent: Event, checked: boolean }, permission: RolePermissionFormValue): void {
+    permission.hasError = false;
     permission.checked = event.checked;
     permission.formValue = permission.checked ? (permission.items || []).map(({ value }) => value) : [];
     (permission.items || []).forEach(item => {
@@ -67,11 +71,18 @@ export class PermissionsTableComponent implements OnInit {
     this.setDirty.emit();
   }
 
-  public _onChange(event: { originalEvent: Event, value: number[], itemValue?: number }, items: RolePermissionFormValue[]): void {
-    items.forEach(item => {
+  public _onChange(event: { originalEvent: Event, value: number[], itemValue?: number }, permission: RolePermissionFormValue): void {
+    let uncheckedCount = 0;
+    permission.items.forEach(item => {
       const isChecked = event.value.indexOf(item.value) !== -1;
       item.checked = isChecked && !item.disabled;
+
+      if (!item.checked) {
+        uncheckedCount++;
+      }
     });
+
+    permission.hasError = !permission.isAdvancedGroup && !permission.noChildren && permission.items.length === uncheckedCount;
 
     this.rolePermissionsChange.emit(this._rolePermissions);
     this.setDirty.emit();

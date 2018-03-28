@@ -1987,7 +1987,8 @@
           "allPermissions": "All Permissions",
           "custom": "Custom ({0} Selected)",
           "disabled": "Disabled",
-          "selectPermissions": "Choose"
+          "selectPermissions": "Choose",
+          "requiredError": "Select permission or disable the row"
         }
       },
       "paginator": {

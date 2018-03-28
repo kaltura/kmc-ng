@@ -31,13 +31,14 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _permissions: string[];
   public _rolePermissions: RolePermissionFormValue[] = [];
   public _permissionChanged = false;
+  public _permissionsError = false;
   public _isNewRole: boolean;
   public _hasDisabledPermissions: boolean;
   public _contactUsLink = subApplicationsConfig.administrationRolesApp.contactUsLink;
   public _kmcPermissions = KMCPermissions;
 
   public get _saveDisabled(): boolean {
-    return this._editRoleForm.pristine && !this.duplicatedRole && !this._permissionChanged;
+    return this._editRoleForm.pristine && !this.duplicatedRole && !this._permissionChanged || this._permissionsError;
   }
 
   constructor(private _fb: FormBuilder,
@@ -191,7 +192,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   }
 
   public _performAction(): void {
-    if (!this._editRoleForm.valid || !this._validateRoles()) {
+    if (!this._editRoleForm.valid) {
       this._markFormFieldsAsTouched();
       return;
     }
@@ -205,29 +206,10 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
   public _updateRolePermissions(permissions: RolePermissionFormValue[]): void {
     this._rolePermissions = permissions;
+    this._permissionsError = permissions.some(permission => permission.hasError);
   }
 
   public _setDirty(): void {
     this._permissionChanged = true;
-  }
-
-  public _validateRoles(): boolean {
-    const groupWithoutChildren = this._rolePermissions.filter(permission => {
-      return permission.checked && !permission.isAdvancedGroup && Array.isArray(permission.formValue) && !permission.formValue.length;
-    });
-    if (groupWithoutChildren.length) {
-      this._blockerMessage = new AreaBlockerMessage({
-        message: this._appLocalization.get(
-          'applications.administration.role.errors.emptyGroup',
-          [groupWithoutChildren.map(({ label }) => label).join(', ')]
-        ),
-        buttons: [{
-          label: this._appLocalization.get('app.common.ok'),
-          action: () => this._blockerMessage = null
-        }]
-      });
-    }
-
-    return !groupWithoutChildren.length;
   }
 }

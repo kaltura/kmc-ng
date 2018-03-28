@@ -11,6 +11,15 @@
     font-weight: bold;
     font-size: 15px;
   }
+
+  .kIconError {
+    position: absolute;
+    top: 20px;
+    padding-left: 1px;
+    margin-left: 20px;
+    font-size: 24px;
+    color: $kDandger;
+  }
 }
 
 :host {
@@ -30,6 +39,14 @@
     border-left: none;
     border-right: none;
     padding: 10px auto;
+  }
+
+  td {
+    position: relative;
+  }
+
+  .kHasError .ui-multiselect {
+    border: 1px solid $kDandger;
   }
 
   .kPermissionsList {
