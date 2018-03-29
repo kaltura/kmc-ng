@@ -5,6 +5,7 @@ import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/Kal
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kEntryDistributedProfile',
@@ -24,6 +25,7 @@ export class DistributedProfileComponent implements OnInit {
   public _deleteButtonHidden = true;
   public _providerType: KalturaDistributionProviderType = null;
   public _distributorPageLink = '';
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization,
               private _widgetService: EntryDistributionWidget) {
