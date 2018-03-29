@@ -1118,6 +1118,7 @@
         "downloadFailed": "Download request failed"
       },
       "entryDetails": {
+        "save": "Save",
         "sections": {
           "metadata": "Metadata",
           "thumbnails": "Thumbnails",
@@ -1672,7 +1673,7 @@
           },
           "moderateContent": {
             "label": "Moderate Content",
-            "help": "Media will not appear in page until by the category manager/moderator."
+            "help": "Media will not appear in page until approved by the category manager/moderator."
           },
           "inheritUsersPermissions": {
             "label": "Inherit Users Permissions",
@@ -2252,7 +2253,7 @@
           "name": "Name",
           "id": "ID",
           "createdOn": "Created On",
-          "domain": "Domain",
+          "domains": "Domains",
           "countries": "Countries",
           "ips": "IPs",
           "flavors": "Flavors",

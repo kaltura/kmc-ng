@@ -1,10 +1,13 @@
 
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+
 export interface PartnerInfo {
     partnerId: number;
     name: string;
     partnerPackage: PartnerPackageTypes;
     landingPage: string;
     adultContent: boolean;
+    publisherEnvironmentType: number;
 }
 
 export enum PartnerPackageTypes {
@@ -18,7 +21,6 @@ export interface AppUser {
     ks: string;
     id: string;
     partnerId: number;
-    permissions: string[];
     fullName: string;
     firstName: string;
     lastName: string;
