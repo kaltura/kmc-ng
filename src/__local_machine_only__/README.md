@@ -51,7 +51,7 @@ Follow these instructions to test external apps integration:
     },
      "liveAnalytics": {
         "enabled": true,
-        "uri": "__local_machine_only__/live-analytics-front-end-future_version_above_v2_6/index.html",
+        "uri": "__local_machine_only__/live-analytics-vFuture/index.html",
         "uiConfId": 36060752,
         "version": "future_version_above_v2_6"
     },
