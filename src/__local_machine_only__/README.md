@@ -75,7 +75,7 @@ Follow these instructions to test external apps integration:
     },
     "advertisements": {
       "enabled": true,
-      "uri": "__local_machine_only__/kedit_future-version-above-v2_22_3/index.html",
+      "uri": "__local_machine_only__/kedit-vFuture/index.html",Ah
       "uiConfId": "36060752",
       "version": "future version above v2.22.3"
     }
