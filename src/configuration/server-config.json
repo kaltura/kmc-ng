@@ -20,6 +20,14 @@
       "html5_version":"",
       "html5lib":""
     },
+    "studioV3": {
+      "enabled": false,
+      "uri": "",
+      "version": "",
+      "uiConfId": "",
+      "html5_version":"",
+      "html5lib":""
+    },
     "liveDashboard": {
       "enabled": false,
       "uri": "",
