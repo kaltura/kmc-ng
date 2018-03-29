@@ -25,10 +25,12 @@
 
         <button *ngIf="!_selectedEntries?.length"
                 pButton class="kButtonDefault kAddEntriesBtn"
+                [disabled]="form.disabled"
                 [label]="_addBtnTitle"
                 (click)="_openEntriesSelector()"></button>
       </div>
       <k-linked-entries-table [entries]="_entries"
+                              [disabled]="form.disabled"
                               [allowMultiple]="control?.allowMultipleEntries"
                               (deleteEntry)="_deleteEntry($event)"
                               [(selectedEntries)]="_selectedEntries"></k-linked-entries-table>

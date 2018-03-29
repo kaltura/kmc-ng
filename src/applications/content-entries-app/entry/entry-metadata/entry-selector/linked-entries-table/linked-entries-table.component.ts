@@ -8,6 +8,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
   styleUrls: ['./linked-entries-table.component.scss']
 })
 export class LinkedEntriesTableComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Input() disabled: boolean;
   @Input() allowMultiple: boolean;
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input()
