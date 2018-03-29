@@ -1673,7 +1673,7 @@
           },
           "moderateContent": {
             "label": "Moderate Content",
-            "help": "Media will not appear in page until by the category manager/moderator."
+            "help": "Media will not appear in page until approved by the category manager/moderator."
           },
           "inheritUsersPermissions": {
             "label": "Inherit Users Permissions",
