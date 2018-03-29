@@ -57,12 +57,13 @@
   }
 
   .emptymessage {
-    line-height: 75px;
+    line-height: 60px;
+    font-size: 20px;
   }
 }
 
 :host /deep/ .kLinkedEntriesTable {
   .ui-table .ui-table-scrollable-body {
-    max-height: 142px !important;
+    max-height: 284px !important;
   }
 }

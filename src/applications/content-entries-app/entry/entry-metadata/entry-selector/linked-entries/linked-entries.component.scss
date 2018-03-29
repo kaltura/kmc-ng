@@ -1,50 +1,51 @@
 @import 'app-theme/_variables.scss';
 
-.kTableHeader {
-  display: flex;
-  flex-direction: row;
-  padding-bottom: 16px;
-  align-items: center;
+.kLinkedEntriesList {
+  margin-bottom: 16px;
 
-  button {
-    font-weight: 400;
-    height: 34px;
-  }
-
-  .kBulkActions {
+  .kTableHeader {
     display: flex;
     flex-direction: row;
+    padding-bottom: 16px;
     align-items: center;
-    margin-left: 24px;
 
-    .kMoveBtn {
-      width: 40px;
+    button {
+      font-weight: 400;
       height: 34px;
-      margin: 0;
     }
 
-    .kMoveBtnTop {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+    .kBulkActions {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .kMoveBtn {
+        width: 40px;
+        height: 34px;
+        margin: 0;
+      }
+
+      .kMoveBtnTop {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .kMoveBtnBottom {
+        margin: 0 12px 0 -4px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      .kBulkDeleteBtn {
+        margin-right: 12px;
+        margin-left: 12px;
+        width: 38px;
+        font-size: 18px;
+      }
     }
 
-    .kMoveBtnBottom {
-      margin: 0 12px 0 -4px;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+    .kAddEntriesBtn {
+      width: 120px;
     }
-
-    .kBulkDeleteBtn {
-      margin-right: 12px;
-      margin-left: 12px;
-      width: 38px;
-      font-size: 18px;
-    }
-  }
-
-  .kAddEntriesBtn {
-    width: 120px;
-    margin-left: 24px;
   }
 }
-

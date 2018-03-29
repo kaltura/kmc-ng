@@ -45,7 +45,7 @@ export class LinkedEntriesAddEntriesComponent implements OnInit {
       : this._appLocalization.get('applications.content.entryDetails.metadata.addEntry');
 
     this._selectionMode = this.allowMultiple
-      ? EntriesSelectorSelectionMode.multipleUnique
+      ? EntriesSelectorSelectionMode.multiple
       : EntriesSelectorSelectionMode.single;
 
     this._selectedEntries = [...this.selectedEntries];

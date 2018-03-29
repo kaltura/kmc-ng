@@ -47,17 +47,6 @@ hr{
 			display: flex;
 			padding-top: 16px;
 
-      &.kLinkedEntries {
-        flex-direction: column;
-        margin-left: -24px;
-        margin-right: -138px;
-
-        .kFormLabelContainer {
-          margin-bottom: 15px;
-          margin-left: 24px;
-        }
-      }
-
 			.kFormLabelContainer{
 				width:190px;
 				display: flex;

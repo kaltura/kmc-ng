@@ -1,34 +1,35 @@
 <div class="kLinkedEntriesTable" [class.noResults]="!_entries?.length">
   <p-table
-    [value]="_entries"
-    dataKey="id"
-    [scrollable]="true"
+    dataKey="selectionId"
     scrollHeight="142px"
+    [value]="_entries"
+    [scrollable]="true"
+    [customSort]="true"
     [rowTrackBy]="_rowTrackBy"
     [(selection)]="selectedEntries"
     (selectionChange)="_onSelectionChange($event)">
     <ng-template pTemplate="header">
       <tr>
-        <th *ngIf="allowMultiple && !disabled" style="width:64px; padding-left: 24px">
+        <th *ngIf="allowMultiple && !disabled" style="width:44px; padding-left: 14px">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '24px', 'width': allowMultiple && !disabled ? '100px' : '124px'}">
+        <th [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '14px', 'width': allowMultiple && !disabled ? '100px' : '114px'}">
           {{'applications.content.entryDetails.metadata.thumbnail' | translate}}
         </th>
         <th>{{'applications.content.entryDetails.metadata.entryName' | translate}}</th>
-        <th style="width: 120px">{{'applications.content.entryDetails.metadata.entryID' | translate}}</th>
-        <th *ngIf="!disabled" style="width: 60px"></th>
+        <th style="width: 100px">{{'applications.content.entryDetails.metadata.entryID' | translate}}</th>
+        <th *ngIf="!disabled" style="width: 50px"></th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-entry>
       <tr [pSelectableRow]="entry">
 
-        <td *ngIf="allowMultiple && !disabled" style="width:64px; padding-left: 24px">
+        <td *ngIf="allowMultiple && !disabled" style="width:44px; padding-left: 14px">
           <p-tableCheckbox [value]="entry"></p-tableCheckbox>
         </td>
 
-        <td [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '24px', 'width': allowMultiple && !disabled ? '100px' : '124px'}">
+        <td [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '14px', 'width': allowMultiple && !disabled ? '100px' : '114px'}">
           <div class="kThumbnailHolder"><span class="kHelper"></span>
             <img [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'">
           </div>
@@ -37,8 +38,8 @@
         <td>
           <span [kTooltip]="entry.name" [maxWidth]="300" class="kTableColumn">{{entry.name}}</span>
         </td>
-        <td style="width: 120px">{{entry.id}}</td>
-        <td *ngIf="!disabled" style="width: 60px">
+        <td style="width: 100px">{{entry.id}}</td>
+        <td *ngIf="!disabled" style="width: 50px">
           <button pButton class="kButtonDefault kDeletehBtn small" type="button" icon="kIcontrash"
                   [kTooltip]="'applications.content.entryDetails.metadata.removeEntry' | translate"
                   (click)="deleteEntry.emit(entry)"></button>

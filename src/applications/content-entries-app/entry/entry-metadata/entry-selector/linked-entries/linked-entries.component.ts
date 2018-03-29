@@ -9,6 +9,11 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { LinkedEntriesControl } from 'app-shared/kmc-shared/dynamic-metadata-form/linked-entries-control';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+
+export interface LinkedMediaEntry extends KalturaMediaEntry {
+  selectionId?: string;
+}
 
 @Component({
   selector: 'k-linked-entries',
@@ -28,11 +33,12 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   @ViewChild('addEntries') entriesSelector: PopupWidgetComponent;
 
   private _innerValue: string[] = [];
+  private _selectionIdGenerator = new FriendlyHashId();
 
   public _blockerMessage: AreaBlockerMessage;
   public _showLoader = false;
-  public _selectedEntries: KalturaMediaEntry[] = [];
-  public _entries: Partial<KalturaMediaEntry>[] = [];
+  public _selectedEntries: LinkedMediaEntry[] = [];
+  public _entries: Partial<LinkedMediaEntry>[] = [];
   public _isReady = false;
   public _addBtnTitle: string;
 
@@ -89,6 +95,7 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
                 } else {
                   this._entries.push({
                     id: response.result.id,
+                    selectionId: this._generateUniqueSelectionId(),
                     name: response.result.name,
                     thumbnailUrl: response.result.thumbnailUrl
                   });
@@ -118,6 +125,18 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   private _propogateChanges(): void {
     this._innerValue = (this._entries || []).map(entry => entry.id);
     this.onChangeCallback(this._innerValue);
+  }
+
+  private _generateUniqueSelectionId(): string {
+    return this._selectionIdGenerator.generateUnique(this._entries.map(item => item.selectionId));
+  }
+
+  private _extendWithSelectionId(entries: KalturaMediaEntry[]): LinkedMediaEntry[] {
+    return entries.map(entry => {
+      (<LinkedMediaEntry>entry).selectionId = this._generateUniqueSelectionId();
+
+      return (<LinkedMediaEntry>entry);
+    });
   }
 
   // Set touched on blur
@@ -172,6 +191,7 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
         }
       });
 
+      this._clearSelection();
       this._propogateChanges();
     }
   }
@@ -181,7 +201,7 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   }
 
   public _addEntries(entries: KalturaMediaEntry[]): void {
-    this._entries = entries;
+    this._entries = this._extendWithSelectionId(entries);
     this._propogateChanges();
   }
 

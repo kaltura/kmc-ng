@@ -33,7 +33,7 @@ export class LinkedEntriesTableComponent implements OnInit, OnDestroy, AfterView
   public _deferredLoading = true;
 
   public _rowTrackBy(index: number, item: any): string {
-    return item.id;
+    return item.selectionId;
   }
 
   constructor(private _appLocalization: AppLocalization,
