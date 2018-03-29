@@ -144,7 +144,7 @@ function getConfiguration(): Observable<ServerConfig> {
 
                     }
                 } catch (e) {
-                    resp = new Error(xhr.responseText);
+                    resp = e;
                 }
 
                 if (resp instanceof Error) {
