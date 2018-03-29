@@ -95,7 +95,7 @@ export class PermissionsTableComponent implements OnInit {
       const hasAllUncheckedPermissions = !permissionGroup.noChildren
         ? permissionGroup.items.every(permission => !permission.checked)
         : false;
-      permissionGroup.hasError = !permissionGroup.isAdvancedGroup && hasAllUncheckedPermissions;
+      permissionGroup.hasError = permissionGroup.checked && !permissionGroup.isAdvancedGroup && hasAllUncheckedPermissions;
 
       if (permissionGroup.hasError) {
         isValid = false;
