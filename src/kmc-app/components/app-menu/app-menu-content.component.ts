@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { AppMenuItem } from '../../services/app-menu-config';
+import { KMCAppMenuItem, KMCAppSubMenuItem } from '../../kmc-app-config';
+
 
 @Component({
   selector: 'kKMCAppContentMenu',
@@ -8,7 +9,7 @@ import { AppMenuItem } from '../../services/app-menu-config';
 })
 export class AppMenuContentComponent implements OnChanges {
   @Input()
-  menuItems : AppMenuItem[];
+  menuItems : KMCAppSubMenuItem[];
 
   @Input()
   position : 'right' | 'left';
@@ -17,5 +18,5 @@ export class AppMenuContentComponent implements OnChanges {
     this._items = (this.menuItems || []).filter( item  => (item.position || 'left') === this.position);
   }
 
-  public _items: Array<AppMenuItem>;
+  public _items: Array<KMCAppSubMenuItem>;
 }

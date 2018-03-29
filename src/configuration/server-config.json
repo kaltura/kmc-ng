@@ -28,6 +28,7 @@
     "liveAnalytics": {
       "enabled": false,
       "uri": "",
+      "uiConfId": 0,
       "version": ""
     },
     "kava": {
@@ -40,9 +41,18 @@
       "version": "",
       "uri": "",
       "uiConfId": 0,
-      "map_urls": [
-      ],
+      "map_urls": [],
       "map_zoom_levels": ""
+    },
+    "clipAndTrim": {
+      "enabled": false,
+      "uri": "",
+      "uiConfId": ""
+    },
+    "advertisements": {
+      "enabled": false,
+      "uri": "",
+      "uiConfId": ""
     }
   },
   "externalLinks": {
@@ -63,7 +73,7 @@
     },
     "uploads": {
       "highSpeedUpload": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
-      "bulkUploadSamples": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
+      "bulkUploadSamples": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_sample.zip"
     },
     "live": {
       "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"

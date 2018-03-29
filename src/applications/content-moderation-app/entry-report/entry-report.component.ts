@@ -16,6 +16,7 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntrySta
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { Observer } from 'rxjs/Observer';
 import { serverConfig } from 'config/server';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface Tabs {
   name: string;
@@ -32,6 +33,7 @@ export interface Tabs {
 
 export class EntryReportComponent implements OnInit, OnDestroy {
 
+	public _kmcPermissions = KMCPermissions;
   @ViewChild('player') player: KalturaPlayerComponent;
 
   @Input() parentPopupWidget: PopupWidgetComponent;

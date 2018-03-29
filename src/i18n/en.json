@@ -10,6 +10,8 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
+      "Kava": "Kava",
+      "Live Analytics": "Live Real-Time Dashboard",
       "Usage Dashboard": "Usage Dashboard",
       "Administration": "Administration",
       "Settings": "Settings",
@@ -340,7 +342,7 @@
           }
         },
         "confirmEntryNavigation": {
-          "title": "Stream has been created successfully",
+          "title": "Stream has been created",
           "generalMessage": "Live Stream Entry has been created successfully.",
           "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
           "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
@@ -1116,6 +1118,7 @@
         "downloadFailed": "Download request failed"
       },
       "entryDetails": {
+        "save": "Save",
         "sections": {
           "metadata": "Metadata",
           "thumbnails": "Thumbnails",
@@ -1127,7 +1130,8 @@
           "relatedFiles": "Related Files",
           "clips": "Clips",
           "users": "Users",
-          "distribution": "Distribution"
+          "distribution": "Distribution",
+          "advertisements": "Advertisements"
         },
         "preview": {
           "pande": "Share & Embed",
@@ -1345,6 +1349,7 @@
         },
         "live": {
           "live": "Live Stream",
+          "liveDashboard": "Live Dashabord",
           "urls": "Broadcasting URLs",
           "primary": "Primary URL:",
           "backup": "Backup URL:",
@@ -1420,7 +1425,15 @@
           "offset": "Offset",
           "duration": "Duration",
           "status": "Status",
-          "n_a": "N/A"
+          "n_a": "N/A",
+          "clipTrim": "Clip & Trim"
+        },
+        "advertisements": {
+          "title":"Advertisement",
+          "description": "Create and manage time-based advertisements by using the Video Editor Tool.",
+          "manageAdvertisements": "Manage Advertisements",
+          "cancelEdit": "Cancel Edit",
+          "discard": "Discard all changes?"
         },
         "users": {
           "users": "Users",
@@ -1665,7 +1678,7 @@
           },
           "moderateContent": {
             "label": "Moderate Content",
-            "help": "Media will not appear in page until by the category manager/moderator."
+            "help": "Media will not appear in page until approved by the category manager/moderator."
           },
           "inheritUsersPermissions": {
             "label": "Inherit Users Permissions",
@@ -1835,7 +1848,9 @@
           "fieldRequired": "This field is required"
         }
       },
-
+      "liveDashboard": {
+        "title": "Live Dashboard"
+      },
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",
@@ -2243,7 +2258,7 @@
           "name": "Name",
           "id": "ID",
           "createdOn": "Created On",
-          "domain": "Domain",
+          "domains": "Domains",
           "countries": "Countries",
           "ips": "IPs",
           "flavors": "Flavors",

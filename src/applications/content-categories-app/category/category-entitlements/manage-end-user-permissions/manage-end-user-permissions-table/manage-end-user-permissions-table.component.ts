@@ -14,6 +14,7 @@ import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/K
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
 import {UserActionData} from '../manage-end-user-permissions.component';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kManageEndUserPermissionsTable',
@@ -24,6 +25,7 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   public _users: EndUserPermissionsUser[] = [];
   private _deferredUsers: any[];
   public _deferredLoading = true;
+  public _kmcPermissions = KMCPermissions;
 
   @Input()
   set users(data: EndUserPermissionsUser[]) {

@@ -1,9 +1,9 @@
-import { RouterModule, Routes } from '@angular/router';
-import { AppBootstrap, AuthCanActivate } from 'app-shared/kmc-shell';
+import {RouterModule, Routes} from '@angular/router';
+import {AppBootstrap, AuthCanActivate} from 'app-shared/kmc-shell';
 
-import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ErrorComponent } from './components/error/error.component';
+import {LoginComponent} from './components/login/login.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
+import {ErrorComponent} from './components/error/error.component';
 
 const routes: Routes = <Routes>[
   {
@@ -102,7 +102,13 @@ const routes: Routes = <Routes>[
         },
         { path: 'studio', loadChildren: '../applications/studio-app/studio-app.module#StudioAppModule' },
         { path: 'usageDashboard', loadChildren: '../applications/usage-dashboard-app/usage-dashboard-app.module#UsageDashboardAppModule' },
-        { path: 'kava', loadChildren: '../applications/analytics-live-app/analytics-live-app.module#AnalyticsLiveAppModule' }
+        {
+          path: 'analytics', children: [
+          { path: '', redirectTo: 'liveAnalytics', pathMatch: 'full' },
+          { path: 'kava', loadChildren: '../applications/analytics-kava-app/analytics-kava-app.module#AnalyticsKavaAppModule' },
+          { path: 'liveAnalytics', loadChildren: '../applications/analytics-live-app/analytics-live-app.module#AnalyticsLiveAppModule' },
+        ]
+        },
       ]
       }
     ]
