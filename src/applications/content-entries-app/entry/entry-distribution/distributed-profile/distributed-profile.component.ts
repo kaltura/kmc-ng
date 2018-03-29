@@ -5,7 +5,7 @@ import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/Kal
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kEntryDistributedProfile',
@@ -28,6 +28,7 @@ export class DistributedProfileComponent implements OnInit {
   public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _widgetService: EntryDistributionWidget) {
 
   }
@@ -99,7 +100,7 @@ export class DistributedProfileComponent implements OnInit {
       case KalturaEntryDistributionStatus.pending:
       case KalturaEntryDistributionStatus.removed:
         this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
-        this._actionButtonDisabled = false;
+        this._actionButtonDisabled = !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE);
         break;
       default:
         this._actionButtonHidden = true;

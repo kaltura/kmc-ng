@@ -43,13 +43,13 @@
   </div>
 
   <div class="kControls">
-    <button *ngIf="!_deleteButtonHidden" pButton
+    <button *ngIf="!_deleteButtonHidden || _kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE | kNgIfPermitted" pButton
             [disabled]="_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_REMOVE | kDisabledIfNotPermitted"
             icon="kIcontrash" class="kButtonDanger kDeleteBtn"
             (click)="_deleteDistribution(_profile)"></button>
     <button *ngIf="!_actionButtonHidden && _kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND | kNgIfPermitted"
             pButton class="kButtonDefault kUpdateBtn"
-            [disabled]="_actionButtonDisabled"
+            [disabled]="_actionButtonDisabled || _kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE | kDisabledIfNotPermitted"
             [label]="_actionButtonLabel"
             (click)="_performAction(_profile)"></button>
   </div>

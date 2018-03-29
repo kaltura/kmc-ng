@@ -69,7 +69,9 @@ export class EditDistributionProfileComponent implements OnInit {
   }
 
   public get _actionDisabled(): boolean {
-    return !!(this._createdFilterError || this._missingFlavorError || this._missingThumbnailError);
+    const hasDistributionWherePermission = !this._forDistribution
+      && this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE);
+    return !!(this._createdFilterError || this._missingFlavorError || this._missingThumbnailError || !hasDistributionWherePermission);
   }
 
   public get _addButtonLabel(): string {
@@ -181,6 +183,11 @@ export class EditDistributionProfileComponent implements OnInit {
         this._updatesField.enable({ onlySelf: true });
       } else {
         this._updatesField.disable({ onlySelf: true });
+      }
+
+      if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE)) {
+        this._startDateField.disable({ onlySelf: true });
+        this._endDateField.disable({ onlySelf: true });
       }
 
       const updates = this.undistributedProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic;
