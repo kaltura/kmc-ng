@@ -2253,7 +2253,7 @@
           "name": "Name",
           "id": "ID",
           "createdOn": "Created On",
-          "domain": "Domain",
+          "domains": "Domains",
           "countries": "Countries",
           "ips": "IPs",
           "flavors": "Flavors",
