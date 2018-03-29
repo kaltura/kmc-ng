@@ -47,7 +47,8 @@
             [disabled]="_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_REMOVE | kDisabledIfNotPermitted"
             icon="kIcontrash" class="kButtonDanger kDeleteBtn"
             (click)="_deleteDistribution(_profile)"></button>
-    <button *ngIf="!_actionButtonHidden" pButton class="kButtonDefault kUpdateBtn"
+    <button *ngIf="!_actionButtonHidden && _kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND | kNgIfPermitted"
+            pButton class="kButtonDefault kUpdateBtn"
             [disabled]="_actionButtonDisabled"
             [label]="_actionButtonLabel"
             (click)="_performAction(_profile)"></button>

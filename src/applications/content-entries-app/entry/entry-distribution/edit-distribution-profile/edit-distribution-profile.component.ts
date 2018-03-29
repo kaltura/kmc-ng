@@ -15,7 +15,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -63,6 +63,7 @@ export class EditDistributionProfileComponent implements OnInit {
               private _widget: EntryDistributionWidget,
               private _fb: FormBuilder,
               private _appAuthentication: AppAuthentication,
+              private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService) {
     this._buildForm();
   }
@@ -159,6 +160,10 @@ export class EditDistributionProfileComponent implements OnInit {
     if (this._forDistribution) {
       this._startDateField.disable({ onlySelf: true });
       this._endDateField.disable({ onlySelf: true });
+
+      if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND)) {
+        this._updatesField.disable({ onlySelf: true });
+      }
     } else {
       this._distributionName = this._widget.getProviderName(this.undistributedProfile.providerType);
 
