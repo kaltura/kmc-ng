@@ -31,6 +31,14 @@ Follow these instructions to test external apps integration:
       "html5_version":"v2.57.2",
       "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
     },
+    "studioV3": {
+      "enabled": true,
+      "uri": "__local_machine_only__/studio_v3_1_1/index.html",
+      "version": "v3.1.1",
+      "uiConfId": "41860962",
+      "html5_version":"v2.67",
+      "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.67/mwEmbedLoader.php"
+    },
     "liveDashboard": {
       "enabled": true,
       "uri": "__local_machine_only__/live-dashboard_v1_4_1/index.html",

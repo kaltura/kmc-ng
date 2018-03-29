@@ -11,11 +11,10 @@ import {
   CheckboxModule,
   ConfirmDialogModule,
   DataTableModule,
-  DropdownModule,
+  DropdownModule, InputSwitchModule,
   InputTextareaModule,
   InputTextModule,
   MenuModule,
-  MultiSelectModule,
   PaginatorModule,
   RadioButtonModule,
   SharedModule,
@@ -37,8 +36,13 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
-import { RolesComponentsList } from './roles/roles-components-list';
-import { EditRoleComponent } from './role/edit-role/edit-role.component';
+import { EditRoleComponent } from './edit-role/edit-role.component';
+import { PermissionsTableComponent } from './permissions-table/permissions-table.component';
+import { TableModule } from 'primeng/table';
+import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui/multi-select/multi-select.module';
+import { RolesListComponent } from './roles-list/roles-list.component';
+import { RolesTableComponent } from './roles-table/roles-table.component';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -75,12 +79,17 @@ import { EditRoleComponent } from './role/edit-role/edit-role.component';
     TieredMenuModule,
     TooltipModule,
     TreeModule,
-    StickyModule
+    StickyModule,
+    TableModule,
+    InputSwitchModule,
+    KMCPermissionsModule
   ],
   declarations: [
     AdministrationRolesComponent,
-    RolesComponentsList,
-    EditRoleComponent
+    EditRoleComponent,
+    PermissionsTableComponent,
+    RolesListComponent,
+    RolesTableComponent
   ],
   exports: [],
   providers: [],

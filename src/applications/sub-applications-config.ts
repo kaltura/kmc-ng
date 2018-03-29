@@ -1,24 +1,27 @@
 
 export interface SubApplicationsConfig {
     shared: {
-        datesRange : string,
+        datesRange: string,
         bulkActionsLimit: number
-    },
-    contentPlaylistsApp : {
+    };
+    contentPlaylistsApp: {
         ruleBasedTotalResults: number
-    },
-    previewAndEmbedApp:{
+    };
+    previewAndEmbedApp: {
         includeKalturaLinks: boolean,
         secureEmbed: boolean,
         includeSeoMetadata: boolean,
         embedType: 'dynamic' | 'iframe' | 'auto' | 'thumb'
-    },
+    };
     contentEntriesApp: {
         distribution: {
           facebookExternal: string,
           youtubeExternal: string
         }
-    }
+    };
+    administrationRolesApp: {
+        contactUsLink: string;
+    };
 }
 
 export const subApplicationsConfig: SubApplicationsConfig = {
@@ -40,5 +43,9 @@ export const subApplicationsConfig: SubApplicationsConfig = {
             'facebookExternal': 'https://www.facebook.com/video.php?v=',
             'youtubeExternal': 'https://www.youtube.com/watch?v='
         }
+    },
+    'administrationRolesApp': {
+        'contactUsLink': 'http://site.kaltura.com/Request-Users.html'
     }
-}
+};
+
