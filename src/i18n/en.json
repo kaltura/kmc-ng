@@ -1424,7 +1424,7 @@
           "clipTrim": "Clip & Trim"
         },
         "advertisements": {
-          "title":"Advertisement",
+          "title":"Advertisements",
           "description": "Create and manage time-based advertisements by using the Video Editor Tool.",
           "manageAdvertisements": "Manage Advertisements",
           "cancelEdit": "Cancel Edit",

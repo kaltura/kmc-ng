@@ -105,6 +105,7 @@ export const ServerConfigSchema = {
                     enabled: {type: 'boolean'},
                     uri: {type: 'string'},
                     uiConfId: {type: 'string'},
+                    version: {type: 'string'}
                   },
                   required: ['enabled', 'uri', 'uiConfId'],
                   additionalProperties: false
@@ -114,6 +115,7 @@ export const ServerConfigSchema = {
                     enabled: {type: 'boolean'},
                     uri: {type: 'string'},
                     uiConfId: {type: 'string'},
+                    version: {type: 'string'}
                   },
                   required: ['enabled', 'uri', 'uiConfId'],
                   additionalProperties: false
@@ -244,11 +246,13 @@ export interface ServerConfig {
           enabled: boolean,
           uri: string,
           uiConfId: string,
+          version: string,
         },
         advertisements: {
           enabled: boolean,
           uri: string,
           uiConfId: string,
+          version: string,
         }
     };
     externalLinks: {
