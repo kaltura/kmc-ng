@@ -9,7 +9,7 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kal
   providers: [
     RolesStoreService,
     KalturaLogger,
-    { provide: KalturaLoggerName, useValue: 'roles-store.service' }
+    { provide: KalturaLoggerName, useValue: 'AdministrationRolesComponent' }
   ]
 })
 
