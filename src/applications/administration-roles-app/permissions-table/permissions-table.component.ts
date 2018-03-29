@@ -41,14 +41,20 @@ export class PermissionsTableComponent implements OnInit {
       let checked = false;
       let formValue = [];
       const permissionItems = (permission.items || [])
-        .map(item => Object.assign(item, { disabled: !this._permissionsService.isPermissionEnabled(item.value) }));
+        .map(item => Object.assign(item, { disabled: !this._permissionsService.isPermissionEnabled(item.value), checked: true }));
 
       if (this.isNewRole) {
         checked = true; // check enabled permission group for new role
         formValue = permissionItems; // check all enabled permission group's items for new role
       } else {
         checked = hasPermissionInList(permission.name); // check permission group according to permissionNames list
-        formValue = permissionItems.filter(({ name }) => hasPermissionInList(name)); // check permission group's items according to permissionNames list
+        permissionItems.forEach(item => { // check permission group's items according to permissionNames list
+          if (hasPermissionInList(item.name)) {
+            formValue.push(item.name);
+          } else {
+            item.checked = false;
+          }
+        });
         hasError = checked && !permission.isAdvancedGroup && !permission.noChildren && !formValue.length;
       }
 
