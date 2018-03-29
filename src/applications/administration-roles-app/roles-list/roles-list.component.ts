@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RolesFilters, RolesStoreService } from '../roles-store/roles-store.service';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
@@ -19,7 +19,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
   public _tableIsBusy = false;
   public _tableBlockerMessage: AreaBlockerMessage = null;
   public _currentEditRole: KalturaUserRole = null;
-  public _currentEditRoleIsDuplicated = false;
   public _query = {
     createdBefore: null,
     pageIndex: 0,
@@ -32,16 +31,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.editPopup) {
-      this.editPopup.state$
-        .cancelOnDestroy(this)
-        .subscribe(event => {
-          if (event.state === PopupWidgetStates.Close) {
-            this._currentEditRoleIsDuplicated = false;
-          }
-        });
-    }
-
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
     this._registerToDataChanges();
@@ -151,7 +140,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
         (duplicatedRole) => {
           this._rolesStore.reload();
           this._blockerMessage = null;
-          this._currentEditRoleIsDuplicated = true;
           this._editRole(duplicatedRole);
         },
         error => {

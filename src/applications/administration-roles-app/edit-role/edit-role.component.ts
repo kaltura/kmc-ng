@@ -18,7 +18,6 @@ import { subApplicationsConfig } from 'config/sub-applications';
 export class EditRoleComponent implements OnInit, OnDestroy {
   @Input() role: KalturaUserRole;
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Input() duplicatedRole: boolean;
 
   @ViewChild(PermissionsTableComponent) _permissionsTable: PermissionsTableComponent;
 
@@ -39,7 +38,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
 
   public get _saveDisabled(): boolean {
-    return this._editRoleForm.pristine && !this.duplicatedRole && !this._permissionChanged;
+    return this._editRoleForm.pristine && !this._permissionChanged;
   }
 
   constructor(private _fb: FormBuilder,
@@ -169,12 +168,6 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   }
 
   public _updateRole(): void {
-    // no need to reload the table since the duplicated role remained intact
-    if (this.duplicatedRole && this._editRoleForm.pristine) {
-      this.parentPopupWidget.close();
-      return;
-    }
-
     this._blockerMessage = null;
 
     const permissionNames = this._getUpdatedPermission();
