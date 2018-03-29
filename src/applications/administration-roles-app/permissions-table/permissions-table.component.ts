@@ -50,7 +50,7 @@ export class PermissionsTableComponent implements OnInit {
         checked = hasPermissionInList(permission.name); // check permission group according to permissionNames list
         permissionItems.forEach(item => { // check permission group's items according to permissionNames list
           if (hasPermissionInList(item.name)) {
-            formValue.push(item.name);
+            formValue.push(item);
           } else {
             item.checked = false;
           }
