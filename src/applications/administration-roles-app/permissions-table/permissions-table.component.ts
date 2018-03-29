@@ -72,20 +72,31 @@ export class PermissionsTableComponent implements OnInit {
   }
 
   public _onChange(event: { originalEvent: Event, value: number[], itemValue?: number }, permission: RolePermissionFormValue): void {
-    let uncheckedCount = 0;
     permission.items.forEach(item => {
       const isChecked = event.value.indexOf(item.value) !== -1;
       item.checked = isChecked && !item.disabled;
-
-      if (!item.checked) {
-        uncheckedCount++;
-      }
     });
 
-    permission.hasError = !permission.isAdvancedGroup && !permission.noChildren && permission.items.length === uncheckedCount;
+    permission.hasError = false;
 
     this.rolePermissionsChange.emit(this._rolePermissions);
     this.setDirty.emit();
+  }
+
+  public validatePermissions(): boolean {
+    let isValid = true;
+    this._rolePermissions.forEach(permissionGroup => {
+      const hasAllUncheckedPermissions = !permissionGroup.noChildren
+        ? permissionGroup.items.every(permission => !permission.checked)
+        : false;
+      permissionGroup.hasError = !permissionGroup.isAdvancedGroup && hasAllUncheckedPermissions;
+
+      if (permissionGroup.hasError) {
+        isValid = false;
+      }
+    });
+
+    return isValid;
   }
 }
 

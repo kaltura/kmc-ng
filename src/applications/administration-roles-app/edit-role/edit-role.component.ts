@@ -1,8 +1,8 @@
-import { Component, Input, IterableDiffers, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, IterableDiffers, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observer } from 'rxjs/Observer';
-import { RolePermissionFormValue } from '../permissions-table/permissions-table.component';
+import { PermissionsTableComponent, RolePermissionFormValue } from '../permissions-table/permissions-table.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -20,6 +20,8 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() duplicatedRole: boolean;
 
+  @ViewChild(PermissionsTableComponent) _permissionsTable: PermissionsTableComponent;
+
   private _defaultPermissionNames = ['KMC_ACCESS', 'KMC_READ_ONLY', 'BASE_USER_SESSION_PERMISSION', 'WIDGET_SESSION_PERMISSION'];
 
   public _editRoleForm: FormGroup;
@@ -31,7 +33,6 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _permissions: string[];
   public _rolePermissions: RolePermissionFormValue[] = [];
   public _permissionChanged = false;
-  public _permissionsError = false;
   public _isNewRole: boolean;
   public _hasDisabledPermissions: boolean;
   public _contactUsLink = subApplicationsConfig.administrationRolesApp.contactUsLink;
@@ -207,7 +208,8 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this._permissionsError) {
+    const isPermissionsValid = this._permissionsTable.validatePermissions();
+    if (!isPermissionsValid) {
       this._showPermissionsErrorMessage();
       return;
     }
@@ -221,7 +223,6 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
   public _updateRolePermissions(permissions: RolePermissionFormValue[]): void {
     this._rolePermissions = permissions;
-    this._permissionsError = permissions.some(permission => permission.hasError);
   }
 
   public _setDirty(): void {
