@@ -385,18 +385,20 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     return message;
   }
 
-  private _getAutocompleteList(allowed: AccessControlAutocompleteItem[], restricted: AccessControlAutocompleteItem[]): string {
+  private _getAutocompleteList(getAllowed: boolean,
+                               allowed: AccessControlAutocompleteItem[],
+                               restricted: AccessControlAutocompleteItem[]): string {
     const allowedList = Array.isArray(allowed) ? allowed.map(({ value }) => value).join(',') : '';
     const restrictedList = Array.isArray(restricted) ? restricted.map(({ value }) => value).join(',') : '';
 
-    return allowedList || restrictedList;
+    return getAllowed ? allowedList : restrictedList;
   }
 
-  private _getList(allowed: string[], restricted: string[]): string {
+  private _getList(getAllowed: boolean, allowed: string[], restricted: string[]): string {
     const allowedList = Array.isArray(allowed) ? allowed.join(',') : '';
     const restrictedList = Array.isArray(restricted) ? restricted.join(',') : '';
 
-    return allowedList || restrictedList;
+    return getAllowed ? allowedList : restrictedList;
   }
 
   private _proceedSave(): void {
@@ -409,7 +411,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     const { domainsType, allowedDomains, restrictedDomains } = formValue;
     if (domainsType !== null) {
-      const siteList = this._getAutocompleteList(allowedDomains, restrictedDomains);
+      const getAllowed = domainsType === KalturaSiteRestrictionType.allowSiteList;
+      const siteList = this._getAutocompleteList(getAllowed, allowedDomains, restrictedDomains);
       if (siteList) {
         accessControlProfile.restrictions.push(new KalturaSiteRestriction({
           siteList,
@@ -420,7 +423,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     const { countriesType, allowedCountries, restrictedCountries } = formValue;
     if (countriesType !== null) {
-      const countryList = this._getList(allowedCountries, restrictedCountries);
+      const getAllowed = countriesType === KalturaCountryRestrictionType.allowCountryList;
+      const countryList = this._getList(getAllowed, allowedCountries, restrictedCountries);
       if (countryList) {
         accessControlProfile.restrictions.push(new KalturaCountryRestriction({
           countryList,
@@ -431,7 +435,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     const { ipsType, allowedIps, restrictedIps } = formValue;
     if (ipsType !== null) {
-      const ipAddressList = this._getAutocompleteList(allowedIps, restrictedIps);
+      const getAllowed = ipsType === KalturaIpAddressRestrictionType.allowList;
+      const ipAddressList = this._getAutocompleteList(getAllowed, allowedIps, restrictedIps);
       if (ipAddressList) {
         accessControlProfile.restrictions.push(new KalturaIpAddressRestriction({
           ipAddressList,
@@ -442,7 +447,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     const { flavorsType, allowedFlavors, restrictedFlavors } = formValue;
     if (flavorsType !== null) {
-      const flavorParamsIds = this._getList(allowedFlavors, restrictedFlavors);
+      const getAllowed = flavorsType === KalturaLimitFlavorsRestrictionType.allowList;
+      const flavorParamsIds = this._getList(getAllowed, allowedFlavors, restrictedFlavors);
       if (flavorParamsIds) {
         accessControlProfile.restrictions.push(new KalturaLimitFlavorsRestriction({
           flavorParamsIds,
