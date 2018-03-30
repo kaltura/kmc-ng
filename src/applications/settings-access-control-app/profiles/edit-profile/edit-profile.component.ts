@@ -107,7 +107,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     let domainsType = null;
     let allowedDomains = [];
     let restrictedDomains = [];
-    if (profile.view.domain) {
+    if (profile.view.domain && profile.view.domain.details && profile.view.domain.details.length) {
       const domain = profile.view.domain;
       const isAuthorized = domain.isAuthorized;
       domainsType = isAuthorized ? KalturaSiteRestrictionType.allowSiteList : KalturaSiteRestrictionType.restrictSiteList;
@@ -118,7 +118,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     let countriesType = null;
     let allowedCountries = [];
     let restrictedCountries = [];
-    if (profile.view.countries) {
+    if (profile.view.countries && profile.view.countries.details && profile.view.countries.details.length) {
       const countries = profile.view.countries;
       const isAuthorized = countries.isAuthorized;
       countriesType = isAuthorized ? KalturaCountryRestrictionType.allowCountryList : KalturaCountryRestrictionType.restrictCountryList;
@@ -129,7 +129,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     let ipsType = null;
     let allowedIps = [];
     let restrictedIps = [];
-    if (profile.view.ips) {
+    if (profile.view.ips && profile.view.ips.details && profile.view.ips.details.length) {
       const ips = profile.view.ips;
       const isAuthorized = ips.isAuthorized;
       ipsType = isAuthorized ? KalturaIpAddressRestrictionType.allowList : KalturaIpAddressRestrictionType.restrictList;
@@ -140,7 +140,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     let flavorsType = null;
     let allowedFlavors = [];
     let restrictedFlavors = [];
-    if (profile.view.flavors) {
+    if (profile.view.flavors && profile.view.flavors.details && profile.view.flavors.details.length) {
       const flavors = profile.view.flavors;
       const isAuthorized = flavors.isAuthorized;
       flavorsType = isAuthorized ? KalturaLimitFlavorsRestrictionType.allowList : KalturaLimitFlavorsRestrictionType.restrictList;
