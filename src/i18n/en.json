@@ -552,7 +552,7 @@
       },
       "entries": {
         "entries": "{{0}} Entries",
-        "selected": "{{0}} Selected",
+        "selected": "Selected",
         "bulkActions": "More Actions",
         "cancel": "Cancel",
         "searchEntries": "Search Entries",
