@@ -11,7 +11,6 @@ function isStudioAppValid(): boolean {
             !!serverConfig.externalApps.studio.uri &&
             !serverConfig.externalApps.studio.uri.match(/\s/g) && // not contains white spaces
             !!serverConfig.externalApps.studio.version &&
-            !!serverConfig.externalApps.studio.uiConfId &&
             !!serverConfig.externalApps.studio.html5_version &&
             !!serverConfig.externalApps.studio.html5lib;
 
