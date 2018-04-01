@@ -114,7 +114,7 @@
                     </div>
                 </td>
 
-                <td *ngIf="_columnsMetadata.addToBucket" style="overflow: visible; width: 80px">
+                <td *ngIf="_columnsMetadata.addToBucket" [ngStyle]="_columnsMetadata.addToBucket.style">
                     <div class="kEntriesTableActions">
                         <button type="button" pButton class="kButtonDefault kButtonAddToBucket" label="+"
                                 (click)="_onActionSelected('addToBucket', entry)"></button>

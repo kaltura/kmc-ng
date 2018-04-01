@@ -552,7 +552,7 @@
       },
       "entries": {
         "entries": "{{0}} Entries",
-        "selected": "Selected",
+        "selected": "{{0}} Selected",
         "bulkActions": "More Actions",
         "cancel": "Cancel",
         "searchEntries": "Search Entries",
@@ -1169,12 +1169,17 @@
           "delete": "Delete",
           "thumbnail": "Thumbnail",
           "addEntry": "Add Entry",
+          "addEntries": "Add Entries",
+          "removeEntry": "Remove Entry",
           "remove": "Remove",
-          "selected": "Selected",
-          "clear": "Clear Selection",
+          "selected": "{{0}} Selected",
+          "clear": "Clear",
           "addGroup": "Add Group",
           "deleteGroup": "Delete Group",
-          "nameRequired": "You must enter an entry name"
+          "nameRequired": "You must enter an entry name",
+          "customDataError": "\"{{0}}\" Custom Data Error",
+          "missingEntriesWarning": "The following entries were not found: {{0}}",
+          "replaceLinkedEntry": "Selecting a new entry will replace the current entry. Continue?"
         },
         "thumbnails": {
           "thumbnails": "Thumbnails",
