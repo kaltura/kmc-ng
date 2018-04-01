@@ -113,7 +113,9 @@ hr{
 
 		.kDelete{
 			margin-left: 14px;
-			color: $kDandger;
+			&:not(.disabled) {
+				color: $kDandger;
+			}
 		}
 		.kDeleteDate{
 			margin-left: 46px;

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, HostListener } from '@angular/core';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
@@ -26,6 +26,12 @@ export class LinkedEntriesTableComponent implements OnInit, OnDestroy, AfterView
   @Output() selectedEntriesChange = new EventEmitter<KalturaMediaEntry[]>();
   @Output() deleteEntry = new EventEmitter<KalturaMediaEntry>();
 
+  @HostListener("window:resize", [])
+  onWindowResize() {
+    this._documentWidth = document.body.clientWidth;
+  }
+  public _documentWidth: number = 2000;
+
   private _deferredEntries: KalturaMediaEntry[];
 
   public _entries: KalturaMediaEntry[] = [];
@@ -41,6 +47,7 @@ export class LinkedEntriesTableComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngOnInit() {
+    this._documentWidth = document.body.clientWidth;
     this._emptyMessage = this.allowMultiple
       ? this._appLocalization.get('applications.content.entryDetails.metadata.addEntries')
       : this._appLocalization.get('applications.content.entryDetails.metadata.addEntry');

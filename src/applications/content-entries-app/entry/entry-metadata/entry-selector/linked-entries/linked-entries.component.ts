@@ -209,7 +209,7 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
     if (!this.control.allowMultipleEntries && this._entries.length > 0) {
       this._browserService.confirm({
         message: this._appLocalization.get('applications.content.entryDetails.metadata.replaceLinkedEntry'),
-        accept: () => this.entriesSelector.open()
+        accept: () => {setTimeout(()=>{this.entriesSelector.open()},0)}
       });
     } else {
       this.entriesSelector.open();

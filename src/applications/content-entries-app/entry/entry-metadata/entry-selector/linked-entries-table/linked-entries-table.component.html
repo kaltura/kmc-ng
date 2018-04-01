@@ -16,8 +16,8 @@
         <th [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '14px', 'width': allowMultiple && !disabled ? '100px' : '114px'}">
           {{'applications.content.entryDetails.metadata.thumbnail' | translate}}
         </th>
-        <th>{{'applications.content.entryDetails.metadata.entryName' | translate}}</th>
-        <th style="width: 100px">{{'applications.content.entryDetails.metadata.entryID' | translate}}</th>
+        <th style="width: 100%">{{'applications.content.entryDetails.metadata.entryName' | translate}}</th>
+        <th style="width: 100px" [hidden]="_documentWidth < 1320">{{'applications.content.entryDetails.metadata.entryID' | translate}}</th>
         <th *ngIf="!disabled" style="width: 50px"></th>
       </tr>
     </ng-template>
@@ -35,10 +35,10 @@
           </div>
         </td>
 
-        <td>
+        <td style="width: 100%">
           <span [kTooltip]="entry.name" [maxWidth]="300" class="kTableColumn">{{entry.name}}</span>
         </td>
-        <td style="width: 100px">{{entry.id}}</td>
+        <td style="width: 100px" [hidden]="_documentWidth < 1320">{{entry.id}}</td>
         <td *ngIf="!disabled" style="width: 50px">
           <button pButton class="kButtonDefault kDeletehBtn small" type="button" icon="kIcontrash"
                   [kTooltip]="'applications.content.entryDetails.metadata.removeEntry' | translate"
