@@ -52,6 +52,11 @@
         <form novalidate [formGroup]="customDataForm.formGroup">
           <k-dynamic-form-item [control]="customDataForm.formSectionControl" [form]="customDataForm.formGroup">
             <ng-template let-item="item">
+              <k-linked-entries *ngIf="item.control.controlType === 'LinkedEntriesComponent'"
+                                [profileName]="customDataForm.metadataProfile.name"
+                                [formControlName]="item.control.key"
+                                [control]="item.control"
+                                [form]="item.form"></k-linked-entries>
               <k-prime-control *ngIf="item.control.controlType !== 'LinkedEntriesComponent'" [control]="item.control" [form]="item.form"></k-prime-control>
             </ng-template>
           </k-dynamic-form-item>

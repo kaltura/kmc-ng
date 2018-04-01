@@ -19,7 +19,6 @@ import {EntryComponent} from './entry.component';
 import {EntryPreview} from './entry-preview/entry-preview.component';
 import {EntryDetails} from './entry-details/entry-details.component';
 import {JumpToSection} from './entry-metadata/jump-to-section.component';
-import {LinkedEntriesComponent} from './entry-metadata/entry-selector/linked-entries/linked-entries.component';
 import {CategoriesSelector} from './entry-metadata/category-selector/categories-selector.component';
 import {TagsPipe} from './entry-flavours/tags.pipe';
 
@@ -37,8 +36,7 @@ import { EditDistributionProfileMetadataComponent } from './entry-distribution/e
 import { EditDistributionProfileThumbnailsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/edit-distribution-profile-thumbnails.component';
 import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';import {EntryAdvertisementsComponent} from './entry-advertisements/entry-advertisements.component';
 import {AdvertisementsComponent} from './entry-advertisements/advertisements/advertisements.component';
-import { LinkedEntriesTableComponent } from './entry-metadata/entry-selector/linked-entries-table/linked-entries-table.component';
-import { LinkedEntriesAddEntriesComponent } from './entry-metadata/entry-selector/linked-entries-add-entries/linked-entries-add-entries.component';
+
 
 
 export const EntryComponentsList = [
@@ -65,9 +63,6 @@ export const EntryComponentsList = [
     FlavorImport,
     FlavorPreview,
     JumpToSection,
-    LinkedEntriesComponent,
-    LinkedEntriesTableComponent,
-    LinkedEntriesAddEntriesComponent,
     TagsPipe,
     EntryDistributionComponent,
     DistributedProfileComponent,
