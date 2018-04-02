@@ -193,6 +193,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         if ($event && $event instanceof Array)
         {
             this._widgetService.metadataForm.patchValue({ categories : $event});
+            this._widgetService.metadataForm.get('categories').markAsTouched();
         }
     }
 

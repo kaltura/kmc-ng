@@ -14,6 +14,7 @@ export interface SubApplicationsConfig {
         embedType: 'dynamic' | 'iframe' | 'auto' | 'thumb'
     };
     contentEntriesApp: {
+        maxLinkedCategories: number,
         distribution: {
           facebookExternal: string,
           youtubeExternal: string
@@ -39,6 +40,7 @@ export const subApplicationsConfig: SubApplicationsConfig = {
         'embedType': 'dynamic'
     },
     'contentEntriesApp': {
+        'maxLinkedCategories': 32,
         'distribution': {
             'facebookExternal': 'https://www.facebook.com/video.php?v=',
             'youtubeExternal': 'https://www.youtube.com/watch?v='

@@ -23,7 +23,7 @@ import { KalturaCategoryEntry } from 'kaltura-ngx-client/api/types/KalturaCatego
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from 'app-shared/kmc-shared';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { DynamicMetadataForm, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
@@ -34,6 +34,7 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 import { EntryWidget } from '../entry-widget';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 
 @Injectable()
@@ -61,11 +62,19 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     }
 
     private _buildForm() : void {
+        const categoriesValidator = (input: FormControl) => {
+          const categoriesCount = (Array.isArray(input.value) ? input.value : []).length;
+          const isCategoriesValid = categoriesCount <= subApplicationsConfig.contentEntriesApp.maxLinkedCategories
+            || this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_CATEGORY_LIMIT);
+
+          return isCategoriesValid ? null : { maxLinkedCategoriesExceed: true };
+        };
+
         this.metadataForm = this._formBuilder.group({
             name: ['', Validators.required],
             description: '',
             tags: null,
-            categories: null,
+            categories: [null, categoriesValidator],
             offlineMessage: '',
             referenceId: '',
             entriesIdList: null
