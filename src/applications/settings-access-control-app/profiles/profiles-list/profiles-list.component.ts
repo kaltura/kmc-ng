@@ -8,6 +8,7 @@ import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccess
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AccessControlProfileUpdatedEvent } from 'app-shared/kmc-shared/events/access-control-profile-updated.event';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kAccessControlProfilesList',
@@ -21,6 +22,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   public _selectedProfile: KalturaAccessControl;
   public _tableIsBusy = false;
   public _tableBlockerMessage: AreaBlockerMessage;
+  public _kmcPermissions = KMCPermissions;
 
   public _query = {
     pageIndex: 0,

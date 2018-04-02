@@ -16,7 +16,7 @@ import {PlayersStore} from 'app-shared/kmc-shared/players/players-store.service'
 import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {PlayerTypes} from 'app-shared/kmc-shared/players';
-
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 export abstract class DestinationComponentBase {
   abstract getData(): KalturaBaseSyndicationFeed;
@@ -29,7 +29,7 @@ export abstract class DestinationComponentBase {
   styleUrls: ['./feed-details.component.scss']
 })
 export class FeedDetailsComponent implements OnInit, OnDestroy {
-
+  public _kmcPermissions = KMCPermissions;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
   @Input()

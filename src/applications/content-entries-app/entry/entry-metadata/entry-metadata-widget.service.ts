@@ -33,6 +33,7 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 import { EntryWidget } from '../entry-widget';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Injectable()
@@ -50,6 +51,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 private _categoriesSearchService : CategoriesSearchService,
                 private _formBuilder : FormBuilder,
                 private _iterableDiffers : IterableDiffers,
+                private _permissionsService: KMCPermissionsService,
                 private _dynamicMetadataFormFactory : DynamicMetadataFormFactory,
                 private _metadataProfileStore : MetadataProfileStore)
     {
@@ -71,8 +73,20 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     }
 
     private _monitorFormChanges() {
-        const formGroups = [this.metadataForm, ...this.customDataForms.map(customDataForm => customDataForm.formGroup)];
+        const formGroups = [];
         const formsChanges: Observable<any>[] = [];
+
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) {
+          formGroups.push(this.metadataForm);
+        }
+
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
+          formGroups.push(...this.customDataForms.map(customDataForm => customDataForm.formGroup));
+        }
+
+        if (!formGroups.length) {
+          return;
+        }
 
         formGroups.forEach(formGroup => {
             formsChanges.push(formGroup.valueChanges, formGroup.statusChanges);
@@ -117,6 +131,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
         this.isLiveEntry = this.data instanceof KalturaLiveStreamEntry;
 
+        if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES)) {
+          this.metadataForm.get('categories').disable({ onlySelf: true });
+        }
+
         const actions: Observable<{failed: boolean, error?: Error}>[] = [
             this._loadEntryCategories(this.data),
             this._loadEntryMetadata(this.data)
@@ -124,6 +142,12 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
         if (firstTimeActivating) {
             actions.push(this._loadProfileMetadata());
+        }
+
+        if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) {
+          this.metadataForm.get('name').disable({ onlySelf: true });
+          this.metadataForm.get('description').disable({ onlySelf: true });
+          this.metadataForm.get('tags').disable({ onlySelf: true });
         }
 
 
@@ -162,8 +186,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 tags: (this.data.tags ? this.data.tags.split(',').map(item => item.trim()) : null), // for backward compatibility we handle values separated with ',{space}'
                 categories: this._entryCategories,
                 offlineMessage: this.data instanceof KalturaLiveStreamEntry ? (this.data.offlineMessage || null) : '',
-                referenceId: this.data.referenceId || null,
-                entriesIdList : ['1_rbyysqbe','0_hp3s3647','1_4gs7ozgq']
+                referenceId: this.data.referenceId || null
             }
         );
 
@@ -178,8 +201,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         // map entry metadata to profile metadata
         if (this.customDataForms)
         {
-            this.customDataForms.forEach(customDataForm =>
-            {
+            this.customDataForms.forEach(customDataForm => {
+                if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
+                  customDataForm.disable();
+                }
                 const entryMetadata = this._entryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
 
                 // reset with either a valid entry metadata or null if not found a matching metadata for that entry

@@ -1,8 +1,8 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
 	<div class="kClips">
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
-    <div class="kButtons" *ngIf="_clipAndTrimEnabled">
-      <button pButton class="kButtonDefault" (click)="clipAndTrim.open()" icon="kIconimage" label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
+    <div class="kButtons">
+      <button [disabled]="!_clipAndTrimEnabled" pButton class="kButtonDefault" (click)="clipAndTrim.open()" icon="kIconimage" label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
     </div>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService.entries$ | async)?.items"
