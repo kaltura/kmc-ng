@@ -70,7 +70,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     this._hasDisabledPermissions = this._permissionsService.restrictionsApplied;
 
     if (this._isNewRole) {
-	    this._logger.info(`entering new role mode`);
+	    this._logger.info(`enter new role mode`);
       this._title = this._appLocalization.get('applications.administration.role.titleAdd');
       this._actionBtnLabel = this._appLocalization.get('applications.administration.role.add');
       this._permissions = this._defaultPermissionNames;
@@ -79,7 +79,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
         { emitEvent: false }
       );
     } else {
-	    this._logger.info(`entering edit existing role mode for role id ${this.role.id} name '${this.role.name}'`);
+	    this._logger.info(`enter edit role mode for existing role id ${this.role.id} name '${this.role.name}'`);
       this._title = this._appLocalization.get('applications.administration.role.titleEdit');
       this._actionBtnLabel = this._appLocalization.get('applications.administration.role.save');
       this._permissions = (this.role.permissionNames || '').split(',');
@@ -112,12 +112,12 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   private _getObserver(retryFn: () => void): Observer<void> {
     return <Observer<void>>{
       next: () => {
-        this._logger.info(`handling successful update by the server`);
+        this._logger.info(`handle successful update by the server`);
         this.parentPopupWidget.close();
         this._rolesService.reload();
       },
       error: (error) => {
-        this._logger.info(`handling failing update by the server`);
+        this._logger.info(`handle failing update by the server`);
         this._blockerMessage = new AreaBlockerMessage(
           {
             message: error.message,
@@ -125,14 +125,14 @@ export class EditRoleComponent implements OnInit, OnDestroy {
               {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
-                  this._logger.info(`handling retry request by the user`);
+                  this._logger.info(`handle retry request by the user`);
                   retryFn();
                 }
               },
               {
                 label: this._appLocalization.get('app.common.dismiss'),
                 action: () => {
-                  this._logger.info(`handling dismiss request by the user`);
+                  this._logger.info(`handle dismiss request by the user`);
                   this.parentPopupWidget.close();
                   this._rolesService.reload();
                 }
@@ -149,20 +149,20 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
   private _getUpdatedPermission(): string {
     const updatedPermissions = [...this._permissions];
-    this._logger.info(`updating role permissions set`);
+    this._logger.info(`update role permissions set`);
 
     const updateList = (value) => {
       if (value.checked) {
         const notInList = updatedPermissions.indexOf(value.name) === -1;
         if (notInList) { // if new checked value
-            this._logger.debug(`adding permission ${value.name}`);
+            this._logger.debug(`add permission ${value.name}`);
           updatedPermissions.push(value.name);
         }
       } else {
         const inListIndex = updatedPermissions.indexOf(value.name);
         const inList = inListIndex !== -1;
         if (inList) { // if existing unchecked value
-	        this._logger.debug(`removing permission ${value.name}`);
+	        this._logger.debug(`remove permission ${value.name}`);
           updatedPermissions.splice(inListIndex, 1);
         }
       }
@@ -190,7 +190,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _updateRole(): void {
     this._blockerMessage = null;
 
-    this._logger.info(`sending modified role to kaltura server`);
+    this._logger.info(`send modified role to kaltura server`);
 
     const permissionNames = this._getUpdatedPermission();
     const { name, description } = this._editRoleForm.value;
@@ -206,7 +206,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _addRole(): void {
     this._blockerMessage = null;
 
-	  this._logger.info(`sending new role to kaltura server`);
+	  this._logger.info(`send new role to kaltura server`);
 
     const retryFn = () => this._addRole();
     const { name, description } = this._editRoleForm.value;
@@ -220,16 +220,16 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   }
 
   public _performAction(): void {
-    this._logger.info(`handling save request by user`);
+    this._logger.info(`handle save request by the user`);
     if (!this._editRoleForm.valid) {
       this._markFormFieldsAsTouched();
-      this._logger.info(`aborting action, role has invalid data`);
+      this._logger.info(`abort action, role has invalid data`);
       return;
     }
 
     const isPermissionsValid = this._permissionsTable.validatePermissions();
     if (!isPermissionsValid) {
-	  this._logger.info(`aborting action, role permissions has invalid selections`);
+	  this._logger.info(`abort action, role permissions has invalid selections`);
       this._showPermissionsErrorMessage();
       return;
     }
