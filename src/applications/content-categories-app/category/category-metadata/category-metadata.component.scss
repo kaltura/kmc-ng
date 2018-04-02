@@ -186,10 +186,10 @@ hr{
 		}
 
 		  .ui-multiselect-trigger .fa.fa-caret-down{
-			margin-top: 2px;
-			margin-left: 1px;
+			margin-top: 0px;
+			right: 8px;
 			position: absolute;
-			color: $kGrayscale1;
+			color: $kGrayscale3;
 		}
 
 		  .ui-autocomplete.ui-widget{
