@@ -99,7 +99,13 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
       this._items.shift();
     }
 
-    this._permissionsService.filterList(<{id: string}[]>this._items, { 'delete': KMCPermissions.PLAYLIST_DELETE });
+    this._permissionsService.filterList(
+      <{id: string}[]>this._items,
+      {
+        'delete': KMCPermissions.PLAYLIST_DELETE,
+        'previewAndEmbed': KMCPermissions.PLAYLIST_EMBED_CODE,
+      }
+    );
   }
 
 

@@ -154,7 +154,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       // update desired fields of entries
         responseProfile = new KalturaDetachedResponseProfile({
           type: KalturaResponseProfileType.includeFields,
-          fields: 'id,name,createdAt,playlistType'
+          fields: 'id,name,createdAt,playlistType,status'
         });
 
       // update the sort by args

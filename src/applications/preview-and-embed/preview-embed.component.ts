@@ -15,6 +15,7 @@ import { KalturaUiConf } from 'kaltura-ngx-client/api/types/KalturaUiConf';
 import { KalturaShortLink } from 'kaltura-ngx-client/api/types/KalturaShortLink';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import { serverConfig } from 'config/server';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPreviewEmbedDetails',
@@ -48,10 +49,17 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private generator: any;
   private _previewLink = null;
 
+  public get _showEmberCode(): boolean {
+    const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
+    const showForEntry = this.media instanceof KalturaMediaEntry;
+    return showForEntry || showForPlaylist;
+  }
+
   constructor(private _previewEmbedService: PreviewEmbedService,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
+              private _permissionsService: KMCPermissionsService,
               private _fb: FormBuilder) {
 
   }
