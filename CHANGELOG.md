@@ -1,3 +1,61 @@
+<a name="4.1.0"></a>
+# [4.1.0](https://github.com/kaltura/kmc-ng/compare/v4.0.1...v4.1.0) (2018-04-02)
+
+
+### Bug Fixes
+
+* **settings/access-control:** domains column header name change ([39c7d95](https://github.com/kaltura/kmc-ng/commit/39c7d95))
+* accept server polls service once user is logged ([6dfe526](https://github.com/kaltura/kmc-ng/commit/6dfe526))
+* **content/category:** help tip typo fix ([47c14f6](https://github.com/kaltura/kmc-ng/commit/47c14f6))
+* **content/entries:** fix entries bulk selection labeling ([a0a7c96](https://github.com/kaltura/kmc-ng/commit/a0a7c96))
+* update bulk upload sample file name ([20b6bb2](https://github.com/kaltura/kmc-ng/commit/20b6bb2))
+* **content/entry:** fix disabled buttons styling in custom metadata ([005486c](https://github.com/kaltura/kmc-ng/commit/005486c))
+* fix menu items visibility logic ([b907fa0](https://github.com/kaltura/kmc-ng/commit/b907fa0))
+* implement permission CONTENT_MANAGE_ACCESS_CONTROL merge issue KMCNG-1470 ([44d10c5](https://github.com/kaltura/kmc-ng/commit/44d10c5))
+* reposition tooltips above the texts (KMCNG-1461) ([#459](https://github.com/kaltura/kmc-ng/issues/459)) ([5aa1768](https://github.com/kaltura/kmc-ng/commit/5aa1768))
+* show actual error in the console when failing to parse server runtime configuration ([fee483f](https://github.com/kaltura/kmc-ng/commit/fee483f))
+* **content/syndication:** add permissions to feed delete button in feed details floater ([6e5d42e](https://github.com/kaltura/kmc-ng/commit/6e5d42e))
+* **settings/custom-data:** Fix applyTo always set to entries ([bf4cb80](https://github.com/kaltura/kmc-ng/commit/bf4cb80))
+* **user-settings:** fix language dropdown no closing on page scroll ([b2e0954](https://github.com/kaltura/kmc-ng/commit/b2e0954))
+
+
+### Features
+
+* add advertisement and clip applications ([#502](https://github.com/kaltura/kmc-ng/issues/502)) ([ba9ea8c](https://github.com/kaltura/kmc-ng/commit/ba9ea8c))
+* add beta logo ([9367220](https://github.com/kaltura/kmc-ng/commit/9367220))
+* add clip&trim and advertisements editors ([#429](https://github.com/kaltura/kmc-ng/issues/429)) ([e155ff2](https://github.com/kaltura/kmc-ng/commit/e155ff2))
+* add live dashboard for kaltura live entries ([#439](https://github.com/kaltura/kmc-ng/issues/439)) ([3ba7c49](https://github.com/kaltura/kmc-ng/commit/3ba7c49))
+* add live real-time dashboard view ([#478](https://github.com/kaltura/kmc-ng/issues/478)) ([e9f63df](https://github.com/kaltura/kmc-ng/commit/e9f63df))
+* add permissions base infrastructure ([#464](https://github.com/kaltura/kmc-ng/issues/464)) ([36b9fec](https://github.com/kaltura/kmc-ng/commit/36b9fec))
+* add studio v3 integration ([#528](https://github.com/kaltura/kmc-ng/issues/528)) KMCNG-1579 ([aa7bf36](https://github.com/kaltura/kmc-ng/commit/aa7bf36))
+* beta logo asset ([8130f10](https://github.com/kaltura/kmc-ng/commit/8130f10))
+* implement CAPTION_MODIFY permission ([#500](https://github.com/kaltura/kmc-ng/issues/500)) KMCNG-1525 ([4560df2](https://github.com/kaltura/kmc-ng/commit/4560df2))
+* implement permission ACCESS_CONTROL_ADD ([#482](https://github.com/kaltura/kmc-ng/issues/482)) KMCNG-1499 ([d9917fe](https://github.com/kaltura/kmc-ng/commit/d9917fe))
+* implement permission ACCESS_CONTROL_DELETE ([#481](https://github.com/kaltura/kmc-ng/issues/481)) KMCNG-1500 ([e0fac29](https://github.com/kaltura/kmc-ng/commit/e0fac29))
+* implement permission CONTENT_MANAGE_ACCESS_CONTROL ([#519](https://github.com/kaltura/kmc-ng/issues/519)) KMCNG-1470 ([d8e963f](https://github.com/kaltura/kmc-ng/commit/d8e963f))
+* implement permission CONTENT_MANAGE_ASSIGN_CATEGORIES ([#505](https://github.com/kaltura/kmc-ng/issues/505)) KMCNG-1546 ([2b392c8](https://github.com/kaltura/kmc-ng/commit/2b392c8))
+* implement permission CONTENT_MANAGE_CATEGORY_USERS ([#494](https://github.com/kaltura/kmc-ng/issues/494)) KMCNG-1517 ([b137354](https://github.com/kaltura/kmc-ng/commit/b137354))
+* **administration>roles:** add role permissions tree selector ([#503](https://github.com/kaltura/kmc-ng/issues/503)) KMCNG-1537 KMCNG-1538 KMCNG-1539 KMCNG-1540 KMCNG-1541 KMCNG-1542 KMCNG-1543 ([2fa3fca](https://github.com/kaltura/kmc-ng/commit/2fa3fca))
+* implement permission CONTENT_MANAGE_METADATA ([#515](https://github.com/kaltura/kmc-ng/issues/515)) KMCNG-1549 ([2d864c3](https://github.com/kaltura/kmc-ng/commit/2d864c3))
+* **content/categories:** add category custom metadata support for linked entries ([23e5ed3](https://github.com/kaltura/kmc-ng/commit/23e5ed3))
+* implement permission CONTENT_MANAGE_DELETE ([#469](https://github.com/kaltura/kmc-ng/issues/469)) KMCNG-1471 ([1bea895](https://github.com/kaltura/kmc-ng/commit/1bea895))
+* implement permission CONTENT_MANAGE_DOWNLOAD ([#468](https://github.com/kaltura/kmc-ng/issues/468)) KMCNG-1472 ([f5f18b9](https://github.com/kaltura/kmc-ng/commit/f5f18b9))
+* implement permission CONTENT_MANAGE_ENTRY_USERS ([#506](https://github.com/kaltura/kmc-ng/issues/506)) KMCNG-1547 ([0590023](https://github.com/kaltura/kmc-ng/commit/0590023))
+* implement permission CONTENT_MANAGE_RECONVERT ([#508](https://github.com/kaltura/kmc-ng/issues/508)) KMCNG-1550 ([c1fcca9](https://github.com/kaltura/kmc-ng/commit/c1fcca9))
+* implement permission CONTENT_MANAGE_SCHEDULE ([#510](https://github.com/kaltura/kmc-ng/issues/510)) KMCNG-1551 ([5f061a4](https://github.com/kaltura/kmc-ng/commit/5f061a4))
+* implement permission CONTENT_MANAGE_THUMBNAIL ([#511](https://github.com/kaltura/kmc-ng/issues/511)) KMCNG-1552 ([66fc75f](https://github.com/kaltura/kmc-ng/commit/66fc75f))
+* Implement permission CONTENT_MODERATE_APPROVE_REJECT ([#477](https://github.com/kaltura/kmc-ng/issues/477)) KMCNG-1478 ([d5ea4ba](https://github.com/kaltura/kmc-ng/commit/d5ea4ba))
+* **content/entries:** add custom metadata component that manages linked entries list KMCNG-293 ([9503bed](https://github.com/kaltura/kmc-ng/commit/9503bed))
+* implement permission INTEGRATION_UPDATE_SETTINGS ([#483](https://github.com/kaltura/kmc-ng/issues/483)) KMCNG-1501 ([ff761ef](https://github.com/kaltura/kmc-ng/commit/ff761ef))
+* implement permission PLAYLIST_ADD ([#475](https://github.com/kaltura/kmc-ng/issues/475)) KMCNG-1469 ([9db13ba](https://github.com/kaltura/kmc-ng/commit/9db13ba))
+* implement permission PLAYLIST_DELETE ([#473](https://github.com/kaltura/kmc-ng/issues/473)) KMCNG-1476 ([82883c4](https://github.com/kaltura/kmc-ng/commit/82883c4))
+* implement permission SYNDICATION_ADD ([#470](https://github.com/kaltura/kmc-ng/issues/470)) KMCNG-1474 ([b46fc9c](https://github.com/kaltura/kmc-ng/commit/b46fc9c))
+* implement permission SYNDICATION_DELETE ([#474](https://github.com/kaltura/kmc-ng/issues/474)) KMCNG-1475 ([1f293df](https://github.com/kaltura/kmc-ng/commit/1f293df))
+* new sync animation icon for uploading status ([352deaa](https://github.com/kaltura/kmc-ng/commit/352deaa))
+* update user roles based on permissions rules and expose flag indicating if restrictions were applied ([f33f483](https://github.com/kaltura/kmc-ng/commit/f33f483))
+
+
+
 <a name="4.0.1"></a>
 ## [4.0.1](https://github.com/kaltura/kmc-ng/compare/v4.0.0...v4.0.1) (2018-03-19)
 
