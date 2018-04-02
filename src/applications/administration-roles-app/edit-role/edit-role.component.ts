@@ -16,13 +16,10 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
   templateUrl: './edit-role.component.html',
   styleUrls: ['./edit-role.component.scss'],
   providers: [
-      KalturaLogger,
-      {
-          provide: KalturaLoggerName, useValue: 'EditRoleComponent'
-      }
+      KalturaLogger.createLogger('EditRoleComponent')
   ]
 })
-export class EditRoleComponent implements OnInit, OnDestroy {
+  export class EditRoleComponent implements OnInit, OnDestroy {
   @Input() role: KalturaUserRole;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
@@ -70,7 +67,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     this._hasDisabledPermissions = this._permissionsService.restrictionsApplied;
 
     if (this._isNewRole) {
-	    this._logger.info(`enter new role mode`);
+      this._logger.info(`enter new role mode`);
       this._title = this._appLocalization.get('applications.administration.role.titleAdd');
       this._actionBtnLabel = this._appLocalization.get('applications.administration.role.add');
       this._permissions = this._defaultPermissionNames;
@@ -79,7 +76,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
         { emitEvent: false }
       );
     } else {
-	    this._logger.info(`enter edit role mode for existing role id ${this.role.id} name '${this.role.name}'`);
+      this._logger.info(`enter edit role mode for existing role`,{ id: this.role.id, name: this.role.name });
       this._title = this._appLocalization.get('applications.administration.role.titleEdit');
       this._actionBtnLabel = this._appLocalization.get('applications.administration.role.save');
       this._permissions = (this.role.permissionNames || '').split(',');
@@ -155,14 +152,14 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       if (value.checked) {
         const notInList = updatedPermissions.indexOf(value.name) === -1;
         if (notInList) { // if new checked value
-            this._logger.debug(`add permission ${value.name}`);
+	      this._logger.debug(`add permission to role`, { permission: value.name });
           updatedPermissions.push(value.name);
         }
       } else {
         const inListIndex = updatedPermissions.indexOf(value.name);
         const inList = inListIndex !== -1;
         if (inList) { // if existing unchecked value
-	        this._logger.debug(`remove permission ${value.name}`);
+          this._logger.debug(`remove permission from role`, { permission: value.name });
           updatedPermissions.splice(inListIndex, 1);
         }
       }
@@ -190,7 +187,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _updateRole(): void {
     this._blockerMessage = null;
 
-    this._logger.info(`send modified role to kaltura server`);
+    this._logger.info(`send updated role to the server`);
 
     const permissionNames = this._getUpdatedPermission();
     const { name, description } = this._editRoleForm.value;
@@ -206,7 +203,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _addRole(): void {
     this._blockerMessage = null;
 
-	  this._logger.info(`send new role to kaltura server`);
+    this._logger.info(`send new role to the server`);
 
     const retryFn = () => this._addRole();
     const { name, description } = this._editRoleForm.value;
