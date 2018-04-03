@@ -78,7 +78,7 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
         },
         {
           label: this._appLocalization.get('applications.settings.transcoding.delete'),
-          styleClass: 'kTranscodingProfileDeleteAction',
+          styleClass: 'kDanger',
           command: () => this._onActionSelected('delete', profile)
         }
       ];

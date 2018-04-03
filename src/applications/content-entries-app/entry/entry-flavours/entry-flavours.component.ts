@@ -63,7 +63,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor)) || ( !flavor.isSource && flavor.id !== '' &&
 					(flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString() ))){
-				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), command: (event) => {this.actionSelected("delete");}});
+				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}});
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.download'), command: (event) => {this.actionSelected("download");}});
 			}
 			if ((flavor.isSource && (this.isSourceReady(flavor) || flavor.status === KalturaFlavorAssetStatus.deleted.toString()))||

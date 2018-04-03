@@ -73,6 +73,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._items = [
       {
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', bulkLogItem)
       },
       {

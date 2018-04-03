@@ -36,7 +36,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
 	    this._actions = [
 		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.download'), command: (event) => {this.actionSelected("download");}},
-		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.delete'), command: (event) => {this.actionSelected("delete");}},
+		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}},
 		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.preview'), command: (event) => {this.actionSelected("preview");}}
 	    ];
     }

@@ -40,19 +40,23 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _rowActions = [
     {
       label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
-      commandName: 'preview'
+      commandName: 'preview',
+      styleClass: ''
     },
     {
       label: this._appLocalization.get('applications.content.table.delete'),
-      commandName: 'delete'
+      commandName: 'delete',
+      styleClass: 'kDanger'
     },
     {
       label: this._appLocalization.get('applications.content.table.view'),
-      commandName: 'view'
+      commandName: 'view',
+      styleClass: ''
     },
     {
       label: this._appLocalization.get('applications.content.table.liveDashboard'),
       commandName: 'liveDashboard',
+      styleClass: '',
       disabled: !serverConfig.externalApps.liveDashboard.enabled
     }
   ];
