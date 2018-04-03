@@ -16,7 +16,7 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntrySta
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { Observer } from 'rxjs/Observer';
 import { serverConfig } from 'config/server';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface Tabs {
   name: string;
@@ -61,6 +61,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _browserService: BrowserService,
               private _bulkService: BulkService,
+              private _permissionsService: KMCPermissionsService,
               private appAuthentication: AppAuthentication,
               private _entriesStore: EntriesStore) {
   }
@@ -73,6 +74,11 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       entryid: this.entryId,
       flashvars: {'closedCaptions': { 'plugin': true }, 'ks': this.appAuthentication.appUser.ks}
     };
+
+    const shouldDisableAlerts = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_KDP_ALERTS);
+    if (shouldDisableAlerts) {
+      this._playerConfig.flashvars['disableAlerts'] = true;
+    }
   }
 
   ngOnDestroy() {
