@@ -55,7 +55,7 @@
             </span>
             <!--Select Playlist-->
             <div class="kSelectPlaylist" *ngIf="_form.get('contentType').value === 'playlist'">
-              <p-dropdown [options]="_availablePlaylists" formControlName="selectedPlaylist" filter="true"
+              <p-dropdown [options]="_availablePlaylists" formControlName="selectedPlaylist" filter="true" [filterPlaceholder]="'applications.content.syndication.details.search' | translate"
                           [autoWidth]="false">
                 <!--template for the selected item-->
                 <ng-template let-item pTemplate="selectedItem">

@@ -16,7 +16,7 @@ import {PlayersStore} from 'app-shared/kmc-shared/players/players-store.service'
 import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {PlayerTypes} from 'app-shared/kmc-shared/players';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 
 export abstract class DestinationComponentBase {
   abstract getData(): KalturaBaseSyndicationFeed;
@@ -117,7 +117,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       {
         value: KalturaSyndicationFeedType.kalturaXslt,
         label: this._appLocalization
-          .get('applications.content.syndication.details.availableDestinations.flexibaleFormat')
+          .get('applications.content.syndication.details.availableDestinations.flexibleFormat')
       }
     ];
   }

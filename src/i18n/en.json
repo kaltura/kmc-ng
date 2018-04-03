@@ -639,8 +639,9 @@
           "contentType" : {
             "content": "Content",
             "allContent": "All Content",
-            "fromPlaylist": "From playlist"
+            "fromPlaylist": "From Playlist"
           },
+          "search": "Search",
           "playerName": "Player({{0}})",
           "entriesCountData": {
             "count": "Entries count",
@@ -658,7 +659,7 @@
             "itunes": "ITunes",
             "roku": "Roku Direct Publisher",
             "opera": "Opera Snap TV",
-            "flexibaleFormat": "Flexibale Format"
+            "flexibleFormat": "Flexible Format"
           },
           "destinationsForms": {
             "google": {
