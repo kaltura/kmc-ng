@@ -16,8 +16,10 @@
       <div class="kRow" [class.kHasError]="_nameField.touched && _nameField.invalid">
         <span class="kLabel">{{'applications.settings.accessControl.editForm.profileName' | translate}}</span>
         <div class="kRequired">*</div>
-        <input class="kControl" pInputText [formControl]="_nameField">
-      </div>
+<div>
+  <input class="kControl" pInputText [formControl]="_nameField">
+  <div class="error" *ngIf="_nameField.touched && _nameField.invalid">{{'applications.settings.accessControl.editForm.validationMessage.invalidValue' | translate}}</div>
+</div>      </div>
       <div class="kRow">
         <span class="kLabel">{{'applications.settings.accessControl.editForm.description' | translate}}</span>
         <textarea class="kControl" pInputText [formControl]="_descriptionField"></textarea>
