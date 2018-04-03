@@ -6,6 +6,11 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntrySta
 
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { serverConfig } from 'config/server';
 
 @Component({
 	selector: 'kEntryPreview',
@@ -17,11 +22,15 @@ export class EntryPreview implements OnInit, OnDestroy {
 
 	public _entryHasContent: boolean = false;
 	public _entryReady: boolean = false;
+  public _clipAndTrimEnabled = false;
 
-	private _currentEntry: KalturaMediaEntry;
+
+  private _currentEntry: KalturaMediaEntry;
 
 
-	constructor(public _widgetService: EntryPreviewWidget, private _appEvents: AppEventsService) {
+	constructor(public _widgetService: EntryPreviewWidget,
+              private _permissionsService: KMCPermissionsService,
+              private _appEvents: AppEventsService) {
 	}
 
 	ngOnInit() {
@@ -33,6 +42,15 @@ export class EntryPreview implements OnInit, OnDestroy {
 					this._currentEntry = data;
 					this._entryHasContent = this._currentEntry.status.toString() !== KalturaEntryStatus.noContent.toString();
 					this._entryReady = this._currentEntry.status.toString() === KalturaEntryStatus.ready.toString();
+
+          const hasIngestClipPermission = this._permissionsService.hasAnyPermissions([
+            KMCPermissions.CONTENT_INGEST_CLIP_MEDIA,
+            KMCPermissions.CONTENT_INGEST_INTO_READY
+          ]);
+          const externalMedia = this._currentEntry instanceof KalturaExternalMediaEntry;
+          const hasRelevantType = this._currentEntry.mediaType !== KalturaMediaType.image && !externalMedia;
+          const enabledByConfig = true || serverConfig.externalApps.clipAndTrim.enabled;
+          this._clipAndTrimEnabled = hasIngestClipPermission && hasRelevantType && enabledByConfig;
 				}
 			}
 		);

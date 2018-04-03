@@ -4,6 +4,8 @@ import { globalConfig } from 'config/global';
 import {EntryClipsWidget} from './entry-clips-widget.service';
 import {serverConfig} from 'config/server';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
 
 
 @Component({
@@ -18,10 +20,13 @@ export class EntryClips implements OnInit, OnDestroy {
 
     public _clipAndTrimEnabled = false;
 
-    constructor(public _widgetService: EntryClipsWidget, logger: KalturaLogger) {
-      this._clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled;
+    constructor(public _widgetService: EntryClipsWidget,
+                private _permissionsService: KMCPermissionsService,
+                logger: KalturaLogger) {
+      const hasIngestClipPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_CLIP_MEDIA);
+      this._clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled && hasIngestClipPermission;
       if (!this._clipAndTrimEnabled) {
-        logger.warn('Clip and trim (kedit) is not enabled, please check configuration');
+        logger.warn('Clip and trim (kedit) is not enabled, please check configuration or CONTENT_INGEST_CLIP_MEDIA permission');
       }
     }
 
