@@ -890,6 +890,7 @@
         "duration": "Duration",
         "status": "Status",
         "previewAndEmbed": "Share & Embed",
+        "previewInPlayer": "Preview in Player",
         "liveDashboard": "Live Dashboard",
         "delete": "Delete",
         "view": "View Details",
@@ -1135,6 +1136,7 @@
         },
         "preview": {
           "pande": "Share & Embed",
+          "previewInPlayer": "Preview in Player",
           "details": "Details",
           "entryID": "ID:",
           "creator": "Created by:",

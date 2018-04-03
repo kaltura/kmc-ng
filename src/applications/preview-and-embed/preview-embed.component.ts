@@ -51,7 +51,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   public get _showEmberCode(): boolean {
     const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
-    const showForEntry = this.media instanceof KalturaMediaEntry;
+    const showForEntry = this.media instanceof KalturaMediaEntry && this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
     return showForEntry || showForPlaylist;
   }
 
