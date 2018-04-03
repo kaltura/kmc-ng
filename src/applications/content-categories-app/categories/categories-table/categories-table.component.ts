@@ -100,6 +100,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       },
       {
         label: this.appLocalization.get('applications.content.categories.delete'),
+        styleClass: 'kDanger',
         command: () => this.onActionSelected('delete', category)
       },
       {

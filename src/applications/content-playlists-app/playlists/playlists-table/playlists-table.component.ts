@@ -87,6 +87,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
       {
         id: 'delete',
         label: this._appLocalization.get('applications.content.table.delete'),
+        styleClass: 'kDanger',
         command: () => this.onActionSelected('delete', playlist)
       },
       {
