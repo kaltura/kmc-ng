@@ -1773,7 +1773,7 @@
               "inheritUser": "Inherit users from parent category",
               "selectEndUsers": "Select End-Users",
               "permissionLevel": "Permission Level",
-              "updateMethod": "Update method",
+              "updateMethod": "Update Method",
               "addUsers": "Add {{0}} Users",
               "save": "Save",
               "cancel": "Cancel",
