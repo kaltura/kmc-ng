@@ -155,6 +155,7 @@
   "applications": {
     "embed":{
       "previewShare": "Share & Embed",
+      "previewInPlayer": "Preview in Player",
       "embedType": "Embed type",
       "selectPlayer": "Select player",
       "embedIframe": "Iframe Embed",

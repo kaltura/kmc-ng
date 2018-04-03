@@ -43,6 +43,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _shortLink = "";
   public _showEmbedParams = true;
   public _showAdvanced = false;
+  public _title: string;
 
   public _previewForm: FormGroup;
 
@@ -70,6 +71,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this.setEmbedTypes();
     this.createForm();
     this.generator = this.getGenerator();
+    this._title = this._showEmberCode
+      ? this._appLocalization.get('applications.embed.previewShare')
+      : this._appLocalization.get('applications.embed.previewInPlayer');
   }
 
   ngAfterViewInit(){
