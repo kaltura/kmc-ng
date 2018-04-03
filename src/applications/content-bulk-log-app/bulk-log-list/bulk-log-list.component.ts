@@ -238,10 +238,16 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   private _downloadFile(url: string, bulkLogItem: KalturaBulkUpload, formatNameFn: (name: string | number, type: string) => string): void {
     const type = getBulkUploadType(bulkLogItem.bulkUploadType);
     let fileName = bulkLogItem.fileName;
-    if (!fileName.endsWith(`.${type}`)) {
-      fileName = bulkLogItem.fileName ? formatNameFn(bulkLogItem.fileName, type) : formatNameFn(bulkLogItem.id, type);
+    if (!fileName) {
+      fileName = formatNameFn(bulkLogItem.id, type);
+    } else if (!this._endsWith(fileName, `.${type}`)) {
+      fileName = formatNameFn(fileName, type);
     }
     this._browserService.download(url, fileName, type);
+  }
+
+  private _endsWith(str: string, suffix: string): boolean {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
   }
 
   public _onPaginationChanged(state: any): void {
