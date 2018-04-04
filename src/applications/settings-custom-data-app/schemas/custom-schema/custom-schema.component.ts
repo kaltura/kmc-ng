@@ -51,7 +51,7 @@ export class CustomSchemaComponent implements OnInit {
         ? [...this._schema.parsedProfile.items] : [];
       this._title = this._appLocalization.get('applications.settings.metadata.editCustomSchema');
     } else {
-      this._logger.info(`enter edit schema mode`);
+      this._logger.info(`enter add schema mode`);
       this._title = this._appLocalization.get('applications.settings.metadata.addCustomSchema');
       const schema = <SettingsMetadataProfile>(new KalturaMetadataProfile({
         name: '',
