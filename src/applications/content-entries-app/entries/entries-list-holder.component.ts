@@ -44,11 +44,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       styleClass: ''
     },
     {
-      label: this._appLocalization.get('applications.content.table.delete'),
-      commandName: 'delete',
-      styleClass: 'kDanger'
-    },
-    {
       label: this._appLocalization.get('applications.content.table.view'),
       commandName: 'view',
       styleClass: ''
@@ -58,6 +53,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       commandName: 'liveDashboard',
       styleClass: '',
       disabled: !serverConfig.externalApps.liveDashboard.enabled
+    },
+    {
+      label: this._appLocalization.get('applications.content.table.delete'),
+      commandName: 'delete',
+      styleClass: 'kDanger'
     }
   ];
 
