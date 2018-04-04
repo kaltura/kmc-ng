@@ -6,6 +6,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 function phoneValidator(): ValidatorFn {
@@ -17,7 +18,7 @@ function phoneValidator(): ValidatorFn {
       }
     }
     return null;
-  }
+  };
 }
 
 
@@ -25,7 +26,10 @@ function phoneValidator(): ValidatorFn {
   selector: 'kmc-settings-account-settings',
   templateUrl: './settings-account-settings.component.html',
   styleUrls: ['./settings-account-settings.component.scss'],
-  providers: [SettingsAccountSettingsService],
+  providers: [
+    SettingsAccountSettingsService,
+    KalturaLogger.createLogger('SettingsAccountSettingsComponent')
+  ],
 })
 export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
@@ -40,10 +44,12 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger,
               private _fb: FormBuilder) {
   }
 
   ngOnInit() {
+    this._logger.info(`initiate account settings view`);
     this._createForm();
     this._fillDescribeYourselfOptions();
     this._loadPartnerAccountSettings();
@@ -53,14 +59,17 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    this._logger.info(`handle update account information action by user`);
     if (this.accountSettingsForm.valid) {
       this._updatePartnerAccountSettings();
     } else {
+      this._logger.info(`form data is not valid, abort action`);
       this.markFormFieldsAsTouched();
     }
   }
 
   private markFormFieldsAsTouched() {
+    this._logger.debug(`mark form fields as touched and update form value & validity`);
     for (let inner in this.accountSettingsForm.controls) {
       this.accountSettingsForm.get(inner).markAsTouched();
       this.accountSettingsForm.get(inner).updateValueAndValidity();
@@ -69,17 +78,17 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
 // Update Partner Account Settings
   private _updatePartnerAccountSettings() {
-    if (!this.accountSettingsForm.valid) {
-      return;
-    }
+    this._logger.info(`handle update partner account settings request`);
     this._accountSettingsService
       .updatePartnerData(this.accountSettingsForm.value)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(updatedPartner => {
+          this._logger.info(`handle successful update partner account settings request`);
           this._fillForm(updatedPartner);
         },
         error => {
+          this._logger.info(`handle failed update partner account settings request`, { errorMessage: error.message });
           const blockerMessage = new AreaBlockerMessage(
             {
               message: this._appLocalization.get('applications.settings.accountSettings.errors.updateFailed'),
@@ -98,6 +107,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
   // Get Partner Account Settings data and fill the form
   private _loadPartnerAccountSettings() {
+    this._logger.info(`handle load partner account settings request`);
     this._updateAreaBlockerState(true, null);
 
     this._accountSettingsService
@@ -109,8 +119,13 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
           this.partnerAdminEmail = response.partnerData.adminEmail;
           this._fillForm(response.partnerData);
           this._updateAreaBlockerState(false, null);
+          this._logger.info(`handle successful load partner account settings request`, {
+            partnerId: this.partnerId,
+            partnerAdminEmail: this.partnerAdminEmail
+          });
         },
         error => {
+          this._logger.warn(`handle failed load partner account settings request`, { errorMessage: error.message });
           const blockerMessage = new AreaBlockerMessage(
             {
               message: this._appLocalization.get('applications.settings.accountSettings.errors.loadFailed'),
@@ -130,6 +145,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
+    this._logger.info(`update areablocker state`, { isBusy, message: message.message });
     this._isBusy = isBusy;
     this._blockerMessage = message;
   }
@@ -141,7 +157,6 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   private _fillDescribeYourselfOptions(): void {
-
     this._appLocalization.get('applications.settings.accountSettings.describeYourselfOptions')
       .split(',')
       .map(option => option.trim())
