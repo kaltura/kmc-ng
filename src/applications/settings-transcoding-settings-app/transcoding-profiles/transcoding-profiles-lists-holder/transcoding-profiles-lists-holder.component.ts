@@ -26,7 +26,7 @@ export class TranscodingProfilesListsHolderComponent {
   }
 
   public _addProfile(profileType: KalturaConversionProfileType): void {
-    this._logger.info(`handle 'add' profile action by the user`);
+    this._logger.info(`handle 'add' profile action by the user`, { profileType });
     this._newProfileType = profileType;
     this._addNewProfilePopup.open();
   }
