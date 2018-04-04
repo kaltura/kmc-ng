@@ -9,6 +9,7 @@
     background-color: $menuBkgColor;
     height: 54px;
     display: flex;
+    align-items: center;
     position: fixed;
     z-index: 700;
     width: 100%;
@@ -116,13 +117,12 @@
         color: white;
         font-size: 32px;
         margin-left: 16px;
-        margin-top: 10px;
     }
     .kBeta{
         width:30px;
         height:15px;
-        margin-top: 8px;
         margin-right: 20px;
+        margin-top: -10px;
     }
 }
 
