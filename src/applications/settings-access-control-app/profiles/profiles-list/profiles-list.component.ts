@@ -76,11 +76,8 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
           } else {
             this._tableBlockerMessage = null;
           }
-        },
-        error => {
-          this._logger.warn('[kmcng] -> could not load playlists'); // navigate to error page
-          throw error;
-        });
+        }
+      );
   }
 
 
@@ -127,11 +124,11 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
         (err) => {
           const error = err.error ? err.error : err;
           const message = error.message || this._appLocalization.get('applications.settings.accessControl.errors.delete');
-          this._logger.info(`handle failing 'delete' by the server`, { errorMessage: message });
+          this._logger.info(`handle failing 'delete' by the server, show alert`, { errorMessage: message });
           const buttons = [{
             label: this._appLocalization.get('app.common.ok'),
             action: () => {
-              this._logger.info(`confirm discarding 'delete' error message`);
+              this._logger.info(`user discarded alert`);
               this._blockerMessage = null;
               this._store.reload();
               this._clearSelection();
@@ -166,7 +163,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   }
 
   public _clearSelection(): void {
-    this._logger.info(`handle 'clear selection' action`);
+    this._logger.info(`clear selected profiles`);
     this._selectedProfiles = [];
   }
 
@@ -178,7 +175,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   }
 
   public _deleteProfiles(profiles = this._selectedProfiles): void {
-    this._logger.info(`handle 'delete' profiles action by the user`);
+    this._logger.info(`handle 'delete' profiles action by the user, show confirmation`);
     if (Array.isArray(profiles) && profiles.length) {
       const header = this._appLocalization.get('applications.settings.accessControl.deleteProfile.header');
       const profilesNames = profiles.map(({ name }) => name).join('\n');
@@ -190,7 +187,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
         header,
         message,
         accept: () => this._executeDeleteProfiles(profiles),
-        reject: () => this._logger.info(`handle rejection 'delete' profiles action by the user`)
+        reject: () => this._logger.info(`user didn't confirm, abort action`)
       });
     } else {
       this._logger.info(`no profiles were selected, stop deletion`);
@@ -219,7 +216,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
           this._store.reload();
         },
         (error) => {
-          this._logger.info(`handle failing 'save' by the server`, { errorMessage: error.message });
+          this._logger.warn(`handle failing 'save' by the server, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization.get(
               'applications.settings.accessControl.errors.profileWasNotUpdated',
@@ -228,7 +225,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
-                this._logger.info(`confirm discarding 'save' error message`);
+                this._logger.info(`user discarded alert`);
                 this._blockerMessage = null;
                 this._store.reload();
                 this._clearSelection();

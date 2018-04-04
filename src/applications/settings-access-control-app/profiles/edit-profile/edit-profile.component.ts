@@ -98,7 +98,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   private _prepare(): void {
     if (this.profile) {
-      this._logger.info(`enter edit profile mode`);
+      this._logger.info(`enter edit profile mode`, { id: this.profile.id, name: this.profile.name });
       this._profile = this.profile;
       this._setInitialValue(this._profile);
       this._headerTitle = this._appLocalization.get('applications.settings.accessControl.editAccessControlProfile');
@@ -521,7 +521,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       this._browserService.confirm({
         message: confirmationMessage,
         accept: () => this._proceedSave(),
-        reject: () => this._logger.info(`reject saving`)
+        reject: () => this._logger.info(`action aborted by the user`)
       });
     } else {
       this._proceedSave();
