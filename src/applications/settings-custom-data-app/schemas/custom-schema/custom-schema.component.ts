@@ -92,7 +92,7 @@ export class CustomSchemaComponent implements OnInit {
         message: error
       });
 
-      this._logger.info(`schema is not valid, stop saving`, { errorMessage: error });
+      this._logger.info(`schema is not valid, abort saving`, { errorMessage: error });
 
       return false;
     }
@@ -102,11 +102,12 @@ export class CustomSchemaComponent implements OnInit {
   }
 
   private _removeField(field: MetadataItem): void {
+    this._logger.info(`handle 'remove field' action by the user, show confirmation`, { field: { id: field.id, name: field.name } });
     this._browserService.confirm({
       header: this._appLocalization.get('applications.settings.metadata.table.deleteCustomDataField'),
       message: this._appLocalization.get('applications.settings.metadata.table.fieldRemoveConfirmation', [field.name]),
       accept: () => {
-        this._logger.info(`handle accept 'remove' field by the user`, { field: { id: field.id, name: field.name } });
+        this._logger.info(`user confirmed, proceed action`);
         const relevantFieldIndex = this._profileFields.findIndex(item => item.id === field.id);
         if (relevantFieldIndex !== -1) {
           this._profileFields.splice(relevantFieldIndex, 1);
@@ -115,12 +116,13 @@ export class CustomSchemaComponent implements OnInit {
         this._clearSelection();
       },
       reject: () => {
-        this._logger.info(`handle reject 'remove' field by the user`, { field: { id: field.id, name: field.name } });
+        this._logger.info(`user didn't confirm, abort action`);
       }
     });
   }
 
   private _moveField(field: MetadataItem, direction: 'up' | 'down'): void {
+    this._logger.info(`handle 'move field' action by the user`, { field: { id: field.id, name: field.name, direction } });
     const action = direction === 'down'
       ? () => KalturaUtils.moveDownItems(this._profileFields, [field])
       : () => KalturaUtils.moveUpItems(this._profileFields, [field]);
@@ -136,11 +138,16 @@ export class CustomSchemaComponent implements OnInit {
       this._schema.parsedProfile.items = this._profileFields;
 
       if (this._isFieldsOrderChanged) {
+        this._logger.info(`schema's fields order was changed, show confirmation`);
         this._browserService.confirm({
           header: this._appLocalization.get('applications.settings.metadata.fieldsOrderChangedTitle'),
           message: this._appLocalization.get('applications.settings.metadata.fieldsOrderChangedWaring'),
           accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
             this.onSave.emit(this._schema);
+          },
+          reject: () => {
+            this._logger.info(`user didn't confirm, abort action`);
           }
         });
       } else {
@@ -150,7 +157,7 @@ export class CustomSchemaComponent implements OnInit {
   }
 
   public _clearSelection(): void {
-    this._logger.info(`handle 'clear selection' action`);
+    this._logger.info(`clear selected schema's fileds`);
     this._selectedFields = [];
   }
 
@@ -165,18 +172,15 @@ export class CustomSchemaComponent implements OnInit {
     const { action, payload } = event;
     switch (action) {
       case 'edit':
-        this._logger.info(`handle 'edit field' action by the user`, { field: { id: payload.field.id, name: payload.field.name } });
         this._editField(payload.field);
         break;
 
       case 'move':
         const { field, direction } = payload;
-        this._logger.info(`handle 'move field' action by the user`, { field: { id: field.id, name: field.name, direction } });
         this._moveField(field, direction);
         break;
 
       case 'remove':
-        this._logger.info(`handle 'remove field' action by the user`, { field: { id: payload.field.id, name: payload.field.name } });
         this._removeField(payload.field);
         break;
 
@@ -197,12 +201,12 @@ export class CustomSchemaComponent implements OnInit {
   }
 
   public _bulkRemove(): void {
-    this._logger.info(`handle 'bulk remove fields' action by the user`);
+    this._logger.info(`handle 'bulk remove fields' action by the user, show confirmation dialog`);
     this._browserService.confirm({
       header: this._appLocalization.get('applications.settings.metadata.table.bulkDeleteCustomDataField'),
       message: this._appLocalization.get('applications.settings.metadata.table.fieldBulkRemoveConfirmation'),
       accept: () => {
-        this._logger.info(`handle accept 'bulk remove fields' action by the user`);
+        this._logger.info(`user confirmed, continue action`);
         this._selectedFields.forEach(field => {
           const relevantFieldIndex = this._profileFields.findIndex(item => item.id === field.id);
           if (relevantFieldIndex !== -1) {
@@ -213,7 +217,7 @@ export class CustomSchemaComponent implements OnInit {
         this._clearSelection();
       },
       reject: () => {
-        this._logger.info(`handle reject 'bulk remove fields' action by the user`);
+        this._logger.info(`user didn't confirmed, abort action`);
       }
     });
   }
@@ -224,17 +228,17 @@ export class CustomSchemaComponent implements OnInit {
   }
 
   public _cancel(): void {
-    this._logger.info(`handle cancel editing by the user`);
+    this._logger.info(`handle cancel editing by the user, show confirmation`);
     if (this._isDirty) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.settings.metadata.discardChanges'),
         message: this._appLocalization.get('applications.settings.metadata.discardWarning'),
         accept: () => {
-          this._logger.info(`accept discarding changes by the user`);
+          this._logger.info(`user confirmed, discard changes`);
           this.onClosePopupWidget.emit();
         },
         reject: () => {
-          this._logger.info(`reject discarding changes by the user, staying in the popup`);
+          this._logger.info(`user did't confirm, staying in the popup`);
         }
       });
     } else {
@@ -243,6 +247,7 @@ export class CustomSchemaComponent implements OnInit {
   }
 
   public _editField(field: MetadataItem): void {
+    this._logger.info(`handle 'edit field' action by the user`, { field: { id: field.id, name: field.name } });
     this._selectedField = field;
     this._customSchemaFieldPopup.open();
   }
