@@ -145,7 +145,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
-    this._logger.info(`update areablocker state`, { isBusy, message: message.message });
+    this._logger.info(`update areablocker state`, { isBusy, message: message ? message.message : null });
     this._isBusy = isBusy;
     this._blockerMessage = message;
   }
