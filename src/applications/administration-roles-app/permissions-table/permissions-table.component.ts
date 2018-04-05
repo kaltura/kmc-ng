@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ROLE_PERMISSIONS, RolePermission } from './permissions-list';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface RolePermissionFormValue extends RolePermission {
   checked?: boolean;
@@ -12,7 +13,8 @@ export interface RolePermissionFormValue extends RolePermission {
 @Component({
   selector: 'kRolePermissionsTable',
   templateUrl: './permissions-table.component.html',
-  styleUrls: ['./permissions-table.component.scss']
+  styleUrls: ['./permissions-table.component.scss'],
+  providers: [KalturaLogger.createLogger('PermissionsTableComponent')]
 })
 export class PermissionsTableComponent implements OnInit {
   @Input() permissions: string[];
@@ -26,7 +28,8 @@ export class PermissionsTableComponent implements OnInit {
   public _rolePermissions: RolePermissionFormValue[] = [];
   public _kmcPermissions = KMCPermissions;
 
-  constructor(private _permissionsService: KMCPermissionsService) {
+  constructor(private _permissionsService: KMCPermissionsService,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -34,6 +37,7 @@ export class PermissionsTableComponent implements OnInit {
   }
 
   private _prepare(): void {
+    this._logger.info(`initiate permissions table`);
     const hasPermissionInList = (value) => this.permissions.indexOf(value) !== -1;
 
     this._rolePermissions = this._rolePermissionsOptions.map(permission => {
@@ -66,6 +70,7 @@ export class PermissionsTableComponent implements OnInit {
   }
 
   public _togglePermission(event: { originalEvent: Event, checked: boolean }, permission: RolePermissionFormValue): void {
+    this._logger.debug(`toggle permission group by user`, { name: permission.name, value: permission.value });
     permission.hasError = false;
     permission.checked = event.checked;
     permission.formValue = permission.checked ? (permission.items || []).map(({ value }) => value) : [];
@@ -78,6 +83,7 @@ export class PermissionsTableComponent implements OnInit {
   }
 
   public _onChange(event: { originalEvent: Event, value: number[], itemValue?: number }, permission: RolePermissionFormValue): void {
+    this._logger.debug(`toggle permission by user`, { value });
     permission.items.forEach(item => {
       const isChecked = event.value.indexOf(item.value) !== -1;
       item.checked = isChecked && !item.disabled;
