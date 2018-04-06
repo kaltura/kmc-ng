@@ -2284,6 +2284,7 @@
           }
         },
         "editForm": {
+          "note": "Note",
           "profileName": "Profile Name",
           "description": "Description",
           "authorizedDomains": "Authorized Domains",

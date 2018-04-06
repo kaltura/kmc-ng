@@ -509,6 +509,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     const confirmationMessage = this._getConfirmationMessage();
     if (confirmationMessage) {
       this._browserService.confirm({
+        header: this._appLocalization.get('applications.settings.accessControl.editForm.note'),
         message: confirmationMessage,
         accept: () => this._proceedSave()
       });
