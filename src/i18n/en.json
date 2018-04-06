@@ -2400,6 +2400,7 @@
             "dimentions": "Dimentions"
           },
           "errors": {
+            "error": "Error",
             "dismiss": "Dismiss",
             "reload": "Reload",
             "loadError": "An error occurred while loading data",
