@@ -20,7 +20,6 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   public _selectedSchema: SettingsMetadataProfile = null;
   public _tableIsBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _tableBlockerMessage: AreaBlockerMessage = null;
   public _serverValidationError = null;
 
   public _query = {
@@ -81,24 +80,20 @@ export class SchemasListComponent implements OnInit, OnDestroy {
           this._tableIsBusy = result.loading;
 
           if (result.errorMessage) {
-            this._tableBlockerMessage = new AreaBlockerMessage({
+            this._blockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || this._appLocalization.get('applications.settings.metadata.errorLoading'),
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
-                  this._tableBlockerMessage = null;
+                  this._blockerMessage = null;
                   this._schemasStore.reload();
                 }
               }
               ]
-            })
+            });
           } else {
-            this._tableBlockerMessage = null;
+            this._blockerMessage = null;
           }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load schemas'); // navigate to error page
-          throw error;
         });
   }
 
