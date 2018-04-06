@@ -11,15 +11,20 @@
       flex-direction: row;
       align-items: center;
 
-      .kTreeNodeLabel {
+      .kTreeNodeLabelContent {
         font-size: 14px;
         font-weight: 700;
-        line-height: 43px;
-        text-overflow: ellipsis;
+        height: 43px;
         margin-left: 5px;
         width: calc(100% - 80px);
-        display: inline-block;
-        overflow: hidden;
+        display: flex;
+        align-items: center;
+
+        .kTreeNodeLabel {
+          overflow: hidden;
+          max-width: 100%;
+          text-overflow: ellipsis;
+        }
       }
       .kTreeNodeLabelSingle {
         color: $kGrayscale1;
