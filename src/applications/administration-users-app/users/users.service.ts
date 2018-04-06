@@ -224,11 +224,18 @@ export class UsersStore implements OnDestroy {
       .multiRequest(request)
       .map((responses) => {
         if (responses.hasErrors()) {
-          const errorMessage = responses.map(response => {
-            if (response.error) {
-              return response.error.message + '\n';
-            }
-          }).join('');
+          // TODO [kmcng] use KalturaAPIException args after KalturaClient lib fix
+          const invalidEmail = responses.some(response => response.error && response.error.message === 'value in field [email] is not valid');
+          let errorMessage = '';
+          if (invalidEmail) {
+            errorMessage = this._appLocalization.get('applications.administration.users.emailFormat');
+          } else {
+            errorMessage = responses.map(response => {
+              if (response.error) {
+                return response.error.message + '\n';
+              }
+            }).join('');
+          }
           throw Error(errorMessage);
         }
       });
