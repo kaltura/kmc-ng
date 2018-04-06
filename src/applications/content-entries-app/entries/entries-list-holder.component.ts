@@ -74,7 +74,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.prepared)
+      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted)
       .subscribe(() => {
         this._entriesStore.reload();
       });
