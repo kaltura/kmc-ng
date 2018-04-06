@@ -177,6 +177,10 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       allowPreview,
       preview
     });
+
+    if (profile.isDefault) {
+      this._nameField.disable({ onlySelf: true });
+    }
   }
 
   private _buildForm(): void {
