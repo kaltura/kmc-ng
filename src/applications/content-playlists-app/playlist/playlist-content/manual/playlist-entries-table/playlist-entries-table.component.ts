@@ -35,6 +35,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @Output() selectedEntriesChange = new EventEmitter<any>();
   @Output() onActionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
+  public _kmcPermissions = KMCPermissions;
   private _deferredEntries: KalturaMediaEntry[];
   public _entries: KalturaMediaEntry[] = [];
   public _emptyMessage: string;
