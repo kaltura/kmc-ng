@@ -83,7 +83,7 @@ export class PermissionsTableComponent implements OnInit {
   }
 
   public _onChange(event: { originalEvent: Event, value: number[], itemValue?: number }, permission: RolePermissionFormValue): void {
-    this._logger.debug(`toggle permission by user`, { value });
+    this._logger.debug(`toggle permission by user`, { value: event.value });
     permission.items.forEach(item => {
       const isChecked = event.value.indexOf(item.value) !== -1;
       item.checked = isChecked && !item.disabled;
