@@ -17,6 +17,7 @@ import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
 import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
 import { globalConfig } from 'config/global';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface AccessControlAutocompleteItem {
   value: string;
@@ -27,7 +28,8 @@ export interface AccessControlAutocompleteItem {
 @Component({
   selector: 'kAccessControlProfilesEditProfile',
   templateUrl: './edit-profile.component.html',
-  styleUrls: ['./edit-profile.component.scss']
+  styleUrls: ['./edit-profile.component.scss'],
+  providers: [KalturaLogger.createLogger('EditProfileComponent')]
 })
 export class EditProfileComponent implements OnInit, OnDestroy {
   @Input() parentPopup: PopupWidgetComponent;
@@ -79,6 +81,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _fb: FormBuilder,
+              private _logger: KalturaLogger,
               public _store: AccessControlProfilesStore) {
     this._convertDomainsUserInputToValidValue = this._convertDomainsUserInputToValidValue.bind(this);
     this._convertIpsUserInputToValidValue = this._convertIpsUserInputToValidValue.bind(this);
@@ -95,10 +98,12 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   private _prepare(): void {
     if (this.profile) {
+      this._logger.info(`enter edit profile mode`, { id: this.profile.id, name: this.profile.name });
       this._profile = this.profile;
       this._setInitialValue(this._profile);
       this._headerTitle = this._appLocalization.get('applications.settings.accessControl.editAccessControlProfile');
     } else {
+      this._logger.info(`enter new profile mode`);
       this._headerTitle = this._appLocalization.get('applications.settings.accessControl.addAccessControlProfile');
     }
   }
@@ -462,6 +467,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       }
     }
 
+    this._logger.info(`emit 'onSave' action`);
+
     this.parentPopup.close();
     this.onSave.emit(accessControlProfile);
   }
@@ -498,19 +505,23 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   }
 
   public _save(): void {
+    this._logger.info(`handle 'save' action by the user`);
     if (!this._nameField.value.trim()) {
       this._browserService.alert({
         header: this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.validationFailed'),
         message: this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.profileNameRequired'),
       });
+      this._logger.info(`profile name is empty, stop saving`);
       return;
     }
 
     const confirmationMessage = this._getConfirmationMessage();
     if (confirmationMessage) {
+      this._logger.info(`confirm saving`, { confirmationMessage });
       this._browserService.confirm({
         message: confirmationMessage,
-        accept: () => this._proceedSave()
+        accept: () => this._proceedSave(),
+        reject: () => this._logger.info(`action aborted by the user`)
       });
     } else {
       this._proceedSave();
