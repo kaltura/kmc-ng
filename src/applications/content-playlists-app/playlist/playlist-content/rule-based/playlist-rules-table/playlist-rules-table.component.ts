@@ -84,6 +84,7 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.deleteRule'),
+        styleClass: 'kDanger',
         command: () => this.onActionSelected.emit({ action: 'remove', rule: rule })
       }
     ];

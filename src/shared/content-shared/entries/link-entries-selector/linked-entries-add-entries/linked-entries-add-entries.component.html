@@ -1,0 +1,19 @@
+<div class="kLinkedEntrySelector kAddEntryWrap">
+  <div class="kFloater">
+    <div class="kHeader">
+      <span class="kTitle">{{_title}}</span>
+      <div class="kButtons">
+        <a class="kCancel" (click)="parentPopup.close()">Cancel</a>
+        <button type="button" pButton class="kButtonBranded"
+                [disabled]="_selectedEntries.length === 0"
+                [label]="_title"
+                (click)="_addEntries()"></button>
+      </div>
+    </div>
+    <div class="kContainer">
+      <kEntriesSelector [columns]="_columns"
+                        [selectionMode]="_selectionMode"
+                        [(selectedEntries)]="_selectedEntries"></kEntriesSelector>
+    </div>
+  </div>
+</div>
