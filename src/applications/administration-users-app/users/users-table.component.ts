@@ -121,6 +121,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
         },
         {
           label: this._appLocalization.get('applications.content.table.delete'),
+          styleClass: 'kDanger',
           command: () => {
             this._browserService.confirm({
               header: this._appLocalization.get('applications.administration.users.deleteUser'),

@@ -76,6 +76,7 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
       },
       {
         label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.delete'),
+        styleClass: 'kDanger',
         command: () => {
           this.onActionSelected.emit({action: 'delete', subcategory});
         }

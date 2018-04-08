@@ -3,5 +3,12 @@
 	<div class="kPreviewAndEmbedContainer" *ngIf="_entryHasContent">
 		<i (click)="_entryReady && openPreviewAndEmbed()" [class.disabled]="!_entryReady" class="kIconShare"></i>
 		<a [class.disabled]="!_entryReady" (click)="_entryReady && openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
-	</div>
+    <i (click)="clipAndTrim.open()" *ngIf="_widgetService.clipAndTrimEnabled" class="kIconmovies"></i>
+  </div>
 </div>
+
+<kPopupWidget #clipAndTrim [fullScreen]="true">
+  <ng-template>
+    <kClipAndTrim [entryId]="_widgetService.data.id" [parentPopupWidget]="clipAndTrim"></kClipAndTrim>
+  </ng-template>
+</kPopupWidget>

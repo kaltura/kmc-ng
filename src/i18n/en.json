@@ -658,7 +658,7 @@
             "itunes": "ITunes",
             "roku": "Roku Direct Publisher",
             "opera": "Opera Snap TV",
-            "flexibaleFormat": "Flexibale Format"
+            "flexibleFormat": "Flexible Format"
           },
           "destinationsForms": {
             "google": {
@@ -1002,6 +1002,9 @@
           "failed": "Failed",
           "otherStatuses": "All other statuses",
           "datesRangeError": "'From Date' must be before 'To Date'"
+        },
+        "errors": {
+          "failedLoad": "Error loading bulk logs"
         }
       },
       "entryStatus": {
@@ -1774,7 +1777,7 @@
               "inheritUser": "Inherit users from parent category",
               "selectEndUsers": "Select End-Users",
               "permissionLevel": "Permission Level",
-              "updateMethod": "Update method",
+              "updateMethod": "Update Method",
               "addUsers": "Add {{0}} Users",
               "save": "Save",
               "cancel": "Cancel",
@@ -2285,6 +2288,7 @@
           }
         },
         "editForm": {
+          "note": "Note",
           "profileName": "Profile Name",
           "description": "Description",
           "authorizedDomains": "Authorized Domains",
@@ -2401,6 +2405,7 @@
             "dimentions": "Dimentions"
           },
           "errors": {
+            "error": "Error",
             "dismiss": "Dismiss",
             "reload": "Reload",
             "loadError": "An error occurred while loading data",

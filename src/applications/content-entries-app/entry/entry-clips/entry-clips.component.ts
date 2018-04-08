@@ -1,10 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import { globalConfig } from 'config/global';
+import {globalConfig} from 'config/global';
 import {EntryClipsWidget} from './entry-clips-widget.service';
-import {serverConfig} from 'config/server';
-import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
-
 
 @Component({
     selector: 'kEntryClips',
@@ -18,11 +15,7 @@ export class EntryClips implements OnInit, OnDestroy {
 
     public _clipAndTrimEnabled = false;
 
-    constructor(public _widgetService: EntryClipsWidget, logger: KalturaLogger) {
-      this._clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled;
-      if (!this._clipAndTrimEnabled) {
-        logger.warn('Clip and trim (kedit) is not enabled, please check configuration');
-      }
+    constructor(public _widgetService: EntryClipsWidget) {
     }
 
     _convertSortValue(value: boolean): number {
