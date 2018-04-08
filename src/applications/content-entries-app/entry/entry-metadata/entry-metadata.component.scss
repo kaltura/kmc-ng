@@ -21,10 +21,13 @@ hr{
 }
 .kMetadataDetails{
 	padding-bottom: 8px;
-	padding-left: 24px;
-	padding-right: 138px;
 	padding-top: 30px;
 	width: 100%;
+
+  .kMetadataDetailsItem {
+    padding-left: 24px;
+    padding-right: 138px;
+  }
 
 	.kSchemaTitle{
 		color: $kGrayscale1;
@@ -35,6 +38,10 @@ hr{
 	}
 
 	/deep/ {
+    k-dynamic-form-item {
+      padding-left: 24px;
+      padding-right: 138px;
+    }
 
 		.kRow {
 			display: flex;
@@ -106,7 +113,9 @@ hr{
 
 		.kDelete{
 			margin-left: 14px;
-			color: $kDandger;
+			&:not(.disabled) {
+				color: $kDandger;
+			}
 		}
 		.kDeleteDate{
 			margin-left: 46px;
@@ -146,14 +155,20 @@ hr{
 				&:active:not(:disabled){
 					box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
 				}
+				&:disabled{
+					color: $kGrayscale4;
+					background: transparent;
+					border: 1px solid $kGrayscale4;
+					cursor: default;
+				}
 			}
 		}
 		.kDeleteGroup{
 			text-align: left;
-			padding-left: 162px;
+			padding-left: 172px;
 			padding-top: 8px;
 			padding-bottom: 4px;
-			a{
+			a:not(.disabled){
 				color: $kDandger;
 			}
 		}
@@ -183,10 +198,10 @@ hr{
 		}
 
 		  .ui-multiselect-trigger .fa.fa-caret-down{
-			margin-top: 2px;
-			margin-left: 1px;
+			margin-top: 0px;
+			right: 8px;
 			position: absolute;
-			color: $kGrayscale1;
+			color: $kGrayscale3;
 		}
 
 		  .ui-autocomplete.ui-widget{

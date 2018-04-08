@@ -27,9 +27,15 @@ Follow these instructions to test external apps integration:
       "enabled": true,
       "uri": "__local_machine_only__/studio_v2_2_1/index.html",
       "version": "v2.2.1",
-      "uiConfId": "39700052",
       "html5_version":"v2.57.2",
       "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
+    },
+    "studioV3": {
+      "enabled": true,
+      "uri": "__local_machine_only__/studio_v3_1_1/index.html",
+      "version": "v3.1.1",
+      "html5_version":"v2.67",
+      "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.67/mwEmbedLoader.php"
     },
     "liveDashboard": {
       "enabled": true,
@@ -43,9 +49,9 @@ Follow these instructions to test external apps integration:
     },
      "liveAnalytics": {
         "enabled": true,
-        "uri": "__local_machine_only__/live-analytics-front-end-v2_6/index.html",
+        "uri": "__local_machine_only__/live-analytics-vFuture/index.html",
         "uiConfId": 36060752,
-        "version": "2.6"
+        "version": "future_version_above_v2_6"
     },
     "usageDashboard": {
       "enabled": true,
@@ -62,11 +68,13 @@ Follow these instructions to test external apps integration:
     "clipAndTrim": {
       "enabled": true,
       "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
-      "uiConfId": "36060752"
+      "uiConfId": "36060752",
+      "version": "v2.21.1"
     },
     "advertisements": {
       "enabled": true,
-      "uri": "__local_machine_only__/kedit-v2_21_1/index.html",
-      "uiConfId": "36060752"
+      "uri": "__local_machine_only__/kedit-vFuture/index.html",
+      "uiConfId": "36060752",
+      "version": "future version above v2.22.3"
     }
 ```

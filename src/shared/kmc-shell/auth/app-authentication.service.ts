@@ -224,7 +224,8 @@ export class AppAuthentication {
                 name: partner.name,
                 partnerPackage: partner.partnerPackage,
                 landingPage: partner.landingPage,
-                adultContent: partner.adultContent
+                adultContent: partner.adultContent,
+                publisherEnvironmentType: partner.publisherEnvironmentType
             }
         });
 

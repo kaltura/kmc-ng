@@ -80,7 +80,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
               private _browserService: BrowserService,
               private _flavorsStore: FlavoursStore,
               _logger: KalturaLogger) {
-    super(_logger);
+    super(_logger.subLogger('AccessControlProfilesStore'));
     this._prepare();
   }
 
@@ -91,6 +91,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
 
   private _prepare(): void {
     if (!this._isReady) {
+      this._logger.info(`initiate service`);
       this._isReady = true;
 
       this._registerToFilterStoreDataChanges();
@@ -127,6 +128,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
       this._browserService.setInLocalStorage(localStoragePageSizeKey, pageSize);
     }
 
+    this._logger.info(`loading data from the server`);
     this._profiles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .cancelOnDestroy(this)
@@ -134,6 +136,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
         ({ accessControlList, flavorsList }) => {
           this._querySubscription = null;
 
+          this._logger.info(`handle success data loading`);
           this._profiles.state.next({ loading: false, errorMessage: null });
           this._profiles.data.next({
             items: accessControlList.items,
@@ -144,6 +147,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          this._logger.info(`handle failing data loading`, { errorMessage });
           this._profiles.state.next({ loading: false, errorMessage });
         });
 
@@ -353,7 +357,9 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
   }
 
   public reload(): void {
+    this._logger.info(`reload profiles list`);
     if (this._profiles.state.getValue().loading) {
+      this._logger.info(`reloading already in progress skip duplicating request`);
       return;
     }
 

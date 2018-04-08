@@ -19,8 +19,7 @@
   </div>
 
   <ul class="kLanguages kOverrideFAIcons">
-    <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [appendTo]="'body'"
-                (onChange)="onLangSelected($event)"></p-dropdown>
+    <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" (onChange)="onLangSelected($event)"></p-dropdown>
   </ul>
 </div>
 <kPopupWidget #changeAccountPopup [popupWidth]="500" [popupHeight]="370" [modal]="true">
