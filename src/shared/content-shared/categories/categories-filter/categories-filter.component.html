@@ -45,7 +45,9 @@
               [parentPopup]="parentPopupWidget"
               kSticky [stickyClass]="'kForceFix'" [stickyId]="'categoriesPref'" [sticksTo]="'header'" [scrollOffset]="80">
   <ng-template>
-    <kCategoriesFilterPrefs [selectionMode]="selectionMode"
-                            (selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
+    <kCategoriesFilterPrefs
+      [translationsContext]="translationsContext"
+      [selectionMode]="selectionMode"
+      (selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
   </ng-template>
 </kPopupWidget>

@@ -2,11 +2,11 @@
   <p class="kFilterPrefs">{{'applications.content.filters.preferences.filterPreferences' | translate | uppercase}}</p>
   <div class="kButtons">
     <p-radioButton name="prefs" [value]="_CategoriesModes.Self"
-                   label="{{'applications.content.filters.preferences.selectedOnly' | translate}}"
+                   [label]="_categoriesFilterPrefLabels[_CategoriesModes.Self]"
                    [(ngModel)]="selectionMode"
                    (click)="prefChange()"></p-radioButton>
     <p-radioButton name="prefs" [value]="_CategoriesModes.SelfAndChildren"
-                   label="{{'applications.content.filters.preferences.subSelected' | translate}}"
+                   [label]="_categoriesFilterPrefLabels[_CategoriesModes.SelfAndChildren]"
                    [(ngModel)]="selectionMode"
                    (click)="prefChange()"></p-radioButton>
   </div>

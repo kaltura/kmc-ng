@@ -14,8 +14,9 @@ import {
   CategoriesStatus,
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {ViewCategoryEntriesEvent} from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
+import {TranslationsContext} from 'app-shared/content-shared/categories/categories-filter-preferences/categories-filter-preferences.component';
 
 @Component({
   selector: 'kCategoriesList',
@@ -43,6 +44,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     public _tableIsBusy = false;
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineGroup[];
+    public readonly _translationContext = TranslationsContext.Categories;
 
     public _query = {
         freetext: '',

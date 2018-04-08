@@ -1,18 +1,26 @@
 import {
-    AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
-    ViewChild
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
 } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { ISubscription } from 'rxjs/Subscription';
+import {Subject} from 'rxjs/Subject';
+import {ISubscription} from 'rxjs/Subscription';
 
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
+import {CategoriesTreeComponent} from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
-import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
-import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
+import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
+import {CategoriesModes} from 'app-shared/content-shared/categories/categories-mode-type';
+import {TranslationsContext} from "app-shared/content-shared/categories/categories-filter-preferences/categories-filter-preferences.component";
 
 
 @Component({
@@ -24,6 +32,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     @Input() public parentPopupWidget: PopupWidgetComponent;
     @Input() public selectionMode: CategoriesModes;
     @Output() public selectionModeChange = new EventEmitter<CategoriesModes>();
+    @Input() translationsContext: TranslationsContext = TranslationsContext.Entries;
     @Input() public selection: number[];
     @Output() onCategorySelected: EventEmitter<number> = new EventEmitter();
     @Output() onCategoriesUnselected: EventEmitter<number[]> = new EventEmitter();
