@@ -2327,6 +2327,7 @@
             "invalidIp": "Invalid IP",
             "validationFailed": "Validation Failed",
             "profileNameRequired": "Profile name is required",
+            "invalidValue": "Invalid value.",
             "authorizedDomains": "No domains added to the approved or restricted lists. The domain restriction will be: allow all domains.\n",
             "authorizedCountries": "No countries added to the approved or restricted lists. The country restriction will be: allow all countries.\n",
             "authorizedIps": "No IPs added to the approved or restricted lists. The IP restriction will be: allow all IPs.\n",
