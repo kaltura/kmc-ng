@@ -182,6 +182,10 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       allowPreview,
       preview
     });
+
+    if (profile.isDefault) {
+      this._nameField.disable({ onlySelf: true });
+    }
   }
 
   private _buildForm(): void {
@@ -519,6 +523,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     if (confirmationMessage) {
       this._logger.info(`confirm saving`, { confirmationMessage });
       this._browserService.confirm({
+        header: this._appLocalization.get('applications.settings.accessControl.editForm.note'),
         message: confirmationMessage,
         accept: () => this._proceedSave(),
         reject: () => this._logger.info(`action aborted by the user`)

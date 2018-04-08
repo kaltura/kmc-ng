@@ -13,7 +13,6 @@ import { KalturaAPIException, KalturaClient } from 'kaltura-ngx-client';
 import { CreateNewTranscodingProfileEvent } from 'app-shared/kmc-shared/events/transcoding-profile-creation';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface NewTranscodingProfileFormData {
   name: string;
@@ -25,8 +24,7 @@ export interface NewTranscodingProfileFormData {
 @Component({
   selector: 'kAddNewTranscodingProfile',
   templateUrl: './add-new-profile.component.html',
-  styleUrls: ['./add-new-profile.component.scss'],
-  providers: [KalturaLogger.createLogger('AddNewProfileComponent')]
+  styleUrls: ['./add-new-profile.component.scss']
 })
 export class AddNewProfileComponent implements OnInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
@@ -47,22 +45,9 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
               private _appLocalization: AppLocalization,
               private _storageProfilesStore: StorageProfilesStore,
               private _kalturaClient: KalturaClient,
-              private _logger: KalturaLogger,
               private _appEvents: AppEventsService) {
-    this._buildForm();
-  }
-
-  ngOnInit() {
-    this._logger.info(`initiate add new profile view`);
-    this._prepare();
-  }
-
-  ngOnDestroy() {
-
-  }
-
-  private _buildForm(): void {
-    this._addNewProfileForm = this._formBuilder.group({
+    // build FormControl group
+    this._addNewProfileForm = _formBuilder.group({
       name: ['', Validators.required],
       description: '',
       defaultMetadataSettings: '',
@@ -74,29 +59,33 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
     this._ingestFromRemoteStorageField = this._addNewProfileForm.controls['ingestFromRemoteStorage'];
   }
 
+  ngOnInit() {
+    this._prepare();
+  }
+
+  ngOnDestroy() {
+
+  }
+
   private _prepare(): void {
     this._hideIngestFromRemoteStorage = this.profileType && this.profileType === KalturaConversionProfileType.liveStream;
     if (!this._hideIngestFromRemoteStorage) {
-      this._logger.info(`load remote storage profiles data`);
       this._dataLoading = true;
       this._loadRemoteStorageProfiles()
         .cancelOnDestroy(this)
         .map(profiles => profiles.map(profile => ({ label: profile.name, value: profile.id })))
         .subscribe(
           profiles => {
-            this._logger.info(`handle success load remote storage profiles data`);
             this._dataLoading = false;
             this._remoteStorageProfilesOptions = profiles;
           },
           error => {
-            this._logger.info(`handle failed load remote storage profiles data, show confirmation dialog`);
             this._blockerMessage = new AreaBlockerMessage({
               message: error.message || this._appLocalization.get('applications.settings.transcoding.errorLoadingRemoteStorageProfiles'),
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
-                    this._logger.info(`user selected retry, retry action`);
                     this._blockerMessage = null;
                     this._prepare();
                   }
@@ -104,7 +93,6 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
                 {
                   label: this._appLocalization.get('app.common.cancel'),
                   action: () => {
-                    this._logger.info(`user canceled, abort action and dismiss dialog`);
                     this._blockerMessage = null;
                     this.parentPopupWidget.close();
                   }
@@ -125,7 +113,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
     return this._storageProfilesStore.get()
       .map(({ items }) => [createEmptyRemoteStorageProfile(), ...items])
       .catch((error) => {
-        if (error.code && error.code === 'SERVICE_FORBIDDEN') {
+        if (error.code && error.code === "SERVICE_FORBIDDEN") {
           return Observable.of([createEmptyRemoteStorageProfile()]);
         }
         return Observable.throw(error);
@@ -143,7 +131,6 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
   }
 
   private _proceedSave(profile: KalturaConversionProfile): void {
-    this._logger.info(`publish 'CreateNewTranscodingProfileEvent' event`, { id: profile.id, name: profile.name });
     this._appEvents.publish(new CreateNewTranscodingProfileEvent({ profile }));
     this.parentPopupWidget.close();
   }
@@ -167,12 +154,10 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
   }
 
   public _goNext(): void {
-    this._logger.info(`handle save new profile action by user`);
     if (this._addNewProfileForm.valid) {
       const formData = this._addNewProfileForm.value;
       const entryId = (formData.defaultMetadataSettings || '').trim();
       if (entryId) {
-        this._logger.info(`entryId is provided validate it exists`, { entryId });
         this._dataLoading = true;
         this._validateEntryExists(entryId)
           .cancelOnDestroy(this)
@@ -180,34 +165,25 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
             exists => {
               this._dataLoading = false;
               if (exists) {
-                this._logger.info(`entry exists, proceed action`);
                 this._proceedSave(this._mapFormDataToProfile(formData));
               } else {
-                this._logger.info(`entry doesn't exist, abort action, show alert`);
                 this._browserService.alert({
-                  message: this._appLocalization.get('applications.settings.transcoding.entryNotFound', [entryId]),
-                  accept: () => {
-                    this._logger.info(`user dismissed alert`);
-                  }
+                  header: this._appLocalization.get('applications.settings.transcoding.profile.errors.error'),
+                  message: this._appLocalization.get('applications.settings.transcoding.entryNotFound', [entryId])
                 });
               }
             },
             error => {
-              this._logger.warn(`handle failed entry validation, abort action, show alert`);
               this._dataLoading = false;
               this._browserService.alert({
-                message: error.message,
-                accept: () => {
-                  this._logger.warn(`user dismissed alert`);
-                }
+                header: this._appLocalization.get('applications.settings.transcoding.profile.errors.error'),
+                message: error.message
               });
             }
           );
       } else {
         this._proceedSave(this._mapFormDataToProfile(formData));
       }
-    } else {
-      this._logger.info(`form data is not valid, abort action`);
     }
   }
 }
