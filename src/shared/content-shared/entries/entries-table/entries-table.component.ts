@@ -49,7 +49,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     [key: string]: { style: SafeStyle, sortable: boolean }
   } = {};
 
-  @Input() rowActions: { label: string, commandName: string }[] = [];
+  @Input() rowActions: { label: string, commandName: string, styleClass: string }[] = [];
 
   @Input()
   set entries(data: any[]) {

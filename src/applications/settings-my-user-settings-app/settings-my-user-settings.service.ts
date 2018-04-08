@@ -28,13 +28,13 @@ export class SettingsMyUserSettingsService {
       .multiRequest(request)
       .map(([user, role]) => {
         if (user.error || role.error) {
-          throw new Error((user.error || role.error).message)
+          throw new Error((user.error || role.error).message);
         }
 
         return {
           user: user.result,
           role: role.result
-        }
+        };
       })
       .catch(() => {
         return Observable.throw(new Error(this._appLocalization.get('applications.settings.myUserSettings.errors.getUserData')));
@@ -51,7 +51,7 @@ export class SettingsMyUserSettingsService {
             : this._appLocalization.get('applications.settings.myUserSettings.errors.passwordErr')
           : this._appLocalization.get('applications.settings.myUserSettings.errors.updateUser');
         return Observable.throw(new Error(message));
-      })
+      });
   }
 
   public updateUserNameManually(user: KalturaUser): void {

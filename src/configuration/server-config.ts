@@ -48,11 +48,23 @@ export const ServerConfigSchema = {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
                         version: {type: 'string'},
-                        uiConfId: {type: 'string'},
                         html5_version: {type: 'string'},
-                        html5lib: {type: 'string'}
+                        html5lib: {type: 'string'},
+                        showStudioV3: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'version', 'uiConfId', 'html5_version', 'html5lib'],
+                    required: ['enabled', 'uri', 'version', 'html5_version', 'html5lib'],
+                    additionalProperties: false
+                },
+                studioV3: {
+                    properties: {
+                        enabled: {type: 'boolean'},
+                        uri: {type: 'string'},
+                        version: {type: 'string'},
+                        html5_version: {type: 'string'},
+                        html5lib: {type: 'string'},
+                        showHTMLStudio: {type: 'boolean'}
+                    },
+                    required: ['enabled', 'uri', 'version', 'html5_version', 'html5lib'],
                     additionalProperties: false
                 },
                 usageDashboard: {
@@ -91,6 +103,7 @@ export const ServerConfigSchema = {
                     enabled: {type: 'boolean'},
                     uri: {type: 'string'},
                     uiConfId: {type: 'string'},
+                    version: {type: 'string'}
                   },
                   required: ['enabled', 'uri', 'uiConfId'],
                   additionalProperties: false
@@ -100,6 +113,7 @@ export const ServerConfigSchema = {
                     enabled: {type: 'boolean'},
                     uri: {type: 'string'},
                     uiConfId: {type: 'string'},
+                    version: {type: 'string'}
                   },
                   required: ['enabled', 'uri', 'uiConfId'],
                   additionalProperties: false
@@ -188,9 +202,17 @@ export interface ServerConfig {
             enabled: boolean,
             uri: string,
             version: string,
-            uiConfId: string,
             html5_version: string,
-            html5lib: string
+            html5lib: string,
+            showFlashStudio: boolean
+        },
+        studioV3: {
+            enabled: boolean,
+            uri: string,
+            version: string,
+            html5_version: string,
+            html5lib: string,
+            showFlashStudio: boolean
         },
         liveDashboard: {
             enabled: boolean,
@@ -220,11 +242,13 @@ export interface ServerConfig {
           enabled: boolean,
           uri: string,
           uiConfId: string,
+          version: string,
         },
         advertisements: {
           enabled: boolean,
           uri: string,
           uiConfId: string,
+          version: string,
         }
     };
     externalLinks: {
