@@ -19,7 +19,7 @@ import { UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exi
 export class AppComponent implements OnInit {
 
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
-  @ViewChild('alert') private _alertDialog: ConfirmDialog;
+  @ViewChild('cd') private _alertDialog: ConfirmDialog;
 
   public _isBusy: boolean = false;
   public _growlMessages: GrowlMessage[] = [];

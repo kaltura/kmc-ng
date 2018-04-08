@@ -1002,6 +1002,9 @@
           "failed": "Failed",
           "otherStatuses": "All other statuses",
           "datesRangeError": "'From Date' must be before 'To Date'"
+        },
+        "errors": {
+          "failedLoad": "Error loading bulk logs"
         }
       },
       "entryStatus": {
@@ -2284,6 +2287,7 @@
           }
         },
         "editForm": {
+          "note": "Note",
           "profileName": "Profile Name",
           "description": "Description",
           "authorizedDomains": "Authorized Domains",
