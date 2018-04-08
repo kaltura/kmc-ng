@@ -342,7 +342,7 @@
           }
         },
         "confirmEntryNavigation": {
-          "title": "Stream has been created",
+          "title": "Success",
           "generalMessage": "Live Stream Entry has been created successfully.",
           "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
           "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
