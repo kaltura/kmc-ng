@@ -1,19 +1,29 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
-import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categories-status/categories-status-monitor.service';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
+import {
+  CategoriesStatus,
+  CategoriesStatusMonitorService
+} from '../../categories-status/categories-status-monitor.service';
 
-import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
+import {
+  EntriesFilters,
+  EntriesStore,
+  SortDirection
+} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-table/entries-table.component';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {CategoriesModes} from 'app-shared/content-shared/categories/categories-mode-type';
 
-import { EntriesRefineFiltersService,
-    RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
+import {
+  EntriesRefineFiltersService,
+  RefineGroup
+} from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
 
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {ViewCategoryEntriesService} from 'app-shared/kmc-shared/events/view-category-entries';
+import {TranslationsContext} from "app-shared/content-shared/categories/categories-filter-preferences/categories-filter-preferences.component";
 
 @Component({
   selector: 'kEntriesList',
@@ -40,6 +50,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineGroup[];
     public _entriesDuration = 0;
+    public readonly _translationContext = TranslationsContext.Entries;
 
     public _categoriesUpdating = false;
     public _isTagsBarVisible = false;

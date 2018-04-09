@@ -491,6 +491,10 @@
         "noRestriction": "No Restriction",
         "requiresAuthentication": "Requires Authentication",
         "private": "Private",
+        "filterCategoriesPrefOptions": {
+          "self": "Display direct sub-categories of the selected category ONLY",
+          "selfAndChildren": "Display ALL sub-categories of the selected category"
+        },
         "selectedCategory": "Selected: {{0}}",
         "deleteAction" : {
           "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
