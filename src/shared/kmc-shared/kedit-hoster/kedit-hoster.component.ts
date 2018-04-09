@@ -1,24 +1,10 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {AppAuthentication} from 'app-shared/kmc-shell';
-import {getKalturaServerUri} from 'config/server';
+import {getKalturaServerUri, serverConfig} from 'config/server';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {UpdateClipsEvent} from 'app-shared/kmc-shared/events/update-clips-event';
+import {AppEventsService} from 'app-shared/kmc-shared';
 
-export interface KeditHosterConfig {
-  entryId: string;
-  keditUrl: string;
-  tab: {name: 'quiz' | 'editor' | 'advertisements',
-    permissions: string[],
-    userPermissions: string[],
-    preActivateMessage?: string,
-    preSaveMessage?: string,
-    preSaveAsMessage?: string};
-    playerUiConfId: string;
-    previewPlayerUiConfId: string;
-    callbackActions?: {
-      clipCreated?: (data: {originalEntryId: string, newEntryId: string, newEntryName: string}) => void,
-      advertisementsModified?: (data: {entryId: string}) => void,
-      advertisementsSaved?: (data: {entryId: string}) => void,
-    };
-}
 
 @Component({
   selector: 'kKeditHoster',
@@ -27,22 +13,30 @@ export interface KeditHosterConfig {
 })
 export class KeditHosterComponent implements OnInit, OnDestroy {
 
+  @Input() entryId: string = null;
+  @Input() tab: 'quiz' | 'editor' | 'advertisements' = null;
 
-  @Input()
-  public set config(value: KeditHosterConfig) {
-    this._keditHosterConfig = value;
-    this._updateState(this._keditHosterConfig);
-  }
+  @Output() enteredDraftMode = new EventEmitter<void>();
+  @Output() exitDraftMode = new EventEmitter<void>();
+
 
   public keditUrl: string;
   public _windowEventListener = null;
   public _keditConfig: any = null;
-  public _keditHosterConfig: KeditHosterConfig = null;
 
-  constructor(private appAuthentication: AppAuthentication) {
+  constructor(private appAuthentication: AppAuthentication,
+              private _permissionService: KMCPermissionsService,
+              private _appEvents: AppEventsService,
+              ) {
   }
 
   ngOnInit() {
+    if (!this.entryId || !this.tab) {
+      this._keditConfig = null;
+      return;
+    }
+    this._updateState();
+
     this._windowEventListener = (e) => {
       let postMessageData;
       try {
@@ -81,9 +75,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy {
             * and message.data is the (localized) text to show the user.
             * */
       if (postMessageData.messageType === 'kea-clip-created') {
-        if (this._keditHosterConfig.callbackActions && this._keditHosterConfig.callbackActions.clipCreated) {
-          this._keditHosterConfig.callbackActions.clipCreated(postMessageData.data);
-        }
+        this._appEvents.publish(new UpdateClipsEvent());
 
         // send a message to KEA which will show up after clip has been created.
         const message = 'Clip was successfully created.';
@@ -99,9 +91,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy {
       * message.data = {entryId}
       */
       if (postMessageData.messageType === 'kea-advertisements-modified') {
-        if (this._keditHosterConfig.callbackActions && this._keditHosterConfig.callbackActions.advertisementsModified) {
-          this._keditHosterConfig.callbackActions.advertisementsModified(postMessageData.data);
-        }
+        this.enteredDraftMode.emit();
       }
 
       /*
@@ -109,16 +99,8 @@ export class KeditHosterComponent implements OnInit, OnDestroy {
        * message.data = {entryId}
        */
       if (postMessageData.messageType === 'kea-advertisements-saved') {
-        if (this._keditHosterConfig.callbackActions && this._keditHosterConfig.callbackActions.advertisementsSaved) {
-          this._keditHosterConfig.callbackActions.advertisementsSaved(postMessageData.data);
-        }
-      }
-
-
-      /* received when user clicks the "go to media" button after quiz was created/edited
-      * message.data = entryId
-      * host should navigate to a page displaying the relevant media */
-      else if (postMessageData.messageType === 'kea-go-to-media') {
+        this.exitDraftMode.emit();
+      } else if (postMessageData.messageType === 'kea-go-to-media') {
         console.log('I will now go to media: ' + postMessageData.data);
       }
     };
@@ -126,28 +108,42 @@ export class KeditHosterComponent implements OnInit, OnDestroy {
     window.addEventListener('message', this._windowEventListener);
   }
 
-  private _updateState(config: KeditHosterConfig): void {
-    if (!config) {
+  private _updateState(): void {
+
+    if (!this.entryId || !this.tab) {
       this._keditConfig = null;
       return;
     }
 
     const serviceUrl = getKalturaServerUri();
+    const tabs = {
+      'quiz': {name: 'quiz', permissions: ['quiz'], userPermissions: ['quiz']},
+      'edit': {name: 'edit', permissions: ['clip', 'trim'], userPermissions: ['clip', 'trim']},
+      'advertisements': {
+        name: 'advertisements',
+        permissions: ['FEATURE_ALLOW_VAST_CUE_POINT_NO_URL', 'CUEPOINT_MANAGE', 'FEATURE_DISABLE_KMC_KDP_ALERTS']
+          .filter(permission => this._permissionService.hasAnyPermissions([KMCPermissions[permission]])),
+        userPermissions: []
+      }
+    };
 
-    const tabs = {};
-    switch (config.tab.name) {
+    let playerUiConfId: string;
+    let previewPlayerUiConfId: string;
+
+    switch (this.tab) {
       case 'quiz':
-        tabs['quiz'] = {name: 'quiz', permissions: config.tab.permissions, userPermissions: config.tab.userPermissions};
-        break;
       case 'editor':
-        tabs['edit'] = {name: 'edit', permissions: config.tab.permissions, userPermissions: config.tab.userPermissions};
+        this.keditUrl = serverConfig.externalApps.clipAndTrim.uri;
+        playerUiConfId = serverConfig.externalApps.clipAndTrim.uiConfId;
+        previewPlayerUiConfId = serverConfig.externalApps.clipAndTrim.uiConfId;
         break;
       case 'advertisements':
-        tabs['advertisements'] = {name: 'advertisements', permissions: config.tab.permissions, userPermissions: config.tab.userPermissions};
+        this.keditUrl = serverConfig.externalApps.advertisements.uri;
+        playerUiConfId = serverConfig.externalApps.advertisements.uiConfId;
+        previewPlayerUiConfId = serverConfig.externalApps.advertisements.uiConfId;
         break;
     }
 
-    this.keditUrl = config.keditUrl;
 
     this._keditConfig = {
       'messageType': 'kea-config',
@@ -177,28 +173,29 @@ export class KeditHosterComponent implements OnInit, OnDestroy {
         'tabs': tabs,
 
         /* tab to start current session with, should match one of the keys above  */
-        'tab': config.tab.name,
+        'tab': this.tab,
 
         /* URL of an additional css file to load */
         'css_url': '',
 
         /* id of the entry to start with */
-        'entry_id': config.entryId,
+        'entry_id': this.entryId,
 
         /* id of uiconf to be used for internal player,
         * if left empty the default deployed player will be used */
-        'player_uiconf_id': config.playerUiConfId,
+        'player_uiconf_id': playerUiConfId,
 
         /* id of uiconf to be used for preview. if not passed, main player is used */
-        'preview_player_uiconf_id': config.previewPlayerUiConfId,
+        'preview_player_uiconf_id': previewPlayerUiConfId,
 
         /* should a KS be appended to the thumbnails url, for access control issues */
         'load_thumbnail_with_ks': false,
 
         /* should hide the navigation bar (sidebar holding the tabs) */
-        'hide_navigation_bar': true
+        'hide_navigation_bar': false
       }
     };
+
   }
 
 
