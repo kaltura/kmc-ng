@@ -27,6 +27,7 @@ import { DefaultFiltersList } from './default-filters-list';
 
 import * as R from 'ramda';
 import { KalturaAccessControlProfile } from 'kaltura-ngx-client/api/types/KalturaAccessControlProfile';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface RefineGroupListItem
 { value: string, label: string }
@@ -52,6 +53,7 @@ export class EntriesRefineFiltersService {
     private _getRefineFilters$: Observable<RefineGroup[]>;
 
     constructor(private kalturaServerClient: KalturaClient,
+                private _permissionsService: KMCPermissionsService,
                 private _metadataProfileStore: MetadataProfileStore, private _flavoursStore: FlavoursStore) {
     }
 
@@ -140,7 +142,9 @@ export class EntriesRefineFiltersService {
             );
             result.lists.push(newRefineFilter);
             defaultFilterList.items.forEach((item: any) => {
+              if (item.value !== '201' || this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM)) {
                 newRefineFilter.items.push({ value: item.value, label: item.label });
+              }
             });
 
         });

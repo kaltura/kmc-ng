@@ -73,8 +73,20 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     }
 
     private _monitorFormChanges() {
-        const formGroups = [this.metadataForm, ...this.customDataForms.map(customDataForm => customDataForm.formGroup)];
+        const formGroups = [];
         const formsChanges: Observable<any>[] = [];
+
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) {
+          formGroups.push(this.metadataForm);
+        }
+
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
+          formGroups.push(...this.customDataForms.map(customDataForm => customDataForm.formGroup));
+        }
+
+        if (!formGroups.length) {
+          return;
+        }
 
         formGroups.forEach(formGroup => {
             formsChanges.push(formGroup.valueChanges, formGroup.statusChanges);
@@ -189,8 +201,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         // map entry metadata to profile metadata
         if (this.customDataForms)
         {
-            this.customDataForms.forEach(customDataForm =>
-            {
+            this.customDataForms.forEach(customDataForm => {
+                if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
+                  customDataForm.disable();
+                }
                 const entryMetadata = this._entryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
 
                 // reset with either a valid entry metadata or null if not found a matching metadata for that entry

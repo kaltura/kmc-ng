@@ -48,12 +48,11 @@ export const ServerConfigSchema = {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
                         version: {type: 'string'},
-                        uiConfId: {type: 'string'},
                         html5_version: {type: 'string'},
                         html5lib: {type: 'string'},
                         showStudioV3: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'version', 'uiConfId', 'html5_version', 'html5lib'],
+                    required: ['enabled', 'uri', 'version', 'html5_version', 'html5lib'],
                     additionalProperties: false
                 },
                 studioV3: {
@@ -61,12 +60,11 @@ export const ServerConfigSchema = {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
                         version: {type: 'string'},
-                        uiConfId: {type: 'string'},
                         html5_version: {type: 'string'},
                         html5lib: {type: 'string'},
                         showHTMLStudio: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'version', 'uiConfId', 'html5_version', 'html5lib'],
+                    required: ['enabled', 'uri', 'version', 'html5_version', 'html5lib'],
                     additionalProperties: false
                 },
                 usageDashboard: {
@@ -204,7 +202,6 @@ export interface ServerConfig {
             enabled: boolean,
             uri: string,
             version: string,
-            uiConfId: string,
             html5_version: string,
             html5lib: string,
             showFlashStudio: boolean
@@ -213,7 +210,6 @@ export interface ServerConfig {
             enabled: boolean,
             uri: string,
             version: string,
-            uiConfId: string,
             html5_version: string,
             html5lib: string,
             showFlashStudio: boolean
