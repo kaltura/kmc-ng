@@ -45,7 +45,10 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
                 partnerPermissionList.add(permissionValue);
             }
         });
-        this._logger.debug(`ignoring the following partner permissions since they are not in use by this app: ${ignoredPartnerPermissionList.join(',')}`);
+        this._logger.debug(`ignoring some partner permissions since they are not in use by this app.`,
+            () => ({
+                permissions: ignoredPartnerPermissionList.join(',')
+            }));
 
         // convert role permission server value into app value
         rawRolePermissionList.forEach(rawPermission => {

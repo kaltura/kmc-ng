@@ -6,6 +6,12 @@
   a {
     color: #FFFFFF;
     text-decoration: none;
+    &:hover:not(.disabled) {
+      color: #FFFFFF;
+    }
+    &:active:not(.disabled) {
+      color: #FFFFFF;
+    }
   }
 
   .kUploadMenuListItem {
