@@ -102,11 +102,6 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
         command: () => this.onActionSelected('edit', category)
       },
       {
-        id: 'delete',
-        label: this.appLocalization.get('applications.content.categories.delete'),
-        command: () => this.onActionSelected('delete', category)
-      },
-      {
         id: 'viewEntries',
         label: this.appLocalization.get('applications.content.categories.viewEntries'),
         command: () => this.onActionSelected('viewEntries', category)
@@ -117,6 +112,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
         command: () => this.onActionSelected('moveCategory', category)
       },
       {
+        id: 'delete',
         label: this.appLocalization.get('applications.content.categories.delete'),
         styleClass: 'kDanger',
         command: () => this.onActionSelected('delete', category)
@@ -126,7 +122,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     this._permissionsService.filterList(
       <{ id: string }[]>this._items,
       {
-        'edit': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
+        'moveCategory': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
         'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
       }
     );
