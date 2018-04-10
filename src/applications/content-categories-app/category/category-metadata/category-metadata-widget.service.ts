@@ -23,6 +23,7 @@ import {CategoryWidgetKeys} from './../category-widget-keys';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
 import {async} from 'rxjs/scheduler/async';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -34,6 +35,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
     constructor(private _kalturaServerClient: KalturaClient,
         private _formBuilder: FormBuilder,
         private _metadataProfileStore: MetadataProfileStore,
+        private _permissionsService: KMCPermissionsService,
         private _dynamicMetadataFormFactory: DynamicMetadataFormFactory) {
         super(CategoryWidgetKeys.Metadata);
 
@@ -101,6 +103,10 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             actions.push(this._loadProfileMetadata());
         }
 
+        if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)) {
+          this.metadataForm.disable({ emitEvent: false });
+        }
+
 
         return Observable.forkJoin(actions)
             .catch((error, caught) => {
@@ -149,6 +155,9 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         // map category metadata to profile metadata
         if (this.customDataForms) {
             this.customDataForms.forEach(customDataForm => {
+                if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)) {
+                  customDataForm.disable();
+                }
                 const categoryMetadata = this._categoryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
 
                 // reset with either a valid category metadata or null if not found a matching metadata for that category
@@ -156,7 +165,9 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             });
         }
 
-        this._monitorFormChanges();
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)) {
+          this._monitorFormChanges();
+        }
     }
 
     private _loadCategoryMetadata(category: KalturaCategory): Observable<{ failed: boolean, error?: Error }> {
