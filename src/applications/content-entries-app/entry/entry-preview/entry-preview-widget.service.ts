@@ -8,6 +8,9 @@ import {EntryWidget} from '../entry-widget';
 import {serverConfig} from 'config/server';
 import {EntryStore} from '../entry-store.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 
 
 @Injectable()
@@ -80,8 +83,11 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
     protected onActivate(firstTimeActivating: boolean) {
 	    this._iframeSrc = this._createUrl();
 
-      this.clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled &&
-        this.data && !this._store.isLiveMediaEntry(this.data.mediaType);
+        const entry: KalturaMediaEntry = this.data ? this.data as KalturaMediaEntry : null;
+        this.clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled &&
+            entry && !this._store.isLiveMediaEntry(entry.mediaType) && entry.mediaType !== KalturaMediaType.image && entry.status === KalturaEntryStatus.ready;
+
+
       if (!this.clipAndTrimEnabled) {
         this._logger.warn('Clip and trim (kedit) is not enabled, please check configuration');
       }
