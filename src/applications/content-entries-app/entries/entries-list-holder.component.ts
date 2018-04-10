@@ -41,20 +41,24 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _rowActions = [
     {
       label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
-      commandName: 'preview'
-    },
-    {
-      label: this._appLocalization.get('applications.content.table.delete'),
-      commandName: 'delete'
+      commandName: 'preview',
+      styleClass: ''
     },
     {
       label: this._appLocalization.get('applications.content.table.view'),
-      commandName: 'view'
+      commandName: 'view',
+      styleClass: ''
     },
     {
       label: this._appLocalization.get('applications.content.table.liveDashboard'),
       commandName: 'liveDashboard',
+      styleClass: '',
       disabled: !serverConfig.externalApps.liveDashboard.enabled
+    },
+    {
+      label: this._appLocalization.get('applications.content.table.delete'),
+      commandName: 'delete',
+      styleClass: 'kDanger'
     }
   ];
 
@@ -72,7 +76,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.prepared)
+      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted)
       .subscribe(() => {
         this._entriesStore.reload();
       });

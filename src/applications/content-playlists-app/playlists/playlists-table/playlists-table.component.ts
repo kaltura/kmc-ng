@@ -85,14 +85,15 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
         command: () => this.onActionSelected('preview', playlist)
       },
       {
-        id: 'delete',
-        label: this._appLocalization.get('applications.content.table.delete'),
-        command: () => this.onActionSelected('delete', playlist)
-      },
-      {
         id: 'view',
         label: this._appLocalization.get('applications.content.table.view'),
         command: () => this.onActionSelected('view', playlist)
+      },
+      {
+        id: 'delete',
+        label: this._appLocalization.get('applications.content.table.delete'),
+        styleClass: 'kDanger',
+        command: () => this.onActionSelected('delete', playlist)
       }
     ];
     if (playlist.status !== KalturaEntryStatus.ready) {

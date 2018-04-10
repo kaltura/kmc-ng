@@ -343,7 +343,7 @@
           }
         },
         "confirmEntryNavigation": {
-          "title": "Stream has been created",
+          "title": "Success",
           "generalMessage": "Live Stream Entry has been created successfully.",
           "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
           "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
@@ -518,7 +518,7 @@
       "addNewCategory": {
         "newCategory": "New Category",
         "newSubcategory": "New Sub-Category",
-        "selectCategoryParent": "Select the parent category under which the new category will appear",
+        "selectCategoryParent": "Select the parent category under which the new category will appear.",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "apply": "Apply",
@@ -541,7 +541,7 @@
       "moveCategory":{
         "noParent":"No Parent",
         "noCategorySelected": "No category was selected",
-        "selectCategoryParent": "Select the parent category under which the selected category will appear",
+        "selectCategoryParent": "Select the parent category under which the selected category will appear.",
         "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
         "errors": {
           "invalidParentSelection": "Category cannot be moved into itself or one of its children categories",
@@ -1004,6 +1004,9 @@
           "failed": "Failed",
           "otherStatuses": "All other statuses",
           "datesRangeError": "'From Date' must be before 'To Date'"
+        },
+        "errors": {
+          "failedLoad": "Error loading bulk logs"
         }
       },
       "entryStatus": {
@@ -1599,6 +1602,7 @@
         }
       },
       "categoryDetails": {
+        "save": "Save",
         "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
@@ -1776,7 +1780,7 @@
               "inheritUser": "Inherit users from parent category",
               "selectEndUsers": "Select End-Users",
               "permissionLevel": "Permission Level",
-              "updateMethod": "Update method",
+              "updateMethod": "Update Method",
               "addUsers": "Add {{0}} Users",
               "save": "Save",
               "cancel": "Cancel",
@@ -2287,6 +2291,7 @@
           }
         },
         "editForm": {
+          "note": "Note",
           "profileName": "Profile Name",
           "description": "Description",
           "authorizedDomains": "Authorized Domains",
@@ -2403,6 +2408,7 @@
             "dimentions": "Dimentions"
           },
           "errors": {
+            "error": "Error",
             "dismiss": "Dismiss",
             "reload": "Reload",
             "loadError": "An error occurred while loading data",

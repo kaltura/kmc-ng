@@ -25,7 +25,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() showReload = true;
     @Input() selectedEntries: any[] = [];
     @Input() columns: EntriesTableColumns | null;
-    @Input() rowActions: { label: string, commandName: string }[];
+    @Input() rowActions: { label: string, commandName: string, styleClass: string }[];
     @Input() enforcedFilters: Partial<EntriesFilters>;
     @Input() defaultFilters: Partial<EntriesFilters>;
 

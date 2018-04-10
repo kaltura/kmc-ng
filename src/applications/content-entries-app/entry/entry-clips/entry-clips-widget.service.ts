@@ -21,7 +21,8 @@ import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import {EntryWidget} from '../entry-widget';
-
+import {serverConfig} from "config/server";
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface ClipsData
 {
@@ -36,6 +37,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
     public entries$ = this._clips.asObservable();
     public sortBy : string = 'createdAt';
     public sortAsc : boolean = false;
+    public clipAndTrimEnabled : boolean = false;
 	private _pageSize: number = 50;
 	public set pageSize(value: number){
     	this._pageSize = value;
@@ -50,7 +52,8 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
                 private _store : EntryStore,
                 private _kalturaServerClient: KalturaClient,
                 private browserService: BrowserService,
-                private _appLocalization: AppLocalization) {
+                private _appLocalization: AppLocalization,
+                private _logger: KalturaLogger) {
         super(EntryWidgetKeys.Clips);
     }
 
@@ -190,7 +193,13 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
     }
 
     protected onActivate(firstTimeActivating: boolean) {
-	    return this._getEntryClips('activation');
+      this.clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled &&
+        this.data && !this._store.isLiveMediaEntry(this.data.mediaType);
+      if (!this.clipAndTrimEnabled) {
+        this._logger.warn('Clip and trim (kedit) is not enabled, please check configuration');
+      }
+
+      return this._getEntryClips('activation');
     }
 
     ngOnDestroy()

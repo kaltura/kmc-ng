@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kSubcategoriesListBulkOperationsContent',
@@ -15,6 +16,8 @@ export class BulkOperationsComponent {
   @Output() clearSelection = new EventEmitter<void>();
   @Output() deleteItems = new EventEmitter<KalturaCategory[]>();
   @Output() moveItems = new EventEmitter<{ items: KalturaCategory[], direction: 'up' | 'down' }>();
+
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization) {
   }
