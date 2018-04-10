@@ -155,6 +155,7 @@
   "applications": {
     "embed":{
       "previewShare": "Share & Embed",
+      "previewInPlayer": "Preview in Player",
       "embedType": "Embed type",
       "selectPlayer": "Select player",
       "embedIframe": "Iframe Embed",
@@ -890,6 +891,7 @@
         "duration": "Duration",
         "status": "Status",
         "previewAndEmbed": "Share & Embed",
+        "previewInPlayer": "Preview in Player",
         "liveDashboard": "Live Dashboard",
         "delete": "Delete",
         "view": "View Details",
@@ -1138,6 +1140,7 @@
         },
         "preview": {
           "pande": "Share & Embed",
+          "previewInPlayer": "Preview in Player",
           "details": "Details",
           "entryID": "ID:",
           "creator": "Created by:",
