@@ -96,15 +96,21 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
         command: () => this.onActionSelected('delete', playlist)
       }
     ];
+
     if (playlist.status !== KalturaEntryStatus.ready) {
       this._items.shift();
+    }else
+    {
+      const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
+      if (!hasEmbedPermission) {
+        this._items[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
+      }
     }
 
     this._permissionsService.filterList(
       <{id: string}[]>this._items,
       {
-        'delete': KMCPermissions.PLAYLIST_DELETE,
-        'previewAndEmbed': KMCPermissions.PLAYLIST_EMBED_CODE,
+        'delete': KMCPermissions.PLAYLIST_DELETE
       }
     );
   }
