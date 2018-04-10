@@ -69,9 +69,7 @@ export class EntryComponent implements OnInit, OnDestroy {
       KMCPermissions.CONTENT_MANAGE_SCHEDULE,
       KMCPermissions.CONTENT_MANAGE_THUMBNAIL,
       KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL,
-      KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
-      KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND,
-      KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE,
+      KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA
     ]);
 		return !this._entryStore.entryIsDirty || !editAccessControlAllowed;
 	}
