@@ -9,6 +9,11 @@ $app-styles-path: '../../../styles';
   border-bottom: 1px solid $kGrayscale4;
   padding: 30px 28px 28px 28px;
 
+  .kProfileIcon {
+    width: 28px;
+    background-repeat: no-repeat;
+  }
+
   .kDistributedProfileContent {
     display: flex;
     flex-grow: 1;
@@ -58,6 +63,10 @@ $app-styles-path: '../../../styles';
 
       .kMoreDetails, .kLastUpdate {
         white-space: nowrap;
+      }
+
+      .kAutoDistribution {
+        display: inline-flex;
       }
 
       .kDelimiter {

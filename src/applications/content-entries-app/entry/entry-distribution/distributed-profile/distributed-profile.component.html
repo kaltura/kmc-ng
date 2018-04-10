@@ -29,7 +29,7 @@
         {{'applications.content.entryDetails.distribution.lastUpdate' | translate:[(_profile?.updatedAt | kDate:'dateOnly')]}}
         <span class="kDelimiter"></span>
       </span>
-      <span *ngIf="_profile?.autoDistribution">
+      <span class="kAutoDistribution" *ngIf="_profile?.autoDistribution">
         {{'applications.content.entryDetails.distribution.auto' | translate}}
         <span class="kDelimiter"></span>
       </span>
