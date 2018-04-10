@@ -342,7 +342,7 @@
           }
         },
         "confirmEntryNavigation": {
-          "title": "Stream has been created",
+          "title": "Success",
           "generalMessage": "Live Stream Entry has been created successfully.",
           "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
           "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
@@ -517,7 +517,7 @@
       "addNewCategory": {
         "newCategory": "New Category",
         "newSubcategory": "New Sub-Category",
-        "selectCategoryParent": "Select the parent category under which the new category will appear",
+        "selectCategoryParent": "Select the parent category under which the new category will appear.",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "apply": "Apply",
@@ -540,7 +540,7 @@
       "moveCategory":{
         "noParent":"No Parent",
         "noCategorySelected": "No category was selected",
-        "selectCategoryParent": "Select the parent category under which the selected category will appear",
+        "selectCategoryParent": "Select the parent category under which the selected category will appear.",
         "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
         "errors": {
           "invalidParentSelection": "Category cannot be moved into itself or one of its children categories",
@@ -658,7 +658,7 @@
             "itunes": "ITunes",
             "roku": "Roku Direct Publisher",
             "opera": "Opera Snap TV",
-            "flexibaleFormat": "Flexibale Format"
+            "flexibleFormat": "Flexible Format"
           },
           "destinationsForms": {
             "google": {
@@ -1002,6 +1002,9 @@
           "failed": "Failed",
           "otherStatuses": "All other statuses",
           "datesRangeError": "'From Date' must be before 'To Date'"
+        },
+        "errors": {
+          "failedLoad": "Error loading bulk logs"
         }
       },
       "entryStatus": {
@@ -1118,6 +1121,7 @@
         "downloadFailed": "Download request failed"
       },
       "entryDetails": {
+        "save": "Save",
         "sections": {
           "metadata": "Metadata",
           "thumbnails": "Thumbnails",
@@ -1168,12 +1172,17 @@
           "delete": "Delete",
           "thumbnail": "Thumbnail",
           "addEntry": "Add Entry",
+          "addEntries": "Add Entries",
+          "removeEntry": "Remove Entry",
           "remove": "Remove",
-          "selected": "Selected",
-          "clear": "Clear Selection",
+          "selected": "{{0}} Selected",
+          "clear": "Clear",
           "addGroup": "Add Group",
           "deleteGroup": "Delete Group",
-          "nameRequired": "You must enter an entry name"
+          "nameRequired": "You must enter an entry name",
+          "customDataError": "\"{{0}}\" Custom Data Error",
+          "missingEntriesWarning": "The following entries were not found: {{0}}",
+          "replaceLinkedEntry": "Selecting a new entry will replace the current entry. Continue?"
         },
         "thumbnails": {
           "thumbnails": "Thumbnails",
@@ -1423,7 +1432,7 @@
           "clipTrim": "Clip & Trim"
         },
         "advertisements": {
-          "title":"Advertisement",
+          "title":"Advertisements",
           "description": "Create and manage time-based advertisements by using the Video Editor Tool.",
           "manageAdvertisements": "Manage Advertisements",
           "cancelEdit": "Cancel Edit",
@@ -1590,6 +1599,7 @@
         }
       },
       "categoryDetails": {
+        "save": "Save",
         "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
@@ -1672,7 +1682,7 @@
           },
           "moderateContent": {
             "label": "Moderate Content",
-            "help": "Media will not appear in page until by the category manager/moderator."
+            "help": "Media will not appear in page until approved by the category manager/moderator."
           },
           "inheritUsersPermissions": {
             "label": "Inherit Users Permissions",
@@ -1767,7 +1777,7 @@
               "inheritUser": "Inherit users from parent category",
               "selectEndUsers": "Select End-Users",
               "permissionLevel": "Permission Level",
-              "updateMethod": "Update method",
+              "updateMethod": "Update Method",
               "addUsers": "Add {{0}} Users",
               "save": "Save",
               "cancel": "Cancel",
@@ -1971,8 +1981,23 @@
         "description": "Description",
         "save": "Save",
         "add": "Add",
+        "cancel": "Cancel",
+        "newRole": "newRole",
+        "contactUs": "Contact us",
+        "contactUsText": " to learn more about adding any disabled items below to your account.",
         "errors": {
-          "required": "This field is required"
+          "required": "This field is required",
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
+        },
+        "permissionsTable": {
+          "featureSet": "Feature Set",
+          "permissions": "Permissions",
+          "viewOnly": "View Only",
+          "allPermissions": "All Permissions",
+          "custom": "Custom ({0} Selected)",
+          "disabled": "Disabled",
+          "selectPermissions": "Choose",
+          "requiredError": "Select permissions or disable the row"
         }
       },
       "paginator": {
@@ -2252,7 +2277,7 @@
           "name": "Name",
           "id": "ID",
           "createdOn": "Created On",
-          "domain": "Domain",
+          "domains": "Domains",
           "countries": "Countries",
           "ips": "IPs",
           "flavors": "Flavors",
@@ -2263,6 +2288,7 @@
           }
         },
         "editForm": {
+          "note": "Note",
           "profileName": "Profile Name",
           "description": "Description",
           "authorizedDomains": "Authorized Domains",
@@ -2379,6 +2405,7 @@
             "dimentions": "Dimentions"
           },
           "errors": {
+            "error": "Error",
             "dismiss": "Dismiss",
             "reload": "Reload",
             "loadError": "An error occurred while loading data",

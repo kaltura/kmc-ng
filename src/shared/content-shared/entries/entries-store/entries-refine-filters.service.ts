@@ -55,7 +55,7 @@ export class EntriesRefineFiltersService {
     private _getRefineFilters$: Observable<RefineGroup[]>;
 
     constructor(private kalturaServerClient: KalturaClient,
-                private _kmcPermissionsService: KMCPermissionsService,
+                private _permissionsService: KMCPermissionsService,
                 private _metadataProfileStore: MetadataProfileStore,
                 private _flavoursStore: FlavoursStore) {
     }
@@ -145,7 +145,9 @@ export class EntriesRefineFiltersService {
             );
             result.lists.push(newRefineFilter);
             defaultFilterList.items.forEach((item: any) => {
+              if (item.value !== '201' || this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM)) {
                 newRefineFilter.items.push({ value: item.value, label: item.label });
+              }
             });
 
         });
@@ -216,7 +218,7 @@ export class EntriesRefineFiltersService {
                 }),
             );
 
-            if (this._kmcPermissionsService.hasPermission(KMCPermissions.CONTENTDISTRIBUTION_PLUGIN_PERMISSION)) {
+            if (this._permissionsService.hasPermission(KMCPermissions.CONTENTDISTRIBUTION_PLUGIN_PERMISSION)) {
               const distributionProfilePager = new KalturaFilterPager({});
               distributionProfilePager.pageSize = 500;
               const distributionProfileListAction = new DistributionProfileListAction({ pager: distributionProfilePager });

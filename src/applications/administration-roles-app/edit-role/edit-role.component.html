@@ -1,0 +1,58 @@
+<k-area-blocker [message]="_blockerMessage">
+  <div class="kEditRole">
+    <div class="kFloater">
+      <div class="kHeader" kStickyHeader [stickyId]="'editRoleHeader'">
+        <span class="kTitle">{{_title}}</span>
+        <div class="kButtons">
+          <a class="kCancel" (click)="parentPopupWidget.close()">
+            {{'applications.administration.role.cancel' | translate}}
+          </a>
+          <button pButton class="kButtonBranded kSaveBtn"
+                  *ngIf="_kmcPermissions.ADMIN_ROLE_UPDATE | kNgIfPermitted"
+                  [label]="_actionBtnLabel"
+                  [disabled]="_saveDisabled"
+                  (click)="_performAction()"></button>
+        </div>
+      </div>
+      <div class="kContainer" #scrollableContainer>
+        <form class="kRoleForm" [formGroup]="_editRoleForm" novalidate>
+          <div class="kRow">
+            <span class="kLabel">{{'applications.administration.role.name' | translate}}</span>
+            <div class="kRequired" [class.kHasError]="_nameField.invalid && _nameField.touched">*</div>
+            <div>
+              <input class="kControl" pInputText
+                     [formControl]="_nameField"
+                     [class.kHasError]="_nameField.invalid && _nameField.touched">
+              <div *ngIf="_nameField.invalid && _nameField.touched" class="kError">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="kRow">
+            <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
+            <div class="kRequired" [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">*</div>
+            <div>
+              <textarea class="kControl" pInputTextarea
+                        [formControl]="_descriptionField"
+                        [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">
+              </textArea>
+              <div *ngIf="_descriptionField.invalid && _descriptionField.touched" class="kError">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="_hasDisabledPermissions" class="kHasDisabledPermissions">
+          <a [href]="_contactUsLink" target="_blank">{{'applications.administration.role.contactUs' | translate}}</a>
+          {{'applications.administration.role.contactUsText' | translate}}
+        </div>
+        <kRolePermissionsTable [permissions]="_permissions"
+                               [isNewRole]="_isNewRole"
+                               [scrollableContainer]="scrollableContainer"
+                               (setDirty)="_setDirty()"
+                               (rolePermissionsChange)="_updateRolePermissions($event)"></kRolePermissionsTable>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
