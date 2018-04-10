@@ -19,7 +19,6 @@ $app-styles-path: '../../../styles';
 
     .kTitle {
       margin-bottom: 16px;
-      cursor: pointer;
 
       .kDistributorPageLink {
         text-decoration: none;
@@ -29,6 +28,7 @@ $app-styles-path: '../../../styles';
         font-size: 15px;
         font-weight: bold;
         line-height: 18px;
+        cursor: pointer;
       }
 
       .kTitleIcon {
@@ -38,6 +38,7 @@ $app-styles-path: '../../../styles';
         position: relative;
         top: 4px;
         line-height: 12px;
+        cursor: pointer;
       }
     }
 
