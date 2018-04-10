@@ -517,7 +517,7 @@
       "addNewCategory": {
         "newCategory": "New Category",
         "newSubcategory": "New Sub-Category",
-        "selectCategoryParent": "Select the parent category under which the new category will appear",
+        "selectCategoryParent": "Select the parent category under which the new category will appear.",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "apply": "Apply",
@@ -540,7 +540,7 @@
       "moveCategory":{
         "noParent":"No Parent",
         "noCategorySelected": "No category was selected",
-        "selectCategoryParent": "Select the parent category under which the selected category will appear",
+        "selectCategoryParent": "Select the parent category under which the selected category will appear.",
         "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
         "errors": {
           "invalidParentSelection": "Category cannot be moved into itself or one of its children categories",
