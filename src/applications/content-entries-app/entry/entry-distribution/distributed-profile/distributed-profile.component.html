@@ -43,7 +43,7 @@
   </div>
 
   <div class="kControls">
-    <button *ngIf="!_deleteButtonHidden || _kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE | kNgIfPermitted" pButton
+    <button *ngIf="!_deleteButtonHidden" pButton
             [disabled]="_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_REMOVE | kDisabledIfNotPermitted"
             icon="kIcontrash" class="kButtonDanger kDeleteBtn"
             (click)="_deleteDistribution(_profile)"></button>
