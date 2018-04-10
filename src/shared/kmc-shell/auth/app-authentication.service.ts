@@ -116,10 +116,10 @@ export class AppAuthentication {
     }
 
     resetPassword(email: string): Observable<void> {
-        if (this.isLogged()) {
+        if (!this.isLogged()) {
             return this.kalturaServerClient.request(new UserResetPasswordAction({email}));
         } else {
-            return Observable.throw(new Error('cannot reset password, user is not logged'));
+            return Observable.throw(new Error('cannot reset password, user is logged'));
         }
     }
 
