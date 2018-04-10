@@ -1988,6 +1988,8 @@
         "newRole": "newRole",
         "contactUs": "Contact us",
         "contactUsText": " to learn more about adding any disabled items below to your account.",
+        "roleUpdated": "Role updated",
+        "roleUpdatedMessage": "Changes will take effect immediately.\nBrowser page refresh should be recommended to the existing users associated with this role",
         "errors": {
           "required": "This field is required",
           "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
