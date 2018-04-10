@@ -91,6 +91,10 @@
 		}
 		.kReportLink{
 			margin-left: 12px;
+			&.kDisabled{
+				pointer-events: none;
+				color: $kGrayscale4;
+			}
 		}
 		.kError{
 			line-height: 28px;

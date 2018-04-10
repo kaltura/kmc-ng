@@ -23,6 +23,8 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {EntryWidget} from '../entry-widget';
 import {serverConfig} from "config/server";
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 
 export interface ClipsData
 {
@@ -38,6 +40,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
     public sortBy : string = 'createdAt';
     public sortAsc : boolean = false;
     public clipAndTrimEnabled : boolean = false;
+    public showClipAndTrim : boolean = false;
 	private _pageSize: number = 50;
 	public set pageSize(value: number){
     	this._pageSize = value;
@@ -193,8 +196,9 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
     }
 
     protected onActivate(firstTimeActivating: boolean) {
-      this.clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled &&
-        this.data && !this._store.isLiveMediaEntry(this.data.mediaType);
+    	const entry: KalturaMediaEntry = this.data ? this.data as KalturaMediaEntry : null;
+      this.clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled;
+      this.showClipAndTrim = entry && !this._store.isLiveMediaEntry(entry.mediaType) && entry.mediaType !== KalturaMediaType.image && entry.status === KalturaEntryStatus.ready;
       if (!this.clipAndTrimEnabled) {
         this._logger.warn('Clip and trim (kedit) is not enabled, please check configuration');
       }

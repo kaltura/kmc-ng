@@ -29,7 +29,7 @@
             <span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
             <span>{{_widgetService.data?.streamName.replace('%i', '1')}}</span>
           </div>
-          <!--div class="kRow">
+          <div class="kRow">
             <span class="kLabels"></span>
             <span>{{'applications.content.entryDetails.live.note' | translate}}</span>
           </div>
@@ -37,8 +37,8 @@
             <span class="kLabels"></span>
             <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"
                     label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
-            <a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" (click)="_widgetService._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
-          </div-->
+            <a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" [class.kDisabled]="!enableLiveDashboard" (click)="_openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
+          </div>
         </div>
 
         <div>
@@ -219,3 +219,4 @@
     <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
   </ng-template>
 </kPopupWidget>
+

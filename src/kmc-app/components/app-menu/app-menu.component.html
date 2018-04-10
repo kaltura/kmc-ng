@@ -38,7 +38,6 @@
 
 <kPopupWidget #usersettings
               [popupWidth]="240"
-              [popupHeight]="232"
               [closeBtn]="false"
               [targetRef]="username"
               [targetOffset]="{'x': 0, 'y': 30}"
@@ -61,11 +60,11 @@
         <p class="kHelpLink">{{'app.helpMenu.contact' | translate}}</p>
         <hr>
         <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
-        <div class="kContexualHelp">
+        <!--div class="kContexualHelp">
             <hr>
             <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
             <p class="kHelpLink">Contextual link 1</p>
             <p class="kHelpLink">Contextual link 2</p>
-        </div>
+        </div-->
     </div>
 </kPopupWidget>
