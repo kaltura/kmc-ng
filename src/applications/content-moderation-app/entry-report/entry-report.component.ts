@@ -215,6 +215,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(entryId): void {
+    this.parentPopupWidget.close();
     this._router.navigate(['content/entries/entry', entryId]);
   }
 

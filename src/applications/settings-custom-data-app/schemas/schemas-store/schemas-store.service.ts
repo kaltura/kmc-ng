@@ -16,7 +16,6 @@ import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaM
 import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
 import { MetadataProfileParser } from 'app-shared/kmc-shared';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { subApplicationsConfig } from 'config/sub-applications';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { MetadataProfileDeleteAction } from 'kaltura-ngx-client/api/types/MetadataProfileDeleteAction';
 import { SettingsMetadataProfile } from './settings-metadata-profile.interface';
@@ -24,12 +23,11 @@ import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
 import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
 import { MetadataProfileUpdateAction } from 'kaltura-ngx-client/api/types/MetadataProfileUpdateAction';
 import { MetadataProfileAddAction } from 'kaltura-ngx-client/api/types/MetadataProfileAddAction';
-import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
 
 export interface SchemasFilters {
-  pageSize: number,
-  pageIndex: number
+  pageSize: number;
+  pageIndex: number;
 }
 
 const localStoragePageSizeKey = 'schemas.list.pageSize';
@@ -55,7 +53,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
               private _appAuth: AppAuthentication,
               private _browserService: BrowserService,
               _logger: KalturaLogger) {
-    super(_logger);
+    super(_logger.subLogger('SchemasStore'));
     this._prepare();
   }
 
@@ -66,6 +64,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
 
   private _prepare(): void {
     if (!this._isReady) {
+      this._logger.info(`initiate service`);
       this._isReady = true;
 
       const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
@@ -100,6 +99,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       this._browserService.setInLocalStorage(localStoragePageSizeKey, pageSize);
     }
 
+    this._logger.info(`loading data from the server`);
     this._schemas.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .cancelOnDestroy(this)
@@ -128,6 +128,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       })
       .subscribe(
         response => {
+          this._logger.info(`handle success data loading`);
           this._querySubscription = null;
 
           this._schemas.state.next({ loading: false, errorMessage: null });
@@ -140,6 +141,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          this._logger.info(`handle failing data loading`, { errorMessage });
           this._schemas.state.next({ loading: false, errorMessage });
         });
   }
@@ -183,11 +185,13 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       metadataObjectType: schema.applyTo
     });
 
+    this._logger.debug(`create 'MetadataProfileUpdateAction'`);
+
     return new MetadataProfileUpdateAction({
       id: schema.id,
       metadataProfile: updatedProfile,
       xsdData: this._metadataProfileParser.generateSchema(schema.parsedProfile)
-    })
+    });
   }
 
   private _getCreateSchemaAction(schema: SettingsMetadataProfile): KalturaRequest<KalturaMetadataProfile> {
@@ -198,6 +202,8 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       description: schema.description,
       metadataObjectType: schema.applyTo
     });
+
+    this._logger.debug(`create 'MetadataProfileAddAction'`);
 
     return new MetadataProfileAddAction({
       metadataProfile: newProfile,
@@ -230,7 +236,9 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
   }
 
   public reload(): void {
+    this._logger.info(`reload schemas list`);
     if (this._schemas.state.getValue().loading) {
+      this._logger.info(`reloading already in progress skipp duplicating request`);
       return;
     }
 

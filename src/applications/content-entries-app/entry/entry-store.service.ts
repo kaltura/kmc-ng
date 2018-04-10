@@ -10,6 +10,7 @@ import 'rxjs/add/operator/switchMap';
 
 import {KalturaClient, KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import {BaseEntryUpdateAction} from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
@@ -384,6 +385,13 @@ export class EntryStore implements  OnDestroy {
 
 	public setRefreshEntriesListUponLeave() {
 	  this._refreshEntriesListUponLeave = true;
+  }
+
+  public isLiveMediaEntry( mediaType: KalturaMediaType): boolean {
+    return mediaType === KalturaMediaType.liveStreamFlash ||
+      mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+      mediaType === KalturaMediaType.liveStreamRealMedia ||
+      mediaType === KalturaMediaType.liveStreamQuicktime;
   }
 
 }

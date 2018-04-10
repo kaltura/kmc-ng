@@ -49,6 +49,7 @@ import {CategoriesModule} from 'app-shared/content-shared/categories/categories.
 import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
 import {KeditHosterModule} from 'app-shared/kmc-shared/kedit-hoster/kedit-hoster.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -93,7 +94,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     OverlayPanelModule,
     KeditHosterModule,
     StickyModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+    TableModule
   ],
   declarations: [
     ContentEntriesComponent,

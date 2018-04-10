@@ -44,7 +44,6 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             'showFlashStudio': false,
             'showStudioV3': this._permissionsService.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION),
-            'uiConfID': +serverConfig.externalApps.studio.uiConfId,
             'version': serverConfig.externalApps.studio.version
           },
           'studioV3':{
@@ -59,7 +58,6 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
             'html5_version': serverConfig.externalApps.studioV3.html5_version,
             'showFlashStudio': false,
             'showHTMLStudio': this._permissionsService.hasPermission(KMCPermissions.FEATURE_SHOW_HTML_STUDIO),
-            'uiConfID': +serverConfig.externalApps.studioV3.uiConfId,
             'version': serverConfig.externalApps.studioV3.version
           }
         },

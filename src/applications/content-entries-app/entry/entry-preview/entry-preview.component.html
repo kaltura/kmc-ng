@@ -1,6 +1,16 @@
 <div class="kEntryPreview">
 	<iframe *ngIf="_widgetService._iframeSrc" [src]="_widgetService._iframeSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
 	<div class="kPreviewAndEmbedContainer" *ngIf="_entryHasContent">
-		<i (click)="openPreviewAndEmbed()" [class.disabled]="!_entryReady" class="kIconshare"></i><a [class.disabled]="!_entryReady" (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
-	</div>
+		<i (click)="_entryReady && openPreviewAndEmbed()" [class.disabled]="!_entryReady" class="kIconShare"></i>
+		<a [class.disabled]="!_entryReady" (click)="_entryReady && openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
+        <i (click)="clipAndTrim.open()" *ngIf="_widgetService.clipAndTrimEnabled" class="kIconmovies"></i>
+        <a *ngIf="_widgetService.clipAndTrimEnabled" (click)="clipAndTrim.open()">{{'applications.content.entryDetails.clips.clipTrim' | translate}}</a>
+
+    </div>
 </div>
+
+<kPopupWidget #clipAndTrim [fullScreen]="true">
+  <ng-template>
+    <kClipAndTrim [entryId]="_widgetService.data.id" [parentPopupWidget]="clipAndTrim"></kClipAndTrim>
+  </ng-template>
+</kPopupWidget>

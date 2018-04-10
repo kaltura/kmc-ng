@@ -80,7 +80,7 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
     this._items = [
       {
         label: this._appLocalization.get('applications.content.dropFolders.table.delete'),
-        styleClass: 'kDeleteAction',
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('remove', rowIndex, folder)
       }
     ];
