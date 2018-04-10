@@ -14,6 +14,7 @@ import {KalturaDropFolderFile} from 'kaltura-ngx-client/api/types/KalturaDropFol
 import {AppLocalization} from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { globalConfig } from 'config/global';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kDropFoldersListTable',
@@ -49,6 +50,7 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   public _items: MenuItem[];
   public _emptyMessage = '';
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef) {
