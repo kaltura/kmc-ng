@@ -1138,6 +1138,7 @@
         },
         "preview": {
           "pande": "Share & Embed",
+          "clipAndTrim": "Clip & Trim",
           "details": "Details",
           "entryID": "ID:",
           "creator": "Created by:",
