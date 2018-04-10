@@ -6,11 +6,12 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntrySta
 
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { serverConfig } from 'config/server';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
 	selector: 'kEntryPreview',
@@ -22,6 +23,7 @@ export class EntryPreview implements OnInit, OnDestroy {
 
 	public _entryHasContent: boolean = false;
 	public _entryReady: boolean = false;
+	public _actionLabel: string;
   public _clipAndTrimEnabled = false;
 
 
@@ -29,11 +31,16 @@ export class EntryPreview implements OnInit, OnDestroy {
 
 
 	constructor(public _widgetService: EntryPreviewWidget,
+              private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _appEvents: AppEventsService) {
 	}
 
 	ngOnInit() {
+    const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
+    this._actionLabel = hasEmbedPermission
+      ? this._appLocalization.get('applications.content.entryDetails.preview.pande')
+      : this._appLocalization.get('applications.content.entryDetails.preview.previewInPlayer');
 
         this._widgetService.attachForm();
 		this._widgetService.data$.subscribe(
