@@ -16,6 +16,7 @@
 			cursor: pointer;
 			color: $kGrayscale3;
 			margin-right: 8px;
+			font-size: 18px;
 		}
 		a{
 			cursor: pointer;
@@ -35,12 +36,8 @@
 			cursor: default;
 		}
 
-    .kIconmovies {
-      padding-left: 20px;
-      font-size: 20px;
-      color: $kGrayscale1;
-      height: 22px;
-      vertical-align: middle;
-    }
+		.kIconmovies {
+		  padding-left: 20px;
+		}
 	}
 }
