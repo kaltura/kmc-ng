@@ -109,7 +109,6 @@
         <div>
           <button pButton class="kButtonDanger"
                   icon="kIcontrash"
-                  *ngIf="_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE | kNgIfPermitted"
                   [disabled]="_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_REMOVE | kDisabledIfNotPermitted"
                   [label]="'applications.content.entryDetails.distribution.form.delete' | translate"
                   (click)="_deleteProfile(_profile)"></button>
