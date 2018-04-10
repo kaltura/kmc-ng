@@ -71,6 +71,7 @@ export class DistributedProfileComponent implements OnInit {
   private _setupActionButton(): void {
     const { status, dirtyStatus } = this._profile;
     this._actionButtonHidden = false;
+    this._actionButtonDisabled = false;
 
     switch (status) {
       case KalturaEntryDistributionStatus.ready:
@@ -100,7 +101,6 @@ export class DistributedProfileComponent implements OnInit {
       case KalturaEntryDistributionStatus.pending:
       case KalturaEntryDistributionStatus.removed:
         this._actionButtonLabel = this._appLocalization.get('applications.content.entryDetails.distribution.export');
-        this._actionButtonDisabled = !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE);
         break;
       default:
         this._actionButtonHidden = true;

@@ -24,7 +24,10 @@ $app-styles-path: '../../../styles';
 
     .kTitle {
       margin-bottom: 16px;
-      cursor: pointer;
+
+      &.kClickable {
+        cursor: pointer;
+      }
 
       .kTitleLabel {
         font-size: 15px;

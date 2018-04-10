@@ -69,9 +69,19 @@ export class EditDistributionProfileComponent implements OnInit {
   }
 
   public get _actionDisabled(): boolean {
-    const hasDistributionWherePermission = !this._forDistribution
-      && this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE);
-    return !!(this._createdFilterError || this._missingFlavorError || this._missingThumbnailError || !hasDistributionWherePermission);
+    let updateDisabled = false;
+    let updateForAutoDistributionDisabled = false;
+    if (!this._forDistribution) {
+      const autoUpdates = this.undistributedProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic;
+
+      updateForAutoDistributionDisabled = autoUpdates
+        && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND);
+
+      updateDisabled = !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE);
+    }
+
+    return !!(this._createdFilterError || this._missingFlavorError || this._missingThumbnailError
+      || updateDisabled || updateForAutoDistributionDisabled);
   }
 
   public get _addButtonLabel(): string {
@@ -185,7 +195,10 @@ export class EditDistributionProfileComponent implements OnInit {
         this._updatesField.disable({ onlySelf: true });
       }
 
-      if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE)) {
+      const hasAutoSubmit = this.undistributedProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic;
+      const noSendPermissions = !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND);
+      const noWherePermissions = !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE);
+      if (noWherePermissions || (hasAutoSubmit && noSendPermissions)) {
         this._startDateField.disable({ onlySelf: true });
         this._endDateField.disable({ onlySelf: true });
       }
