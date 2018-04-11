@@ -25,7 +25,6 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlProfileTableName kTableColumn"
                 [kTooltip]="profile[col.field]"
-                [maxWidth]="300"
                 (click)="_onActionSelected('edit', profile)">
             {{ profile[col.field] }}
           </span>

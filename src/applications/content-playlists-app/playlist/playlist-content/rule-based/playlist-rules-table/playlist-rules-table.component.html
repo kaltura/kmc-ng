@@ -16,7 +16,6 @@
         <ng-template let-col let-rule="rowData" pTemplate="body">
           <span class="kTitle kTableColumn"
                 [kTooltip]="rule[col.field]"
-                [maxWidth]="300"
                 (click)="_viewRule(rule)">{{rule[col.field]}}</span>
         </ng-template>
       </p-column>

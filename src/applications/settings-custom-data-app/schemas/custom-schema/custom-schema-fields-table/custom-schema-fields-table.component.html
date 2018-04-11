@@ -23,7 +23,6 @@
       <ng-template let-col let-field="rowData" pTemplate="body">
         <div class="kTitle kTableColumn"
              [kTooltip]="'applications.settings.metadata.table.labelTT' | translate : {name: field['name']}"
-             [maxWidth]="300"
              (click)="_editField(field)">
           {{field[col.field]}}
         </div>
