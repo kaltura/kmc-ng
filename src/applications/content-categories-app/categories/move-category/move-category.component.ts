@@ -164,16 +164,13 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   }
 
   private _validateCategoryMove(categoryToMove: KalturaCategory) {
-    const hasSelectedParent = this._selectedParentCategory && this._selectedParentCategory !== 'missing';
-
-    if (!hasSelectedParent) {
+    if (this._selectedParentCategory === 'missing') {
       return Observable.of(false);
     }
 
     // if category moved to the same parent or to 'no parent' as it was before
-    const noCurrentParent = !categoryToMove.parentId;
-    const sameParent = hasSelectedParent && categoryToMove.parentId === this._selectedParentCategory;
-    if ((!hasSelectedParent && noCurrentParent) || sameParent) {
+    const sameParent = categoryToMove.parentId === this._selectedParentCategory || !categoryToMove.parentId && this._selectedParentCategory === null;
+    if (sameParent) {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.moveCategory.errors.categoryAlreadyBelongsToParent'),
         buttons: [{
@@ -184,6 +181,10 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
         }]
       });
       return Observable.of(false);
+    }
+
+    if (this._selectedParentCategory === null) { // no parent selected
+      return Observable.of(true);
     }
 
     return this._categoriesService.getCategoryById(<number>this._selectedParentCategory)
