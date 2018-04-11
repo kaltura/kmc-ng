@@ -1139,6 +1139,7 @@
           "advertisements": "Advertisements"
         },
         "preview": {
+          "clipAndTrim": "Clip & Trim",
           "pande": "Share & Embed",
           "previewInPlayer": "Preview in Player",
           "details": "Details",
