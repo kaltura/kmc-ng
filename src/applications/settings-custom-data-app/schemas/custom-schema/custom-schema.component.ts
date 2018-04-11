@@ -247,7 +247,12 @@ export class CustomSchemaComponent implements OnInit {
   }
 
   public _editField(field: MetadataItem): void {
-    this._logger.info(`handle 'edit field' action by the user`, { field: { id: field.id, name: field.name } });
+      if (field) {
+          this._logger.info(`handle 'edit field' action by the user`, { field: { id: field.id, name: field.name } });
+      } else {
+          this._logger.info(`handle 'add field' action by the user`);
+      }
+
     this._selectedField = field;
     this._customSchemaFieldPopup.open();
   }
