@@ -22,7 +22,6 @@ import {AccessControlProfileStore, FlavoursStore} from 'app-shared/kmc-shared';
 import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';
-import * as R from 'ramda';
 import {EntryWidget} from '../entry-widget';
 
 
@@ -78,7 +77,7 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
             let ACProfiles = response[0].items;
             if (ACProfiles.length) {
               // check if any of the access control profiles is defined as default
-              const defaultIndex = R.findIndex(R.propEq('isDefault', 1))(ACProfiles);
+              const defaultIndex = ACProfiles.findIndex(({ isDefault }) => isDefault === 1);
               if (defaultIndex > -1) {
                 // put the default profile at the beginning of the profiles array
                 const defaultProfile: KalturaAccessControl[] = ACProfiles.splice(defaultIndex, 1);
@@ -125,7 +124,7 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
     profilesDataProvider.forEach(profile => {
       profilesArr.push(profile.value)
     });
-    let entryACProfileIndex = R.findIndex(R.propEq('id', this.data.accessControlId))(profilesArr);
+    let entryACProfileIndex = profilesArr.findIndex(({ id }) => id === this.data.accessControlId);
     entryACProfileIndex = entryACProfileIndex === -1 ? 0 : entryACProfileIndex;
     this.selectedProfile = profilesArr[entryACProfileIndex];
   }
@@ -174,7 +173,7 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
           let flavourIDs = restriction.flavorParamsIds.split(",");
           let flavourNames = [];
           flavourIDs.forEach(flavourId => {
-            let flavour: KalturaFlavorParams = R.find(R.propEq('id', parseInt(flavourId)))(this._flavourParams);
+            const flavour: KalturaFlavorParams = this._flavourParams.find(({ id }) => id === parseInt(flavourId, 10));
             if (flavour !== undefined) {
               flavourNames.push(flavour.name);
             }

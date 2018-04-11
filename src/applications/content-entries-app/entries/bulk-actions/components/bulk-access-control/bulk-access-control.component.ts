@@ -27,7 +27,6 @@ import { AppLocalization, KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { AccessControlProfileStore, FlavoursStore } from 'app-shared/kmc-shared';
 
 import 'rxjs/add/observable/forkJoin';
-import * as R from 'ramda';
 
 @Component({
 	selector: 'kBulkAccessControl',
@@ -85,7 +84,7 @@ export class BulkAAccessControl implements OnInit, OnDestroy, AfterViewInit {
 				let ACProfiles = response[0].items;
 				if (ACProfiles.length) {
 					// check if any of the access control profiles is defined as default
-					const defaultIndex = R.findIndex(R.propEq('isDefault', 1))(ACProfiles);
+					const defaultIndex = ACProfiles.findIndex(({ isDefault }) => isDefault === 1);
 					if (defaultIndex > -1) {
 						// put the default profile at the beginning of the profiles array
 						const defaultProfile: KalturaAccessControl[] = ACProfiles.splice(defaultIndex, 1);
@@ -221,7 +220,7 @@ export class BulkAAccessControl implements OnInit, OnDestroy, AfterViewInit {
 					let flavourIDs = restriction.flavorParamsIds.split(",");
 					let flavourNames = [];
 					flavourIDs.forEach(flavourId => {
-						let flavour: KalturaFlavorParams = R.find(R.propEq('id', parseInt(flavourId)))(this._flavourParams);
+            const flavour: KalturaFlavorParams = this._flavourParams.find(({ id }) => id === parseInt(flavourId, 10));
 						if (flavour !== undefined) {
 							flavourNames.push(flavour.name);
 						}

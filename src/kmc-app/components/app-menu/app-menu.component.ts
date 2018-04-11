@@ -5,7 +5,6 @@ import { AppAuthentication, AppUser, AppNavigator } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
 
-import * as R from 'ramda';
 import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
@@ -51,8 +50,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     setSelectedRoute(path) {
-
-        let item = R.find(R.propEq('routePath', path.split("/")[1]))(this.menuConfig);
+        const item = this.menuConfig.find(({ routePath }) => routePath === path.split('/')[1]);
         if (item) {
             this.selectedMenuItem = item;
             this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
