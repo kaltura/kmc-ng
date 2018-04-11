@@ -169,7 +169,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
     }
 
     // if category moved to the same parent or to 'no parent' as it was before
-    const sameParent = categoryToMove.parentId === this._selectedParentCategory || !categoryToMove.parentId && this._selectedParentCategory === null;
+    const sameParent = categoryToMove.parentId === this._selectedParentCategory || (!categoryToMove.parentId && this._selectedParentCategory === null);
     if (sameParent) {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.moveCategory.errors.categoryAlreadyBelongsToParent'),
