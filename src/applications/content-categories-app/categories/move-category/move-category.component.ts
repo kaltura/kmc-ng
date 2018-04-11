@@ -97,8 +97,8 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
         },
         error => {
           this._browserService.confirm({
-            header: this._appLocalization.get('appp.common.error'),
-            message: error.messaeg || this._appLocalization.get('applications.content.moveCategory.errors.failedToLoadParentCategoryData'),
+            header: this._appLocalization.get('app.common.error'),
+            message: error.message || this._appLocalization.get('applications.content.moveCategory.errors.failedToLoadParentCategoryData'),
             accept: () => {
               this._blockerMessage = null;
             }

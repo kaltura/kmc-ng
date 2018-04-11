@@ -479,7 +479,7 @@
           "error": "Categories update failed",
           "cancelEdit": "Cancel Edit",
           "discard": "Discard all changes?",
-          "noPrivacyContext": "Some of the selected categories don't have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page under the Settings tab."
+          "noPrivacyContext": "Some of the selected categories don't have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page under the Settings tab.",
           "failedToLoadCategoryData": "Could not load category data. CategoryId - {{0}}"
         },
         "deleteCategories": "Delete Categories",
