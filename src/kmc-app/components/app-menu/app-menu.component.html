@@ -51,13 +51,13 @@
 <kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">
     <div class="kHelpMenu">
         <p class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.kmcOverview' | translate}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.mediaManagement' | translate}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.productTour' | translate}}</p>
+        <p class="kHelpLink" (click)="openHelpLink('kmcOverview')">{{'app.helpMenu.kmcOverview' | translate}}</p>
+        <p class="kHelpLink" (click)="openHelpLink('mediaManagement')">{{'app.helpMenu.mediaManagement' | translate}}</p>
+        <p class="kHelpLink" (click)="openHelpLink('')">{{'app.helpMenu.productTour' | translate}}</p>
         <hr>
         <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.userManual' | translate}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.contact' | translate}}</p>
+        <p class="kHelpLink" (click)="openHelpLink('manual')">{{'app.helpMenu.userManual' | translate}}</p>
+        <p class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
         <hr>
         <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
         <!--div class="kContexualHelp">
