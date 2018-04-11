@@ -135,6 +135,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
             .cancelOnDestroy(this)
             .subscribe(
                 result => {
+                  this._clearSelection();
 
                     this._tableIsBusy = result.loading;
 
