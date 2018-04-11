@@ -107,7 +107,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
         objects.forEach((object: SettingsMetadataProfile) => {
           if (!object.createMode || object.createMode === KalturaMetadataProfileCreateMode.kmc) {
             const parsedProfile = this._metadataProfileParser.parse(object);
-            object.profileDisabled = !!parsedProfile.error; // disable profile if there's error during parsing
+            object.profileDisabled = !!parsedProfile.error || !parsedProfile.profile; // disable profile if there's error during parsing
             object.parsedProfile = parsedProfile.profile;
 
             if (!object.profileDisabled) {
