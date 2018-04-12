@@ -7,6 +7,12 @@
       "trialPeriodInDays": 30
     }
   },
+    "login": {
+        "limitAccess": {
+            "enabled": false,
+            "whitelist": []
+        }
+    },
   "cdnServers": {
     "serverUri": "http://cdnapi.kaltura.com",
     "securedServerUri": "https://cdnapisec.kaltura.com"

@@ -33,6 +33,20 @@ export const ServerConfigSchema = {
             required: ['uri', 'previewUIConf', 'freeTrialExpiration'],
             additionalProperties: false
         },
+        login: {
+            properties: {
+                limitAccess: {
+                    properties: {
+                        enabled: {type: 'boolean'},
+                        whitelist: { type: 'array', items: { type: 'number' } },
+                    },
+                    required: ['enabled', 'whitelist'],
+                    additionalProperties: false
+                }
+            },
+            required: ['limitAccess'],
+            additionalProperties: false
+        },
         cdnServers: {
             properties: {
                 serverUri: {type: 'string'},
@@ -193,6 +207,12 @@ export interface ServerConfig {
         freeTrialExpiration: {
             enabled: boolean,
             trialPeriodInDays: number
+        }
+    };
+    login: {
+        limitAccess: {
+            enabled: boolean,
+            whitelist: number[]
         }
     };
     cdnServers: {

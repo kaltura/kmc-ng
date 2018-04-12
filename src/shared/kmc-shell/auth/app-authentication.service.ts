@@ -29,6 +29,7 @@ import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { serverConfig } from 'config/server';
 
 export interface IUpdatePasswordPayload {
     email: string;
@@ -88,7 +89,8 @@ export class AppAuthentication {
             'NEW_PASSWORD_HASH_KEY_EXPIRED': 'app.login.error.newPasswordHashKeyExpired',
             'ADMIN_KUSER_WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
             'WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
-            'INVALID_FIELD_VALUE': 'app.login.error.invalidField'
+            'INVALID_FIELD_VALUE': 'app.login.error.invalidField',
+            'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta'
         };
 
         if (code === 'PASSWORD_EXPIRED') {
@@ -191,15 +193,31 @@ export class AppAuthentication {
             .switchMap(
                 response => {
                     if (!response.hasErrors()) {
-                        return this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result, response[4].result)
-                            .map(() => {
-                                return {success: true, error: null};
-                            });
+                        if (this._canLogin(response[2].result)) {
+                            return this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result, response[4].result)
+                                .map(() => {
+                                    return { success: true, error: null };
+                                });
+                        }
+
+                        return Observable.of({success: false, error: this._getLoginErrorMessage({error: {code: 'USER_FORBIDDEN_FOR_BETA'}})});
                     }
 
                     return Observable.of({success: false, error: this._getLoginErrorMessage(response[0])});
                 }
             ));
+    }
+
+    private _canLogin(partner: KalturaPartner): boolean {
+        const limitAccess = serverConfig.login.limitAccess;
+
+        if (!limitAccess.enabled) {
+            return true;
+        }
+
+        const isBetaUser = limitAccess.whitelist.indexOf(partner.id) !== -1;
+
+        return isBetaUser;
     }
 
     private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): Observable<void> {
