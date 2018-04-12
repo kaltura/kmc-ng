@@ -62,6 +62,11 @@ export class AppAuthentication {
 
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
+    private _hasAccessToBeta = true;
+
+    public get hasAccessToBeta(): boolean {
+        return this._hasAccessToBeta;
+    }
 
     constructor(private kalturaServerClient: KalturaClient,
                 @Inject(APP_AUTH_EVENTS) private _appAuthenticationEvents: AppAuthenticationEvents,
@@ -193,7 +198,7 @@ export class AppAuthentication {
             .switchMap(
                 response => {
                     if (!response.hasErrors()) {
-                        if (this._canLogin(response[2].result)) {
+                        if (this._verifyBetaUser(response[2].result)) {
                             return this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result, response[4].result)
                                 .map(() => {
                                     return { success: true, error: null };
@@ -208,16 +213,20 @@ export class AppAuthentication {
             ));
     }
 
-    private _canLogin(partner: KalturaPartner): boolean {
+    private _verifyBetaUser(partner: KalturaPartner): boolean {
         const limitAccess = serverConfig.login.limitAccess;
 
         if (!limitAccess.enabled) {
             return true;
         }
 
-        const isBetaUser = limitAccess.whitelist.indexOf(partner.id) !== -1;
+        this._hasAccessToBeta = limitAccess.whitelist.indexOf(partner.id) !== -1;
 
-        return isBetaUser;
+        if (!this._hasAccessToBeta) {
+            this.logout(false);
+        }
+
+        return this._hasAccessToBeta;
     }
 
     private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): Observable<void> {
@@ -258,11 +267,11 @@ export class AppAuthentication {
         return !!this._appUser;
     }
 
-    logout() {
+    logout(reloadPage = true) {
         this._appUser = null;
         this.appStorage.removeFromSessionStorage('auth.login.ks');
         this._appEvents.publish(new UserLoginStatusEvent(false));
-        this._logout();
+        this._logout(reloadPage);
     }
 
     public loginAutomatically(): Observable<boolean> {
@@ -305,7 +314,11 @@ export class AppAuthentication {
 
                     return this.kalturaServerClient.multiRequest(requests)
                         .switchMap((response) => {
-                            return this._afterLogin(loginToken, response[0].result, response[1].result, response[2].result, response[3].result);
+                            if (this._verifyBetaUser(response[1].result)) {
+                                return this._afterLogin(loginToken, response[0].result, response[1].result, response[2].result, response[3].result);
+                            }
+
+                            return Observable.throw(new Error('user is not allowed for beta test'));
                         })
                         .subscribe(
                             () => {
@@ -348,10 +361,12 @@ export class AppAuthentication {
         document.location.reload();
     }
 
-    private _logout() {
+    private _logout(reloadPage = true) {
         this._appAuthenticationEvents.onUserLoggedOut();
         this._pageExitVerificationService.removeAll();
-        document.location.reload();
+        if (reloadPage) {
+            document.location.reload();
+        }
     }
 
     public _updateNameManually(firstName: string, lastName: string, fullName: string): void {
