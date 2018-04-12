@@ -13,6 +13,7 @@
         <kKMCLoginForm *ngSwitchCase="_loginScreens.Login"
                        [username]="_username"
                        [errorMessage]="_errorMessage"
+                       [errorCode]="_errorCode"
                        [inProgress]="_inProgress"
                        (onSetScreen)="_setScreen($event)"
                        (onRememberMe)="_rememberMe($event)"

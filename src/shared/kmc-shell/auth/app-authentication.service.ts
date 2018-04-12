@@ -30,23 +30,23 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
-export interface IUpdatePasswordPayload {
+export interface UpdatePasswordPayload {
     email: string;
     password: string;
     newEmail: string;
     newPassword: string;
 }
 
-export interface ILoginError {
+export interface LoginError {
     message: string;
     custom: boolean;
     passwordExpired?: boolean;
     code?: string;
 }
 
-export interface ILoginResponse {
+export interface LoginResponse {
     success: boolean;
-    error: ILoginError;
+    error: LoginError;
 }
 
 export interface AppAuthenticationEvents {
@@ -72,18 +72,16 @@ export class AppAuthentication {
         this._logger = logger.subLogger('AppAuthentication');
     }
 
-    private _getLoginErrorMessage({error}): ILoginError {
+    private _getLoginErrorMessage({error}): LoginError {
         const message = (error ? error.message : null) || 'Failed to load partner information';
         const code = error ? error.code : null;
         const custom = true;
         const errors = {
             'USER_NOT_FOUND': 'app.login.error.badCredentials',
             'USER_WRONG_PASSWORD': 'app.login.error.badCredentials',
-            'LOGIN_RETRIES_EXCEEDED': 'app.login.error.retriesExceeded',
             'ADMIN_KUSER_NOT_FOUND': 'app.login.error.userNotFound',
             'PASSWORD_STRUCTURE_INVALID': 'app.login.error.invalidStructure',
             'PASSWORD_ALREADY_USED': 'app.login.error.alreadyUsed',
-            'LOGIN_BLOCKED': 'app.login.error.loginBlocked',
             'NEW_PASSWORD_HASH_KEY_INVALID': 'app.login.error.newPasswordHashKeyInvalid',
             'NEW_PASSWORD_HASH_KEY_EXPIRED': 'app.login.error.newPasswordHashKeyExpired',
             'ADMIN_KUSER_WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
@@ -123,7 +121,7 @@ export class AppAuthentication {
         }
     }
 
-    updatePassword(payload: IUpdatePasswordPayload): Observable<{ email: string, password: string }> {
+    updatePassword(payload: UpdatePasswordPayload): Observable<{ email: string, password: string }> {
         if (this.isLogged()) {
             return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
                 .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
@@ -135,7 +133,7 @@ export class AppAuthentication {
     login(loginId: string, password: string, optional: { privileges?, expiry? } = {
         privileges: '',
         expiry: 86400
-    }): Observable<ILoginResponse> {
+    }): Observable<LoginResponse> {
 
         const expiry = (optional ? optional.expiry : null) || 86400;
         const privileges = optional ? optional.privileges : '';
