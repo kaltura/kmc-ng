@@ -65,7 +65,7 @@
             <div
               *ngIf="_widgetService.metadataForm.controls['categories'].touched && _widgetService.metadataForm.controls['categories'].invalid"
               class="kControlErrorMessage">
-              {{'applications.content.entryDetails.metadata.maxCategoriesLinked' | translate}}
+              {{_categoriesErrorMessage}}
             </div>
           </div>
         </div>

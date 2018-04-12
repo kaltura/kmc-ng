@@ -16,6 +16,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 @Component({
     selector: 'kEntryMetadata',
@@ -45,10 +46,18 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         return this._categoriesTooltipPipe.transform(value);
     };
 
+    public get _categoriesErrorMessage(): string {
+        const limit = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_CATEGORY_LIMIT)
+            ? subApplicationsConfig.contentEntriesApp.maxLinkedCategories.extendedLimit
+            : subApplicationsConfig.contentEntriesApp.maxLinkedCategories.defaultLimit;
+        return this._appLocalization.get('applications.content.entryDetails.metadata.maxCategoriesLinked', limit);
+    }
+
     constructor(public _widgetService: EntryMetadataWidget,
                 private _pageScrollService: PageScrollService,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
+                private _permissionsService: KMCPermissionsService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
                 @Inject(DOCUMENT) private document: any) {
         this._categoriesTooltipPipe  = new CategoryTooltipPipe(this._appLocalization);

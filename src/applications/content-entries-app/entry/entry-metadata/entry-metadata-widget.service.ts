@@ -64,8 +64,9 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     private _buildForm() : void {
         const categoriesValidator = (input: FormControl) => {
           const categoriesCount = (Array.isArray(input.value) ? input.value : []).length;
-          const isCategoriesValid = categoriesCount <= subApplicationsConfig.contentEntriesApp.maxLinkedCategories
-            || this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_CATEGORY_LIMIT);
+            const isCategoriesValid = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_CATEGORY_LIMIT)
+                ? categoriesCount <= subApplicationsConfig.contentEntriesApp.maxLinkedCategories.extendedLimit
+                : categoriesCount <= subApplicationsConfig.contentEntriesApp.maxLinkedCategories.defaultLimit;
 
           return isCategoriesValid ? null : { maxLinkedCategoriesExceed: true };
         };
@@ -262,7 +263,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                         entryIdEqual: entry.id
                     }),
                     pager: new KalturaFilterPager({
-                        pageSize: 32
+                        pageSize: 500
                     })
                 }
             ))
@@ -470,6 +471,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     {
         return Observable.create(observer =>
         {
+            this.metadataForm.markAsTouched();
             this.metadataForm.updateValueAndValidity();
             const isValid = this.metadataForm.valid;
             observer.next({  isValid });

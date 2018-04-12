@@ -1190,7 +1190,7 @@
           "customDataError": "\"{{0}}\" Custom Data Error",
           "missingEntriesWarning": "The following entries were not found: {{0}}",
           "replaceLinkedEntry": "Selecting a new entry will replace the current entry. Continue?",
-          "maxCategoriesLinked": "Entry can be linked with a maximum of \"32\" categories"
+          "maxCategoriesLinked": "Entry can be linked with a maximum of {{0}} categories"
         },
         "thumbnails": {
           "thumbnails": "Thumbnails",
