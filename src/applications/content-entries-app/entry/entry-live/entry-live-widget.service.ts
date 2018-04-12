@@ -313,16 +313,6 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			);
 	}
 
-	public _openLiveReport(): void {
-		//const base_url = window.location.protocol + '//' + serverConfig.externalApps.liveAnalytics.uri;
-		//const url = base_url + '/apps/liveanalytics/' + serverConfig.externalApps.liveAnalytics.version + '/index.html#/entry/' + this.data.id + '/nonav/';
-		//this._browserService.openLink(url);
-		this._browserService.alert({
-			header: "Note",
-			message: "Live Analytics Currently Not Supported"
-		});
-	}
-
 	ngOnDestroy()
     {
 

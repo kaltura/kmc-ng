@@ -83,7 +83,7 @@
 
                 <td *ngIf="_columnsMetadata.id" [ngStyle]="_columnsMetadata.id.style">{{entry.id}}</td>
 
-                <td *ngIf="_columnsMetadata.mediaType" [ngStyle]="_columnsMetadata.mediaType.style">
+                <td *ngIf="_columnsMetadata.mediaType" class="kMediaTypeIcon" [ngStyle]="_columnsMetadata.mediaType.style">
                     <div [kTooltip]="entry.mediaType | entryType: true"
                          [class]="entry.mediaType | entryType: false"></div>
                 </td>

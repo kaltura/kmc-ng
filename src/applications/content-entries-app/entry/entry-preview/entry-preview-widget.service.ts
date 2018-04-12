@@ -1,21 +1,31 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { AppAuthentication } from 'app-shared/kmc-shell';
-import { subApplicationsConfig } from 'config/sub-applications';
+import {Injectable, OnDestroy} from '@angular/core';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {AppAuthentication} from 'app-shared/kmc-shell';
+import {KalturaSourceType} from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import {PreviewMetadataChangedEvent} from '../../preview-metadata-changed-event';
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {EntryWidget} from '../entry-widget';
+import {serverConfig} from 'config/server';
+import {EntryStore} from '../entry-store.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
-import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { EntryWidget } from '../entry-widget';
-import { serverConfig } from 'config/server';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+
 
 @Injectable()
 export class EntryPreviewWidget extends EntryWidget implements OnDestroy
 {
     public _iframeSrc : string;
     private _urlHash: number = 0;
+  public clipAndTrimEnabled : boolean = false;
 
-    constructor(kalturaServerClient: KalturaClient, private appAuthentication: AppAuthentication, appEvents: AppEventsService) {
+
+  constructor(kalturaServerClient: KalturaClient,
+                private appAuthentication: AppAuthentication,
+                appEvents: AppEventsService,
+                private _store: EntryStore,
+                private _logger: KalturaLogger) {
         super('entryPreview');
 
 
@@ -29,7 +39,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
                 }
             });
     }
-    
+
     /**
      * Do some cleanups if needed once the section is removed
      */
@@ -72,6 +82,15 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
     }
     protected onActivate(firstTimeActivating: boolean) {
 	    this._iframeSrc = this._createUrl();
+
+        const entry: KalturaMediaEntry = this.data ? this.data as KalturaMediaEntry : null;
+        this.clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled &&
+            entry && !this._store.isLiveMediaEntry(entry.mediaType) && entry.mediaType !== KalturaMediaType.image && entry.status === KalturaEntryStatus.ready;
+
+
+      if (!this.clipAndTrimEnabled) {
+        this._logger.warn('Clip and trim (kedit) is not enabled, please check configuration');
+      }
     }
 
 

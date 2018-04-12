@@ -48,7 +48,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               _logger: KalturaLogger) {
-    super(_logger);
+    super(_logger.subLogger('RolesStoreService'));
     this._prepare();
   }
 
@@ -85,6 +85,9 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     // NOTICE: do not execute here any logic that should run only once.
     // this function will re-run if preparation failed. execute your logic
     // only after the line where we set isReady to true    if (!this._isReady) {
+
+    this._logger.info(`initiate service`);
+
     this._roles.state.next({ loading: true, errorMessage: null });
 
     this._isReady = true;
@@ -114,11 +117,13 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
       this._browserService.setInLocalStorage(localStoragePageSizeKey, pageSize);
     }
 
+    this._logger.info(`loading roles list data`);
     this._roles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+          this._logger.info(`handle success loading roles list data`);
           this._querySubscription = null;
 
           this._roles.state.next({ loading: false, errorMessage: null });
@@ -131,6 +136,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          this._logger.info(`handle failed loading roles list data, show alert`, { errorMessage });
           this._roles.state.next({ loading: false, errorMessage });
         });
   }
@@ -190,6 +196,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     return this._kalturaClient.request(new UserRoleDeleteAction({
       userRoleId: role.id
     }))
+      .monitor('RolesStoreService::deleteRole')
       .map(() => {
         return undefined;
       })
@@ -215,6 +222,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     );
 
     return this._kalturaClient.multiRequest(multiRequest)
+      .monitor('RolesStoreService::duplicateRole')
       .map(
         data => {
           if (data.hasErrors()) {
@@ -239,6 +247,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
       userRoleId: id,
       userRole: role
     }))
+      .monitor('RolesStoreService::updateRole')
       .map(() => {
         return;
       });
@@ -252,13 +261,16 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     role.tags = 'kmc';
 
     return this._kalturaClient.request(new UserRoleAddAction({ userRole: role }))
+      .monitor('RolesStoreService::addRole')
       .map(() => {
         return;
       });
   }
 
   public reload(): void {
+    this._logger.info(`reloading roles data`);
     if (this._roles.state.getValue().loading) {
+      this._logger.info(`reloading in progress, skip duplicating request`);
       return;
     }
 
