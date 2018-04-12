@@ -22,10 +22,12 @@ import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Injectable()
 export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestroy {
   constructor(private _kalturaServerClient: KalturaClient,
+              private _appPermissions: KMCPermissionsService,
               private _metadataProfileService: MetadataProfileStore) {
   }
 
@@ -197,7 +199,10 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
 
           // handle default value for media types
           if (!filter.mediaTypeIn && mediaTypesDefault) {
-            filter.mediaTypeIn = '1,2,5,6,201';
+            filter.mediaTypeIn = '1,2,5,6';
+            if (this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM)) {
+              filter.mediaTypeIn += ',201';
+            }
           }
 
           // update the sort by args
@@ -220,6 +225,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       return Observable.throw(err);
     }
   }
+
 
   public executeQuery(data: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {
     let pagination: KalturaFilterPager = null;

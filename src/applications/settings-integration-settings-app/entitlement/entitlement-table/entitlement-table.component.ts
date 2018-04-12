@@ -74,6 +74,7 @@ export class EntitlementTableComponent implements OnInit, OnDestroy, AfterViewIn
       {
         label: this._appLocalization.get('applications.settings.integrationSettings.entitlement.table.actions.delete'),
         disabled: !hasEditPermission,
+        styleClass: 'kDanger',
         command: () => {
           this.onActionSelected.emit({action: 'delete', entitlement});
         }

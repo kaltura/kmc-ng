@@ -143,6 +143,8 @@ export const ServerConfigSchema = {
                 },
                 kaltura: {
                     properties: {
+                        kmcOverview: {type: 'string'},
+                        mediaManagement: {type: 'string'},
                         userManual: {type: 'string'},
                         support: {type: 'string'},
                         signUp: {type: 'string'},
@@ -261,6 +263,8 @@ export interface ServerConfig {
         },
         kaltura: {
             userManual: string,
+            kmcOverview: string,
+            mediaManagement: string,
             support: string,
             signUp: string,
             contactUs: string,
