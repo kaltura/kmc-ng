@@ -50,7 +50,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         const limit = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_CATEGORY_LIMIT)
             ? subApplicationsConfig.contentEntriesApp.maxLinkedCategories.extendedLimit
             : subApplicationsConfig.contentEntriesApp.maxLinkedCategories.defaultLimit;
-        return this._appLocalization.get('applications.content.entryDetails.metadata.maxCategoriesLinked', limit);
+        return this._appLocalization.get('applications.content.entryDetails.metadata.maxCategoriesLinked', [limit]);
     }
 
     constructor(public _widgetService: EntryMetadataWidget,
