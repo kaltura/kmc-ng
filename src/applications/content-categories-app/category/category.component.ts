@@ -15,6 +15,7 @@ import {
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -39,6 +40,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   public _currentCategoryId: number;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
+  public _kmcPermissions = KMCPermissions;
 
   constructor(categoryWidgetsManager: CategoryWidgetsManager,
               widget1: CategorySectionsListWidget,

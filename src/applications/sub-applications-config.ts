@@ -27,7 +27,7 @@ export interface SubApplicationsConfig {
 
 export const subApplicationsConfig: SubApplicationsConfig = {
     'shared': {
-        'datesRange': '2005:2030',
+        'datesRange': '2005:2050',
         'bulkActionsLimit': 50
     },
     'contentPlaylistsApp': {

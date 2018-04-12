@@ -47,7 +47,7 @@ import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {ContentEntriesAppService} from './content-entries-app.service';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
-import {KeditHosterModule} from 'app-shared/kmc-shared/kedit-hoster/kedit-hoster.module';
+import {KEditHosterModule} from 'app-shared/kmc-shared/kedit-hoster/kedit-hoster.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
 
@@ -92,7 +92,7 @@ import { TableModule } from 'primeng/table';
     StickyModule,
     CopyToClipboardModule,
     OverlayPanelModule,
-    KeditHosterModule,
+    KEditHosterModule,
     StickyModule,
     KMCPermissionsModule,
     TableModule

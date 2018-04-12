@@ -107,7 +107,7 @@
     <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
       <ng-template let-col let-profile="rowData" pTemplate="body">
         <div class="kAccessControlProfilesTableActions">
-          <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, profile)"></button>
+          <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, profile)"></button>
         </div>
       </ng-template>
     </p-column>

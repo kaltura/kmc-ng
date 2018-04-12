@@ -76,6 +76,7 @@
       "apply": "Apply",
       "done": "Done",
       "save": "Save",
+      "error": "Error",
       "connectionError": "Error connecting to server"
     },
     "login": {
@@ -155,6 +156,7 @@
   "applications": {
     "embed":{
       "previewShare": "Share & Embed",
+      "previewInPlayer": "Preview in Player",
       "embedType": "Embed type",
       "selectPlayer": "Select player",
       "embedIframe": "Iframe Embed",
@@ -342,7 +344,7 @@
           }
         },
         "confirmEntryNavigation": {
-          "title": "Stream has been created",
+          "title": "Success",
           "generalMessage": "Live Stream Entry has been created successfully.",
           "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
           "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
@@ -477,7 +479,8 @@
           "error": "Categories update failed",
           "cancelEdit": "Cancel Edit",
           "discard": "Discard all changes?",
-          "noPrivacyContext": "Some of the selected categories don't have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page under the Settings tab."
+          "noPrivacyContext": "Some of the selected categories don't have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page under the Settings tab.",
+          "failedToLoadCategoryData": "Could not load category data. CategoryId - {{0}}"
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
@@ -517,7 +520,7 @@
       "addNewCategory": {
         "newCategory": "New Category",
         "newSubcategory": "New Sub-Category",
-        "selectCategoryParent": "Select the parent category under which the new category will appear",
+        "selectCategoryParent": "Select the parent category under which the new category will appear.",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "apply": "Apply",
@@ -540,9 +543,10 @@
       "moveCategory":{
         "noParent":"No Parent",
         "noCategorySelected": "No category was selected",
-        "selectCategoryParent": "Select the parent category under which the selected category will appear",
+        "selectCategoryParent": "Select the parent category under which the selected category will appear.",
         "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
         "errors": {
+          "failedToLoadParentCategoryData": "Could not load parent category data",
           "invalidParentSelection": "Category cannot be moved into itself or one of its children categories",
           "categoryMovedFailure": "An error occurred while trying to move category to selected parent",
           "unableToMove": "Cannot perform Move Category action since no categories to move were selected",
@@ -658,7 +662,7 @@
             "itunes": "ITunes",
             "roku": "Roku Direct Publisher",
             "opera": "Opera Snap TV",
-            "flexibaleFormat": "Flexibale Format"
+            "flexibleFormat": "Flexible Format"
           },
           "destinationsForms": {
             "google": {
@@ -890,6 +894,7 @@
         "duration": "Duration",
         "status": "Status",
         "previewAndEmbed": "Share & Embed",
+        "previewInPlayer": "Preview in Player",
         "liveDashboard": "Live Dashboard",
         "delete": "Delete",
         "view": "View Details",
@@ -1002,6 +1007,9 @@
           "failed": "Failed",
           "otherStatuses": "All other statuses",
           "datesRangeError": "'From Date' must be before 'To Date'"
+        },
+        "errors": {
+          "failedLoad": "Error loading bulk logs"
         }
       },
       "entryStatus": {
@@ -1134,7 +1142,9 @@
           "advertisements": "Advertisements"
         },
         "preview": {
+          "clipAndTrim": "Clip & Trim",
           "pande": "Share & Embed",
+          "previewInPlayer": "Preview in Player",
           "details": "Details",
           "entryID": "ID:",
           "creator": "Created by:",
@@ -1597,6 +1607,7 @@
         }
       },
       "categoryDetails": {
+        "save": "Save",
         "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
@@ -1774,7 +1785,7 @@
               "inheritUser": "Inherit users from parent category",
               "selectEndUsers": "Select End-Users",
               "permissionLevel": "Permission Level",
-              "updateMethod": "Update method",
+              "updateMethod": "Update Method",
               "addUsers": "Add {{0}} Users",
               "save": "Save",
               "cancel": "Cancel",
@@ -2285,6 +2296,7 @@
           }
         },
         "editForm": {
+          "note": "Note",
           "profileName": "Profile Name",
           "description": "Description",
           "authorizedDomains": "Authorized Domains",
@@ -2401,6 +2413,7 @@
             "dimentions": "Dimentions"
           },
           "errors": {
+            "error": "Error",
             "dismiss": "Dismiss",
             "reload": "Reload",
             "loadError": "An error occurred while loading data",

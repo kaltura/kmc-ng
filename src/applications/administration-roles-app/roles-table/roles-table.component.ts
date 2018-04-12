@@ -74,6 +74,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       },
       {
         label: this._appLocalization.get('applications.administration.roles.actions.delete'),
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', role)
       }
     ];
