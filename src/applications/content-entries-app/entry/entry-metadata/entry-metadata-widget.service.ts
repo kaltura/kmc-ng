@@ -467,14 +467,21 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         this.isLiveEntry = false;
     }
 
-    onValidate(wasActivated: boolean) : Observable<{ isValid : boolean}>
-    {
-        return Observable.create(observer =>
-        {
-            this.metadataForm.markAsTouched();
-            this.metadataForm.updateValueAndValidity();
+    private _markFormFieldsAsTouched() {
+        for (const controlName in this.metadataForm.controls) {
+            if (this.metadataForm.controls.hasOwnProperty(controlName)) {
+                this.metadataForm.get(controlName).markAsTouched();
+                this.metadataForm.get(controlName).updateValueAndValidity();
+            }
+        }
+        this.metadataForm.updateValueAndValidity();
+    }
+
+    onValidate(wasActivated: boolean): Observable<{ isValid : boolean}> {
+        return Observable.create(observer => {
+            this._markFormFieldsAsTouched();
             const isValid = this.metadataForm.valid;
-            observer.next({  isValid });
+            observer.next({isValid});
             observer.complete();
         });
     }
