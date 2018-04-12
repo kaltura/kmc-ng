@@ -171,13 +171,17 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
                 this._proceedSave(this._mapFormDataToProfile(formData));
               } else {
                 this._browserService.alert({
+                  header: this._appLocalization.get('applications.settings.transcoding.profile.errors.error'),
                   message: this._appLocalization.get('applications.settings.transcoding.entryNotFound', [entryId])
                 });
               }
             },
             error => {
               this._dataLoading = false;
-              this._browserService.alert({ message: error.message });
+              this._browserService.alert({
+                header: this._appLocalization.get('applications.settings.transcoding.profile.errors.error'),
+                message: error.message
+              });
             }
           );
       } else {
