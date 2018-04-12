@@ -150,9 +150,10 @@ export const ServerConfigSchema = {
                         signUp: {type: 'string'},
                         contactUs: {type: 'string'},
                         upgradeAccount: {type: 'string'},
-                        contactSalesforce: {type: 'string'}
+                        contactSalesforce: {type: 'string'},
+                        dropFoldersManual: {type: 'string'}
                     },
-                    required: ['userManual', 'support', 'signUp', 'contactUs', 'upgradeAccount', 'contactSalesforce'],
+                    required: ['userManual', 'support', 'signUp', 'contactUs', 'upgradeAccount', 'contactSalesforce', 'dropFoldersManual'],
                     additionalProperties: false
                 },
                 entitlements: {
@@ -270,6 +271,7 @@ export interface ServerConfig {
             contactUs: string,
             upgradeAccount: string,
             contactSalesforce: string,
+            dropFoldersManual: string
         },
         uploads: {
             highSpeedUpload: string,

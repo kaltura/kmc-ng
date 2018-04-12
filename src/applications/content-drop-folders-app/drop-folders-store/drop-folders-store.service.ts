@@ -167,7 +167,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
           this._browserService.alert({
             message: error || this._appLocalization.get(
                 'applications.content.dropFolders.errors.dropFoldersAlert',
-                [serverConfig.externalLinks.kaltura.contactUs, serverConfig.externalLinks.kaltura.userManual]
+                [serverConfig.externalLinks.kaltura.contactUs, serverConfig.externalLinks.kaltura.dropFoldersManual]
             )
           });
 
@@ -299,7 +299,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
               dropFoldersList: [],
               error: this._appLocalization.get(
                   'applications.content.dropFolders.errors.dropFoldersAlert',
-                  [serverConfig.externalLinks.kaltura.contactUs, serverConfig.externalLinks.kaltura.userManual]
+                  [serverConfig.externalLinks.kaltura.contactUs, serverConfig.externalLinks.kaltura.dropFoldersManual]
               )
           };
         }
