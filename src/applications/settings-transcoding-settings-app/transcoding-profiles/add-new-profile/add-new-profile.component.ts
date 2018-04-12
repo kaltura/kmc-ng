@@ -71,7 +71,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
 
   private _prepare(): void {
     const hasStorageProfilesPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_REMOTE_STORAGE_INGEST);
-    this._hideIngestFromRemoteStorage = this.profileType && this.profileType === KalturaConversionProfileType.liveStream || !hasStorageProfilesPermission;
+    this._hideIngestFromRemoteStorage = (this.profileType && this.profileType === KalturaConversionProfileType.liveStream) || !hasStorageProfilesPermission;
     if (!this._hideIngestFromRemoteStorage) {
       this._dataLoading = true;
       this._loadRemoteStorageProfiles()

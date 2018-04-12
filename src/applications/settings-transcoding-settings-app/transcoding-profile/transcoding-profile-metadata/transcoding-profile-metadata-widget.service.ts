@@ -141,7 +141,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     super._showLoader();
 
     const hasStorageProfilesPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_REMOTE_STORAGE_INGEST);
-    this.hideStorageProfileIdField = this.data.type && this.data.type === KalturaConversionProfileType.liveStream || !hasStorageProfilesPermission;
+    this.hideStorageProfileIdField = (this.data.type && this.data.type === KalturaConversionProfileType.liveStream) || !hasStorageProfilesPermission;
     if (!this.hideStorageProfileIdField) {
       return this._loadRemoteStorageProfiles()
         .cancelOnDestroy(this)
