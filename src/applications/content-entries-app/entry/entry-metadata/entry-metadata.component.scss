@@ -82,6 +82,10 @@ hr{
 			{
 				width:100%;
 
+        .kHasError .ui-autocomplete-multiple-container {
+          border-color: $kDandger;
+        }
+
         .kControlInvalid {
           border: 1px solid $kDandger;
         }
