@@ -3,8 +3,9 @@ import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import {AppStatus, BrowserService, GrowlMessage} from 'app-shared/kmc-shell/providers/browser.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization, OperationTagManagerService} from '@kaltura-ng/kaltura-common';
-import {NavigationEnd, Router} from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { KmcLoggerConfigurator } from './kmc-logger-configurator';
 
 /*
  * App Component
@@ -28,6 +29,8 @@ export class AppComponent implements OnInit {
               private _browserService : BrowserService,
               private _appLocalization: AppLocalization,
               private router: Router,
+              private _route: ActivatedRoute,
+              private _loggerConfigurator: KmcLoggerConfigurator,
               private _oprationsTagManager: OperationTagManagerService
               ) {
   }
@@ -65,5 +68,7 @@ export class AppComponent implements OnInit {
         this._growlMessages = [ ...this._growlMessages, message ];
       }
     );
+
+      this._loggerConfigurator.init(this._route);
   }
 }
