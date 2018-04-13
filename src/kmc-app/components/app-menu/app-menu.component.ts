@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
 import { AppAuthentication, AppUser, AppNavigator } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -8,6 +8,8 @@ import { serverConfig } from 'config/server';
 import * as R from 'ramda';
 import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { EnablePowerUserModeEvent } from 'app-shared/kmc-shared/events/enable-power-user-mode-event';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -18,10 +20,10 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     @ViewChild('helpmenu') private _helpmenu: PopupWidgetComponent;
 
-    private sub: any;
     public _userContext: AppUser;
     public _showChangelog = false;
     public _helpMenuOpened = false;
+    public _powerUser = false;
 
     menuConfig: KMCAppMenuItem[];
     selectedMenuItem: KMCAppMenuItem;
@@ -31,9 +33,13 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     constructor(private userAuthentication: AppAuthentication,
                 private appNavigator: AppNavigator,
                 private router: Router,
+                private _route: ActivatedRoute,
+                private _appEvents: AppEventsService,
                 private _browserService: BrowserService) {
 
-        this.sub = router.events.subscribe((event) => {
+        router.events
+            .cancelOnDestroy(this)
+            .subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 this.setSelectedRoute(event.url);
             }
@@ -41,10 +47,19 @@ export class AppMenuComponent implements OnInit, OnDestroy{
         this._userContext = userAuthentication.appUser;
         this.menuConfig = kmcAppConfig.menuItems;
 
-        if (router.navigated)
-        {
+        if (router.navigated) {
             this.setSelectedRoute(router.routerState.snapshot.url);
         }
+
+        _route.queryParams
+            .cancelOnDestroy(this)
+            .map(params => params['mode'])
+            .filter(Boolean)
+            .subscribe(mode => {
+              if (mode === 'poweruser') {
+                  this._powerUser = true;
+              }
+            });
     }
 
     ngOnInit() {
@@ -92,6 +107,5 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     ngOnDestroy() {
-        this.sub.unsubscribe();
     }
 }

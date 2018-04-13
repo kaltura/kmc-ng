@@ -2,7 +2,7 @@ import { NgModule, SkipSelf, Optional, ModuleWithProviders, Self } from '@angula
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { CheckboxModule, SharedModule } from 'primeng/primeng';
+import { CheckboxModule, SharedModule, SidebarModule } from 'primeng/primeng';
 
 import { AppShellService } from "./providers/app-shell.service";
 import { BrowserService } from "./providers/browser.service";
@@ -11,25 +11,31 @@ import { ReleaseNotesComponent } from './components/release-notes/release-notes.
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
 import { PageExitVerificationService, UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { PowerUserConsoleComponent } from 'app-shared/kmc-shell/components';
+import { TranslateModule } from 'ng2-translate/ng2-translate';
 
 @NgModule({
     imports: <any[]>[
         CommonModule,
         FormsModule,
         CheckboxModule,
-        SharedModule
+        SharedModule,
+        TranslateModule,
+        SidebarModule
     ],
     declarations: <any[]>[
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
-        EntryTypePipe
+        EntryTypePipe,
+        PowerUserConsoleComponent
     ],
     exports: <any[]>[
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
-        EntryTypePipe
+        EntryTypePipe,
+        PowerUserConsoleComponent
     ],
     providers: <any[]>[
 

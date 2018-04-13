@@ -50,7 +50,8 @@
       "userManual": "Download user manual",
       "contact": "Contact Support",
       "currentPage": "Current Page",
-      "changelog": "Changelog"
+      "changelog": "Changelog",
+        "powerUser": "Open power-user console"
     },
     "languageMenu": {
       "selectLang": "Select Language"
