@@ -58,7 +58,7 @@
     "@angular/platform-browser-dynamic": "~5.2.0",
     "@angular/router": "~5.2.0",
     "@kaltura-ng/kaltura-common": "~5.0.1",
-    "@kaltura-ng/kaltura-logger": "~2.0.2",
+    "@kaltura-ng/kaltura-logger": "~2.1.0",
     "@kaltura-ng/kaltura-primeng-ui": "~2.2.0",
     "@kaltura-ng/kaltura-ui": "~5.1.0",
     "@kaltura-ng/mc-shared": "~3.1.0",
