@@ -25,6 +25,7 @@ import {KalturaConversionProfileType} from 'kaltura-ngx-client/api/types/Kaltura
 import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface bitrate {
 	enabled: boolean,
@@ -60,7 +61,11 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		{label: this._appLocalization.get('applications.content.entryDetails.live.enabled'), value: false}
 	];
 
-	constructor(private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(private _kalturaServerClient: KalturaClient,
+              private _appAuthentication: AppAuthentication,
+              private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
+              private _browserService: BrowserService) {
 		super(EntryWidgetKeys.Live);
 	}
 
@@ -107,9 +112,10 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	protected onActivate(firstTimeActivating : boolean) {
 		// set live type and load data accordingly
 		switch (this.data.sourceType.toString()) {
-			case KalturaSourceType.liveStream.toString():
+      case KalturaSourceType.liveStream.toString():
 				this._liveType = "kaltura";
-				this._liveDashboardEnabled = serverConfig.externalApps.liveDashboard.enabled;
+        this._liveDashboardEnabled = serverConfig.externalApps.liveDashboard.enabled
+          && this._permissionsService.hasPermission(KMCPermissions.ANALYTICS_BASE);
 				this._setRecordStatus();
 				this._setDVRStatus();
 				super._showLoader();
