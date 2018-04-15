@@ -22,12 +22,13 @@ import {AppStorage} from '@kaltura-ng/kaltura-common';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
-import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
 import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
 import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { AppEventsService } from 'app-shared/kmc-shared';
-
+import { AppEventsService } from 'app-shared/kmc-shared/app-events';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface IUpdatePasswordPayload {
     email: string;
@@ -58,13 +59,17 @@ export const APP_AUTH_EVENTS = new InjectionToken<AppAuthenticationEvents>('App 
 @Injectable()
 export class AppAuthentication {
 
+    private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
 
     constructor(private kalturaServerClient: KalturaClient,
                 @Inject(APP_AUTH_EVENTS) private _appAuthenticationEvents: AppAuthenticationEvents,
                 private appStorage: AppStorage,
                 private _pageExitVerificationService: PageExitVerificationService,
+                logger: KalturaLogger,
+                private _permissionsService: KMCPermissionsService,
                 private _appEvents: AppEventsService) {
+        this._logger = logger.subLogger('AppAuthentication');
     }
 
     private _getLoginErrorMessage({error}): ILoginError {
@@ -111,10 +116,10 @@ export class AppAuthentication {
     }
 
     resetPassword(email: string): Observable<void> {
-        if (this.isLogged()) {
+        if (!this.isLogged()) {
             return this.kalturaServerClient.request(new UserResetPasswordAction({email}));
         } else {
-            return Observable.throw(new Error('cannot reset password, user is not logged'));
+            return Observable.throw(new Error('cannot reset password, user is logged'));
         }
     }
 
@@ -201,8 +206,9 @@ export class AppAuthentication {
 
         this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
 
-        const userRoleList = userRole.permissionNames.split(',')
         const partnerPermissionList = permissionList.objects.map(item => item.name);
+        const userRolePermissionList = userRole.permissionNames.split(',');
+        this._permissionsService.load(userRolePermissionList, partnerPermissionList);
 
         const appUser: Immutable.ImmutableObject<AppUser> = Immutable({
             ks,
@@ -213,13 +219,13 @@ export class AppAuthentication {
             lastName: user.lastName,
             isAccountOwner: user.isAccountOwner,
             createdAt: user.createdAt,
-            permissions: Array.from(new Set<string>([...userRoleList, ...partnerPermissionList ])),
             partnerInfo: {
                 partnerId: user.partnerId,
                 name: partner.name,
                 partnerPackage: partner.partnerPackage,
                 landingPage: partner.landingPage,
-                adultContent: partner.adultContent
+                adultContent: partner.adultContent,
+                publisherEnvironmentType: partner.publisherEnvironmentType
             }
         });
 

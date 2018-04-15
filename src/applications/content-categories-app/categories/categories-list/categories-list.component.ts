@@ -16,6 +16,7 @@ import {
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCategoriesList',
@@ -34,8 +35,10 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     @ViewChild('addNewCategory') addNewCategory: PopupWidgetComponent;
     public _categoriesLocked = false;
     public _categoriesUpdating = false;
+    public _kmcPermissions = KMCPermissions;
 
-    @ViewChild('tags') private tags: StickyComponent;
+
+  @ViewChild('tags') private tags: StickyComponent;
 
     public _isBusy = false;
     public _blockerMessage: AreaBlockerMessage = null;
@@ -132,6 +135,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
             .cancelOnDestroy(this)
             .subscribe(
                 result => {
+                  this._clearSelection();
 
                     this._tableIsBusy = result.loading;
 

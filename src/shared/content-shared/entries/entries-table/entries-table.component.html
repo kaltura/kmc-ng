@@ -74,16 +74,16 @@
                 </td>
 
                 <td *ngIf="_columnsMetadata.name" [ngStyle]="_columnsMetadata.name.style">
-                    <div class="kTitle" [kTooltip]="entry.name" [maxWidth]="300"
+                    <span class="kTitle kTableColumn" [kTooltip]="entry.name" [maxWidth]="300"
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
                         {{entry.name}}
-                    </div>
+                    </span>
                 </td>
 
                 <td *ngIf="_columnsMetadata.id" [ngStyle]="_columnsMetadata.id.style">{{entry.id}}</td>
 
-                <td *ngIf="_columnsMetadata.mediaType" [ngStyle]="_columnsMetadata.mediaType.style">
+                <td *ngIf="_columnsMetadata.mediaType" class="kMediaTypeIcon" [ngStyle]="_columnsMetadata.mediaType.style">
                     <div [kTooltip]="entry.mediaType | entryType: true"
                          [class]="entry.mediaType | entryType: false"></div>
                 </td>
@@ -114,7 +114,7 @@
                     </div>
                 </td>
 
-                <td *ngIf="_columnsMetadata.addToBucket" style="overflow: visible; width: 80px">
+                <td *ngIf="_columnsMetadata.addToBucket" [ngStyle]="_columnsMetadata.addToBucket.style">
                     <div class="kEntriesTableActions">
                         <button type="button" pButton class="kButtonDefault kButtonAddToBucket" label="+"
                                 (click)="_onActionSelected('addToBucket', entry)"></button>

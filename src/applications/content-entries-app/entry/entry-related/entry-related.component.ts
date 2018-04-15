@@ -56,7 +56,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 		this._actions = [
 			{label: this._appLocalization.get('applications.content.entryDetails.related.edit'), command: (event) => {this.actionSelected("edit");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.related.download'), command: (event) => {this.actionSelected("download");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.related.delete'), command: (event) => {this.actionSelected("delete");}}
+			{label: this._appLocalization.get('applications.content.entryDetails.related.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}}
 		];
 	}
 

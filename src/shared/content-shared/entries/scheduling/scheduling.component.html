@@ -41,7 +41,9 @@
               {{'applications.content.entryDetails.scheduling.noEndDate' | translate}}
             </div>
             <p>
-              <a [class.kDisabled]="_schedulingForm.get('scheduling').value === 'anytime'" (click)="_clearDates()">
+              <a *ngIf="!hideClearDates"
+                 [class.kDisabled]="_schedulingForm.get('scheduling').value === 'anytime'"
+                 (click)="_clearDates()">
                 {{'applications.content.entryDetails.scheduling.clear' | translate}}
               </a>
             </p>

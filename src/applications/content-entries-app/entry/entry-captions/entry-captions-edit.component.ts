@@ -52,10 +52,18 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
     ngOnInit(){
 	    // load all supported languages
 	    this._languages = [];
-	    let exludedLanguages = ['he', 'id', 'yi']; // duplicated languages TODO [KMCNG] - should be checked with beckend
+	    // let exludedLanguages = ['he', 'id', 'yi']; // duplicated languages TODO [KMCNG] - should be checked with beckend
 	    for (let lang in KalturaLanguage){
-		    if (lang !== "en" && exludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
-			    this._languages.push( {label: this._appLocalization.get("languages." + lang.toUpperCase()), value: KalturaLanguage[lang] });
+		    if (lang !== "en") { // we push English to the top of the array after sorting
+			    if (this._appLocalization.get("languages." + lang.toUpperCase()) !== "languages." + lang.toUpperCase()) { // get only supported languages as listed in the localization file
+				    const value = KalturaLanguage[lang];
+				    if (!this._languages.find(language => language.value === value)) {
+					    this._languages.push({
+						    label: this._appLocalization.get("languages." + lang.toUpperCase()),
+						    value
+					    });
+				    }
+			    }
 		    }
 	    }
 	    // sort the language array by language alphabetically
