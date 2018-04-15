@@ -10,6 +10,7 @@ import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryWidget } from '../entry-widget';
 import { async } from 'rxjs/scheduler/async';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -42,6 +43,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 
     constructor(
 				private _appLocalization: AppLocalization,
+				private _permissionsService: KMCPermissionsService,
 				private _fb: FormBuilder)
     {
         super(EntryWidgetKeys.Scheduling);
@@ -96,60 +98,66 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 			endDate: endDate,
 			enableEndDate: enableEndDate
 		});
-	}
 
-    private createForm(): void{
-    	this.schedulingForm = this._fb.group({
-		    scheduling: 'anytime',
-		    startDate: {value: '', disabled: true},
-		    endDate: {value: '', disabled: true},
-		    enableEndDate: false
-	    }, { validator: datesValidation(false) });
-
-	    this.schedulingForm.get('scheduling').valueChanges
-		    .cancelOnDestroy(this)
-		    .subscribe(
-	    	value => {
-	    		if (value === "anytime"){
-				    this.schedulingForm.get('startDate').disable();
-				    this.schedulingForm.get('endDate').disable();
-				    this.schedulingForm.get('enableEndDate').disable();
-			    }else{
-				    this.schedulingForm.get('startDate').enable();
-				    this.schedulingForm.get('enableEndDate').enable();
-				    if (this.schedulingForm.get('enableEndDate').value){
-					    this.schedulingForm.get('endDate').enable();
-				    }
-
-			    }
-		    }
-	    );
-	    this.schedulingForm.get('enableEndDate').valueChanges
-		    .cancelOnDestroy(this)
-		    .subscribe(
-		    value => {
-			    if (value){
-				    this.schedulingForm.get('endDate').enable();
-			    }else{
-
-				    this.schedulingForm.get('endDate').disable();
-			    }
-		    }
-	    );
-
-		Observable.merge(this.schedulingForm.valueChanges,
-			this.schedulingForm.statusChanges)
-            .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
-            .cancelOnDestroy(this)
-            .subscribe(
-				() => {
-					super.updateState({
-						isValid: this.schedulingForm.status === 'VALID',
-						isDirty: this.schedulingForm.dirty
-					});
-				}
-			);
+    if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_SCHEDULE)) {
+      this.schedulingForm.disable({ emitEvent: false });
     }
+  }
+
+  private createForm(): void {
+    this.schedulingForm = this._fb.group({
+      scheduling: 'anytime',
+      startDate: { value: '', disabled: true },
+      endDate: { value: '', disabled: true },
+      enableEndDate: false
+    }, { validator: datesValidation(false) });
+
+    if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_SCHEDULE)) {
+      this.schedulingForm.get('scheduling').valueChanges
+        .cancelOnDestroy(this)
+        .subscribe(
+          value => {
+            if (value === 'anytime') {
+              this.schedulingForm.get('startDate').disable();
+              this.schedulingForm.get('endDate').disable();
+              this.schedulingForm.get('enableEndDate').disable();
+            } else {
+              this.schedulingForm.get('startDate').enable();
+              this.schedulingForm.get('enableEndDate').enable();
+              if (this.schedulingForm.get('enableEndDate').value) {
+                this.schedulingForm.get('endDate').enable();
+              }
+
+            }
+          }
+        );
+      this.schedulingForm.get('enableEndDate').valueChanges
+        .cancelOnDestroy(this)
+        .subscribe(
+          value => {
+            if (value) {
+              this.schedulingForm.get('endDate').enable();
+            } else {
+
+              this.schedulingForm.get('endDate').disable();
+            }
+          }
+        );
+
+      Observable.merge(this.schedulingForm.valueChanges,
+        this.schedulingForm.statusChanges)
+        .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            super.updateState({
+              isValid: this.schedulingForm.status === 'VALID',
+              isDirty: this.schedulingForm.dirty
+            });
+          }
+        );
+    }
+  }
 
 
 	public _clearDates(){

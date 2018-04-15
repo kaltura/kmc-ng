@@ -11,6 +11,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -21,7 +22,9 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 })
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
-  @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
+	public _kmcPermissions = KMCPermissions;
+
+	@ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
   @ViewChild('tags') private tags: StickyComponent;
 
     public _isBusy = false;
