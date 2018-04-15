@@ -108,9 +108,9 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private _buildMenu(user: KalturaUser): void {
+
       this._items = [{
-          id: 'edit',
-          label: this._appLocalization.get('applications.content.table.edit'),
+          id: 'edit', label: this._appLocalization.get('applications.content.table.edit'),
           command: () => this.editUser.emit(user)
       }];
       const isCurrentUser = this._appAuthentication.appUser.id === user.id;
@@ -118,25 +118,27 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!isCurrentUser || !isAdminUser) {
           this._items.push(
               {
-                  id: 'blockUnblock',
-                  label: this._appLocalization.get('applications.content.table.blockUnblock'),
+                  id: 'blockUnblock', label: this._appLocalization.get('applications.content.table.blockUnblock'),
                   command: () => this.toggleUserStatus.emit(user)
               },
               {
-                  id: 'delete',
-                  label: this._appLocalization.get('applications.content.table.delete'),
-                  styleClass: 'kDanger',
-                  command: () => {
-                      this._browserService.confirm({
-                          header: this._appLocalization.get('applications.administration.users.deleteUser'),
-                          message: this._appLocalization.get('applications.administration.users.confirmDelete', {0: user.fullName}),
-                          accept: () => this.deleteUser.emit(user)
-                      });
-                  }
+                  id: 'delete', label: this._appLocalization.get('applications.content.table.delete'),
+                  styleClass: 'kDanger', command: () => {
+                  this._browserService.confirm({
+                      header: this._appLocalization.get('applications.administration.users.deleteUser'),
+                      message: this._appLocalization.get('applications.administration.users.confirmDelete', {0: user.fullName}),
+                      accept: () => this.deleteUser.emit(user)
+                  });
+              }
               }
           );
-
-          this._permissionsService.filterList(<{ id: string }[]>this._items, {'delete': KMCPermissions.ADMIN_USER_DELETE});
+          this._permissionsService.filterList(<{ id: string }[]>this._items,
+              {
+                  'delete': KMCPermissions.ADMIN_USER_DELETE,
+                  'blockUnblock': KMCPermissions.ADMIN_USER_UPDATE,
+                  'edit': KMCPermissions.ADMIN_USER_UPDATE,
+              }
+          );
       }
   }
 
