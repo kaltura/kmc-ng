@@ -1,0 +1,48 @@
+<div class="kLinkedEntriesList" [formGroup]="form">
+  <k-area-blocker [showLoader]="_showLoader" [message]="_blockerMessage">
+
+    <!-- Entries table -->
+    <div class="kMultiple" *ngIf="_isReady">
+      <div class="kTableHeader">
+        <div class="kBulkActions" *ngIf="_selectedEntries?.length">
+          <button pButton
+                  class="kButtonDefault kMoveBtn kMoveBtnTop"
+                  icon="kIcondropdown_arrow_top"
+                  (click)="_moveUpSelections()"></button>
+          <button pButton
+                  class="kButtonDefault kMoveBtn kMoveBtnBottom"
+                  icon="kIcondropdown_arrow_bottom"
+                  (click)="_moveDownSelections()"></button>
+
+          <span>{{'applications.content.entryDetails.metadata.selected' | translate: [_selectedEntries.length]}}</span>
+
+          <button pButton icon="kIcontrash" (click)="_deleteSelections()" class="kButtonDanger kBulkDeleteBtn"></button>
+
+          <a class="kClearSelection" (click)="_clearSelection()">
+            {{'applications.content.entryDetails.metadata.clear' | translate}}
+          </a>
+        </div>
+
+        <button *ngIf="!_selectedEntries?.length"
+                pButton class="kButtonDefault kAddEntriesBtn"
+                [disabled]="form.disabled"
+                [label]="_addBtnTitle"
+                (click)="_openEntriesSelector()"></button>
+      </div>
+      <k-linked-entries-table [entries]="_entries"
+                              [disabled]="form.disabled"
+                              [allowMultiple]="control?.allowMultipleEntries"
+                              (deleteEntry)="_deleteEntry($event)"
+                              [(selectedEntries)]="_selectedEntries"></k-linked-entries-table>
+    </div>
+  </k-area-blocker>
+</div>
+
+<kPopupWidget #addEntries [popupWidth]="995" [slider]="true">
+  <ng-template>
+    <k-linked-entries-add-entries-popup [parentPopup]="addEntries"
+                                        [allowMultiple]="control?.allowMultipleEntries"
+                                        [selectedEntries]="_entries"
+                                        (addEntries)="_addEntries($event)"></k-linked-entries-add-entries-popup>
+  </ng-template>
+</kPopupWidget>

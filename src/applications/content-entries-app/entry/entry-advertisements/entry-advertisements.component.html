@@ -4,7 +4,8 @@
     <div class="kDescription">{{'applications.content.entryDetails.advertisements.description' | translate}}</div>
     <div class="kButtons">
       <button pButton class="kButtonDefault"
-              (click)="_advertisementsEnabled && advertisements.open()"
+              [disabled]="!_advertisementsEnabled"
+              (click)="advertisements.open()"
               label="{{'applications.content.entryDetails.advertisements.manageAdvertisements' | translate}}"></button>
     </div>
 	</div>

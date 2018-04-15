@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {AppAuthentication} from 'app-shared/kmc-shell';
+import {AppAuthentication} from 'app-shared/kmc-shell/auth';
 import {getKalturaServerUri} from 'config/server';
 
 export interface KeditHosterConfig {

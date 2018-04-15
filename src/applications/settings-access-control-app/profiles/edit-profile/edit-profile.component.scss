@@ -76,6 +76,12 @@
           }
         }
 
+        span.kHasError {
+          color: $kDandger;
+          margin-top: 10px;
+          margin-bottom: -25px;
+        }
+
         .kLabel {
           width: 269px;
           flex: 0 0 auto;
@@ -98,6 +104,10 @@
         .kRequired, .kLabel {
           padding: 8px 4px;
           height: 18px;
+        }
+        .kControlWrapper {
+          display: flex;
+          flex-direction: column;
         }
         .kControl {
           color: $kGrayscale2;

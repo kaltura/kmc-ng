@@ -8,6 +8,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 
 import { EntryThumbnailsWidget, ThumbnailRow } from './entry-thumbnails-widget.service';
 import { Menu, MenuItem } from 'primeng/primeng';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('capturePopup') public capturePopup: PopupWidgetComponent;
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	public _actions: MenuItem[] = [];
+	public _kmcPermissions = KMCPermissions;
 
 	private currentThumb: ThumbnailRow;
 	private _popupStateChangeSubscribe: ISubscription;
@@ -34,8 +36,8 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
 	    this._actions = [
 		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.download'), command: (event) => {this.actionSelected("download");}},
-		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.delete'), command: (event) => {this.actionSelected("delete");}},
-		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.preview'), command: (event) => {this.actionSelected("preview");}}
+		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.preview'), command: (event) => {this.actionSelected("preview");}},
+		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}}
 	    ];
     }
 
