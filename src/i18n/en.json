@@ -1371,7 +1371,6 @@
           "regenerateSuccess": "Token generated",
           "regenerateFailure": "Error generating token",
           "streamName": "Stream name:",
-          "note": "Note: When using Flash Live Media Encoder you can use %i to automatically map multiple streams, with other encoders you should substitute \"_1\" with the index of each live stream flavor.",
           "config": "Live Stream Configuration",
           "dvrStatus": "DVR Status:",
           "dvrWindow": "DVR Window:",
