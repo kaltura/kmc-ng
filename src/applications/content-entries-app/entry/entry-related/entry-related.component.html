@@ -16,7 +16,7 @@
 				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}" [style]="{'width':'140px', 'overflow':'visible'}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
 						<p-dropdown
-                        [disabled]="file.uploading || file.uploadFailure || _kmcPermissions.ATTACHMENT_MODIFY | kDisabledIfNotPermitted"
+                        [disabled]="file.uploading || file.uploadFailure || (_kmcPermissions.ATTACHMENT_MODIFY | kDisabledIfNotPermitted)"
                         [options]="_fileTypes"
                         [autoWidth]="false"
                         [placeholder]="'applications.content.entryDetails.related.select' | translate"
