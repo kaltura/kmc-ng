@@ -26,21 +26,21 @@ hr{
 
   .kMetadataDetailsItem {
     padding-left: 24px;
-    padding-right: 138px;
+    padding-right: 38px;
   }
 
 	.kSchemaTitle{
 		color: $kGrayscale1;
 		font-size: 20px;
 		font-weight: 700;
-		padding-top: 30px;
+		padding-top: 50px;
 		padding-bottom: 12px;
 	}
 
 	/deep/ {
     k-dynamic-form-item {
       padding-left: 24px;
-      padding-right: 138px;
+      padding-right: 38px;
     }
 
 		.kRow {
@@ -48,7 +48,7 @@ hr{
 			padding-top: 16px;
 
 			.kFormLabelContainer{
-				width:190px;
+				width:208px;
 				display: flex;
 				justify-content: space-between;
 				.kFormRequiredIndicator{
@@ -62,7 +62,7 @@ hr{
 				}
 			}
 			.kLabel {
-				width: 160px;
+				width: 196px;
 				flex: 0 0 auto;
 				word-wrap: break-word;
 				padding-right: 12px;
@@ -70,17 +70,28 @@ hr{
 
 			input {
 				width: 100%;
+                max-width: 500px;
 				height: 34px;
 			}
 
 			textarea{
 				width: 100%;
+                max-width: 500px;
 				height: 76px;
 			}
+
+            kmultiselect{
+                max-width: 500px;
+                display: block;
+            }
 
 			.kControl, k-prime-control
 			{
 				width:100%;
+
+        .kHasError .ui-autocomplete-multiple-container {
+          border-color: $kDandger;
+        }
 
         .kControlInvalid {
           border: 1px solid $kDandger;
@@ -237,6 +248,8 @@ hr{
 
 		  kAutoComplete{
 			width: 100%;
+            max-width: 500px;
+            display: block;
 
         .ui-state-disabled {
           background-color: $kGrayscale5;
@@ -245,6 +258,8 @@ hr{
 
 		  p-dropdown{
 			width: 100%;
+              max-width: 500px;
+              display: block;
 		}
 
 		  p-multiselect{

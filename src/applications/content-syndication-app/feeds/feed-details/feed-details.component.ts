@@ -117,7 +117,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       {
         value: KalturaSyndicationFeedType.kalturaXslt,
         label: this._appLocalization
-          .get('applications.content.syndication.details.availableDestinations.flexibaleFormat')
+          .get('applications.content.syndication.details.availableDestinations.flexibleFormat')
       }
     ];
   }

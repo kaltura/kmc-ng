@@ -8,8 +8,7 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kal
   styleUrls: ['./administration-roles.component.scss'],
   providers: [
     RolesStoreService,
-    KalturaLogger,
-    { provide: KalturaLoggerName, useValue: 'AdministrationRolesComponent' }
+    KalturaLogger.createLogger('AdministrationRoles')
   ]
 })
 
