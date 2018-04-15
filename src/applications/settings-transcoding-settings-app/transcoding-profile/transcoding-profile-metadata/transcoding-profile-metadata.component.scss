@@ -37,6 +37,7 @@
 
       input {
         width: 100%;
+        max-width: 500px;
         height: 34px;
 
         &.kHasError {
@@ -46,9 +47,15 @@
 
       textarea {
         width: 100%;
+        max-width: 500px;
         height: 76px;
         padding: 4px;
       }
+
+        kmultiselect{
+            max-width: 500px;
+            display: block;
+        }
 
       .kControl, k-prime-control {
         width: 100%;

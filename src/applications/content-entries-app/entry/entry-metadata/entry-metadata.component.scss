@@ -26,7 +26,7 @@ hr{
 
   .kMetadataDetailsItem {
     padding-left: 24px;
-    padding-right: 138px;
+    padding-right: 38px;
   }
 
 	.kSchemaTitle{
@@ -40,7 +40,7 @@ hr{
 	/deep/ {
     k-dynamic-form-item {
       padding-left: 24px;
-      padding-right: 138px;
+      padding-right: 38px;
     }
 
 		.kRow {
@@ -70,13 +70,20 @@ hr{
 
 			input {
 				width: 100%;
+                max-width: 500px;
 				height: 34px;
 			}
 
 			textarea{
 				width: 100%;
+                max-width: 500px;
 				height: 76px;
 			}
+
+            kmultiselect{
+                max-width: 500px;
+                display: block;
+            }
 
 			.kControl, k-prime-control
 			{
@@ -237,6 +244,8 @@ hr{
 
 		  kAutoComplete{
 			width: 100%;
+            max-width: 500px;
+            display: block;
 
         .ui-state-disabled {
           background-color: $kGrayscale5;
@@ -245,6 +254,8 @@ hr{
 
 		  p-dropdown{
 			width: 100%;
+              max-width: 500px;
+              display: block;
 		}
 
 		  p-multiselect{
