@@ -1,44 +1,20 @@
-import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { AppAuthentication, AppShellService } from "app-shared/kmc-shell";
-
-import * as $ from 'jquery';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AppShellService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kKMCDashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('appMenu') private _appMenuRef : any;
-  private onResize : () => void;
+export class DashboardComponent {
+  @ViewChild('appMenu') private _appMenuRef: ElementRef;
 
-
-  constructor(private appShellService : AppShellService, private appAuthentication: AppAuthentication) {
-      this.onResize = this._resizeContent.bind(this);
-
-
-  }
-
-  private _resizeContent() : void
-  {
-    const $window = $(window);
+  @HostListener('window:resize') private _resizeContent(): void {
     if (this._appMenuRef) {
-        const $appMenu = $(this._appMenuRef.nativeElement);
-        this.appShellService.setContentAreaHeight($window.outerHeight() - $appMenu.outerHeight());
+      this._appShellService.setContentAreaHeight(window.innerHeight - this._appMenuRef.nativeElement.offsetHeight);
     }
   }
 
-  ngAfterViewInit()
-  {
-    $(window).bind('resize',this.onResize); // We bind the event to a function reference that proxy 'actual' this inside
-    this._resizeContent();
+  constructor(private _appShellService: AppShellService) {
   }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy(){
-    $(window).unbind('resize',this.onResize);
-  }
-
 }

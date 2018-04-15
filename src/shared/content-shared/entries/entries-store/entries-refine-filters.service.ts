@@ -25,8 +25,6 @@ import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/Kaltura
 
 import { DefaultFiltersList } from './default-filters-list';
 
-import * as R from 'ramda';
-import { KalturaAccessControlProfile } from 'kaltura-ngx-client/api/types/KalturaAccessControlProfile';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
 import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileListResponse';
@@ -102,9 +100,9 @@ export class EntriesRefineFiltersService {
             result.metadataProfiles.push(metadataProfile.id);
 
             // get only fields that are list, searchable and has values
-            const profileLists = R.filter(field => {
+            const profileLists = metadataProfile.items.filter(field => {
                 return (field.type === MetadataItemTypes.List && field.isSearchable && field.optionalValues.length > 0);
-            }, metadataProfile.items);
+            });
 
             // if found relevant lists, create a group for that profile
             if (profileLists && profileLists.length > 0) {
