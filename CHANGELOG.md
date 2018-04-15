@@ -1,3 +1,55 @@
+<a name="4.2.0"></a>
+# [4.2.0](https://github.com/kaltura/kmc-ng/compare/v4.1.0...v4.2.0) (2018-04-15)
+
+
+### Bug Fixes
+
+* **administration/roles:** show required violation indication for description when trying to create new role without a value ([704b29f](https://github.com/kaltura/kmc-ng/commit/704b29f))
+* **administration/users:** fix last login time format ([77b9273](https://github.com/kaltura/kmc-ng/commit/77b9273))
+* **content/category:** fix UI issues in Add Users window ([7bd11f2](https://github.com/kaltura/kmc-ng/commit/7bd11f2))
+* **content/entries:** reload entries list after file was uploaded, not prepared ([ea10680](https://github.com/kaltura/kmc-ng/commit/ea10680))
+* **content/entry:** display "copy to clipboard" button for broadcasting URLs in Universal stream ([02692c3](https://github.com/kaltura/kmc-ng/commit/02692c3))
+* **content/entry:** display "Export XML to FMLE" and live dashboard link for Kaltura live entry drill-down ([d45d5df](https://github.com/kaltura/kmc-ng/commit/d45d5df))
+* **content/entry:** don't display non-supported languages in captions language drop-down ([20e2743](https://github.com/kaltura/kmc-ng/commit/20e2743))
+* **content/entry:** hide "clip & trim" option for live, image and non-ready entries ([32f5ca5](https://github.com/kaltura/kmc-ng/commit/32f5ca5))
+* **content/entry:** hide distribution link for live, audio and image entries ([923b579](https://github.com/kaltura/kmc-ng/commit/923b579))
+* **content/moderation:** close moderation report window before navigating to entry details view ([f44bdc3](https://github.com/kaltura/kmc-ng/commit/f44bdc3))
+* **content/playlists:** fix name column header alignment ([f0db98f](https://github.com/kaltura/kmc-ng/commit/f0db98f))
+* **content/syndication:** typo fix ([ae28e3f](https://github.com/kaltura/kmc-ng/commit/ae28e3f))
+* **login:** fix reset password condition ([73da206](https://github.com/kaltura/kmc-ng/commit/73da206))
+* **settings/access-control:** fix confirmation header ([665a88d](https://github.com/kaltura/kmc-ng/commit/665a88d))
+* **settings/access-control-profile:** display validation message on blur ([08b0f54](https://github.com/kaltura/kmc-ng/commit/08b0f54))
+* **settings/access-control-profiles:** disable profile name editing for the default profile ([82fad29](https://github.com/kaltura/kmc-ng/commit/82fad29))
+* center dialog boxes on screen according to content height (fix to PrimeNG bug) ([f7d32d4](https://github.com/kaltura/kmc-ng/commit/f7d32d4))
+* handle categories lazy mode when permission DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD is provided ([7fe9d0e](https://github.com/kaltura/kmc-ng/commit/7fe9d0e))
+* perform move of categories  ([#582](https://github.com/kaltura/kmc-ng/issues/582)) KMCNG-1380 ([1c4f35e](https://github.com/kaltura/kmc-ng/commit/1c4f35e))
+* remove "Create" button border ([b282153](https://github.com/kaltura/kmc-ng/commit/b282153))
+* set "Delete" action to be last in all menus ([f0fe309](https://github.com/kaltura/kmc-ng/commit/f0fe309))
+* set delete action color to red in all menus ([9e8147c](https://github.com/kaltura/kmc-ng/commit/9e8147c))
+* updated metadata layout ([6578bf0](https://github.com/kaltura/kmc-ng/commit/6578bf0))
+* vertical align header menu item to middle ([0d8bdf7](https://github.com/kaltura/kmc-ng/commit/0d8bdf7))
+* **settings/transcoding-profiles:** provide headers for alerts ([21d19d2](https://github.com/kaltura/kmc-ng/commit/21d19d2))
+
+
+### Features
+
+* ignore metadata profiles with corrupted xsd value KMCNG-1633 ([bfee978](https://github.com/kaltura/kmc-ng/commit/bfee978))
+* implement permission CONTENT_MANAGE_BASE ([#529](https://github.com/kaltura/kmc-ng/issues/529)) KMCNG-1570 ([5c76e6f](https://github.com/kaltura/kmc-ng/commit/5c76e6f))
+* implement permission CONTENT_MANAGE_EDIT_CATEGORIES ([#537](https://github.com/kaltura/kmc-ng/issues/537)) KMCNG-1473 ([cf48355](https://github.com/kaltura/kmc-ng/commit/cf48355))
+* implement permission CONTENT_MODERATE_METADATA ([#534](https://github.com/kaltura/kmc-ng/issues/534)) KMCNG-1587 ([28dcd3b](https://github.com/kaltura/kmc-ng/commit/28dcd3b))
+* implement permission CONTENTDISTRIBUTION_PLUGIN_PERMISSION ([#520](https://github.com/kaltura/kmc-ng/issues/520)) KMCNG-1560 ([993ed62](https://github.com/kaltura/kmc-ng/commit/993ed62))
+* implement permission dropFolder.CONTENT_INGEST_DROP_FOLDER_DELETE ([#533](https://github.com/kaltura/kmc-ng/issues/533)) KMCNG-1586 ([ca5a64c](https://github.com/kaltura/kmc-ng/commit/ca5a64c))
+* implement permission FEATURE_DISABLE_CATEGORY_LIMIT ([#540](https://github.com/kaltura/kmc-ng/issues/540)) KMCNG-1596 ([16cd2cc](https://github.com/kaltura/kmc-ng/commit/16cd2cc))
+* implement permission FEATURE_DISABLE_KMC_KDP_ALERTS ([#549](https://github.com/kaltura/kmc-ng/issues/549)) KMCNG-1609 ([90a10cd](https://github.com/kaltura/kmc-ng/commit/90a10cd))
+* implement permission FEATURE_KMC_VERIFY_MODERATION ([#543](https://github.com/kaltura/kmc-ng/issues/543)) KMCNG-1599 ([d3a8836](https://github.com/kaltura/kmc-ng/commit/d3a8836))
+* implement permission FEATURE_REMOTE_STORAGE_INGEST ([#577](https://github.com/kaltura/kmc-ng/issues/577)) KMCNG-1573 ([4dbe3a1](https://github.com/kaltura/kmc-ng/commit/4dbe3a1))
+* implement permissions CONTENT_INGEST_CLIP_MEDIA and CONTENT_INGEST_INTO_READY ([#552](https://github.com/kaltura/kmc-ng/issues/552)) KMCNG-1612 KMCNG-1613 ([e63d10c](https://github.com/kaltura/kmc-ng/commit/e63d10c))
+* implement permissions CONTENT_MANAGE_DISTRIBUTION_REMOVE, CONTENT_MANAGE_DISTRIBUTION_SEND, CONTENT_MANAGE_DISTRIBUTION_WHERE ([#532](https://github.com/kaltura/kmc-ng/issues/532)) KMCNG-1584 KMCNG-1585 KMCNG-1583 ([7d89c0a](https://github.com/kaltura/kmc-ng/commit/7d89c0a))
+* Implement permissions FEATURE_LIVE_STREAM and FEATURE_LIVE_STREAM_RECORD ([#527](https://github.com/kaltura/kmc-ng/issues/527)) KMCNG-1589 KMCNG-1569 ([a174728](https://github.com/kaltura/kmc-ng/commit/a174728))
+* implement permissions PLAYLIST_EMBED_CODE and CONTENT_MANAGE_EMBED_CODE ([#538](https://github.com/kaltura/kmc-ng/issues/538)) KMCNG-1594 KMCNG-1610 ([b448708](https://github.com/kaltura/kmc-ng/commit/b448708))
+
+
+
 <a name="4.1.0"></a>
 # [4.1.0](https://github.com/kaltura/kmc-ng/compare/v4.0.1...v4.1.0) (2018-04-02)
 
