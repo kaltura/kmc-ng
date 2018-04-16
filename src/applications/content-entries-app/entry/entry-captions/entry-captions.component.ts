@@ -12,6 +12,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
 
 import { getKalturaServerUri, serverConfig } from 'config/server';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { getKalturaServerUri, serverConfig } from 'config/server';
     styleUrls: ['./entry-captions.component.scss']
 })
 export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
+  public _kmcPermissions = KMCPermissions;
 
     public _loadingError = null;
 	public _actions: MenuItem[] = [];
@@ -38,8 +40,8 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		this._actions = [
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.edit'), command: (event) => {this.actionSelected("edit");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.download'), command: (event) => {this.actionSelected("download");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.captions.delete'), command: (event) => {this.actionSelected("delete");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.captions.preview'), command: (event) => {this.actionSelected("preview");}}
+			{label: this._appLocalization.get('applications.content.entryDetails.captions.preview'), command: (event) => {this.actionSelected("preview");}},
+			{label: this._appLocalization.get('applications.content.entryDetails.captions.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}}
 		];
 	}
 
