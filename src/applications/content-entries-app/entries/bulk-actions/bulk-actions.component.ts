@@ -319,7 +319,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'),
                   command: (event) => {
                       this.performBulkAction('addToNewPlaylist')
-                  }
+                  },
+                disabled: !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_ADD)
               }]
           },
           {
@@ -338,7 +339,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               }]
           },
           {
-              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA),
+              disabled: !this._permissionsService.hasAnyPermissions([
+                KMCPermissions.CONTENT_MANAGE_METADATA,
+                KMCPermissions.CONTENT_MODERATE_METADATA
+              ]),
               label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
               {
                   label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => {

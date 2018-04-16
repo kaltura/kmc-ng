@@ -13,6 +13,7 @@ export class EntryAccessControl implements  OnInit, OnDestroy {
 	public _loading = false;
 	public _loadingError = null;
 	public _canSetAccessControl = false;
+  public _kmcPermissions = KMCPermissions;
 
 	constructor(public _widgetService: EntryAccessControlWidget,
               private _permissionsService: KMCPermissionsService) {
@@ -21,7 +22,7 @@ export class EntryAccessControl implements  OnInit, OnDestroy {
 
 	ngOnInit() {
         this._widgetService.attachForm();
-    this._canSetAccessControl = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL);
+    this._canSetAccessControl = this._permissionsService.hasAnyPermissions([KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL]);
 	}
 
 	ngOnDestroy() {

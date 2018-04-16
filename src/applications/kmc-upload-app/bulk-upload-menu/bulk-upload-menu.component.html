@@ -9,11 +9,12 @@
               [label]="'applications.content.bulkUpload.menu.types.entries' | translate"
               (click)="_invokeFileSelection(_bulkUploadTypes.entries)"></button>
       <button pButton class="kButtonDefault"
+              *ngIf="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kNgIfPermitted"
               [label]="'applications.content.bulkUpload.menu.types.categories' | translate"
               (click)="_invokeFileSelection(_bulkUploadTypes.categories)">
       </button>
       <button pButton class="kButtonDefault"
-              *ngIf="_kmcPermissions.FEATURE_END_USER_MANAGE | kNgIfPermitted"
+              *ngIf="_kmcPermissions.ADMIN_USER_BULK | kNgIfPermitted"
               [label]="'applications.content.bulkUpload.menu.types.endUsers' | translate"
               (click)="_invokeFileSelection(_bulkUploadTypes.endUsers)">
       </button>
