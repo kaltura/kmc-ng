@@ -25,8 +25,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
   @ViewChild('moderationDetails') private _moderationDetails: PopupWidgetComponent;
 
-  private _shouldConfirmEntryApproval = false; // TODO [kmcng] need to get such permissions from somewhere
-  private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
+  public _kmcPermissions = KMCPermissions;
   public _defaultFilters: Partial<EntriesFilters> = {
     'moderationStatuses': ['1', '5'],
       'sortDirection': SortDirection.Asc
@@ -73,7 +72,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _entriesStore: EntriesStore,
+              private _permissionsService: KMCPermissionsService,
               private _bulkService: BulkService) {
+    if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MODERATE_APPROVE_REJECT)) {
+      this._rowActions = [];
+    }
   }
 
   ngOnInit() {
@@ -92,7 +95,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   private _approveEntry(entryId: string, entryName: string): void {
-    if (!this._shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.approveMedia'),
         message: this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: entryName }),
@@ -107,10 +110,10 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
     const entriesToApprove = this._entriesList.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`);
     const entries = this._entriesList.selectedEntries.length <= 10 ? entriesToApprove.join(',').replace(/,/gi, '\n') : '';
     const message = this._entriesList.selectedEntries.length > 1 ?
-      (this._entriesList.selectedEntries.length <=10 ? this._appLocalization.get('applications.content.moderation.sureToApproveMultiple', { 0: entries }) :
+      (this._entriesList.selectedEntries.length <= 10 ? this._appLocalization.get('applications.content.moderation.sureToApproveMultiple', { 0: entries }) :
           this._appLocalization.get('applications.content.moderation.sureToApproveSelected')) :
       this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: entries });
-    if (!this._shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.approveMedia'),
         message: message,
@@ -151,7 +154,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       (this._entriesList.selectedEntries.length <= 10 ? this._appLocalization.get('applications.content.moderation.sureToRejectMultiple', { 0: entries }) :
             this._appLocalization.get('applications.content.moderation.sureToRejectSelected')) :
       this._appLocalization.get('applications.content.moderation.sureToReject', { 0: entries });
-    if (!this._shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
         message: message,
@@ -163,7 +166,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   private _rejectEntry(entryId: string, entryName: string): void {
-    if (!this._shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
         message: this._appLocalization.get('applications.content.moderation.sureToReject', { 0: entryName }),
