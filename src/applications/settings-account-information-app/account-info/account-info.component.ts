@@ -17,7 +17,9 @@ import { serverConfig } from 'config/server';
 export class AccountInfoComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _bandwidth = '';
+  public _bandwidthNA = false;
   public _storage = '';
+  public _storageNA = false;
   public _showTrialUserInfo: boolean;
   public _trialExpirationDateString = '';
 
@@ -48,8 +50,10 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe((response: KalturaPartnerStatistics) => {
         this._isBusy = false;
-        this._bandwidth = response.bandwidth ? response.bandwidth.toFixed(2) : this._appLocalization.get('app.common.n_a');
-        this._storage = response.hosting ? response.hosting.toFixed(2) : this._appLocalization.get('app.common.n_a');
+        this._bandwidthNA = !response.bandwidth;
+        this._storageNA = !response.hosting;
+        this._bandwidth = !this._bandwidthNA ? response.bandwidth.toFixed(2) : this._appLocalization.get('app.common.n_a');
+        this._storage = !this._storageNA ? response.hosting.toFixed(2) : this._appLocalization.get('app.common.n_a');
         this._logger.info(`handle successful loading statistics data`, { bandwidth: this._bandwidth, storage: this._storage });
       }, error => {
         this._logger.warn(`handle failed loading statistics data`, { errorMessage: error.message });
