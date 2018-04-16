@@ -1188,7 +1188,8 @@
                     "replaceLinkedEntry": "Selecting a new entry will replace the current entry. Continue?"
                 },
                 "thumbnails": {
-                    "thumbnails": "Thumbnails",
+                    "tags": "Tags",
+          "thumbnails": "Thumbnails",
                     "upload": "Upload",
                     "capture": {
                         "choose": "Choose Frame",
