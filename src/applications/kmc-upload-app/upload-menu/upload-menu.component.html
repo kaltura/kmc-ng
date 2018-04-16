@@ -3,9 +3,15 @@
     <i class="kIconUpload kUploadMenuUploadIcon"></i>
     <span>
       <a (click)="onItemSelected.emit('uploadFromDesktop')">{{ 'applications.upload.uploadMenu.uploadFromDesktop' | translate }}</a><br>
-      <a *ngIf="[_kmcPermissions.FEATURE_HIDE_ASPERA_LINK, _kmcPermissions.FEATURE_SHOW_ASPERA_UPLOAD_BUTTON]| kNgIfPermitted"
+      <a *ngIf="_showHighSpeedLink"
+         [class.kDisabled]="!_enableHighSpeedLink"
          class="kBulkUploadSamplesLink"
-         (click)="onHighSpeedLinkClicked()">{{ 'applications.upload.uploadMenu.highSpeed' | translate }}</a>
+         (click)="_enableHighSpeedLink && onHighSpeedLinkClicked()">{{ 'applications.upload.uploadMenu.highSpeed' | translate }}</a>
+
+      <a *ngIf="_showNeedHighSpeedLink"
+         [class.kDisabled]="!_enableNeedHighSpeedLink"
+         class="kBulkUploadSamplesLink"
+         (click)="_enableNeedHighSpeedLink && onNeedHighSpeedLinkClicked()">{{ 'applications.upload.uploadMenu.needHighSpeed' | translate }}</a>
     </span>
   </div>
 

@@ -20,6 +20,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
 
     load(rawRolePermissionList: string[], rawPartnerPermissionList: string[]): void {
 
+        rawRolePermissionList.push('FEATURE_SHOW_ASPERA_UPLOAD_BUTTON');
         super.flushPermissions();
 
         this._logger.info(`prepare user permissions set based on role permissions and partner permissions`);
