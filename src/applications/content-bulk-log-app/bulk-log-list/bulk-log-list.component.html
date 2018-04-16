@@ -12,7 +12,7 @@
               • {{selectedBulkLogItems.length}} {{'applications.content.bulkUpload.list.selected' | translate}}
             </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
-                    *ngIf="_kmcPermissions.BULK_LOG_DELETE | kNgIfPermitted"
+                    [disabled]="_kmcPermissions.BULK_LOG_DELETE | kDisabledIfNotPermitted"
                     (click)="_deleteFiles()"></button>
 
             <a class="kBulkCancel" (click)="_clearSelection()">
