@@ -23,7 +23,7 @@
             </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
                     [kTooltip]="'applications.settings.metadata.deleteProfiles' | translate"
-                    [class.kHidden]="_kmcPermissions.CUSTOM_DATA_PROFILE_DELETE | kHiddenIfNotPermitted"
+                    [disabled]="_kmcPermissions.CUSTOM_DATA_PROFILE_DELETE | kDisabledIfNotPermitted"
                     (click)="_deleteSchemas(_selectedSchemas)"></button>
             <a class="kBulkCancel" (click)="_clearSelection()">
               {{'applications.settings.metadata.cancel' | translate}}
