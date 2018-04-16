@@ -18,7 +18,6 @@ import {KalturaPermissionStatus} from 'kaltura-ngx-client/api/types/KalturaPermi
 import {UserRoleGetAction} from 'kaltura-ngx-client/api/types/UserRoleGetAction';
 import * as Immutable from 'seamless-immutable';
 import {AppUser} from './app-user';
-import {AppStorage} from '@kaltura-ng/kaltura-common';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
@@ -29,6 +28,7 @@ import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export interface IUpdatePasswordPayload {
     email: string;
@@ -64,7 +64,7 @@ export class AppAuthentication {
 
     constructor(private kalturaServerClient: KalturaClient,
                 @Inject(APP_AUTH_EVENTS) private _appAuthenticationEvents: AppAuthenticationEvents,
-                private appStorage: AppStorage,
+                private _browserService: BrowserService,
                 private _pageExitVerificationService: PageExitVerificationService,
                 logger: KalturaLogger,
                 private _permissionsService: KMCPermissionsService,
@@ -140,7 +140,7 @@ export class AppAuthentication {
         const expiry = (optional ? optional.expiry : null) || 86400;
         const privileges = optional ? optional.privileges : '';
 
-        this.appStorage.removeFromSessionStorage('auth.login.ks');  // clear session storage
+        this._browserService.removeFromSessionStorage('auth.login.ks');  // clear session storage
 
         const request = new KalturaMultiRequest(
             new UserLoginByLoginIdAction(
@@ -204,7 +204,7 @@ export class AppAuthentication {
 
     private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): Observable<void> {
 
-        this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
+        this._browserService.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
 
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
@@ -242,7 +242,7 @@ export class AppAuthentication {
 
     logout() {
         this._appUser = null;
-        this.appStorage.removeFromSessionStorage('auth.login.ks');
+        this._browserService.removeFromSessionStorage('auth.login.ks');
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._logout();
     }
@@ -250,7 +250,7 @@ export class AppAuthentication {
     public loginAutomatically(): Observable<boolean> {
         return Observable.create((observer: any) => {
             if (!this.isLogged()) {
-                const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
+                const loginToken = this._browserService.getFromSessionStorage('auth.login.ks');  // get ks from session storage
                 if (loginToken) {
                     const requests = [
                         new UserGetAction({})
@@ -312,7 +312,7 @@ export class AppAuthentication {
             return this.kalturaServerClient.request(new UserLoginByKsAction({requestedPartnerId: partnerId}))
                 .subscribe(
                     result => {
-                        this.appStorage.setInSessionStorage('auth.login.ks', result.ks);
+                        this._browserService.setInSessionStorage('auth.login.ks', result.ks);
                         this._logout();
 
                         // DEVELOPER NOTICE: observer next/complete not implemented by design

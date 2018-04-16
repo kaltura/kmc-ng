@@ -85,6 +85,7 @@ import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 import { KmcLoggerConfigurator } from './kmc-logger-configurator';
+import { APP_STORAGE_TOKEN } from '@kaltura-ng/kaltura-common/app-storage.service';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -173,7 +174,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       {
           provide: APP_AUTH_EVENTS, useClass: KMCAuthenticationEvents
       },
-    { provide: AppStorage, useExisting: BrowserService },
+      { provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
     ConfirmationService,
       KmcLoggerConfigurator
   ]
