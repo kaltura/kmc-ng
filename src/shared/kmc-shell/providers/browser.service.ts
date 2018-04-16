@@ -148,6 +148,17 @@ export class BrowserService implements IAppStorage {
 		window.open(baseUrl, target);
 	}
 
+	public openEmail(email: string): void{
+  	    const windowRef = window.open(email, '_blank');
+		windowRef.focus();
+
+		setTimeout(function(){
+			if(!windowRef.document.hasFocus()) {
+				windowRef.close();
+			}
+		}, 500);
+	}
+
 	public isSafari(): boolean{
 		const isChrome = !!window['chrome'] && !!window['chrome'].webstore;
 		return Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 || !isChrome && window['webkitAudioContext'] !== undefined;

@@ -8,7 +8,7 @@ export interface LinkedEntriesControlArgs extends DynamicFormControlArgs<any>
 export class LinkedEntriesControl extends DynamicFormControlBase<any> {
     get controlType()
     {
-        return 'LinkedEntries';
+        return 'LinkedEntriesComponent';
     }
 
     allowMultipleEntries : boolean;

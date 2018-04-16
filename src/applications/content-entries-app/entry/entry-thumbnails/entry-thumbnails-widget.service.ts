@@ -29,6 +29,7 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntrySta
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { globalConfig } from 'config/global';
 import { serverConfig } from 'config/server';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface ThumbnailRow {
   id: string;
@@ -56,6 +57,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
     constructor( private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
+                private _permissionsService: KMCPermissionsService,
                 private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _browserService: BrowserService)
     {
         super(EntryWidgetKeys.Thumbnails);
@@ -81,9 +83,10 @@ export class EntryThumbnailsWidget extends EntryWidget
 		    }))
 		    .monitor('get thumbnails');
 
-	    const getProfiles$ = this._kalturaServerClient.request(new DistributionProfileListAction({}))
-		    .monitor('get distribution profiles');
-
+      const canLoadProfiles = this._permissionsService.hasPermission(KMCPermissions.CONTENTDISTRIBUTION_PLUGIN_PERMISSION);
+      const getProfiles$ = canLoadProfiles
+        ? this._kalturaServerClient.request(new DistributionProfileListAction({})).monitor('get distribution profiles')
+        : Observable.of({});
 
 	    return Observable.forkJoin(getThumbnails$, getProfiles$)
 		    .cancelOnDestroy(this,this.widgetReset$)

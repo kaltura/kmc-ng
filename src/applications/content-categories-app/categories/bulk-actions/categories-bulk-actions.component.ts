@@ -35,6 +35,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   private _selectedCateogoriesWithPrivacyContext: KalturaCategory[] = [];
 
   public _bulkActionsMenu: MenuItem[] = [];
+  public _kmcPermissions = KMCPermissions;
   public _bulkAction = '';
 
   @Input() selectedCategories: KalturaCategory[];

@@ -7,14 +7,17 @@
       <div class="kBulkActionsContainer">
         <div class="kBulkActions" *ngIf="selectedItems.length; else addItemWrap">
           <button pButton
+                  [disabled]="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kDisabledIfNotPermitted"
                   class="kButtonDefault kMoveBtn kMoveBtnTop"
                   icon="kIcondropdown_arrow_top"
                   (click)="_moveItems('up')"></button>
           <button pButton
                   class="kButtonDefault kMoveBtn kMoveBtnBottom"
+                  [disabled]="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kDisabledIfNotPermitted"
                   icon="kIcondropdown_arrow_bottom"
                   (click)="_moveItems('down')"></button>
           <button pButton class="kButtonDanger kBulkDeleteBtn"
+                  [disabled]="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kDisabledIfNotPermitted"
                   label="{{'applications.content.categoryDetails.subcategories.tableHeaderDetails.remove' | translate}}"
                   (click)="_deleteItems()"></button>
         </div>
@@ -22,6 +25,7 @@
           <button
             pButton
             type="button"
+            [disabled]="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kDisabledIfNotPermitted"
             label="{{'applications.content.categoryDetails.subcategories.tableHeaderDetails.addSubcategory' | translate}}"
             class="kButtonBranded kAddItemBtn"
             (click)="addItem.emit()">
