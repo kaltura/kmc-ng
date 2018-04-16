@@ -35,7 +35,8 @@
           <span>{{subcategory[col.field]}}</span>
         </ng-template>
       </p-column>
-      <p-column styleClass="actionsColumn" header="">
+      <p-column styleClass="actionsColumn" header=""
+              *ngIf="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kNgIfPermitted">
         <ng-template let-subcategory="rowData" let-i="rowIndex" pTemplate="body">
           <div class="kTableActions">
             <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, i, subcategory)"></button>

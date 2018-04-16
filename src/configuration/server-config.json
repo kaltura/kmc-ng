@@ -12,54 +12,54 @@
     "securedServerUri": "https://cdnapisec.kaltura.com"
   },
   "externalApps": {
-    "studio": {
-      "enabled": false,
-      "uri": "",
-      "version": "",
-      "html5_version":"",
-      "html5lib":""
-    },
-    "studioV3": {
-      "enabled": false,
-      "uri": "",
-      "version": "",
-      "html5_version":"",
-      "html5lib":""
-    },
-    "liveDashboard": {
-      "enabled": false,
-      "uri": "",
-      "version": ""
-    },
-    "liveAnalytics": {
-      "enabled": false,
-      "uri": "",
-      "uiConfId": 0,
-      "version": ""
-    },
-    "kava": {
-      "enabled": false,
-      "version": "",
-      "uri": ""
-    },
-    "usageDashboard": {
-      "enabled": false,
-      "version": "",
-      "uri": "",
-      "uiConfId": 0,
-      "map_urls": [],
-      "map_zoom_levels": ""
-    },
-    "clipAndTrim": {
-      "enabled": false,
-      "uri": "",
-      "uiConfId": ""
-    },
-    "advertisements": {
-      "enabled": false,
-      "uri": "",
-      "uiConfId": ""
-    }
+      "studio": {
+          "enabled": false,
+          "uri": "",
+          "version": "",
+          "html5_version":"",
+          "html5lib":""
+      },
+      "studioV3": {
+          "enabled": false,
+          "uri": "",
+          "version": "",
+          "html5_version":"",
+          "html5lib":""
+      },
+      "liveDashboard": {
+          "enabled": false,
+          "uri": "",
+          "version": ""
+      },
+      "liveAnalytics": {
+          "enabled": false,
+          "uri": "",
+          "uiConfId": 0,
+          "version": ""
+      },
+      "kava": {
+          "enabled": false,
+          "version": "",
+          "uri": ""
+      },
+      "usageDashboard": {
+          "enabled": false,
+          "version": "",
+          "uri": "",
+          "uiConfId": 0,
+          "map_urls": [],
+          "map_zoom_levels": ""
+      },
+      "clipAndTrim": {
+          "enabled": false,
+          "uri": "",
+          "uiConfId": ""
+      },
+      "advertisements": {
+          "enabled": false,
+          "uri": "",
+          "uiConfId": ""
+      }
   },
   "externalLinks": {
     "previewAndEmbed": {
@@ -67,8 +67,10 @@
       "deliveryProtocols": "https://knowledge.kaltura.com/how-enforce-delivery-type-each-player-using-ui-variables"
     },
     "kaltura": {
-      "userManual": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
-      "support": "http://kmc.kaltura.com/index.php/kmc/support",
+      "kmcOverview": "https://knowledge.kaltura.com/node/2023",
+      "mediaManagement": "https://knowledge.kaltura.com/node/2024",
+      "userManual": "http://knowledge.kaltura.com/node/1606/attachment/field_media",
+      "support": "mailto:customercare@kaltura.com",
       "signUp": "https://corp.kaltura.com/free-trial",
       "contactUs": "https://corp.kaltura.com/company/contact-us",
       "upgradeAccount":"https://site.kaltura.com/Request-Users.html",
@@ -78,7 +80,8 @@
       "manage": "https://knowledge.kaltura.com/node/629#managing"
     },
     "uploads": {
-      "highSpeedUpload": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
+      "needHighSpeedUpload": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
+      "highSpeedUpload": "https://aspera.kaltura.com/",
       "bulkUploadSamples": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_sample.zip"
     },
     "live": {

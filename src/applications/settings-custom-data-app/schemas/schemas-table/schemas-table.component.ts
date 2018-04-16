@@ -4,6 +4,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { SchemasStore } from '../schemas-store/schemas-store.service';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kSchemasTable',
@@ -40,6 +41,7 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               public _schemasStore: SchemasStore,
               private _cdRef: ChangeDetectorRef) {
   }
@@ -63,10 +65,12 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
   private _buildMenu(schema: SettingsMetadataProfile): void {
     const nonDisableSchemaActions = [
       {
+        id: 'edit',
         label: this._appLocalization.get('applications.settings.metadata.table.actions.edit'),
         command: () => this._onActionSelected('edit', schema)
       },
       {
+        id: 'download',
         label: this._appLocalization.get('applications.settings.metadata.table.actions.download'),
         command: () => this._onActionSelected('download', schema)
       },
@@ -74,6 +78,7 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
 
     this._items = [
       {
+        id: 'delete',
         label: this._appLocalization.get('applications.settings.metadata.table.actions.delete'),
         styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', schema)
@@ -83,6 +88,8 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
     if (!schema.profileDisabled) {
       this._items = [...nonDisableSchemaActions, ...this._items];
     }
+
+    this._permissionsService.filterList(<{ id: string }[]>this._items, { 'delete': KMCPermissions.CUSTOM_DATA_PROFILE_DELETE });
   }
 
   public _openActionsMenu(event: any, schema: SettingsMetadataProfile): void {

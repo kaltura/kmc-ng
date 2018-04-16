@@ -101,12 +101,18 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
     this._descriptionField = this._editRoleForm.controls['description'];
   }
 
-  private _markFormFieldsAsTouched() {
-    this._editRoleForm.markAsTouched();
-    this._editRoleForm.updateValueAndValidity();
-  }
+    private _markFormFieldsAsTouched() {
+        for (const controlName in this._editRoleForm.controls) {
+            if (this._editRoleForm.controls.hasOwnProperty(controlName)) {
+                this._editRoleForm.get(controlName).markAsTouched();
+                this._editRoleForm.get(controlName).updateValueAndValidity();
+            }
+        }
+        this._editRoleForm.updateValueAndValidity();
+    }
 
-  private _getObserver(retryFn: () => void): Observer<void> {
+
+    private _getObserver(retryFn: () => void): Observer<void> {
     return <Observer<void>>{
       next: () => {
         this._logger.info(`handle successful update by the server`);

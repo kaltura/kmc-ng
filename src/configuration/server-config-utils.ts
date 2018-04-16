@@ -150,6 +150,7 @@ function getConfiguration(): Observable<ServerConfig> {
                     observer.error(resp);
                 } else {
                     observer.next(resp);
+                    observer.complete();
                 }
             }
         };

@@ -79,6 +79,7 @@
     },
     "uploads": {
       "highSpeedUpload": "@externalLinks.uploads.highSpeedUpload@",
+      "needHighSpeedUpload": "@externalLinks.uploads.needHighSpeedUpload@",
       "bulkUploadSamples": "@externalLinks.uploads.bulkUploadSamples@"
     },
     "live": {
