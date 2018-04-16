@@ -26,6 +26,7 @@ import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullab
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 
 export interface bitrate {
 	enabled: boolean,
@@ -40,6 +41,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	public _liveType: string = "";
 	private dirty: boolean;
+    private _passthroughProfile: KalturaConversionProfile = null;
 
 	private _conversionProfiles: BehaviorSubject<{ items: any[]}> = new BehaviorSubject<{ items: any[]}>({items: []});
 	public _conversionProfiles$ = this._conversionProfiles.asObservable();
@@ -150,6 +152,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 									return 1;
 								return 0;
 							});
+                            this._passthroughProfile = response.objects.find(({ systemName }) => systemName === 'Passthrough_Live');
 							// create drop down options array
 							let conversionProfiles = [];
 							response.objects.forEach(profile => {
@@ -312,6 +315,10 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 				}
 			);
 	}
+
+    public isPassthroughProfile(id: number): boolean {
+        return this._passthroughProfile && this._passthroughProfile.id === id;
+    }
 
 	ngOnDestroy()
     {

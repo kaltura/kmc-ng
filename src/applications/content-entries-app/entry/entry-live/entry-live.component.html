@@ -30,7 +30,7 @@
             <span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
             <span>{{_widgetService.data?.streamName.replace('%i', '1')}}</span>
           </div>
-          <div class="kRow" *ngIf="_widgetService?._selectedConversionProfile === 8871861">
+          <div class="kRow" *ngIf="_isNoteShown">
             <span class="kLabels"></span>
             <span>{{'applications.content.entryDetails.live.note' | translate}}</span>
           </div>

@@ -21,6 +21,10 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
 	public enableLiveDashboard: boolean = false;
 
+    public get _isNoteShown(): boolean {
+        return this._widgetService.isPassthroughProfile(this._widgetService._selectedConversionProfile);
+    }
+
 
 	constructor(public _widgetService: EntryLiveWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
 		this._copyToClipboardTooltips = {
