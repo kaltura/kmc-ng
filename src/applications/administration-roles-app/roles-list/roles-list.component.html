@@ -6,6 +6,7 @@
           <div class="kRolesTableFilters kContent">
             <button pButton type="button" class="kButtonBranded kAddRoleBtn"
                     [label]="'applications.administration.roles.addRole' | translate"
+                    [disabled]="_kmcPermissions.ADMIN_ROLE_ADD | kDisabledIfNotPermitted"
                     (click)="_addRole()"></button>
             <span class="kSelectedRolesNum" *ngIf="(_rolesStore.roles.data$ | async)?.totalCount">
               {{ 'applications.administration.roles.rolesNum' | translate:[(_rolesStore.roles.data$ | async)?.totalCount] }}
