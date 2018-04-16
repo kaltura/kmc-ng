@@ -6,6 +6,7 @@
       pButton
       type="button"
       class="kButtonBranded kAddProfileBtn"
+      [disabled]="_kmcPermissions.TRANSCODING_ADD | kDisabledIfNotPermitted"
       [class.kHidden]="_selectedProfiles.length"
       [label]="'applications.settings.transcoding.addProfile' | translate"
       (click)="addProfile.emit(_profilesType)"></button>
