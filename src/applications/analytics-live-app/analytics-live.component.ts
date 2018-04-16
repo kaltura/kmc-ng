@@ -34,6 +34,7 @@ export class AnalyticsLiveComponent implements OnInit, OnDestroy {
           'service_url': getKalturaServerUri(),
           'liveanalytics': {
             'player_id': +serverConfig.externalApps.liveAnalytics.uiConfId,
+            'hideSubNav': true
           }
         },
         'functions': {

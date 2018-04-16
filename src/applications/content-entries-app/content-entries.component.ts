@@ -8,8 +8,7 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
   styleUrls: ['./content-entries.component.scss'],
   providers: [
     EntriesStore,
-    KalturaLogger,
-    { provide: KalturaLoggerName, useValue: 'entries-store.service' },
+    KalturaLogger.createLogger('ContentEntriesComponent'),
     { provide: EntriesStorePaginationCacheToken, useValue: 'entries-list' }
   ]
 })

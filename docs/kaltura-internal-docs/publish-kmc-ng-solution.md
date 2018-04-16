@@ -39,7 +39,7 @@ git status
 ```
 2. Make sure you are working against updated version of master
 ```
-npm checkout master
+git checkout master
 git fetch
 ```
    * NOTICE: in order to sync tags you must run both `git fetch` and `git pull`
@@ -75,7 +75,7 @@ git status
 
 2. Make sure you are working against updated version of master
 ```
-npm checkout master
+git checkout master
 git fetch
 git pull
 ```
