@@ -15,6 +15,7 @@
       <kSticky stickyId="usersFilters" [sticksTo]="'header'" [scrollOffset]="166">
         <div class="kUsersTableFilters kContent">
           <button [disabled]="_usersTotalCount >= _partnerInfo.adminLoginUsersQuota"
+                  *ngIf="_kmcPermissions.ADMIN_USER_ADD | kNgIfPermitted"
                   pButton
                   type="button"
                   label="{{'applications.administration.users.addUser' | translate}}"

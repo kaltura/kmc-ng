@@ -7,6 +7,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export type UserSettingsPopup = 'editUserNamePopup' | 'editEmailAddressPopup' | 'changePasswordPopup'
 
@@ -14,7 +15,10 @@ export type UserSettingsPopup = 'editUserNamePopup' | 'editEmailAddressPopup' | 
   selector: 'kmc-settings-my-user-settings',
   templateUrl: './settings-my-user-settings.component.html',
   styleUrls: ['./settings-my-user-settings.component.scss'],
-  providers: [SettingsMyUserSettingsService]
+  providers: [
+    SettingsMyUserSettingsService,
+    KalturaLogger.createLogger('SettingsMyUserSettingsComponent')
+  ]
 })
 export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   @ViewChild('editUserNamePopup') public editUserNamePopup: PopupWidgetComponent;
@@ -30,10 +34,12 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   public _isBusy = false;
 
   constructor(private _myUserSettingsStore: SettingsMyUserSettingsService,
+              private _logger: KalturaLogger,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
+    this._logger.info(`initiate my user settings view`);
     this._getUserData();
   }
 
@@ -48,6 +54,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   }
 
   private _getUserData(): void {
+    this._logger.info(`handle loading user data`);
     this._isBusy = true;
     this._areaBlockerMessage = null;
     this._myUserSettingsStore
@@ -55,6 +62,10 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         ({ user, role }) => {
+          this._logger.info(
+            `handle successful loading user data`,
+            { userId: user.id, userName: user.screenName, roleId: role.id, roleName: role.name }
+          );
           this._isBusy = false;
           this._areaBlockerMessage = null;
           this._user = user;
@@ -66,11 +77,13 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
           }
         },
         error => {
+          this._logger.warn(`handle failed loading user data, show retry alert`);
           this._areaBlockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [{
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
+                this._logger.info(`user selected retry, retry action`, { errorMessage: error.message });
                 this._isBusy = false;
                 this._areaBlockerMessage = null;
                 this._getUserData();
@@ -81,8 +94,9 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   }
 
   public _updateLoginData(userData: UserUpdateLoginDataActionArgs, popup: UserSettingsPopup): void {
+    this._logger.info(`handle update user data request by user`);
     if (!this._isAllowedPopup(popup)) {
-      throw Error(`Popup name "${popup}" is not allowed, the name have to be 'UserSettingsPopup' type`)
+      throw Error(`Popup name "${popup}" is not allowed, the name have to be 'UserSettingsPopup' type`);
     }
 
     this._updateBlockerMessage = null;
@@ -92,21 +106,29 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
+          this._logger.info(`handle successful update action`);
           this._updateBlockerMessage = null;
           this._updateUserName = true;
           this[popup].close();
           this._getUserData();
         },
         error => {
+          this._logger.warn(`handle failed update action, show confirmation`);
           const buttons = [{
             label: this._appLocalization.get('app.common.cancel'),
-            action: () => this._updateBlockerMessage = null
+            action: () => {
+              this._logger.info(`user canceled, dismiss dialog`);
+              this._updateBlockerMessage = null;
+            }
           }];
           if (error.message === this._appLocalization.get('applications.settings.myUserSettings.errors.connection')) {
             buttons.push({
               label: this._appLocalization.get('app.common.retry'),
-              action: () => this._updateLoginData(userData, popup)
-            })
+              action: () => {
+                this._logger.info(`user selected retry, retry update action`);
+                this._updateLoginData(userData, popup);
+              }
+            });
           }
 
           this._updateBlockerMessage = new AreaBlockerMessage({ message: error.message, buttons });
@@ -115,16 +137,19 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   }
 
   public _editUserName(): void {
+    this._logger.info(`handle edit user name action by user`);
     this._updateBlockerMessage = null;
     this.editUserNamePopup.open();
   }
 
   public _editEmailAddress(): void {
+    this._logger.info(`handle edit user email action by user`);
     this._updateBlockerMessage = null;
     this.editEmailAddressPopup.open();
   }
 
   public _changePassword(): void {
+    this._logger.info(`handle edit user password action by user`);
     this._updateBlockerMessage = null;
     this.changePasswordPopup.open();
   }
