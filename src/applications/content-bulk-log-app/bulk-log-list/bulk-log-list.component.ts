@@ -13,13 +13,17 @@ import {
     RefineList
 } from '../bulk-log-store/bulk-log-refine-filters.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 @Component({
   selector: 'kBulkLogList',
   templateUrl: './bulk-log-list.component.html',
   styleUrls: ['./bulk-log-list.component.scss'],
-    providers: [BulkLogStoreService]
+  providers: [
+    BulkLogStoreService,
+    KalturaLogger.createLogger('BulkLogListComponent')
+  ]
 })
 export class BulkLogListComponent implements OnInit, OnDestroy {
   @Input() selectedBulkLogItems: Array<any> = [];
@@ -42,6 +46,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _refineFiltersService: BulkLogRefineFiltersService,
               private _browserService: BrowserService,
+              private _logger: KalturaLogger,
               public _store: BulkLogStoreService,
               appEvents: AppEventsService) {
     appEvents.event(BulkLogUploadingStartedEvent)
@@ -59,12 +64,14 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
         // this function will re-run if preparation failed. execute your logic
         // only once the filters were fetched successfully.
 
+      this._logger.info(`initiate bulk-log list view, load refine filters`);
         this._isBusy = true;
         this._refineFiltersService.getFilters()
             .cancelOnDestroy(this)
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 lists => {
+                  this._logger.info(`handle successful loading of filters, proceed initiation`);
                     this._isBusy = false;
                     this._refineFilters = lists;
                     this._restoreFiltersState();
@@ -72,19 +79,21 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
                     this._registerToDataChanges();
                 },
                 error => {
+                  this._logger.warn(`handle failed loading of filters, abort initiation, show alert`, { errorMessage: error.message });
                     this._isBusy = false;
                     this._blockerMessage = new AreaBlockerMessage({
                         message: this._appLocalization.get('applications.content.filters.errorLoading'),
                         buttons: [{
                             label: this._appLocalization.get('app.common.retry'),
                             action: () => {
+                              this._logger.info(`user selected retry, retry action`);
                                 this._blockerMessage = null;
                                 this._prepare();
                                 this._store.reload();
                             }
                         }
                         ]
-                    })
+                    });
                 });
     }
 
@@ -98,23 +107,20 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
                     if (result.errorMessage) {
                         this._tableBlockerMessage = new AreaBlockerMessage({
-                            message: result.errorMessage || 'Error loading bulk logs',
+                            message: result.errorMessage || this._appLocalization.get('applications.content.bulkUpload.errors.failedLoad'),
                             buttons: [{
-                                label: 'Retry',
+                                label: this._appLocalization.get('app.common.retry'),
                                 action: () => {
+                                  this._logger.info(`user selected retry, retry action`);
                                     this._tableBlockerMessage = null;
                                     this._store.reload();
                                 }
                             }
                             ]
-                        })
+                        });
                     } else {
                         this._tableBlockerMessage = null;
                     }
-                },
-                error => {
-                    console.warn('[kmcng] -> could not load bulk logs'); // navigate to error page
-                    throw error;
                 });
     }
   ngOnDestroy() {
@@ -152,6 +158,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
 
   private _deleteBulkLog(id: number): void {
+    this._logger.info(`handle delete log request by user`, { id });
     this._blockerMessage = null;
 
     this._store.deleteBulkLog(id)
@@ -159,15 +166,18 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._store.reload()
+          this._logger.info(`handle success delete log request`);
+          this._store.reload();
         },
-        () => {
+        (error) => {
+          this._logger.warn(`handle failed delete log request, show confirmation`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.error'),
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                  this._logger.info(`user confirmed, retry action`);
                   this._blockerMessage = null;
                   this._deleteBulkLog(id);
                 }
@@ -175,6 +185,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
               {
                 label: this._appLocalization.get('app.common.cancel'),
                 action: () => {
+                  this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
                   this._blockerMessage = null;
                 }
               }
@@ -184,7 +195,8 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _deleteBulkLogs(files: Array<KalturaBulkUpload>): void {
+  private _deleteBulkLogs(files: KalturaBulkUpload[]): void {
+    this._logger.info(`handle delete bulk logs request by user`);
     this._blockerMessage = null;
 
     this._store.deleteBulkLogs(files)
@@ -192,16 +204,19 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
       () => {
+        this._logger.info(`handle successful delete bulk logs request`);
         this._store.reload();
         this._clearSelection();
       },
-      () => {
+      (error) => {
+        this._logger.warn(`handle failed delete bulk logs request, show confirmation`, { errorMessage: error.message });
         this._blockerMessage = new AreaBlockerMessage({
           message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.error'),
           buttons: [
             {
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
+                this._logger.info(`user confirmed, retry action`);
                 this._blockerMessage = null;
                 this._deleteBulkLogs(files);
               }
@@ -209,6 +224,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
             {
               label: this._appLocalization.get('app.common.cancel'),
               action: () => {
+                this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
                 this._blockerMessage = null;
               }
             }
@@ -219,23 +235,38 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   private _deleteAction(bulkLogItem: KalturaBulkUpload): void {
+    this._logger.info(`handle delete bulkLog item action by user, show confirmation`, { id: bulkLogItem.id, name: bulkLogItem.fileName });
     this._browserService.confirm(
       {
         header: this._appLocalization.get('applications.content.bulkUpload.deleteLog.header'),
         message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.message'),
         accept: () => {
+          this._logger.info(`user confirmed, proceed action`);
           this._deleteBulkLog(bulkLogItem.id);
+        },
+        reject: () => {
+          this._logger.info(`user didn't confirm, abort action`);
         }
       }
     );
   }
 
   private _downloadLogAction(bulkLogItem: KalturaBulkUpload): void {
+    this._logger.info(`handle download log action by user`, {
+      id: bulkLogItem.id,
+      name: bulkLogItem.fileName,
+      url: bulkLogItem.logFileUrl
+    });
     const formatName = (name: string | number, type: string) => `${name}_log.${type}`;
     this._downloadFile(bulkLogItem.logFileUrl, bulkLogItem, formatName);
   }
 
   private _downloadFileAction(bulkLogItem: KalturaBulkUpload): void {
+    this._logger.info(`handle download file action by user`, {
+      id: bulkLogItem.id,
+      name: bulkLogItem.fileName,
+      url: bulkLogItem.bulkFileUrl
+    });
     const formatName = (name: string | number, type: string) => `${name}.${type}`;
     this._downloadFile(bulkLogItem.bulkFileUrl, bulkLogItem, formatName);
   }
@@ -278,6 +309,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   public _clearSelection(): void {
+    this._logger.info(`clear selected bulk log items`);
     this.selectedBulkLogItems = [];
   }
 
@@ -286,12 +318,20 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   public _deleteFiles(): void {
+    this._logger.info(
+      `handle delete bulk logs action by user, show confirmation`,
+      () => this.selectedBulkLogItems.map(item => ({ id: item.id, name: item.fileName }))
+    );
     this._browserService.confirm(
       {
         header: this._appLocalization.get('applications.content.bulkUpload.deleteLog.header'),
         message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.messageMultiple'),
         accept: () => {
+          this._logger.info(`user confirmed, proceed action`);
           this._deleteBulkLogs(this.selectedBulkLogItems);
+        },
+        reject: () => {
+          this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
         }
       }
     );

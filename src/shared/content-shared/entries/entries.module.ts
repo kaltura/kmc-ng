@@ -39,6 +39,10 @@ import {EntriesStoreDataProvider} from 'app-shared/content-shared/entries/entrie
 import {EntriesDataProviderToken} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import {LiveDashboardComponent} from 'app-shared/content-shared/entries/live-dashboard/live-dashboard.component';
 import {LiveDashboardHostComponent} from 'app-shared/content-shared/entries/live-dashboard-host/live-dashboard-host.component';
+import { LinkedEntriesTableComponent } from './link-entries-selector/linked-entries-table/linked-entries-table.component';
+import { LinkedEntriesAddEntriesComponent } from './link-entries-selector/linked-entries-add-entries/linked-entries-add-entries.component';
+import {LinkedEntriesComponent} from './link-entries-selector/linked-entries/linked-entries.component';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -67,7 +71,8 @@ import {LiveDashboardHostComponent} from 'app-shared/content-shared/entries/live
     InputTextModule,
     StickyModule,
     FiltersModule,
-    CategoriesModule
+    CategoriesModule,
+    KMCPermissionsModule
   ],
   declarations: [
     EntryStatusPipe,
@@ -83,7 +88,10 @@ import {LiveDashboardHostComponent} from 'app-shared/content-shared/entries/live
     EntriesListTagsComponent,
     EntriesSelectorComponent,
     LiveDashboardComponent,
-    LiveDashboardHostComponent
+    LiveDashboardHostComponent,
+    LinkedEntriesComponent,
+    LinkedEntriesTableComponent,
+    LinkedEntriesAddEntriesComponent
   ],
   exports: [
     EntryStatusPipe,
@@ -97,7 +105,10 @@ import {LiveDashboardHostComponent} from 'app-shared/content-shared/entries/live
     EntriesListComponent,
     EntriesSelectorComponent,
     LiveDashboardComponent,
-    LiveDashboardHostComponent
+    LiveDashboardHostComponent,
+	  LinkedEntriesComponent,
+	  LinkedEntriesTableComponent,
+	  LinkedEntriesAddEntriesComponent
   ]
 })
 export class EntriesModule {

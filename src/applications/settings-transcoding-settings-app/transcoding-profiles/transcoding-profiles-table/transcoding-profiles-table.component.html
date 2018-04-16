@@ -13,7 +13,7 @@
     <p-column field="name" [header]="'applications.settings.transcoding.table.name' | translate">
       <ng-template let-col let-profile="rowData" pTemplate="body">
         <div class="kTranscodingProfileNameWrapper">
-          <div class="kTranscodingProfileName"
+          <div class="kTranscodingProfileName kTableColumn"
                [kTooltip]="profile[col.field]"
                [maxWidth]="300"
                (click)="_onActionSelected('edit',profile)">
