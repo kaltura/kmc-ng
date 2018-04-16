@@ -35,7 +35,6 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
         });
 
         this._syncAppMenuConfigWithPermissions();
-        this._permissions.loadPermissions(Array.from(appUser.permissions).map(permission => KMCPermissions[permission]));
         this._serverPolls.forcePolling();
         return Observable.of(undefined);
     }
@@ -80,10 +79,12 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
         kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => isItemEnabled(item));
 
         kmcAppConfig.menuItems.forEach(item => {
-            item.children = item.children.filter(childItem => isItemEnabled(childItem));
+            if (item.children && item.children.length) {
+                item.children = item.children.filter(childItem => isItemEnabled(childItem));
+            }
         });
 
-        kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => item.children ? item.children.length > 0 : false);
+        kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => !item.showSubMenu ? true : (item.children ? item.children.length > 0 : false));
 
     }
 }

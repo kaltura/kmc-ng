@@ -17,7 +17,7 @@
               [style]="{'width': '236px'}"
               [header]="'applications.settings.metadata.table.name' | translate">
       <ng-template let-col let-schema="rowData" pTemplate="body">
-        <div class="kTitle"
+        <div class="kTitle kTableColumn"
              [class.kProfileDisabled]="schema?.profileDisabled"
              [kTooltip]="schema?.profileDisabled ? ('applications.settings.metadata.table.disabledLabel' | translate) : schema[col.field]"
              [maxWidth]="300"

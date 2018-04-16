@@ -4,6 +4,8 @@ import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { globalConfig } from 'config/global';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPlaylistsTable',
@@ -43,6 +45,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -77,21 +80,39 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   buildMenu(playlist: KalturaPlaylist): void {
     this._items = [
       {
+        id: 'previewAndEmbed',
         label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
         command: () => this.onActionSelected('preview', playlist)
       },
       {
-        label: this._appLocalization.get('applications.content.table.delete'),
-        command: () => this.onActionSelected('delete', playlist)
-      },
-      {
+        id: 'view',
         label: this._appLocalization.get('applications.content.table.view'),
         command: () => this.onActionSelected('view', playlist)
+      },
+      {
+        id: 'delete',
+        label: this._appLocalization.get('applications.content.table.delete'),
+        styleClass: 'kDanger',
+        command: () => this.onActionSelected('delete', playlist)
       }
     ];
+
     if (playlist.status !== KalturaEntryStatus.ready) {
       this._items.shift();
+    }else
+    {
+      const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
+      if (!hasEmbedPermission) {
+        this._items[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
+      }
     }
+
+    this._permissionsService.filterList(
+      <{id: string}[]>this._items,
+      {
+        'delete': KMCPermissions.PLAYLIST_DELETE
+      }
+    );
   }
 
 

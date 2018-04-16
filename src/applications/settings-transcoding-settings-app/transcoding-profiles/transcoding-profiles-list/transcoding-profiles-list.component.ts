@@ -12,11 +12,13 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
   templateUrl: './transcoding-profiles-list.component.html',
-  styleUrls: ['./transcoding-profiles-list.component.scss']
+  styleUrls: ['./transcoding-profiles-list.component.scss'],
+  providers: [KalturaLogger.createLogger('TranscodingProfilesListComponent')]
 })
 export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   @Input() title = '';
@@ -45,6 +47,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _router: Router,
+              private _logger: KalturaLogger,
               private _liveTranscodingProfilesStore: LiveTranscodingProfilesStore,
               private _mediaTranscodingProfilesStore: MediaTranscodingProfilesStore) {
   }
@@ -58,6 +61,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
+    this._logger.info(`initialize transcoding profiles list view`);
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
     this._registerToDataChanges();
@@ -74,8 +78,10 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
   private _setStoreServiceByType(serviceType: KalturaConversionProfileType): void {
     if (serviceType === KalturaConversionProfileType.media) {
+      this._logger.info(`set 'MediaTranscodingProfilesStore' as store service`, { serviceType });
       this._storeService = this._mediaTranscodingProfilesStore;
     } else if (serviceType === KalturaConversionProfileType.liveStream) {
+      this._logger.info(`set 'LiveTranscodingProfilesStore' as store service`, { serviceType });
       this._storeService = this._liveTranscodingProfilesStore;
     } else {
       throw Error('Incorrect serviceType provided. It can be either KalturaConversionProfileType.media or KalturaConversionProfileType.liveStream type');
@@ -90,12 +96,14 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
           this._tableIsBusy = result.loading;
 
           if (result.errorMessage) {
+            this._logger.info(`handle failing load profiles list data, show confirmation`);
             this._tableBlockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || this._appLocalization.get('applications.settings.transcoding.errorLoadingProfiles'),
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
+                    this._logger.info(`user selected retry, reload profiles list data`);
                     this._tableBlockerMessage = null;
                     this._clearSelection();
                     this._storeService.reload();
@@ -104,6 +112,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
                 {
                   label: this._appLocalization.get('app.common.cancel'),
                   action: () => {
+                    this._logger.info(`user canceled, dismiss confirmation`);
                     this._tableBlockerMessage = null;
                   }
                 }
@@ -112,11 +121,8 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
           } else {
             this._tableBlockerMessage = null;
           }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load transcoding profiles'); // navigate to error page
-          throw error;
-        });
+        }
+      );
   }
 
   private _restoreFiltersState(): void {
@@ -152,16 +158,19 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   private _setAsDefault(profile: KalturaConversionProfileWithAsset): void {
+    this._logger.info(`handle 'setAsDefault' request by the user`, { id: profile.id, name: profile.name });
     if (!profile.isDefault) {
       this._storeService.setAsDefault(profile)
         .tag('block-shell')
         .cancelOnDestroy(this)
         .subscribe(
           () => {
+            this._logger.info(`handle successful 'setAsDefault' request by the user`);
             this._clearSelection();
             this._storeService.reload();
           },
           error => {
+            this._logger.info(`handle failed 'setAsDefault' request by the user, show confirmation`);
             this.setParentBlockerMessage.emit(
               new AreaBlockerMessage({
                 message: error.message || this._appLocalization.get('applications.settings.transcoding.failedSetDefault'),
@@ -169,13 +178,17 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
                   {
                     label: this._appLocalization.get('app.common.retry'),
                     action: () => {
+                      this._logger.info(`user selected retry, retry failed 'setAsDefault' request by the user`);
                       this.setParentBlockerMessage.emit(null);
                       this._setAsDefault(profile);
                     }
                   },
                   {
                     label: this._appLocalization.get('app.common.cancel'),
-                    action: () => this.setParentBlockerMessage.emit(null)
+                    action: () => {
+                      this._logger.info(`user canceled, dismiss confirmation`);
+                      this.setParentBlockerMessage.emit(null);
+                    }
                   }
                 ]
               })
@@ -186,15 +199,21 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   private _proceedDeleteProfiles(profiles: KalturaConversionProfileWithAsset[]): void {
+    this._logger.info(
+      `handle 'delete' profiles request by the user`,
+      () => profiles.map(profile => ({ id: profile.id, name: profile.name }))
+    );
     this._storeService.deleteProfiles(profiles)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
         () => {
+          this._logger.info(`handle successful 'delete' profiles request by the user`);
           this._clearSelection();
           this._storeService.reload();
         },
         error => {
+          this._logger.info(`handle failed 'delete' profiles request by the user, show confirmation`);
           this.setParentBlockerMessage.emit(
             new AreaBlockerMessage({
               message: error.message || this._appLocalization.get('applications.settings.transcoding.failedDelete'),
@@ -202,13 +221,17 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
+                    this._logger.info(`user selected retry, retry failed 'delete' profiles request by the user`);
                     this.setParentBlockerMessage.emit(null);
                     this._proceedDeleteProfiles(profiles);
                   }
                 },
                 {
                   label: this._appLocalization.get('app.common.cancel'),
-                  action: () => this.setParentBlockerMessage.emit(null)
+                  action: () => {
+                    this._logger.info(`user canceled, dismiss confirmation`);
+                    this.setParentBlockerMessage.emit(null);
+                  }
                 }
               ]
             })
@@ -218,6 +241,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   private _deleteProfiles(profiles: KalturaConversionProfileWithAsset[], includesDefault = false): void {
+    this._logger.info(`handle 'delete profiles' action, show confirmation`);
     const profileNames = profiles.map(({ name }) => name).join('\n');
     const includesDefaultWarning = includesDefault
       ? this._appLocalization.get('applications.settings.transcoding.deleteDefaultProfileNote')
@@ -233,6 +257,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
           {
             label: this._appLocalization.get('applications.settings.transcoding.yes'),
             action: () => {
+              this._logger.info(`user confirmed, proceed action`);
               this.setParentBlockerMessage.emit(null);
               this._proceedDeleteProfiles(profiles);
             }
@@ -240,6 +265,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
           {
             label: this._appLocalization.get('applications.settings.transcoding.no'),
             action: () => {
+              this._logger.info(`user didn't confirmed, abort action`);
               this.setParentBlockerMessage.emit(null);
             }
           }
@@ -249,6 +275,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   public _deleteSelected(): void {
+    this._logger.info(`handle 'deleteSelected' profiles action by the user`);
     const includesDefault = this._selectedProfiles.some(({ isDefault }) => isDefault === KalturaNullableBoolean.trueValue);
     const profiles = includesDefault
       ? this._selectedProfiles.filter(({ isDefault }) => isDefault !== KalturaNullableBoolean.trueValue)
@@ -257,6 +284,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
     if (profiles.length) {
       this._deleteProfiles(profiles, includesDefault);
     } else if (includesDefault) {
+      this._logger.info(`selected profiles contain only default profile, show alert and abort action`);
       this.setParentBlockerMessage.emit(
         new AreaBlockerMessage({
           title: this._appLocalization.get('applications.settings.transcoding.deleteProfiles'),
@@ -264,6 +292,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
           buttons: [{
             label: this._appLocalization.get('app.common.ok'),
             action: () => {
+              this._logger.info(`user dismissed alert`);
               this.setParentBlockerMessage.emit(null);
             }
           }]
@@ -279,12 +308,16 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
         break;
 
       case 'edit':
+        this._logger.info(`handle 'edit' profile action by the user`, { profileId: event.profile.id });
         this._router.navigate(['/settings/transcoding/profile', event.profile.id]);
         break;
 
       case 'delete':
+        this._logger.info(`handle 'delete' action by the user`, { id: event.profile.id, name: event.profile.name });
         if (!event.profile.isDefault) {
           this._deleteProfiles([event.profile]);
+        } else {
+          this._logger.info(`cannot delete default profile, abort action`, { id: event.profile.id, name: event.profile.name });
         }
         break;
 

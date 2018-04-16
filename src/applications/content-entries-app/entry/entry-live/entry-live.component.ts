@@ -1,9 +1,10 @@
-import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryLiveWidget } from './entry-live-widget.service';
-
+import { serverConfig } from "config/server";
 
 @Component({
     selector: 'kEntryLive',
@@ -12,7 +13,10 @@ import { EntryLiveWidget } from './entry-live-widget.service';
 })
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
+	@ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
+
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
+	public enableLiveDashboard: boolean = false;
 
 
 	constructor(public _widgetService: EntryLiveWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
@@ -27,6 +31,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnInit() {
 		this._widgetService.attachForm();
+		this.enableLiveDashboard = serverConfig.externalApps.liveDashboard.enabled;
     }
 
     ngOnDestroy() {
@@ -56,6 +61,12 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 				}
 			}
 		);
+	}
+
+	public _openLiveReport(): void {
+		if (this.enableLiveDashboard){
+			this._liveDashboard.open();
+		}
 	}
 
 
