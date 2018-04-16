@@ -221,7 +221,8 @@
       },
       "uploadMenu": {
         "uploadFromDesktop": "Upload from desktop",
-        "highSpeed": "Need high-speed upload?",
+        "needHighSpeed": "Need high-speed upload?",
+        "highSpeed": "High-Speed Upload",
         "bulkUpload": {
           "title": "Bulk upload",
           "samplesLink": "Download CSV/XML Samples"

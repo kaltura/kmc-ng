@@ -165,9 +165,10 @@ export const ServerConfigSchema = {
                 uploads: {
                     properties: {
                         highSpeedUpload: {type: 'string'},
+                        needHighSpeedUpload: {type: 'string'},
                         bulkUploadSamples: {type: 'string'}
                     },
-                    required: ['highSpeedUpload', 'bulkUploadSamples'],
+                    required: ['highSpeedUpload', 'needHighSpeedUpload', 'bulkUploadSamples'],
                     additionalProperties: false
                 },
                 live: {
@@ -273,6 +274,7 @@ export interface ServerConfig {
         },
         uploads: {
             highSpeedUpload: string,
+            needHighSpeedUpload: string,
             bulkUploadSamples: string
         },
         live: {
