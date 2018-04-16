@@ -112,6 +112,7 @@ export class EditDistributionProfileComponent implements OnInit {
   public _cancel(): void {
     if (this._distributionForm.dirty) {
       this._browserService.confirm({
+        header: this._appLocalization.get('applications.content.entryDetails.distribution.form.discardChangesHeader'),
         message: this._appLocalization.get('applications.content.entryDetails.distribution.form.discardChanges'),
         accept: () => {
           this.parentPopup.close();

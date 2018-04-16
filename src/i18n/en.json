@@ -1500,7 +1500,8 @@
             "logs": "Logs",
             "requestXml": "Request XML",
             "responseXml": "Response XML",
-            "discardChanges": "Discard all changes?"
+            "discardChanges": "Discard all changes?",
+            "discardChangesHeader": "Exit distribution details"
           },
           "providerTypes": {
             "unknown": "Unknown provider",
