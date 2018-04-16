@@ -93,8 +93,7 @@
         <div class="kSaveBtnContainer kRow">
           <button pButton class="kButtonBranded kSaveBtn"
                   label="{{'applications.settings.accountSettings.apply' | translate}}"
-                  [class.kHidden]="_kmcPermissions.ACCOUNT_UPDATE_SETTINGS | kHiddenIfNotPermitted"
-                  [disabled]="accountSettingsForm.pristine"></button>
+                  [disabled]="accountSettingsForm.pristine || (_kmcPermissions.ACCESS_CONTROL_ADD | kDisabledIfNotPermitted)"></button>
         </div>
       </div>
 
