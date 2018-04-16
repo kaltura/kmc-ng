@@ -6,7 +6,8 @@
       pButton
       type="button"
       class="kButtonBranded kAddProfileBtn"
-      [class.kHidden]="_selectedProfiles.length || (_kmcPermissions.TRANSCODING_ADD | kHiddenIfNotPermitted)"
+      [disabled]="_kmcPermissions.TRANSCODING_ADD | kDisabledIfNotPermitted"
+      [class.kHidden]="_selectedProfiles.length"
       [label]="'applications.settings.transcoding.addProfile' | translate"
       (click)="addProfile.emit(_profilesType)"></button>
     <span class="kTotalProfilesCount" *ngIf="(_storeService.profiles.data$ | async)?.totalCount">
