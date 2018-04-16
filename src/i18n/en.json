@@ -134,7 +134,7 @@
         "newPasswordHashKeyExpired": "This link is older then 24 hours and is no longer valid.",
         "wrongOldPassword": "Old password is wrong",
         "invalidField": "Value in field {{value}} is not valid",
-          "userForbiddenForBeta": "This account is not invited to beta test of the new KMC!"
+          "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon."
       },
       "send": "Send",
       "wait": "Wait…",
