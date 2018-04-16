@@ -33,7 +33,7 @@ export interface Tabs {
 
 export class EntryReportComponent implements OnInit, OnDestroy {
 
-	public _kmcPermissions = KMCPermissions;
+    public _kmcPermissions = KMCPermissions;
   @ViewChild('player') player: KalturaPlayerComponent;
 
   @Input() parentPopupWidget: PopupWidgetComponent;

@@ -74,9 +74,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (!this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS)) {
-      delete this._columns.thumbnailUrl;
-    }
 
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)

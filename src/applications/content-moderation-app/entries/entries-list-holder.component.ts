@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import {
@@ -70,7 +70,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   constructor(private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
-              private _permissionsService: KMCPermissionsService,
               private _entriesStore: EntriesStore,
               private _permissionsService: KMCPermissionsService,
               private _bulkService: BulkService) {
@@ -80,9 +79,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (!this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS)) {
-      delete this._columns.thumbnailUrl;
-    }
+
   }
 
   ngOnDestroy() {

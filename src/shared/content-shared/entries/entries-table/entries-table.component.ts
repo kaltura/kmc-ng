@@ -41,6 +41,8 @@ export interface CustomMenuItem extends MenuItem {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
+    public _kmcPermissions = KMCPermissions;
+    
   @Input() set columns(value: EntriesTableColumns) {
     this._columns = value || this._defaultColumns;
   }
