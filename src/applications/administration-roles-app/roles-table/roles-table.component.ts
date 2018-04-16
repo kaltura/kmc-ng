@@ -11,10 +11,8 @@ import {
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { RolesStoreService } from '../roles-store/roles-store.service';
 
 @Component({
   selector: 'kRolesTable',
@@ -50,8 +48,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
-              private _permissionsService: KMCPermissionsService,
-              public rolesService: RolesStoreService) {
+              private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
