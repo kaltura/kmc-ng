@@ -1,8 +1,8 @@
-import { Observable } from 'rxjs/Observable';
-import { environment } from 'environments/environment';
+import {Observable} from 'rxjs/Observable';
+import {environment} from 'environments/environment';
 import * as Ajv from 'ajv';
-import { serverConfig, ServerConfig, ServerConfigSchema } from 'config/server';
-import { globalConfig } from 'config/global';
+import {serverConfig, ServerConfig, ServerConfigSchema} from 'config/server';
+import {globalConfig} from 'config/global';
 
 function isStudioAppValid(): boolean {
     let isValid = false;
@@ -11,7 +11,6 @@ function isStudioAppValid(): boolean {
             !!serverConfig.externalApps.studio.uri &&
             !serverConfig.externalApps.studio.uri.match(/\s/g) && // not contains white spaces
             !!serverConfig.externalApps.studio.version &&
-            !!serverConfig.externalApps.studio.uiConfId &&
             !!serverConfig.externalApps.studio.html5_version &&
             !!serverConfig.externalApps.studio.html5lib;
 
@@ -72,6 +71,39 @@ function isUsageDashboardAppValid(): boolean {
     return isValid;
 }
 
+function isClipAndTrimAppValid(): boolean {
+  let isValid = false;
+  if (serverConfig.externalApps.clipAndTrim.enabled) {
+    isValid =
+      !!serverConfig.externalApps.clipAndTrim.uri &&
+      !serverConfig.externalApps.clipAndTrim.uri.match(/\s/g) && // not contains white spaces
+      serverConfig.externalApps.clipAndTrim.uiConfId &&
+      !serverConfig.externalApps.clipAndTrim.uiConfId.match(/\s/g); // not contains white spaces
+
+    if (!isValid) {
+      console.warn('Disabling clipAndTrim (kedit) standalone application - configuration is invalid');
+    }
+  }
+  return isValid;
+}
+
+
+function isAdvertisementsAppValid(): boolean {
+  let isValid = false;
+  if (serverConfig.externalApps.advertisements.enabled) {
+    isValid =
+      !!serverConfig.externalApps.advertisements.uri &&
+      !serverConfig.externalApps.advertisements.uri.match(/\s/g) && // not contains white spaces
+      serverConfig.externalApps.advertisements.uiConfId &&
+      !serverConfig.externalApps.advertisements.uiConfId.match(/\s/g); // not contains white spaces
+
+    if (!isValid) {
+      console.warn('Disabling Advertisements (kedit) standalone application - configuration is invalid');
+    }
+  }
+  return isValid;
+}
+
 
 function validateSeverConfig(data: ServerConfig): { isValid: boolean, error?: string } {
     const ajv = new Ajv({allErrors: true, verbose: true});
@@ -111,13 +143,14 @@ function getConfiguration(): Observable<ServerConfig> {
 
                     }
                 } catch (e) {
-                    resp = new Error(xhr.responseText);
+                    resp = e;
                 }
 
                 if (resp instanceof Error) {
                     observer.error(resp);
                 } else {
                     observer.next(resp);
+                    observer.complete();
                 }
             }
         };
@@ -148,6 +181,8 @@ export function initializeConfiguration(): Observable<void> {
                 serverConfig.externalApps.kava.enabled = isKavaAppValid();
                 serverConfig.externalApps.liveDashboard.enabled = isLiveDashboardAppValid();
                 serverConfig.externalApps.usageDashboard.enabled = isUsageDashboardAppValid();
+                serverConfig.externalApps.clipAndTrim.enabled = isClipAndTrimAppValid();
+                serverConfig.externalApps.advertisements.enabled = isAdvertisementsAppValid();
 
             } else {
                 throw Error(validationResult.error || 'Invalid server configuration')

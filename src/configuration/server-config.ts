@@ -1,6 +1,6 @@
-import  'rxjs/add/operator/takeUntil';
-import  'rxjs/add/operator/delay';
-import { globalConfig } from './global-config';
+import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/delay';
+import {globalConfig} from './global-config';
 
 /*************************************
  * Developer Notice:
@@ -48,11 +48,23 @@ export const ServerConfigSchema = {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
                         version: {type: 'string'},
-                        uiConfId: {type: 'string'},
                         html5_version: {type: 'string'},
-                        html5lib: {type: 'string'}
+                        html5lib: {type: 'string'},
+                        showStudioV3: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'version', 'uiConfId', 'html5_version', 'html5lib'],
+                    required: ['enabled', 'uri', 'version', 'html5_version', 'html5lib'],
+                    additionalProperties: false
+                },
+                studioV3: {
+                    properties: {
+                        enabled: {type: 'boolean'},
+                        uri: {type: 'string'},
+                        version: {type: 'string'},
+                        html5_version: {type: 'string'},
+                        html5lib: {type: 'string'},
+                        showHTMLStudio: {type: 'boolean'}
+                    },
+                    required: ['enabled', 'uri', 'version', 'html5_version', 'html5lib'],
                     additionalProperties: false
                 },
                 usageDashboard: {
@@ -80,10 +92,31 @@ export const ServerConfigSchema = {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
-                        version: {type: 'string'}
+                      uiConfId: {type: 'number'},
+                      version: {type: 'string'}
                     },
                     required: ['enabled', 'uri', 'version'],
                     additionalProperties: false
+                },
+                clipAndTrim: {
+                  properties: {
+                    enabled: {type: 'boolean'},
+                    uri: {type: 'string'},
+                    uiConfId: {type: 'string'},
+                    version: {type: 'string'}
+                  },
+                  required: ['enabled', 'uri', 'uiConfId'],
+                  additionalProperties: false
+                },
+                advertisements: {
+                  properties: {
+                    enabled: {type: 'boolean'},
+                    uri: {type: 'string'},
+                    uiConfId: {type: 'string'},
+                    version: {type: 'string'}
+                  },
+                  required: ['enabled', 'uri', 'uiConfId'],
+                  additionalProperties: false
                 },
                 kava: {
                     properties: {
@@ -110,6 +143,8 @@ export const ServerConfigSchema = {
                 },
                 kaltura: {
                     properties: {
+                        kmcOverview: {type: 'string'},
+                        mediaManagement: {type: 'string'},
                         userManual: {type: 'string'},
                         support: {type: 'string'},
                         signUp: {type: 'string'},
@@ -130,9 +165,10 @@ export const ServerConfigSchema = {
                 uploads: {
                     properties: {
                         highSpeedUpload: {type: 'string'},
+                        needHighSpeedUpload: {type: 'string'},
                         bulkUploadSamples: {type: 'string'}
                     },
-                    required: ['highSpeedUpload', 'bulkUploadSamples'],
+                    required: ['highSpeedUpload', 'needHighSpeedUpload', 'bulkUploadSamples'],
                     additionalProperties: false
                 },
                 live: {
@@ -159,19 +195,27 @@ export interface ServerConfig {
             enabled: boolean,
             trialPeriodInDays: number
         }
-    },
+    };
     cdnServers: {
         serverUri: string,
         securedServerUri: string
-    },
+    };
     externalApps: {
         studio: {
             enabled: boolean,
             uri: string,
             version: string,
-            uiConfId: string,
             html5_version: string,
-            html5lib: string
+            html5lib: string,
+            showFlashStudio: boolean
+        },
+        studioV3: {
+            enabled: boolean,
+            uri: string,
+            version: string,
+            html5_version: string,
+            html5lib: string,
+            showFlashStudio: boolean
         },
         liveDashboard: {
             enabled: boolean,
@@ -194,9 +238,22 @@ export interface ServerConfig {
         liveAnalytics: {
             enabled: boolean,
             version: string,
-            uri: string,
+            uiConfId: number,
+            uri: string
+        },
+        clipAndTrim: {
+          enabled: boolean,
+          uri: string,
+          uiConfId: string,
+          version: string,
+        },
+        advertisements: {
+          enabled: boolean,
+          uri: string,
+          uiConfId: string,
+          version: string,
         }
-    },
+    };
     externalLinks: {
         previewAndEmbed: {
             embedTypes: string,
@@ -207,6 +264,8 @@ export interface ServerConfig {
         },
         kaltura: {
             userManual: string,
+            kmcOverview: string,
+            mediaManagement: string,
             support: string,
             signUp: string,
             contactUs: string,
@@ -215,23 +274,23 @@ export interface ServerConfig {
         },
         uploads: {
             highSpeedUpload: string,
+            needHighSpeedUpload: string,
             bulkUploadSamples: string
         },
         live: {
             akamaiEdgeServerIpURL: string
         }
-    }
+    };
 }
 
 export const serverConfig: ServerConfig = <any>{};
 
-export function getKalturaServerUri(suffix: string = ''): string{
-    if (serverConfig.kalturaServer)
-    {
+export function getKalturaServerUri(suffix: string = ''): string {
+    if (serverConfig.kalturaServer) {
         const useHttpsProtocol = globalConfig.kalturaServer.useSecuredProtocol;
         const serverEndpoint = serverConfig.kalturaServer.uri;
         return `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}${suffix}`;
-    }else {
+    } else {
         throw new Error(`cannot provide kaltura server uri. server configuration wasn't loaded already`);
     }
 }

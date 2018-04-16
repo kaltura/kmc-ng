@@ -89,7 +89,7 @@ export class CustomSchemaFormComponent {
 
       if (change.applyTo) {
         const applyTo = change.applyTo;
-        if (!this._schema.applyTo === applyTo) {
+        if (this._schema.applyTo !== applyTo) {
           this._schema.applyTo = applyTo;
           sendUpdate = true;
         }

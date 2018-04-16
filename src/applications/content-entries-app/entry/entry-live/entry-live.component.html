@@ -1,11 +1,9 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
-
-  <!--div class="kLiveDashboardContainer" *ngIf="_widgetService._liveType === 'kaltura'">
-    <kLiveDashboard [entryId]="_widgetService.data.id"></kLiveDashboard>
-  </div-->
-
   <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
+    <div class="kButtons">
+      <button pButton [disabled]="!_widgetService._liveDashboardEnabled" class="kButtonDefault" (click)="liveDashboard.open()" label="{{'applications.content.entryDetails.live.liveDashboard' | translate}}"></button>
+    </div>
     <div class="kLiveDetails">
 
       <div *ngIf="_widgetService._liveType === 'kaltura'">
@@ -31,16 +29,12 @@
             <span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
             <span>{{_widgetService.data?.streamName.replace('%i', '1')}}</span>
           </div>
-          <!--div class="kRow">
-            <span class="kLabels"></span>
-            <span>{{'applications.content.entryDetails.live.note' | translate}}</span>
-          </div>
           <div class="kRow">
             <span class="kLabels"></span>
             <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"
                     label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
-            <a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" (click)="_widgetService._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
-          </div-->
+            <a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" [class.kDisabled]="!enableLiveDashboard" (click)="_openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
+          </div>
         </div>
 
         <div>
@@ -93,31 +87,19 @@
           <span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
-            <div>
-              <span #primaryBroadcastingUrl>{{_widgetService.data?.primaryBroadcastingUrl}}</span>
-              <button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn"
-                      (click)="_copyToClipboard(primaryBroadcastingUrl.textContent)" icon="kIconCopy-to-clipboard"
-                      [kTooltip]="'app.common.copyToClipboard' | translate"></button>
-            </div>
+            <span #primaryBroadcastingUrl>{{_widgetService.data?.primaryBroadcastingUrl}}</span>
+            <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.primaryBroadcastingUrl" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
           </div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.entryDetails.live.backup' | translate}}</span>
-            <div>
-              <span #secondaryBroadcastingUrl>{{_widgetService.data?.secondaryBroadcastingUrl}}</span>
-              <button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn"
-                      (click)="_copyToClipboard(secondaryBroadcastingUrl.textContent)" icon="kIconCopy-to-clipboard"
-                      [kTooltip]="'app.common.copyToClipboard' | translate"></button>
-            </div>
+            <span #secondaryBroadcastingUrl>{{_widgetService.data?.secondaryBroadcastingUrl}}</span>
+            <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.secondaryBroadcastingUrl" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
           </div>
         </div>
         <div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
             <span>{{_widgetService.data?.streamName.replace('%i', '1')}}</span>
-          </div>
-          <div class="kRow">
-            <span class="kLabels"></span>
-            <span>{{'applications.content.entryDetails.live.note' | translate}}</span>
           </div>
           <div class="kRow">
             <span class="kLabels"></span>
@@ -223,3 +205,10 @@
     </div>
   </div>
 </k-area-blocker>
+
+<kPopupWidget #liveDashboard [fullScreen]="true">
+  <ng-template>
+    <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
+  </ng-template>
+</kPopupWidget>
+

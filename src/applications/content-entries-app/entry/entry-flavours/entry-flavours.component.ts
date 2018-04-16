@@ -13,6 +13,7 @@ import { Flavor } from './flavor';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { globalConfig } from 'config/global';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -32,6 +33,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
 	public _actions: MenuItem[] = [];
+	public _kmcPermissions = KMCPermissions;
 
 	public _selectedFlavor: Flavor;
 	public _uploadFilter: string = "";
@@ -59,10 +61,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			if (this._widgetService.sourceAvailabale && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted.toString()))){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.convert'), command: (event) => {this.actionSelected("convert");}});
 			}
+			let addDelete = false; // use this to add the "Delete" action last
 			if ((flavor.isSource && this.isSourceReady(flavor)) || ( !flavor.isSource && flavor.id !== '' &&
 					(flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString() ))){
-				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), command: (event) => {this.actionSelected("delete");}});
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.download'), command: (event) => {this.actionSelected("download");}});
+				addDelete = true;
 			}
 			if ((flavor.isSource && (this.isSourceReady(flavor) || flavor.status === KalturaFlavorAssetStatus.deleted.toString()))||
 					flavor.id === "" || (flavor.id !== "" && (flavor.status === KalturaFlavorAssetStatus.deleted.toString() ||
@@ -82,6 +85,9 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			}
 			if (flavor.isWidevine && flavor.status === KalturaFlavorAssetStatus.ready.toString()){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.drm'), command: (event) => {this.actionSelected("drm");}});
+			}
+			if (addDelete){
+				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}});
 			}
 			if (this._actions.length) {
 				this._selectedFlavor = flavor;

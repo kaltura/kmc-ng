@@ -4,8 +4,16 @@
 		<div class="kHeader">
 			<p class="kTitle">{{'applications.content.entryDetails.thumbnails.thumbnails' | translate}}</p>
 			<div class="kButtons">
-			<button pButton class="kButtonDefault" (click)="fileDialog.open($event)" icon="kIconupload" label="{{'applications.content.entryDetails.thumbnails.upload' | translate}}"></button>
-			<button pButton class="kButtonDefault" (click)="capturePopup.open()" *ngIf="_widgetService.allowGrabFromVideo" icon="kIconimage" label="{{'applications.content.entryDetails.thumbnails.capture.choose' | translate}}"></button>
+			<button pButton class="kButtonDefault"
+              *ngIf="_kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted"
+              (click)="fileDialog.open($event)"
+              icon="kIconupload"
+              label="{{'applications.content.entryDetails.thumbnails.upload' | translate}}"></button>
+			<button pButton class="kButtonDefault"
+              (click)="capturePopup.open()"
+              *ngIf="_widgetService.allowGrabFromVideo && _kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted"
+              icon="kIconimage"
+              label="{{'applications.content.entryDetails.thumbnails.capture.choose' | translate}}"></button>
 		</div>
 		</div>
 		<div class="kTable">
@@ -25,15 +33,18 @@
 						<span>{{thumb[col.field] | kFileSize}}</span>
 					</ng-template>
 				</p-column>
-				<p-column field="distributors" header="{{'applications.content.entryDetails.thumbnails.distributors' | translate}}">
+				<p-column *ngIf="_kmcPermissions.CONTENTDISTRIBUTION_PLUGIN_PERMISSION | kNgIfPermitted"
+                  field="distributors"
+                  header="{{'applications.content.entryDetails.thumbnails.distributors' | translate}}">
 				</p-column>
-				<p-column field="isDefault" header="{{'applications.content.entryDetails.thumbnails.defaultTitle' | translate}}">
+				<p-column *ngIf="_kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted"
+                  field="isDefault" header="{{'applications.content.entryDetails.thumbnails.defaultTitle' | translate}}">
 					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<span *ngIf="thumb.isDefault">{{'applications.content.entryDetails.thumbnails.default' | translate}}</span>
 						<a (click)="_widgetService._setAsDefault(thumb)" *ngIf="!thumb.isDefault && thumb.status?.toString()==='2'">{{'applications.content.entryDetails.thumbnails.setDefault' | translate}}</a>
 					</ng-template>
 				</p-column>
-				<p-column [style]="{'width':'80px'}">
+				<p-column [style]="{'width':'80px'}" *ngIf="_kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted">
 					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<div class="kThumbnailsTableActions" *ngIf="thumb.id!==''">
 							<button type="button" pButton class="kMoreActionsButton" icon="kIconmore" (click)="openActionsMenu($event, thumb)"></button>
