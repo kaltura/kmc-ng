@@ -19,7 +19,7 @@
         • {{ 'applications.settings.transcoding.selected' | translate: [_selectedProfiles.length]}}
       </span>
       <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
-              [class.kHidden]="_kmcPermissions.TRANSCODING_DELETE | kHiddenIfNotPermitted"
+              [disabled]="_kmcPermissions.TRANSCODING_DELETE | kDisabledIfNotPermitted"
               (click)="_deleteSelected()"></button>
       <a class="kBulkCancel" (click)="_clearSelection()">
         {{'applications.settings.transcoding.cancel' | translate}}
