@@ -16,7 +16,7 @@
     <div class="kBulkActionsContainer">
 
       <button class="kButtonBranded kAddItemBtn"
-              *ngIf="!_selectedUsers.length"
+              *ngIf="!_selectedUsers.length && _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kNgIfPermitted"
               pButton
               type="button"
               label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.addUsers' | translate}}"
@@ -47,7 +47,7 @@
 
       </div>
 
-      <div class="kBulkActions" [class.kHidden]="!_selectedUsers.length">
+      <div class="kBulkActions" [class.kHidden]="!_selectedUsers.length || _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kHiddenIfNotPermitted">
         <span class="kSelectedItems">
              • {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.selectedUsersCount' | translate: {'0':_selectedUsers.length} }}
         </span>

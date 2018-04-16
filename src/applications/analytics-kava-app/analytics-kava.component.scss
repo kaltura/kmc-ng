@@ -1,0 +1,9 @@
+@import "app-theme/_variables.scss";
+
+.kApp{
+  height: $contentArea;
+  iframe{
+    width: 100%;
+    height: calc(100vh - 55px);
+  }
+}

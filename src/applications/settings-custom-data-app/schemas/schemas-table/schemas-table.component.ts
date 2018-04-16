@@ -80,6 +80,7 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
       {
         id: 'delete',
         label: this._appLocalization.get('applications.settings.metadata.table.actions.delete'),
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', schema)
       }
     ];

@@ -1,15 +1,16 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from "@kaltura-ng/kaltura-common";
-import { SectionsList } from './sections-list';
-import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {Injectable, OnDestroy} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {SectionsList} from './sections-list';
+import {EntryWidgetKeys} from '../entry-widget-keys';
+import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
-import { EntryWidget } from '../entry-widget';
+import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {KalturaExternalMediaEntry} from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
+import {EntryWidget} from '../entry-widget';
+import {EntryStore} from "../entry-store.service";
 
 export interface SectionWidgetItem
 {
@@ -25,7 +26,8 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
     private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
     public sections$ : Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
-    constructor(private _appLocalization: AppLocalization)
+    constructor(private _appLocalization: AppLocalization,
+                private _entryStore: EntryStore)
     {
         super('sectionsList');
     }
@@ -113,22 +115,21 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
             case EntryWidgetKeys.Thumbnails:
                 return mediaType !== KalturaMediaType.image;
             case EntryWidgetKeys.Flavours:
-                return mediaType !== KalturaMediaType.image && !this._isLive(entry) && !externalMedia;
             case EntryWidgetKeys.Captions:
-                return mediaType !== KalturaMediaType.image && !this._isLive(entry) && !externalMedia;
+                return mediaType !== KalturaMediaType.image && !this._entryStore.isLiveMediaEntry(entry.mediaType) && !externalMedia;
+            case EntryWidgetKeys.Advertisements:
+                return mediaType !== KalturaMediaType.image && !this._entryStore.isLiveMediaEntry(entry.mediaType);
             case EntryWidgetKeys.Live:
-                return this._isLive(entry);
+                return this._entryStore.isLiveMediaEntry(entry.mediaType);
             case EntryWidgetKeys.Clips:
 	            return mediaType !== KalturaMediaType.image && !externalMedia;
+            case EntryWidgetKeys.Distribution:
+                return !this._entryStore.isLiveMediaEntry(entry.mediaType) && mediaType !== KalturaMediaType.audio && mediaType !== KalturaMediaType.image;
             default:
                 return true;
         }
     }
 
-    private _isLive( entry : KalturaMediaEntry): boolean {
-        const mediaType = entry.mediaType;
-        return mediaType === KalturaMediaType.liveStreamFlash || mediaType === KalturaMediaType.liveStreamWindowsMedia || mediaType === KalturaMediaType.liveStreamRealMedia || mediaType === KalturaMediaType.liveStreamQuicktime;
-    }
 
     ngOnDestroy()
     {

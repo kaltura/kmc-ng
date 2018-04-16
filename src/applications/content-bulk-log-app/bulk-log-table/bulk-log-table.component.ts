@@ -72,16 +72,17 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _buildMenu(bulkLogItem: KalturaBulkUpload): void {
     this._items = [
       {
-        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
-        command: () => this._onActionSelected('delete', bulkLogItem)
-      },
-      {
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),
         command: () => this._onActionSelected('downloadLog', bulkLogItem)
       },
       {
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadFile'),
         command: () => this._onActionSelected('downloadFile', bulkLogItem)
+      },
+      {
+        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
+        styleClass: 'kDanger',
+        command: () => this._onActionSelected('delete', bulkLogItem)
       }
     ];
   }

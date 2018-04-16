@@ -16,9 +16,15 @@
       "enabled": @externalApps.studio.enabled@,
       "uri": "@externalApps.studio.uri@",
       "version": "@externalApps.studio.vesrion@",
-      "uiConfId": "@externalApps.studio.uiConfId@",
       "html5_version":"@externalApps.studio.html5_version@",
       "html5lib":"@externalApps.studio.html5lib@"
+    },
+    "studioV3": {
+      "enabled": @externalApps.studioV3.enabled@,
+      "uri": "@externalApps.studioV3.uri@",
+      "version": "@externalApps.studioV3.vesrion@",
+      "html5_version":"@externalApps.studioV3.html5_version@",
+      "html5lib":"@externalApps.studioV3.html5lib@"
     },
     "liveDashboard": {
       "enabled": @externalApps.liveDashboard.enabled@,
@@ -44,6 +50,18 @@
         @externalApps.usageDashboard.map_urls@
       ],
       "map_zoom_levels": "@externalApps.usageDashboard.map_zoom_levels@"
+    },
+    "clipAndTrim": {
+      "enabled": @externalApps.clipAndTrim.enabled@,
+      "uiConfId": "@externalApps.clipAndTrim.uiConfId@",
+      "uri": "@externalApps.clipAndTrim.uri@",
+      "version": "@externalApps.clipAndTrim.version@"
+    },
+    "advertisements": {
+      "enabled": @externalApps.advertisements.enabled@,
+      "uri": "@externalApps.advertisements.uri@",
+      "uiConfId": "@externalApps.advertisements.uiConfId@",
+      "version": "@externalApps.advertisements.version@"
     }
   },
   "externalLinks": {
@@ -61,6 +79,7 @@
     },
     "uploads": {
       "highSpeedUpload": "@externalLinks.uploads.highSpeedUpload@",
+      "needHighSpeedUpload": "@externalLinks.uploads.needHighSpeedUpload@",
       "bulkUploadSamples": "@externalLinks.uploads.bulkUploadSamples@"
     },
     "live": {
