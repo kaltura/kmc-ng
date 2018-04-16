@@ -8,7 +8,13 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
+export enum EntriesSelectorSelectionMode {
+  multiple = 'multiple',
+  multipleUnique = 'multipleUnique',
+  single = 'single'
+}
 
 @Component({
   selector: 'kEntriesSelector',
@@ -20,14 +26,14 @@ import { KalturaTypesFactory } from 'kaltura-ngx-client';
   ]
 })
 export class EntriesSelectorComponent {
+
+  public _kmcPermissions = KMCPermissions;
+
+  @Input() selectionMode: EntriesSelectorSelectionMode = EntriesSelectorSelectionMode.multiple;
   @Input() selectedEntries: KalturaMediaEntry[] = [];
-    @Input() enforcedFilters: Partial<EntriesFilters>;
-    @Input() defaultFilters: Partial<EntriesFilters>;
-
-  @Output() selectedEntriesChange = new EventEmitter<KalturaMediaEntry[]>();
-  @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
-
-  public _columns: EntriesTableColumns = {
+  @Input() enforcedFilters: Partial<EntriesFilters>;
+  @Input() defaultFilters: Partial<EntriesFilters>;
+  @Input() columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
     mediaType: { sortable: true, width: '80px', align: 'center' },
@@ -36,15 +42,16 @@ export class EntriesSelectorComponent {
     addToBucket: { sortable: false, width: '80px' }
   };
 
+  @Output() selectedEntriesChange = new EventEmitter<KalturaMediaEntry[]>();
+  @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
+
   constructor(public _entriesStore: EntriesStore) {
   }
 
   public _onActionSelected({ action, entry }: { action: string, entry: KalturaMediaEntry }): void {
     switch (action) {
       case 'addToBucket':
-          const clonedEntry = <KalturaMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
-        this.selectedEntries.push(clonedEntry);
-        this.selectedEntriesChange.emit(this.selectedEntries);
+        this._addToBucket(entry);
         break;
       default:
         break;
@@ -53,6 +60,30 @@ export class EntriesSelectorComponent {
 
   public _removeSelected(entry: KalturaMediaEntry): void {
     this.selectedEntries.splice(this.selectedEntries.indexOf(entry), 1);
+    this.selectedEntriesChange.emit(this.selectedEntries);
+  }
+
+  public _addToBucket(entry: KalturaMediaEntry): void {
+    switch (this.selectionMode) {
+      case EntriesSelectorSelectionMode.multiple:
+        const clonedEntry = <KalturaMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
+        this.selectedEntries.push(clonedEntry);
+        break;
+
+      case EntriesSelectorSelectionMode.multipleUnique:
+        const newSelection = this.selectedEntries.indexOf(entry) === -1;
+        if (newSelection) {
+          this.selectedEntries.push(entry);
+        }
+        break;
+
+      case EntriesSelectorSelectionMode.single:
+        this.selectedEntries = [entry];
+        break;
+      default:
+        break;
+    }
+
     this.selectedEntriesChange.emit(this.selectedEntries);
   }
 }
