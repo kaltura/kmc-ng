@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
-    selector: 'kPowerUserConsole',
+    selector: 'k-power-user-console',
     templateUrl: './power-user-console.component.html',
     styleUrls: ['./power-user-console.component.scss'],
     providers: [KalturaLogger.createLogger('PowerUserConsoleComponent')]

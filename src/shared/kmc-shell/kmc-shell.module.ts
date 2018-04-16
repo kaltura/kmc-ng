@@ -2,7 +2,7 @@ import { NgModule, SkipSelf, Optional, ModuleWithProviders, Self } from '@angula
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { CheckboxModule, SharedModule, SidebarModule } from 'primeng/primeng';
+import { CheckboxModule, SharedModule } from 'primeng/primeng';
 
 import { AppShellService } from "./providers/app-shell.service";
 import { BrowserService } from "./providers/browser.service";
@@ -13,6 +13,7 @@ import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
 import { PageExitVerificationService, UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PowerUserConsoleComponent } from 'app-shared/kmc-shell/components';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
+import { PowerUserConsoleModule } from '@kaltura-ng/mc-shared/components/power-user-console/power-user-console.module';
 
 @NgModule({
     imports: <any[]>[
@@ -21,7 +22,7 @@ import { TranslateModule } from 'ng2-translate/ng2-translate';
         CheckboxModule,
         SharedModule,
         TranslateModule,
-        SidebarModule
+        PowerUserConsoleModule
     ],
     declarations: <any[]>[
         AppContainerComponent,

@@ -60,7 +60,7 @@
         <p class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
         <hr>
         <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
-        <kPowerUserConsole [class.kHelpLinkHidden]="!_powerUser"></kPowerUserConsole>
+        <k-power-user-console [class.kHelpLinkHidden]="!_powerUser"></k-power-user-console>
 
         <!--div class="kContexualHelp">
             <hr>
