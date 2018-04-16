@@ -42,7 +42,6 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private _deferredRoles: KalturaUserRole[];
 
-  public _blockerMessage: AreaBlockerMessage = null;
   public _roles: KalturaUserRole[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
@@ -56,37 +55,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this.rolesService.roles.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        result => {
-          if (result.errorMessage) {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: result.errorMessage || this._appLocalization.get('applications.administration.roles.errors.loadError'),
-              buttons: [{
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => this.rolesService.reload(true)
-              }]
-            });
-          } else {
-            this._blockerMessage = null;
-            if (result.loading) {
-              this._emptyMessage = '';
-              loadedOnce = true;
-            } else {
-              if (loadedOnce) {
-                this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-              }
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load user roles'); // navigate to error page
-          throw error;
-        });
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngOnDestroy() {
@@ -105,7 +74,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private _onActionSelected(action: string, role: KalturaUserRole): void {
-    this.actionSelected.emit({ 'action': action, 'role': role });
+    this.actionSelected.emit({ action, role });
   }
 
   private _buildMenu(role: KalturaUserRole): void {
@@ -123,6 +92,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       {
         id: 'delete',
         label: this._appLocalization.get('applications.administration.roles.actions.delete'),
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', role)
       }
     ];

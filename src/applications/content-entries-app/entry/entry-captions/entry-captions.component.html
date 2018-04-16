@@ -1,7 +1,10 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
 	<div class="kCaptions" #captions>
 		<p class="kTitle">{{'applications.content.entryDetails.captions.captions' | translate}}</p>
-		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}" (click)="_addCaption()"></button>
+		<button type="button" class="kButtonDefault" pButton
+            label="{{'applications.content.entryDetails.captions.add' | translate}}"
+            *ngIf="_kmcPermissions.CAPTION_MODIFY | kNgIfPermitted"
+            (click)="_addCaption()"></button>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService._captions$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_widgetService._getRowStyle">
 				<p-column field="label" header="{{'applications.content.entryDetails.captions.label' | translate}}" [style]="{'padding-left': '24px'}">
