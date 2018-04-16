@@ -18,7 +18,9 @@
       <span class="kSelectedProfilesLabel">
         • {{ 'applications.settings.transcoding.selected' | translate: [_selectedProfiles.length]}}
       </span>
-      <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteSelected()"></button>
+      <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+              [disabled]="_kmcPermissions.TRANSCODING_DELETE | kDisabledIfNotPermitted"
+              (click)="_deleteSelected()"></button>
       <a class="kBulkCancel" (click)="_clearSelection()">
         {{'applications.settings.transcoding.cancel' | translate}}
       </a>
