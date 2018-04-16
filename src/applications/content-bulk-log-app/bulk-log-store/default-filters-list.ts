@@ -1,3 +1,6 @@
+import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
+import { KalturaBatchJobStatus } from 'kaltura-ngx-client/api/types/KalturaBatchJobStatus';
+
 export const DefaultFiltersList: {
   name: string;
   label: string;
@@ -7,20 +10,33 @@ export const DefaultFiltersList: {
     name: 'uploadedItem',
     label: 'uploadedItems',
     items: [
-      { value: '1', label: 'entries' },
-      { value: '2', label: 'categories' },
-      { value: '4', label: 'endUserEntitlements' },
-      { value: '3', label: 'endUsers' }
+      { value: KalturaBulkUploadObjectType.entry, label: 'entries' },
+      { value: KalturaBulkUploadObjectType.category, label: 'categories' },
+      { value: KalturaBulkUploadObjectType.categoryUser, label: 'endUserEntitlements' },
+      { value: KalturaBulkUploadObjectType.user, label: 'endUsers' }
     ]
   },
   {
     name: 'status',
     label: 'statuses',
     items: [
-      { value: '5', label: 'successFinish' },
-      { value: '12', label: 'errorFinish' },
-      { value: '6,10', label: 'failed' },
-      { value: '0,1,2,3,4,7,8,9,11', label: 'otherStatuses' }
+      { value: `${KalturaBatchJobStatus.finished}`, label: 'successFinish' },
+      { value: `${KalturaBatchJobStatus.finishedPartially}`, label: 'errorFinish' },
+      { value: [KalturaBatchJobStatus.failed, KalturaBatchJobStatus.fatal].join(','), label: 'failed' },
+      {
+        value: [
+          KalturaBatchJobStatus.pending,
+          KalturaBatchJobStatus.queued,
+          KalturaBatchJobStatus.finished,
+          KalturaBatchJobStatus.processed,
+          KalturaBatchJobStatus.movefile,
+          KalturaBatchJobStatus.aborted,
+          KalturaBatchJobStatus.almostDone,
+          KalturaBatchJobStatus.retry,
+          KalturaBatchJobStatus.dontProcess
+        ].join(','),
+        label: 'otherStatuses'
+      }
     ]
   }
 ];

@@ -9,7 +9,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
     private _logger: KalturaLogger;
     private _restrictionsApplied = false;
 
-    get restrictionsApplied(): boolean{
+    get restrictionsApplied(): boolean {
         return this._restrictionsApplied;
     }
 
@@ -23,6 +23,10 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
         super.flushPermissions();
 
         this._logger.info(`prepare user permissions set based on role permissions and partner permissions`);
+        this._logger.trace('load()', () => ({
+            rawRolePermissionList,
+            rawPartnerPermissionList
+        }));
 
         const rolePermissionList: Set<KMCPermissions> = new Set();
         const partnerPermissionList: Set<KMCPermissions> = new Set();
@@ -35,7 +39,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
 
         // convert partner permission server value into app value
         rawPartnerPermissionList.forEach(rawPermission => {
-            const formattedPermission:string = rawPermission.replace('.', '_').toUpperCase();
+            const formattedPermission = rawPermission.replace('.', '_').toUpperCase();
             const permissionValue = KMCPermissions[formattedPermission];
 
             if (typeof permissionValue === 'undefined') {
@@ -45,7 +49,13 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
                 partnerPermissionList.add(permissionValue);
             }
         });
-        this._logger.debug(`ignoring the following partner permissions since they are not in use by this app: ${ignoredPartnerPermissionList.join(',')}`);
+
+        if (ignoredPartnerPermissionList.length) {
+            this._logger.trace(`ignoring some partner permissions since they are not in use by this app.`,
+                () => ({
+                    permissions: ignoredPartnerPermissionList.join(',')
+                }));
+        }
 
         // convert role permission server value into app value
         rawRolePermissionList.forEach(rawPermission => {
@@ -59,7 +69,12 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
                 rolePermissionList.add(permissionValue);
             }
         });
-        this._logger.debug(`ignoring the following role permissions since they are not in use by this app: ${ignoredRolePermissionList.join(',')}`);
+
+        if (ignoredRolePermissionList.length) {
+            this._logger.trace(`ignoring some role permissions since they are not in use by this app`, () => ({
+                permissions: ignoredRolePermissionList.join(',')
+            }));
+        }
 
         // traverse on each role permission and add it to user permissions set if possible
         rolePermissionList.forEach(permission => {
@@ -102,7 +117,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
         const userPermissions = Array.from(filteredRolePermissionList);
         super.loadPermissions(userPermissions);
 
-        this._logger.info(`setting flag restrictionsApplied with value '${restrictionsApplied}'`)
+        this._logger.info(`setting flag restrictionsApplied with value '${restrictionsApplied}'`);
         this._restrictionsApplied = restrictionsApplied;
     }
 

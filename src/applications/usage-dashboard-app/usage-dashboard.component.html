@@ -1,4 +1,4 @@
 <div class="kUsageDashboard">
   <span *ngIf="!_usageDashboardUrl" class="kDevMsg">Couldn't load Usage Dashboard</span>
-  <iframe *ngIf="_usageDashboardUrl" frameborder="0px" [src]="_usageDashboardUrl | safe"></iframe>
+  <iframe *ngIf="_usageDashboardUrl" frameborder="0" [src]="_usageDashboardUrl | safe"></iframe>
 </div>
