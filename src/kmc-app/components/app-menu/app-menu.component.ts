@@ -9,7 +9,6 @@ import * as R from 'ramda';
 import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { EnablePowerUserModeEvent } from 'app-shared/kmc-shared/events/enable-power-user-mode-event';
 
 @Component({
     selector: 'kKMCAppMenu',
