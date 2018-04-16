@@ -33,6 +33,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
 	public _actions: MenuItem[] = [];
+	public _kmcPermissions = KMCPermissions;
 
 	public _selectedFlavor: Flavor;
 	public _uploadFilter: string = "";
@@ -63,7 +64,6 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor)) || ( !flavor.isSource && flavor.id !== '' &&
 					(flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString() ))){
-				this._actions.push({id: 'delete', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), command: (event) => {this.actionSelected("delete");}});
 				this._actions.push({id: 'download', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.download'), command: (event) => {this.actionSelected("download");}});
 			}
 			if ((flavor.isSource && (this.isSourceReady(flavor) || flavor.status === KalturaFlavorAssetStatus.deleted.toString()))||
@@ -86,7 +86,12 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				this._actions.push({id: 'drm', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.drm'), command: (event) => {this.actionSelected("drm");}});
 			}
 
-      this._permissionsService.filterList(<{ id: string }[]>this._actions, { 'import': KMCPermissions.CONTENT_INGEST_UPLOAD });
+            if ((flavor.isSource && this.isSourceReady(flavor)) || ( !flavor.isSource && flavor.id !== '' &&
+                    (flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString() ))){
+                this._actions.push({id: 'delete', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), command: (event) => {this.actionSelected("delete");}});
+            }
+
+            this._permissionsService.filterList(<{ id: string }[]>this._actions, { 'import': KMCPermissions.CONTENT_INGEST_UPLOAD });
 
 			if (this._actions.length) {
 				this._selectedFlavor = flavor;
