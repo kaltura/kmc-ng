@@ -17,7 +17,7 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 export class RolesListComponent implements OnInit, OnDestroy {
   @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
-         
+
   public _kmcPermissions = KMCPermissions;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableIsBusy = false;
