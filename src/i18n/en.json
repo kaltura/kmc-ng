@@ -1717,7 +1717,7 @@
                             "unableToChange": "Unable to change owner for current category.",
                             "selectUser" : "Unable to change owner since no user was selected.",
                             "invalidOwner": "Cannot set Owner field with User Id\n\"{{0}}\"\nUser Id is invalid.",
-                            "ownerRequired": "Cannot set Owner field,\nUser Id is invalid/"
+                            "ownerRequired": "Cannot set Owner field,\nUser Id is invalid"
                         }
                     },
                     "permittedUsers": {
@@ -1901,11 +1901,11 @@
                     "ok": "Ok",
                     "backToPlaylists": "Back To Playlists",
                     "playlistTypeNotSupported": "This Playlist type is not supported.",
-                    "validationError": "The form contains some invalid information. Please review the sections marked as invalid/",
-                    "contentValidationError": "Add at least one entry/",
-                    "loadError": "An error occurred while loading data/",
-                    "addAtLeastOneMedia": "Add at least one media/",
-                    "entriesLoadError": "Error loading entries/",
+                    "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+                    "contentValidationError": "Add at least one entry",
+                    "loadError": "An error occurred while loading data",
+                    "addAtLeastOneMedia": "Add at least one media",
+                    "entriesLoadError": "Error loading entries",
                     "addRules": "Add rules to your playlist.",
                     "invalidInput": "Invalid Input",
                     "nameRequired": "Name field is required."

@@ -88,8 +88,7 @@
 }
 
 :host /deep/ {
-  .kControl, k-prime-control
-  {
+  .kControl, k-prime-control {
     width:100%;
     .kHasError {
       border: 1px solid $kDandger;
@@ -97,9 +96,16 @@
     }
   }
 }
-:host /deep/ kautocomplete input{
-  height: auto !important;
-  width: 100%;
+
+:host /deep/ kautocomplete {
+  .ui-state-disabled {
+    background-color: $kGrayscale5;
+  }
+
+  input {
+    height: auto !important;
+    width: 100%;
+  }
 }
 
 :host /deep/ .ui-autocomplete {
