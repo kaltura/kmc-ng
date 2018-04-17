@@ -28,6 +28,7 @@ export class CustomSchemaComponent implements OnInit {
 
   private _isFieldsOrderChanged = false;
 
+  public _isSavedDisabled = false;
   public _title;
   public _schema: SettingsMetadataProfile;
   public _selectedFields: MetadataItem[] = [];
@@ -139,7 +140,7 @@ export class CustomSchemaComponent implements OnInit {
     if (this._validateSchema()) {
       this._schema.parsedProfile.items = this._profileFields;
 
-      if (this._isFieldsOrderChanged) {
+      if (!this._schema.isNew && this._isFieldsOrderChanged) {
         this._logger.info(`schema's fields order was changed, show confirmation`);
         this._browserService.confirm({
           header: this._appLocalization.get('applications.settings.metadata.fieldsOrderChangedTitle'),
