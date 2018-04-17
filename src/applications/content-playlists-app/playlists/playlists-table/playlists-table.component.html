@@ -18,7 +18,7 @@
           <th style="width:44px; padding-left: 14px">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th [pSortableColumn]="'name'">
+          <th [pSortableColumn]="'name'" class="kNameHeader">
             {{'applications.content.table.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
@@ -46,7 +46,7 @@
           <td>
             <div class="kPlaylistsNameWrap">
               <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
-              <div class="kTitle"
+              <div class="kTitle kTableColumn"
                    [kTooltip]="playlist.name"
                    (click)="onActionSelected('view',playlist)">
                 {{playlist.name}}

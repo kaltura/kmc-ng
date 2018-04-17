@@ -8,11 +8,14 @@ import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-prof
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kSchemasList',
   templateUrl: './schemas-list.component.html',
-  styleUrls: ['./schemas-list.component.scss']
+  styleUrls: ['./schemas-list.component.scss'],
+  providers: [KalturaLogger.createLogger('SchemasListComponent')]
 })
 export class SchemasListComponent implements OnInit, OnDestroy {
   @ViewChild('customSchema') _customSchemaPopup: PopupWidgetComponent;
@@ -33,10 +36,12 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   constructor(public _schemasStore: SchemasStore,
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger,
               private _browserService: BrowserService) {
   }
 
   ngOnInit() {
+    this._logger.info(`init custom data list view`);
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
     this._registerToDataChanges();
@@ -93,40 +98,45 @@ export class SchemasListComponent implements OnInit, OnDestroy {
                 }
               }
               ]
-            })
+            });
           } else {
             this._tableBlockerMessage = null;
           }
         },
         error => {
-          console.warn('[kmcng] -> could not load schemas'); // navigate to error page
+          this._logger.warn('[kmcng] -> could not load schemas'); // navigate to error page
           throw error;
         });
   }
 
   private _updateMetadataProfiles(): void {
+    this._logger.info(`publish app event 'MetadataProfileUpdatedEvent'`);
     this._appEvents.publish(new MetadataProfileUpdatedEvent());
   }
 
   private _proceedDeleteSchemas(schemas: SettingsMetadataProfile[]): void {
+    this._logger.info(`send delete schema request to the server`);
     this._blockerMessage = null;
     this._schemasStore.deleteProfiles(schemas)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
         () => {
+          this._logger.info(`handle success delete by the server`);
           this._schemasStore.reload();
           this._clearSelection();
           this._updateMetadataProfiles();
         },
         error => {
           const msg: string = error.message ? error.message : this._appLocalization.get('app.common.connectionError');
+          this._logger.info(`handle failing delete by the server`, { errorMessage: msg });
           this._blockerMessage = new AreaBlockerMessage({
             message: msg,
             buttons: [
               {
                 label: this._appLocalization.get('app.common.ok'),
                 action: () => {
+                  this._logger.info(`handle dismiss request by the user`);
                   this._blockerMessage = null;
                   this._schemasStore.reload();
                 }
@@ -138,24 +148,35 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   }
 
   public _clearSelection(): void {
+    this._logger.info(`handle clear selection by the user`);
     this._selectedSchemas = [];
   }
 
   public _onActionSelected({ action, schema }: { action: string, schema: SettingsMetadataProfile }): void {
     switch (action) {
       case 'edit':
+        this._logger.info(`handle 'edit' action by the user`);
         if (!schema.profileDisabled) {
           this._clearSelection();
           this._selectedSchema = schema;
           this._customSchemaPopup.open();
+        } else {
+          this._logger.info(`the profile is disabled, do not proceed editing`, { schema: { id: schema.id, name: schema.name } });
         }
         break;
       case 'download':
+        this._logger.info(`handle 'download' action by the user`);
         if (schema.downloadUrl) {
           this._browserService.download(schema.downloadUrl, `${schema.name}.xml`, 'text/xml');
+        } else {
+          this._logger.info(
+            `the profile doesn't have 'downloadUrl', do not proceed downloading`,
+            { schema: { id: schema.id, name: schema.name } }
+          );
         }
         break;
       case 'delete':
+        this._logger.info(`handle 'delete' action by the user`);
         this._deleteSchemas([schema]);
         break;
       default:
@@ -164,8 +185,8 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   }
 
   public _deleteSchemas(selectedSchemas: SettingsMetadataProfile[]): void {
-    const schemasToDelete = selectedSchemas.map((playlist, index) => {
-      return selectedSchemas.length > 1 ? `${index + 1}: ${playlist.name}` : playlist.name;
+    const schemasToDelete = selectedSchemas.map((schema, index) => {
+      return selectedSchemas.length > 1 ? `${index + 1}: ${schema.name}` : schema.name;
     });
     const schemas = selectedSchemas.length <= 5 ? schemasToDelete.join(',').replace(/,/gi, '\n') : '';
     let message = '';
@@ -185,6 +206,9 @@ export class SchemasListComponent implements OnInit, OnDestroy {
         message,
         accept: () => {
           this._proceedDeleteSchemas(selectedSchemas);
+        },
+        reject: () => {
+          this._logger.info(`handle discard 'delete' action by the user`);
         }
       }
     );
@@ -205,21 +229,25 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   }
 
   public _saveSchema(schema: SettingsMetadataProfile): void {
+    this._logger.info(`send updated schema to the server`);
     this._schemasStore.saveSchema(schema)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         () => {
+          this._logger.info(`handle success update by the server`);
           this._serverValidationError = null;
           this._customSchemaPopup.close();
           this._schemasStore.reload();
           this._updateMetadataProfiles();
         },
         (error) => {
+          this._logger.info(`handle failing delete by the server`, { errorMessage: error.message });
           this._serverValidationError = error;
           this._browserService.alert({
             message: error.message,
             accept: () => {
+              this._logger.info(`handle dismiss request by the user`);
               this._schemasStore.reload();
             }
           });
@@ -228,6 +256,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   }
 
   public _addNewSchema(): void {
+    this._logger.info(`handle 'add schema' action by the user`);
     this._selectedSchema = null;
     this._customSchemaPopup.open();
   }

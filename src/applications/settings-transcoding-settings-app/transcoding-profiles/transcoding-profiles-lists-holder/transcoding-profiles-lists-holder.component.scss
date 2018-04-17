@@ -18,5 +18,23 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 42px !important;
+    .kSingleTableMode {
+      height: auto !important;
+    }
+  }
+}
+
+:host /deep/ .kSingleTableMode {
+  .kTranscodingProfilesTable {
+    .ui-datatable-scrollable-table-wrapper {
+      max-height: none !important;
+    }
+    .ui-datatable-scrollable-body {
+      margin-bottom: 34px !important;
+    }
+  }
+
+  .kProfilesTableFooter {
+    position: fixed !important;
   }
 }

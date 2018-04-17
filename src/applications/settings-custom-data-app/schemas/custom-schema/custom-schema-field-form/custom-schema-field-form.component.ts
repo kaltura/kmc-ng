@@ -5,11 +5,13 @@ import { MetadataItem, MetadataItemTypes } from 'app-shared/kmc-shared/custom-me
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kCustomSchemaFieldForm',
   templateUrl: './custom-schema-field-form.component.html',
-  styleUrls: ['./custom-schema-field-form.component.scss']
+  styleUrls: ['./custom-schema-field-form.component.scss'],
+  providers: [KalturaLogger.createLogger('CustomSchemaFieldFormComponent')]
 })
 export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -62,6 +64,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   constructor(private _fb: FormBuilder,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
+              private _logger: KalturaLogger,
               private _browserService: BrowserService) {
     this._buildForm();
   }
@@ -92,6 +95,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
   private _prepare(): void {
     if (this.field) {
+      this._logger.info(`enter edit field mode`);
       this._isNew = false;
       this._field = <MetadataItem>Object.assign({}, this.field);
       this._title = this._appLocalization.get('applications.settings.metadata.editCustomField');
@@ -115,6 +119,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
       this._setPristine();
     } else {
+      this._logger.info(`enter create field mode`);
       this._title = this._appLocalization.get('applications.settings.metadata.addCustomField');
       this._saveBtnLabel = this._appLocalization.get('applications.settings.metadata.add');
     }
@@ -130,6 +135,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   }
 
   private _setPristine(): void {
+    this._logger.debug(`mark field form as pristine`);
     this._fieldForm.markAsPristine();
     this._fieldForm.updateValueAndValidity();
   }
@@ -168,6 +174,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   }
 
   private _update(): MetadataItem {
+    this._logger.info(`handle update field with form data`);
     const formValue = this._fieldForm.getRawValue();
     const { label, shortDescription, description, searchable, includeTime, listValues } = formValue;
 
@@ -238,10 +245,13 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       uid[index++] = ALPHA_CHAR_CODES[Math.floor(Math.random() * 16)];
     }
 
-    return `md_${String.fromCharCode.apply(null, uid)}`;
+    const fieldId = `md_${String.fromCharCode.apply(null, uid)}`;
+    this._logger.debug(`generate custom id for new field`, { fieldId });
+    return fieldId;
   }
 
   private _create(): MetadataItem {
+    this._logger.info(`handle creation of new field with form data`);
     const formValue = this._fieldForm.value;
     const { label, type, allowMultiple, shortDescription, description, searchable, includeTime, listValues } = formValue;
     const formattedLabel = label.trim();
@@ -251,14 +261,18 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       .map(word => word.charAt(0).toUpperCase() + word.substr(1, word.length))
       .join('');
 
+    this._logger.info(`validate 'systemName uniqueness`);
     const systemNameUnique = this._systemNames.indexOf(systemName) === -1;
     if (!systemNameUnique) {
       this._browserService.alert({
         header: this._appLocalization.get('applications.settings.metadata.fieldForm.validationErrors.invalidInput'),
         message: this._appLocalization.get('applications.settings.metadata.fieldForm.validationErrors.invalidSystemName'),
       });
+      this._logger.info(`systemName is not unique, stop saving`, { systemName });
       return null;
     }
+
+    this._logger.info(`systemName is unique, proceed saving`, { systemName });
 
     const newField: MetadataItem = {
       allowMultiple,
@@ -302,6 +316,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   }
 
   private _validateForm(): boolean {
+    this._logger.info(`validate field form data`);
     const invalidLabelPrefix = /^[0-9`~:;!@#$%\^&*()\-_+=|',.?\/\\{}<>"\[\]]/;
     const invalidChars = /[<>'"&]/;
     const invalidListValuesOptions = /[`;!#*\+,?\\{}<>"\[\]]/;
@@ -340,20 +355,27 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
         header: this._appLocalization.get('applications.settings.metadata.fieldForm.validationErrors.invalidInput'),
         message: error
       });
+      this._logger.info('form data is not valid, stop saving', { errorMessage: error });
+    } else {
+      this._logger.info('form data is valid, proceed saving');
     }
 
     return !error;
   }
 
   public _cancel(): void {
+    this._logger.info(`handle 'cancel' updated field by the user`);
     if (this._fieldForm.dirty) {
+      this._logger.info(`the form has unsaved changes, handle 'save' of unsaved changes`);
       this._browserService.confirm({
         header: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChanges'),
         message: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChangesMessage'),
         accept: () => {
+          this._logger.info(`handle 'save' of unsaved changes by the user`);
           this._save();
         },
         reject: () => {
+          this._logger.info(`handle 'discard' of unsaved changes by the user`);
           this._setPristine();
           this.parentPopupWidget.close();
         }
@@ -364,6 +386,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   }
 
   public _save(): void {
+    this._logger.info(`handle 'save' updated field by the user`);
     const formValid = this._validateForm();
 
     if (formValid) {

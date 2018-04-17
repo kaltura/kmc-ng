@@ -1,28 +1,32 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import { globalConfig } from 'config/global';
+import {globalConfig} from 'config/global';
 import {EntryClipsWidget} from './entry-clips-widget.service';
 import {serverConfig} from 'config/server';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
+import { KEditHosterService } from 'app-shared/kmc-shared';
 
 
 @Component({
     selector: 'kEntryClips',
     templateUrl: './entry-clips.component.html',
-    styleUrls: ['./entry-clips.component.scss']
+    styleUrls: ['./entry-clips.component.scss'],
+    providers: [
+      KEditHosterService,
+      KalturaLogger.createLogger('EntryClipsComponent')
+    ]
 })
 export class EntryClips implements OnInit, OnDestroy {
     public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
     public _loading = false;
     public _loadingError = null;
-
     public _clipAndTrimEnabled = false;
 
-    constructor(public _widgetService: EntryClipsWidget, logger: KalturaLogger) {
-      this._clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled;
-      if (!this._clipAndTrimEnabled) {
-        logger.warn('Clip and trim (kedit) is not enabled, please check configuration');
-      }
+    constructor(public _widgetService: EntryClipsWidget,
+                private _keditHosterService: KEditHosterService,
+                logger: KalturaLogger) {
     }
 
     _convertSortValue(value: boolean): number {
@@ -47,6 +51,14 @@ export class EntryClips implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._widgetService.attachForm();
+
+      this._widgetService.data$.subscribe(
+        data => {
+          if (data) {
+            this._clipAndTrimEnabled = this._keditHosterService.isClipAndTrimAvailable(data);
+          }
+        }
+      );
     }
 
     ngOnDestroy() {

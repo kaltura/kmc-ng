@@ -9,6 +9,7 @@ import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-up
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kKMCBulkUploadMenu',
@@ -33,6 +34,7 @@ export class BulkUploadMenuComponent {
   public _allowedExtensions = '';
   public _showFileDialog = true;
   public _blockerMessage: AreaBlockerMessage;
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _bulkUploadService: BulkUploadService,
               private _appLocalization: AppLocalization,

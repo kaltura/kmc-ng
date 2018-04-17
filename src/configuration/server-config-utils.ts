@@ -11,7 +11,6 @@ function isStudioAppValid(): boolean {
             !!serverConfig.externalApps.studio.uri &&
             !serverConfig.externalApps.studio.uri.match(/\s/g) && // not contains white spaces
             !!serverConfig.externalApps.studio.version &&
-            !!serverConfig.externalApps.studio.uiConfId &&
             !!serverConfig.externalApps.studio.html5_version &&
             !!serverConfig.externalApps.studio.html5lib;
 
@@ -144,13 +143,14 @@ function getConfiguration(): Observable<ServerConfig> {
 
                     }
                 } catch (e) {
-                    resp = new Error(xhr.responseText);
+                    resp = e;
                 }
 
                 if (resp instanceof Error) {
                     observer.error(resp);
                 } else {
                     observer.next(resp);
+                    observer.complete();
                 }
             }
         };

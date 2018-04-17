@@ -237,3 +237,66 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
     margin-right: 12px;
   }
 }
+
+.kTableColumn {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kShowAsDisabled {
+  opacity: 0.5 !important;
+  cursor: default !important;
+}
+
+.kPermissionsListPanel {
+  width: 320px;
+
+  &.ui-multiselect-panel {
+    .fa-minus {
+      background-color: #00a784;
+      border: 1px solid #00a784;
+      color: #ffffff;
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      top: -1px;
+      position: relative;
+      left: -1px;
+    }
+  }
+
+
+  .ui-multiselect-header {
+    margin-bottom: 0;
+  }
+
+  .ui-widget-header {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .ui-select-all label {
+    cursor: pointer;
+    font-weight: normal;
+  }
+
+  .ui-multiselect-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+  }
+
+  .ui-chkbox {
+    margin-right: 15px;
+  }
+
+  .kPermissionItem {
+    font-size: 15px;
+  }
+}
