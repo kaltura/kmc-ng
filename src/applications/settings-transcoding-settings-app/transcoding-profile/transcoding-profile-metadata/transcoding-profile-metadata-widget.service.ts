@@ -139,8 +139,8 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
       });
 
       if (!this.isNewData && !this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE)) {
-        this.metadataForm.get('name').disable({ onlySelf: true });
-        this.metadataForm.get('description').disable({ onlySelf: true });
+
+        this.metadataForm.disable();
         this.metadataForm.markAsUntouched();
       }
     };
