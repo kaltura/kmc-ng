@@ -66,6 +66,7 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
         this.data.transcodingProfile = this._getSelectedTranscodingProfile(transcodingProfilesList);
 
         this._form.reset(this.data);
+        this._toggleRecordingSelectedOption(this.data.enableRecording);
         this._updateAreaBlockerState(false, null);
 
       }, error => {

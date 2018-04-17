@@ -2,7 +2,7 @@
 	<div class="kClips">
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
     <div class="kButtons">
-      <button [disabled]="!_clipAndTrimEnabled" pButton class="kButtonDefault" (click)="clipAndTrim.open()" icon="kIconimage" label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
+      <button [disabled]="!_clipAndTrimEnabled" pButton class="kButtonDefault" (click)="_clipAndTrimEnabled && clipAndTrim.open()" icon="kIconmovies" label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
     </div>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService.entries$ | async)?.items"
