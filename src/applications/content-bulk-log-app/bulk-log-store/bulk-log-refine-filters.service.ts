@@ -30,6 +30,7 @@ export class BulkLogRefineFiltersService {
 
   private _buildDefaultFiltersGroup(): RefineList[] {
     const hasEntitlementPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_ENTITLEMENT);
+    const hasEndUserPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_END_USER_MANAGE);
     return DefaultFiltersList.map((list) => {
       const refineList = new RefineList(
         list.name,
@@ -37,9 +38,13 @@ export class BulkLogRefineFiltersService {
       );
 
       list.items.forEach((item: any) => {
-        if (item.value === KalturaBulkUploadObjectType.categoryUser && !hasEntitlementPermission) {
+        if (item.value === KalturaBulkUploadObjectType.user && !hasEndUserPermission) {
           return;
         }
+
+	    if (item.value === KalturaBulkUploadObjectType.categoryUser && !hasEntitlementPermission) {
+	        return;
+	    }
 
         refineList.items.push({
           value: item.value,

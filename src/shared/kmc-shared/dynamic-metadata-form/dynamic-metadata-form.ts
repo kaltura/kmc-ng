@@ -15,6 +15,7 @@ export class DynamicMetadataForm
         '"': '&quot;',
         "'": '&apos;'
     };
+    private _isDisabled = false;
 
     public get isReady() : boolean
     {
@@ -52,10 +53,18 @@ export class DynamicMetadataForm
 
                 this._formGroup = this._dynamicFormService.toFormGroup(this.formSectionControl.children, {formValue: formValue});
                 this._formGroup.reset(formValue);
+
+                if (this._isDisabled) {
+                  this._formGroup.disable({ emitEvent: false});
+                }
             } catch (e) {
                 this._formGroup = null;
             }
         }
+    }
+
+    public disable(): void {
+      this._isDisabled = true;
     }
 
     getValue() : { xml? : string, error? : Error} {

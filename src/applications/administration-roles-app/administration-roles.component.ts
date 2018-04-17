@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
-import { RolesService } from './roles/roles.service';
+import { RolesStoreService } from './roles-store/roles-store.service';
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kRoles',
   templateUrl: './administration-roles.component.html',
   styleUrls: ['./administration-roles.component.scss'],
-  providers: [RolesService]
+  providers: [
+    RolesStoreService,
+    KalturaLogger.createLogger('AdministrationRoles')
+  ]
 })
 
 export class AdministrationRolesComponent {

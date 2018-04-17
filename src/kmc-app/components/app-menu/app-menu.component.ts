@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { AppAuthentication, AppUser, AppNavigator } from 'app-shared/kmc-shell';
-
+import { BrowserService } from 'app-shared/kmc-shell';
+import { serverConfig } from 'config/server';
 
 import * as R from 'ramda';
 import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -13,6 +15,9 @@ import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
     styleUrls: ['./app-menu.component.scss']
 })
 export class AppMenuComponent implements OnInit, OnDestroy{
+
+    @ViewChild('helpmenu') private _helpmenu: PopupWidgetComponent;
+
     private sub: any;
     public _userContext: AppUser;
     public _showChangelog = false;
@@ -25,7 +30,9 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     constructor(private userAuthentication: AppAuthentication,
                 private appNavigator: AppNavigator,
-                private router: Router) {
+                private router: Router,
+                private _browserService: BrowserService) {
+
         this.sub = router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 this.setSelectedRoute(event.url);
@@ -50,6 +57,30 @@ export class AppMenuComponent implements OnInit, OnDestroy{
             this.selectedMenuItem = item;
             this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
         }
+    }
+
+    openHelpLink(key) {
+        let link = '';
+        switch (key){
+            case 'manual':
+                link = serverConfig.externalLinks.kaltura.userManual;
+                break;
+            case 'kmcOverview':
+                link = serverConfig.externalLinks.kaltura.kmcOverview;
+                break;
+            case 'mediaManagement':
+                link = serverConfig.externalLinks.kaltura.mediaManagement;
+                break;
+        }
+        if (link.length > 0) {
+            this._browserService.openLink(link, {}, '_blank');
+        }
+        this._helpmenu.close();
+    }
+
+    openSupport() {
+        this._browserService.openEmail(serverConfig.externalLinks.kaltura.support);
+        this._helpmenu.close();
     }
 
     navigate(path):void{
