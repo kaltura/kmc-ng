@@ -68,7 +68,6 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(private createLiveService: CreateLiveService,
               private _appLocalization: AppLocalization,
               private _appEvents: AppEventsService,
-              private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
               private _permissionsService: KMCPermissionsService,
               private _router: Router) {
