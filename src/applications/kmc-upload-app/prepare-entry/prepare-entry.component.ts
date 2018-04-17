@@ -7,6 +7,7 @@ import {BrowserService} from 'app-shared/kmc-shell';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 @Component({
   selector: 'kPrepareEntry',
@@ -21,6 +22,7 @@ export class PrepareEntryComponent implements OnInit {
   constructor(private _prepareEntryService: PrepareEntryService,
               private _router: Router,
               private _permissionsService: KMCPermissionsService,
+              private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
   }
 
@@ -49,6 +51,7 @@ export class PrepareEntryComponent implements OnInit {
         },
         error => {
           this._browserService.alert({
+              header: this._appLocalization.get('app.common.error'),
             message: error.message
           });
         });

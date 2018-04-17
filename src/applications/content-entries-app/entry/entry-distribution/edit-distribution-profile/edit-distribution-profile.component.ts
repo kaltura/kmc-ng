@@ -126,6 +126,7 @@ export class EditDistributionProfileComponent implements OnInit {
   public _saveProfile(): void {
     if (this._createdFilterError || this._missingFlavorError || this._missingThumbnailError) {
       this._browserService.alert({
+        header: this._appLocalization.get('app.common.error'),
         message: this._createdFilterError || this._missingFlavorError || this._missingThumbnailError
       });
       return;
@@ -247,6 +248,7 @@ export class EditDistributionProfileComponent implements OnInit {
             },
             error => {
               this._browserService.alert({
+                header: this._appLocalization.get('app.common.error'),
                 message: this._appLocalization.get(
                   'applications.content.entryDetails.distribution.errors.failedLoadMissingFlavors',
                   [

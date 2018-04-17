@@ -299,6 +299,7 @@ export class BrowserService implements IAppStorage {
         case (UnpermittedActionReasons.InvalidConfiguration):
           this.alert(
             {
+                header: this._appLocalization.get('app.common.error'),
               message: this._appLocalization.get('app.UnpermittedActionReasons.InvalidConfiguration.message'),
               accept: () => {
                 this._router.navigate([navigateTo || '/']);

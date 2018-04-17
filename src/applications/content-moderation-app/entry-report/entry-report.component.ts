@@ -230,6 +230,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this._browserService.alert({
+            header: this._appLocalization.get('app.common.error'),
             message: this._appLocalization.get('applications.content.moderation.notificationHasBeenSent')
           });
         },

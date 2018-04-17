@@ -164,6 +164,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       .switchMap(({ dropFoldersList, error }) => {
         if (!dropFoldersList.length || error) {
           this._browserService.alert({
+            header: this._appLocalization.get('app.common.error'),
             message: error || this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert')
           });
 

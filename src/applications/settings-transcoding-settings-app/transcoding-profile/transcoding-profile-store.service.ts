@@ -219,6 +219,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
     return Observable.create(observer => {
       this._browserService.confirm({
+        header: this._appLocalization.get('applications.settings.transcoding.flavors.noFlavorsSelectedHeader'),
         message: this._appLocalization.get('applications.settings.transcoding.flavors.noFlavorsSelectedWarning'),
         accept: () => {
           observer.next({ proceedSave: true });

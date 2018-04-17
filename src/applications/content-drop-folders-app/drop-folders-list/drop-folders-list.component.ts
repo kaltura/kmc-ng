@@ -246,7 +246,10 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
             this._router.navigate(['/content/entries/entry', entryId]);
           }
         },
-        ({ message }) => this._browserService.alert({ message })
+        ({ message }) => this._browserService.alert({
+            header: this._appLocalization.get('app.common.error'),
+            message
+        })
       );
   }
 

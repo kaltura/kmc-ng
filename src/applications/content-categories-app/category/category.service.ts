@@ -191,6 +191,7 @@ export class CategoryService implements OnDestroy {
                 ]
               );
               this._browserService.confirm({
+                  header: this._appLocalization.get('applications.content.categoryDetails.note'),
                 message,
                 accept: () => {
                   observer.next(true);

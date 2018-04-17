@@ -76,7 +76,8 @@
             "apply": "Apply",
             "done": "Done",
             "save": "Save",
-            "connectionError": "Error connecting to server"
+            "connectionError": "Error connecting to server",
+            "error": "Error"
         },
         "login": {
             "login": {
@@ -1185,6 +1186,7 @@
                     "nameRequired": "You must enter an Entry Name",
                     "customDataError": "\"{{0}}\" Custom Data Error",
                     "missingEntriesWarning": "The following entries were not found: {{0}}",
+                    "note": "Note",
                     "replaceLinkedEntry": "Selecting a new entry will replace the current entry. Continue?"
                 },
                 "thumbnails": {
@@ -1605,7 +1607,8 @@
       },
       "categoryDetails": {
         "save": "Save",
-                "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
+        "note": "Note",
+        "referenceIdInUse": "The following categories are already set with {{0}} as a Reference ID:\n\n{{1}}\n\n Do you want to continue?",
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
         "headerProps": {
@@ -1861,6 +1864,8 @@
         "title": "Live Dashboard"
       },
       "playlistDetails": {
+        "cancelEdit": "Cancel Edit",
+        "discardAllChanges": "Discard all changes?",
         "sections": {
           "metadata": "Metadata",
           "content": "Content"
@@ -2451,7 +2456,8 @@
           "selected": "{{0}} Selected",
           "na": "N/A",
           "auto": "auto",
-          "noFlavorsSelectedWarning": " transcoding will notapply on entries associated with this profile. Do you want to continue?",
+          "noFlavorsSelectedHeader": "No flavor was selected",
+          "noFlavorsSelectedWarning": "Transcoding will not apply on entries associated with this profile. Do you want to continue?",
           "table": {
             "name": "Name",
             "id": "ID",

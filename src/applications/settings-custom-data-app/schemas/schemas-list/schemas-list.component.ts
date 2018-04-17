@@ -244,6 +244,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
           this._logger.info(`handle failing delete by the server`, { errorMessage: error.message });
           this._serverValidationError = error;
           this._browserService.alert({
+            header: this._appLocalization.get('app.common.error'),
             message: error.message,
             accept: () => {
               this._logger.info(`handle dismiss request by the user`);

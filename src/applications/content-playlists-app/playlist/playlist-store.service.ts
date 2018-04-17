@@ -346,8 +346,8 @@ export class PlaylistStore implements OnDestroy {
       if (this._playlistIsDirty) {
         this._browserService.confirm(
           {
-            header: 'Cancel Edit',
-            message: 'Discard all changes?',
+            header: this._appLocalization.get('applications.content.playlistDetails.cancelEdit'),
+            message: this._appLocalization.get('applications.content.playlistDetails.discardAllChanges'),
             accept: () => {
               this._playlistIsDirty = false;
               observer.next({ allowed: true });

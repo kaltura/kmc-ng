@@ -456,6 +456,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
     if (!action) {
       this._browserService.alert({
+        header: this._appLocalization.get('app.common.error'),
         message: this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDelete'),
       });
       return;
