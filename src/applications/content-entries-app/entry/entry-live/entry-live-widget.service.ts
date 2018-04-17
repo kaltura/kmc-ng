@@ -1,31 +1,30 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import {Injectable, OnDestroy} from '@angular/core';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
 
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
-import { KalturaLiveStreamBitrate } from 'kaltura-ngx-client/api/types/KalturaLiveStreamBitrate';
-import { KalturaRecordStatus } from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
-import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
-import { KalturaDVRStatus } from 'kaltura-ngx-client/api/types/KalturaDVRStatus';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { LiveStreamRegenerateStreamTokenAction } from 'kaltura-ngx-client/api/types/LiveStreamRegenerateStreamTokenAction';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaSourceType} from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import {KalturaLiveStreamBitrate} from 'kaltura-ngx-client/api/types/KalturaLiveStreamBitrate';
+import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
+import {KalturaLiveStreamEntry} from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
+import {KalturaDVRStatus} from 'kaltura-ngx-client/api/types/KalturaDVRStatus';
+import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {LiveStreamRegenerateStreamTokenAction} from 'kaltura-ngx-client/api/types/LiveStreamRegenerateStreamTokenAction';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
 
-import { EntryWidgetKeys } from '../entry-widget-keys';
-import { LiveXMLExporter } from './live-xml-exporter';
-import { AVAIL_BITRATES } from './bitrates';
-import { EntryWidget } from '../entry-widget';
-import { serverConfig } from 'config/server';
-import { ConversionProfileListAction } from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
-import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import {EntryWidgetKeys} from '../entry-widget-keys';
+import {LiveXMLExporter} from './live-xml-exporter';
+import {AVAIL_BITRATES} from './bitrates';
+import {EntryWidget} from '../entry-widget';
+import {serverConfig} from 'config/server';
+import {ConversionProfileListAction} from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
+import {KalturaConversionProfileFilter} from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaConversionProfileType} from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface bitrate {
@@ -50,6 +49,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	public _showDVRWindow: boolean = false;
 	public _dvrWindowAvailable: boolean = false;
 	public _explicitLive: boolean = true;
+	public _liveDashboardEnabled: boolean = false;
 
 	public _selectedConversionProfile: number;
 	public _manualStreamsConfiguration = [];
@@ -112,8 +112,10 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	protected onActivate(firstTimeActivating : boolean) {
 		// set live type and load data accordingly
 		switch (this.data.sourceType.toString()) {
-			case KalturaSourceType.liveStream.toString():
+      case KalturaSourceType.liveStream.toString():
 				this._liveType = "kaltura";
+        this._liveDashboardEnabled = serverConfig.externalApps.liveDashboard.enabled
+          && this._permissionsService.hasPermission(KMCPermissions.ANALYTICS_BASE);
 				this._setRecordStatus();
 				this._setDVRStatus();
 				super._showLoader();
@@ -315,16 +317,6 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 					}
 				}
 			);
-	}
-
-	public _openLiveReport(): void {
-		//const base_url = window.location.protocol + '//' + serverConfig.externalApps.liveAnalytics.uri;
-		//const url = base_url + '/apps/liveanalytics/' + serverConfig.externalApps.liveAnalytics.version + '/index.html#/entry/' + this.data.id + '/nonav/';
-		//this._browserService.openLink(url);
-		this._browserService.alert({
-			header: "Note",
-			message: "Live Analytics Currently Not Supported"
-		});
 	}
 
 	ngOnDestroy()

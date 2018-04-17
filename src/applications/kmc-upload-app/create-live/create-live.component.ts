@@ -36,7 +36,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     description: '',
     transcodingProfile: null,
     liveDVR: false,
-    enableRecording: false,
+    enableRecording: this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM_RECORD),
     enableRecordingSelectedOption: KalturaRecordStatus.appended,
     previewMode: false
   };
@@ -70,6 +70,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
               private _appEvents: AppEventsService,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
+              private _permissionsService: KMCPermissionsService,
               private _router: Router) {
   }
 
