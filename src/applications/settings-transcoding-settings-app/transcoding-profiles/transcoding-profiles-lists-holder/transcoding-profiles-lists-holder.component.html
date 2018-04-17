@@ -1,7 +1,8 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kTranscodingProfilesListsHolderWrapper">
 
-    <div class="kTranscodingProfilesListsHolder kContent">
+    <div class="kTranscodingProfilesListsHolder kContent"
+         [class.kSingleTableMode]="!(_kmcPermissions.FEATURE_KALTURA_LIVE_STREAM | kNgIfPermitted)">
       <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.media"
                                    [title]="'applications.settings.transcoding.transcodingProfiles'| translate"
                                    (addProfile)="_addProfile($event)"
@@ -9,7 +10,8 @@
       </k-transcoding-profiles-list>
     </div>
 
-    <div class="kTranscodingProfilesListsHolder kContent">
+    <div class="kTranscodingProfilesListsHolder kContent"
+         *ngIf="_kmcPermissions.FEATURE_KALTURA_LIVE_STREAM | kNgIfPermitted">
       <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.liveStream"
                                    [title]="'applications.settings.transcoding.liveTranscodingProfiles'| translate"
                                    (addProfile)="_addProfile($event)"

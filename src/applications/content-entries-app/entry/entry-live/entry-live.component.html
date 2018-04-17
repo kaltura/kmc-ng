@@ -76,7 +76,7 @@
         </div>
 
 
-        <div>
+        <div *ngIf="_kmcPermissions.FEATURE_KALTURA_LIVE_STREAM | kNgIfPermitted">
             <span class="kSubTitle">{{'applications.content.entryDetails.live.transcoding' | translate}}</span>
             <div class="kRow">
                 <span class="kLabels">{{'applications.content.entryDetails.live.transcodingProfile' | translate}}</span>
