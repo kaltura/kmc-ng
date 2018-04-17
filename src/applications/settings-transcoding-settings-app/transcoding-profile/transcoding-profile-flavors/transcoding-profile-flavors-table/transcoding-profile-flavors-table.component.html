@@ -4,12 +4,13 @@
     dataKey="id"
     scrollable="true"
     scrollHeight="100%"
+    [class.kDisabled]="!_isEditAllowed"
     [immutable]="false"
     [value]="_flavors"
     [emptyMessage]="_emptyMessage"
     (selectionChange)="_onSelectionChange($event)"
     [(selection)]="selectedFlavors">
-    <p-column *ngIf="_isEditAllowed" selectionMode="multiple" [style]="{'width': '44px'}"></p-column>
+    <p-column selectionMode="multiple" [style]="{'width': '44px'}"></p-column>
 
     <p-column field="name"
               [style]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}"

@@ -55,3 +55,13 @@
     margin-left: 10px !important;
   }
 }
+
+:host /deep/ {
+    .kDisabled {
+        .ui-chkbox-box {
+            pointer-events: none;
+            background-color: $kGrayscale6;
+            border-color: $kGrayscale5;
+        }
+    }
+}
