@@ -20,6 +20,13 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
 
     load(rawRolePermissionList: string[], rawPartnerPermissionList: string[]): void {
 
+
+        this._logger.error('DANGER!!!!!!!!!!! test code added! should remove before commiting!!');
+
+        const tempRemoveThis = ['PLAYLIST_UPDATE'];
+        rawRolePermissionList = rawRolePermissionList.filter(item => tempRemoveThis.indexOf(item) === -1);
+        rawPartnerPermissionList = rawPartnerPermissionList.filter(item => tempRemoveThis.indexOf(item) === -1);
+
         super.flushPermissions();
 
         this._logger.info(`prepare user permissions set based on role permissions and partner permissions`);

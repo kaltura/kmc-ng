@@ -43,7 +43,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   public _deferredLoading = true;
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
-  public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
