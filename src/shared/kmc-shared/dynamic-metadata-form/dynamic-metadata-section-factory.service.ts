@@ -79,7 +79,8 @@ export class DynamicMetadataSectionFactory {
                 allowMultiple : false,
                 allowMultipleEntries : item.allowMultiple,
                 key: item.name,
-                description: item.description
+                description: item.description,
+                styleClass: 'kLinkedEntries'
             }
         );
     }

@@ -10,6 +10,7 @@
           type="button"
           [label]="'applications.content.moderation.approveEntry' | translate"
           (click)="_approveEntry()"
+          *ngIf="_kmcPermissions.CONTENT_MODERATE_APPROVE_REJECT | kNgIfPermitted"
           class="kButtonBranded kApproveEntryBtn"></button>
 
         <button
@@ -17,6 +18,7 @@
           type="button"
           [label]="'applications.content.moderation.rejectEntry' | translate"
           (click)="_rejectEntry()"
+          *ngIf="_kmcPermissions.CONTENT_MODERATE_APPROVE_REJECT | kNgIfPermitted"
           class="kButtonDefault kRejectEntryBtn"></button>
       </div>
     </div>

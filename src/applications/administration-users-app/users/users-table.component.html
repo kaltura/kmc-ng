@@ -39,7 +39,7 @@
       <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}"
                 [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span>{{user[col.field] | kDate}}</span>
+          <span>{{(user[col.field] * 1000)| kDate}}</span>
         </ng-template>
       </p-column>
       <p-column header="" styleClass="kTableActions">
