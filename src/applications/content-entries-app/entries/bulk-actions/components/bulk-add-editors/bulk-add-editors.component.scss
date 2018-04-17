@@ -34,6 +34,9 @@
   justify-content: center;
 }
 :host /deep/ kautocomplete {
+  li.userAdded{
+    background-color: transparentize($kPrimary, 0.5) !important;
+  }
   .ui-autocomplete {
     width: 475px;
   }
