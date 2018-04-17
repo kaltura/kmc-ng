@@ -1,0 +1,15 @@
+<div *ngIf="mode === 'link'">
+    <p *ngIf="!_isRecording" class="kHelpLink" (click)="_toggleRecord()">{{'app.helpMenu.startLogsRecord' | translate}}</p>
+    <p *ngIf="_isRecording" class="kHelpLink" (click)="_toggleRecord()">{{'app.helpMenu.stopLogsRecord' | translate}}</p>
+</div>
+<div *ngIf="mode === 'button'">
+    <div class="kToggleRecord"
+         [ngClass]="{'kStartRecord': !_isRecording, 'kStopRecord': _isRecording}"
+         (click)="_toggleRecord()"></div>
+</div>
+
+<kPopupWidget [popupWidth]="500" [popupHeight]="260">
+    <ng-template>
+
+    </ng-template>
+</kPopupWidget>

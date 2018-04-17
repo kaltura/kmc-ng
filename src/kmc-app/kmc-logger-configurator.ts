@@ -23,6 +23,7 @@ export class KmcLoggerConfigurator implements OnDestroy {
     }
 
     ngOnDestroy() {
+        this._logsRecordMode.complete();
     }
 
     private _setLoggerLevel(level: LogLevels): void {
@@ -35,6 +36,7 @@ export class KmcLoggerConfigurator implements OnDestroy {
     }
 
     private _enableLogsRecordMode(logLevel: LogLevels): void {
+        this._logger.info(`'record' queryParam received, enable logs record mode with preselected ${logLevel} logs level `);
         this._logsRecordMode.next({
             enabled: true,
             logLevel

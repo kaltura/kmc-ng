@@ -5,7 +5,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
     selector: 'k-power-user-console',
     templateUrl: './power-user-console.component.html',
     styleUrls: ['./power-user-console.component.scss'],
-    providers: [KalturaLogger.createLogger('PowerUserConsoleComponent')]
+    providers: [KalturaLogger.createLogger('LogsRecordComponent')]
 })
 export class PowerUserConsoleComponent {
     public _display = false;

@@ -51,7 +51,9 @@
       "contact": "Contact Support",
       "currentPage": "Current Page",
       "changelog": "Changelog",
-        "powerUser": "Open power-user console"
+        "powerUser": "Open power-user console",
+        "startLogsRecord": "Start record logs",
+        "stopLogsRecord": "Stop record logs"
     },
     "languageMenu": {
       "selectLang": "Select Language"

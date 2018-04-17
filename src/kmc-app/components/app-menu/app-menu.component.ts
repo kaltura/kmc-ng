@@ -9,6 +9,7 @@ import * as R from 'ramda';
 import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { KmcLoggerConfigurator } from '../../kmc-logger-configurator';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -29,7 +30,8 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     showSubMenu: boolean = true;
 
 
-    constructor(private userAuthentication: AppAuthentication,
+    constructor(public _kmcLogs: KmcLoggerConfigurator,
+                private userAuthentication: AppAuthentication,
                 private appNavigator: AppNavigator,
                 private router: Router,
                 private _route: ActivatedRoute,

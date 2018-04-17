@@ -14,6 +14,8 @@ import { PageExitVerificationService, UploadPageExitVerificationService } from '
 import { PowerUserConsoleComponent } from 'app-shared/kmc-shell/components';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
 import { PowerUserConsoleModule } from '@kaltura-ng/mc-shared/components/power-user-console/power-user-console.module';
+import { LogsRecordComponent } from 'app-shared/kmc-shell/components/logs-record/logs-record.component';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.module';
 
 @NgModule({
     imports: <any[]>[
@@ -22,21 +24,24 @@ import { PowerUserConsoleModule } from '@kaltura-ng/mc-shared/components/power-u
         CheckboxModule,
         SharedModule,
         TranslateModule,
-        PowerUserConsoleModule
+        PowerUserConsoleModule,
+        PopupWidgetModule
     ],
     declarations: <any[]>[
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
         EntryTypePipe,
-        PowerUserConsoleComponent
+        PowerUserConsoleComponent,
+        LogsRecordComponent
     ],
     exports: <any[]>[
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
         EntryTypePipe,
-        PowerUserConsoleComponent
+        PowerUserConsoleComponent,
+        LogsRecordComponent
     ],
     providers: <any[]>[
 
