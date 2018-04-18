@@ -3,12 +3,16 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage, KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import {UniversalLiveService} from './universal-live.service';
 import {UniversalLive} from "./universal-live.interface";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kUniversalLive',
   templateUrl: './universal-live.component.html',
   styleUrls: ['./universal-live.component.scss'],
-  providers: [UniversalLiveService]
+  providers: [
+      UniversalLiveService,
+      KalturaLogger.createLogger('UniversalLiveComponent')
+  ]
 })
 export class UniversalLiveComponent implements OnInit, OnDestroy {
 
@@ -27,6 +31,7 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
   blockerStateChange = new EventEmitter<{ isBusy: boolean, message: AreaBlockerMessage }>();
 
   constructor(private _fb: FormBuilder,
+              private _logger: KalturaLogger,
               private universalLiveService: UniversalLiveService) {
   }
 
@@ -88,6 +93,7 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
   }
 
   private loadDefaultIp() {
+      this._logger.info(`handle loading default ip request`);
     this._updateAreaBlockerState(true, null);
 
     // set the retrieved default IP in both primary and secondary IP fields.
@@ -95,12 +101,14 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
       .getDefaultIp()
       .cancelOnDestroy(this)
       .subscribe(ip => {
+              this._logger.info(`handle successful loading default ip request`, { ip });
           this.data.primaryEncoderIp = ip;
           this.data.secondaryEncoderIp = ip;
           this._form.reset(this.data);
           this._updateAreaBlockerState(false, null);
         },
         error => {
+            this._logger.info(`handle failed loading default ip request, show areaBlocker`, { errorMessage: error.message });
           this._updateAreaBlockerState(false, error.message);
         });
   }

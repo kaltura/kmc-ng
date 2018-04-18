@@ -8,6 +8,7 @@ import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui'
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { globalConfig } from 'config/global';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface UploadSettingsFile {
   file: File;
@@ -23,7 +24,8 @@ export interface UploadSettingsFile {
 @Component({
   selector: 'kKMCUploadSettings',
   templateUrl: './upload-settings.component.html',
-  styleUrls: ['./upload-settings.component.scss']
+  styleUrls: ['./upload-settings.component.scss'],
+    providers: [KalturaLogger.createLogger('UploadSettingsComponent')]
 })
 export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
@@ -64,6 +66,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
               private _formBuilder: FormBuilder,
               private _transcodingProfileManagement: TranscodingProfileManagement,
               private _uploadManagement: UploadManagement,
+              private _logger: KalturaLogger,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -74,6 +77,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+      this._logger.info(`open file selection dialog after view was init`);
     this._fileDialog.open();
 
     this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
@@ -97,8 +101,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   private _getFileExtension(filename: string): string {
-  	const extension = /(?:\.([^.]+))?$/.exec(filename)[1];
-    return typeof extension === "undefined" ? '' : extension.toLowerCase();
+    const extension = /(?:\.([^.]+))?$/.exec(filename)[1];
+    return typeof extension === 'undefined' ? '' : extension.toLowerCase();
   }
 
   private _getMediaTypeFromExtension(extension: string): KalturaMediaType | null {
@@ -130,11 +134,13 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
 
   private _loadTranscodingProfiles() {
+      this._logger.info(`load transcoding profiles data`);
     this._transcodingProfileLoading = true;
 
     this._transcodingProfileManagement.get()
       .subscribe(
         profiles => {
+            this._logger.info(`handle successful loading of transcoding profiles`);
           this._transcodingProfileLoading = false;
           const transcodingProfiles = [...profiles];
           const defaultProfileIndex = transcodingProfiles.findIndex(({ isDefault }) => !!isDefault);
@@ -151,12 +157,14 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
           }
         },
         (error) => {
+            this._logger.warn(`handle failed loading of transcoding profiles, show confirmation`, { errorMessage: error.message });
           this._transcodingProfileError = new AreaBlockerMessage({
             message: error.message,
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                    this._logger.info(`user confirmed, retry request`);
                   this._transcodingProfileError = null;
                   this._transcodingProfileLoading = false;
                   this._loadTranscodingProfiles();
@@ -165,6 +173,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
               {
                 label: this._appLocalization.get('app.common.cancel'),
                 action: () => {
+                    this._logger.info(`user didn't confirm, abort request, dismiss confirmation`);
                   this._transcodingProfileError = null;
                   this._transcodingProfileLoading = false;
                   this.parentPopupWidget.close();
@@ -176,6 +185,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   public _removeFile(file: UploadSettingsFile): void {
+      this._logger.info(`handle remove file action by user`, { name: file.name, type: file.mediaType });
     const fileIndex = this._files.indexOf(file);
     if (fileIndex !== -1) {
       const newList = Array.from(this._files);
@@ -185,20 +195,24 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   public _upload(): void {
+      this._logger.info(`handle upload action by user`);
 
     if (this._files.some(({ isEditing }) => isEditing)) {
+        this._logger.info(`some file are in edit state, abort action`);
       return;
     }
 
     const trancodingProfileId = this._profileForm.value.transcodingProfile;
 
     if (trancodingProfileId === null || typeof trancodingProfileId === 'undefined' || trancodingProfileId.length === 0) {
+        this._logger.info(`transcoding profile is not selected, abort action, show alert`);
       this._transcodingProfileError = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.upload.validation.missingTranscodingProfile'),
         buttons: [
           {
             label: this._appLocalization.get('app.common.ok'),
             action: () => {
+                this._logger.info(`user dismissed alert`);
               this._transcodingProfileError = null;
             }
           }
@@ -207,7 +221,9 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    this._logger.info(`validate files before upload`);
     if (this._validateFiles(this._files)) {
+        this._logger.info(`files are valid proceed action`);
       this.parentPopupWidget.close();
       const uploadFileDataList = this._files.map(fileData => ({
         file: fileData.file,
@@ -216,6 +232,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
       }));
 
       this._newEntryUploadService.upload(uploadFileDataList, Number(trancodingProfileId));
+    } else {
+        this._logger.info(`files are not valid, abort action`);
     }
   }
 
@@ -240,12 +258,17 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
         file.hasError = false;
         file.errorToken = null;
       }
+
+        if (file.hasError) {
+            this._logger.debug(`file is not valid`, { fileName: file.name, errorMessage: this._appLocalization.get(file.errorToken) });
+        }
     });
 
     return result;
   }
 
   public _updateFileValidityOnTypeChange(file: UploadSettingsFile): void {
+      this._logger.info(`handle file type change action by user, reset validity`, { name: file.name, type: file.mediaType });
     if (file.hasError && file.errorToken === 'applications.upload.validation.wrongType') {
       file.errorToken = null;
       file.hasError = false;
@@ -253,16 +276,19 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   public _editName(file: UploadSettingsFile): void {
+      this._logger.info(`handle edit name action by user`, { name: file.name, type: file.mediaType });
     file.isEditing = true;
   }
 
   public _cancelEdit(file: UploadSettingsFile): void {
+      this._logger.info(`handle cancel editing action by user`, { name: file.name, type: file.mediaType });
     const name = file.name.trim() || '';
 
     if (name) {
       file.isEditing = file.hasError = false;
       file.name = name;
     } else {
+        this._logger.info(`name is not provided, abort action`);
       file.hasError = true;
       file.errorToken = 'applications.upload.validation.fileNameRequired';
     }

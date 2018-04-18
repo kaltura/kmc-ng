@@ -68,6 +68,7 @@ export class BulkUploadMonitorService implements OnDestroy {
                 private _appEvents: AppEventsService,
                 private _browserService: BrowserService,
                 private _logger: KalturaLogger) {
+        this._logger = _logger.subLogger('BulkUploadMonitorService');
         this._logger.debug('constructor()');
         this._logger.debug(`registering to app event 'BulkLogUploadingStartedEvent'`);
         this._appEvents

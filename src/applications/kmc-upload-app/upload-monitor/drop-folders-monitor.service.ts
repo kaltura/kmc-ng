@@ -61,6 +61,7 @@ export class DropFoldersMonitorService implements OnDestroy {
               private _kmcServerPolls: KmcServerPolls,
               private _browserService: BrowserService,
               private _logger: KalturaLogger) {
+      this._logger = _logger.subLogger('DropFoldersMonitorService');
     this._initTracking();
   }
 
