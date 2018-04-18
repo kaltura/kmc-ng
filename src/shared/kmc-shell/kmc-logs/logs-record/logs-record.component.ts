@@ -2,7 +2,8 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { KalturaLogger, LogLevels } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { serverConfig } from 'config/server';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import { globalConfig } from 'config/global';
 
 @Component({
     selector: 'k-logs-record',
@@ -32,6 +33,7 @@ export class LogsRecordComponent {
 
     @ViewChild('recordPopup') _recordPopup: PopupWidgetComponent;
 
+    private _appLogLevel: LogLevels = globalConfig.client.production ? 'Error' : 'All';
     private get _supportTeamLink(): string {
         return serverConfig.externalLinks.kaltura.support.replace(':mailto', '');
     }
@@ -51,11 +53,18 @@ export class LogsRecordComponent {
     public _logLevelValues = this._logLevelOptions.map(({ value }) => value);
 
     constructor(private _logger: KalturaLogger,
+                private _appAuth: AppAuthentication,
                 private _browserService: BrowserService) {
+    }
 
+    private _getLogFileName(): string {
+        const timestamp = +(new Date());
+        const partnerId = this._appAuth.appUser.partnerId;
+        return `logs-${partnerId}-${timestamp}.txt`;
     }
 
     private _stopRecord(): void {
+        this._logger.setOptions({ level: this._appLogLevel });
         this._recordPopup.open();
     }
 
@@ -64,11 +73,15 @@ export class LogsRecordComponent {
     }
 
     public _startRecord(): void {
+        this._logger.setOptions({ level: this._logLevel });
+        this._logger.startRecordingLogs();
         this._isRecording = true;
         this._recordPopup.close();
     }
 
     public _downloadLogs(): void {
+        const recordedLogs = this._logger.getRecordedLogs();
+        this._browserService.download(JSON.stringify(recordedLogs), this._getLogFileName(), 'plain/text');
         this._cancel();
     }
 

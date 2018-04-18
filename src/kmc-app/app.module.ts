@@ -86,6 +86,7 @@ import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 import { APP_STORAGE_TOKEN } from '@kaltura-ng/kaltura-common/app-storage.service';
 import { KmcLogsModule } from 'app-shared/kmc-shell/kmc-logs/kmc-logs.module';
+import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger/kaltura-logger.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -144,7 +145,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
-      KmcLogsModule.forRoot()
+      KmcLogsModule.forRoot(),
+      KalturaLoggerModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
