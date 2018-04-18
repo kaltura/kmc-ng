@@ -1,11 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
-import {AppStatus, BrowserService, GrowlMessage} from 'app-shared/kmc-shell/providers/browser.service';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import { BrowserService, GrowlMessage } from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization, OperationTagManagerService} from '@kaltura-ng/kaltura-common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { KmcLoggerConfigurator } from './kmc-logger-configurator';
+import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 
 /*
  * App Component

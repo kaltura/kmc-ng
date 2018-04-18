@@ -84,8 +84,8 @@ import { getKalturaServerUri } from 'config/server';
 import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
-import { KmcLoggerConfigurator } from './kmc-logger-configurator';
 import { APP_STORAGE_TOKEN } from '@kaltura-ng/kaltura-common/app-storage.service';
+import { KmcLogsModule } from 'app-shared/kmc-shell/kmc-logs/kmc-logs.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -143,7 +143,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     AccessControlProfileModule.forRoot(),
       KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
-    KalturaClientModule.forRoot(kalturaClientOptionsFactory)
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      KmcLogsModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -175,8 +176,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
           provide: APP_AUTH_EVENTS, useClass: KMCAuthenticationEvents
       },
       { provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
-    ConfirmationService,
-      KmcLoggerConfigurator
+    ConfirmationService
   ]
 })
 export class AppModule {

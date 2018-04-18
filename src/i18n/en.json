@@ -50,10 +50,7 @@
       "userManual": "Download user manual",
       "contact": "Contact Support",
       "currentPage": "Current Page",
-      "changelog": "Changelog",
-        "powerUser": "Open power-user console",
-        "startLogsRecord": "Start record logs",
-        "stopLogsRecord": "Stop record logs"
+      "changelog": "Changelog"
     },
     "languageMenu": {
       "selectLang": "Select Language"

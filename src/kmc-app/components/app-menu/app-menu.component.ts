@@ -9,7 +9,7 @@ import * as R from 'ramda';
 import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { KmcLoggerConfigurator } from '../../kmc-logger-configurator';
+import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 
 @Component({
     selector: 'kKMCAppMenu',

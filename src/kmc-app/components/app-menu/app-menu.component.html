@@ -10,7 +10,9 @@
             </div>
 
             <div class="kMenu-right">
-                <k-logs-record *ngIf="(_kmcLogs.logsRecordMode | async).enabled" mode="button"></k-logs-record>
+                <k-logs-record mode="button"
+                               *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
+                               [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"></k-logs-record>
                 <kUploadButton></kUploadButton>
                 <kUploadMonitor [appmenu]="appmenu"></kUploadMonitor>
                 <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem?.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
@@ -59,7 +61,9 @@
         <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
         <p class="kHelpLink" (click)="openHelpLink('manual')">{{'app.helpMenu.userManual' | translate}}</p>
         <p class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
-        <k-logs-record [class.kHelpLinkHidden]="!(_kmcLogs.logsRecordMode | async).enabled" mode="link"></k-logs-record>
+        <k-logs-record mode="link"
+                       [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"
+                       [class.kHelpLinkHidden]="!(_kmcLogs.logsRecordMode | async).enabled"></k-logs-record>
         <hr>
         <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
         <k-power-user-console [class.kHelpLinkHidden]="!_powerUser"></k-power-user-console>
