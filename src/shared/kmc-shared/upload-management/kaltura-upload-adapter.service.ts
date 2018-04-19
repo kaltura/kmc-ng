@@ -19,6 +19,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
     constructor(private _serverClient: KalturaClient,
                 private _logger: KalturaLogger) {
         super();
+        this._logger = _logger.subLogger('KalturaUploadAdapter');
     }
 
     get label(): string {
