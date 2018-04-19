@@ -8,12 +8,16 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kDropFoldersList',
   templateUrl: './drop-folders-list.component.html',
   styleUrls: ['./drop-folders-list.component.scss'],
-    providers: [DropFoldersRefineFiltersService]
+    providers: [
+        DropFoldersRefineFiltersService,
+        KalturaLogger.createLogger('DropFoldersListComponent')
+    ]
 })
 
 export class DropFoldersListComponent implements OnInit, OnDestroy {
@@ -37,7 +41,8 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
               private _refineFiltersService: DropFoldersRefineFiltersService,
               private _appLocalization: AppLocalization,
               private _router: Router,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -53,12 +58,15 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
         // this function will re-run if preparation failed. execute your logic
         // only once the filters were fetched successfully.
 
+        this._logger.info(`prepare component, load filters data`);
+
         this._isBusy = true;
         this._refineFiltersService.getFilters()
             .cancelOnDestroy(this)
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 lists => {
+                    this._logger.info(`handle successful load filters data`);
                     this._isBusy = false;
                     this._refineFilters = lists;
                     this._restoreFiltersState();
@@ -66,28 +74,28 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                     this._registerToDataChanges();
                 },
                 error => {
+                    this._logger.warn(`handle failed load filters data, show alert`, { errorMessage: error.message });
                     this._isBusy = false;
                     this._blockerMessage = new AreaBlockerMessage({
                         message: this._appLocalization.get('applications.content.filters.errorLoading'),
                         buttons: [{
                             label: this._appLocalization.get('app.common.retry'),
                             action: () => {
+                                this._logger.info(`user selected retry, retry loading data`);
                                 this._blockerMessage = null;
                                 this._prepare();
                                 this._dropFoldersStore.reload();
                             }
                         }
                         ]
-                    })
+                    });
                 });
     }
 
     private _registerToDataChanges(): void {
         this._dropFoldersStore.dropFolders.state$
             .cancelOnDestroy(this)
-            .subscribe(
-                result => {
-
+            .subscribe(result => {
                     this._tableIsBusy = result.loading;
 
                     if (result.errorMessage) {
@@ -101,14 +109,10 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                                 }
                             }
                             ]
-                        })
+                        });
                     } else {
                         this._tableBlockerMessage = null;
                     }
-                },
-                error => {
-                    console.warn('[kmcng] -> could not load drop folders'); // navigate to error page
-                    throw error;
                 });
     }
 
@@ -157,22 +161,26 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   private _deleteDropFiles(ids: number[]): void {
+      this._logger.info(`handle delete files request`, { fileIds: ids });
     const execute = () => {
       this._dropFoldersStore.deleteDropFiles(ids)
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(
           () => {
+              this._logger.info(`handle successful delete files request`);
             this._dropFoldersStore.reload();
             this._clearSelection();
           },
           error => {
+              this._logger.info(`handle failed delete files request, show confirmation`);
             this._blockerMessage = new AreaBlockerMessage({
               message: this._appLocalization.get('applications.content.dropFolders.errors.errorDropFoldersFiles'),
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
+                      this._logger.info(`user confirmed, retry action`);
                     this._blockerMessage = null;
                     this._deleteDropFiles(ids);
                   }
@@ -180,20 +188,28 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                 {
                   label: this._appLocalization.get('app.common.cancel'),
                   action: () => {
+                      this._logger.info(`user didn't confirm, abort action`);
                     this._blockerMessage = null;
                   }
                 }
               ]
-            })
+            });
           }
         );
     };
 
     if (ids.length > subApplicationsConfig.shared.bulkActionsLimit) {
+        this._logger.info(`files count bigger than limit, show confirmation`, { filesCount: ids.length, limit: subApplicationsConfig.shared.bulkActionsLimit });
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.bulkActions.note'),
         message: this._appLocalization.get('applications.content.bulkActions.confirmDropFolders', { '0': ids.length }),
-        accept: () => execute()
+        accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
+            execute();
+        },
+          reject: () => {
+              this._logger.info(`user didn't confirm, abort action`);
+          }
       });
     } else {
       execute();
@@ -201,20 +217,29 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   public _bulkDelete(_selectedDropFolders: KalturaDropFolderFile[]): void {
+      this._logger.info(
+          `handle bulk action by user, show confirmation dialog`,
+          () => ({ dropFolders: _selectedDropFolders.map(file => ({ fileId: file.id, fileName: file.fileName })) })
+      );
     const dropFolderFilesToDelete = _selectedDropFolders.map((file, index) => `${index + 1}: ${(file.fileName)}`);
     const dropFolderFiles = _selectedDropFolders.length <= 10 ? dropFolderFilesToDelete.join(',').replace(/,/gi, '\n') : '';
     this._browserService.confirm({
       header: this._appLocalization.get('applications.content.dropFolders.deleteFiles'),
       message: this._appLocalization.get('applications.content.dropFolders.confirmDelete', { 0: dropFolderFiles }),
       accept: () => {
+          this._logger.info(`user confirmed, proceed action`);
         setTimeout(() => {
           this._deleteDropFiles(_selectedDropFolders.map(file => file.id));
         }, 0);
-      }
+      },
+        reject: () => {
+            this._logger.info(`user didn't confirm, abort action`);
+        }
     });
   }
 
   public _clearSelection(): void {
+      this._logger.info(`handle clear selection action by user`);
     this._selectedDropFolders = [];
   }
 
@@ -232,31 +257,46 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   public _reload(): void {
+      this._logger.info(`handle reload list data action by user`);
     this._clearSelection();
     this._dropFoldersStore.reload();
   }
 
   public _navigateToEntry(entryId: string): void {
+      this._logger.info(`handle navigate to entry action by user, check if entry exists`, { entryId });
     this._dropFoldersStore.isEntryExist(entryId)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         exists => {
           if (exists) {
+              this._logger.info(`entry exists, proceed action`);
             this._router.navigate(['/content/entries/entry', entryId]);
+          } else {
+              this._logger.info(`entry does not exist, abort action`);
           }
         },
-        ({ message }) => this._browserService.alert({ message })
+        ({ message }) => {
+            this._logger.warn(`failed check if entry exists`, { errorMessage: message });
+            this._browserService.alert({ message });
+        }
       );
   }
 
   public _deleteDropFolderFiles(event): void {
+      this._logger.info(`handle delete drop folder files action by user, show confirmation`);
     this._browserService.confirm({
       header: this._appLocalization.get('applications.content.dropFolders.deleteFiles'),
       message: this._appLocalization.get('applications.content.dropFolders.confirmDeleteSingle', {
         0: event.name ? event.name : event.fileName
       }),
-      accept: () => this._deleteDropFiles([event.id])
+      accept: () => {
+          this._logger.info(`user confirmed, proceed action`);
+          this._deleteDropFiles([event.id]);
+      },
+        reject: () => {
+            this._logger.info(`user didn't confirm, abort action`);
+        }
     });
   }
 
