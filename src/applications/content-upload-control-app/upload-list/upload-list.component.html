@@ -21,10 +21,9 @@
 
       <kUploadListTable class="kUploadsTable"
                         [uploads]="_uploads"
-                        (onSelectedEntriesChange)="_selectedEntriesChange($event)"
                         (onCancelUpload)="_cancelUpload($event)"
                         (onRetryUpload)="_retryUpload($event)"
-                        [selectedUploads]="_selectedUploads"
+                        [(selectedUploads)]="_selectedUploads"
       ></kUploadListTable>
     </div>
   </div>

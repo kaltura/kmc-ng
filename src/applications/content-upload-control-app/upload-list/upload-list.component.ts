@@ -6,6 +6,7 @@ import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType'
 import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { KalturaUploadFile } from 'app-shared/kmc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 type MonitoredUploadFile = NewEntryUploadFile | NewEntryFlavourFile;
 
@@ -29,6 +30,7 @@ export interface UploadFileData {
   selector: 'kUploadControlList',
   templateUrl: './upload-list.component.html',
   styleUrls: ['./upload-list.component.scss'],
+    providers: [KalturaLogger.createLogger('UploadListComponent')]
 })
 export class UploadListComponent implements OnInit, OnDestroy {
   public _selectedUploads: UploadFileData[] = [];
@@ -39,12 +41,16 @@ export class UploadListComponent implements OnInit, OnDestroy {
   constructor(private _uploadManagement: UploadManagement,
               private _newEntryUploadService: NewEntryUploadService,
               private _browserService: BrowserService,
+              private _logger: KalturaLogger,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
+      this._logger.info(`init component`);
+      this._logger.info(`get currently uploading files from the service to display them in the list`);
     this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
 
+    this._logger.info(`subscribe to mediaCreated to update file's entryId`);
     // listen for mediaCreated to show entryId in the upload list once media is created for this upload
     this._newEntryUploadService.onMediaCreated$
       .cancelOnDestroy(this)
@@ -54,11 +60,13 @@ export class UploadListComponent implements OnInit, OnDestroy {
         }
       );
 
+    this._logger.info(`subscribe to trackedFileChanged to update files state`);
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => isMonitoredUploadFile(trackedFile.data))
       .subscribe(
         (trackedFile) => {
+            this._logger.debug(`file updated`, { id: trackedFile.id, status: trackedFile.status });
           // NOTE: this service does not handle 'waitingUpload' status by design.
           switch (trackedFile.status) {
             case TrackedFileStatuses.added:
@@ -117,10 +125,12 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   private _updateSelectedUploadsOnRemove(fileId: string): void {
+      this._logger.info(`handle update selected uploads on remove action`, { fileId });
     this._selectedUploads = this._selectedUploads.filter(({ id }) => id !== fileId);
   }
 
   private _addFile(trackedFile: TrackedFileData): void {
+      this._logger.info(`handle add file to uploads list action`, { id: trackedFile.id, status: trackedFile.status });
 
     if (isMonitoredUploadFile(trackedFile.data)) {
         const fileData = trackedFile.data;
@@ -135,10 +145,13 @@ export class UploadListComponent implements OnInit, OnDestroy {
             uploadedOn: trackedFile.uploadStartAt,
             progress: trackedFile.progress
         });
+    } else {
+        this._logger.info(`file's data is not instance of 'NewEntryUploadFile' or 'NewEntryFlavourFile', abort action`);
     }
   }
 
   private _removeFile(id: string): void {
+      this._logger.info(`handle remove file from uploads list action`, { fileId: id });
     const relevantFileIndex = this._uploads.findIndex(file => file.id === id);
     if (relevantFileIndex !== -1) {
       this._uploads.splice(relevantFileIndex, 1);
@@ -147,6 +160,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   private _updateFile(id, changes: Partial<UploadFileData>): void {
+      this._logger.info(`handle update file in uploads list action`, { fileId: id, changes });
     const relevantFile = this._uploads.find(file => file.id === id);
 
     if (relevantFile) {
@@ -155,6 +169,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   private _sortUploads() {
+      this._logger.info(`handle sort uploads list by status action`);
     this._uploads.sort((a, b) => {
       return this._getStatusWeight(a.status) - this._getStatusWeight(b.status);
     });
@@ -181,43 +196,55 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   public _clearSelection(): void {
+      this._logger.info(`handle clear selection action by user`);
     this._selectedUploads = [];
   }
 
-  public _selectedEntriesChange(event): void {
-    this._selectedUploads = event;
-  }
-
   public _cancelUpload(file: UploadFileData): void {
+      this._logger.info(`handle cancel upload action by user`, { fileId: file.id });
     this._uploadManagement.cancelUpload(file.id, true);
   }
 
   public _retryUpload(file: UploadFileData): void {
+      this._logger.info(`handle retry failed upload action by user`, { fileId: file.id });
     if (file.entryId) {
+        this._logger.info(`file has entryId proceed action`);
       this._uploadManagement.resumeUpload(file.id);
     } else {
+        this._logger.info(`file does not have entryId, abort action, show alert`);
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.uploadControl.retryError.header'),
-        message: this._appLocalization.get('applications.content.uploadControl.retryError.message')
+        message: this._appLocalization.get('applications.content.uploadControl.retryError.message'),
+          accept: () => {
+            this._logger.info(`user dismissed alert`);
+          }
       });
     }
   }
 
   public _bulkCancel(): void {
+      this._logger.info(`handle bulk cancel action by user`);
     if (this._selectedUploads.length) {
+        this._logger.info(`show confirmation dialog`);
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.uploadControl.bulkCancel.header'),
           message: this._appLocalization.get('applications.content.uploadControl.bulkCancel.message'),
           accept: () => {
+              this._logger.info(`user confirmed, proceed action`);
             this._selectedUploads.forEach(file => {
               this._uploadManagement.cancelUpload(file.id, true);
             });
 
             this._clearSelection();
-          }
+          },
+            reject: () => {
+              this._logger.info(`user didn't confirm, abort action, dismiss confirmation`);
+            }
         }
       );
+    } else {
+        this._logger.info(`selectedUploads list is empty, nothing to cancel, abort action`);
     }
   }
 }
