@@ -16,6 +16,7 @@ export class PlaylistRuleParserService implements OnDestroy {
   constructor(private _metadataProfileService: MetadataProfileStore,
               private _logger: KalturaLogger,
               public _entriesStore: EntriesStore) {
+      this._logger = _logger.subLogger('PlaylistRuleParserService');
   }
 
   ngOnDestroy() {

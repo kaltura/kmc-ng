@@ -15,6 +15,7 @@ import { PlaylistWidget } from '../../playlist-widget';
 import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
   selectionId?: string;
@@ -29,8 +30,11 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   public entriesDuration = 0;
 
 
-  constructor(private _kalturaClient: KalturaClient) {
+  constructor(private _kalturaClient: KalturaClient,
+              private _logger: KalturaLogger) {
     super(PlaylistWidgetKeys.Content);
+
+      this._logger = _logger.subLogger('ManualContentWidget');
   }
 
   ngOnDestroy() {
@@ -142,6 +146,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   private _deleteEntryFromPlaylist(entry: PlaylistContentMediaEntry): void {
+      this._logger.info(`handle delete entry from playlist action by user`, { entryId: entry.id });
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
@@ -149,34 +154,52 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
       this._recalculateCountAndDuration();
 
       this._setDirty();
+    } else {
+        this._logger.info(`entry not found in the list, abort action`);
     }
   }
 
   private _duplicateEntry(entry: PlaylistContentMediaEntry): void {
+      this._logger.info(`handle duplicate entry action by user`, { entryId: entry.id });
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
       const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
       this._extendWithSelectionId([clonedEntry]);
+      this._logger.debug(`cloned entry`, { selectionId: clonedEntry.selectionId});
       this.entries.splice(entryIndex, 0, clonedEntry);
       this._recalculateCountAndDuration();
       this._setDirty();
+    } else {
+        this._logger.info(`entry not found in the list, abort action`);
     }
   }
 
   private _moveUpEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
+      this._logger.info(
+          `handle move up entries action by user`,
+          () => ({ entriesIds: selectedEntries.map(({ id }) => id) })
+      );
     if (KalturaUtils.moveUpItems(this.entries, selectedEntries)) {
       this._setDirty();
     }
   }
 
   private _moveDownEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
+      this._logger.info(
+          `handle move down entries action by user`,
+          () => ({ entriesIds: selectedEntries.map(({ id }) => id) })
+      );
     if (KalturaUtils.moveDownItems(this.entries, selectedEntries)) {
       this._setDirty();
     }
   }
 
   public deleteSelectedEntries(entries: PlaylistContentMediaEntry[]): void {
+      this._logger.info(
+          `handle delete selected entries action by user`,
+          () => ({ entriesIds: entries.map(({ id }) => id) })
+      );
     entries.forEach(entry => this._deleteEntryFromPlaylist(entry));
   }
 
@@ -208,12 +231,17 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   public addEntries(entries: KalturaMediaEntry[]): void {
+      this._logger.info(
+          `handle add entries action by user`,
+          () => ({ entriesIds: entries.map(({ id }) => id) })
+      );
     this.entries.push(...this._extendWithSelectionId(entries));
     this._recalculateCountAndDuration();
     this._setDirty();
   }
 
   public onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
+      this._logger.info(`handle sort changed action by user`, { sortBy: event.field, order: event.order });
     this.entries.sort(this._getComparatorFor(event.field, event.order));
     this._setDirty();
   }

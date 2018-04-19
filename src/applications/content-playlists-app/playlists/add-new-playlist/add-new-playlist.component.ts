@@ -1,17 +1,18 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kAddNewPlaylist',
   templateUrl: './add-new-playlist.component.html',
-  styleUrls: ['./add-new-playlist.component.scss']
+  styleUrls: ['./add-new-playlist.component.scss'],
+    providers: [KalturaLogger.createLogger('AddNewPlaylistComponent')]
 })
 export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -22,9 +23,9 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
   public _playlistTypes = KalturaPlaylistType;
 
   constructor(private _formBuilder: FormBuilder,
-              public router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger,
               private _appEvents: AppEventsService) {
     // build FormControl group
     this.addNewPlaylistForm = _formBuilder.group({
@@ -35,11 +36,15 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   goNext() {
+      this._logger.info(`handle add playlist action by user`);
     if (this.addNewPlaylistForm.valid) {
       this._showConfirmationOnClose = false;
       this.parentPopupWidget.close();
       const { name, description, playlistType: type } = this.addNewPlaylistForm.value;
-      this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type }))
+      this._logger.info(`publish 'CreateNewPlaylistEvent' event`, { name, description, type });
+      this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type }));
+    } else {
+        this._logger.info(`add new playlist form is not valid, abort action`);
     }
   }
 

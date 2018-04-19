@@ -12,13 +12,17 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 @Component({
   selector: 'kPlaylistsList',
   templateUrl: './playlists-list.component.html',
   styleUrls: ['./playlists-list.component.scss'],
-  providers: [BulkDeleteService]
+  providers: [
+      BulkDeleteService,
+      KalturaLogger.createLogger('PlaylistsListComponent')
+  ]
 })
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
@@ -49,6 +53,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
+              private _logger: KalturaLogger,
               public _bulkDeleteService: BulkDeleteService) {
   }
 
@@ -62,20 +67,24 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _proceedDeletePlaylists(ids: string[]): void {
+      this._logger.info(`handle delete playlists request`, { playlistsIds: ids });
     this._bulkDeleteService.deletePlaylist(ids)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
         () => {
+            this._logger.info(`handle successful delete playlists request`);
           this._playlistsStore.reload();
           this._clearSelection();
         },
         error => {
+            this._logger.warn(`handle failed delete playlists request, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization.get('applications.content.bulkActions.cannotDeletePlaylists'),
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
+                  this._logger.info(`user dismissed alert`);
                 this._blockerMessage = null;
               }
             }]
@@ -86,13 +95,21 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   private _deletePlaylist(ids: string[]): void {
     if (ids.length > subApplicationsConfig.shared.bulkActionsLimit) {
+        this._logger.info(
+            `selected playlist count is bigger than limit, show confirmation dialog`,
+            { selectedPlaylistsLength: ids.length, limit: subApplicationsConfig.shared.bulkActionsLimit }
+        );
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
           message: this._appLocalization.get('applications.content.bulkActions.confirmPlaylists', { '0': ids.length }),
           accept: () => {
+              this._logger.info(`user confirmed, proceed action`);
             this._proceedDeletePlaylists(ids);
-          }
+          },
+            reject: () => {
+              this._logger.info(`user didn't confirm, abort action`);
+            }
         }
       );
     } else {
@@ -101,21 +118,25 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _deleteCurrentPlaylist(playlistId: string): void {
+      this._logger.info(`handle delete playlist request`, { playlistId });
     this._playlistsStore.deletePlaylist(playlistId)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         () => {
+            this._logger.info(`handle successful delete playlist request`);
           this._clearSelection();
           this._playlistsStore.reload();
         },
         error => {
+            this._logger.warn(`handle failed delete playlist request, show confirmation`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                    this._logger.info(`user confirmed, retry action`);
                   this._blockerMessage = null;
                   this._deleteCurrentPlaylist(playlistId);
                 }
@@ -123,6 +144,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               {
                 label: this._appLocalization.get('app.common.cancel'),
                 action: () => {
+                    this._logger.info(`user didn't confirm, abort action`);
                   this._blockerMessage = null;
                 }
               }
@@ -179,8 +201,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     private _registerToDataChanges(): void {
         this._playlistsStore.playlists.state$
             .cancelOnDestroy(this)
-            .subscribe(
-                result => {
+            .subscribe(result => {
 
                     this._tableIsBusy = result.loading;
 
@@ -188,7 +209,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
                         this._tableBlockerMessage = new AreaBlockerMessage({
                             message: result.errorMessage || 'Error loading playlists',
                             buttons: [{
-                                label: 'Retry',
+                                label: this._appLocalization.get('app.common.retry'),
                                 action: () => {
                                     this._tableBlockerMessage = null;
                                     this._playlistsStore.reload();
@@ -199,10 +220,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
                     } else {
                         this._tableBlockerMessage = null;
                     }
-                },
-                error => {
-                    console.warn('[kmcng] -> could not load playlists'); // navigate to error page
-                    throw error;
                 });
     }
 
@@ -213,18 +230,25 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   public _onActionSelected(event: { action: string, playlist: KalturaPlaylist }): void {
       switch (event.action) {
           case 'preview':
+              this._logger.info(`handle preview action by user, publish 'PreviewAndEmbedEvent' event`, { playlistId: event.playlist.id });
               this._appEvents.publish(new PreviewAndEmbedEvent(event.playlist));
               break;
           case 'view':
+              this._logger.info(`handle view action by user, navigate to playlist details page`, { playlistId: event.playlist.id });
               this._router.navigate(['/content/playlists/playlist', event.playlist.id]);
               break;
           case 'delete':
+              this._logger.info(`handle delete playlist action by user, show confirmation`, { playlistId: event.playlist.id });
               this._browserService.confirm(
                   {
                       header: this._appLocalization.get('applications.content.playlists.deletePlaylist'),
                       message: this._appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: event.playlist.name}),
                       accept: () => {
+                          this._logger.info(`user confirmed, proceed action`);
                           this._deleteCurrentPlaylist(event.playlist.id);
+                      },
+                      reject: () => {
+                          this._logger.info(`user didn't confirmed, abort action`);
                       }
                   }
               );
@@ -258,15 +282,21 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   public _reload(): void {
+      this._logger.info(`handle reload action by user`);
     this._clearSelection();
     this._playlistsStore.reload();
   }
 
   public _clearSelection(): void {
+      this._logger.info(`handle clear selection action by user`);
     this._selectedPlaylists = [];
   }
 
   public _deletePlaylists(selectedPlaylists: KalturaPlaylist[]): void {
+      this._logger.info(
+          `handle delete playlists action by user, show confirmation`,
+          () => ({ playlists: selectedPlaylists.map(({ id, name }) => ({ id, name })) })
+      );
     const playlistsToDelete = selectedPlaylists.map((playlist, index) => `${index + 1}: ${playlist.name}`);
     const playlists = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '\n') : '';
     const message = selectedPlaylists.length > 1 ?
@@ -277,15 +307,20 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         header: this._appLocalization.get('applications.content.playlists.deletePlaylist'),
         message: message,
         accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
           setTimeout(() => {
             this._deletePlaylist(selectedPlaylists.map(playlist => playlist.id));
           }, 0);
-        }
+        },
+          reject: () => {
+            this._logger.info(`user didn't confirm, abort action`);
+          }
       }
     );
   }
 
   public _addPlaylist(): void {
+      this._logger.info(`handle add playlist action by user`);
     this.addNewPlaylist.open();
   }
 }

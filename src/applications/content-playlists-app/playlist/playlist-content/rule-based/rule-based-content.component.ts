@@ -5,6 +5,7 @@ import { EntriesDataProviderToken, EntriesStore } from 'app-shared/content-share
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { PlaylistEntriesDataProvider } from './playlist-rule/playlist-entries-data-provider.service';
 import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kPlaylistContentRuleBased',
@@ -15,7 +16,8 @@ import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
     {
       provide: EntriesDataProviderToken,
       useClass: PlaylistEntriesDataProvider
-    }
+    },
+      KalturaLogger.createLogger('RuleBasedContentComponent')
   ]
 })
 export class RuleBasedContentComponent implements OnInit, OnDestroy {
@@ -25,7 +27,8 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
   public _selectedRule: PlaylistRule = null;
 
   constructor(public _playlistStore: PlaylistStore,
-              public _widgetService: RuleBasedContentWidget) {
+              public _widgetService: RuleBasedContentWidget,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -44,6 +47,7 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
   }
 
   public _clearSelection() {
+      this._logger.info(`handle clear selection action by user`);
     this._selectedRules = [];
   }
 
@@ -51,6 +55,7 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
     this._clearSelection();
 
     if (event.action === 'view') {
+        this._logger.info(`handle view rule action by user`, { ruleId: event.rule.selectionId });
       this._selectedRule = event.rule;
       this._rulePopup.open();
     } else {

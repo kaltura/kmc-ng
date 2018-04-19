@@ -6,11 +6,13 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { ManualContentWidget } from '../manual-content-widget.service';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
   templateUrl: './playlist-entries-table.component.html',
-  styleUrls: ['./playlist-entries-table.component.scss']
+  styleUrls: ['./playlist-entries-table.component.scss'],
+    providers: [KalturaLogger.createLogger('PlaylistEntriesTableComponent')]
 })
 export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('dataTable') private dataTable: DataTable;
@@ -28,7 +30,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
       this._entries = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredEntries = data
+      this._deferredEntries = data;
     }
   }
 
@@ -48,6 +50,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
               private _cdRef: ChangeDetectorRef,
               private _widgetService: ManualContentWidget,
               private _permissionsService: KMCPermissionsService,
+              private _logger: KalturaLogger,
               private _router: Router) {
   }
 
@@ -99,8 +102,12 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   public _goToEntry(entryId: KalturaMediaEntry): void {
+      this._logger.info(`handle go to entry action by user`);
     if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_BASE)) {
+        this._logger.info(`navigate to entry`, { entryId });
       this._router.navigate(['/content/entries/entry', entryId]);
+    } else {
+        this._logger.info(`user does not have permissions to navigate to entry`);
     }
   }
 
