@@ -71,8 +71,8 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   public _trimNameValue(): void {
-      this._logger.info(`handle trim name value on blur action by user`, { name });
     const name = (this._widgetService.metadataForm.controls['name'].value || '').trim();
+    this._logger.info(`handle trim name value on blur action by user`, { name });
     this._widgetService.metadataForm.controls['name'].setValue(name);
   }
 }
