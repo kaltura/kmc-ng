@@ -40,6 +40,7 @@
                         </ng-template>
                     </p-column>
                     <p-column field="type"
+                              *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted"
                               [sortable]="false"
                               [style]="{ 'width': '150px', 'overflow':'visible' }"
                               [header]="'applications.upload.uploadSettings.table.header.mediaType' | translate">

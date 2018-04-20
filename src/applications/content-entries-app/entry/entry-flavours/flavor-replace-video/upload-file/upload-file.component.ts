@@ -155,19 +155,23 @@ export class UploadFileComponent implements OnInit, AfterViewInit {
         this._transcodingProfileManagement.get()
             .subscribe(
                 profiles => {
-                    this._transcodingProfileLoading = false;
-                    const transcodingProfiles = [...profiles];
-                    const defaultProfileIndex = transcodingProfiles.findIndex(({ isDefault }) => !!isDefault);
-                    if (defaultProfileIndex !== -1) {
-                        const [defaultProfile] = transcodingProfiles.splice(defaultProfileIndex, 1);
-                        this._transcodingProfiles = [
-                            { label: defaultProfile.name, value: defaultProfile.id },
-                            ...transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }))
-                        ];
-                        this._transcodingProfileField.setValue(defaultProfile.id);
+                    if (this.entry.conversionProfileId) {
+                        this._transcodingProfileField.setValue(this.entry.conversionProfileId);
                     } else {
-                        this._transcodingProfiles = transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }));
-                        this._transcodingProfileField.setValue(this._transcodingProfiles[0].value);
+                        this._transcodingProfileLoading = false;
+                        const transcodingProfiles = [...profiles];
+                        const defaultProfileIndex = transcodingProfiles.findIndex(({ isDefault }) => !!isDefault);
+                        if (defaultProfileIndex !== -1) {
+                            const [defaultProfile] = transcodingProfiles.splice(defaultProfileIndex, 1);
+                            this._transcodingProfiles = [
+                                { label: defaultProfile.name, value: defaultProfile.id },
+                                ...transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }))
+                            ];
+                            this._transcodingProfileField.setValue(defaultProfile.id);
+                        } else {
+                            this._transcodingProfiles = transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }));
+                            this._transcodingProfileField.setValue(this._transcodingProfiles[0].value);
+                        }
                     }
                 },
                 (error) => {

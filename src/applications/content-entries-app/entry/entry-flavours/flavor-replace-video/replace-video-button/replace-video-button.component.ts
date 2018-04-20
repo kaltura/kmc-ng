@@ -5,6 +5,7 @@ import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType'
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { Flavor } from '../../flavor';
 
 @Component({
     selector: 'kFlavorReplaceVideoBtn',
@@ -13,6 +14,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 })
 export class ReplaceVideoButtonComponent {
     @Input() entry: KalturaMediaEntry;
+    @Input() flavors: Flavor[] = [];
 
     @ViewChild('uploadMenu') _uploadMenu: PopupWidgetComponent;
 
