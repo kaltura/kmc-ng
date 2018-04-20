@@ -9,7 +9,18 @@
               [targetOffset]="{'x': 0, 'y': 40}"
               [placement]="{'x':'right', 'y': 'bottom'}">
     <div class="kReplaceVideoPopup">
-        <p [class.kHidden]="_kmcPermissions.CONTENT_INGEST_UPLOAD | kHiddenIfNotPermitted">{{_uploadFileLabel}}</p>
-        <p [class.kHidden]="_kmcPermissions.CONTENT_INGEST_BULK_UPLOAD | kHiddenIfNotPermitted">{{_importFileLabel}}</p>
+        <p [class.kHidden]="_kmcPermissions.CONTENT_INGEST_UPLOAD | kHiddenIfNotPermitted"
+           (click)="_openUploadMenu('upload')">{{_uploadFileLabel}}</p>
+        <p [class.kHidden]="_kmcPermissions.CONTENT_INGEST_BULK_UPLOAD | kHiddenIfNotPermitted"
+           (click)="_openUploadMenu('replace')">{{_importFileLabel}}</p>
     </div>
+</kPopupWidget>
+
+
+<kPopupWidget #uploadMenu [popupWidth]="791" [popupHeight]="607"
+              [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kFlavorFileUploadSettings [entry]="entry"
+                                   [replaceType]="_replaceType"></kFlavorFileUploadSettings>
+    </ng-template>
 </kPopupWidget>

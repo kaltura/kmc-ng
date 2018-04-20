@@ -37,6 +37,7 @@ import { EditDistributionProfileThumbnailsComponent } from './entry-distribution
 import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';import {EntryAdvertisementsComponent} from './entry-advertisements/entry-advertisements.component';
 import {AdvertisementsComponent} from './entry-advertisements/advertisements/advertisements.component';
 import { ReplaceVideoButtonComponent } from './entry-flavours/flavor-replace-video/replace-video-button/replace-video-button.component';
+import { UploadFileComponent } from './entry-flavours/flavor-replace-video/upload-file/upload-file.component';
 
 
 
@@ -79,5 +80,6 @@ export const EntryComponentsList = [
     EditDistributionProfileThumbnailItemComponent,
     ClipAndTrimComponent,
     AdvertisementsComponent,
-    ReplaceVideoButtonComponent
+    ReplaceVideoButtonComponent,
+    UploadFileComponent
 ];

@@ -1330,7 +1330,9 @@
                         "uploadFile": "Upload file",
                         "uploadFiles": "Upload files",
                         "importFile": "Import file",
-                        "importFiles": "Import files"
+                        "importFiles": "Import files",
+                        "updateVideo": "Update Video",
+                        "updateAudio": "Update Audio"
                     }
                 },
                 "captions": {
