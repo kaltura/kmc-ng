@@ -1321,7 +1321,17 @@
                     "convertFailure": "Flavor conversion failed.",
                     "uploadFailure": "Flavor upload failed.",
                     "downloadFailure": "Flavor download failed.",
-                    "importFailure": "Flavor import failed."
+                    "importFailure": "Flavor import failed.",
+                    "replaceVideo": {
+                        "replaceVideo": "Replace Video",
+                        "replaceAudio": "Replace Audio",
+                        "addVideo": "Add Video",
+                        "addAudio": "Add Audio",
+                        "uploadFile": "Upload file",
+                        "uploadFiles": "Upload files",
+                        "importFile": "Import file",
+                        "importFiles": "Import files"
+                    }
                 },
                 "captions": {
                     "captions": "Captions",

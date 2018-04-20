@@ -36,6 +36,7 @@ import { EditDistributionProfileMetadataComponent } from './entry-distribution/e
 import { EditDistributionProfileThumbnailsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/edit-distribution-profile-thumbnails.component';
 import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';import {EntryAdvertisementsComponent} from './entry-advertisements/entry-advertisements.component';
 import {AdvertisementsComponent} from './entry-advertisements/advertisements/advertisements.component';
+import { ReplaceVideoButtonComponent } from './entry-flavours/flavor-replace-video/replace-video-button/replace-video-button.component';
 
 
 
@@ -77,5 +78,6 @@ export const EntryComponentsList = [
     EditDistributionProfileThumbnailsComponent,
     EditDistributionProfileThumbnailItemComponent,
     ClipAndTrimComponent,
-    AdvertisementsComponent
+    AdvertisementsComponent,
+    ReplaceVideoButtonComponent
 ];

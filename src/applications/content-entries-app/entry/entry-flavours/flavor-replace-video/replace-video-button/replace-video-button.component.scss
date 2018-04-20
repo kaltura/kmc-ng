@@ -1,0 +1,31 @@
+@import 'app-theme/_variables.scss';
+
+.kFlavorReplaceButton {
+    margin-left: 24px;
+    /deep/ .kIcondropdown_arrow_bottom {
+        font-size: 10px;
+    }
+}
+
+.kReplaceVideoPopup {
+    p {
+        margin: 0;
+        padding: 17px 17px 0 17px;
+        font-size: 15px;
+        cursor: pointer;
+        color: $kGrayscale1;
+        &:hover {
+            color: #000000;
+        }
+        &:last-child {
+            padding-bottom: 17px;
+        }
+    }
+    .kHidden {
+        display: none;
+        margin: 0;
+        padding: 0;
+        width: 0;
+        height: 0;
+    }
+}

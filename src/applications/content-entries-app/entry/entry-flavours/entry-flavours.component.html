@@ -5,8 +5,9 @@
 		<div class="kEntryStatus">
 			<i class="{{_widgetService._entryStatusClassName}}"></i><span>{{_widgetService._entryStatus}}</span>
 		</div>
-		<!--button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.flavours.replace' | translate}}"></button-->
 		<div>
+            <kFlavorReplaceVideoBtn *ngIf="_showActionsView"
+                                    [entry]="_widgetService.data"></kFlavorReplaceVideoBtn>
 			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService._refresh()"></button>
 		</div>
 

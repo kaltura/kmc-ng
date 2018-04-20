@@ -14,6 +14,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -42,6 +43,32 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _documentWidth: number = 2000;
 
 	private _importPopupStateChangeSubscribe: ISubscription;
+
+    public get _showActionsView(): boolean {
+        if (!this._widgetService.data) {
+            return false;
+        }
+
+        const entry = this._widgetService.data;
+        const noCurrentlyReplacing = !entry.replacingEntryId;
+        const hasReplacePermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_INTO_READY);
+        let showActionsView = true;
+        switch (entry.status) {
+            case KalturaEntryStatus.noContent:
+                showActionsView = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_INTO_ORPHAN);
+                break;
+            case KalturaEntryStatus.ready:
+            case KalturaEntryStatus.errorConverting:
+            case KalturaEntryStatus.errorImporting:
+                showActionsView = noCurrentlyReplacing && hasReplacePermission;
+                break;
+            default:
+                showActionsView = hasReplacePermission;
+                break;
+        }
+
+        return showActionsView;
+    }
 
 	constructor(public _widgetService: EntryFlavoursWidget,
               private _uploadManagement: UploadManagement,

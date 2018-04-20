@@ -1,0 +1,15 @@
+<button #replaceVideo pButton class="kFlavorReplaceButton kButtonDefault"
+        icon="kIcondropdown_arrow_bottom" iconPos="right"
+        [label]="_actionBtnTitle"></button>
+
+<kPopupWidget #replaceVideoPopup
+              [popupWidth]="240"
+              [closeBtn]="false"
+              [targetRef]="replaceVideo"
+              [targetOffset]="{'x': 0, 'y': 40}"
+              [placement]="{'x':'right', 'y': 'bottom'}">
+    <div class="kReplaceVideoPopup">
+        <p [class.kHidden]="_kmcPermissions.CONTENT_INGEST_UPLOAD | kHiddenIfNotPermitted">{{_uploadFileLabel}}</p>
+        <p [class.kHidden]="_kmcPermissions.CONTENT_INGEST_BULK_UPLOAD | kHiddenIfNotPermitted">{{_importFileLabel}}</p>
+    </div>
+</kPopupWidget>
