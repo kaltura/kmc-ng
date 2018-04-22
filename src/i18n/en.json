@@ -2890,6 +2890,10 @@
                     "categoriesLoadError": "Error loading categories"
                 }
             }
+        },
+        "keditHoster": {
+            "entryNotReady": "Entry is not ready",
+            "entryBeingReplaced": "Entry is being replaced"
         }
     }
 }

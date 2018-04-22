@@ -2,11 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {globalConfig} from 'config/global';
 import {EntryClipsWidget} from './entry-clips-widget.service';
-import {serverConfig} from 'config/server';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
-import { KEditHosterService } from 'app-shared/kmc-shared';
+import {KEditHosterService} from 'app-shared/kmc-shared';
 
 
 @Component({
@@ -23,6 +20,7 @@ export class EntryClips implements OnInit, OnDestroy {
     public _loading = false;
     public _loadingError = null;
     public _clipAndTrimEnabled = false;
+    public _clipAndTrimDisabledReason: string = null;
 
     constructor(public _widgetService: EntryClipsWidget,
                 private _keditHosterService: KEditHosterService,
@@ -55,7 +53,9 @@ export class EntryClips implements OnInit, OnDestroy {
       this._widgetService.data$.subscribe(
         data => {
           if (data) {
-            this._clipAndTrimEnabled = this._keditHosterService.isClipAndTrimAvailable(data);
+              const isAvailableResult = this._keditHosterService.isClipAndTrimAvailable(data);
+              this._clipAndTrimEnabled = isAvailableResult.isAvailable;
+              this._clipAndTrimDisabledReason = isAvailableResult.reason;
           }
         }
       );
