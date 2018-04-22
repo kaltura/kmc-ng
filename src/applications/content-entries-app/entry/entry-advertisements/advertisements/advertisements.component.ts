@@ -46,8 +46,6 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
         permissions,
         userPermissions: []
       },
-      playerUiConfId: serverConfig.externalApps.advertisements.uiConfId,
-      previewPlayerUiConfId: serverConfig.externalApps.advertisements.uiConfId,
       callbackActions: {
         advertisementsModified: this._advertisementsModified.bind(this),
         advertisementsSaved: this._advertisementsSaved.bind(this)

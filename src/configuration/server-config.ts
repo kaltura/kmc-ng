@@ -101,21 +101,17 @@ export const ServerConfigSchema = {
                 clipAndTrim: {
                   properties: {
                     enabled: {type: 'boolean'},
-                    uri: {type: 'string'},
-                    uiConfId: {type: 'string'},
-                    version: {type: 'string'}
+                    uri: {type: 'string'}
                   },
-                  required: ['enabled', 'uri', 'uiConfId'],
+                  required: ['enabled', 'uri'],
                   additionalProperties: false
                 },
                 advertisements: {
                   properties: {
                     enabled: {type: 'boolean'},
-                    uri: {type: 'string'},
-                    uiConfId: {type: 'string'},
-                    version: {type: 'string'}
+                    uri: {type: 'string'}
                   },
-                  required: ['enabled', 'uri', 'uiConfId'],
+                  required: ['enabled', 'uri'],
                   additionalProperties: false
                 },
                 kava: {
@@ -243,15 +239,11 @@ export interface ServerConfig {
         },
         clipAndTrim: {
           enabled: boolean,
-          uri: string,
-          uiConfId: string,
-          version: string,
+          uri: string
         },
         advertisements: {
           enabled: boolean,
-          uri: string,
-          uiConfId: string,
-          version: string,
+          uri: string
         }
     };
     externalLinks: {

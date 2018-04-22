@@ -52,13 +52,11 @@
       },
       "clipAndTrim": {
           "enabled": false,
-          "uri": "",
-          "uiConfId": ""
+          "uri": ""
       },
       "advertisements": {
           "enabled": false,
-          "uri": "",
-          "uiConfId": ""
+          "uri": ""
       }
   },
   "externalLinks": {
