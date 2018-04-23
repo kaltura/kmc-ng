@@ -247,20 +247,19 @@ export class AppAuthentication {
         this._logout();
     }
 
-    public loginAutomatically(): Observable<boolean> {
+    public loginByKS(loginToken: string): Observable<boolean> {
         return Observable.create((observer: any) => {
             if (!this.isLogged()) {
-                const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
                 if (loginToken) {
                     const requests = [
                         new UserGetAction({})
                             .setRequestOptions({
-                            ks: loginToken
-                        }),
+                                ks: loginToken
+                            }),
                         new PartnerGetInfoAction({})
                             .setRequestOptions({
-                            ks: loginToken
-                        })
+                                ks: loginToken
+                            })
                             .setDependency(['id', 0, 'partnerId']),
                         new UserRoleGetAction({ userRoleId: 0})
                             .setRequestOptions({
@@ -305,6 +304,11 @@ export class AppAuthentication {
                 }
             }
         });
+    }
+
+    public loginAutomatically(): Observable<boolean> {
+        const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
+        return this.loginByKS(loginToken);
     }
 
     public switchPartnerId(partnerId: number): Observable<void> {
