@@ -4,6 +4,10 @@
     <span class="kTitle">{{'applications.content.entryDetails.advertisements.title' | translate}}</span>
   </div>
   <div class="kKeditHoster">
-    <kKeditHoster [config]="_keditConfig"></kKeditHoster>
+    <kKeditHoster [tab]="'advertisements'"
+                  [entryId]="entryId"
+                  (enteredDraftMode)="_confirmClose = true"
+                  (exitDraftMode)="_confirmClose = false"
+    ></kKeditHoster>
   </div>
 </div>
