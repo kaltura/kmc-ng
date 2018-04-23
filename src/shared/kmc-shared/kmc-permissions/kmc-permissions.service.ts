@@ -27,15 +27,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
             rawRolePermissionList,
             rawPartnerPermissionList
         }));
-
-
-        this._logger.error('DANGER!!!!!!!!!!! test code added! should remove before commiting!!');
-
-        const tempRemoveThis = ['SYNDICATION_UPDATE'];
-        rawRolePermissionList = rawRolePermissionList.filter(item => tempRemoveThis.indexOf(item) === -1);
-        rawPartnerPermissionList = rawPartnerPermissionList.filter(item => tempRemoveThis.indexOf(item) === -1);
-
-
+        
         const rolePermissionList: Set<KMCPermissions> = new Set();
         const partnerPermissionList: Set<KMCPermissions> = new Set();
         const filteredRolePermissionList: Set<KMCPermissions> = new Set<KMCPermissions>();
