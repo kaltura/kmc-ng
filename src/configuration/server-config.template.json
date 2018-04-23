@@ -15,14 +15,12 @@
     "studio": {
       "enabled": @externalApps.studio.enabled@,
       "uri": "@externalApps.studio.uri@",
-      "version": "@externalApps.studio.vesrion@",
       "html5_version":"@externalApps.studio.html5_version@",
       "html5lib":"@externalApps.studio.html5lib@"
     },
     "studioV3": {
       "enabled": @externalApps.studioV3.enabled@,
       "uri": "@externalApps.studioV3.uri@",
-      "version": "@externalApps.studioV3.vesrion@",
       "html5_version":"@externalApps.studioV3.html5_version@",
       "html5lib":"@externalApps.studioV3.html5lib@"
     },
@@ -33,18 +31,15 @@
     },
     "liveAnalytics": {
       "enabled": @externalApps.liveAnalytics.enabled@,
-      "uri": "@externalApps.liveAnalytics.uri@",
-      "version": "@externalApps.liveAnalytics.version@"
+      "uri": "@externalApps.liveAnalytics.uri@"
     },
     "kava": {
       "enabled": @externalApps.kava.enabled@,
-      "version": "@externalApps.kava.version@",
       "uri": "@externalApps.kava.uri@"
     },
     "usageDashboard": {
       "enabled": @externalApps.usageDashboard.enabled@,
       "uri": "@externalApps.usageDashboard.uri@",
-      "version": "@externalApps.usageDashboard.version@",
       "uiConfId": @externalApps.usageDashboard.uiConfId@,
       "map_urls": [
         @externalApps.usageDashboard.map_urls@

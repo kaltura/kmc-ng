@@ -15,14 +15,12 @@
       "studio": {
           "enabled": false,
           "uri": "",
-          "version": "",
           "html5_version":"",
           "html5lib":""
       },
       "studioV3": {
           "enabled": false,
           "uri": "",
-          "version": "",
           "html5_version":"",
           "html5lib":""
       },
@@ -34,17 +32,14 @@
       "liveAnalytics": {
           "enabled": false,
           "uri": "",
-          "uiConfId": 0,
-          "version": ""
+          "uiConfId": 0
       },
       "kava": {
           "enabled": false,
-          "version": "",
           "uri": ""
       },
       "usageDashboard": {
           "enabled": false,
-          "version": "",
           "uri": "",
           "uiConfId": 0,
           "map_urls": [],

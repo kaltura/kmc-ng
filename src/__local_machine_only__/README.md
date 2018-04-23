@@ -26,14 +26,12 @@ Follow these instructions to test external apps integration:
   "studio": {
       "enabled": true,
       "uri": "__local_machine_only__/studio_v2_2_1/index.html",
-      "version": "v2.2.1",
       "html5_version":"v2.57.2",
       "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
     },
     "studioV3": {
       "enabled": true,
       "uri": "__local_machine_only__/studio_v3_1_1/index.html",
-      "version": "v3.1.1",
       "html5_version":"v2.67",
       "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.67/mwEmbedLoader.php"
     },
@@ -44,18 +42,15 @@ Follow these instructions to test external apps integration:
     },
     "kava": {
       "enabled": false,
-      "version": "",
       "uri": ""
     },
      "liveAnalytics": {
         "enabled": true,
         "uri": "__local_machine_only__/live-analytics-vFuture/index.html",
-        "uiConfId": 36060752,
-        "version": "future_version_above_v2_6"
+        "uiConfId": 36060752
     },
     "usageDashboard": {
       "enabled": true,
-      "version": "v0.11.2",
       "uri": "__local_machine_only__/usage-dashboard-v0_11_2/index.html",
       "uiConfId": 36060752,
       "map_urls": [
@@ -74,3 +69,7 @@ Follow these instructions to test external apps integration:
       "uri": "__local_machine_only__/kedit-vFuture/index.html"
     }
 ```
+
+#### External application supported versions
+
+For extrenal application supported versions, please see the general [README.md](../../README.md) file 

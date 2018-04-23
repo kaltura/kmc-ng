@@ -10,7 +10,6 @@ function isStudioAppValid(): boolean {
         isValid =
             !!serverConfig.externalApps.studio.uri &&
             !serverConfig.externalApps.studio.uri.match(/\s/g) && // not contains white spaces
-            !!serverConfig.externalApps.studio.version &&
             !!serverConfig.externalApps.studio.html5_version &&
             !!serverConfig.externalApps.studio.html5lib;
 
@@ -41,8 +40,7 @@ function isKavaAppValid(): boolean {
     if (serverConfig.externalApps.kava.enabled) {
         isValid =
             !!serverConfig.externalApps.kava.uri &&
-            !serverConfig.externalApps.kava.uri.match(/\s/g) && // not contains white spaces
-            !!serverConfig.externalApps.kava.version;
+            !serverConfig.externalApps.kava.uri.match(/\s/g); // not contains white spaces
 
         if (!isValid) {
             console.warn('Disabling KAVA standalone application - configuration is invalid');
