@@ -25,7 +25,7 @@ export class AnalyticsLiveComponent implements OnInit, OnDestroy {
         return undefined;
       }
       const cdnUrl = serverConfig.cdnServers.serverUri.replace('http://', '').replace('https://', '');
-      this._url = serverConfig.externalApps.liveAnalytics.uri;
+      this._url = serverConfig.externalApps.liveAnalytics.uri + '#/dashboard/nonav';
       window['kmc'] = {
         'vars': {
           'ks': this.appAuthentication.appUser.ks,
