@@ -1,14 +1,17 @@
-<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
-	<div class="kAdvertisements">
-		<div class="kTitle">{{'applications.content.entryDetails.advertisements.title' | translate}}</div>
-    <div class="kDescription">{{'applications.content.entryDetails.advertisements.description' | translate}}</div>
-    <div class="kButtons">
-      <button pButton class="kButtonDefault"
-              [disabled]="!_advertisementsEnabled"
-              (click)="advertisements.open()"
-              label="{{'applications.content.entryDetails.advertisements.manageAdvertisements' | translate}}"></button>
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage"
+                [bodyScroll]="true">
+    <div class="kAdvertisements">
+        <div class="kTitle">{{'applications.content.entryDetails.advertisements.title' | translate}}</div>
+        <div class="kDescription">{{'applications.content.entryDetails.advertisements.description' | translate}}</div>
+        <div class="kButtons">
+            <div [kTooltip]="_advertisementsDisabledReason">
+                <button pButton class="kButtonDefault"
+                        [disabled]="!_advertisementsEnabled"
+                        (click)="advertisements.open()"
+                        label="{{'applications.content.entryDetails.advertisements.manageAdvertisements' | translate}}"></button>
+            </div>
+        </div>
     </div>
-	</div>
 </k-area-blocker>
 
 <kPopupWidget #advertisements [fullScreen]="true">
