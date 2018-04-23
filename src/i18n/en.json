@@ -2384,7 +2384,8 @@
                     "flavors": "Flavors"
                 },
                 "profile": {
-                    "metadata": "Metadata",
+                    "save": "Save",
+          "metadata": "Metadata",
                     "backToProfiles": "Back To Profiles",
                     "flavor": "Flavor",
                     "id": "ID {{0}}",
