@@ -45,6 +45,12 @@
       cursor: auto;
     }
   }
+  .kMediaTypeIcon{
+    font-size: 16px;
+    div{
+      display: inline-block;
+    }
+  }
   .kEntriesTableActions {
     width: 100%;
     text-align: center;

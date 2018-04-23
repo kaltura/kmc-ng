@@ -5,6 +5,7 @@ import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { ManualContentWidget } from '../manual-content-widget.service';
 import { globalConfig } from 'config/global';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -17,6 +18,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
+  @Input() isNewPlaylist: boolean;
 
   @Input()
   set entries(data: any[]) {
@@ -34,6 +36,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @Output() selectedEntriesChange = new EventEmitter<any>();
   @Output() onActionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
+  public _kmcPermissions = KMCPermissions;
   private _deferredEntries: KalturaMediaEntry[];
   public _entries: KalturaMediaEntry[] = [];
   public _emptyMessage: string;
@@ -44,6 +47,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
               private _widgetService: ManualContentWidget,
+              private _permissionsService: KMCPermissionsService,
               private _router: Router) {
   }
 
@@ -95,7 +99,9 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   public _goToEntry(entryId: KalturaMediaEntry): void {
-    this._router.navigate(['/content/entries/entry', entryId]);
+    if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_BASE)) {
+      this._router.navigate(['/content/entries/entry', entryId]);
+    }
   }
 
   public _openActionsMenu(event: any, rowIndex: number, entry: KalturaMediaEntry) {

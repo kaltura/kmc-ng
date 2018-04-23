@@ -21,27 +21,34 @@ hr{
 }
 .kMetadataDetails{
 	padding-bottom: 8px;
-	padding-left: 24px;
-	padding-right: 138px;
 	padding-top: 30px;
 	width: 100%;
+
+  .kMetadataDetailsItem {
+    padding-left: 24px;
+    padding-right: 38px;
+  }
 
 	.kSchemaTitle{
 		color: $kGrayscale1;
 		font-size: 20px;
 		font-weight: 700;
-		padding-top: 30px;
+		padding-top: 50px;
 		padding-bottom: 12px;
 	}
 
 	/deep/ {
+    k-dynamic-form-item {
+      padding-left: 24px;
+      padding-right: 38px;
+    }
 
 		.kRow {
 			display: flex;
-			padding-top: 16px;
+			padding-top: 22px;
 
 			.kFormLabelContainer{
-				width:190px;
+				width:208px;
 				display: flex;
 				justify-content: space-between;
 				.kFormRequiredIndicator{
@@ -55,7 +62,7 @@ hr{
 				}
 			}
 			.kLabel {
-				width: 160px;
+				width: 196px;
 				flex: 0 0 auto;
 				word-wrap: break-word;
 				padding-right: 12px;
@@ -63,17 +70,28 @@ hr{
 
 			input {
 				width: 100%;
+                max-width: 500px;
 				height: 34px;
 			}
 
 			textarea{
 				width: 100%;
+                max-width: 500px;
 				height: 76px;
 			}
+
+            kmultiselect{
+                max-width: 500px;
+                display: block;
+            }
 
 			.kControl, k-prime-control
 			{
 				width:100%;
+
+        .kHasError .ui-autocomplete-multiple-container {
+          border-color: $kDandger;
+        }
 
         .kControlInvalid {
           border: 1px solid $kDandger;
@@ -106,7 +124,10 @@ hr{
 
 		.kDelete{
 			margin-left: 14px;
-			color: $kDandger;
+			&:not(.disabled) {
+				color: $kDandger;
+                cursor: pointer;
+			}
 		}
 		.kDeleteDate{
 			margin-left: 46px;
@@ -129,34 +150,41 @@ hr{
 		}
 		.kGroupButtons{
 			padding-bottom: 12px;
-			button{
-				height: 30px;
-				font-weight: 400;
-				color: $kGrayscale1;
-				background: white;
-				border: 1px solid $kGrayscale4;
-				cursor: pointer;
-				border-radius: 3px;
-				&:focus {
-					outline:0;
-				}
-				&:hover{
-					color: $kPrimary;
-				}
-				&:active:not(:disabled){
-					box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
-				}
-			}
 		}
 		.kDeleteGroup{
 			text-align: left;
-			padding-left: 162px;
+			padding-left: 208px;
 			padding-top: 8px;
 			padding-bottom: 4px;
-			a{
+			a:not(.disabled){
 				color: $kDandger;
+                cursor: pointer;
 			}
 		}
+        .kButton{
+            height: 30px;
+            font-weight: 400;
+            color: $kGrayscale1;
+            background: white;
+            border: 1px solid $kGrayscale4;
+            cursor: pointer;
+            border-radius: 3px;
+            &:focus {
+                outline:0;
+            }
+            &:hover{
+                color: $kPrimary;
+            }
+            &:active:not(:disabled){
+                box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+            }
+            &:disabled{
+                color: $kGrayscale4;
+                background: transparent;
+                border: 1px solid $kGrayscale4;
+                cursor: default;
+            }
+        }
 
 
 		/*********************/
@@ -183,10 +211,10 @@ hr{
 		}
 
 		  .ui-multiselect-trigger .fa.fa-caret-down{
-			margin-top: 2px;
-			margin-left: 1px;
+			margin-top: 0px;
+			right: 8px;
 			position: absolute;
-			color: $kGrayscale1;
+			color: $kGrayscale3;
 		}
 
 		  .ui-autocomplete.ui-widget{
@@ -222,10 +250,18 @@ hr{
 
 		  kAutoComplete{
 			width: 100%;
+            max-width: 500px;
+            display: block;
+
+        .ui-state-disabled {
+          background-color: $kGrayscale5;
+        }
 		}
 
 		  p-dropdown{
 			width: 100%;
+              max-width: 500px;
+              display: block;
 		}
 
 		  p-multiselect{

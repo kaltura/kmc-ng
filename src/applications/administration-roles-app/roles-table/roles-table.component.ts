@@ -11,9 +11,8 @@ import {
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {RolesService} from './roles.service';
 import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kRolesTable',
@@ -41,7 +40,6 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private _deferredRoles: KalturaUserRole[];
 
-  public _blockerMessage: AreaBlockerMessage = null;
   public _roles: KalturaUserRole[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
@@ -50,41 +48,11 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
-              public rolesService: RolesService) {
+              private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this.rolesService.roles.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        result => {
-          if (result.errorMessage) {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: result.errorMessage || this._appLocalization.get('applications.administration.roles.errors.loadError'),
-              buttons: [{
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => this.rolesService.reload(true)
-              }]
-            });
-          } else {
-            this._blockerMessage = null;
-            if (result.loading) {
-              this._emptyMessage = '';
-              loadedOnce = true;
-            } else {
-              if (loadedOnce) {
-                this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-              }
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load user roles'); // navigate to error page
-          throw error;
-        });
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngOnDestroy() {
@@ -103,24 +71,36 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private _onActionSelected(action: string, role: KalturaUserRole): void {
-    this.actionSelected.emit({ 'action': action, 'role': role });
+    this.actionSelected.emit({ action, role });
   }
 
   private _buildMenu(role: KalturaUserRole): void {
     this._items = [
       {
+        id: 'edit',
         label: this._appLocalization.get('applications.administration.roles.actions.edit'),
         command: () => this._onActionSelected('edit', role)
       },
       {
+        id: 'duplicate',
         label: this._appLocalization.get('applications.administration.roles.actions.duplicate'),
         command: () => this._onActionSelected('duplicate', role)
       },
       {
+        id: 'delete',
         label: this._appLocalization.get('applications.administration.roles.actions.delete'),
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', role)
       }
     ];
+
+    this._permissionsService.filterList(
+      <{ id: string }[]>this._items,
+      {
+        'duplicate': KMCPermissions.ADMIN_ROLE_ADD,
+        'delete': KMCPermissions.ADMIN_ROLE_DELETE
+      }
+    );
   }
 
   public _openActionsMenu(event: any, role: KalturaUserRole): void {

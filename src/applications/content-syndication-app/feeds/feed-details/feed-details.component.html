@@ -7,7 +7,7 @@
     <a class="kBulkCancel" (click)="_close()">
       {{'applications.content.syndication.details.header.cancel' | translate}}
     </a>
-    <button [disabled]="_isBusy || _blockerMessage" *ngIf="_mode === 'edit'" class="kDeletehBtn kButtonDanger" pButton icon="kIcontrash"
+    <button [disabled]="(_kmcPermissions.SYNDICATION_DELETE | kDisabledIfNotPermitted) || _isBusy || _blockerMessage" *ngIf="_mode === 'edit'" class="kDeletehBtn kButtonDanger" pButton icon="kIcontrash"
             label="{{'applications.content.syndication.details.header.delete' | translate}}"
             (click)="_deleteFeed()"></button>
 

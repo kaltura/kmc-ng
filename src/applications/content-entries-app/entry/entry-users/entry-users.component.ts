@@ -6,6 +6,7 @@ import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryUsersWidget } from './entry-users-widget.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
 	private _searchUsersSubscription : ISubscription;
 	public _usersProvider = new Subject<SuggestionsProviderData>();
+	public _kmcPermissions = KMCPermissions;
 
 	constructor(public _widgetService: EntryUsersWidget, private _appLocalization: AppLocalization) {
 		this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this); // fix scope issues when binding to a property

@@ -52,16 +52,13 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     data: () => this._profiles.data.value
   };
 
-  constructor(private _kalturaServerClient: KalturaClient,
-              private _browserService: BrowserService,
-              _logger: KalturaLogger) {
+  protected constructor(private _kalturaServerClient: KalturaClient,
+                        private _browserService: BrowserService,
+                        _logger: KalturaLogger) {
     super(_logger);
-    setTimeout(() =>
-    {
-        this._prepare();
+    setTimeout(() => {
+      this._prepare();
     });
-
-
   }
 
   ngOnDestroy() {
@@ -88,11 +85,13 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
       this._browserService.setInLocalStorage(this.localStoragePageSizeKey, pageSize);
     }
 
+    this._logger.info(`loading data from the server`);
     this._profiles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+          this._logger.info(`handle success loading data from the server`);
           this._querySubscription = null;
 
           this._profiles.state.next({ loading: false, errorMessage: null });
@@ -105,6 +104,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          this._logger.warn(`handle failed loading data from the server`, { errorMessage });
           this._profiles.state.next({ loading: false, errorMessage });
         });
   }
@@ -205,6 +205,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     // only after the line where we set isReady to true
 
     if (!this._isReady) {
+      this._logger.info(`initiate service`);
       this._isReady = true;
 
       this._registerToFilterStoreDataChanges();
@@ -237,7 +238,9 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
   }
 
   public reload(): void {
+    this._logger.info(`reload profiles list`);
     if (this._profiles.state.getValue().loading) {
+      this._logger.info(`reloading already in progress skip duplicating request`);
       return;
     }
 

@@ -31,7 +31,7 @@ export type FeedFormMode = 'edit' | 'new';
   styleUrls: ['./feed-details.component.scss']
 })
 export class FeedDetailsComponent implements OnInit, OnDestroy {
-
+  public _kmcPermissions = KMCPermissions;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
   @Input()
@@ -126,7 +126,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       {
         value: KalturaSyndicationFeedType.kalturaXslt,
         label: this._appLocalization
-          .get('applications.content.syndication.details.availableDestinations.flexibaleFormat')
+          .get('applications.content.syndication.details.availableDestinations.flexibleFormat')
       }
     ];
   }
