@@ -22,7 +22,6 @@ export interface UploadSettingsFile {
     size: number;
 }
 
-
 @Component({
     selector: 'kFlavorFileUploadSettings',
     templateUrl: './upload-file.component.html',
@@ -209,14 +208,9 @@ export class UploadFileComponent implements OnInit, AfterViewInit {
     }
 
     public _upload(): void {
+        const transcodingProfileId = this._profileForm.value.transcodingProfile;
 
-        if (this._files.some(({ isEditing }) => isEditing)) {
-            return;
-        }
-
-        const trancodingProfileId = this._profileForm.value.transcodingProfile;
-
-        if (trancodingProfileId === null || typeof trancodingProfileId === 'undefined' || trancodingProfileId.length === 0) {
+        if (transcodingProfileId === null || typeof transcodingProfileId === 'undefined' || transcodingProfileId.length === 0) {
             this._transcodingProfileError = new AreaBlockerMessage({
                 message: this._appLocalization.get('applications.upload.validation.missingTranscodingProfile'),
                 buttons: [
@@ -239,7 +233,7 @@ export class UploadFileComponent implements OnInit, AfterViewInit {
                 entryName: fileData.name
             }));
 
-            this._newEntryUploadService.upload(uploadFileDataList, Number(trancodingProfileId));
+            this._newEntryUploadService.upload(uploadFileDataList, Number(transcodingProfileId));
         }
     }
 
