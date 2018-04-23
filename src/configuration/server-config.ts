@@ -143,6 +143,8 @@ export const ServerConfigSchema = {
                 },
                 kaltura: {
                     properties: {
+                        kmcOverview: {type: 'string'},
+                        mediaManagement: {type: 'string'},
                         userManual: {type: 'string'},
                         support: {type: 'string'},
                         signUp: {type: 'string'},
@@ -163,9 +165,10 @@ export const ServerConfigSchema = {
                 uploads: {
                     properties: {
                         highSpeedUpload: {type: 'string'},
+                        needHighSpeedUpload: {type: 'string'},
                         bulkUploadSamples: {type: 'string'}
                     },
-                    required: ['highSpeedUpload', 'bulkUploadSamples'],
+                    required: ['highSpeedUpload', 'needHighSpeedUpload', 'bulkUploadSamples'],
                     additionalProperties: false
                 },
                 live: {
@@ -261,6 +264,8 @@ export interface ServerConfig {
         },
         kaltura: {
             userManual: string,
+            kmcOverview: string,
+            mediaManagement: string,
             support: string,
             signUp: string,
             contactUs: string,
@@ -269,6 +274,7 @@ export interface ServerConfig {
         },
         uploads: {
             highSpeedUpload: string,
+            needHighSpeedUpload: string,
             bulkUploadSamples: string
         },
         live: {

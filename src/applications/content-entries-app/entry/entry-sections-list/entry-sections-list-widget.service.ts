@@ -123,6 +123,8 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
                 return this._entryStore.isLiveMediaEntry(entry.mediaType);
             case EntryWidgetKeys.Clips:
 	            return mediaType !== KalturaMediaType.image && !externalMedia;
+            case EntryWidgetKeys.Distribution:
+                return !this._entryStore.isLiveMediaEntry(entry.mediaType) && mediaType !== KalturaMediaType.audio && mediaType !== KalturaMediaType.image;
             default:
                 return true;
         }

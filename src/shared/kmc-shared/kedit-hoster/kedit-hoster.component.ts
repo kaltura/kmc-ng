@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AppAuthentication} from 'app-shared/kmc-shell';
+import {AppAuthentication} from 'app-shared/kmc-shell/auth';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {UpdateClipsEvent} from 'app-shared/kmc-shared/events/update-clips-event';

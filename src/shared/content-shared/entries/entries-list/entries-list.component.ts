@@ -163,7 +163,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                         this._tableBlockerMessage = new AreaBlockerMessage({
                             message: result.errorMessage || 'Error loading entries',
                             buttons: [{
-                                label: 'Retry',
+                                label: this._appLocalization.get('app.common.retry'),
                                 action: () => {
                                     this._tableBlockerMessage = null;
                                     this._entriesStore.reload();

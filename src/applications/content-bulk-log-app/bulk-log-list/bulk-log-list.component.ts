@@ -12,6 +12,7 @@ import {
     BulkLogRefineFiltersService,
     RefineList
 } from '../bulk-log-store/bulk-log-refine-filters.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
@@ -34,6 +35,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineList[];
 
+  public _kmcPermissions = KMCPermissions;
   public _query = {
     uploadedAfter: null,
     uploadedBefore: null,

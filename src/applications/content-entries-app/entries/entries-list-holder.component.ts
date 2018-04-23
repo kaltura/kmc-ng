@@ -14,6 +14,7 @@ import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common/upload-management/
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {serverConfig} from "config/server";
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -67,11 +68,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               private _uploadManagement: UploadManagement,
+              private _permissionsService: KMCPermissionsService,
               public _entriesStore: EntriesStore,
               private _contentEntriesAppService: ContentEntriesAppService) {
   }
 
   ngOnInit() {
+
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted)
@@ -82,6 +85,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
     this._appEvents.event(UpdateEntriesListEvent)
       .cancelOnDestroy(this)
       .subscribe(() => this._entriesStore.reload());
+
+    const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
+    if (!hasEmbedPermission) {
+      this._rowActions[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
+    }
   }
 
   ngOnDestroy() {
