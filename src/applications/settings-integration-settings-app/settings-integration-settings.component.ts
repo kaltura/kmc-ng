@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kIntegrationSettings',
@@ -6,4 +7,5 @@ import {Component} from '@angular/core';
   styleUrls: ['./settings-integration-settings.component.scss']
 })
 export class SettingsIntegrationSettingsComponent {
+  public _kmcPermissions = KMCPermissions;
 }
