@@ -1,7 +1,14 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import {
     ContentCategoriesMainViewService,
-    ContentEntriesMainViewService, StudioMainViewService
+    ContentEntriesMainViewService,
+    ContentModerationMainViewService,
+    ContentPlaylistsMainViewService,
+    ContentSyndicationMainViewService,
+    ContentUploadsMainViewService,
+    ContentBulkUploadsMainViewService,
+    ContentDropFoldersMainViewService,
+    StudioMainViewService
 } from './main-views';
 import { KmcMainViewsService } from './kmc-main-views.service';
 
@@ -18,6 +25,12 @@ export class KmcViewsModule {
             providers: <any[]>[
                 ContentEntriesMainViewService,
                 ContentCategoriesMainViewService,
+                ContentModerationMainViewService,
+                ContentPlaylistsMainViewService,
+                ContentSyndicationMainViewService,
+                ContentUploadsMainViewService,
+                ContentBulkUploadsMainViewService,
+                ContentDropFoldersMainViewService,
                 StudioMainViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]

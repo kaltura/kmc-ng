@@ -4,22 +4,6 @@ import * as Ajv from 'ajv';
 import {serverConfig, ServerConfig, ServerConfigSchema} from 'config/server';
 import {globalConfig} from 'config/global';
 
-function isStudioAppValid(): boolean {
-    let isValid = false;
-    if (serverConfig.externalApps.studio.enabled) {
-        isValid =
-            !!serverConfig.externalApps.studio.uri &&
-            !serverConfig.externalApps.studio.uri.match(/\s/g) && // not contains white spaces
-            !!serverConfig.externalApps.studio.version &&
-            !!serverConfig.externalApps.studio.html5_version &&
-            !!serverConfig.externalApps.studio.html5lib;
-
-        if (!isValid) {
-            console.warn('Disabling Studio standalone application - configuration is invalid');
-        }
-    }
-    return isValid;
-}
 
 function isLiveDashboardAppValid(): boolean {
     let isValid = false;
@@ -177,7 +161,6 @@ export function initializeConfiguration(): Observable<void> {
             const validationResult = validateSeverConfig(response);
             if (validationResult.isValid) {
                 Object.assign(serverConfig, response);
-                serverConfig.externalApps.studio.enabled = isStudioAppValid();
                 serverConfig.externalApps.kava.enabled = isKavaAppValid();
                 serverConfig.externalApps.liveDashboard.enabled = isLiveDashboardAppValid();
                 serverConfig.externalApps.usageDashboard.enabled = isUsageDashboardAppValid();

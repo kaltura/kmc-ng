@@ -1,6 +1,17 @@
 import { Injectable } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { ContentCategoriesMainViewService, ContentEntriesMainViewService, StudioMainViewService } from './main-views';
+import { ContentCategoriesMainViewService,
+    ContentEntriesMainViewService,
+    StudioMainViewService,
+    ContentModerationMainViewService,
+    ContentPlaylistsMainViewService,
+    ContentSyndicationMainViewService,
+    ContentUploadsMainViewService,
+    ContentBulkUploadsMainViewService,
+    ContentDropFoldersMainViewService
+} from './main-views';
+
+
 
 export interface KMCAppMenuItem {
     id?: any; // TODO sakal remove
@@ -65,6 +76,12 @@ export class KmcMainViewsService {
         logger: KalturaLogger,
         private _contentEntriesMain: ContentEntriesMainViewService,
         private _contentCategoriesMain: ContentCategoriesMainViewService,
+        private _contentModerationMain: ContentModerationMainViewService,
+        private _contentPlaylistsMain: ContentPlaylistsMainViewService,
+        private _contentSyndicationMain: ContentSyndicationMainViewService,
+        private _contentUploadsMain: ContentUploadsMainViewService,
+        private _contentBulkUploadsMain: ContentBulkUploadsMainViewService,
+        private _contentDropFoldersMain: ContentDropFoldersMainViewService,
         private _studioMain: StudioMainViewService
     ) {
         this._logger = logger.subLogger('KmcMainViewsService');
@@ -87,20 +104,26 @@ export class KmcMainViewsService {
                         'position': 'left'
                     },
                     {
-                        'id': 'contentModeration',
-                        'routePath': 'content/moderation',
+                        isAvailable: this._contentModerationMain.isAvailable(),
+                        open: () => {
+                            this._contentModerationMain.open();
+                        },
                         'titleToken': 'Moderation',
                         'position': 'left'
                     },
                     {
-                        'id': 'contentPlaylists',
-                        'routePath': 'content/playlists',
+                        isAvailable: this._contentPlaylistsMain.isAvailable(),
+                        open: () => {
+                            this._contentPlaylistsMain.open();
+                        },
                         'titleToken': 'Playlists',
                         'position': 'left'
                     },
                     {
-                        'id': 'contentSyndication',
-                        'routePath': 'content/syndication',
+                        isAvailable: this._contentSyndicationMain.isAvailable(),
+                        open: () => {
+                            this._contentSyndicationMain.open();
+                        },
                         'titleToken': 'Syndication',
                         'position': 'left'
                     },
@@ -113,20 +136,26 @@ export class KmcMainViewsService {
                         'position': 'left'
                     },
                     {
-                        'id': 'contentUploadControl',
-                        'routePath': 'content/upload-control',
+                        isAvailable: this._contentUploadsMain.isAvailable(),
+                            open: () => {
+                            this._contentUploadsMain.open();
+                        },
                         'titleToken': 'UploadControl',
                         'position': 'right'
                     },
                     {
-                        'id': 'contentBulkUpload',
-                        'routePath': 'content/bulk',
+                        isAvailable: this._contentBulkUploadsMain.isAvailable(),
+                        open: () => {
+                            this._contentBulkUploadsMain.open();
+                        },
                         'titleToken': 'BulkUpload',
                         'position': 'right'
                     },
                     {
-                        'id': 'contentDropFolders',
-                        'routePath': 'content/drop-folders',
+                        isAvailable: this._contentDropFoldersMain.isAvailable(),
+                        open: () => {
+                            this._contentDropFoldersMain.open();
+                        },
                         'titleToken': 'DropFolders',
                         'position': 'right'
                     }
