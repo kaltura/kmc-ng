@@ -213,6 +213,7 @@
             "validation": {
                 "error": "Error",
                 "wrongType": "Select media type",
+                "selectFlavor": "Select flavor",
                 "missingTranscodingProfile": "Select Transcoding Profile",
                 "fileSizeExceeded": "File size exceeded",
                 "fileSizeExceededFor": "File size exceeded for:",
@@ -1323,6 +1324,7 @@
                     "downloadFailure": "Flavor download failed.",
                     "importFailure": "Flavor import failed.",
                     "replaceVideo": {
+                        "noFlavors": "No Flavors",
                         "replaceVideo": "Replace Video",
                         "replaceAudio": "Replace Audio",
                         "addVideo": "Add Video",
@@ -1332,7 +1334,22 @@
                         "importFile": "Import file",
                         "importFiles": "Import files",
                         "updateVideo": "Update Video",
-                        "updateAudio": "Update Audio"
+                        "updateAudio": "Update Audio",
+                        "transcodingProfile": "Transcoding profile",
+                        "profilePlaceholder": "Default",
+                        "addFileBtn": "Add File",
+                        "fileName": "File name",
+                        "flavor": "Transcoding Flavor",
+                        "size": "Size",
+                        "select": "Select flavor",
+                        "remove": "Remove",
+                        "uploadBtn": "Upload",
+                        "cancel": "Cancel",
+                        "emptyMessage": {
+                            "title": "No files to upload",
+                            "getStarted": "Add some files to get started. ",
+                            "browse": "Browse"
+                        }
                     }
                 },
                 "captions": {

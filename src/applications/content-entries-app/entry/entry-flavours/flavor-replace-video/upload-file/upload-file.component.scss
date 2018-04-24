@@ -76,25 +76,9 @@
                 width: 380px;
             }
 
-            .kFileNameCell {
-                display: flex;
-                align-items: center;
-
-                .kFileName {
-                    color: $kGrayscale1;
-                    font-weight: bold;
-                    word-break: break-all;
-                    max-width: 360px;
-                }
-
-                .kIconEditFileName {
-                    font-size: 16px;
-                    margin-left: 10px;
-                    cursor: pointer;
-                    color: $kGrayscale3;
-                    font-weight: normal;
-                    display: none;
-                }
+            .kFileName {
+                color: $kGrayscale1;
+                font-weight: bold;
             }
 
             .kIconError {
@@ -164,10 +148,6 @@
     .ui-dropdown.ui-widget {
         width: 184px;
     }
-}
-
-:host /deep/ .kFileType .ui-dropdown.ui-widget {
-    width: 127px;
 }
 
 :host /deep/ .kTable.empty .ui-widget-content {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
@@ -10,16 +10,31 @@ import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-
 import { globalConfig } from 'config/global';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { Flavor } from '../../flavor';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
+import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
+import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client/api/types/KalturaConversionProfileOrderBy';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
+import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
+import { Observable } from 'rxjs/Observable';
 
-export interface UploadSettingsFile {
+export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
+    assets: KalturaConversionProfileAssetParams[];
+}
+
+export interface UploadReplacementFile {
     file: File;
-    mediaType: KalturaMediaType;
     name: string;
     hasError?: boolean;
     errorToken?: string;
     size: number;
+    flavor?: number;
 }
 
 @Component({
@@ -27,7 +42,7 @@ export interface UploadSettingsFile {
     templateUrl: './upload-file.component.html',
     styleUrls: ['./upload-file.component.scss']
 })
-export class UploadFileComponent implements OnInit, AfterViewInit {
+export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Input() entry: KalturaMediaEntry;
     @Input() flavors: Flavor[] = [];
@@ -35,57 +50,54 @@ export class UploadFileComponent implements OnInit, AfterViewInit {
 
     @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
 
+    private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];
+
     public _tableScrollableWrapper: Element;
-    public _transcodingProfiles: { value: number, label: string }[];
+    public _transcodingProfilesOptions: { value: number, label: string }[];
     public _profileForm: FormGroup;
     public _transcodingProfileField: AbstractControl;
     public _transcodingProfileError: AreaBlockerMessage;
     public _transcodingProfileLoading = false;
-    public _files: UploadSettingsFile[] = [];
+    public _files: UploadReplacementFile[] = [];
     public _kmcPermissions = KMCPermissions;
     public _title: string;
-    public _fileTypes: SelectItem[] = [
-        {
-            'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.video'),
-            'value': KalturaMediaType.video
-        },
-        {
-            'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.audio'),
-            'value': KalturaMediaType.audio
-        },
-        {
-            'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.image'),
-            'value': KalturaMediaType.image
-        },
-    ];
+    public _flavorOptions: SelectItem[] = [];
+    public _flavorsFieldDisabled = false;
 
     public _allowedVideoExtensions = `.flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v`;
     public _allowedAudioExtensions = `.flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav`;
 
     public _allowedExtensions: string;
 
-
     constructor(private _newEntryUploadService: NewEntryUploadService,
                 private _formBuilder: FormBuilder,
+                private _kalturaClient: KalturaClient,
                 private _transcodingProfileManagement: TranscodingProfileManagement,
                 private _uploadManagement: UploadManagement,
+                private _permissionsService: KMCPermissionsService,
                 private _appLocalization: AppLocalization) {
         this._buildForm();
+    }
+
+    ngOnInit() {
+        this._prepare();
+    }
+
+    ngOnDestroy() {
+
+    }
+
+    ngAfterViewInit(): void {
+        if (this.replaceType === 'upload') {
+            this._fileDialog.open();
+        }
+
+        this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
     }
 
     private _buildForm(): void {
         this._profileForm = this._formBuilder.group({ 'transcodingProfile': '' });
         this._transcodingProfileField = this._profileForm.controls['transcodingProfile'];
-    }
-
-    ngAfterViewInit(): void {
-        this._fileDialog.open();
-
-        this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
-    }
-
-    ngOnInit() {
-        this._prepare();
     }
 
     private _prepare(): void {
@@ -104,74 +116,73 @@ export class UploadFileComponent implements OnInit, AfterViewInit {
         this._loadTranscodingProfiles();
     }
 
-    public _handleSelectedFiles(files: FileList) {
+    public _handleSelectedFiles(files: FileList): void {
         const newItems = Array.from(files).map(file => {
-            const ext = this._getFileExtension(file.name);
-            const mediaType = this._getMediaTypeFromExtension(ext);
             const { name, size } = file;
-            return ({ file, mediaType, name, size });
+            return { file, name, size };
         });
 
         this._files = [...this._files, ...newItems];
     }
 
-    private _getFileExtension(filename: string): string {
-        const extension = /(?:\.([^.]+))?$/.exec(filename)[1];
-        return typeof extension === 'undefined' ? '' : extension.toLowerCase();
+    private _loadConversionProfiles(): Observable<KalturaConversionProfileAssetParams[]> {
+        const filter = new KalturaConversionProfileFilter({
+            orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
+            typeEqual: KalturaConversionProfileType.media
+        });
+
+        // build the request
+        return this._kalturaClient
+            .request(new ConversionProfileAssetParamsListAction({
+                filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdFilter: filter }),
+                pager: new KalturaFilterPager({ pageSize: 1000 })
+            })).map(res => res.objects);
     }
 
-    private _getMediaTypeFromExtension(extension: string): KalturaMediaType | null {
-        const imageFiles = ['jpg', 'jpeg', 'gif', 'png'];
-        const audioFiles = [
-            'flv', 'asf', 'qt', 'mov', 'mpg',
-            'avi', 'wmv', 'mp3', 'wav', 'ra',
-            'rm', 'wma', 'aif', 'm4a'
-        ];
-        const videoFiles = [
-            'flv', 'asf', 'qt', 'mov', 'mpg',
-            'avi', 'wmv', 'mp4', '3gp', 'f4v',
-            'm4v', 'mpeg', 'mxf', 'rm', 'rv',
-            'rmvb', 'ts', 'ogg', 'ogv', 'vob',
-            'webm', 'mts', 'arf', 'mkv'
-        ];
-
-        switch (true) {
-            case videoFiles.indexOf(extension) !== -1:
-                return KalturaMediaType.video;
-            case audioFiles.indexOf(extension) !== -1:
-                return KalturaMediaType.audio;
-            case imageFiles.indexOf(extension) !== -1:
-                return KalturaMediaType.image;
-            default:
-                return null;
-        }
-    }
-
-
-    private _loadTranscodingProfiles() {
+    private _loadTranscodingProfiles(): void {
         this._transcodingProfileLoading = true;
 
         this._transcodingProfileManagement.get()
+            .switchMap(
+                () => this._loadConversionProfiles(),
+                (transcodingProfiles, assets) => {
+                    return transcodingProfiles.map(profile => {
+                        return {
+                            id: profile.id,
+                            name: profile.name,
+                            isDefault: profile.isDefault,
+                            assets: assets.filter(item => {
+                                return item.conversionProfileId === profile.id && item.origin === KalturaAssetParamsOrigin.convert;
+                            })
+                        };
+                    });
+                }
+            )
             .subscribe(
-                profiles => {
+                (profilesWithAssets) => {
+                    const transcodingProfiles = [...profilesWithAssets];
+                    const defaultProfileIndex = transcodingProfiles.findIndex(({ isDefault }) => !!isDefault);
+                    if (defaultProfileIndex !== -1) {
+                        const [defaultProfile] = transcodingProfiles.splice(defaultProfileIndex, 1);
+                        this._transcodingProfilesOptions = [
+                            { label: defaultProfile.name, value: defaultProfile.id },
+                            ...transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }))
+                        ];
+                        this._transcodingProfileField.setValue(defaultProfile.id);
+                    } else {
+                        this._transcodingProfilesOptions = transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }));
+                        this._transcodingProfileField.setValue(this._transcodingProfilesOptions[0].value);
+                    }
+
                     if (this.entry.conversionProfileId) {
                         this._transcodingProfileField.setValue(this.entry.conversionProfileId);
-                    } else {
-                        this._transcodingProfileLoading = false;
-                        const transcodingProfiles = [...profiles];
-                        const defaultProfileIndex = transcodingProfiles.findIndex(({ isDefault }) => !!isDefault);
-                        if (defaultProfileIndex !== -1) {
-                            const [defaultProfile] = transcodingProfiles.splice(defaultProfileIndex, 1);
-                            this._transcodingProfiles = [
-                                { label: defaultProfile.name, value: defaultProfile.id },
-                                ...transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }))
-                            ];
-                            this._transcodingProfileField.setValue(defaultProfile.id);
-                        } else {
-                            this._transcodingProfiles = transcodingProfiles.map(({ name: label, id: value }) => ({ label, value }));
-                            this._transcodingProfileField.setValue(this._transcodingProfiles[0].value);
-                        }
                     }
+
+                    this._transcodingProfiles = profilesWithAssets;
+
+                    this._updateFlavorsOption();
+
+                    this._transcodingProfileLoading = false;
                 },
                 (error) => {
                     this._transcodingProfileError = new AreaBlockerMessage({
@@ -198,12 +209,37 @@ export class UploadFileComponent implements OnInit, AfterViewInit {
                 });
     }
 
-    public _removeFile(file: UploadSettingsFile): void {
+    private _setNoFlavorsOption(): void {
+        this._flavorOptions = [{
+            label: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.noFlavors'),
+            value: null
+        }];
+        this._flavorsFieldDisabled = true;
+    }
+
+    public _removeFile(file: UploadReplacementFile): void {
         const fileIndex = this._files.indexOf(file);
         if (fileIndex !== -1) {
             const newList = Array.from(this._files);
             newList.splice(fileIndex, 1);
             this._files = newList;
+        }
+    }
+
+    public _updateFlavorsOption(): void {
+        this._flavorsFieldDisabled = false;
+        const relevantTranscodingProfile = this._transcodingProfiles.find(profile => profile.id === this._transcodingProfileField.value);
+        if (relevantTranscodingProfile && relevantTranscodingProfile.assets.length) {
+            const assetParamsIds = relevantTranscodingProfile.assets.map(({ assetParamsId }) => assetParamsId);
+            this._flavorOptions = this.flavors
+                .filter((flavor) => assetParamsIds.indexOf(flavor.paramsId) !== -1)
+                .map(({ name: label, id: value }) => ({ label, value }));
+
+            if (!this._flavorOptions.length) {
+                this._setNoFlavorsOption();
+            }
+        } else {
+            this._setNoFlavorsOption();
         }
     }
 
@@ -213,14 +249,12 @@ export class UploadFileComponent implements OnInit, AfterViewInit {
         if (transcodingProfileId === null || typeof transcodingProfileId === 'undefined' || transcodingProfileId.length === 0) {
             this._transcodingProfileError = new AreaBlockerMessage({
                 message: this._appLocalization.get('applications.upload.validation.missingTranscodingProfile'),
-                buttons: [
-                    {
-                        label: this._appLocalization.get('app.common.ok'),
-                        action: () => {
-                            this._transcodingProfileError = null;
-                        }
+                buttons: [{
+                    label: this._appLocalization.get('app.common.ok'),
+                    action: () => {
+                        this._transcodingProfileError = null;
                     }
-                ]
+                }]
             });
             return;
         }
@@ -229,26 +263,23 @@ export class UploadFileComponent implements OnInit, AfterViewInit {
             this.parentPopupWidget.close();
             const uploadFileDataList = this._files.map(fileData => ({
                 file: fileData.file,
-                mediaType: fileData.mediaType,
                 entryName: fileData.name
             }));
 
-            this._newEntryUploadService.upload(uploadFileDataList, Number(transcodingProfileId));
+            // this._newEntryUploadService.upload(uploadFileDataList, Number(transcodingProfileId));
         }
     }
 
-    private _validateFiles(files: UploadSettingsFile[]): boolean {
-
+    private _validateFiles(files: UploadReplacementFile[]): boolean {
         let result = true;
-        const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
         const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
 
         files.forEach(file => {
             const fileSize = file.size / 1024 / 1024; // convert to Mb
 
-            if (allowedTypes.indexOf(file.mediaType) === -1) {
+            if (Number.isInteger(file.flavor) && !this._flavorsFieldDisabled && this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
                 result = false;
-                file.errorToken = 'applications.upload.validation.wrongType';
+                file.errorToken = 'applications.upload.validation.selectFlavor';
                 file.hasError = true;
             } else if (!(this._uploadManagement.supportChunkUpload(new NewEntryUploadFile(null, null, null, null)) || fileSize < maxFileSize)) {
                 result = false;
@@ -263,8 +294,8 @@ export class UploadFileComponent implements OnInit, AfterViewInit {
         return result;
     }
 
-    public _updateFileValidityOnTypeChange(file: UploadSettingsFile): void {
-        if (file.hasError && file.errorToken === 'applications.upload.validation.wrongType') {
+    public _updateFileValidityOnTypeChange(file: UploadReplacementFile): void {
+        if (file.hasError && file.errorToken === 'applications.upload.validation.selectFlavor') {
             file.errorToken = null;
             file.hasError = false;
         }
