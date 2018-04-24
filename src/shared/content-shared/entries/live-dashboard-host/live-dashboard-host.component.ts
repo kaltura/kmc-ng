@@ -38,8 +38,7 @@ export class LiveDashboardHostComponent implements OnInit, OnDestroy {
           'ks': this.appAuthentication.appUser.ks,
           'service_url': getKalturaServerUri(),
           'liveDashboard': {
-            'entryId': this.entryId,
-            'version': serverConfig.externalApps.liveDashboard.version
+            'entryId': this.entryId
           }
         }
       };
