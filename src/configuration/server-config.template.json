@@ -26,8 +26,7 @@
     },
     "liveDashboard": {
       "enabled": @externalApps.liveDashboard.enabled@,
-      "uri": "@externalApps.liveDashboard.uri@",
-      "version": "@externalApps.liveDashboard.version@"
+      "uri": "@externalApps.liveDashboard.uri@"
     },
     "liveAnalytics": {
       "enabled": @externalApps.liveAnalytics.enabled@,

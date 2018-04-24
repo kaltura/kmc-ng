@@ -25,9 +25,7 @@ function isLiveDashboardAppValid(): boolean {
     if (serverConfig.externalApps.liveDashboard.enabled) {
         isValid =
             !!serverConfig.externalApps.liveDashboard.uri &&
-            !serverConfig.externalApps.liveDashboard.uri.match(/\s/g) && // not contains white spaces
-            !!serverConfig.externalApps.liveDashboard.version;
-
+            !serverConfig.externalApps.liveDashboard.uri.match(/\s/g); // not contains white spaces
         if (!isValid) {
             console.warn('Disabling Live Dashboard standalone application - configuration is invalid');
         }

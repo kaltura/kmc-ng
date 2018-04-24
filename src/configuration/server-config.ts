@@ -79,10 +79,9 @@ export const ServerConfigSchema = {
                 liveDashboard: {
                     properties: {
                         enabled: {type: 'boolean'},
-                        uri: {type: 'string'},
-                        version: {type: 'string'}
+                        uri: {type: 'string'}
                     },
-                    required: ['enabled', 'uri', 'version'],
+                    required: ['enabled', 'uri'],
                     additionalProperties: false
                 },
                 liveAnalytics: {
@@ -208,7 +207,6 @@ export interface ServerConfig {
         },
         liveDashboard: {
             enabled: boolean,
-            version: string,
             uri: string,
         },
         kava: {
