@@ -63,6 +63,10 @@ export class AppMenuComponent implements OnInit, OnDestroy{
         if (item) {
             this.selectedMenuItem = item;
             this.showSubMenu = item.children && item.children.length > 0;
+        }else
+        {
+            this.selectedMenuItem = null;
+            this.showSubMenu = false;
         }
     }
 
