@@ -26,6 +26,10 @@ export class ContentPlaylistsMainViewService extends KmcMainViewBaseService {
     }
 
     protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl('content/playlists'));
+        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
+    }
+
+    getRoutePath(): string {
+        return 'content/playlists';
     }
 }

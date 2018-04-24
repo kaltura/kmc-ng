@@ -8,10 +8,8 @@ import { Router, NavigationEnd } from '@angular/router';
 @Injectable()
 export class ContentEntriesMainViewService extends KmcMainViewBaseService {
 
-    constructor(
-        private _appPermissions: KMCPermissionsService,
-        private router: Router
-    ) {
+    constructor(private _appPermissions: KMCPermissionsService,
+                private router: Router) {
         super();
     }
 
@@ -32,6 +30,10 @@ export class ContentEntriesMainViewService extends KmcMainViewBaseService {
     }
 
     protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl('content/entries'));
+        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
+    }
+
+    getRoutePath(): string {
+        return 'content/entries';
     }
 }

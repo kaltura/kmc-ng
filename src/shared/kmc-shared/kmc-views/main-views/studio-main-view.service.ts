@@ -33,7 +33,7 @@ export class StudioMainViewService extends KmcMainViewBaseService {
     }
 
     protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl('studio'));
+        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
     }
 
 
@@ -53,6 +53,10 @@ export class StudioMainViewService extends KmcMainViewBaseService {
             this._logger.debug(`Disabling Studio standalone application - studio is disabled`);
         }
         return isValid;
+    }
+
+    getRoutePath(): string {
+        return 'studio';
     }
 }
 

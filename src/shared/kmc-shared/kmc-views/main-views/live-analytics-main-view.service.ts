@@ -27,7 +27,11 @@ export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
     }
 
     protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl('analytics/liveAnalytics'));
+        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
+    }
+
+    getRoutePath(): string {
+        return 'analytics/liveAnalytics';
     }
 
 }

@@ -33,7 +33,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     selectedMenuItem: KMCAppMenuItem;
     showSubMenu = true;
 
-
     constructor(private userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
                 private _logger: KalturaLogger,
@@ -57,12 +56,13 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     ngOnInit() {
     }
 
+    // TODO sakal remove
     setSelectedRoute(path) {
 
-        let item = R.find(R.propEq('routePath', path.split("/")[1]))(this.menuConfig);
+        const item: KMCAppMenuItem = R.find(R.propEq('routePath', path.split("/")[1]))(this.menuConfig);
         if (item) {
             this.selectedMenuItem = item;
-            this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
+            this.showSubMenu = item.children && item.children.length > 0;
         }
     }
 

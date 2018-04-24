@@ -22,6 +22,10 @@ export class ContentBulkUploadsMainViewService extends KmcMainViewBaseService {
     }
 
     protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl('content/bulk'));
+        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
+    }
+
+    getRoutePath(): string {
+        return 'content/bulk';
     }
 }

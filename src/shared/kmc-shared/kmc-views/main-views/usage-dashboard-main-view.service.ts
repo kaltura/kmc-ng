@@ -12,11 +12,9 @@ export class UsageDashboardMainViewService extends KmcMainViewBaseService {
 
     private _logger: KalturaLogger;
 
-    constructor(
-        logger: KalturaLogger,
-        private _appPermissions: KMCPermissionsService,
-        private router: Router
-    ) {
+    constructor(logger: KalturaLogger,
+                private _appPermissions: KMCPermissionsService,
+                private router: Router) {
         super();
         this._logger = logger.subLogger('UsageDashboardMainViewService');
     }
@@ -29,31 +27,35 @@ export class UsageDashboardMainViewService extends KmcMainViewBaseService {
     }
 
     protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl('usageDashboard'));
+        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
     }
 
 
     private _isUsageDashboardAppValid(): boolean {
-    let isValid = false;
-    if (serverConfig.externalApps.usageDashboard.enabled) {
-        isValid =
-            !!serverConfig.externalApps.usageDashboard.uri &&
-            !serverConfig.externalApps.usageDashboard.uri.match(/\s/g) && // not contains white spaces
-            typeof (serverConfig.externalApps.usageDashboard.uiConfId) !== 'undefined' &&
-            serverConfig.externalApps.usageDashboard.uiConfId !== null &&
-            serverConfig.externalApps.usageDashboard.map_urls &&
-            serverConfig.externalApps.usageDashboard.map_urls.length &&
-            serverConfig.externalApps.usageDashboard.map_urls.indexOf('') === -1 && // no empty url
-            !!serverConfig.externalApps.usageDashboard.map_zoom_levels;
+        let isValid = false;
+        if (serverConfig.externalApps.usageDashboard.enabled) {
+            isValid =
+                !!serverConfig.externalApps.usageDashboard.uri &&
+                !serverConfig.externalApps.usageDashboard.uri.match(/\s/g) && // not contains white spaces
+                typeof (serverConfig.externalApps.usageDashboard.uiConfId) !== 'undefined' &&
+                serverConfig.externalApps.usageDashboard.uiConfId !== null &&
+                serverConfig.externalApps.usageDashboard.map_urls &&
+                serverConfig.externalApps.usageDashboard.map_urls.length &&
+                serverConfig.externalApps.usageDashboard.map_urls.indexOf('') === -1 && // no empty url
+                !!serverConfig.externalApps.usageDashboard.map_zoom_levels;
 
-        if (!isValid) {
-            this._logger.debug(`Disabling Usage Dashboard standalone application - configuration is invalid`);
+            if (!isValid) {
+                this._logger.debug(`Disabling Usage Dashboard standalone application - configuration is invalid`);
+            }
+        } else {
+            this._logger.debug(`Disabling Usage Dashboard standalone application - Usage Dashboard is disabled`);
         }
-    }else{
-        this._logger.debug(`Disabling Usage Dashboard standalone application - Usage Dashboard is disabled`);
+        return isValid;
     }
-    return isValid;
-}
+
+    getRoutePath(): string {
+        return 'usageDashboard';
+    }
 }
 
 

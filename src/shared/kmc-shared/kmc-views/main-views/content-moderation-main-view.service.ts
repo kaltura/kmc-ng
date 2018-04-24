@@ -24,6 +24,10 @@ export class ContentModerationMainViewService extends KmcMainViewBaseService {
     }
 
     protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl('content/moderation'));
+        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
+    }
+
+    getRoutePath(): string {
+        return 'content/moderation';
     }
 }

@@ -17,14 +17,13 @@ import { ContentCategoriesMainViewService,
 
 export interface KMCAppMenuItem {
     id?: any; // TODO sakal remove
-    routePath?: string; // TODO sakal remove
+    routePath: string;
     titleToken: string;
     icon?: string;
     isAvailable?: boolean; // TODO sakal make requiredch
     position?: string;
     open?: () => void;
     children?: KMCAppMenuItem[];
-    showSubMenu?: boolean; // TODO remove
 }
 //
 //
@@ -94,170 +93,176 @@ export class KmcMainViewsService {
     private _getMainViewsList(): KMCAppMenuItem[] {
         return [
             {
-                'routePath': 'content',
-                'titleToken': 'Content',
+                routePath: 'content',
+                titleToken: 'Content',
                 isAvailable: true,
-                'showSubMenu': true,
-                'children': [
+                children: [
                     {
                         isAvailable: this._contentEntriesMain.isAvailable(),
+                        routePath: this._contentEntriesMain.getRoutePath(),
                         open: () => {
                             this._contentEntriesMain.open();
                         },
-                        'titleToken': 'Entries',
+                        titleToken: 'Entries',
                         'position': 'left'
                     },
                     {
                         isAvailable: this._contentModerationMain.isAvailable(),
+                        routePath: this._contentModerationMain.getRoutePath(),
+
                         open: () => {
                             this._contentModerationMain.open();
                         },
-                        'titleToken': 'Moderation',
+                        titleToken: 'Moderation',
                         'position': 'left'
                     },
                     {
                         isAvailable: this._contentPlaylistsMain.isAvailable(),
+                        routePath: this._contentPlaylistsMain.getRoutePath(),
                         open: () => {
                             this._contentPlaylistsMain.open();
                         },
-                        'titleToken': 'Playlists',
+                        titleToken: 'Playlists',
                         'position': 'left'
                     },
                     {
                         isAvailable: this._contentSyndicationMain.isAvailable(),
+                        routePath: this._contentSyndicationMain.getRoutePath(),
                         open: () => {
                             this._contentSyndicationMain.open();
                         },
-                        'titleToken': 'Syndication',
+                        titleToken: 'Syndication',
                         'position': 'left'
                     },
                     {
                         isAvailable: this._contentCategoriesMain.isAvailable(),
+                        routePath: this._contentCategoriesMain.getRoutePath(),
                         open: () => {
                             this._contentCategoriesMain.open();
                         },
-                        'titleToken': 'Categories',
+                        titleToken: 'Categories',
                         'position': 'left'
                     },
                     {
                         isAvailable: this._contentUploadsMain.isAvailable(),
-                            open: () => {
+                        routePath: this._contentUploadsMain.getRoutePath(),
+                        open: () => {
                             this._contentUploadsMain.open();
                         },
-                        'titleToken': 'UploadControl',
+                        titleToken: 'UploadControl',
                         'position': 'right'
                     },
                     {
                         isAvailable: this._contentBulkUploadsMain.isAvailable(),
+                        routePath: this._contentBulkUploadsMain.getRoutePath(),
                         open: () => {
                             this._contentBulkUploadsMain.open();
                         },
-                        'titleToken': 'BulkUpload',
+                        titleToken: 'BulkUpload',
                         'position': 'right'
                     },
                     {
                         isAvailable: this._contentDropFoldersMain.isAvailable(),
+                        routePath: this._contentDropFoldersMain.getRoutePath(),
                         open: () => {
                             this._contentDropFoldersMain.open();
                         },
-                        'titleToken': 'DropFolders',
+                        titleToken: 'DropFolders',
                         'position': 'right'
                     }
                 ]
             },
             {
                 isAvailable: this._studioMain.isAvailable(),
+                routePath: this._studioMain.getRoutePath(),
                 open: () => {
                     this._studioMain.open();
                 },
-                'titleToken': 'Studio',
-                'showSubMenu': false,
+                titleToken: 'Studio'
             },
             {
                 isAvailable: this._usageDashboardMain.isAvailable(),
+                routePath: this._usageDashboardMain.getRoutePath(),
                 open: () => {
                     this._usageDashboardMain.open();
                 },
-                'titleToken': 'Usage Dashboard',
-                'showSubMenu': false,
+                titleToken: 'Usage Dashboard',
             },
             {
-                'id': 'analytics',
-                'routePath': 'analytics',
-                'titleToken': 'Analytics',
-                'showSubMenu': true,
-                'children': [
+                id: 'analytics',
+                routePath: 'analytics',
+                titleToken: 'Analytics',
+                children: [
                     {
                         isAvailable: this._liveAnalyticsMain.isAvailable(),
+                        routePath: this._liveAnalyticsMain.getRoutePath(),
                         open: () => {
                             this._liveAnalyticsMain.open();
                         },
-                        'titleToken': 'Live Analytics'
+                        titleToken: 'Live Analytics'
                     },
                     {
-                        'id': 'kava',
-                        'routePath': 'analytics/kava',
-                        'titleToken': 'Kava'
+                        id: 'kava',
+                        routePath: 'analytics/kava',
+                        titleToken: 'Kava'
                     }
                 ]
             },
             {
-                'id': 'settings',
-                'routePath': 'settings',
-                'titleToken': '',
-                'showSubMenu': true,
-                'children': [
+                id: 'settings',
+                routePath: 'settings',
+                titleToken: '',
+                children: [
                     {
-                        'id': 'settingsAccountSettings',
-                        'routePath': 'settings/accountSettings',
-                        'titleToken': 'Account Settings'
+                        id: 'settingsAccountSettings',
+                        routePath: 'settings/accountSettings',
+                        titleToken: 'Account Settings'
                     },
                     {
-                        'id': 'settingsIntegrationSettings',
-                        'routePath': 'settings/integrationSettings',
-                        'titleToken': 'Integration Settings'
+                        id: 'settingsIntegrationSettings',
+                        routePath: 'settings/integrationSettings',
+                        titleToken: 'Integration Settings'
                     },
                     {
-                        'id': 'settingsAccessControl',
-                        'routePath': 'settings/accessControl',
-                        'titleToken': 'AccessControl'
+                        id: 'settingsAccessControl',
+                        routePath: 'settings/accessControl',
+                        titleToken: 'AccessControl'
                     },
                     {
-                        'id': 'settingsTranscoding',
-                        'routePath': 'settings/transcoding',
-                        'titleToken': 'Transcoding settings'
+                        id: 'settingsTranscoding',
+                        routePath: 'settings/transcoding',
+                        titleToken: 'Transcoding settings'
                     },
                     {
-                        'id': 'settingsCustomData',
-                        'routePath': 'settings/metadata',
-                        'titleToken': 'CustomData'
+                        id: 'settingsCustomData',
+                        routePath: 'settings/metadata',
+                        titleToken: 'CustomData'
                     },
                     {
-                        'id': 'settingsMyUserSettings',
-                        'routePath': 'settings/myUserSettings',
-                        'titleToken': 'My User Settings'
+                        id: 'settingsMyUserSettings',
+                        routePath: 'settings/myUserSettings',
+                        titleToken: 'My User Settings'
                     },
                     {
-                        'id': 'settingsAccountInformation',
-                        'routePath': 'settings/accountInformation',
-                        'titleToken': 'Account Information'
+                        id: 'settingsAccountInformation',
+                        routePath: 'settings/accountInformation',
+                        titleToken: 'Account Information'
                     }
                 ]
             }, {
-                'id': 'administration',
-                'routePath': 'administration',
-                'titleToken': '',
-                'showSubMenu': true,
-                'children': [
+                id: 'administration',
+                routePath: 'administration',
+                titleToken: '',
+                children: [
                     {
-                        'id': 'administrationUsers',
-                        'routePath': 'administration/users',
-                        'titleToken': 'Users',
+                        id: 'administrationUsers',
+                        routePath: 'administration/users',
+                        titleToken: 'Users',
                     },
                     {
-                        'id': 'administrationRoles',
-                        'routePath': 'administration/roles',
-                        'titleToken': 'Roles',
+                        id: 'administrationRoles',
+                        routePath: 'administration/roles',
+                        titleToken: 'Roles',
                     }
                 ]
             }
@@ -267,6 +272,12 @@ export class KmcMainViewsService {
     createMenu(): KMCAppMenuItem[] {
         this._logger.info('build app menu');
 
+        const openFirstChild = function(this: KMCAppMenuItem): void {
+              if (this.children && this.children.length > 0) {
+                  this.children[0].open();
+              }
+        };
+
         const processItem = (target: KMCAppMenuItem[], item: KMCAppMenuItem): KMCAppMenuItem[] => {
             if (item.children && item.children.length) {
                 item.children = item.children.reduce(processItem, []);
@@ -275,6 +286,9 @@ export class KmcMainViewsService {
                 const itemHasChildren = item.children && item.children.length > 0;
                 const itemIsActionable = !!item.open;
                 if (itemHasChildren || itemIsActionable) {
+                    if (!item.open) {
+                        item.open = openFirstChild.bind(item);
+                    }
                     target.push(item);
                 } else {
                     this._logger.debug(`remove item from app main views list`, {
