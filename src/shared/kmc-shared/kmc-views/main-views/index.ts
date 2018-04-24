@@ -7,3 +7,5 @@ export * from './content-uploads-main-view.service';
 export * from './content-bulk-uploads-main-view.service';
 export * from './content-drop-folders-main-view.service';
 export * from './studio-main-view.service';
+export * from './usage-dashboard-main-view.service';
+export * from './live-analytics-main-view.service';

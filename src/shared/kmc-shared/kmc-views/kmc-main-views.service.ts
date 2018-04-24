@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { ContentCategoriesMainViewService,
     ContentEntriesMainViewService,
-    StudioMainViewService,
     ContentModerationMainViewService,
     ContentPlaylistsMainViewService,
     ContentSyndicationMainViewService,
     ContentUploadsMainViewService,
     ContentBulkUploadsMainViewService,
-    ContentDropFoldersMainViewService
+    ContentDropFoldersMainViewService,
+    StudioMainViewService,
+    UsageDashboardMainViewService,
+    LiveAnalyticsMainViewService
 } from './main-views';
 
 
@@ -82,7 +84,9 @@ export class KmcMainViewsService {
         private _contentUploadsMain: ContentUploadsMainViewService,
         private _contentBulkUploadsMain: ContentBulkUploadsMainViewService,
         private _contentDropFoldersMain: ContentDropFoldersMainViewService,
-        private _studioMain: StudioMainViewService
+        private _studioMain: StudioMainViewService,
+        private _usageDashboardMain: UsageDashboardMainViewService,
+        private _liveAnalyticsMain: LiveAnalyticsMainViewService
     ) {
         this._logger = logger.subLogger('KmcMainViewsService');
     }
@@ -162,7 +166,6 @@ export class KmcMainViewsService {
                 ]
             },
             {
-
                 isAvailable: this._studioMain.isAvailable(),
                 open: () => {
                     this._studioMain.open();
@@ -171,8 +174,10 @@ export class KmcMainViewsService {
                 'showSubMenu': false,
             },
             {
-                'id': 'usageDashboard',
-                'routePath': 'usageDashboard',
+                isAvailable: this._usageDashboardMain.isAvailable(),
+                open: () => {
+                    this._usageDashboardMain.open();
+                },
                 'titleToken': 'Usage Dashboard',
                 'showSubMenu': false,
             },
@@ -183,8 +188,10 @@ export class KmcMainViewsService {
                 'showSubMenu': true,
                 'children': [
                     {
-                        'id': 'liveAnalytics',
-                        'routePath': 'analytics/liveAnalytics',
+                        isAvailable: this._liveAnalyticsMain.isAvailable(),
+                        open: () => {
+                            this._liveAnalyticsMain.open();
+                        },
                         'titleToken': 'Live Analytics'
                     },
                     {

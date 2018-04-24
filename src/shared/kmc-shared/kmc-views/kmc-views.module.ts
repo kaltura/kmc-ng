@@ -8,7 +8,9 @@ import {
     ContentUploadsMainViewService,
     ContentBulkUploadsMainViewService,
     ContentDropFoldersMainViewService,
-    StudioMainViewService
+    StudioMainViewService,
+    UsageDashboardMainViewService,
+    LiveAnalyticsMainViewService
 } from './main-views';
 import { KmcMainViewsService } from './kmc-main-views.service';
 
@@ -32,6 +34,8 @@ export class KmcViewsModule {
                 ContentBulkUploadsMainViewService,
                 ContentDropFoldersMainViewService,
                 StudioMainViewService,
+                UsageDashboardMainViewService,
+                LiveAnalyticsMainViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };

@@ -35,26 +35,6 @@ function isKavaAppValid(): boolean {
     return isValid;
 }
 
-function isUsageDashboardAppValid(): boolean {
-    let isValid = false;
-    if (serverConfig.externalApps.usageDashboard.enabled) {
-        isValid =
-            !!serverConfig.externalApps.usageDashboard.uri &&
-            !serverConfig.externalApps.usageDashboard.uri.match(/\s/g) && // not contains white spaces
-            typeof (serverConfig.externalApps.usageDashboard.uiConfId) !== 'undefined' &&
-            serverConfig.externalApps.usageDashboard.uiConfId !== null &&
-            serverConfig.externalApps.usageDashboard.map_urls &&
-            serverConfig.externalApps.usageDashboard.map_urls.length &&
-            serverConfig.externalApps.usageDashboard.map_urls.indexOf('') === -1 && // no empty url
-            !!serverConfig.externalApps.usageDashboard.map_zoom_levels;
-
-        if (!isValid) {
-            console.warn('Disabling Usage Dashboard standalone application - configuration is invalid')
-        }
-    }
-    return isValid;
-}
-
 function isClipAndTrimAppValid(): boolean {
   let isValid = false;
   if (serverConfig.externalApps.clipAndTrim.enabled) {
@@ -163,7 +143,6 @@ export function initializeConfiguration(): Observable<void> {
                 Object.assign(serverConfig, response);
                 serverConfig.externalApps.kava.enabled = isKavaAppValid();
                 serverConfig.externalApps.liveDashboard.enabled = isLiveDashboardAppValid();
-                serverConfig.externalApps.usageDashboard.enabled = isUsageDashboardAppValid();
                 serverConfig.externalApps.clipAndTrim.enabled = isClipAndTrimAppValid();
                 serverConfig.externalApps.advertisements.enabled = isAdvertisementsAppValid();
 
