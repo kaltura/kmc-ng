@@ -1345,6 +1345,11 @@
                         "remove": "Remove",
                         "uploadBtn": "Upload",
                         "cancel": "Cancel",
+                        "continue": "Continue",
+                        "errors": {
+                            "uniqueFlavors": "More than one file is associated with the same Transcoding Flavor settings.",
+                            "missingFlavor": "Some required Transcoding Flavors are missing. Continue?"
+                        },
                         "emptyMessage": {
                             "title": "No files to upload",
                             "getStarted": "Add some files to get started. ",

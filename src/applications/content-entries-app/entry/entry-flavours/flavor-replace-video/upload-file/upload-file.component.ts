@@ -23,6 +23,7 @@ import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaCo
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
 import { Observable } from 'rxjs/Observable';
+import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/KalturaFlavorReadyBehaviorType';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];
@@ -259,7 +260,8 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
-        if (this._validateFiles(this._files)) {
+        const { isValid, code } = this._validateFiles(this._files);
+        if (isValid) {
             this.parentPopupWidget.close();
             const uploadFileDataList = this._files.map(fileData => ({
                 file: fileData.file,
@@ -267,31 +269,80 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
             }));
 
             // this._newEntryUploadService.upload(uploadFileDataList, Number(transcodingProfileId));
+        } else if (code) {
+            if (code === 'uniqueFlavors') {
+                this._transcodingProfileError = new AreaBlockerMessage({
+                    message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.errors.uniqueFlavors'),
+                    buttons: [
+                        {
+                            label: this._appLocalization.get('app.common.ok'),
+                            action: () => {
+                                this._transcodingProfileError = null;
+                                this.parentPopupWidget.close();
+                            }
+                        }
+                    ]
+                });
+            } else if (code === 'missingFlavors') {
+                this._transcodingProfileError = new AreaBlockerMessage({
+                    message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.errors.uniqueFlavors'),
+                    buttons: [
+                        {
+                            label: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.continue'),
+                            action: () => {
+                                // TODO
+                            }
+                        },
+                        {
+                            label: this._appLocalization.get('app.common.cancel'),
+                            action: () => {
+                                this._transcodingProfileError = null;
+                                this.parentPopupWidget.close();
+                            }
+                        }
+                    ]
+                });
+            }
         }
     }
 
-    private _validateFiles(files: UploadReplacementFile[]): boolean {
-        let result = true;
+    private _validateFiles(files: UploadReplacementFile[]): { isValid: boolean, code?: string } {
+        let isValid = true;
+        let code = null;
         const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
+        const selectedProfile = this._transcodingProfiles.find(profile => profile.id === this._transcodingProfileField.value);
+        const conversionProfileAssetParams = selectedProfile ? selectedProfile.assets : [];
 
-        files.forEach(file => {
+        files.forEach((file, index) => {
             const fileSize = file.size / 1024 / 1024; // convert to Mb
 
-            if (Number.isInteger(file.flavor) && !this._flavorsFieldDisabled && this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
-                result = false;
+            if (!Number.isInteger(file.flavor) && !this._flavorsFieldDisabled && this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
+                isValid = false;
                 file.errorToken = 'applications.upload.validation.selectFlavor';
                 file.hasError = true;
             } else if (!(this._uploadManagement.supportChunkUpload(new NewEntryUploadFile(null, null, null, null)) || fileSize < maxFileSize)) {
-                result = false;
+                isValid = false;
                 file.hasError = true;
                 file.errorToken = 'applications.upload.validation.fileSizeExceeded';
             } else {
                 file.hasError = false;
                 file.errorToken = null;
             }
+
+            if (files.indexOf(file) !== index) {
+                code = 'uniqueFlavors';
+            }
+
+            conversionProfileAssetParams.forEach(asset => {
+                if (asset.readyBehavior === KalturaFlavorReadyBehaviorType.required
+                    && asset.origin === KalturaAssetParamsOrigin.ingest
+                    && file.flavor !== asset.assetParamsId) {
+                    code = 'missingFlavors';
+                }
+            });
         });
 
-        return result;
+        return { isValid, code };
     }
 
     public _updateFileValidityOnTypeChange(file: UploadReplacementFile): void {
