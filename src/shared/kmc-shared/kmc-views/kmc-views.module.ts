@@ -4,8 +4,7 @@ import {
     ContentEntriesMainViewService, StudioMainViewService
 } from './main-views';
 import {
-    ContentCategoryViewService, ContentEntryViewService,
-    ContentNewCategoryViewService
+    ContentCategoryViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 
@@ -22,10 +21,8 @@ export class KmcViewsModule {
             providers: <any[]>[
                 KmcMainViewsService,
                 ContentEntriesMainViewService,
-                ContentEntryViewService,
                 ContentCategoriesMainViewService,
                 ContentCategoryViewService,
-                ContentNewCategoryViewService,
                 StudioMainViewService
             ]
         };

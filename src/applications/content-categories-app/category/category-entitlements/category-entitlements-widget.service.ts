@@ -1,6 +1,5 @@
 import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {CategoryWidgetKeys} from './../category-widget-keys';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
@@ -13,6 +12,7 @@ import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullab
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
@@ -27,7 +27,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _categoryService: CategoryService) {
-    super(CategoryWidgetKeys.Entitlements);
+    super(ContentCategoryViewSections.Entitlements);
 
     this._buildForm();
   }

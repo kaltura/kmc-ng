@@ -298,7 +298,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     _onActionSelected({action, category}: { action: string, category: KalturaCategory }) {
         switch (action) {
             case 'edit':
-                this._contentCategoryView.open({ category: { id: category.id, tags: category.tags } });
+                this._contentCategoryView.open({ category });
                 break;
             case 'delete':
                 this.deleteCategory(category);
