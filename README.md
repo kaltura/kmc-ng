@@ -73,7 +73,20 @@ The configuration of the kmc-ng application is split into several files. Each fi
 - (3) this configuration file can be modified only before building the application
 - (4) the path is relative to the file that contains the import statement
 
+### External application supported versions
 
+KMC-ng launches various external applications. The following application versions are supported by the current KMC-ng version:
+
+| Application | Version | 
+|:-------|:-------|
+| Studio V2 | v2.2.1 |
+| Studio V3 | v3.1.1 |
+| Live Dashboard | v1.4.1 |
+| Kava | N/A |
+| Live Analytics | v2.5 |
+| Usage Dashboard | v1.0.0 |
+| KEA | v2.22.5 |
+ 
 ### Contributing
 KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
 

@@ -47,36 +47,33 @@ export const ServerConfigSchema = {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
-                        version: {type: 'string'},
                         html5_version: {type: 'string'},
                         html5lib: {type: 'string'},
                         showStudioV3: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'version', 'html5_version', 'html5lib'],
+                    required: ['enabled', 'uri', 'html5_version', 'html5lib'],
                     additionalProperties: false
                 },
                 studioV3: {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
-                        version: {type: 'string'},
                         html5_version: {type: 'string'},
                         html5lib: {type: 'string'},
                         showHTMLStudio: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'version', 'html5_version', 'html5lib'],
+                    required: ['enabled', 'uri', 'html5_version', 'html5lib'],
                     additionalProperties: false
                 },
                 usageDashboard: {
                     properties: {
                         enabled: {type: 'boolean'},
-                        version: {type: 'string'},
                         uri: {type: 'string'},
                         uiConfId: {type: 'number'},
                         map_urls: { type: 'array', items: { type: 'string' } },
                         map_zoom_levels: {type: 'string'}
                     },
-                    required: ['enabled', 'version', 'uri', 'uiConfId', 'map_urls', 'map_zoom_levels'],
+                    required: ['enabled', 'uri', 'uiConfId', 'map_urls', 'map_zoom_levels'],
                     additionalProperties: false
                 },
                 liveDashboard: {
@@ -92,39 +89,33 @@ export const ServerConfigSchema = {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'},
-                      uiConfId: {type: 'number'},
-                      version: {type: 'string'}
+                      uiConfId: {type: 'number'}
                     },
-                    required: ['enabled', 'uri', 'version'],
+                    required: ['enabled', 'uri'],
                     additionalProperties: false
                 },
                 clipAndTrim: {
                   properties: {
                     enabled: {type: 'boolean'},
-                    uri: {type: 'string'},
-                    uiConfId: {type: 'string'},
-                    version: {type: 'string'}
+                    uri: {type: 'string'}
                   },
-                  required: ['enabled', 'uri', 'uiConfId'],
+                  required: ['enabled', 'uri'],
                   additionalProperties: false
                 },
                 advertisements: {
                   properties: {
                     enabled: {type: 'boolean'},
-                    uri: {type: 'string'},
-                    uiConfId: {type: 'string'},
-                    version: {type: 'string'}
+                    uri: {type: 'string'}
                   },
-                  required: ['enabled', 'uri', 'uiConfId'],
+                  required: ['enabled', 'uri'],
                   additionalProperties: false
                 },
                 kava: {
                     properties: {
                         enabled: {type: 'boolean'},
-                        version: {type: 'string'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled', 'version', 'uri'],
+                    required: ['enabled', 'uri'],
                     additionalProperties: false
                 }
             },
@@ -204,7 +195,6 @@ export interface ServerConfig {
         studio: {
             enabled: boolean,
             uri: string,
-            version: string,
             html5_version: string,
             html5lib: string,
             showFlashStudio: boolean
@@ -212,7 +202,6 @@ export interface ServerConfig {
         studioV3: {
             enabled: boolean,
             uri: string,
-            version: string,
             html5_version: string,
             html5lib: string,
             showFlashStudio: boolean
@@ -224,12 +213,10 @@ export interface ServerConfig {
         },
         kava: {
             enabled: boolean,
-            version: string,
             uri: string
         },
         usageDashboard: {
             enabled: boolean,
-            version: string,
             uri: string,
             uiConfId: number,
             map_urls: string[],
@@ -237,21 +224,16 @@ export interface ServerConfig {
         },
         liveAnalytics: {
             enabled: boolean,
-            version: string,
             uiConfId: number,
             uri: string
         },
         clipAndTrim: {
           enabled: boolean,
-          uri: string,
-          uiConfId: string,
-          version: string,
+          uri: string
         },
         advertisements: {
           enabled: boolean,
-          uri: string,
-          uiConfId: string,
-          version: string,
+          uri: string
         }
     };
     externalLinks: {
