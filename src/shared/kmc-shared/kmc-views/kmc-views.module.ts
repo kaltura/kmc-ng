@@ -1,7 +1,16 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import {
     ContentCategoriesMainViewService,
-    ContentEntriesMainViewService, StudioMainViewService
+    ContentEntriesMainViewService,
+    ContentModerationMainViewService,
+    ContentPlaylistsMainViewService,
+    ContentSyndicationMainViewService,
+    ContentUploadsMainViewService,
+    ContentBulkUploadsMainViewService,
+    ContentDropFoldersMainViewService,
+    StudioMainViewService,
+    UsageDashboardMainViewService,
+    LiveAnalyticsMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService
@@ -22,8 +31,17 @@ export class KmcViewsModule {
                 KmcMainViewsService,
                 ContentEntriesMainViewService,
                 ContentCategoriesMainViewService,
+                ContentModerationMainViewService,
+                ContentPlaylistsMainViewService,
+                ContentSyndicationMainViewService,
+                ContentUploadsMainViewService,
+                ContentBulkUploadsMainViewService,
+                ContentDropFoldersMainViewService,
                 ContentCategoryViewService,
-                StudioMainViewService
+                StudioMainViewService,
+                UsageDashboardMainViewService,
+                LiveAnalyticsMainViewService,
+                KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };
     }

@@ -4,22 +4,6 @@ import * as Ajv from 'ajv';
 import {serverConfig, ServerConfig, ServerConfigSchema} from 'config/server';
 import {globalConfig} from 'config/global';
 
-function isStudioAppValid(): boolean {
-    let isValid = false;
-    if (serverConfig.externalApps.studio.enabled) {
-        isValid =
-            !!serverConfig.externalApps.studio.uri &&
-            !serverConfig.externalApps.studio.uri.match(/\s/g) && // not contains white spaces
-            !!serverConfig.externalApps.studio.version &&
-            !!serverConfig.externalApps.studio.html5_version &&
-            !!serverConfig.externalApps.studio.html5lib;
-
-        if (!isValid) {
-            console.warn('Disabling Studio standalone application - configuration is invalid');
-        }
-    }
-    return isValid;
-}
 
 function isLiveDashboardAppValid(): boolean {
     let isValid = false;
@@ -46,26 +30,6 @@ function isKavaAppValid(): boolean {
 
         if (!isValid) {
             console.warn('Disabling KAVA standalone application - configuration is invalid');
-        }
-    }
-    return isValid;
-}
-
-function isUsageDashboardAppValid(): boolean {
-    let isValid = false;
-    if (serverConfig.externalApps.usageDashboard.enabled) {
-        isValid =
-            !!serverConfig.externalApps.usageDashboard.uri &&
-            !serverConfig.externalApps.usageDashboard.uri.match(/\s/g) && // not contains white spaces
-            typeof (serverConfig.externalApps.usageDashboard.uiConfId) !== 'undefined' &&
-            serverConfig.externalApps.usageDashboard.uiConfId !== null &&
-            serverConfig.externalApps.usageDashboard.map_urls &&
-            serverConfig.externalApps.usageDashboard.map_urls.length &&
-            serverConfig.externalApps.usageDashboard.map_urls.indexOf('') === -1 && // no empty url
-            !!serverConfig.externalApps.usageDashboard.map_zoom_levels;
-
-        if (!isValid) {
-            console.warn('Disabling Usage Dashboard standalone application - configuration is invalid')
         }
     }
     return isValid;
@@ -177,10 +141,8 @@ export function initializeConfiguration(): Observable<void> {
             const validationResult = validateSeverConfig(response);
             if (validationResult.isValid) {
                 Object.assign(serverConfig, response);
-                serverConfig.externalApps.studio.enabled = isStudioAppValid();
                 serverConfig.externalApps.kava.enabled = isKavaAppValid();
                 serverConfig.externalApps.liveDashboard.enabled = isLiveDashboardAppValid();
-                serverConfig.externalApps.usageDashboard.enabled = isUsageDashboardAppValid();
                 serverConfig.externalApps.clipAndTrim.enabled = isClipAndTrimAppValid();
                 serverConfig.externalApps.advertisements.enabled = isAdvertisementsAppValid();
 
