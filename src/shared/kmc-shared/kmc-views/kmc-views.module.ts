@@ -1,8 +1,9 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import {
     ContentCategoriesMainViewService,
-    ContentEntriesMainViewService
-} from 'app-shared/kmc-shared/kmc-views/main-views';
+    ContentEntriesMainViewService, StudioMainViewService
+} from './main-views';
+import { KmcMainViewsService } from './kmc-main-views.service';
 
 @NgModule({
     imports: <any[]>[],
@@ -16,7 +17,9 @@ export class KmcViewsModule {
             ngModule: KmcViewsModule,
             providers: <any[]>[
                 ContentEntriesMainViewService,
-                ContentCategoriesMainViewService
+                ContentCategoriesMainViewService,
+                StudioMainViewService,
+                KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };
     }

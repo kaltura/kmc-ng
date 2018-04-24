@@ -1,9 +1,11 @@
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KmcMainViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-main-view-base.service';
+import { Injectable } from '@angular/core';
+import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
+import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router, NavigationEnd } from '@angular/router';
 
+@Injectable()
 export class ContentEntriesMainViewService extends KmcMainViewBaseService {
 
     constructor(

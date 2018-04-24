@@ -1,14 +1,3 @@
-import { KmcRouteViews } from 'app-shared/kmc-shared/kmc-views/kmc-route-views';
-
-export interface KMCAppMenuItem {
-    id: string | KmcRouteViews;
-    routePath: string;
-    titleToken: string;
-    icon?: string;
-    position?: string;
-    children?: KMCAppMenuItem[];
-    showSubMenu: boolean;
-}
 
 export interface KmcAppConfig {
   storageNamespace: string;
@@ -20,7 +9,6 @@ export interface KmcAppConfig {
     errorRoute: string;
     loginRoute: string;
   },
-  menuItems: KMCAppMenuItem[];
   locales: {
     id: string;
     label: string;
@@ -38,7 +26,6 @@ export const kmcAppConfig: KmcAppConfig = {
     'errorRoute': '/error',
     'loginRoute': '/login',
   },
-  'menuItems': [],
   'locales': [
     {
       'id': 'en',

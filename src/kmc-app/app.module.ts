@@ -142,8 +142,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     AccessControlProfileModule.forRoot(),
     KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
-    KmcViewsModule.forRoot(),
-    KalturaClientModule.forRoot(kalturaClientOptionsFactory)
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      KmcViewsModule.forRoot(),
   ],
   declarations: <any>[
     AppComponent,

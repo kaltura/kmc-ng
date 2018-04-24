@@ -6,11 +6,10 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
 
 import * as R from 'ramda';
-import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { KmcRouteViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-route-view-base.service';
+import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -32,11 +31,11 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     menuConfig: KMCAppMenuItem[];
     selectedMenuItem: KMCAppMenuItem;
-    showSubMenu: boolean = true;
+    showSubMenu = true;
 
 
     constructor(private userAuthentication: AppAuthentication,
-                private appNavigator: AppNavigator,
+                private _kmcMainViews: KmcMainViewsService,
                 private _logger: KalturaLogger,
                 private router: Router,
                 private _browserService: BrowserService) {
@@ -47,7 +46,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
             }
         });
         this._userContext = userAuthentication.appUser;
-        this.menuConfig = this._buildMenu();
+        this.menuConfig = this._kmcMainViews.createMenu();
 
         if (router.navigated)
         {

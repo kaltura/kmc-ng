@@ -1,38 +1,87 @@
-
-import { ContentCategoriesMainViewService, ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { Injectable } from '@angular/core';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { ContentCategoriesMainViewService, ContentEntriesMainViewService, StudioMainViewService } from './main-views';
 
 export interface KMCAppMenuItem {
     id?: any; // TODO sakal remove
     routePath?: string; // TODO sakal remove
     titleToken: string;
     icon?: string;
-    isAvailable?: boolean; // TODO sakal make required
+    isAvailable?: boolean; // TODO sakal make requiredch
     position?: string;
-    open?: () => void; // TODO sakal make required
+    open?: () => void;
     children?: KMCAppMenuItem[];
-    showSubMenu?: boolean;
+    showSubMenu?: boolean; // TODO remove
 }
+//
+//
+// private _syncAppMenuConfigWithPermissions(): void {
+//
+//     const isItemEnabled = (menuItem: KMCAppMenuItem | KMCAppSubMenuItem): boolean => {
+//         switch (menuItem.id) {
+//             case 'usageDashboard':
+//                 this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
+//                 return serverConfig.externalApps.usageDashboard.enabled;
+//             case 'studio':
+//                 this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
+//                 return serverConfig.externalApps.studio.enabled;
+//             case 'kava':
+//                 this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
+//                 return serverConfig.externalApps.kava.enabled;
+//             case 'liveAnalytics':
+//                 this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
+//                 return serverConfig.externalApps.liveAnalytics.enabled;
+//             default:
+//                 return true;
+//         }
+//     }
+//
+//     const hasViewPermission = (menuItem: KMCAppMenuItem | KMCAppSubMenuItem): boolean => {
+//         const itemPermissions = appRoutePermissionsMapping[menuItem.routePath];
+//
+//         let result = false;
+//         if (itemPermissions && itemPermissions.length) {
+//             result = this._permissions.hasPermission(itemPermissions);
+//         }
+//
+//         if (!result) {
+//             this._logger.info(`The user doesn't have sufficient permission to access app '${menuItem.id}', removing relevant menu item.`);
+//             return false;
+//         } else {
+//             return true;
+//         }
+//     }
+//
+//
+//
+// }
 
-export class AppMenuProvider {
+@Injectable()
+export class KmcMainViewsService {
+
+    private _logger: KalturaLogger;
 
     constructor(
+        logger: KalturaLogger,
         private _contentEntriesMain: ContentEntriesMainViewService,
-        private _contentCategoriesMain: ContentCategoriesMainViewService
+        private _contentCategoriesMain: ContentCategoriesMainViewService,
+        private _studioMain: StudioMainViewService
     ) {
-
+        this._logger = logger.subLogger('KmcMainViewsService');
     }
 
-    private _getMenuItems(): KMCAppMenuItem[] {
+    private _getMainViewsList(): KMCAppMenuItem[] {
         return [
             {
                 'routePath': 'content',
                 'titleToken': 'Content',
+                isAvailable: true,
                 'showSubMenu': true,
                 'children': [
                     {
                         isAvailable: this._contentEntriesMain.isAvailable(),
                         open: () => {
-                          this._contentEntriesMain.open();
+                            this._contentEntriesMain.open();
                         },
                         'titleToken': 'Entries',
                         'position': 'left'
@@ -84,8 +133,11 @@ export class AppMenuProvider {
                 ]
             },
             {
-                'id': 'studio',
-                'routePath': 'studio',
+
+                isAvailable: this._studioMain.isAvailable(),
+                open: () => {
+                    this._studioMain.open();
+                },
                 'titleToken': 'Studio',
                 'showSubMenu': false,
             },
@@ -173,60 +225,35 @@ export class AppMenuProvider {
                     }
                 ]
             }
-            ];
+        ];
     }
 
     createMenu(): KMCAppMenuItem[] {
-        let result: KMCAppMenuItem[] = [];
+        this._logger.info('build app menu');
 
         const processItem = (target: KMCAppMenuItem[], item: KMCAppMenuItem): KMCAppMenuItem[] => {
             if (item.children && item.children.length) {
                 item.children = item.children.reduce(processItem, []);
-            } else {
-                const viewId = KmcRouteViews[item.id];
-
-                if (viewId)
-                {
-                    const viewProvider = viewId ? this._kmcRouteViewsProvider.getRouteView(viewId) : null;
-                    if (viewProvider) {
-                        if (viewProvider.isAvailable())
-                        {
-                            return true;
-                        } else {
-                            this._logger.debug(`missing provider for view, removing view from kmc menu`, { viewId });
-                        }
-                    }else
-                    {
-                        this._logger.warn(`cannot find route view service for view, removing view from kmc menu (did you remember to add add your route to KmcRouteViewsProviderService?)`, { viewId });
-                        return false;
-                    }
-                } else
-                {
-                    this._logger.info(`ignoring ${item.id}`);
-                    return false;
+            }
+            if (item.isAvailable) {
+                const itemHasChildren = item.children && item.children.length > 0;
+                const itemIsActionable = !!item.open;
+                if (itemHasChildren || itemIsActionable) {
+                    target.push(item);
+                } else {
+                    this._logger.debug(`remove item from app main views list`, {
+                        titleToken: item.titleToken,
+                        itemHasChildren,
+                        itemIsActionable
+                    });
                 }
-
-
+            } else {
+                this._logger.debug(`remove item from app main views list`, {titleToken: item.titleToken, isAvailable: item.isAvailable});
             }
 
             return target;
         };
 
-        kmcAppConfig.menuItems.reduce((item, acc) => {
-
-        })
-
-        result = kmcAppConfig.menuItems.filter(item => processItem);
-
-        kmcAppConfig.menuItems.forEach(item => {
-            if (item.children && item.children.length) {
-                item.children = item.children.filter(childItem => isItemEnabled(childItem));
-            }
-        });
-
-        kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => !item.showSubMenu ? true : (item.children ? item.children.length > 0 : false));
-        return result;
-
+        return this._getMainViewsList().reduce(processItem, []);
     }
-
 }

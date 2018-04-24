@@ -6,7 +6,7 @@ import 'rxjs/add/observable/fromPromise';
 import { Router, NavigationEnd } from '@angular/router';
 
 @Injectable()
-export class ContentCategoriesMainViewService extends KmcMainViewBaseService {
+export class StudioMainViewService extends KmcMainViewBaseService {
 
     constructor(
         private _appPermissions: KMCPermissionsService,
@@ -20,6 +20,6 @@ export class ContentCategoriesMainViewService extends KmcMainViewBaseService {
     }
 
     protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl('content/categories'));
+        return Observable.fromPromise(this.router.navigateByUrl('studio'));
     }
 }
