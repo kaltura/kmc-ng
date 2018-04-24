@@ -1,16 +1,13 @@
-export interface KMCAppSubMenuItem {
-    id: string;
-    routePath: string;
-    titleToken: string;
-    position?: string;
-}
+import { KmcRouteViews } from 'app-shared/kmc-shared/kmc-views/kmc-route-views';
 
 export interface KMCAppMenuItem {
-    id: string;
+    id: string | KmcRouteViews;
     routePath: string;
     titleToken: string;
+    icon?: string;
+    position?: string;
+    children?: KMCAppMenuItem[];
     showSubMenu: boolean;
-    children?: KMCAppSubMenuItem[];
 }
 
 export interface KmcAppConfig {
@@ -41,154 +38,7 @@ export const kmcAppConfig: KmcAppConfig = {
     'errorRoute': '/error',
     'loginRoute': '/login',
   },
-  'menuItems': [
-    {
-      'id': 'content',
-      'routePath': 'content',
-      'titleToken': 'Content',
-      'showSubMenu': true,
-      'children': [
-        {
-          'id': 'contentEntries',
-          'routePath': 'content/entries',
-          'titleToken': 'Entries',
-          'position': 'left'
-        },
-        {
-          'id': 'contentModeration',
-          'routePath': 'content/moderation',
-          'titleToken': 'Moderation',
-          'position': 'left'
-        },
-        {
-          'id': 'contentPlaylists',
-          'routePath': 'content/playlists',
-          'titleToken': 'Playlists',
-          'position': 'left'
-        },
-        {
-          'id': 'contentSyndication',
-          'routePath': 'content/syndication',
-          'titleToken': 'Syndication',
-          'position': 'left'
-        },
-        {
-          'id': 'contentCategories',
-          'routePath': 'content/categories',
-          'titleToken': 'Categories',
-          'position': 'left'
-        },
-        {
-          'id': 'contentUploadControl',
-          'routePath': 'content/upload-control',
-          'titleToken': 'UploadControl',
-          'position': 'right'
-        },
-        {
-          'id': 'contentBulkUpload',
-          'routePath': 'content/bulk',
-          'titleToken': 'BulkUpload',
-          'position': 'right'
-        },
-        {
-          'id': 'contentDropFolders',
-          'routePath': 'content/drop-folders',
-          'titleToken': 'DropFolders',
-          'position': 'right'
-        }
-      ]
-    },
-    {
-      'id': 'studio',
-      'routePath': 'studio',
-      'titleToken': 'Studio',
-      'showSubMenu': false,
-    },
-    {
-      'id': 'usageDashboard',
-      'routePath': 'usageDashboard',
-      'titleToken': 'Usage Dashboard',
-      'showSubMenu': false,
-    },
-    {
-        'id': 'analytics',
-        'routePath': 'analytics',
-        'titleToken': 'Analytics',
-        'showSubMenu': true,
-        'children': [
-            {
-              'id': 'liveAnalytics',
-              'routePath': 'analytics/liveAnalytics',
-              'titleToken': 'Live Analytics'
-            },
-            {
-              'id': 'kava',
-              'routePath': 'analytics/kava',
-              'titleToken': 'Kava'
-            }
-        ]
-    },
-    {
-      'id': 'settings',
-      'routePath': 'settings',
-      'titleToken': '',
-      'showSubMenu': true,
-      'children': [
-        {
-          'id': 'settingsAccountSettings',
-          'routePath': 'settings/accountSettings',
-          'titleToken': 'Account Settings'
-        },
-        {
-          'id': 'settingsIntegrationSettings',
-          'routePath': 'settings/integrationSettings',
-          'titleToken': 'Integration Settings'
-        },
-        {
-          'id': 'settingsAccessControl',
-          'routePath': 'settings/accessControl',
-          'titleToken': 'AccessControl'
-        },
-        {
-          'id': 'settingsTranscoding',
-          'routePath': 'settings/transcoding',
-          'titleToken': 'Transcoding settings'
-        },
-        {
-          'id': 'settingsCustomData',
-          'routePath': 'settings/metadata',
-          'titleToken': 'CustomData'
-        },
-        {
-          'id': 'settingsMyUserSettings',
-          'routePath': 'settings/myUserSettings',
-          'titleToken': 'My User Settings'
-        },
-        {
-            'id': 'settingsAccountInformation',
-            'routePath': 'settings/accountInformation',
-            'titleToken': 'Account Information'
-        }
-      ]
-    }, {
-      'id': 'administration',
-      'routePath': 'administration',
-      'titleToken': '',
-      'showSubMenu': true,
-      'children': [
-        {
-          'id': 'administrationUsers',
-          'routePath': 'administration/users',
-          'titleToken': 'Users',
-        },
-        {
-          'id': 'administrationRoles',
-          'routePath': 'administration/roles',
-          'titleToken': 'Roles',
-        }
-      ]
-    }
-  ],
+  'menuItems': [],
   'locales': [
     {
       'id': 'en',

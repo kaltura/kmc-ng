@@ -76,15 +76,7 @@ export class KMCAuthenticationEvents implements AppAuthenticationEvents {
             }
         }
 
-        kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => isItemEnabled(item));
 
-        kmcAppConfig.menuItems.forEach(item => {
-            if (item.children && item.children.length) {
-                item.children = item.children.filter(childItem => isItemEnabled(childItem));
-            }
-        });
-
-        kmcAppConfig.menuItems = kmcAppConfig.menuItems.filter(item => !item.showSubMenu ? true : (item.children ? item.children.length > 0 : false));
 
     }
 }

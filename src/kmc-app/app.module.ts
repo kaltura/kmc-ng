@@ -84,6 +84,7 @@ import { getKalturaServerUri } from 'config/server';
 import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
+import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -139,8 +140,9 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
     AccessControlProfileModule.forRoot(),
-      KMCPermissionsModule.forRoot(),
+    KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
+    KmcViewsModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory)
   ],
   declarations: <any>[
