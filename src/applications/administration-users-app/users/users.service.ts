@@ -212,26 +212,9 @@ export class UsersStore implements OnDestroy {
       loginEnabled: true
     });
 
-    const request = new KalturaMultiRequest(
-      new UserAddAction({ user }),
-      new UserEnableLoginAction({
-        userId: user.id,
-        loginId: user.email
-      }).setDependency(['password', 0, 'password'])
-    );
-
     return this._kalturaServerClient
-      .multiRequest(request)
-      .map((responses) => {
-        if (responses.hasErrors()) {
-          const errorMessage = responses.map(response => {
-            if (response.error) {
-              return response.error.message + '\n';
-            }
-          }).join('');
-          throw Error(errorMessage);
-        }
-      });
+        .request(new UserAddAction({ user }))
+        .map(() => {});
   }
 
   public updateUser(userForm: FormGroup, userId: string): Observable<void> {
