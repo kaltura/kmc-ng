@@ -35,7 +35,7 @@ export class AppMenuContentComponent implements OnChanges, OnDestroy {
 
     setSelectedRoute(path) {
         if (this._items) {
-            this._selectedMenuItem = this._items.find(item => path.indexOf(`/${item.routePath}`) !== -1);
+            this._selectedMenuItem = this._items.find(item => item.isActiveView(path));
         }else {
             this._selectedMenuItem = null;
         }

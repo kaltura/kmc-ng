@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
@@ -11,23 +10,16 @@ import {serverConfig} from 'config/server';
 @Injectable()
 export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
 
-    private _logger: KalturaLogger;
-
     constructor(
         logger: KalturaLogger,
-        private _appPermissions: KMCPermissionsService,
-        private router: Router
+        router: Router,
+        private _appPermissions: KMCPermissionsService
     ) {
-        super();
-        this._logger = logger.subLogger('LiveAnalyticsMainViewService');
+        super(logger.subLogger('LiveAnalyticsMainViewService'), router);
     }
 
     isAvailable(): boolean {
         return this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE) && this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM);
-    }
-
-    protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
     }
 
     getRoutePath(): string {

@@ -4,15 +4,17 @@ import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router, NavigationEnd } from '@angular/router';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Injectable()
 export class ContentModerationMainViewService extends KmcMainViewBaseService {
 
     constructor(
-        private _appPermissions: KMCPermissionsService,
-        private router: Router
+        logger: KalturaLogger,
+        router: Router,
+        private _appPermissions: KMCPermissionsService
     ) {
-        super();
+        super(logger.subLogger('ContentModerationMainViewService'), router);
     }
 
     isAvailable(): boolean {
@@ -21,10 +23,6 @@ export class ContentModerationMainViewService extends KmcMainViewBaseService {
             KMCPermissions.CONTENT_MODERATE_METADATA,
             KMCPermissions.CONTENT_MODERATE_CUSTOM_DATA
         ]);
-    }
-
-    protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
     }
 
     getRoutePath(): string {

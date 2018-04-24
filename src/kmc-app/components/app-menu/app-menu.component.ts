@@ -58,13 +58,10 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     // TODO sakal remove
     setSelectedRoute(path) {
-
-        const item: KMCAppMenuItem = R.find(R.propEq('routePath', path.split("/")[1]))(this.menuConfig);
-        if (item) {
-            this.selectedMenuItem = item;
-            this.showSubMenu = item.children && item.children.length > 0;
-        }else
-        {
+        if (this.menuConfig) {
+            this.selectedMenuItem = this.menuConfig.find(item => item.isActiveView(path));
+            this.showSubMenu = this.selectedMenuItem && this.selectedMenuItem.children && this.selectedMenuItem.children.length > 0;
+        } else {
             this.selectedMenuItem = null;
             this.showSubMenu = false;
         }

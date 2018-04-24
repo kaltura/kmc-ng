@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router } from '@angular/router';
 import {serverConfig} from 'config/server';
@@ -10,15 +9,13 @@ import {serverConfig} from 'config/server';
 @Injectable()
 export class StudioMainViewService extends KmcMainViewBaseService {
 
-    private _logger: KalturaLogger;
 
     constructor(
         logger: KalturaLogger,
-        private _appPermissions: KMCPermissionsService,
-        private router: Router
+        router: Router,
+        private _appPermissions: KMCPermissionsService
     ) {
-        super();
-        this._logger = logger.subLogger('StudioMainViewService');
+        super(logger.subLogger('StudioMainViewService'), router);
     }
 
     isAvailable(): boolean {
@@ -31,11 +28,6 @@ export class StudioMainViewService extends KmcMainViewBaseService {
             KMCPermissions.FEATURE_V3_STUDIO_PERMISSION
         ]);
     }
-
-    protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
-    }
-
 
     private _isStudioAppValid(): boolean {
         let isValid = false;

@@ -4,15 +4,17 @@ import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router, NavigationEnd } from '@angular/router';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Injectable()
 export class ContentSyndicationMainViewService extends KmcMainViewBaseService {
 
     constructor(
-        private _appPermissions: KMCPermissionsService,
-        private router: Router
+        logger: KalturaLogger,
+        router: Router,
+        private _appPermissions: KMCPermissionsService
     ) {
-        super();
+        super(logger.subLogger('ContentSyndicationMainViewService'), router);
     }
 
     isAvailable(): boolean {
@@ -22,10 +24,6 @@ export class ContentSyndicationMainViewService extends KmcMainViewBaseService {
             KMCPermissions.SYNDICATION_UPDATE,
             KMCPermissions.SYNDICATION_DELETE
         ]);
-    }
-
-    protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
     }
 
     getRoutePath(): string {

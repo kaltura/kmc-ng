@@ -17,10 +17,10 @@ import { ContentCategoriesMainViewService,
 
 export interface KMCAppMenuItem {
     id?: any; // TODO sakal remove
-    routePath: string;
     titleToken: string;
     icon?: string;
-    isAvailable?: boolean; // TODO sakal make requiredch
+    isAvailable?: boolean; // TODO sakal make required
+    isActiveView?: (activePath: string) => boolean; // TODO sakal make required
     position?: string;
     open?: () => void;
     children?: KMCAppMenuItem[];
@@ -93,13 +93,13 @@ export class KmcMainViewsService {
     private _getMainViewsList(): KMCAppMenuItem[] {
         return [
             {
-                routePath: 'content',
                 titleToken: 'Content',
                 isAvailable: true,
+                isActiveView: (activePath: string) => (activePath.indexOf(`/content`) !== -1),
                 children: [
                     {
                         isAvailable: this._contentEntriesMain.isAvailable(),
-                        routePath: this._contentEntriesMain.getRoutePath(),
+                        isActiveView:  (path) => this._contentEntriesMain.isActiveView(path),
                         open: () => {
                             this._contentEntriesMain.open();
                         },
@@ -108,8 +108,7 @@ export class KmcMainViewsService {
                     },
                     {
                         isAvailable: this._contentModerationMain.isAvailable(),
-                        routePath: this._contentModerationMain.getRoutePath(),
-
+                        isActiveView:  (path) => this._contentModerationMain.isActiveView(path),
                         open: () => {
                             this._contentModerationMain.open();
                         },
@@ -118,7 +117,7 @@ export class KmcMainViewsService {
                     },
                     {
                         isAvailable: this._contentPlaylistsMain.isAvailable(),
-                        routePath: this._contentPlaylistsMain.getRoutePath(),
+                        isActiveView:  (path) => this._contentPlaylistsMain.isActiveView(path),
                         open: () => {
                             this._contentPlaylistsMain.open();
                         },
@@ -127,7 +126,7 @@ export class KmcMainViewsService {
                     },
                     {
                         isAvailable: this._contentSyndicationMain.isAvailable(),
-                        routePath: this._contentSyndicationMain.getRoutePath(),
+                        isActiveView:  (path) => this._contentSyndicationMain.isActiveView(path),
                         open: () => {
                             this._contentSyndicationMain.open();
                         },
@@ -136,7 +135,7 @@ export class KmcMainViewsService {
                     },
                     {
                         isAvailable: this._contentCategoriesMain.isAvailable(),
-                        routePath: this._contentCategoriesMain.getRoutePath(),
+                        isActiveView:  (path) => this._contentCategoriesMain.isActiveView(path),
                         open: () => {
                             this._contentCategoriesMain.open();
                         },
@@ -145,7 +144,7 @@ export class KmcMainViewsService {
                     },
                     {
                         isAvailable: this._contentUploadsMain.isAvailable(),
-                        routePath: this._contentUploadsMain.getRoutePath(),
+                        isActiveView:  (path) => this._contentUploadsMain.isActiveView(path),
                         open: () => {
                             this._contentUploadsMain.open();
                         },
@@ -154,7 +153,8 @@ export class KmcMainViewsService {
                     },
                     {
                         isAvailable: this._contentBulkUploadsMain.isAvailable(),
-                        routePath: this._contentBulkUploadsMain.getRoutePath(),
+                        isActiveView:  (path) => this._contentBulkUploadsMain.isActiveView(path),
+
                         open: () => {
                             this._contentBulkUploadsMain.open();
                         },
@@ -163,7 +163,7 @@ export class KmcMainViewsService {
                     },
                     {
                         isAvailable: this._contentDropFoldersMain.isAvailable(),
-                        routePath: this._contentDropFoldersMain.getRoutePath(),
+                        isActiveView:  (path) => this._contentDropFoldersMain.isActiveView(path),
                         open: () => {
                             this._contentDropFoldersMain.open();
                         },
@@ -174,7 +174,7 @@ export class KmcMainViewsService {
             },
             {
                 isAvailable: this._studioMain.isAvailable(),
-                routePath: this._studioMain.getRoutePath(),
+                isActiveView:  (path) => this._studioMain.isActiveView(path),
                 open: () => {
                     this._studioMain.open();
                 },
@@ -182,7 +182,7 @@ export class KmcMainViewsService {
             },
             {
                 isAvailable: this._usageDashboardMain.isAvailable(),
-                routePath: this._usageDashboardMain.getRoutePath(),
+                isActiveView:  (path) => this._usageDashboardMain.isActiveView(path),
                 open: () => {
                     this._usageDashboardMain.open();
                 },
@@ -190,12 +190,12 @@ export class KmcMainViewsService {
             },
             {
                 id: 'analytics',
-                routePath: 'analytics',
+                isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
                 titleToken: 'Analytics',
                 children: [
                     {
                         isAvailable: this._liveAnalyticsMain.isAvailable(),
-                        routePath: this._liveAnalyticsMain.getRoutePath(),
+                        isActiveView:  (path) => this._liveAnalyticsMain.isActiveView(path),
                         open: () => {
                             this._liveAnalyticsMain.open();
                         },
@@ -203,65 +203,65 @@ export class KmcMainViewsService {
                     },
                     {
                         id: 'kava',
-                        routePath: 'analytics/kava',
+                        //isActiveView: 'analytics/kava',
                         titleToken: 'Kava'
                     }
                 ]
             },
             {
                 id: 'settings',
-                routePath: 'settings',
+                isActiveView: (activePath: string) => activePath.indexOf(`/settings`) !== -1,
                 titleToken: '',
                 children: [
                     {
                         id: 'settingsAccountSettings',
-                        routePath: 'settings/accountSettings',
+                       // isActiveView: 'settings/accountSettings',
                         titleToken: 'Account Settings'
                     },
                     {
                         id: 'settingsIntegrationSettings',
-                        routePath: 'settings/integrationSettings',
+                      //  isActiveView: 'settings/integrationSettings',
                         titleToken: 'Integration Settings'
                     },
                     {
                         id: 'settingsAccessControl',
-                        routePath: 'settings/accessControl',
+                        //isActiveView: 'settings/accessControl',
                         titleToken: 'AccessControl'
                     },
                     {
                         id: 'settingsTranscoding',
-                        routePath: 'settings/transcoding',
+                       // isActiveView: 'settings/transcoding',
                         titleToken: 'Transcoding settings'
                     },
                     {
                         id: 'settingsCustomData',
-                        routePath: 'settings/metadata',
+                       // isActiveView: 'settings/metadata',
                         titleToken: 'CustomData'
                     },
                     {
                         id: 'settingsMyUserSettings',
-                        routePath: 'settings/myUserSettings',
+                      //  isActiveView: 'settings/myUserSettings',
                         titleToken: 'My User Settings'
                     },
                     {
                         id: 'settingsAccountInformation',
-                        routePath: 'settings/accountInformation',
+                        //isActiveView: 'settings/accountInformation',
                         titleToken: 'Account Information'
                     }
                 ]
             }, {
                 id: 'administration',
-                routePath: 'administration',
+                isActiveView: (activePath: string) => activePath.indexOf(`/administration`) !== -1,
                 titleToken: '',
                 children: [
                     {
                         id: 'administrationUsers',
-                        routePath: 'administration/users',
+                        //isActiveView: 'administration/users',
                         titleToken: 'Users',
                     },
                     {
                         id: 'administrationRoles',
-                        routePath: 'administration/roles',
+                        //isActiveView: 'administration/roles',
                         titleToken: 'Roles',
                     }
                 ]
@@ -286,19 +286,26 @@ export class KmcMainViewsService {
                 const itemHasChildren = item.children && item.children.length > 0;
                 const itemIsActionable = !!item.open;
                 if (itemHasChildren || itemIsActionable) {
-                    if (!item.open) {
+                    if (itemHasChildren) {
+                        if (item.open) {
+                            this._logger.warn('override menu item open behavior, will select the first available child instead', {
+                                titleToken: item.titleToken,
+                                itemHasChildren,
+                                itemIsActionable
+                            });
+                        }
                         item.open = openFirstChild.bind(item);
                     }
                     target.push(item);
                 } else {
-                    this._logger.debug(`remove item from app main views list`, {
+                    this._logger.debug(`remove menu item from app main views list`, {
                         titleToken: item.titleToken,
                         itemHasChildren,
                         itemIsActionable
                     });
                 }
             } else {
-                this._logger.debug(`remove item from app main views list`, {titleToken: item.titleToken, isAvailable: item.isAvailable});
+                this._logger.debug(`remove menu item from app main views list`, {titleToken: item.titleToken, isAvailable: item.isAvailable});
             }
 
             return target;

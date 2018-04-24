@@ -10,13 +10,12 @@ import {serverConfig} from 'config/server';
 @Injectable()
 export class UsageDashboardMainViewService extends KmcMainViewBaseService {
 
-    private _logger: KalturaLogger;
-
-    constructor(logger: KalturaLogger,
-                private _appPermissions: KMCPermissionsService,
-                private router: Router) {
-        super();
-        this._logger = logger.subLogger('UsageDashboardMainViewService');
+    constructor(
+        logger: KalturaLogger,
+        router: Router,
+        private _appPermissions: KMCPermissionsService
+    ) {
+        super(logger.subLogger('UsageDashboardMainViewService'), router);
     }
 
     isAvailable(): boolean {
@@ -25,11 +24,6 @@ export class UsageDashboardMainViewService extends KmcMainViewBaseService {
             KMCPermissions.ANALYTICS_BASE
         ]);
     }
-
-    protected _open(): Observable<boolean> {
-        return Observable.fromPromise(this.router.navigateByUrl(this.getRoutePath()));
-    }
-
 
     private _isUsageDashboardAppValid(): boolean {
         let isValid = false;
