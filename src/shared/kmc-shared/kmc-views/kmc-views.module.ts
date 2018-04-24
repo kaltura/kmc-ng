@@ -3,7 +3,11 @@ import {
     ContentCategoriesMainViewService,
     ContentEntriesMainViewService, StudioMainViewService
 } from './main-views';
-import { KmcMainViewsService } from './kmc-main-views.service';
+import {
+    ContentCategoryViewService, ContentEntryViewService,
+    ContentNewCategoryViewService
+} from 'app-shared/kmc-shared/kmc-views/details-views';
+import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 
 @NgModule({
     imports: <any[]>[],
@@ -16,10 +20,13 @@ export class KmcViewsModule {
         return {
             ngModule: KmcViewsModule,
             providers: <any[]>[
+                KmcMainViewsService,
                 ContentEntriesMainViewService,
+                ContentEntryViewService,
                 ContentCategoriesMainViewService,
-                StudioMainViewService,
-                KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
+                ContentCategoryViewService,
+                ContentNewCategoryViewService,
+                StudioMainViewService
             ]
         };
     }

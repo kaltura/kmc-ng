@@ -8,6 +8,7 @@ export abstract class KmcMainViewBaseService {
     protected abstract _open(): Observable<boolean>;
 
     abstract isAvailable(): boolean;
+
     open(): void {
         this._open().subscribe(); // TODO sakal handle
     }

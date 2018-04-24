@@ -17,6 +17,7 @@ import {
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kCategoriesList',
@@ -65,6 +66,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private _categoriesUtilsService: CategoriesUtilsService,
                 public _categoryCreationService: CategoryCreationService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+                private _contentCategoryView: ContentCategoryViewService,
                 private _appEvents: AppEventsService) {
     }
 
@@ -296,20 +298,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     _onActionSelected({action, category}: { action: string, category: KalturaCategory }) {
         switch (action) {
             case 'edit':
-                // show category edit warning if needed
-                if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
-                    this._browserService.confirm(
-                        {
-                            header: this._appLocalization.get('applications.content.categories.editCategory'),
-                            message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
-                            accept: () => {
-                                this.router.navigate(['/content/categories/category', category.id]);
-                            }
-                        }
-                    );
-                } else {
-                    this.router.navigate(['/content/categories/category', category.id]);
-                }
+                this._contentCategoryView.open({ category: { id: category.id, tags: category.tags } });
                 break;
             case 'delete':
                 this.deleteCategory(category);
