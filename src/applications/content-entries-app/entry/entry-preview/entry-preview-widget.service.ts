@@ -38,6 +38,13 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
             });
     }
 
+    private _isLiveMediaEntry(mediaType: KalturaMediaType): boolean {
+        return mediaType === KalturaMediaType.liveStreamFlash ||
+            mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            mediaType === KalturaMediaType.liveStreamRealMedia ||
+            mediaType === KalturaMediaType.liveStreamQuicktime;
+    }
+
     /**
      * Do some cleanups if needed once the section is removed
      */
@@ -87,7 +94,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
 
         const entry: KalturaMediaEntry = this.data ? this.data as KalturaMediaEntry : null;
         this.clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled &&
-            entry && !this._store.isLiveMediaEntry(entry.mediaType) && entry.mediaType !== KalturaMediaType.image && entry.status === KalturaEntryStatus.ready;
+            entry && !this._isLiveMediaEntry(entry.mediaType) && entry.mediaType !== KalturaMediaType.image && entry.status === KalturaEntryStatus.ready;
 
 
       if (!this.clipAndTrimEnabled) {

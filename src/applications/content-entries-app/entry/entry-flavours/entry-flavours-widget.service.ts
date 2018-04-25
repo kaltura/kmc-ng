@@ -1,7 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {EntryWidgetKeys} from '../entry-widget-keys';
 import {Observable} from 'rxjs/Observable';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization, TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
@@ -29,6 +28,7 @@ import {EntryWidget} from '../entry-widget';
 import {NewEntryFlavourFile} from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
@@ -44,7 +44,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
                 private _appAuthentication: AppAuthentication, private _browserService: BrowserService,
                 private _uploadManagement: UploadManagement, private _appEvents: AppEventsService) {
-        super(EntryWidgetKeys.Flavours);
+        super(ContentEntryViewSections.Flavours);
     }
 
     /**

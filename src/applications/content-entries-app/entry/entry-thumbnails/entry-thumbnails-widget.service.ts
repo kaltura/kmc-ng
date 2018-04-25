@@ -17,8 +17,6 @@ import { ThumbAssetAddFromImageAction } from 'kaltura-ngx-client/api/types/Thumb
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-
-import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
@@ -30,6 +28,7 @@ import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType'
 import { globalConfig } from 'config/global';
 import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 export interface ThumbnailRow {
   id: string;
@@ -58,7 +57,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
     constructor(private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
                 private _permissionsService: KMCPermissionsService,
                 private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _browserService: BrowserService) {
-        super(EntryWidgetKeys.Thumbnails);
+        super(ContentEntryViewSections.Thumbnails);
     }
 
     /**
