@@ -11,6 +11,7 @@ import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { ButtonModule, DataTableModule, DropdownModule, MenuModule, PaginatorModule } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
     TooltipModule,
     StickyModule,
     RouterModule.forChild(routing),
-    TooltipModule
+    TooltipModule,
+    KMCPermissionsModule
   ],
   declarations: [
     AdministrationUsersComponent,

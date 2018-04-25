@@ -18,6 +18,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
+  @Input() isNewPlaylist: boolean;
 
   @Input()
   set entries(data: any[]) {

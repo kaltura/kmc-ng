@@ -11,7 +11,7 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Injectable()
 export class EntryPreviewWidget extends EntryWidget implements OnDestroy
@@ -20,10 +20,8 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
     private _urlHash: number = 0;
   public clipAndTrimEnabled : boolean = false;
 
-
-  constructor(kalturaServerClient: KalturaClient,
-                private appAuthentication: AppAuthentication,
-                appEvents: AppEventsService,
+    constructor( private appAuthentication: AppAuthentication,private _permissionsService: KMCPermissionsService,
+                kalturaServerClient: KalturaClient, appEvents: AppEventsService,
                 private _store: EntryStore,
                 private _logger: KalturaLogger) {
         super('entryPreview');
@@ -71,6 +69,10 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
             let flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[ks]=${ks}`;
             if (isLive) {
                 flashVars += '&flashvars[disableEntryRedirect]=true';
+            }
+            const shouldDisableAlerts = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_KDP_ALERTS);
+            if (shouldDisableAlerts) {
+              flashVars += '&flashvars[disableAlerts]=true';
             }
 
             this._urlHash = this._urlHash + 1;

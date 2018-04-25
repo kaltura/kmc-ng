@@ -1,9 +1,9 @@
-<button pButton
+<button pButton [disabled]="disabled"
         label="{{'app.menu.upload' | translate | uppercase}}"
         class="kButtonDefault kUploadBtn"
         (click)="uploadmenu.open()"></button>
 
-<kPopupWidget #uploadmenu [popupWidth]="350" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true" [preventPageScroll]="true">
+<kPopupWidget #uploadmenu [popupWidth]="360" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true" [preventPageScroll]="true">
   <ng-template>
     <kKMCUploadMenu (onItemSelected)="_onMenuItemSelected($event)"></kKMCUploadMenu>
   </ng-template>

@@ -3,9 +3,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaUiConf} from 'kaltura-ngx-client/api/types/KalturaUiConf';
 import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import {DestinationComponentBase} from '../../feed-details.component';
+import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
 import {KalturaYahooSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaYahooSyndicationFeed';
 import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kYahooDestinationForm',
@@ -14,6 +15,7 @@ import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
   providers: [{provide: DestinationComponentBase, useExisting: YahooDestinationFormComponent}]
 })
 export class YahooDestinationFormComponent extends DestinationComponentBase implements OnInit, OnDestroy {
+  @Input() mode: FeedFormMode;
 
   @Output()
   onFormStateChanged = new EventEmitter<{ isValid: boolean, isDirty: boolean }>();
@@ -37,6 +39,7 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
     'News &amp; Politics', 'Products &amp; Tech.', 'Sports', 'Travel'];
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _fb: FormBuilder) {
     super();
     // prepare form
@@ -49,21 +52,25 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
     this._fillAvailableCategories();
     this._restartFormData();
 
-    this.onFormStateChanged.emit({
-      isValid: this._form.status === 'VALID',
-      isDirty: this._form.dirty
-    });
+    if (this.mode === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+      this._form.disable({ emitEvent: false });
+    } else {
+      this.onFormStateChanged.emit({
+        isValid: this._form.status === 'VALID',
+        isDirty: this._form.dirty
+      });
 
-    this._form.valueChanges
-      .cancelOnDestroy(this)
-      .subscribe(
-        () => {
-          this.onFormStateChanged.emit({
-            isValid: this._form.status === 'VALID',
-            isDirty: this._form.dirty
-          });
-        }
-      );
+      this._form.valueChanges
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            this.onFormStateChanged.emit({
+              isValid: this._form.status === 'VALID',
+              isDirty: this._form.dirty
+            });
+          }
+        );
+    }
   }
 
   ngOnDestroy() {
