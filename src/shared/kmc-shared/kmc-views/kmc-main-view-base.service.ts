@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { Router } from '@angular/router';
-import { BrowserService, UnpermittedActionReasons } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 export abstract class KmcMainViewBaseService {
 
@@ -40,6 +40,8 @@ export abstract class KmcMainViewBaseService {
         this.openWithState().subscribe();
     }
 
+
+
     openWithState(): Observable<{ opened: boolean }> {
         return Observable.create(observer => {
             if (this.isAvailable()) {
@@ -47,23 +49,21 @@ export abstract class KmcMainViewBaseService {
                     result => {
                         if (!result) {
                             this._logger.info('open view operation failed');
-                            // TODO sakal consult with Amir what to show if failed to navigate
-                            this._browserService.handleUnpermittedAction(UnpermittedActionReasons.General);
+                            this._browserService.handleUnpermittedAction(false);
                         }
 
                         observer.next({opened: result});
                         observer.complete();
                     }, error => {
                         this._logger.info('open view operation failed', { errorMessage: error ? error.message : '' });
-                        // TODO sakal consult with Amir what to show if failed to navigate
-                        this._browserService.handleUnpermittedAction(UnpermittedActionReasons.General);
+                        this._browserService.handleUnpermittedAction(false);
                         observer.next({opened: false});
                         observer.complete();
                     }
                 );
             } else {
                 this._logger.info('ignore open view operation request, view is not available');
-                this._browserService.handleUnpermittedAction(UnpermittedActionReasons.General);
+                this._browserService.handleUnpermittedAction(false);
                 observer.next({opened: false});
                 observer.complete();
             }

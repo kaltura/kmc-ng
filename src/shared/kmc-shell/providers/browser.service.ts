@@ -31,307 +31,279 @@ export type AppStatus = {
   errorMessage : string;
 };
 
-export enum UnpermittedActionReasons {
-    General,
-    Permissions,
-    InvalidConfiguration
-}
-
 @Injectable()
 export class BrowserService implements IAppStorage {
 
-  private _growlMessage = new Subject<GrowlMessage>();
-  private _sessionStartedAt: Date = new Date();
-  public growlMessage$ = this._growlMessage.asObservable();
+    private _growlMessage = new Subject<GrowlMessage>();
+    private _sessionStartedAt: Date = new Date();
+    public growlMessage$ = this._growlMessage.asObservable();
 
-	private _onConfirmationFn : OnShowConfirmationFn = (confirmation : Confirmation) => {
-		// this is the default confirmation dialog provided by the browser.
-		if (confirm(confirmation.message))
-		{
-			if (confirmation.accept)
-			{
-				confirmation.accept.apply(null);
-			}
-
-			if (confirmation.acceptEvent)
-			{
-				confirmation.acceptEvent.next();
-			}
-		}else
-		{
-			if (confirmation.reject)
-			{
-				confirmation.reject.apply(null);
-			}
-
-			if (confirmation.rejectEvent)
-			{
-				confirmation.rejectEvent.next();
-			}
-		}
-	};
-
-  public get sessionStartedAt(): Date {
-    return this._sessionStartedAt;
-  }
-
-	constructor(private localStorage: LocalStorageService,
-              private sessionStorage: SessionStorageService,
-              private _router: Router,
-              private _appLocalization: AppLocalization) {
-	}
-
-  private _downloadContent(url: string): void {
-    return Observable.create(observer => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = () => {
-        observer.next(xhr.response);
-        observer.complete();
-      };
-      xhr.open('GET', url);
-      xhr.responseType = 'blob';
-      xhr.send();
-    });
-  }
-
-	public registerOnShowConfirmation(fn : OnShowConfirmationFn)
-	{
-		if (fn) {
-			this._onConfirmationFn = fn;
-		}
-	}
-
-	public confirm(confirmation : Confirmation) {
-		confirmation.key = "confirm";
-		this._onConfirmationFn(confirmation);
-	}
-
-	public alert(confirmation : Confirmation) {
-		confirmation.key = "alert";
-		this._onConfirmationFn(confirmation);
-	}
-
-	public setInLocalStorage(key: string, value: any): void {
-		this.localStorage.store(key, value);
-	}
-
-	public getFromLocalStorage(key: string): any {
-		return this.localStorage.retrieve(key);
-	}
-
-	public removeFromLocalStorage(key: string): any {
-		this.localStorage.clear(key);
-	}
-
-	public setInSessionStorage(key: string, value: any): void {
-		this.sessionStorage.store(key, value);
-	}
-
-	public getFromSessionStorage(key: string): any {
-		return this.sessionStorage.retrieve(key);
-	}
-
-	public removeFromSessionStorage(key: string): any {
-		this.sessionStorage.clear(key);
-	}
-
-	public openLink(baseUrl: string, params: any = {}, target: string = "_blank") {
-		// if we got params, append to the base URL using query string
-		if (baseUrl && baseUrl.length) {
-			if (Object.keys(params).length > 0) {
-				baseUrl += "?";
-				for (var key of Object.keys(params)) {
-					baseUrl += key + "=" + params[key] + "&";
-				}
-				baseUrl = baseUrl.slice(0, -1); // remove last &
-			}
-		}
-		window.open(baseUrl, target);
-	}
-
-	public openEmail(email: string): void{
-  	    const windowRef = window.open(email, '_blank');
-		windowRef.focus();
-
-		setTimeout(function(){
-			if(!windowRef.document.hasFocus()) {
-				windowRef.close();
-			}
-		}, 500);
-	}
-
-	public isSafari(): boolean{
-		const isChrome = !!window['chrome'] && !!window['chrome'].webstore;
-		return Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 || !isChrome && window['webkitAudioContext'] !== undefined;
-	}
-
-	public isIE11(): boolean{
-		return !!window['MSInputMethodContext'] && !!document['documentMode'];
-	}
-
-	public copyToClipboardEnabled(): boolean {
-		let enabled = true;
-
-		if (this.isSafari()) {
-			let nAgt = navigator.userAgent;
-			let verOffset = nAgt.indexOf("Version");
-			let fullVersion = nAgt.substring(verOffset + 8);
-			let ix;
-			if ((ix = fullVersion.indexOf(";")) != -1) {
-				fullVersion = fullVersion.substring(0, ix);
-			}
-			if ((ix = fullVersion.indexOf(" ")) != -1) {
-				fullVersion = fullVersion.substring(0, ix);
-			}
-			let majorVersion = parseInt('' + fullVersion, 10);
-			enabled = majorVersion < 10;
-		}
-		return enabled;
-	}
-
-	public copyElementToClipboard(el: any): void {
-		if (document.body['createTextRange']) {
-			// IE
-			let textRange = document.body['createTextRange']();
-			textRange.moveToElementText(el);
-			textRange.select();
-			textRange.execCommand("Copy");
-		}
-		else if (window.getSelection && document.createRange) {
-			// non-IE
-			let editable = el.contentEditable; // Record contentEditable status of element
-			let readOnly = el.readOnly; // Record readOnly status of element
-			el.contentEditable = true; // iOS will only select text on non-form elements if contentEditable = true;
-			el.readOnly = false; // iOS will not select in a read only form element
-			let range = document.createRange();
-			range.selectNodeContents(el);
-			let sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(range); // Does not work for Firefox if a textarea or input
-			if (el.nodeName == "TEXTAREA" || el.nodeName == "INPUT")
-				el.select(); // Firefox will only select a form element with select()
-			if (el.setSelectionRange && navigator.userAgent.match(/ipad|ipod|iphone/i))
-				el.setSelectionRange(0, 999999); // iOS only selects "form" elements with SelectionRange
-			el.contentEditable = editable; // Restore previous contentEditable status
-			el.readOnly = readOnly; // Restore previous readOnly status
-			if (document.queryCommandSupported("copy")) {
-				document.execCommand('copy');
-			}
-		}
-	}
-
-	public copyToClipboard(text: string): boolean {
-		let copied = false;
-		let textArea = document.createElement("textarea");
-		textArea.style.position = 'fixed';
-		textArea.style.top = -1000 + 'px';
-		textArea.value = text;
-		document.body.appendChild(textArea);
-		textArea.select();
-		try {
-			copied = document.execCommand('copy');
-		} catch (err) {
-			console.log('Copy to clipboard operation failed');
-		}
-		document.body.removeChild(textArea);
-		return copied;
-	}
-
-	public download(data, filename, type): void {
-		let file;
-		if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
-			if (this.isIE11()){
-				this.openLink(data);
-				return;
-			}
-			file = this._downloadContent(data);
-		} else {
-			file = Observable.of(new Blob([data], { type: type }));
-		}
-
-		file.subscribe(content => {
-			if (window.navigator.msSaveOrOpenBlob) {// IE10+
-				window.navigator.msSaveOrOpenBlob(content, filename);
-			} else { // Others
-				const a = document.createElement('a');
-				const url = URL.createObjectURL(content);
-				a.href = url;
-				a.download = filename;
-				document.body.appendChild(a);
-				a.click();
-				setTimeout(function () {
-					document.body.removeChild(a);
-					window.URL.revokeObjectURL(url);
-				}, 0);
-			}
-		});
-	}
-
-	private scrolling = false;
-	public scrollToTop(duration: number = 500): void {
-		if (!this.scrolling){
-			this.scrolling = true;
-			const cosParameter = window.pageYOffset / 2;
-			let scrollCount: number = 0;
-			let oldTimestamp: number = performance.now();
-			const step = newTimestamp => {
-				scrollCount += Math.PI / (duration / (newTimestamp - oldTimestamp));
-				if (scrollCount >= Math.PI) window.scrollTo(0, 0);
-				if (window.pageYOffset === 0) {
-					this.scrolling = false;
-					return;
-				}
-				window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
-				oldTimestamp = newTimestamp;
-				window.requestAnimationFrame(step);
-			};
-			window.requestAnimationFrame(step);
-		}
-	}
-
-	public showGrowlMessage(message: GrowlMessage): void {
-		if (message.detail || message.summary) {
-			this._growlMessage.next(message);
-		}
-	}
-
-  public handleUnpermittedAction(reason: UnpermittedActionReasons, navigateTo?: string): void {
-      switch (reason) {
-        case (UnpermittedActionReasons.InvalidConfiguration):
-          this.alert(
-            {
-              message: this._appLocalization.get('app.UnpermittedActionReasons.InvalidConfiguration.message'),
-              accept: () => {
-                this._router.navigate([navigateTo || '/']);
-              }
+    private _onConfirmationFn: OnShowConfirmationFn = (confirmation: Confirmation) => {
+        // this is the default confirmation dialog provided by the browser.
+        if (confirm(confirmation.message)) {
+            if (confirmation.accept) {
+                confirmation.accept.apply(null);
             }
-          );
-          break;
-        case (UnpermittedActionReasons.Permissions):
-            // TODO sakal consult with amir
+
+            if (confirmation.acceptEvent) {
+                confirmation.acceptEvent.next();
+            }
+        } else {
+            if (confirmation.reject) {
+                confirmation.reject.apply(null);
+            }
+
+            if (confirmation.rejectEvent) {
+                confirmation.rejectEvent.next();
+            }
+        }
+    };
+
+    public get sessionStartedAt(): Date {
+        return this._sessionStartedAt;
+    }
+
+    constructor(private localStorage: LocalStorageService,
+                private sessionStorage: SessionStorageService,
+                private _router: Router,
+                private _appLocalization: AppLocalization) {
+    }
+
+    private _downloadContent(url: string): void {
+        return Observable.create(observer => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                observer.next(xhr.response);
+                observer.complete();
+            };
+            xhr.open('GET', url);
+            xhr.responseType = 'blob';
+            xhr.send();
+        });
+    }
+
+    public registerOnShowConfirmation(fn: OnShowConfirmationFn) {
+        if (fn) {
+            this._onConfirmationFn = fn;
+        }
+    }
+
+    public confirm(confirmation: Confirmation) {
+        confirmation.key = "confirm";
+        this._onConfirmationFn(confirmation);
+    }
+
+    public alert(confirmation: Confirmation) {
+        confirmation.key = "alert";
+        this._onConfirmationFn(confirmation);
+    }
+
+    public setInLocalStorage(key: string, value: any): void {
+        this.localStorage.store(key, value);
+    }
+
+    public getFromLocalStorage(key: string): any {
+        return this.localStorage.retrieve(key);
+    }
+
+    public removeFromLocalStorage(key: string): any {
+        this.localStorage.clear(key);
+    }
+
+    public setInSessionStorage(key: string, value: any): void {
+        this.sessionStorage.store(key, value);
+    }
+
+    public getFromSessionStorage(key: string): any {
+        return this.sessionStorage.retrieve(key);
+    }
+
+    public removeFromSessionStorage(key: string): any {
+        this.sessionStorage.clear(key);
+    }
+
+    public openLink(baseUrl: string, params: any = {}, target: string = "_blank") {
+        // if we got params, append to the base URL using query string
+        if (baseUrl && baseUrl.length) {
+            if (Object.keys(params).length > 0) {
+                baseUrl += "?";
+                for (var key of Object.keys(params)) {
+                    baseUrl += key + "=" + params[key] + "&";
+                }
+                baseUrl = baseUrl.slice(0, -1); // remove last &
+            }
+        }
+        window.open(baseUrl, target);
+    }
+
+    public openEmail(email: string): void {
+        const windowRef = window.open(email, '_blank');
+        windowRef.focus();
+
+        setTimeout(function () {
+            if (!windowRef.document.hasFocus()) {
+                windowRef.close();
+            }
+        }, 500);
+    }
+
+    public isSafari(): boolean {
+        const isChrome = !!window['chrome'] && !!window['chrome'].webstore;
+        return Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 || !isChrome && window['webkitAudioContext'] !== undefined;
+    }
+
+    public isIE11(): boolean {
+        return !!window['MSInputMethodContext'] && !!document['documentMode'];
+    }
+
+    public copyToClipboardEnabled(): boolean {
+        let enabled = true;
+
+        if (this.isSafari()) {
+            let nAgt = navigator.userAgent;
+            let verOffset = nAgt.indexOf("Version");
+            let fullVersion = nAgt.substring(verOffset + 8);
+            let ix;
+            if ((ix = fullVersion.indexOf(";")) != -1) {
+                fullVersion = fullVersion.substring(0, ix);
+            }
+            if ((ix = fullVersion.indexOf(" ")) != -1) {
+                fullVersion = fullVersion.substring(0, ix);
+            }
+            let majorVersion = parseInt('' + fullVersion, 10);
+            enabled = majorVersion < 10;
+        }
+        return enabled;
+    }
+
+    public copyElementToClipboard(el: any): void {
+        if (document.body['createTextRange']) {
+            // IE
+            let textRange = document.body['createTextRange']();
+            textRange.moveToElementText(el);
+            textRange.select();
+            textRange.execCommand("Copy");
+        }
+        else if (window.getSelection && document.createRange) {
+            // non-IE
+            let editable = el.contentEditable; // Record contentEditable status of element
+            let readOnly = el.readOnly; // Record readOnly status of element
+            el.contentEditable = true; // iOS will only select text on non-form elements if contentEditable = true;
+            el.readOnly = false; // iOS will not select in a read only form element
+            let range = document.createRange();
+            range.selectNodeContents(el);
+            let sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range); // Does not work for Firefox if a textarea or input
+            if (el.nodeName == "TEXTAREA" || el.nodeName == "INPUT")
+                el.select(); // Firefox will only select a form element with select()
+            if (el.setSelectionRange && navigator.userAgent.match(/ipad|ipod|iphone/i))
+                el.setSelectionRange(0, 999999); // iOS only selects "form" elements with SelectionRange
+            el.contentEditable = editable; // Restore previous contentEditable status
+            el.readOnly = readOnly; // Restore previous readOnly status
+            if (document.queryCommandSupported("copy")) {
+                document.execCommand('copy');
+            }
+        }
+    }
+
+    public copyToClipboard(text: string): boolean {
+        let copied = false;
+        let textArea = document.createElement("textarea");
+        textArea.style.position = 'fixed';
+        textArea.style.top = -1000 + 'px';
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            copied = document.execCommand('copy');
+        } catch (err) {
+            console.log('Copy to clipboard operation failed');
+        }
+        document.body.removeChild(textArea);
+        return copied;
+    }
+
+    public download(data, filename, type): void {
+        let file;
+        if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
+            if (this.isIE11()) {
+                this.openLink(data);
+                return;
+            }
+            file = this._downloadContent(data);
+        } else {
+            file = Observable.of(new Blob([data], {type: type}));
+        }
+
+        file.subscribe(content => {
+            if (window.navigator.msSaveOrOpenBlob) {// IE10+
+                window.navigator.msSaveOrOpenBlob(content, filename);
+            } else { // Others
+                const a = document.createElement('a');
+                const url = URL.createObjectURL(content);
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(function () {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 0);
+            }
+        });
+    }
+
+    private scrolling = false;
+
+    public scrollToTop(duration: number = 500): void {
+        if (!this.scrolling) {
+            this.scrolling = true;
+            const cosParameter = window.pageYOffset / 2;
+            let scrollCount: number = 0;
+            let oldTimestamp: number = performance.now();
+            const step = newTimestamp => {
+                scrollCount += Math.PI / (duration / (newTimestamp - oldTimestamp));
+                if (scrollCount >= Math.PI) window.scrollTo(0, 0);
+                if (window.pageYOffset === 0) {
+                    this.scrolling = false;
+                    return;
+                }
+                window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
+                oldTimestamp = newTimestamp;
+                window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+    }
+
+    public showGrowlMessage(message: GrowlMessage): void {
+        if (message.detail || message.summary) {
+            this._growlMessage.next(message);
+        }
+    }
+
+    public handleUnpermittedAction(navigateToDefault: boolean): void {
+
+        if (navigateToDefault) {
+            // TODO sakal ask Amir to change the messages
             this.alert(
                 {
-                    message: this._appLocalization.get('app.UnpermittedActionReasons.InvalidConfiguration.message'),
+                    message: this._appLocalization.get('app.UnpermittedActionReasons.message'),
                     accept: () => {
-                        this._router.navigate([navigateTo || '/']);
+                        this._router.navigate([ '/default']);
                     }
                 }
             );
-          break;
-          case (UnpermittedActionReasons.General):
-          default:
-              // TODO sakal consult with amir
-              this.alert(
-                  {
-                      message: this._appLocalization.get('app.UnpermittedActionReasons.InvalidConfiguration.message'),
-                      accept: () => {
-
-                      }
-                  }
-              );
-              break;
-      }
-  }
-
+        } else {
+            this.alert(
+                {
+                    message: this._appLocalization.get('app.UnpermittedActionReasons.message'),
+                    accept: () => {
+                    }
+                }
+            );
+        }
+    }
 }
 

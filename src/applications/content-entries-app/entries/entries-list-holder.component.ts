@@ -15,6 +15,7 @@ import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entrie
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {serverConfig} from "config/server";
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { EntriesListService } from './entries-list.service';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -64,6 +65,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   constructor(private _router: Router,
               private _activatedRoute: ActivatedRoute,
+              private _entriesListService: EntriesListService,
               private _browserService: BrowserService,
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
@@ -75,21 +77,26 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted)
-      .subscribe(() => {
-        this._entriesStore.reload();
-      });
+      if (this._entriesListService.isViewAvailable)
+      {
+          this._entriesStore.reload();
+      }
 
-    this._appEvents.event(UpdateEntriesListEvent)
-      .cancelOnDestroy(this)
-      .subscribe(() => this._entriesStore.reload());
+      this._uploadManagement.onTrackedFileChanged$
+          .cancelOnDestroy(this)
+          .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted)
+          .subscribe(() => {
+              this._entriesStore.reload();
+          });
 
-    const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
-    if (!hasEmbedPermission) {
-      this._rowActions[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
-    }
+      this._appEvents.event(UpdateEntriesListEvent)
+          .cancelOnDestroy(this)
+          .subscribe(() => this._entriesStore.reload());
+
+      const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
+      if (!hasEmbedPermission) {
+          this._rowActions[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
+      }
   }
 
   ngOnDestroy() {
