@@ -4,6 +4,7 @@ import { NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Injectable()
 export class NewUploadMonitorService implements OnDestroy {
@@ -11,7 +12,10 @@ export class NewUploadMonitorService implements OnDestroy {
   private _totals = new BehaviorSubject<UploadMonitorStatuses>({ uploading: 0, queued: 0, completed: 0, errors: 0 });
   public totals$ = this._totals.asObservable();
 
-  constructor(private _uploadManagement: UploadManagement) {
+  constructor(private _uploadManagement: UploadManagement,
+              private _logger: KalturaLogger) {
+      this._logger = _logger.subLogger('NewUploadMonitorService');
+      this._logger.info(`init service, subscribe to tracked files changed (NewEntryUploadFile and NewEntryFlavourFile)`);
     this._uploadManagement
       .onTrackedFileChanged$
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile || trackedFile.data instanceof NewEntryFlavourFile)

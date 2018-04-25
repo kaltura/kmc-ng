@@ -6,12 +6,16 @@ import {TranscodingProfilesService} from './transcoding-profiles.service';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kTranscodingProfileSelect',
   templateUrl: './transcoding-profile-select.component.html',
   styleUrls: ['./transcoding-profile-select.component.scss'],
-  providers: [TranscodingProfilesService]
+  providers: [
+      TranscodingProfilesService,
+      KalturaLogger.createLogger('TranscodingProfileSelectComponent')
+  ]
 })
 export class TranscodingProfileSelectComponent implements OnInit {
   @Output() onTranscodingProfileSelected = new EventEmitter<{ profileId?: number }>();
@@ -26,6 +30,7 @@ export class TranscodingProfileSelectComponent implements OnInit {
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
+              private _logger: KalturaLogger,
               private _transcodingProfilesService: TranscodingProfilesService,
               private _browserService: BrowserService) {
   }
@@ -51,8 +56,10 @@ export class TranscodingProfileSelectComponent implements OnInit {
   }
 
   private _loadTranscodingProfiles() {
+      this._logger.info(`handle load transcoding profiles request`);
     this._transcodingProfilesService.getTranscodingProfiles()
       .subscribe(profiles => {
+          this._logger.info(`handle successful loading of transcoding profiles request`);
           profiles.forEach(profile => {
             this._profiles.push({label: profile.name, value: profile.id});
           });
@@ -67,6 +74,7 @@ export class TranscodingProfileSelectComponent implements OnInit {
           this._updateAreaBlockerState(false, null);
         },
         error => {
+          this._logger.warn(`handle failed loading of transcoding profiles request, show alert`, { errorMessage: error.message });
           const blockerMessage = new AreaBlockerMessage(
             {
               message: this._appLocalization.get('applications.upload.transcodingProfilesSelect.errors.loadFailed'),
@@ -74,6 +82,7 @@ export class TranscodingProfileSelectComponent implements OnInit {
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
+                      this._logger.info(`user selected retry, retry request`);
                     this._loadTranscodingProfiles();
                   }
                 }
@@ -103,9 +112,11 @@ export class TranscodingProfileSelectComponent implements OnInit {
   }
 
   public _saveAndClose() {
+      this._logger.info(`handle save and close action by user`);
     // set profile in local cache
     const selectedProfile = this.transcodingProfileSelectForm.get('profile').value;
     if (selectedProfile) {
+        this._logger.debug(`store selected profileId in local storage`, { profileId: selectedProfile });
       this._browserService.setInLocalStorage('transcodingProfiles.selectedProfile', selectedProfile);
       this.onTranscodingProfileSelected.emit({profileId: selectedProfile});
     }

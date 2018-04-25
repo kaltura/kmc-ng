@@ -2,11 +2,13 @@ import {Component, ViewChild} from '@angular/core';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {PrepareEntryComponent} from '../prepare-entry/prepare-entry.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kUploadButton',
   templateUrl: './upload-button.component.html',
   styleUrls: ['./upload-button.component.scss'],
+    providers: [KalturaLogger.createLogger('UploadButtonComponent')]
 })
 export class UploadButtonComponent {
   @ViewChild('uploadmenu') uploadMenuPopup: PopupWidgetComponent;
@@ -15,10 +17,11 @@ export class UploadButtonComponent {
   @ViewChild('prepareEntry') prepareEntryComponent: PrepareEntryComponent;
   @ViewChild('bulkuploadmenu') bulkUploadMenu: PopupWidgetComponent;
 
-  constructor() {
+  constructor(private _logger: KalturaLogger) {
   }
 
-  _onMenuItemSelected(item: string): void {
+  public _onMenuItemSelected(item: string): void {
+      this._logger.info(`handle menu item selected action by user`, { item });
     this.uploadMenuPopup.close();
 
     switch (item) {

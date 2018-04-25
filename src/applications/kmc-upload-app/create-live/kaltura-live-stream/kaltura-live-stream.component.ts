@@ -6,12 +6,16 @@ import {KalturaLiveStreamService} from './kaltura-live-stream.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaLive} from './kaltura-live-stream.interface';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kKalturaLiveStream',
   templateUrl: './kaltura-live-stream.component.html',
   styleUrls: ['./kaltura-live-stream.component.scss'],
-  providers: [KalturaLiveStreamService]
+  providers: [
+      KalturaLiveStreamService,
+      KalturaLogger.createLogger('KalturaLiveStreamComponent')
+  ]
 })
 export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
 
@@ -29,6 +33,7 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
+              private _logger: KalturaLogger,
               private _kalturaLiveStreamService: KalturaLiveStreamService,
               private _browserService: BrowserService) {
   }
@@ -54,10 +59,12 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
   }
 
   private _loadTranscodingProfiles(): void {
+      this._logger.info(`handle load transcoding profile request`);
     this._updateAreaBlockerState(true, null);
     this._kalturaLiveStreamService.getKalturaConversionProfiles()
       .cancelOnDestroy(this)
       .subscribe(transcodingProfilesList => {
+          this._logger.info(`handle successful load transcoding profile request`);
         this._availableTranscodingProfiles = transcodingProfilesList.map(transcodingProfile => ({
           value: transcodingProfile.id,
           label: transcodingProfile.name
@@ -70,6 +77,8 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
         this._updateAreaBlockerState(false, null);
 
       }, error => {
+          this._logger.warn(`handle failed load transcoding profile request, show area blocker`, { errorMessage: error.message });
+          // TODO [kmcng] use AreaBlockerMessage instance for error instead of string
         this._updateAreaBlockerState(false,  error.message);
       });
   }

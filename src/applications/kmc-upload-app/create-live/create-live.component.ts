@@ -14,6 +14,7 @@ import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceTyp
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export enum StreamTypes {
   kaltura,
@@ -25,7 +26,10 @@ export enum StreamTypes {
   selector: 'kCreateLive',
   templateUrl: './create-live.component.html',
   styleUrls: ['./create-live.component.scss'],
-  providers: [CreateLiveService]
+  providers: [
+      CreateLiveService,
+      KalturaLogger.createLogger('CreateLiveComponent')
+  ]
 })
 export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   private _showConfirmationOnClose = true;
@@ -69,11 +73,13 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
               private _appLocalization: AppLocalization,
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
+              private _logger: KalturaLogger,
               private _permissionsService: KMCPermissionsService,
               private _router: Router) {
   }
 
   ngOnInit() {
+      this._logger.info(`init component, fill live entry type dropdown`);
     this._availableStreamTypes = [
       {
         id: 'kaltura',
@@ -101,6 +107,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     if (this._availableStreamTypes.length === 1) {
+        this._logger.info(`only manual live stream type is available, do not show dropdown`);
       this._manualStreamOnly = true;
       this._selectedStreamType = StreamTypes.manual;
     }
@@ -139,6 +146,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   submitCurrentSelectedForm() {
+      this._logger.info(`handle live stream form`, { type: this._selectedStreamType });
     switch (this._selectedStreamType) {
       case StreamTypes.kaltura: {
         this._submitKalturaLiveStreamData();
@@ -153,6 +161,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       }
       default: {
+          this._logger.info(`unknown steam type, abort action, show alert`);
         // add error message for trying to submit unsupported form type
         this._blockerMessage = new AreaBlockerMessage({
           title: 'Cannot create stream',
@@ -160,6 +169,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
           buttons: [{
             label: this._appLocalization.get('app.common.confirm'),
             action: () => {
+                this._logger.info(`user dismissed alert`);
               this._blockerMessage = null;
             }
           }]
@@ -190,12 +200,14 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   private _confirmEntryNavigation(liveStream: KalturaLiveStreamEntry): void {
     const header = this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title');
 
+    this._logger.info(`live stream is created, show alert`, { entryId: liveStream.id, type: liveStream.sourceType });
     switch (liveStream.sourceType) {
       case KalturaSourceType.liveStream:
         this._browserService.confirm({
           header,
           message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.kalturaMessage'),
           accept: () => {
+              this._logger.info(`user confirmed, navigate to created entry, dismiss alert`, { entryId: liveStream.id });
             this._router.navigate(
               ['/content/entries/entry', liveStream.id],
               { queryParams: { reloadEntriesListOnNavigateOut: true } }
@@ -204,6 +216,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
             this.parentPopupWidget.close();
           },
           reject: () => {
+              this._logger.info(`user didn't confirmed, publish 'UpdateEntriesListEvent' event, dismiss alert`);
             this._showConfirmationOnClose = false;
             this._appEvents.publish(new UpdateEntriesListEvent());
             this.parentPopupWidget.close();
@@ -216,6 +229,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
           header,
           message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.universalMessage'),
           accept: () => {
+              this._logger.info(`user confirmed, publish 'UpdateEntriesListEvent' event, dismiss alert`);
             this._showConfirmationOnClose = false;
             this._appEvents.publish(new UpdateEntriesListEvent());
             this.parentPopupWidget.close();
@@ -231,6 +245,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
             [liveStream.id]
           ),
           accept: () => {
+              this._logger.info(`user confirmed, publish 'UpdateEntriesListEvent' event, dismiss alert`);
             this._showConfirmationOnClose = false;
             this._appEvents.publish(new UpdateEntriesListEvent());
             this.parentPopupWidget.close();
@@ -253,68 +268,89 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   private _submitKalturaLiveStreamData() {
+      this._logger.info(`submit kaltura live stream, validate component`);
     if (this.kalturaLiveStreamComponent.validate()) {
+        this._logger.info(`component is valid, proceed action`, { data: this.kalturaLiveStreamData });
       this.createLiveService.createKalturaLiveStream(this.kalturaLiveStreamData)
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
+            this._logger.info(`handle success submit action`);
           this._confirmEntryNavigation(response);
         }, error => {
+            this._logger.info(`handle failed submit action, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             title: 'Error',
             message: error.message,
             buttons: [{
               label: this._appLocalization.get('app.common.close'),
               action: () => {
+                  this._logger.info(`user dismissed alert, abort action`);
                 this._blockerMessage = null;
               }
             }]
           });
         });
+    } else {
+        this._logger.info(`component is not valid, abort action`);
     }
   }
 
   private _submitUniversalLiveStreamData() {
+      this._logger.info(`submit universal stream, validate component`);
     if (this.universalLiveComponent.validate()) {
+        this._logger.info(`component is valid, proceed action`, { data: this.universalLiveData });
       this.createLiveService.createUniversalLiveStream(this.universalLiveData)
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
+            this._logger.info(`handle success submit action`);
           this._confirmEntryNavigation(response);
         }, error => {
+            this._logger.info(`handle failed submit action, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             title: 'Error',
             message: error.message,
             buttons: [{
               label: this._appLocalization.get('app.common.close'),
               action: () => {
+                  this._logger.info(`user dismissed alert, abort action`);
                 this._blockerMessage = null;
               }
             }]
           });
         });
+    } else {
+        this._logger.info(`component is not valid, abort action`);
     }
   }
 
   private _submitManualLiveStreamData() {
+      this._logger.info(`submit manual live stream, validate component`);
     if (this.manualLiveComponent.validate()) {
+        this._logger.info(`component is valid, proceed action`, { data: this.manualLiveData });
       this.createLiveService.createManualLiveStream(this.manualLiveData)
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
+            this._logger.info(`handle success submit action`);
           this._confirmEntryNavigation(response);
         }, error => {
+            this._logger.info(`handle failed submit action, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             title: 'Error',
             message: error.message,
             buttons: [{
               label: this._appLocalization.get('app.common.close'),
               action: () => {
+                  this._logger.info(`user dismissed alert, abort action`);
                 this._blockerMessage = null;
               }
             }]
           });
         });
+    } else {
+        this._logger.info(`component is not valid, abort action`);
     }
   }
 }

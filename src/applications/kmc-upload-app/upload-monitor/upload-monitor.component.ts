@@ -3,6 +3,7 @@ import { BulkUploadMonitorService } from './bulk-upload-monitor.service';
 import { NewUploadMonitorService } from './new-upload-monitor.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { DropFoldersMonitorService } from './drop-folders-monitor.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface UploadMonitorStatuses {
   uploading: number;
@@ -14,7 +15,8 @@ export interface UploadMonitorStatuses {
 @Component({
   selector: 'kUploadMonitor',
   templateUrl: './upload-monitor.component.html',
-  styleUrls: ['./upload-monitor.component.scss']
+  styleUrls: ['./upload-monitor.component.scss'],
+    providers: [KalturaLogger.createLogger('UploadMonitorComponent')]
 })
 export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
@@ -49,7 +51,9 @@ export class UploadMonitorComponent implements OnDestroy {
 
   constructor(private _bulkUploadMonitor: BulkUploadMonitorService,
               private _newUploadMonitor: NewUploadMonitorService,
+              private _logger: KalturaLogger,
               private _dropFoldersMonitor: DropFoldersMonitorService) {
+      this._logger.info(`init service, subscribe to uploads changes`);
     this._newUploadMonitor.totals$
       .cancelOnDestroy(this)
       .subscribe(totals => {
@@ -57,6 +61,7 @@ export class UploadMonitorComponent implements OnDestroy {
           this._updateErrorIconStatus();
         }
         this._uploadFromDesktop = totals;
+        this._logger.info(`new upload from desktop updated`, { totals });
         this._checkUpToDate();
       });
 
@@ -67,6 +72,7 @@ export class UploadMonitorComponent implements OnDestroy {
           this._updateErrorIconStatus();
         }
         this._bulkUpload = totals;
+          this._logger.info(`bulk upload updated`, { totals });
         this._checkUpToDate();
       });
 
@@ -108,6 +114,7 @@ export class UploadMonitorComponent implements OnDestroy {
           this._updateErrorIconStatus();
         }
         this._dropFolders = totals;
+          this._logger.info(`drop folders updated`, { totals });
         this._checkUpToDate();
       });
   }
@@ -129,19 +136,23 @@ export class UploadMonitorComponent implements OnDestroy {
   }
 
   public _onMonitorOpen(): void {
+      this._logger.info(`handle open upload monitor action by user`);
     this._showErrorIcon = false;
     this._menuOpened = true;
   }
 
   public _onMonitorClose(): void {
+      this._logger.info(`handle close upload monitor action by user`);
     this._menuOpened = false;
   }
 
   public _bulkTryReconnect(): void {
+      this._logger.info(`handle retry to connect to bulk upload monitor action by user`);
     this._bulkUploadMonitor.retryTracking();
   }
 
   public _dropFoldersTryReconnect(): void {
+      this._logger.info(`handle retry to connect to drop folders monitor action by user`);
     this._dropFoldersMonitor.retryTracking();
   }
 }

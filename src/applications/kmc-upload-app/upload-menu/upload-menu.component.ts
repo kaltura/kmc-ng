@@ -1,14 +1,14 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import { subApplicationsConfig } from 'config/sub-applications';
 import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kKMCUploadMenu',
   templateUrl: './upload-menu.component.html',
-  styleUrls: ['./upload-menu.component.scss']
+  styleUrls: ['./upload-menu.component.scss'],
+    providers: [KalturaLogger.createLogger('UploadMenuComponent')]
 })
 export class UploadMenuComponent {
   @Output() onItemSelected = new EventEmitter<string>();
@@ -20,31 +20,26 @@ export class UploadMenuComponent {
   public _enableNeedHighSpeedLink: boolean;
 
   constructor(private _browserService: BrowserService,
-              private _permissionsService: KMCPermissionsService,
-              private _appLocalization: AppLocalization) {
+              private _logger: KalturaLogger,
+              private _permissionsService: KMCPermissionsService) {
       this._showHighSpeedLink = this._permissionsService.hasPermission(KMCPermissions.FEATURE_SHOW_ASPERA_UPLOAD_BUTTON);
       this._enableHighSpeedLink =  !!serverConfig.externalLinks.uploads.highSpeedUpload;
       this._showNeedHighSpeedLink = !this._showHighSpeedLink && !this._permissionsService.hasPermission(KMCPermissions.FEATURE_HIDE_ASPERA_LINK);
       this._enableNeedHighSpeedLink = !!serverConfig.externalLinks.uploads.needHighSpeedUpload;
   }
 
-  // TODO remove when all menu items will be implemented
-  public _inDevelopment(): void {
-    this._browserService.alert({
-      header: this._appLocalization.get('applications.upload.inDevelopment.title'),
-      message: this._appLocalization.get('applications.upload.inDevelopment.message')
-    });
-  }
-
   onHighSpeedLinkClicked() {
+      this._logger.info(`handle high speed link clicked action by user`);
     this._browserService.openLink(serverConfig.externalLinks.uploads.highSpeedUpload);
   }
 
     onNeedHighSpeedLinkClicked() {
+        this._logger.info(`handle need high speed link clicked action by user`);
         this._browserService.openLink(serverConfig.externalLinks.uploads.needHighSpeedUpload);
     }
 
   onDownloadSamplesClicked() {
+      this._logger.info(`handle download samples action by user`);
     this._browserService.openLink(serverConfig.externalLinks.uploads.bulkUploadSamples);
   }
 
