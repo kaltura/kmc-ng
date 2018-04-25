@@ -8,6 +8,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
 import {CategoryWidgetKeys} from '../category-widget-keys';
 import { modulesConfig } from 'config/modules';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface SectionWidgetItem {
   label: string,
@@ -21,7 +22,8 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
   private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
   public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
-  constructor(private _appLocalization: AppLocalization) {
+  constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService) {
     super('categorySectionsList');
   }
 
@@ -101,10 +103,9 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
       case CategoryWidgetKeys.Metadata:
         return true;
       case CategoryWidgetKeys.Entitlements:
-        // Enable if any of these conditions are met:
-        // TODO [kmcng] Permissions: showEndUsersTab is set to true
-        // KalturaCategory.privacyContexts is defined
-        return category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
+        const hasPrivacyContexts = category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
+        const hasFeatureEntitlementPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_ENTITLEMENT);
+        return hasPrivacyContexts && hasFeatureEntitlementPermission;
       case CategoryWidgetKeys.SubCategories:
         return category.directSubCategoriesCount > 0 &&
           category.directSubCategoriesCount <= modulesConfig.contentShared.categories.subCategoriesLimit;

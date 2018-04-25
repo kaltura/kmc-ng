@@ -126,7 +126,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
           const height = !flavor.height
             ? this._appLocalization.get('applications.settings.transcoding.flavors.auto')
             : flavor.height;
-          const dimensions = `${width}x${height}`;
+          const dimensions = `${width} x ${height}`;
           return Object.assign(flavor, { codec, bitrate, dimensions });
         });
 

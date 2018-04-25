@@ -31,8 +31,6 @@ export class ClipAndTrimComponent implements OnInit, OnDestroy {
       entryId: this.entryId,
       keditUrl: serverConfig.externalApps.clipAndTrim.uri,
       tab: {name: 'editor', permissions: ['clip', 'trim'], userPermissions: ['clip', 'trim']},
-      playerUiConfId: serverConfig.externalApps.clipAndTrim.uiConfId,
-      previewPlayerUiConfId: serverConfig.externalApps.clipAndTrim.uiConfId,
       callbackActions: {
         clipCreated: this._onClipCreated.bind(this)
       }

@@ -5,6 +5,8 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {DraftEntry, PrepareEntryService} from './prepare-entry.service';
 import {BrowserService} from 'app-shared/kmc-shell';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPrepareEntry',
@@ -18,6 +20,7 @@ export class PrepareEntryComponent implements OnInit {
 
   constructor(private _prepareEntryService: PrepareEntryService,
               private _router: Router,
+              private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService) {
   }
 
@@ -26,13 +29,11 @@ export class PrepareEntryComponent implements OnInit {
 
   public prepareEntry(kalturaMediaType: KalturaMediaType) {
     this._selectedMediaType = kalturaMediaType;
-    // TODO [kmcng] If user permissions allows setting transcoding profile - show transcoding profile selector
-    // 'transcodingProfileSettingPermission' should contain whether the user has the permission to set the transcoding profile
-    const transcodingProfileSettingPermission = true;
+    const transcodingProfileSettingPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DRAFT_ENTRY_CONV_PROF_SELECTION);
     if (transcodingProfileSettingPermission) {
       this.transcodingProfileSelectMenu.open();
     } else {
-        this._loadEntry({profileId: null})
+        this._loadEntry({profileId: null});
     }
   }
 

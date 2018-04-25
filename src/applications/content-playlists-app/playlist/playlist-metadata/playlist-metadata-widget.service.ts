@@ -11,12 +11,14 @@ import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTag
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { async } from 'rxjs/scheduler/async';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Injectable()
 export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy {
   public metadataForm: FormGroup;
 
   constructor(private _formBuilder: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
               private _kalturaServerClient: KalturaClient) {
     super(PlaylistWidgetKeys.Metadata);
     this._buildForm();
@@ -88,6 +90,10 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
 
     if (firstTimeActivating) {
       this._monitorFormChanges();
+    }
+
+    if (!this.isNewData && !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE)) {
+      this.metadataForm.disable({ emitEvent: false, onlySelf: true });
     }
   }
 

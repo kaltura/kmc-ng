@@ -17,6 +17,7 @@ import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
 import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
 import { globalConfig } from 'config/global';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface AccessControlAutocompleteItem {
@@ -43,6 +44,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   public _ipsFormatError = false;
   public _domainsFormatError = false;
+  public _kmcPermissions = KMCPermissions;
 
   public get _saveBtnDisabled(): boolean {
     return this._domainsFormatError || this._ipsFormatError || this._nameField.invalid;
@@ -51,7 +53,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   public _countryCodes: { value: string }[] = globalConfig.client.countriesList.map(code => {
     return {
       value: code, label: this._appLocalization.get(`countries.${code}`)
-    }
+    };
   });
 
   public _profileForm: FormGroup;
@@ -81,6 +83,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _fb: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
               private _logger: KalturaLogger,
               public _store: AccessControlProfilesStore) {
     this._convertDomainsUserInputToValidValue = this._convertDomainsUserInputToValidValue.bind(this);
@@ -105,6 +108,10 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     } else {
       this._logger.info(`enter new profile mode`);
       this._headerTitle = this._appLocalization.get('applications.settings.accessControl.addAccessControlProfile');
+    }
+
+    if (!this._permissionsService.hasPermission(KMCPermissions.ACCESS_CONTROL_UPDATE)) {
+      this._profileForm.disable({ emitEvent: false });
     }
   }
 
