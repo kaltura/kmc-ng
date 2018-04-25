@@ -29,7 +29,6 @@ export abstract class KmcMainViewBaseService {
             } catch (error) {
                 observer.error(error);
             }
-
         });
     }
 

@@ -5,16 +5,18 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router, NavigationEnd } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Injectable()
 export class AdminRolesMainViewService extends KmcMainViewBaseService {
 
     constructor(
         logger: KalturaLogger,
+        browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService
     ) {
-        super(logger.subLogger('AdminRolesMainViewService'), router);
+        super(logger.subLogger('AdminRolesMainViewService'), browserService, router);
     }
 
     isAvailable(): boolean {

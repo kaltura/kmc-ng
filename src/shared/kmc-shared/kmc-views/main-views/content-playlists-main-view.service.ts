@@ -30,6 +30,6 @@ export class ContentPlaylistsMainViewService extends KmcMainViewBaseService {
     }
 
     getRoutePath(): string {
-        return null;
+        return 'content/playlists';
     }
 }
