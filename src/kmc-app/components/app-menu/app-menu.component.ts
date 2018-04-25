@@ -30,6 +30,8 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _helpMenuOpened = false;
 
     menuConfig: KMCAppMenuItem[];
+    leftMenuConfig: KMCAppMenuItem[];
+    rightMenuConfig: KMCAppMenuItem[];
     selectedMenuItem: KMCAppMenuItem;
     showSubMenu = true;
 
@@ -46,7 +48,12 @@ export class AppMenuComponent implements OnInit, OnDestroy{
         });
         this._userContext = userAuthentication.appUser;
         this.menuConfig = this._kmcMainViews.createMenu();
-
+        this.leftMenuConfig = this.menuConfig.filter( (item: KMCAppMenuItem) => {
+            return !item.icon;
+        });
+        this.rightMenuConfig = this.menuConfig.filter( (item: KMCAppMenuItem) => {
+            return item.icon;
+        });
         if (router.navigated)
         {
             this.setSelectedRoute(router.routerState.snapshot.url);
