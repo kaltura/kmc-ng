@@ -211,16 +211,18 @@ export class PlaylistStore implements OnDestroy {
               if (newData) {
                 this._playlistId = currentPlaylistId;
 
-                this._playlist.next({
-                  playlist: new KalturaPlaylist({
-                    name: newData.name,
-                    description: newData.description,
-                    playlistContent: newData.playlistContent,
-                    playlistType: newData.type,
-                    creatorId: this._appAuth.appUser.id,
-                    totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
-                  })
-                });
+                  const playlist = new KalturaPlaylist({
+                      name: newData.name,
+                      description: newData.description,
+                      playlistContent: newData.playlistContent,
+                      playlistType: newData.type,
+                      creatorId: this._appAuth.appUser.id,
+                      totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
+                  });
+
+                  (<any>playlist).id = 'new';
+
+                this._playlist.next({ playlist });
 
                 setTimeout(() => {
                   const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(this.playlist, { isNewData: true });
@@ -325,7 +327,7 @@ export class PlaylistStore implements OnDestroy {
   }
 
   public openSection(sectionKey: ContentPlaylistViewSections): void {
-      this._contentPlaylistView.open({ section: sectionKey, playlist: this.playlist });
+     this._contentPlaylistView.open({ section: sectionKey, playlist: this.playlist });
   }
 
   public openPlaylist(playlist: KalturaPlaylist) {

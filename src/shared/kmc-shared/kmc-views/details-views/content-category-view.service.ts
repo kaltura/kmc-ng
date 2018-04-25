@@ -33,7 +33,7 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
                 private _kalturaClient: KalturaClient,
-                private router: Router) {
+                private _router: Router) {
         super();
     }
 
@@ -79,7 +79,7 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
     protected _open(args: ContentCategoryViewArgs): Observable<boolean> {
         const navigate = (): Observable<boolean> => {
             const sectionToken = this._getSectionRouteToken(args.section);
-            return Observable.fromPromise(this.router.navigateByUrl(`/content/categories/category/${args.category.id}/${sectionToken}`));
+            return Observable.fromPromise(this._router.navigateByUrl(`/content/categories/category/${args.category.id}/${sectionToken}`));
     };
         // show category edit warning if needed
         if (!args.ignoreWarningTag && args.category.tags && args.category.tags.indexOf('__EditWarning') > -1) {

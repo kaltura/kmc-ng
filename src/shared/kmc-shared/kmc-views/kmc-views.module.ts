@@ -25,6 +25,7 @@ import {
     ContentCategoryViewService, ContentPlaylistViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
+import { SettingsTranscodingProfileViewService } from 'app-shared/kmc-shared/kmc-views/details-views/settings-transcoding-profile-view.service';
 
 @NgModule({
     imports: <any[]>[],
@@ -60,6 +61,7 @@ export class KmcViewsModule {
                 SettingsMyUserSettingsMainViewService,
                 SettingsAccountInformationMainViewService,
                 ContentPlaylistViewService,
+                SettingsTranscodingProfileViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };

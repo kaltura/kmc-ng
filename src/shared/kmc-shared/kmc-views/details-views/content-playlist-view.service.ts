@@ -27,7 +27,7 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
-                private router: Router) {
+                private _router: Router) {
         super();
     }
 
@@ -67,6 +67,6 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
 
     protected _open(args: ContentPlaylistViewArgs): Observable<boolean> {
         const sectionToken = this._getSectionRouteToken(args.section);
-        return Observable.fromPromise(this.router.navigateByUrl(`/content/playlists/playlist/${args.playlist.id}/${sectionToken}`));
+        return Observable.fromPromise(this._router.navigateByUrl(`/content/playlists/playlist/${args.playlist.id}/${sectionToken}`));
     }
 }
