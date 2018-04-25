@@ -100,6 +100,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   public _goToEntry(entryId: KalturaMediaEntry): void {
     if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_BASE)) {
+        // TODO [kmc-views]
       this._router.navigate(['/content/entries/entry', entryId]);
     }
   }

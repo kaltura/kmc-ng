@@ -22,7 +22,7 @@ import {
     SettingsAccountInformationMainViewService
 } from './main-views';
 import {
-    ContentCategoryViewService
+    ContentCategoryViewService, ContentPlaylistViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 
@@ -59,6 +59,7 @@ export class KmcViewsModule {
                 SettingsMetadataMainViewService,
                 SettingsMyUserSettingsMainViewService,
                 SettingsAccountInformationMainViewService,
+                ContentPlaylistViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };

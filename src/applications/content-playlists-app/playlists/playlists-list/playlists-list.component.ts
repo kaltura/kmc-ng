@@ -12,6 +12,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { async } from 'rxjs/scheduler/async';
 
 
 @Component({
@@ -178,6 +179,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
     private _registerToDataChanges(): void {
         this._playlistsStore.playlists.state$
+            .subscribeOn(async)
             .cancelOnDestroy(this)
             .subscribe(
                 result => {
