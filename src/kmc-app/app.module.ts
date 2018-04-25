@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
@@ -85,6 +85,7 @@ import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 import { LoginActionsComponent } from './components/login/login-actions/login-actions.component';
+import { KmcAuthenticationInterceptor } from './kmc-authentication-interceptor';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -175,7 +176,12 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
           provide: APP_AUTH_EVENTS, useClass: KMCAuthenticationEvents
       },
     { provide: AppStorage, useExisting: BrowserService },
-    ConfirmationService
+    ConfirmationService,
+      {
+          provide: HTTP_INTERCEPTORS,
+          useClass: KmcAuthenticationInterceptor,
+          multi: true
+      }
   ]
 })
 export class AppModule {
