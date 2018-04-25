@@ -7,7 +7,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {CategoryCreationService} from 'app-shared/kmc-shared/events/category-creation';
+
 import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
 import {CategoriesRefineFiltersService, RefineGroup} from '../categories-refine-filters.service';
 import {
@@ -18,6 +18,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 
 @Component({
   selector: 'kCategoriesList',
@@ -64,7 +65,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _categoriesUtilsService: CategoriesUtilsService,
-                public _categoryCreationService: CategoryCreationService,
+                public _contentNewCategoryView: ContentNewCategoryViewService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
                 private _contentCategoryView: ContentCategoryViewService,
                 private _appEvents: AppEventsService) {
@@ -173,7 +174,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 }
             });
 
-        const newCategoryData = this._categoryCreationService.popNewCategoryData();
+        const newCategoryData = this._contentNewCategoryView.popNewCategoryData();
         if (newCategoryData) {
             this._linkedEntries = newCategoryData.entries.map(entry => ({entryId: entry.id}));
             this.addNewCategory.open();

@@ -37,20 +37,37 @@ export abstract class KmcMainViewBaseService {
     }
 
     open(): void {
-        if (this.isAvailable()) {
-            this._open().subscribe(
-                result => {
-                    if (!result) {
+        this.openWithState().subscribe();
+    }
+
+    openWithState(): Observable<{ opened: boolean }> {
+        return Observable.create(observer => {
+            if (this.isAvailable()) {
+                this._open().subscribe(
+                    result => {
+                        if (!result) {
+                            this._logger.info('open view operation failed');
+                            // TODO sakal consult with Amir what to show if failed to navigate
+                            this._browserService.handleUnpermittedAction(UnpermittedActionReasons.General);
+                        }
+
+                        observer.next({opened: result});
+                        observer.complete();
+                    }, error => {
+                        this._logger.info('open view operation failed', { errorMessage: error ? error.message : '' });
                         // TODO sakal consult with Amir what to show if failed to navigate
                         this._browserService.handleUnpermittedAction(UnpermittedActionReasons.General);
+                        observer.next({opened: false});
+                        observer.complete();
                     }
-                }, error => {
-                    // TODO sakal consult with Amir what to show if failed to navigate
-                    this._browserService.handleUnpermittedAction(UnpermittedActionReasons.General);
-                }
-            );
-        } else {
-            this._browserService.handleUnpermittedAction(UnpermittedActionReasons.General);
-        }
+                );
+            } else {
+                this._logger.info('ignore open view operation request, view is not available');
+                this._browserService.handleUnpermittedAction(UnpermittedActionReasons.General);
+                observer.next({opened: false});
+                observer.complete();
+            }
+        });
+
     }
 }

@@ -74,7 +74,6 @@ import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-creation';
-import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
 import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
@@ -136,7 +135,6 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     StickyModule.forRoot(),
     OperationTagModule.forRoot(),
     PlaylistCreationModule.forRoot(),
-    CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),

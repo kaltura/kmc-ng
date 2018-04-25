@@ -19,13 +19,13 @@ import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {CreateNewCategoryEvent} from 'app-shared/kmc-shared/events/category-creation';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 
 @Component({
   selector: 'kBulkActions',
@@ -75,7 +75,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkDownloadService: BulkDownloadService,
     private _bulkDeleteService: BulkDeleteService,
     private _appEvents: AppEventsService,
-    private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+              public _contentNewCategoryView: ContentNewCategoryViewService,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
               private _permissionsService: KMCPermissionsService) {
 
   }
@@ -287,8 +288,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       });
     }else {
       if (this.selectedEntries.length > 0) {
-        const creationEvent = new CreateNewCategoryEvent({entries: this.selectedEntries});
-        this._appEvents.publish(creationEvent);
+          this._contentNewCategoryView.open({entries: this.selectedEntries});
       }
     }
   }
