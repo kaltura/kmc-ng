@@ -114,6 +114,7 @@ export class KmcMainViewsService {
                 titleToken: 'Content',
                 isAvailable: true,
                 isActiveView: (activePath: string) => (activePath.indexOf(`/content`) !== -1),
+                position: 'left',
                 children: [
                     {
                         isAvailable: this._contentEntriesMain.isAvailable(),
@@ -196,6 +197,7 @@ export class KmcMainViewsService {
                 open: () => {
                     this._studioMain.open();
                 },
+                position: 'left',
                 titleToken: 'Studio'
             },
             {
@@ -204,11 +206,13 @@ export class KmcMainViewsService {
                 open: () => {
                     this._usageDashboardMain.open();
                 },
+                position: 'left',
                 titleToken: 'Usage Dashboard',
             },
             {
                 id: 'analytics',
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
+                position: 'left',
                 titleToken: 'Analytics',
                 children: [
                     {
@@ -232,6 +236,7 @@ export class KmcMainViewsService {
                 isAvailable: true,
                 titleToken: 'Settings',
                 icon: 'kIcongear',
+                position: 'right',
                 children: [
                     {
                         isAvailable: this._settingsAccountSettingsMain.isAvailable(),
@@ -257,7 +262,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsAccessControlMain.open();
                         },
-                        titleToken: 'Access Control',
+                        titleToken: 'AccessControl',
                         'position': 'left'
                     },
                     {
@@ -303,6 +308,7 @@ export class KmcMainViewsService {
                 isAvailable: true,
                 titleToken: 'Administration',
                 icon: 'kIconuser',
+                position: 'right',
                 children: [
                     {
                         isAvailable: this._adminUsersMain.isAvailable(),
