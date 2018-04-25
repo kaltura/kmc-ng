@@ -12,7 +12,14 @@ import {
     UsageDashboardMainViewService,
     LiveAnalyticsMainViewService,
     AdminUsersMainViewService,
-    AdminRolesMainViewService
+    AdminRolesMainViewService,
+    SettingsAccountSettingsMainViewService,
+    SettingsIntegrationSettingsMainViewService,
+    SettingsAccessControlMainViewService,
+    SettingsTranscodingMainViewService,
+    SettingsMetadataMainViewService,
+    SettingsMyUserSettingsMainViewService,
+    SettingsAccountInformationMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService
@@ -45,6 +52,13 @@ export class KmcViewsModule {
                 LiveAnalyticsMainViewService,
                 AdminUsersMainViewService,
                 AdminRolesMainViewService,
+                SettingsAccountSettingsMainViewService,
+                SettingsIntegrationSettingsMainViewService,
+                SettingsAccessControlMainViewService,
+                SettingsTranscodingMainViewService,
+                SettingsMetadataMainViewService,
+                SettingsMyUserSettingsMainViewService,
+                SettingsAccountInformationMainViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };
