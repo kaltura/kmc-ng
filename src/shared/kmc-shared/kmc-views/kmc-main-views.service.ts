@@ -12,7 +12,14 @@ import { ContentCategoriesMainViewService,
     UsageDashboardMainViewService,
     LiveAnalyticsMainViewService,
     AdminUsersMainViewService,
-    AdminRolesMainViewService
+    AdminRolesMainViewService,
+    SettingsAccountSettingsMainViewService,
+    SettingsIntegrationSettingsMainViewService,
+    SettingsAccessControlMainViewService,
+    SettingsTranscodingMainViewService,
+    SettingsMetadataMainViewService,
+    SettingsMyUserSettingsMainViewService,
+    SettingsAccountInformationMainViewService
 } from './main-views';
 
 
@@ -89,7 +96,14 @@ export class KmcMainViewsService {
         private _usageDashboardMain: UsageDashboardMainViewService,
         private _liveAnalyticsMain: LiveAnalyticsMainViewService,
         private _adminUsersMain: AdminUsersMainViewService,
-        private _adminRolesMain: AdminRolesMainViewService
+        private _adminRolesMain: AdminRolesMainViewService,
+        private _settingsAccountSettingsMain: SettingsAccountSettingsMainViewService,
+        private _settingsIntegrationSettingsMain: SettingsIntegrationSettingsMainViewService,
+        private _settingsAccessControlMain: SettingsAccessControlMainViewService,
+        private _settingsTranscodingMain: SettingsTranscodingMainViewService,
+        private _settingsMetadataMain: SettingsMetadataMainViewService,
+        private _settingsMyUserSettingsMain: SettingsMyUserSettingsMainViewService,
+        private _settingsAccountInformationMain: SettingsAccountInformationMainViewService
     ) {
         this._logger = logger.subLogger('KmcMainViewsService');
     }
@@ -218,39 +232,67 @@ export class KmcMainViewsService {
                 titleToken: '',
                 children: [
                     {
-                        id: 'settingsAccountSettings',
-                       // isActiveView: 'settings/accountSettings',
-                        titleToken: 'Account Settings'
+                        isAvailable: this._settingsAccountSettingsMain.isAvailable(),
+                        isActiveView:  (path) => this._settingsAccountSettingsMain.isActiveView(path),
+                        open: () => {
+                            this._settingsAccountSettingsMain.open();
+                        },
+                        titleToken: 'Account Settings',
+                        'position': 'left'
                     },
                     {
-                        id: 'settingsIntegrationSettings',
-                      //  isActiveView: 'settings/integrationSettings',
-                        titleToken: 'Integration Settings'
+                        isAvailable: this._settingsIntegrationSettingsMain.isAvailable(),
+                        isActiveView:  (path) => this._settingsIntegrationSettingsMain.isActiveView(path),
+                        open: () => {
+                            this._settingsIntegrationSettingsMain.open();
+                        },
+                        titleToken: 'Integration Settings',
+                        'position': 'left'
                     },
                     {
-                        id: 'settingsAccessControl',
-                        //isActiveView: 'settings/accessControl',
-                        titleToken: 'AccessControl'
+                        isAvailable: this._settingsAccessControlMain.isAvailable(),
+                        isActiveView:  (path) => this._settingsAccessControlMain.isActiveView(path),
+                        open: () => {
+                            this._settingsAccessControlMain.open();
+                        },
+                        titleToken: 'Access Control',
+                        'position': 'left'
                     },
                     {
-                        id: 'settingsTranscoding',
-                       // isActiveView: 'settings/transcoding',
-                        titleToken: 'Transcoding settings'
+                        isAvailable: this._settingsTranscodingMain.isAvailable(),
+                        isActiveView:  (path) => this._settingsTranscodingMain.isActiveView(path),
+                        open: () => {
+                            this._settingsTranscodingMain.open();
+                        },
+                        titleToken: 'Transcoding settings',
+                        'position': 'left'
                     },
                     {
-                        id: 'settingsCustomData',
-                       // isActiveView: 'settings/metadata',
-                        titleToken: 'CustomData'
+                        isAvailable: this._settingsMetadataMain.isAvailable(),
+                        isActiveView:  (path) => this._settingsMetadataMain.isActiveView(path),
+                        open: () => {
+                            this._settingsMetadataMain.open();
+                        },
+                        titleToken: 'CustomData',
+                        'position': 'left'
                     },
                     {
-                        id: 'settingsMyUserSettings',
-                      //  isActiveView: 'settings/myUserSettings',
-                        titleToken: 'My User Settings'
+                        isAvailable: this._settingsMyUserSettingsMain.isAvailable(),
+                        isActiveView:  (path) => this._settingsMyUserSettingsMain.isActiveView(path),
+                        open: () => {
+                            this._settingsMyUserSettingsMain.open();
+                        },
+                        titleToken: 'My User Settings',
+                        'position': 'left'
                     },
                     {
-                        id: 'settingsAccountInformation',
-                        //isActiveView: 'settings/accountInformation',
-                        titleToken: 'Account Information'
+                        isAvailable: this._settingsAccountInformationMain.isAvailable(),
+                        isActiveView:  (path) => this._settingsAccountInformationMain.isActiveView(path),
+                        open: () => {
+                            this._settingsAccountInformationMain.open();
+                        },
+                        titleToken: 'Account Information',
+                        'position': 'left'
                     }
                 ]
             }, {
