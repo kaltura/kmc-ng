@@ -70,10 +70,9 @@ export class CategoryService implements OnDestroy {
         return this._category.getValue();
     }
 
-    public notifyChangesInCategory(): void {
-        this._saveCategoryInvoked = true;
-    }
-
+    public notifyChangesInCategory(): void{
+    	this._saveCategoryInvoked = true;
+	}
     constructor(private _kalturaServerClient: KalturaClient,
                 private _router: Router,
                 private _browserService: BrowserService,
@@ -117,7 +116,7 @@ export class CategoryService implements OnDestroy {
         if (this._categoryIsDirty) {
             this._pageExitVerificationToken = this._pageExitVerificationService.add();
         } else {
-            if (this._pageExitVerificationToken) {
+        	if (this._pageExitVerificationToken) {
                 this._pageExitVerificationService.remove(this._pageExitVerificationToken);
             }
             this._pageExitVerificationToken = null;
@@ -145,223 +144,242 @@ export class CategoryService implements OnDestroy {
     }
 
 
-    private _onRouterEvents(): void {
-        this._router.events
-            .cancelOnDestroy(this)
-            .filter(
-                event => event instanceof NavigationEnd)
-            .subscribe(
+	private _onRouterEvents(): void {
+		this._router.events
+			.cancelOnDestroy(this)
+			.filter(
+			event => event instanceof NavigationEnd)
+.subscribe(
                 event => {
-                    // we must defer the loadCategory to the next event cycle loop to allow components
-                    // to init them-selves when entering this module directly.
-                    setTimeout(() => {
-                        const currentCategoryId = this._categoryRoute.snapshot.params.id;
+					// we must defer the loadCategory to the next event cycle loop to allow components
+					// to init them-selves when entering this module directly.
+					setTimeout(() => {
+						const currentCategoryId = this._categoryRoute.snapshot.params.id;
                         const category = this._category.getValue();
                         if (!category || (category && category.id.toString() !== currentCategoryId)) {
-                            this._loadCategory(currentCategoryId);
+                          this._loadCategory(currentCategoryId);
                         }
-                    });
-                });
+					});
+				});
+			}
+
+  private _checkReferenceId(newCategory: KalturaCategory): Observable<boolean> {
+    if (!newCategory.referenceId ||
+		((newCategory.referenceId || null) === (this.category.referenceId || null))
+	) {
+      return Observable.of(true);
     }
 
-    private _checkReferenceId(newCategory: KalturaCategory): Observable<boolean> {
-        if (!newCategory.referenceId ||
-            ((newCategory.referenceId || null) === (this.category.referenceId || null))
-        ) {
-            return Observable.of(true);
-        }
-
-        return Observable.create(observer => {
-            this._kalturaServerClient
-                .request(new CategoryListAction({
-                    filter: new KalturaCategoryFilter({referenceIdEqual: newCategory.referenceId})
-                }))
-                .subscribe(
-                    response => {
-                        if (Array.isArray(response.objects) && response.objects.length) {
-                            const message = this._appLocalization.get(
-                                'applications.content.categoryDetails.referenceIdInUse',
-                                [
-                                    newCategory.referenceId,
-                                    response.objects.map(({fullName, id}) => `- ${fullName} (ID:${id})`).join('\n')
-                                ]
-                            );
-                            this._browserService.confirm({
-                                message,
-                                accept: () => {
-                                    observer.next(true);
-                                    observer.complete();
-                                },
-                                reject: () => {
-                                    observer.next(false);
-                                    observer.complete();
-                                }
-                            })
-                        } else {
-                            observer.next(true);
-                            observer.complete();
-                        }
-                    },
-                    error => {
-                        this._state.next({action: ActionTypes.CategoryPrepareSavingFailed});
-                        observer.next(false);
-                    });
-        });
-    }
-
-    private _transmitSaveRequest(newCategory: KalturaCategory) {
-        this._state.next({action: ActionTypes.CategorySaving});
-
-        const request = new KalturaMultiRequest(
-            new CategoryUpdateAction({
-                id: this.categoryId,
-                category: newCategory
-            })
-        );
-
-
-        this._widgetsManager.notifyDataSaving(newCategory, request, this.category)
-            .cancelOnDestroy(this)
-            .monitor('category store: prepare category for save')
-            .tag('block-shell')
-            .flatMap(
-                (response) => {
-                    if (response.ready) {
-                        this._saveCategoryInvoked = true;
-
-                        const userModifiedName = this.category.name !== newCategory.name;
-
-                        return this._checkReferenceId(newCategory)
-                            .switchMap(proceedSaveRequest => {
-                                if (proceedSaveRequest) {
-                                    return this._kalturaServerClient.multiRequest(request)
-                                        .monitor('category store: save category')
-                                        .tag('block-shell')
-                                        .map(
-                                            categorySavedResponse => {
-
-                                                if (userModifiedName) {
-                                                    this._appEvents.publish(new CategoriesGraphUpdatedEvent());
-                                                }
-
-
-                                                // if categories were deleted during the save operation (sub-categories window) - invoke immediate polling of categories status
-                                                const deletedCategories = request.requests.find((req, index) => {
-                                                    return (req instanceof CategoryDeleteAction && !categorySavedResponse[index].error)
-                                                });
-                                                if (deletedCategories) {
-                                                    this._categoriesStatusMonitorService.updateCategoriesStatus();
-                                                }
-
-                                                if (categorySavedResponse.hasErrors()) {
-                                                    this._state.next({action: ActionTypes.CategorySavingFailed});
-                                                } else {
-                                                    this._loadCategory(this.categoryId);
-                                                }
-
-                                                return Observable.empty();
-                                            }
-                                        )
-                                } else {
-                                    return Observable.empty();
-                                }
-                            });
-                    }
-                    else {
-                        switch (response.reason) {
-                            case OnDataSavingReasons.validationErrors:
-                                this._state.next({action: ActionTypes.CategoryDataIsInvalid});
-                                break;
-                            case OnDataSavingReasons.attachedWidgetBusy:
-                                this._state.next({action: ActionTypes.ActiveSectionBusy});
-                                break;
-                            case OnDataSavingReasons.buildRequestFailure:
-                                this._state.next({action: ActionTypes.CategoryPrepareSavingFailed});
-                                break;
-                        }
-
-                        return Observable.empty();
-                    }
-                }
-            )
-            .subscribe(
-                response => {
-                    // do nothing - the service state is modified inside the map functions.
+    return Observable.create(observer => {
+      this._kalturaServerClient
+        .request(new CategoryListAction({
+          filter: new KalturaCategoryFilter({ referenceIdEqual: newCategory.referenceId })
+        }))
+        .subscribe(
+          response => {
+            if (Array.isArray(response.objects) && response.objects.length) {
+              const message = this._appLocalization.get(
+                'applications.content.categoryDetails.referenceIdInUse',
+                [
+                  newCategory.referenceId,
+                  response.objects.map(({ fullName, id }) => `- ${fullName} (ID:${id})`).join('\n')
+                ]
+              );
+              this._browserService.confirm({
+                message,
+                accept: () => {
+                  observer.next(true);
+                  observer.complete();
                 },
-                error => {
-                    // should not reach here, this is a fallback plan.
-                    this._state.next({action: ActionTypes.CategorySavingFailed});
+                reject: () => {
+                  observer.next(false);
+                  observer.complete();
                 }
-            );
-    }
+              })
+            } else {
+              observer.next(true);
+              observer.complete();
+            }
+          },
+          error => {
+            this._state.next({ action: ActionTypes.CategoryPrepareSavingFailed });
+            observer.next(false);
+          });
+    });
+  }
 
-    public saveCategory(): void {
+	private _transmitSaveRequest(newCategory: KalturaCategory) {
+		this._state.next({ action: ActionTypes.CategorySaving });
 
-        const newCategory = KalturaTypesFactory.createObject(this.category);
+		const request = new KalturaMultiRequest(
+			new CategoryUpdateAction({
+				id: this.categoryId,
+				category: newCategory
+			})
+		);
 
-        if (newCategory && newCategory instanceof KalturaCategory) {
-            this._transmitSaveRequest(newCategory)
-        } else {
-            console.error(new Error(`Failed to create a new instance of the category type '${this.category ? typeof this.category : 'n/a'}`));
-            this._state.next({action: ActionTypes.CategoryPrepareSavingFailed});
-        }
-    }
 
-    public reloadCategory(): void {
-        if (this.categoryId) {
-            this._loadCategory(this.categoryId);
-        }
-    }
 
-    private _loadCategory(id: number): void {
-        if (this._loadCategorySubscription) {
-            this._loadCategorySubscription.unsubscribe();
-            this._loadCategorySubscription = null;
-        }
+		this._widgetsManager.notifyDataSaving(newCategory, request, this.category)
+			.cancelOnDestroy(this)
+			.monitor('category store: prepare category for save')
+      .tag('block-shell')
+			.flatMap(
+			(response) => {
+				if (response.ready) {
+					this._saveCategoryInvoked = true;
 
-        this._categoryId = id;
-        this._categoryIsDirty = false;
-        this._updatePageExitVerification();
+                    const userModifiedName = this.category.name !== newCategory.name;
 
-        this._state.next({action: ActionTypes.CategoryLoading});
-        this._widgetsManager.notifyDataLoading(id);
+					return this._checkReferenceId(newCategory)
+            .switchMap(proceedSaveRequest => {
+              if (proceedSaveRequest) {
+                return this._kalturaServerClient.multiRequest(request)
+                  .monitor('category store: save category')
+                  .tag('block-shell')
+                  .map(
+                    categorySavedResponse => {
 
-        if (!id) {
-            return this._state.next({
-                action: ActionTypes.CategoryLoadingFailed,
-                error: new Error('Missing categoryId')
+                      if (userModifiedName) {
+                        this._appEvents.publish(new CategoriesGraphUpdatedEvent());
+                      }
+
+
+                      // if categories were deleted during the save operation (sub-categories window) - invoke immediate polling of categories status
+                      const deletedCategories = request.requests.find((req, index) => {
+                        return (req instanceof CategoryDeleteAction && !categorySavedResponse[index].error)
+                      });
+                      if (deletedCategories) {
+                        this._categoriesStatusMonitorService.updateCategoriesStatus();
+                      }
+
+                      if (categorySavedResponse.hasErrors()) {
+                        this._state.next({ action: ActionTypes.CategorySavingFailed });
+                      } else {
+                        this._loadCategory(this.categoryId);
+                      }
+
+                      return Observable.empty();
+                    }
+                  )
+              } else {
+                return Observable.empty();
+              }
             });
-        }
-        this._loadCategorySubscription = this._kalturaServerClient
-            .request(new CategoryGetAction({id}))
-            .cancelOnDestroy(this)
-            .subscribe(category => {
-                    this._loadCategorySubscription = null;
+				}
+				else {
+					switch (response.reason) {
+						case OnDataSavingReasons.validationErrors:
+							this._state.next({ action: ActionTypes.CategoryDataIsInvalid });
+							break;
+						case OnDataSavingReasons.attachedWidgetBusy:
+							this._state.next({ action: ActionTypes.ActiveSectionBusy });
+							break;
+						case OnDataSavingReasons.buildRequestFailure:
+							this._state.next({ action: ActionTypes.CategoryPrepareSavingFailed });
+							break;
+					}
 
-                    this._category.next(category);
+					return Observable.empty();
+				}
+			}
+			)
+			.subscribe(
+			response => {
+				// do nothing - the service state is modified inside the map functions.
+			},
+			error => {
+				// should not reach here, this is a fallback plan.
+				this._state.next({ action: ActionTypes.CategorySavingFailed });
+			}
+			);
+	}
+	public saveCategory(): void {
 
-                    const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, {isNewData: false});
+		const newCategory = KalturaTypesFactory.createObject(this.category);
 
-                    if (dataLoadedResult.errors.length) {
-                        this._state.next({
-                            action: ActionTypes.CategoryLoadingFailed,
-                            error: new Error(`one of the widgets failed while handling data loaded event`)
-                        });
-                    } else {
-                        this._state.next({action: ActionTypes.CategoryLoaded});
-                    }
-                },
-                error => {
-                    this._loadCategorySubscription = null;
-                    this._state.next({action: ActionTypes.CategoryLoadingFailed, error});
-                }
-            );
+		if (newCategory && newCategory instanceof KalturaCategory) {
+			this._transmitSaveRequest(newCategory)
+		} else {
+			console.error(new Error(`Failed to create a new instance of the category type '${this.category ? typeof this.category : 'n/a'}`));
+			this._state.next({ action: ActionTypes.CategoryPrepareSavingFailed });
+		}
+	}
 
-    }
+	public reloadCategory(): void {
+		if (this.categoryId) {
+			this._loadCategory(this.categoryId);
+		}
+	}
 
-    public openSection(section: ContentCategoryViewSections): void {
-        this._contentCategoryView.open({section, category: this.category, ignoreWarningTag: true});
-    }
+	private _loadCategory(id: number): void {
+		if (this._loadCategorySubscription) {
+			this._loadCategorySubscription.unsubscribe();
+			this._loadCategorySubscription = null;
+		}
+
+		this._categoryId = id;
+		this._categoryIsDirty = false;
+		this._updatePageExitVerification();
+
+		this._state.next({ action: ActionTypes.CategoryLoading });
+		this._widgetsManager.notifyDataLoading(id);
+
+		if (!id) {
+      return this._state.next({action: ActionTypes.CategoryLoadingFailed, error: new Error('Missing categoryId')});
+    }this._loadCategorySubscription = this._kalturaServerClient
+      .request(new CategoryGetAction({id}))
+			.cancelOnDestroy(this)
+			.subscribe(category => {
+			this._loadCategorySubscription = null;
+
+				this._category.next(category);
+
+				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
+
+				if (dataLoadedResult.errors.length) {
+					this._state.next({
+						action: ActionTypes.CategoryLoadingFailed,
+						error: new Error(`one of the widgets failed while handling data loaded event`)
+					});
+				} else {
+					this._state.next({ action: ActionTypes.CategoryLoaded });
+				}
+			},
+			error => {
+				this._loadCategorySubscription = null;this._state.next({ action: ActionTypes.CategoryLoadingFailed, error });
+}
+			);
+
+	}
+
+	public openSection(section: ContentCategoryViewSections): void {
+		this._contentCategoryView.open({ section, category: this.category, ignoreWarningTag: true });
+	}
+
+	public canLeaveWithoutSaving(): Observable<{ allowed: boolean }> {
+		return Observable.create(observer => {
+			if (this._categoryIsDirty) {
+				this._browserService.confirm(
+					{
+						header: this._appLocalization.get('applications.content.categoryDetails.cancelEdit'),
+						message: this._appLocalization.get('applications.content.categoryDetails.discard'),
+						accept: () => {
+							observer.next({ allowed: true });
+							observer.complete();
+						},
+						reject: () => {
+							observer.next({ allowed: false });
+							observer.complete();
+						}
+					}
+				)
+			} else {
+				observer.next({ allowed: true });
+				observer.complete();
+			}
+		}).monitor('category store: check if can leave section without saving');
+	}
 
     public openCategory(category: KalturaCategory | number) {
         const categoryId = category instanceof KalturaCategory ? category.id : category;
@@ -384,38 +402,16 @@ export class CategoryService implements OnDestroy {
         }
     }
 
-    public canLeaveWithoutSaving(): Observable<{ allowed: boolean }> {
-        return Observable.create(observer => {
-            if (this._categoryIsDirty) {
-                this._browserService.confirm(
-                    {
-                        header: this._appLocalization.get('applications.content.categoryDetails.cancelEdit'),
-                        message: this._appLocalization.get('applications.content.categoryDetails.discard'),
-                        accept: () => {
-                            observer.next({allowed: true});
-                            observer.complete();
-                        },
-                        reject: () => {
-                            observer.next({allowed: false});
-                            observer.complete();
-                        }
-                    }
-                )
-            } else {
-                observer.next({allowed: true});
-                observer.complete();
-            }
-        }).monitor('category store: check if can leave section without saving');
-    }
+	public returnToCategories(force = false) {
 
-    public returnToCategories(force = false) {
+    	if (force)
+	    {
+		    this._categoryIsDirty = false;
+		    this._updatePageExitVerification();
+	    }
 
-        if (force) {
-            this._categoryIsDirty = false;
-            this._updatePageExitVerification();
-        }
-
-        this._contentCategoriesMainViewService.open();
-    }
+	    this._contentCategoriesMainViewService.open();
+		this._router.navigate(['content/categories']);
+	}
 }
 

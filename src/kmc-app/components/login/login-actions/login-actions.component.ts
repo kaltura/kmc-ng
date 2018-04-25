@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppNavigator } from 'app-shared/kmc-shell/auth/app-navigator.service';
+import 'rxjs/add/operator/first';
 
 @Component({
     selector: 'kKMCLoginActions',
@@ -29,6 +30,7 @@ export class LoginActionsComponent implements OnInit, OnDestroy {
     private _prepare(): void {
         this._route.params
             .cancelOnDestroy(this)
+            .first()
             .subscribe(param => {
                 switch (param['action']) {
                     case 'login-by-ks':
@@ -44,6 +46,8 @@ export class LoginActionsComponent implements OnInit, OnDestroy {
     }
 
     private _handleLoginByKS(ks: string): void {
+
+        this._appAuth.clearSessionCredentials();
         if (typeof ks !== 'string' || !ks.trim()) {
             this._logger.info(`ks is not defined, redirect to login page`);
             this._router.navigate(['/login']);
