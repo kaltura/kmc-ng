@@ -4,6 +4,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
 
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryLiveWidget } from './entry-live-widget.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+
 import { serverConfig } from "config/server";
 
 @Component({
@@ -15,6 +17,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
 	@ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
 
+  public _kmcPermissions = KMCPermissions;
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
 	public enableLiveDashboard: boolean = false;
 

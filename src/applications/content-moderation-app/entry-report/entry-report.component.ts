@@ -33,7 +33,7 @@ export interface Tabs {
 
 export class EntryReportComponent implements OnInit, OnDestroy {
 
-	public _kmcPermissions = KMCPermissions;
+    public _kmcPermissions = KMCPermissions;
   @ViewChild('player') player: KalturaPlayerComponent;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
@@ -72,6 +72,11 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       entryid: this.entryId,
       flashvars: {'closedCaptions': { 'plugin': true }, 'ks': this.appAuthentication.appUser.ks}
     };
+
+    const shouldDisableAlerts = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_KDP_ALERTS);
+    if (shouldDisableAlerts) {
+      this._playerConfig.flashvars['disableAlerts'] = true;
+    }
   }
 
   ngOnDestroy() {

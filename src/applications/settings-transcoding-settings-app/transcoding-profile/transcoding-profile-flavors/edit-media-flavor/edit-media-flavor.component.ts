@@ -13,6 +13,7 @@ import {
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
@@ -30,6 +31,7 @@ export class EditMediaFlavorComponent implements OnInit {
 
   private _assetParams: ExtendedKalturaConversionProfileAssetParams;
 
+  public _kmcPermissions = KMCPermissions;
   public _availabilityOptions = [
     {
       value: KalturaFlavorReadyBehaviorType.inheritFlavorParams,
@@ -88,6 +90,7 @@ export class EditMediaFlavorComponent implements OnInit {
   public _deletePolicyField: AbstractControl;
 
   constructor(private _fb: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
               private _logger: KalturaLogger,
               private _appLocalization: AppLocalization) {
     this._buildForm();
@@ -200,8 +203,11 @@ export class EditMediaFlavorComponent implements OnInit {
     assetParams.origin = formData.origin;
     assetParams.systemName = formData.systemName;
     assetParams.forceNoneComplied = formData.forceNoneComplied;
-    assetParams.deletePolicy = formData.deletePolicy;
     assetParams.updated = this._editFlavorForm.dirty;
+
+    if (this._permissionsService.hasPermission(KMCPermissions.WIDEVINE_PLUGIN_PERMISSION)) {
+      assetParams.deletePolicy = formData.deletePolicy;
+    }
 
     this.saveFlavor.emit(assetParams);
     this.parentPopupWidget.close();

@@ -10,7 +10,6 @@ function isStudioAppValid(): boolean {
         isValid =
             !!serverConfig.externalApps.studio.uri &&
             !serverConfig.externalApps.studio.uri.match(/\s/g) && // not contains white spaces
-            !!serverConfig.externalApps.studio.version &&
             !!serverConfig.externalApps.studio.html5_version &&
             !!serverConfig.externalApps.studio.html5lib;
 
@@ -26,9 +25,7 @@ function isLiveDashboardAppValid(): boolean {
     if (serverConfig.externalApps.liveDashboard.enabled) {
         isValid =
             !!serverConfig.externalApps.liveDashboard.uri &&
-            !serverConfig.externalApps.liveDashboard.uri.match(/\s/g) && // not contains white spaces
-            !!serverConfig.externalApps.liveDashboard.version;
-
+            !serverConfig.externalApps.liveDashboard.uri.match(/\s/g); // not contains white spaces
         if (!isValid) {
             console.warn('Disabling Live Dashboard standalone application - configuration is invalid');
         }
@@ -41,8 +38,7 @@ function isKavaAppValid(): boolean {
     if (serverConfig.externalApps.kava.enabled) {
         isValid =
             !!serverConfig.externalApps.kava.uri &&
-            !serverConfig.externalApps.kava.uri.match(/\s/g) && // not contains white spaces
-            !!serverConfig.externalApps.kava.version;
+            !serverConfig.externalApps.kava.uri.match(/\s/g); // not contains white spaces
 
         if (!isValid) {
             console.warn('Disabling KAVA standalone application - configuration is invalid');
@@ -76,9 +72,7 @@ function isClipAndTrimAppValid(): boolean {
   if (serverConfig.externalApps.clipAndTrim.enabled) {
     isValid =
       !!serverConfig.externalApps.clipAndTrim.uri &&
-      !serverConfig.externalApps.clipAndTrim.uri.match(/\s/g) && // not contains white spaces
-      serverConfig.externalApps.clipAndTrim.uiConfId &&
-      !serverConfig.externalApps.clipAndTrim.uiConfId.match(/\s/g); // not contains white spaces
+      !serverConfig.externalApps.clipAndTrim.uri.match(/\s/g); // not contains white spaces
 
     if (!isValid) {
       console.warn('Disabling clipAndTrim (kedit) standalone application - configuration is invalid');
@@ -93,9 +87,7 @@ function isAdvertisementsAppValid(): boolean {
   if (serverConfig.externalApps.advertisements.enabled) {
     isValid =
       !!serverConfig.externalApps.advertisements.uri &&
-      !serverConfig.externalApps.advertisements.uri.match(/\s/g) && // not contains white spaces
-      serverConfig.externalApps.advertisements.uiConfId &&
-      !serverConfig.externalApps.advertisements.uiConfId.match(/\s/g); // not contains white spaces
+      !serverConfig.externalApps.advertisements.uri.match(/\s/g); // not contains white spaces
 
     if (!isValid) {
       console.warn('Disabling Advertisements (kedit) standalone application - configuration is invalid');
