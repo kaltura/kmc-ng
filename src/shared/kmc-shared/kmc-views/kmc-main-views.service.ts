@@ -114,6 +114,7 @@ export class KmcMainViewsService {
                 titleToken: 'Content',
                 isAvailable: true,
                 isActiveView: (activePath: string) => (activePath.indexOf(`/content`) !== -1),
+                position: 'left',
                 children: [
                     {
                         isAvailable: this._contentEntriesMain.isAvailable(),
@@ -196,6 +197,7 @@ export class KmcMainViewsService {
                 open: () => {
                     this._studioMain.open();
                 },
+                position: 'left',
                 titleToken: 'Studio'
             },
             {
@@ -204,11 +206,13 @@ export class KmcMainViewsService {
                 open: () => {
                     this._usageDashboardMain.open();
                 },
+                position: 'left',
                 titleToken: 'Usage Dashboard',
             },
             {
                 id: 'analytics',
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
+                position: 'left',
                 titleToken: 'Analytics',
                 children: [
                     {
@@ -229,7 +233,10 @@ export class KmcMainViewsService {
             {
                 id: 'settings',
                 isActiveView: (activePath: string) => activePath.indexOf(`/settings`) !== -1,
-                titleToken: '',
+                isAvailable: true,
+                titleToken: 'Settings',
+                icon: 'kIcongear',
+                position: 'right',
                 children: [
                     {
                         isAvailable: this._settingsAccountSettingsMain.isAvailable(),
@@ -255,7 +262,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsAccessControlMain.open();
                         },
-                        titleToken: 'Access Control',
+                        titleToken: 'AccessControl',
                         'position': 'left'
                     },
                     {
@@ -298,7 +305,10 @@ export class KmcMainViewsService {
             }, {
                 id: 'administration',
                 isActiveView: (activePath: string) => activePath.indexOf(`/administration`) !== -1,
-                titleToken: '',
+                isAvailable: true,
+                titleToken: 'Administration',
+                icon: 'kIconuser',
+                position: 'right',
                 children: [
                     {
                         isAvailable: this._adminUsersMain.isAvailable(),
@@ -313,7 +323,7 @@ export class KmcMainViewsService {
                         isAvailable: this._adminRolesMain.isAvailable(),
                         isActiveView:  (path) => this._adminRolesMain.isActiveView(path),
                         open: () => {
-                            this._adminUsersMain.open();
+                            this._adminRolesMain.open();
                         },
                         titleToken: 'Roles',
                         'position': 'left'
@@ -344,8 +354,8 @@ export class KmcMainViewsService {
                         if (item.open) {
                             this._logger.warn('override menu item open behavior, will select the first available child instead', {
                                 titleToken: item.titleToken,
-                                itemHasChildren,
-                                itemIsActionable
+                                itemHasChildren: !!itemHasChildren,
+                                itemIsActionable: !!itemIsActionable
                             });
                         }
                         item.open = openFirstChild.bind(item);
@@ -354,12 +364,12 @@ export class KmcMainViewsService {
                 } else {
                     this._logger.debug(`remove menu item from app main views list`, {
                         titleToken: item.titleToken,
-                        itemHasChildren,
-                        itemIsActionable
+                        itemHasChildren: !!itemHasChildren,
+                        itemIsActionable: !!itemIsActionable
                     });
                 }
             } else {
-                this._logger.debug(`remove menu item from app main views list`, {titleToken: item.titleToken, isAvailable: item.isAvailable});
+                this._logger.debug(`remove menu item from app main views list`, {titleToken: item.titleToken, isAvailable: !!item.isAvailable});
             }
 
             return target;

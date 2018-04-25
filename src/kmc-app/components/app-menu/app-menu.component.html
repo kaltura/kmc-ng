@@ -5,25 +5,16 @@
             <div class="kIconkaltura_logo kLogo"></div>
             <div class="k-beta-logo kBeta"></div>
 
-            <!--<kKMCAppContentMenu-->
-            <!--position="left"-->
-            <!--[menuItems]="menuConfig"></kKMCAppContentMenu>-->
-            <!---->
-            <div *ngFor="let item of menuConfig">
-                <a *ngIf="item.titleToken.length" [class.activeLink]="item === selectedMenuItem" (click)="item.open()">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
+            <div *ngFor="let item of leftMenuConfig">
+                <a *ngIf="item.titleToken.length && !item.icon" [class.activeLink]="item === selectedMenuItem" (click)="item.open()">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
             </div>
 
             <div class="kMenu-right">
                 <kUploadButton></kUploadButton>
                 <kUploadMonitor [appmenu]="appmenu"></kUploadMonitor>
 
-                <!--<kKMCAppContentMenu-->
-                <!--position="right"-->
-                <!--[menuItems]="menuConfig"></kKMCAppContentMenu>-->
-                <!---->
+                <i *ngFor="let item of rightMenuConfig" (click)="item.open()" [ngClass]="item.icon" [class.open]="item === selectedMenuItem" [kTooltip]="'app.menu.'+item.titleToken | translate" [placement]="'bottom'"></i>
 
-                <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem?.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
-                <i class="kIcongear" (click)="navigate('/settings')" [class.open]="selectedMenuItem?.routePath==='settings'" [kTooltip]="'app.menu.Settings' | translate" [placement]="'bottom'"></i>
                 <i #help class="kIconhelp" [class.has-notification]="_showChangelog" [class.open]="_helpMenuOpened"></i>
                 <div #username class="kUserName">
                     <span>{{_userContext.fullName}}</span>
