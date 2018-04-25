@@ -6,16 +6,18 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router } from '@angular/router';
 import {serverConfig} from 'config/server';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Injectable()
 export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
 
     constructor(
         logger: KalturaLogger,
+        browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService
     ) {
-        super(logger.subLogger('LiveAnalyticsMainViewService'), router);
+        super(logger.subLogger('LiveAnalyticsMainViewService'), browserService, router);
     }
 
     isAvailable(): boolean {

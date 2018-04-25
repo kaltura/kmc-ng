@@ -32,8 +32,9 @@ export type AppStatus = {
 };
 
 export enum UnpermittedActionReasons {
-  Permissions,
-  InvalidConfiguration
+    General,
+    Permissions,
+    InvalidConfiguration
 }
 
 @Injectable()
@@ -307,9 +308,28 @@ export class BrowserService implements IAppStorage {
           );
           break;
         case (UnpermittedActionReasons.Permissions):
+            // TODO sakal consult with amir
+            this.alert(
+                {
+                    message: this._appLocalization.get('app.UnpermittedActionReasons.InvalidConfiguration.message'),
+                    accept: () => {
+                        this._router.navigate([navigateTo || '/']);
+                    }
+                }
+            );
           break;
-        default:
-          break;
+          case (UnpermittedActionReasons.General):
+          default:
+              // TODO sakal consult with amir
+              this.alert(
+                  {
+                      message: this._appLocalization.get('app.UnpermittedActionReasons.InvalidConfiguration.message'),
+                      accept: () => {
+
+                      }
+                  }
+              );
+              break;
       }
   }
 

@@ -28,7 +28,7 @@ export class AppMenuContentComponent implements OnChanges, OnDestroy {
             .cancelOnDestroy(this)
             .subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                this.setSelectedRoute(event.url);
+                this.setSelectedRoute(event.urlAfterRedirects);
             }
         });
     }

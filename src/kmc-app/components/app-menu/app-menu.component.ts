@@ -41,7 +41,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
         this.sub = router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                this.setSelectedRoute(event.url);
+                this.setSelectedRoute(event.urlAfterRedirects);
             }
         });
         this._userContext = userAuthentication.appUser;

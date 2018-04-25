@@ -5,6 +5,7 @@ import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
 import 'rxjs/add/observable/fromPromise';
 import { Router } from '@angular/router';
 import {serverConfig} from 'config/server';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Injectable()
 export class StudioMainViewService extends KmcMainViewBaseService {
@@ -12,10 +13,11 @@ export class StudioMainViewService extends KmcMainViewBaseService {
 
     constructor(
         logger: KalturaLogger,
+        browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService
     ) {
-        super(logger.subLogger('StudioMainViewService'), router);
+        super(logger.subLogger('StudioMainViewService'), browserService, router);
     }
 
     isAvailable(): boolean {
