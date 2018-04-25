@@ -10,7 +10,9 @@ import {
     ContentDropFoldersMainViewService,
     StudioMainViewService,
     UsageDashboardMainViewService,
-    LiveAnalyticsMainViewService
+    LiveAnalyticsMainViewService,
+    AdminUsersMainViewService,
+    AdminRolesMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService
@@ -41,6 +43,8 @@ export class KmcViewsModule {
                 StudioMainViewService,
                 UsageDashboardMainViewService,
                 LiveAnalyticsMainViewService,
+                AdminUsersMainViewService,
+                AdminRolesMainViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };

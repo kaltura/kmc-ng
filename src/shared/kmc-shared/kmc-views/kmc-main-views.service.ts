@@ -10,7 +10,9 @@ import { ContentCategoriesMainViewService,
     ContentDropFoldersMainViewService,
     StudioMainViewService,
     UsageDashboardMainViewService,
-    LiveAnalyticsMainViewService
+    LiveAnalyticsMainViewService,
+    AdminUsersMainViewService,
+    AdminRolesMainViewService
 } from './main-views';
 
 
@@ -85,7 +87,9 @@ export class KmcMainViewsService {
         private _contentDropFoldersMain: ContentDropFoldersMainViewService,
         private _studioMain: StudioMainViewService,
         private _usageDashboardMain: UsageDashboardMainViewService,
-        private _liveAnalyticsMain: LiveAnalyticsMainViewService
+        private _liveAnalyticsMain: LiveAnalyticsMainViewService,
+        private _adminUsersMain: AdminUsersMainViewService,
+        private _adminRolesMain: AdminRolesMainViewService
     ) {
         this._logger = logger.subLogger('KmcMainViewsService');
     }
@@ -255,14 +259,22 @@ export class KmcMainViewsService {
                 titleToken: '',
                 children: [
                     {
-                        id: 'administrationUsers',
-                        //isActiveView: 'administration/users',
+                        isAvailable: this._adminUsersMain.isAvailable(),
+                        isActiveView:  (path) => this._adminUsersMain.isActiveView(path),
+                        open: () => {
+                            this._adminUsersMain.open();
+                        },
                         titleToken: 'Users',
+                        'position': 'left'
                     },
                     {
-                        id: 'administrationRoles',
-                        //isActiveView: 'administration/roles',
+                        isAvailable: this._adminRolesMain.isAvailable(),
+                        isActiveView:  (path) => this._adminRolesMain.isActiveView(path),
+                        open: () => {
+                            this._adminUsersMain.open();
+                        },
                         titleToken: 'Roles',
+                        'position': 'left'
                     }
                 ]
             }

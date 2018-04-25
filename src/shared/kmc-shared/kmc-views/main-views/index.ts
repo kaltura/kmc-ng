@@ -9,3 +9,5 @@ export * from './content-drop-folders-main-view.service';
 export * from './studio-main-view.service';
 export * from './usage-dashboard-main-view.service';
 export * from './live-analytics-main-view.service';
+export * from './admin-users-main-view.service';
+export * from './admin-roles-main-view.service';
