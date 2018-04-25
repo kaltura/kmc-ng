@@ -76,7 +76,8 @@
             "apply": "Apply",
             "done": "Done",
             "save": "Save",
-            "connectionError": "Error connecting to server"
+            "connectionError": "Error connecting to server",
+            "error": "Error"
         },
         "login": {
             "login": {

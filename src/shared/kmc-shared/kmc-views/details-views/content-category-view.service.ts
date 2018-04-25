@@ -3,11 +3,15 @@ import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router } from '@angular/router';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { modulesConfig } from 'config/modules';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 
 export enum ContentCategoryViewSections {
     Metadata = 'Metadata',
@@ -28,6 +32,7 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
+                private _kalturaClient: KalturaClient,
                 private router: Router) {
         super();
     }
@@ -85,6 +90,10 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
                         message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
                         accept: () => {
                             navigate().subscribe(observer);
+                        },
+                        reject: () => {
+                            observer.next(false);
+                            observer.complete();
                         }
                     }
                 );
@@ -92,5 +101,25 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
         } else {
             return navigate();
         }
+    }
+
+    public openById(categoryId: number): Observable<boolean> {
+        const categoryGetAction = new CategoryGetAction({ id: categoryId })
+            .setRequestOptions({
+                responseProfile: new KalturaDetachedResponseProfile({
+                    type: KalturaResponseProfileType.includeFields,
+                    fields: 'id,tags,privacyContexts,directSubCategoriesCount'
+                })
+            });
+        return this._kalturaClient
+            .request(categoryGetAction)
+            .switchMap(category => this._open({ category }))
+            .catch(err => {
+                this._browserService.alert({
+                    header: this._appLocalization.get('app.common.error'),
+                    message: err.message
+                });
+                return Observable.of(false);
+            });
     }
 }

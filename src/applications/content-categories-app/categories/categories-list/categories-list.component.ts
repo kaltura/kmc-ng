@@ -18,6 +18,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'kCategoriesList',
@@ -134,6 +135,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     private _registerToDataChanges(): void {
         this._categoriesService.categories.state$
+            .observeOn(async)
             .cancelOnDestroy(this)
             .subscribe(
                 result => {

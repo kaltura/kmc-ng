@@ -179,7 +179,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
     private _registerToDataChanges(): void {
         this._playlistsStore.playlists.state$
-            .subscribeOn(async)
+            .observeOn(async)
             .cancelOnDestroy(this)
             .subscribe(
                 result => {

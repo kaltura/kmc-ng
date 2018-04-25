@@ -216,9 +216,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   ngOnDestroy() {
   }
 
-  public openCategory(category: KalturaCategory) {
+  public openCategory(category: KalturaCategory): void {
     if (category && category.id) {
-      this._categoryService.openCategory(category.id);
+      this._categoryService.openCategory(category);
     }
   }
 }

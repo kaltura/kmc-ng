@@ -363,17 +363,24 @@ export class CategoryService implements OnDestroy {
         this._contentCategoryView.open({section, category: this.category, ignoreWarningTag: true});
     }
 
-    public openCategory(categoryId: number) {
+    public openCategory(category: KalturaCategory | number) {
+        const categoryId = category instanceof KalturaCategory ? category.id : category;
         if (this.categoryId !== categoryId) {
             this.canLeaveWithoutSaving()
+                .filter(({ allowed }) => allowed)
                 .cancelOnDestroy(this)
-                .subscribe(
-                    response => {
-                        if (response.allowed) {
-                            this._router.navigate(['category', categoryId], {relativeTo: this._categoryRoute.parent});
-                        }
+                .subscribe(() => {
+                    if (category instanceof KalturaCategory) {
+                        this._contentCategoryView.open({ category });
+                    } else {
+                        this._state.next({ action: ActionTypes.CategoryLoading });
+                        this._contentCategoryView.openById(category)
+                            .cancelOnDestroy(this)
+                            .subscribe(() => {
+                                this._state.next({ action: ActionTypes.CategoryLoaded });
+                            });
                     }
-                );
+                });
         }
     }
 
