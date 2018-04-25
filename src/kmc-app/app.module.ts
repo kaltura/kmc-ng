@@ -84,6 +84,7 @@ import { getKalturaServerUri } from 'config/server';
 import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
+import { LoginActionsComponent } from './components/login/login-actions/login-actions.component';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -157,7 +158,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     InvalidLoginHashFormComponent,
     ChangeAccountComponent,
     ChangelogComponent,
-    ChangelogContentComponent
+    ChangelogContentComponent,
+      LoginActionsComponent
   ],
   bootstrap: <any>[
     AppComponent
