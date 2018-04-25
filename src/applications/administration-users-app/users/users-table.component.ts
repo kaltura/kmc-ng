@@ -6,6 +6,7 @@ import { Menu, MenuItem } from 'primeng/primeng';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -15,7 +16,8 @@ export interface PartnerInfo {
 @Component({
   selector: 'kUsersTable',
   templateUrl: './users-table.component.html',
-  styleUrls: ['./users-table.component.scss']
+  styleUrls: ['./users-table.component.scss'],
+    providers: [KalturaLogger.createLogger('UsersTableComponent')]
 })
 export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
@@ -58,6 +60,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
+              private _logger: KalturaLogger,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -67,16 +70,18 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(
         response => {
           if (response.error) {
+              this._logger.info(`handle failed data load action, show alert`);
             this._blockerMessage = new AreaBlockerMessage({
               message: response.error,
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                    this._logger.info(`user selected retry, retry loading data`);
                   this._blockerMessage = null;
                   this._usersStore.reload(true);
                 }
               }]
-            })
+            });
           }
         }
       );
