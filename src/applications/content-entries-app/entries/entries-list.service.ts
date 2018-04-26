@@ -1,9 +1,6 @@
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {ISubscription} from 'rxjs/Subscription';
-import 'rxjs/add/operator/map';
+import { Injectable } from '@angular/core';
+
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Injectable()
