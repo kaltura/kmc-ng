@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -22,6 +22,7 @@ export enum ContentCategoryViewSections {
 export interface ContentCategoryViewArgs {
     category: KalturaCategory;
     section?: ContentCategoryViewSections;
+    activatedRoute?: ActivatedRoute;
     ignoreWarningTag?: boolean;
 }
 
@@ -38,7 +39,22 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
     }
 
     isAvailable(args: ContentCategoryViewArgs): boolean {
-        return this._isSectionEnabled(args.section, args.category);
+        const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute);
+        return this._isSectionEnabled(section, args.category);
+    }
+
+    private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute): ContentCategoryViewSections {
+        const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+        switch (sectionToken) {
+            case 'subcategories':
+                return ContentCategoryViewSections.SubCategories;
+            case 'entitlements':
+                return ContentCategoryViewSections.Entitlements;
+            case 'metadata':
+                return ContentCategoryViewSections.Metadata;
+            default:
+                return null;
+        }
     }
 
     private _getSectionRouteToken(section?: ContentCategoryViewSections): string {

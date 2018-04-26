@@ -331,21 +331,25 @@ export class CategoryService implements OnDestroy {
       .request(new CategoryGetAction({id}))
 			.cancelOnDestroy(this)
 			.subscribe(category => {
-			this._loadCategorySubscription = null;
+                if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute })) {
+                    this._loadCategorySubscription = null;
 
-				this._category.next(category);
+                    this._category.next(category);
 
-				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
+                    const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
 
-				if (dataLoadedResult.errors.length) {
-					this._state.next({
-						action: ActionTypes.CategoryLoadingFailed,
-						error: new Error(`one of the widgets failed while handling data loaded event`)
-					});
-				} else {
-					this._state.next({ action: ActionTypes.CategoryLoaded });
-				}
-			},
+                    if (dataLoadedResult.errors.length) {
+                        this._state.next({
+                            action: ActionTypes.CategoryLoadingFailed,
+                            error: new Error(`one of the widgets failed while handling data loaded event`)
+                        });
+                    } else {
+                        this._state.next({ action: ActionTypes.CategoryLoaded });
+                    }
+                } else {
+                    this._browserService.handleUnpermittedAction(true);
+                }
+            },
 			error => {
 				this._loadCategorySubscription = null;this._state.next({ action: ActionTypes.CategoryLoadingFailed, error });
 }
@@ -410,8 +414,7 @@ export class CategoryService implements OnDestroy {
 		    this._updatePageExitVerification();
 	    }
 
-	    this._contentCategoriesMainViewService.open();
-		this._router.navigate(['content/categories']);
+        this._contentCategoriesMainViewService.open();
 	}
 }
 
