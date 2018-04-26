@@ -41,8 +41,6 @@ export class EntitlementComponent implements OnInit, OnDestroy {
   ngOnInit() {
       if (this._settingsIntegrationSettingsMainView.isAvailable()) {
           this._loadEntitlementSectionData();
-      }else{
-          this._browserService.handleUnpermittedAction(true);
       }
   }
 

@@ -5,7 +5,7 @@ import {LoginComponent} from './components/login/login.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {ErrorComponent} from './components/error/error.component';
 import { LoginActionsComponent } from './components/login/login-actions/login-actions.component';
-import { AppDefaultViewComponent } from './components/app-default-view.component';
+import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 
 const routes: Routes = <Routes>[
   {

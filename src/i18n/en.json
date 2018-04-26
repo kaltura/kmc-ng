@@ -78,6 +78,11 @@
             "save": "Save",
             "connectionError": "Error connecting to server"
         },
+        "redirect":{
+            "redirect1": "Redirecting to default view...",
+            "redirect2": "If you are not redirected in few seconds, click ",
+            "redirect3": "here"
+        },
         "login": {
             "login": {
                 "title": "Login",

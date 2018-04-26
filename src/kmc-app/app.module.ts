@@ -85,7 +85,7 @@ import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { LoginActionsComponent } from './components/login/login-actions/login-actions.component';
-import { AppDefaultViewComponent } from './components/app-default-view.component';
+import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
