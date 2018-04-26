@@ -148,9 +148,7 @@
             "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
         },
         "UnpermittedActionReasons": {
-            "InvalidConfiguration": {
-                "message": "This view cannot be loaded. If the problem persists - please contact Kaltura Support.\nClick OK to navigate to the entries view."
-            }
+            "message": "This view cannot be loaded. If the problem persists - please contact Kaltura Support.\nClick OK to navigate to the entries view"
         }
     },
     "applications": {
