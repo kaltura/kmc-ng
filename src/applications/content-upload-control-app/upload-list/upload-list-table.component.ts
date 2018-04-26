@@ -12,7 +12,7 @@ export class UploadListTableComponent {
   @Input() uploads: UploadFileData[];
   @Input() selectedUploads: UploadFileData[] = [];
 
-  @Output() onSelectedEntriesChange = new EventEmitter<any>();
+  @Output() selectedUploadsChange = new EventEmitter<any>();
   @Output() onCancelUpload = new EventEmitter<UploadFileData>();
   @Output() onRetryUpload = new EventEmitter<UploadFileData>();
 

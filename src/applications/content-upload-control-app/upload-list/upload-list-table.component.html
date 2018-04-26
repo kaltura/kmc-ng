@@ -8,7 +8,7 @@
                  [value]="uploads"
                  [emptyMessage]="!uploads.length ? _emptyMessage : ''"
                  [rowStyleClass]="_relatedTableRowStyle"
-                 (selectionChange)="onSelectedEntriesChange.emit($event)"
+                 (selectionChange)="selectedUploadsChange.emit($event)"
                  [(selection)]="selectedUploads"
                  kStickyHeader [sticksTo]="'uploadControlFilters'" stickyClass="stickyHeader" [stickyId]="'uploadControlTable'">
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
