@@ -289,7 +289,7 @@ export class BrowserService implements IAppStorage {
             // TODO sakal ask Amir to change the messages
             this.alert(
                 {
-                    message: this._appLocalization.get('app.UnpermittedActionReasons.message'),
+                    message: this._appLocalization.get('app.UnpermittedActionReasons.messageNav'),
                     accept: () => {
                         this._router.navigate([ '/default']);
                     }

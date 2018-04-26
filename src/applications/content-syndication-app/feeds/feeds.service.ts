@@ -34,6 +34,7 @@ import {SyndicationFeedGetEntryCountAction} from "kaltura-ngx-client/api/types/S
 import {SyndicationFeedAddAction} from "kaltura-ngx-client/api/types/SyndicationFeedAddAction";
 import {SyndicationFeedUpdateAction} from "kaltura-ngx-client/api/types/SyndicationFeedUpdateAction";
 import { subApplicationsConfig } from 'config/sub-applications';
+import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
 
 export interface UpdateStatus {
@@ -82,11 +83,16 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
 
   constructor(private _kalturaClient: KalturaClient,
+              contentSyndicationMainView: ContentSyndicationMainViewService,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               _logger: KalturaLogger) {
     super(_logger);
-    this._prepare();
+    if (contentSyndicationMainView.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   private _prepare(): void {
