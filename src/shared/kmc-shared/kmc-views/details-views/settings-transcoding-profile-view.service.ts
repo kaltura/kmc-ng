@@ -6,7 +6,12 @@ import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaConversionProfileWithAsset } from '../../../../applications/settings-transcoding-settings-app/transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
+import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
+
+export interface KalturaConversionProfileWithAsset extends KalturaConversionProfile {
+    assets?: KalturaConversionProfileAssetParams[];
+}
 
 export enum SettingsTranscodingProfileViewSections {
     Metadata = 'Metadata',
