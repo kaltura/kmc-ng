@@ -9,6 +9,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { Observer } from 'rxjs/Observer';
 import { serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -18,7 +19,8 @@ export interface PartnerInfo {
 @Component({
   selector: 'kUsersList',
   templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.scss']
+  styleUrls: ['./users-list.component.scss'],
+    providers: [KalturaLogger.createLogger('UsersListComponent')]
 })
 
 export class UsersListComponent implements OnInit, OnDestroy {
@@ -39,14 +41,17 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   constructor(public _usersStore: UsersStore,
               private _appLocalization: AppLocalization,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
+      this._logger.debug(`init component, subscribe to query and data changes`);
     this._usersStore.query$
       .cancelOnDestroy(this)
       .subscribe(
         query => {
+            this._logger.debug(`query was updated`, { query });
           this._filter.pageSize = query.pageSize;
           this._filter.pageIndex = query.pageIndex - 1;
           this._browserService.scrollToTop();
@@ -71,6 +76,8 @@ export class UsersListComponent implements OnInit, OnDestroy {
             adminLoginUsersQuota: response.partnerInfo.adminLoginUsersQuota,
             adminUserId: response.partnerInfo.adminUserId
           };
+
+          this._logger.debug(`users data was updated`, { totalUsers: this._usersTotalCount, partnerInfo: this._partnerInfo, usersInfo: this._usersTotalCount });
         }
       );
   }
@@ -81,15 +88,18 @@ export class UsersListComponent implements OnInit, OnDestroy {
   private _getObserver(retryFn: () => void): Observer<void> {
     return <Observer<void>>{
       next: () => {
-        this._usersStore.reload(true)
+          this._logger.info(`handle successful action`);
+        this._usersStore.reload(true);
       },
       error: (error) => {
+          this._logger.warn(`handle failed action, show confirmation`);
         this._blockerMessage = new AreaBlockerMessage({
           message: error.message,
           buttons: [
             {
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
+                  this._logger.info(`user confirmed, retry action`);
                 this._blockerMessage = null;
                 retryFn();
               }
@@ -97,6 +107,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
             {
               label: this._appLocalization.get('app.common.cancel'),
               action: () => {
+                  this._logger.info(`user didn't confirm, abort action`);
                 this._blockerMessage = null;
               }
             }
@@ -106,14 +117,16 @@ export class UsersListComponent implements OnInit, OnDestroy {
       complete: () => {
         // empty by design
       }
-    }
+    };
   }
 
   public _upgradeAccount(): void {
+      this._logger.info(`handle upgrade account action by user`);
     this._browserService.openLink(serverConfig.externalLinks.kaltura.upgradeAccount, {}, '_blank');
   }
 
   public _onPaginationChanged(state: any): void {
+      this._logger.info(`handle pagination changed action by user`, { state });
     if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
       this._filter.pageSize = state.page + 1;
       this._filter.pageIndex = state.rows;
@@ -125,11 +138,13 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _onEditUser(user: KalturaUser): void {
+      this._logger.info(`handel edit user action by user`, { user });
     this._user = user;
     this.editUserPopup.open();
   }
 
   public _onToggleUserStatus(user: KalturaUser): void {
+      this._logger.info(`handle toggle user status action by user`, { user });
     const retryFn = () => this._onToggleUserStatus(user);
     this._usersStore.toggleUserStatus(user)
       .cancelOnDestroy(this)
@@ -138,6 +153,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _onDeleteUser(user: KalturaUser): void {
+      this._logger.info(`handle delete user action by user`, { user });
     const retryFn = () => this._onDeleteUser(user);
     this._usersStore.deleteUser(user)
       .cancelOnDestroy(this)
@@ -146,6 +162,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _addUser(): void {
+      this._logger.info(`handle add user action by user`);
     this._user = null;
     this.editUserPopup.open();
   }

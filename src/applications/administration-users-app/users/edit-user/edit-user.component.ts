@@ -10,6 +10,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -19,7 +20,8 @@ export interface PartnerInfo {
 @Component({
   selector: 'kEditUser',
   templateUrl: './edit-user.component.html',
-  styleUrls: ['./edit-user.component.scss']
+  styleUrls: ['./edit-user.component.scss'],
+    providers: [KalturaLogger.createLogger('EditUserComponent')]
 })
 
 export class EditUserComponent implements OnInit, OnDestroy {
@@ -48,6 +50,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
               private _formBuilder: FormBuilder,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
+              private _logger: KalturaLogger,
               private _appLocalization: AppLocalization) {
     // build FormControl group
     this._userForm = _formBuilder.group({
@@ -83,6 +86,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
         this._isNewUser = !relevantUser;
 
         if (this._isNewUser) {
+            this._logger.info(`enter add user mode`);
           this._userForm.reset({
             email: '',
             firstName: '',
@@ -96,6 +100,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._userForm.get('roleIds').enable();
           this._setRoleDescription();
         } else {
+            this._logger.info(`enter edit user mode`, { user: this.user });
           this._userForm.reset({
             email: this.user.email,
             firstName: this.user.firstName,
@@ -126,6 +131,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   private _isUserAlreadyExists(): void {
+      this._logger.info(`handle if user already exists request by user`);
     const { email } = this._userForm.value;
     this._isBusy = true;
     this._usersStore.isUserAlreadyExists(email)
@@ -136,6 +142,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
         if (status !== null) {
             switch (status) {
                 case IsUserExistsStatuses.kmcUser:
+                    this._logger.info(`user already exists, show alert`);
                     this._browserService.alert({
                         message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: email})
                     });
@@ -144,20 +151,31 @@ export class EditUserComponent implements OnInit, OnDestroy {
                     this._isUserAssociated();
                     break;
                 case IsUserExistsStatuses.unknownUser:
+                    this._logger.info(`unknown user, show confirmation`);
                     this._browserService.confirm({
                             header: this._appLocalization.get('applications.administration.users.alreadyExist'),
                             message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
-                            accept: () => this._isUserAssociated()
+                            accept: () => {
+                                this._logger.info(`user confirmed, proceed action`);
+                                this._isUserAssociated();
+                            },
+                            reject: () => {
+                                this._logger.info(`user didn't confirmed, abort action`);
+                            }
                         }
                     );
                     break;
             }
         }else {
+            this._logger.warn(`handle failed action by user, show alert`);
             this._blockerMessage = new AreaBlockerMessage({
                 message: this._appLocalization.get('applications.administration.users.commonError'),
                 buttons: [{
                     label: this._appLocalization.get('app.common.ok'),
-                    action: () => this._blockerMessage = null
+                    action: () => {
+                        this._logger.info(`user dismissed alert`);
+                        this._blockerMessage = null;
+                    }
                 }]
             });
         }
@@ -165,7 +183,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   private _updateUser(): void {
+      this._logger.info(`handle update user action`);
     if (!this._userForm.valid) {
+        this._logger.info(`user form is not valid, abort action`);
       return;
     }
 
@@ -176,15 +196,18 @@ export class EditUserComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         () => {
+            this._logger.info(`handle successful update user action, show confirmation`);
           this._usersStore.reload(true);
           this._browserService.alert({ message: this._appLocalization.get('applications.administration.users.successSavingUser') });
           this.parentPopupWidget.close();
         },
         error => {
+            this._logger.warn(`handle failed update user action`);
           let buttons = [
             {
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
+                  this._logger.info(`user confirmed, retry action`);
                 this._blockerMessage = null;
                 this._updateUser();
               }
@@ -192,6 +215,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
             {
               label: this._appLocalization.get('app.common.cancel'),
               action: () => {
+                  this._logger.info(`user didn't confrim, abort action`);
                 this._blockerMessage = null;
               }
             }
@@ -201,6 +225,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
             buttons = [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
+                  this._logger.info(`user dismissed confirmation`);
                 this._blockerMessage = null;
               }
             }];
@@ -216,6 +241,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   private _isUserAssociated(): void {
+      this._logger.info(`handle is user associated request`);
     const { id, email } = this._userForm.value;
     const userId = id || email;
     this._isBusy = true;
@@ -223,38 +249,51 @@ export class EditUserComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         user => {
+            this._logger.info(`handle successful action, show confirmation`);
           this._isBusy = false;
           this._browserService.confirm({
             header: this._appLocalization.get('applications.administration.users.userAssociatedCaption'),
             message: this._appLocalization.get('applications.administration.users.userAssociated', { 0: userId }),
-            accept: () => this._updateUserPermissions(user)
+            accept: () => {
+                this._logger.info(`user confirmed, proceed action`);
+                this._updateUserPermissions(user);
+            },
+              reject: () => {
+                this._logger.info(`user didn't confirm, abort action`);
+              }
           });
         },
         error => {
           this._isBusy = false;
           if (error.code === 'INVALID_USER_ID') {
             this._addNewUser();
+          } else {
+              this._logger.warn(`handle failed action`, { errorMessage: error.message });
           }
         }
       );
   }
 
   private _updateUserPermissions(user: KalturaUser): void {
+      this._logger.info(`handle update user permissions action`, { user });
     this._blockerMessage = null;
     this._usersStore.updateUserPermissions(user, this._userForm)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         () => {
+            this._logger.info(`handle successful action`);
           this._usersStore.reload(true);
           this.parentPopupWidget.close();
         },
         error => {
+            this._logger.info(`handle failed action, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
+                  this._logger.info(`user dismissed alert`);
                 this._blockerMessage = null;
               }
             }]
@@ -264,9 +303,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   private _addNewUser(): void {
+      this._logger.info(`handle add user action`);
     this._blockerMessage = null;
 
     if (!this._userForm.valid) {
+        this._logger.info(`user form is not valid abort action`);
       return;
     }
 
@@ -275,15 +316,18 @@ export class EditUserComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
+            this._logger.info(`handle successful add user action`);
           this._usersStore.reload(true);
           this.parentPopupWidget.close();
         },
         error => {
+            this._logger.warn(`handle failed add user action, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
+                  this._logger.info(`user dismissed alert`);
                 this._blockerMessage = null;
               }
             }]
@@ -293,6 +337,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   public _setRoleDescription(event?: any): void {
+      this._logger.info(`handle set role description action`, { event });
     if (!event) {
       this._selectedRoleDescription = this._roles[0] ? this._roles[0].description : '';
     } else {
@@ -304,12 +349,17 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   public _saveUser(): void {
+      this._logger.info(`handle save user action by user`);
     if (this._userForm.valid) {
       if (this._isNewUser) {
+          this._logger.info(`handle add user`);
         this._isUserAlreadyExists();
       } else {
+          this._logger.info(`handle update user`);
         this._updateUser();
       }
+    } else {
+        this._logger.info(`form is not valid, abort action`);
     }
   }
 }

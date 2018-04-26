@@ -26,6 +26,7 @@ import { UserGetByLoginIdAction } from 'kaltura-ngx-client/api/types/UserGetByLo
 import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
 import { UserEnableLoginAction } from 'kaltura-ngx-client/api/types/UserEnableLoginAction';
 import { UserAddAction } from 'kaltura-ngx-client/api/types/UserAddAction';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface QueryData {
   pageIndex: number,
@@ -63,7 +64,9 @@ export class UsersStore implements OnDestroy {
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger,
               private _appAuthentication: AppAuthentication) {
+      this._logger = _logger.subLogger('UsersStore');
     const defaultPageSize = this._browserService.getFromLocalStorage('users.list.pageSize');
     if (defaultPageSize !== null) {
       this._updateQueryData({
@@ -89,6 +92,7 @@ export class UsersStore implements OnDestroy {
   }
 
   private _loadData(): void {
+      this._logger.info(`handle load data request`);
     this._users.state.next({ loading: true, error: null });
     this._kalturaServerClient
       .multiRequest([
@@ -111,6 +115,7 @@ export class UsersStore implements OnDestroy {
         new PartnerGetInfoAction()
       ])
       .cancelOnDestroy(this)
+        .monitor('UsersStore: load users data')
       .subscribe(
         response => {
           if (!response.hasErrors()) {
@@ -131,10 +136,19 @@ export class UsersStore implements OnDestroy {
             });
             this._users.state.next({ loading: false, error: null });
           } else {
+              this._logger.warn(`handle failed loading of data`, () => {
+                  return {
+                      errorMessage: response
+                          .map(res => res.error)
+                          .filter(Boolean)
+                          .reduce((acc, val) => `${acc}\n${val.message}`, '')
+                  };
+              });
             this._users.state.next({ loading: false, error: this._appLocalization.get('applications.administration.users.failedLoading') });
           }
         },
-        () => {
+        (error) => {
+            this._logger.warn(`handle failed loading of data`, { errorMessage: error.message });
           this._users.state.next({ loading: false, error: this._appLocalization.get('applications.administration.users.failedLoading') });
         }
       );
@@ -157,7 +171,9 @@ export class UsersStore implements OnDestroy {
           userId: user.id,
           user: new KalturaUser({ status: newStatus })
         })
-      ).map(() => {
+      )
+        .monitor('UsersStore: toggle user status')
+        .map(() => {
         return;
       });
   }
@@ -172,6 +188,7 @@ export class UsersStore implements OnDestroy {
 
     return this._kalturaServerClient
       .request(new UserDeleteAction({ userId: user.id }))
+        .monitor('UsersStore: delete user')
       .map(() => {
         return;
       });
@@ -180,6 +197,7 @@ export class UsersStore implements OnDestroy {
   public isUserAlreadyExists(email: string): Observable<IsUserExistsStatuses | null> {
     return this._kalturaServerClient
       .request(new UserGetByLoginIdAction({ loginId: email }))
+        .monitor('UsersStore: is user already exists')
       .map(() => {
         return IsUserExistsStatuses.kmcUser;
       })
@@ -192,7 +210,9 @@ export class UsersStore implements OnDestroy {
   }
 
   public isUserAssociated(userId: string): Observable<KalturaUser> {
-    return this._kalturaServerClient.request(new UserGetAction({ userId }));
+    return this._kalturaServerClient
+        .request(new UserGetAction({ userId }))
+        .monitor('UsersStore: is user associated');
   }
 
   public addUser(userForm: FormGroup): Observable<void> {
@@ -222,6 +242,7 @@ export class UsersStore implements OnDestroy {
 
     return this._kalturaServerClient
       .multiRequest(request)
+        .monitor('UsersStore: add user')
       .map((responses) => {
         if (responses.hasErrors()) {
           const errorMessage = responses.map(response => {
@@ -247,6 +268,7 @@ export class UsersStore implements OnDestroy {
     });
     return this._kalturaServerClient
       .request(new UserUpdateAction({ userId, user }))
+        .monitor('UsersStore: update user')
       .map(() => {
         return;
       });
@@ -267,6 +289,7 @@ export class UsersStore implements OnDestroy {
     );
     return this._kalturaServerClient
       .multiRequest(request)
+        .monitor('UsersStore: update user permissions')
       .map((responses) => {
         if (responses.hasErrors()) {
           const errorMessage = responses.map(response => {
@@ -282,6 +305,7 @@ export class UsersStore implements OnDestroy {
   public reload(force: boolean): void;
   public reload(query: Partial<QueryData>): void;
   public reload(query: boolean | Partial<QueryData>): void {
+      this._logger.info(`handle reload action by user`);
     const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
     if (forceReload || this._usersDataValue.users.totalCount === 0) {
       if (typeof query === 'object') {
