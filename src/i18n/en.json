@@ -147,6 +147,7 @@
             "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
         },
         "UnpermittedActionReasons": {
+            "header": "View Disabled",
             "message": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.",
             "messageNav": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.\nClick OK to navigate to the main view."
         }
