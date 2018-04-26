@@ -51,6 +51,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
 
     isAvailable(args: ContentEntryViewArgs): boolean {
         const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute);
+        this._logger.info(`handle isAvailable action by user`, { categoryId: args.entry.id, section });
         return this._isSectionEnabled(section, args.entry);
     }
 
@@ -63,97 +64,146 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
 
     private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute): ContentEntryViewSections {
         const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+        let result = null;
 
         switch (sectionToken) {
             case 'metadata':
-                return ContentEntryViewSections.Metadata;
+                result = ContentEntryViewSections.Metadata;
+                break;
             case 'thumbnails':
-                return ContentEntryViewSections.Thumbnails;
+                result = ContentEntryViewSections.Thumbnails;
+                break;
             case 'accesscontrol':
-                return ContentEntryViewSections.AccessControl;
+                result = ContentEntryViewSections.AccessControl;
+                break;
             case 'scheduling':
-                return ContentEntryViewSections.Scheduling;
+                result = ContentEntryViewSections.Scheduling;
+                break;
             case 'flavours':
-                return ContentEntryViewSections.Flavours;
+                result = ContentEntryViewSections.Flavours;
+                break;
             case 'captions':
-                return ContentEntryViewSections.Captions;
+                result = ContentEntryViewSections.Captions;
+                break;
             case 'live':
-                return ContentEntryViewSections.Live;
+                result = ContentEntryViewSections.Live;
+                break;
             case 'related':
-                return ContentEntryViewSections.Related;
+                result = ContentEntryViewSections.Related;
+                break;
             case 'clips':
-                return ContentEntryViewSections.Clips;
+                result = ContentEntryViewSections.Clips;
+                break;
             case 'advertisements':
-                return ContentEntryViewSections.Advertisements;
+                result = ContentEntryViewSections.Advertisements;
+                break;
             case 'users':
-                return ContentEntryViewSections.Users;
+                result = ContentEntryViewSections.Users;
+                break;
             case 'distribution':
-                return ContentEntryViewSections.Distribution;
+                result = ContentEntryViewSections.Distribution;
+                break;
             default:
-                return null;
+                break;
         }
+
+        this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+
+        return result;
     }
 
     private _getSectionRouteToken(section?: ContentEntryViewSections): string {
+        let result;
         switch (section) {
             case ContentEntryViewSections.Thumbnails:
-                return 'thumbnails';
+                result = 'thumbnails';
+                break;
             case ContentEntryViewSections.AccessControl:
-                return 'accesscontrol';
+                result = 'accesscontrol';
+                break;
             case ContentEntryViewSections.Scheduling:
-                return 'scheduling';
+                result = 'scheduling';
+                break;
             case ContentEntryViewSections.Flavours:
-                return 'flavours';
+                result = 'flavours';
+                break;
             case ContentEntryViewSections.Captions:
-                return 'captions';
+                result = 'captions';
+                break;
             case ContentEntryViewSections.Live:
-                return 'live';
+                result = 'live';
+                break;
             case ContentEntryViewSections.Related:
-                return 'related';
+                result = 'related';
+                break;
             case ContentEntryViewSections.Clips:
-                return 'clips';
+                result = 'clips';
+                break;
             case ContentEntryViewSections.Advertisements:
-                return 'advertisements';
+                result = 'advertisements';
+                break;
             case ContentEntryViewSections.Users:
-                return 'users';
+                result = 'users';
+                break;
             case ContentEntryViewSections.Distribution:
-                return 'distribution';
+                result = 'distribution';
+                break;
             case ContentEntryViewSections.Metadata:
             default:
-                return 'metadata';
+                result = 'metadata';
+                break;
         }
+
+        this._logger.debug(`section mapped to token`, { section, token: result });
+
+        return result;
     }
 
     private _isSectionEnabled(section: ContentEntryViewSections, entry: KalturaMediaEntry): boolean {
+        this._logger.debug(`check section availability for entry`, { categoryId: entry.id, section });
         const mediaType = entry.mediaType;
         const externalMedia = entry instanceof KalturaExternalMediaEntry;
+        let result = false;
         switch (section) {
             case ContentEntryViewSections.Thumbnails:
-                return mediaType !== KalturaMediaType.image;
+                result = mediaType !== KalturaMediaType.image;
+                break;
             case ContentEntryViewSections.Flavours:
             case ContentEntryViewSections.Captions:
-                return mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType) && !externalMedia;
+                result = mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType) && !externalMedia;
+                break;
             case ContentEntryViewSections.Advertisements:
-                return mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType);
+                result = mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType);
+                break;
             case ContentEntryViewSections.Live:
-                return this._isLiveMediaEntry(entry.mediaType);
+                result = this._isLiveMediaEntry(entry.mediaType);
+                break;
             case ContentEntryViewSections.Clips:
-                return mediaType !== KalturaMediaType.image && !externalMedia;
+                result = mediaType !== KalturaMediaType.image && !externalMedia;
+                break;
             case ContentEntryViewSections.Distribution:
-                return !this._isLiveMediaEntry(entry.mediaType) && mediaType !== KalturaMediaType.audio && mediaType !== KalturaMediaType.image;
+                result = !this._isLiveMediaEntry(entry.mediaType) && mediaType !== KalturaMediaType.audio && mediaType !== KalturaMediaType.image;
+                break;
             case ContentEntryViewSections.Metadata:
-                return true;
+                result = true;
+                break;
             default:
-                return false;
+                break;
         }
+
+        this._logger.debug(`availability result`, { result });
+
+        return result;
     }
 
     protected _open(args: ContentEntryViewArgs): Observable<boolean> {
         const sectionToken = this._getSectionRouteToken(args.section);
+        this._logger.info('handle open entry view request by the user', { entryId: args.entry.id, sectionToken });
         return Observable.fromPromise(this._router.navigateByUrl(`/content/entries/entry/${args.entry.id}/${sectionToken}`));
     }
 
     public openById(entryId: string): Observable<boolean> {
+        this._logger.info('handle open entry view by id request by the user, load category data', { entryId });
         const baseEntryAction = new BaseEntryGetAction({ entryId })
             .setRequestOptions({
                 responseProfile: new KalturaDetachedResponseProfile({
@@ -169,8 +219,12 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                     throw new Error(`invalid type provided, expected KalturaMediaEntry, got ${typeof response}`);
                 }
             })
-            .switchMap(entry => this._open({ entry }))
+            .switchMap(entry => {
+                this._logger.info(`handle successful request, proceed navigation`);
+                return this._open({ entry });
+            })
             .catch(err => {
+                this._logger.info(`handle failed request, show alert, abort navigation`);
                 this._browserService.alert({
                     header: this._appLocalization.get('app.common.error'),
                     message: err.message

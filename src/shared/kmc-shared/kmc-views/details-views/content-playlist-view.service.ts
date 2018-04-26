@@ -36,21 +36,29 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
 
     isAvailable(args: ContentPlaylistViewArgs): boolean {
         const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute, args.playlist);
+        this._logger.info(`handle isAvailable action by user`, { playlistId: args.playlist.id, section });
         return this._isSectionEnabled(section, args.playlist);
     }
 
     private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute, playlist: KalturaPlaylist): ContentPlaylistViewSections {
         const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+        let result = null;
         switch (sectionToken) {
             case 'content':
-                return playlist.playlistType === KalturaPlaylistType.staticList
+                result = playlist.playlistType === KalturaPlaylistType.staticList
                     ? ContentPlaylistViewSections.Content
                     : ContentPlaylistViewSections.ContentRuleBased;
+                break;
             case 'metadata':
-                return ContentPlaylistViewSections.Metadata;
+                result = ContentPlaylistViewSections.Metadata;
+                break;
             default:
-                return null;
+                break;
         }
+
+        this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+
+        return result;
     }
 
     private _getSectionRouteToken(section?: ContentPlaylistViewSections): string {
@@ -67,23 +75,34 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
                 break;
         }
 
+        this._logger.debug(`section mapped to token`, { section, token: result });
+
         return result;
     }
 
     private _isSectionEnabled(section: ContentPlaylistViewSections, playlist: KalturaPlaylist): boolean {
+        let result = false;
         switch (section) {
             case ContentPlaylistViewSections.Content:
-                return playlist.playlistType === KalturaPlaylistType.staticList;
+                result = playlist.playlistType === KalturaPlaylistType.staticList;
+                break;
             case ContentPlaylistViewSections.ContentRuleBased:
-                return playlist.playlistType === KalturaPlaylistType.dynamic;
+                result = playlist.playlistType === KalturaPlaylistType.dynamic;
+                break;
             case ContentPlaylistViewSections.Metadata:
-                return true;
+                result = true;
+                break;
             default:
-                return false;
+                break;
         }
+
+        this._logger.debug(`availability result`, { result });
+
+        return result;
     }
 
     protected _open(args: ContentPlaylistViewArgs): Observable<boolean> {
+        this._logger.info('handle open playlist view request by the user', { playlistId: args.playlist.id });
         const sectionToken = this._getSectionRouteToken(args.section);
         return Observable.fromPromise(this._router.navigateByUrl(`/content/playlists/playlist/${args.playlist.id}/${sectionToken}`));
     }

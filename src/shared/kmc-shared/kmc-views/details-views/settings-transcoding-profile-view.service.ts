@@ -39,20 +39,28 @@ export class SettingsTranscodingProfileViewService extends KmcDetailsViewBaseSer
 
     isAvailable(args: SettingsTranscodingProfileViewArgs): boolean {
         const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute);
+        this._logger.info(`handle isAvailable action by user`, { profileId: args.profile.id, section });
         return this._isSectionEnabled(section, args.profile);
     }
 
     private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute): SettingsTranscodingProfileViewSections {
-        const routeToken = activatedRoute.snapshot.firstChild.url[0].path;
+        const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+        let result = null;
 
-        switch (routeToken) {
+        switch (sectionToken) {
             case 'flavors':
-                return SettingsTranscodingProfileViewSections.Flavors;
+                result = SettingsTranscodingProfileViewSections.Flavors;
+                break;
             case 'metadata':
-                return SettingsTranscodingProfileViewSections.Metadata;
+                result = SettingsTranscodingProfileViewSections.Metadata;
+                break;
             default:
-                return null;
+                break;
         }
+
+        this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+
+        return result;
     }
 
     private _getSectionRouteToken(section?: SettingsTranscodingProfileViewSections): string {
@@ -68,21 +76,30 @@ export class SettingsTranscodingProfileViewService extends KmcDetailsViewBaseSer
                 break;
         }
 
+        this._logger.debug(`section mapped to token`, { section, token: result });
+
         return result;
     }
 
     private _isSectionEnabled(section: SettingsTranscodingProfileViewSections, profile: KalturaConversionProfileWithAsset): boolean {
+        let result = false;
         switch (section) {
             case SettingsTranscodingProfileViewSections.Flavors:
             case SettingsTranscodingProfileViewSections.Metadata:
-                return true;
+                result = true;
+                break;
             default:
-                return false;
+                break;
         }
+
+        this._logger.debug(`availability result`, { result });
+
+        return result;
     }
 
     protected _open(args: SettingsTranscodingProfileViewArgs): Observable<boolean> {
         const sectionToken = this._getSectionRouteToken(args.section);
+        this._logger.info('handle open transcoding profile view request by the user', { profileId: args.profile.id, sectionToken });
         return Observable.fromPromise(this._router.navigateByUrl(`/settings/transcoding/profile/${args.profile.id}/${sectionToken}`));
     }
 }
