@@ -213,6 +213,7 @@ export class KmcMainViewsService {
                 id: 'analytics',
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
                 position: 'left',
+                isAvailable: true,
                 titleToken: 'Analytics',
                 children: [
                     {
@@ -224,8 +225,7 @@ export class KmcMainViewsService {
                         titleToken: 'Live Analytics'
                     },
                     {
-                        id: 'kava',
-                        //isActiveView: 'analytics/kava',
+                        isAvailable: false,
                         titleToken: 'Kava'
                     }
                 ]
