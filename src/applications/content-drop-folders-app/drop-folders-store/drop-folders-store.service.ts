@@ -37,13 +37,13 @@ export enum SortDirection {
 }
 
 export interface DropFoldersFilters {
-  pageSize: number,
-  pageIndex: number,
-  freeText: string,
-  createdAt: DatesRangeType,
-  status: string[],
-  sortBy: string,
-  sortDirection: number
+  pageSize: number;
+  pageIndex: number;
+  freeText: string;
+  createdAt: DatesRangeType;
+  status: string[];
+  sortBy: string;
+  sortDirection: number;
 }
 
 @Injectable()
@@ -79,7 +79,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               _logger: KalturaLogger) {
-    super(_logger);
+    super(_logger.subLogger('DropFoldersStoreService'));
     this._prepare();
   }
 
@@ -95,6 +95,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
     // only after the line where we set isReady to true
 
     if (!this._isReady) {
+        this._logger.info(`prepare service`);
       this._isReady = true;
 
       const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
@@ -138,11 +139,14 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       this._browserService.setInLocalStorage(localStoragePageSizeKey, pageSize);
     }
 
+    this._logger.info(`handle load drop folders list data`);
+
     this._dropFolders.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest(reloadFolders)
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+            this._logger.info(`handle successful load drop folders list data`);
           this._querySubscription = null;
           this._dropFolders.state.next({ loading: false, errorMessage: null });
           this._dropFolders.data.next({
@@ -153,6 +157,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+            this._logger.warn(`handle failed load drop folders list data`, { errorMessage });
           this._dropFolders.state.next({ loading: false, errorMessage });
         });
 
@@ -330,7 +335,9 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
   }
 
   public reload(): void {
+      this._logger.info(`handle reload action by user`);
     if (this._dropFolders.state.getValue().loading) {
+        this._logger.info(`reload action is already in progress, skip duplicating action`);
       return;
     }
 
