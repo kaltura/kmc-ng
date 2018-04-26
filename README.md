@@ -49,9 +49,12 @@ npm install
 npm run start -- -o
 ```
 
-> Note: By default, the `kmc-config.json` file is configured against the Kaltura production server. We advice you to check that the application works as expected using the default configuration before customizing it against your own server.
+> Note: By default, the `configuration/kmc-config-example.json` file is configured against the Kaltura production server. We advice you to check that the application works as expected using the default configuration before customizing it against your own server.
 >
-> For CI and on-prem server integrations, you can use the template file `server-config.template.json`.
+> when building for development purposes (`npm run build`, `npm start` or `npm run start`), a check is done to verify that file `src/kmc-config.json` exists, if not it is being created automatically with the content of `configuration/kmc-config-example.json`. This file is being removed when building to production.
+>
+> For CI and on-prem server integrations, you can use the template file `configuration/kmc-config.template.json`.
+
 
 
 ## KMC-ng Configuration
@@ -110,7 +113,7 @@ $ npm run build -- --prod
 A distributed standalone application will be created in the `dist/` folder.
 
 ### External (standalone) applications integrations
-The KMC integrates several standalone applications using iFrames. It contains a dedicated bridge component responsible for the communication with between the KMC shell and standalone application. External applications are not part of the KMC deployment process, they are configured at runtime by the server as part of file `kmc-config.json`. Read [__local_machine_only__/README.md](./__local_machine_only__/README.md) to learn more about standalone applications integration.
+The KMC integrates several standalone applications using iFrames. It contains a dedicated bridge component responsible for the communication with between the KMC shell and standalone application. External applications are not part of the KMC deployment process, they are configured at runtime by the server as part of the configuration file `kmc-config.json`. Read [__local_machine_only__/README.md](./__local_machine_only__/README.md) to learn more about standalone applications integration.
 
 
 ### Configuring the server
