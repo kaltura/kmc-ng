@@ -62,8 +62,6 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
         setTimeout(() => {
             this._prepare();
         });
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

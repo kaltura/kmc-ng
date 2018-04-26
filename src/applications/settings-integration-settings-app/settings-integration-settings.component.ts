@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 
 @Component({
   selector: 'kIntegrationSettings',
@@ -8,4 +10,9 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 })
 export class SettingsIntegrationSettingsComponent {
   public _kmcPermissions = KMCPermissions;
+  constructor(browserService: BrowserService, settingsIntegrationSettingsMainViewService: SettingsIntegrationSettingsMainViewService){
+      if (!settingsIntegrationSettingsMainViewService.isAvailable()){
+          browserService.handleUnpermittedAction(true);
+      }
+  }
 }
