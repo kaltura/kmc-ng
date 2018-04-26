@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AppEventsService } from 'shared/kmc-shared/app-events';
-import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { CreateNewTranscodingProfileEvent, CreateNewTranscodingProfileEventArgs } from './create-new-transcoding-profile.event';
 import {
@@ -31,13 +30,9 @@ export class TranscodingProfileCreationService implements OnDestroy {
       this._creationSubscription = this._appEvents.event(CreateNewTranscodingProfileEvent)
         .subscribe(({ data }) => {
             const profile = data.profile;
-            if (this._settingsTranscodingProfileViewService.isAvailable( { profile, section: SettingsTranscodingProfileViewSections.Flavors})) {
-                this._newProfileData = data;
-                (<any>profile).id = 'new';
-                this._settingsTranscodingProfileViewService.open({ profile, section: SettingsTranscodingProfileViewSections.Flavors });
-            } else {
-                this._browserService.handleUnpermittedAction(false);
-            }
+            this._newProfileData = data;
+            (<any>profile).id = 'new';
+            this._settingsTranscodingProfileViewService.open({ profile, section: SettingsTranscodingProfileViewSections.Flavors });
         });
     } else {
       console.warn('Service was already initialized!');

@@ -268,19 +268,23 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
 				response => {
+                    if (this._contentEntryViewService.isAvailable({ entry: response, activatedRoute: this._entryRoute })) {
+                        this._entry.next(response);
+                        this._entryId = response.id;
 
-						this._entry.next(response);
-						this._entryId = response.id;
+                        const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
 
-						const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
-
-						if (dataLoadedResult.errors.length)
-						{
-							this._state.next({action: ActionTypes.EntryLoadingFailed,
-								error: new Error(`one of the widgets failed while handling data loaded event`)});
-						}else {
-							this._state.next({action: ActionTypes.EntryLoaded});
-						}
+                        if (dataLoadedResult.errors.length) {
+                            this._state.next({
+                                action: ActionTypes.EntryLoadingFailed,
+                                error: new Error(`one of the widgets failed while handling data loaded event`)
+                            });
+                        } else {
+                            this._state.next({ action: ActionTypes.EntryLoaded });
+                        }
+                    } else {
+                        this._browserService.handleUnpermittedAction(true);
+                    }
 				},
 				error => {
 					this._state.next({action: ActionTypes.EntryLoadingFailed, error});
@@ -322,7 +326,7 @@ export class EntryStore implements  OnDestroy {
                 .cancelOnDestroy(this)
                 .subscribe(() => {
                     if (entry instanceof KalturaMediaEntry) {
-                        this._contentEntryViewService.open({ entry });
+                        this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
                     } else {
                         this._state.next({ action: ActionTypes.EntryLoading });
                         this._contentEntryViewService.openById(entry)

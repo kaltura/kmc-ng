@@ -36,11 +36,7 @@ export class PlaylistCreationService implements OnDestroy {
                   ? ContentPlaylistViewSections.Content
                   : ContentPlaylistViewSections.ContentRuleBased;
             }
-            if (this._contentPlaylistViewService.isAvailable({ playlist, section })) {
-                this._contentPlaylistViewService.open({ playlist, section });
-            } else {
-                this._browserService.handleUnpermittedAction(false);
-            }
+            this._contentPlaylistViewService.open({ playlist, section });
         });
     } else {
       console.warn('Service was already initialized!');

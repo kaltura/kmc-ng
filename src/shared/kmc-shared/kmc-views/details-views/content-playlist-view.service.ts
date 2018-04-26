@@ -8,6 +8,7 @@ import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-d
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export enum ContentPlaylistViewSections {
     Metadata = 'Metadata',
@@ -27,9 +28,10 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
-                private _browserService: BrowserService,
-                private _router: Router) {
-        super();
+                private _router: Router,
+                _browserService: BrowserService,
+                _logger: KalturaLogger) {
+        super(_logger.subLogger('ContentPlaylistViewService'), _browserService);
     }
 
     isAvailable(args: ContentPlaylistViewArgs): boolean {

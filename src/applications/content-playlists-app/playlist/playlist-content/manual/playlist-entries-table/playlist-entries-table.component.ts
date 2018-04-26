@@ -5,7 +5,7 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { ManualContentWidget } from '../manual-content-widget.service';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -100,7 +100,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   public _goToEntry(entry: KalturaMediaEntry): void {
     if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_BASE)) {
-        this._contentEntryViewService.open({ entry });
+        this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
     }
   }
 

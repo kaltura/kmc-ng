@@ -1,8 +1,11 @@
 import { Observable } from 'rxjs/Observable';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
 
-    constructor() {
+    protected constructor(protected _logger: KalturaLogger,
+                          protected _browserService: BrowserService) {
     }
 
     protected abstract _open(args: TArgs): Observable<boolean>;
@@ -10,6 +13,22 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
     abstract isAvailable(args: TArgs): boolean;
 
     open(args: TArgs): void {
-        this._open(args).subscribe(); // TODO sakal handle
+        if (this.isAvailable(args)) {
+            this._open(args).subscribe(
+                result => {
+                    if (!result) {
+                        this._logger.info('open view operation failed');
+                        this._browserService.handleUnpermittedAction(false);
+                    }
+
+                }, error => {
+                    this._logger.info('open view operation failed', { errorMessage: error ? error.message : '' });
+                    this._browserService.handleUnpermittedAction(false);
+                }
+            );
+        } else {
+            this._logger.info('ignore open view operation request, view is not available');
+            this._browserService.handleUnpermittedAction(false);
+        }
     }
 }

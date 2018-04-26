@@ -316,20 +316,14 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
       case 'edit':
         this._logger.info(`handle 'edit' profile action by the user`, { profileId: event.profile.id });
-        if (this._settingsTranscodingProfileViewService.isAvailable({ profile: event.profile, section: SettingsTranscodingProfileViewSections.Metadata })) {
-            this._settingsTranscodingProfileViewService.open({ profile: event.profile });
-        } else {
-            this._logger.info(`user cannot access the profile details view, abort action, show alert`);
-            this._browserService.handleUnpermittedAction(false);
-        }
-        break;
-
-      case 'delete':
-        this._logger.info(`handle 'delete' action by the user`, { id: event.profile.id, name: event.profile.name });
-        if (!event.profile.isDefault) {
-          this._deleteProfiles([event.profile]);
-        } else {
-          this._logger.info(`cannot delete default profile, abort action`, { id: event.profile.id, name: event.profile.name });
+        this._settingsTranscodingProfileViewService.open({ profile: event.profile, section: SettingsTranscodingProfileViewSections.Metadata });
+          break;
+        case 'delete':
+            this._logger.info(`handle 'delete' action by the user`, { id: event.profile.id, name: event.profile.name });
+            if (!event.profile.isDefault) {
+                this._deleteProfiles([event.profile]);
+            } else {
+                this._logger.info(`cannot delete default profile, abort action`, { id: event.profile.id, name: event.profile.name });
         }
         break;
 

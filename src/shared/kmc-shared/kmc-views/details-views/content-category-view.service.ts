@@ -12,6 +12,7 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export enum ContentCategoryViewSections {
     Metadata = 'Metadata',
@@ -32,10 +33,11 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
-                private _browserService: BrowserService,
                 private _kalturaClient: KalturaClient,
-                private _router: Router) {
-        super();
+                private _router: Router,
+                _browserService: BrowserService,
+                _logger: KalturaLogger) {
+        super(_logger.subLogger('ContentCategoryViewService'), _browserService);
     }
 
     isAvailable(args: ContentCategoryViewArgs): boolean {

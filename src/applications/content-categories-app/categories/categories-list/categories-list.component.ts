@@ -301,11 +301,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     _onActionSelected({action, category}: { action: string, category: KalturaCategory }) {
         switch (action) {
             case 'edit':
-                if (this._contentCategoryView.isAvailable({ category, section: ContentCategoryViewSections.Metadata })) {
-                    this._contentCategoryView.open({ category });
-                } else {
-                    this._browserService.handleUnpermittedAction(false);
-                }
+                this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
                 break;
             case 'delete':
                 this.deleteCategory(category);
@@ -388,12 +384,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
         } else {
             this._categoriesService.reload();
             // use a flag so the categories will be refreshed upon clicking 'back' from the category page
-
-            if (this._contentCategoryView.isAvailable({ category, section: ContentCategoryViewSections.Metadata})) {
-                this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
-            } else {
-                this._browserService.handleUnpermittedAction(false);
-            }
+            this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
         }
     }
 }

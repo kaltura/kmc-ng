@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -13,7 +13,7 @@ import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAct
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export enum ContentEntryViewSections {
     Metadata = 'Metadata',
@@ -33,6 +33,7 @@ export enum ContentEntryViewSections {
 export interface ContentEntryViewArgs {
     entry: KalturaMediaEntry;
     section?: ContentEntryViewSections;
+    activatedRoute?: ActivatedRoute;
 }
 
 
@@ -41,14 +42,16 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
-                private _browserService: BrowserService,
                 private _kalturaClient: KalturaClient,
-                private _router: Router) {
-        super();
+                private _router: Router,
+                _browserService: BrowserService,
+                _logger: KalturaLogger) {
+        super(_logger.subLogger('ContentEntryViewService'), _browserService);
     }
 
     isAvailable(args: ContentEntryViewArgs): boolean {
-        return this._isSectionEnabled(args.section, args.entry);
+        const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute);
+        return this._isSectionEnabled(section, args.entry);
     }
 
     private _isLiveMediaEntry(mediaType: KalturaMediaType): boolean {
@@ -56,6 +59,39 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             mediaType === KalturaMediaType.liveStreamWindowsMedia ||
             mediaType === KalturaMediaType.liveStreamRealMedia ||
             mediaType === KalturaMediaType.liveStreamQuicktime;
+    }
+
+    private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute): ContentEntryViewSections {
+        const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+
+        switch (sectionToken) {
+            case 'metadata':
+                return ContentEntryViewSections.Metadata;
+            case 'thumbnails':
+                return ContentEntryViewSections.Thumbnails;
+            case 'accesscontrol':
+                return ContentEntryViewSections.AccessControl;
+            case 'scheduling':
+                return ContentEntryViewSections.Scheduling;
+            case 'flavours':
+                return ContentEntryViewSections.Flavours;
+            case 'captions':
+                return ContentEntryViewSections.Captions;
+            case 'live':
+                return ContentEntryViewSections.Live;
+            case 'related':
+                return ContentEntryViewSections.Related;
+            case 'clips':
+                return ContentEntryViewSections.Clips;
+            case 'advertisements':
+                return ContentEntryViewSections.Advertisements;
+            case 'users':
+                return ContentEntryViewSections.Users;
+            case 'distribution':
+                return ContentEntryViewSections.Distribution;
+            default:
+                return null;
+        }
     }
 
     private _getSectionRouteToken(section?: ContentEntryViewSections): string {

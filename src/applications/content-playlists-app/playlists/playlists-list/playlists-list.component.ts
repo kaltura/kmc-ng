@@ -221,11 +221,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               this._appEvents.publish(new PreviewAndEmbedEvent(event.playlist));
               break;
           case 'view':
-              if (this._contentPlaylistViewService.isAvailable({ playlist: event.playlist, section: ContentPlaylistViewSections.Metadata })) {
-                  this._contentPlaylistViewService.open({ playlist: event.playlist, section: ContentPlaylistViewSections.Metadata });
-              } else {
-                  this._browserService.handleUnpermittedAction(false);
-              }
+              this._contentPlaylistViewService.open({ playlist: event.playlist, section: ContentPlaylistViewSections.Metadata });
               break;
           case 'delete':
               this._browserService.confirm(

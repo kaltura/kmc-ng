@@ -284,7 +284,7 @@ export class PlaylistStore implements OnDestroy {
                     } else {
                       if (id === 'new') {
                         this._playlistIsDirty = false;
-                          this._contentPlaylistView.open({ playlist: res.result });
+                          this._contentPlaylistView.open({ playlist: res.result, section: ContentPlaylistViewSections.Metadata });
                       } else {
                         this._loadPlaylist(this.playlistId);
                       }
@@ -340,7 +340,7 @@ export class PlaylistStore implements OnDestroy {
             .filter(({ allowed }) => allowed)
             .cancelOnDestroy(this)
             .subscribe(() => {
-                this._contentPlaylistView.open({ playlist });
+                this._contentPlaylistView.open({ playlist, section: ContentPlaylistViewSections.Metadata });
             });
     }
   }

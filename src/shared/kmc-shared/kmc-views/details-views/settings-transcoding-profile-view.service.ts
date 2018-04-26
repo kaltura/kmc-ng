@@ -8,6 +8,7 @@ import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-d
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface KalturaConversionProfileWithAsset extends KalturaConversionProfile {
     assets?: KalturaConversionProfileAssetParams[];
@@ -30,9 +31,10 @@ export class SettingsTranscodingProfileViewService extends KmcDetailsViewBaseSer
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
-                private _browserService: BrowserService,
-                private _router: Router) {
-        super();
+                private _router: Router,
+                _browserService: BrowserService,
+                _logger: KalturaLogger) {
+        super(_logger.subLogger('SettingsTranscodingProfileViewService'), _browserService);
     }
 
     isAvailable(args: SettingsTranscodingProfileViewArgs): boolean {

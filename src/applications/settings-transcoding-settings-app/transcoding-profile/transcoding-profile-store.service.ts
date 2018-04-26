@@ -263,7 +263,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
                     if (isNew) {
                       this._profileIsDirty = false;
-                        this._settingsTranscodingProfileViewService.open({ profile: profileResponse.result });
+                        this._settingsTranscodingProfileViewService.open({ profile: profileResponse.result, section: SettingsTranscodingProfileViewSections.Metadata });
                     } else {
                       this._loadProfile(profileResponse.result.id);
                     }
@@ -407,7 +407,7 @@ export class TranscodingProfileStore implements OnDestroy {
         .filter(({ allowed }) => allowed)
         .cancelOnDestroy(this)
         .subscribe(() => {
-            this._settingsTranscodingProfileViewService.open({ profile });
+            this._settingsTranscodingProfileViewService.open({ profile, section: SettingsTranscodingProfileViewSections.Metadata });
         });
   }
 
