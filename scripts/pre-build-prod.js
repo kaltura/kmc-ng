@@ -4,7 +4,7 @@ const path = require('path');
 var packageRoot = findRoot(process.cwd());
 if (!packageRoot) throw new Error("couldn't find package root");
 
-var serverConfigPath = path.resolve(packageRoot,'kmc-config.json');
+var serverConfigPath = path.resolve(packageRoot,'server-config.json');
 
 if (fs.existsSync(serverConfigPath)) {
 	var serverConfig = JSON.parse(fs.readFileSync(serverConfigPath, 'utf8'));

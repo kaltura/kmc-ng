@@ -62,8 +62,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     ngOnInit() {
     }
-
-    // TODO sakal remove
+    
     setSelectedRoute(path) {
         if (this.menuConfig) {
             this.selectedMenuItem = this.menuConfig.find(item => item.isActiveView(path));
