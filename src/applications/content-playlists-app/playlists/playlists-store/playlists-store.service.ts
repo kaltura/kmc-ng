@@ -56,7 +56,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
               _logger: KalturaLogger) {
-    super(_logger);
+    super(_logger.subLogger('PlaylistsStore'));
     this._prepare();
   }
 
@@ -72,6 +72,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       // only after the line where we set isReady to true
 
     if (!this._isReady) {
+        this._logger.info(`init service`);
       this._isReady = true;
 
       const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
@@ -106,11 +107,14 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       this._browserService.setInLocalStorage(localStoragePageSizeKey, pageSize);
     }
 
+    this._logger.info(`handle loading playlists list request`);
+
     this._playlists.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+            this._logger.info(`handle successful loading playlists list request`);
           this._querySubscription = null;
 
           this._playlists.state.next({ loading: false, errorMessage: null });
@@ -123,6 +127,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+            this._logger.warn(`handle failed loading playlists list request`, { errorMessage });
           this._playlists.state.next({ loading: false, errorMessage });
         });
   }
@@ -227,7 +232,9 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   }
 
   public reload(): void {
+      this._logger.info(`handle reload action`);
     if (this._playlists.state.getValue().loading) {
+        this._logger.info(`previous action is in progress, skip duplicating action`);
       return;
     }
 

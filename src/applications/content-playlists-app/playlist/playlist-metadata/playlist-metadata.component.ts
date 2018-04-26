@@ -3,11 +3,13 @@ import { PlaylistMetadataWidget } from './playlist-metadata-widget.service';
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { ISubscription } from 'rxjs/Subscription';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kPlaylistMetadata',
   templateUrl: './playlist-metadata.component.html',
-  styleUrls: ['./playlist-metadata.component.scss']
+  styleUrls: ['./playlist-metadata.component.scss'],
+    providers: [KalturaLogger.createLogger('PlaylistMetadataComponent')]
 })
 
 export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestroy {
@@ -16,7 +18,8 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
 
   @ViewChild('metadataNameInput') public metadataNameInput;
 
-  constructor(public _widgetService: PlaylistMetadataWidget) {
+  constructor(public _widgetService: PlaylistMetadataWidget,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -37,6 +40,7 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   public _searchTags(event): void {
+      this._logger.info(`handle search tags request by user`, { query: event.query });
     this._tagsProvider.next({ suggestions: [], isLoading: true });
 
     if (this._searchTagsSubscription) {
@@ -45,7 +49,10 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
       this._searchTagsSubscription = null;
     }
 
-    this._searchTagsSubscription = this._widgetService.searchTags(event.query).subscribe(data => {
+    this._searchTagsSubscription = this._widgetService.searchTags(event.query)
+        .monitor('PlaylistMetadataComponent: search tags')
+        .subscribe(data => {
+            this._logger.info(`handle successful search tags request by user`);
         const suggestions = [];
         const entryTags = this._widgetService.metadataForm.value.tags || [];
 
@@ -58,12 +65,14 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
         this._tagsProvider.next({ suggestions: suggestions, isLoading: false });
       },
       (err) => {
+          this._logger.warn(`handle failed search tags request by user`, { errorMessage: err.message || err });
         this._tagsProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
       });
   }
 
   public _trimNameValue(): void {
     const name = (this._widgetService.metadataForm.controls['name'].value || '').trim();
+    this._logger.info(`handle trim name value on blur action by user`, { name });
     this._widgetService.metadataForm.controls['name'].setValue(name);
   }
 }

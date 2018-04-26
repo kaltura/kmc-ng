@@ -17,6 +17,7 @@ import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PlaylistCreationService } from 'app-shared/kmc-shared/events/playlist-creation';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -64,6 +65,7 @@ export class PlaylistStore implements OnDestroy {
   }
 
   constructor(private _router: Router,
+              private _logger: KalturaLogger,
               private _playlistRoute: ActivatedRoute,
               private _appAuth: AppAuthentication,
               private _kalturaServerClient: KalturaClient,
@@ -73,6 +75,7 @@ export class PlaylistStore implements OnDestroy {
               private _playlistCreationService: PlaylistCreationService,
               private _pageExitVerificationService: PageExitVerificationService,
               @Host() private _widgetsManager: PlaylistWidgetsManager) {
+      this._logger = _logger.subLogger('PlaylistStore');
     this._widgetsManager.playlistStore = this;
     this._mapSections();
     this._onSectionsStateChanges();
@@ -126,6 +129,7 @@ export class PlaylistStore implements OnDestroy {
   }
 
   private _loadPlaylist(id: string): void {
+      this._logger.info(`handle load playlist request`, { playlistId: id });
     if (this._loadPlaylistSubscription) {
       this._loadPlaylistSubscription.unsubscribe();
       this._loadPlaylistSubscription = null;
@@ -139,6 +143,7 @@ export class PlaylistStore implements OnDestroy {
     this._widgetsManager.notifyDataLoading(id);
 
     if (!id) {
+        this._logger.info(`playlistId is not defined, abort action`);
       return this._state.next({ action: ActionTypes.PlaylistLoadingFailed, error: new Error('Missing playlistId') });
     }
 
@@ -146,6 +151,7 @@ export class PlaylistStore implements OnDestroy {
       .request(new PlaylistGetAction({ id }))
       .cancelOnDestroy(this)
       .subscribe(playlist => {
+          this._logger.info(`handle successful loading playlist request`);
           if (playlist.playlistType === KalturaPlaylistType.dynamic) {
             if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
               playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
@@ -165,6 +171,7 @@ export class PlaylistStore implements OnDestroy {
           }
         },
         error => {
+            this._logger.warn(`handle failed loading playlist request`, { errorMessage: error.message });
           this._loadPlaylistSubscription = null;
           this._state.next({ action: ActionTypes.PlaylistLoadingFailed, error });
         }
@@ -238,10 +245,11 @@ export class PlaylistStore implements OnDestroy {
             }
           }
         }
-      )
+      );
   }
 
   public savePlaylist(): void {
+      this._logger.info(`handle save playlist request by user`);
     if (this.playlist && this.playlist instanceof KalturaPlaylist) {
       const newPlaylist = <KalturaPlaylist>KalturaTypesFactory.createObject(this.playlist);
       newPlaylist.playlistType = this.playlist.playlistType;
@@ -256,6 +264,8 @@ export class PlaylistStore implements OnDestroy {
         : new PlaylistUpdateAction({ id, playlist: newPlaylist });
       const request = new KalturaMultiRequest(action);
 
+      this._logger.debug(`saving ${id === 'new' ? 'new' : 'existing'} playlist`);
+
       this._widgetsManager.notifyDataSaving(newPlaylist, request, this.playlist)
         .cancelOnDestroy(this)
         .monitor('playlist store: prepare playlist for save')
@@ -269,19 +279,22 @@ export class PlaylistStore implements OnDestroy {
                 .monitor('playlist store: save playlist')
                 .map(([res]) => {
                     if (res.error) {
+                        this._logger.warn(`handle failed save playlist request`, { errorMessage: res.error.message });
                       this._state.next({ action: ActionTypes.PlaylistSavingFailed });
                     } else {
                       if (id === 'new') {
+                          this._logger.info(`handle successful creation of new playlist, navigate to new playlist`, { playlistId: res.result.id });
                         this._playlistIsDirty = false;
                         this._router.navigate(['playlist', res.result.id], { relativeTo: this._playlistRoute.parent });
                       } else {
+                          this._logger.info(`handle successful save of existing playlist`, { playlistId: this.playlistId });
                         this._loadPlaylist(this.playlistId);
                       }
                     }
 
                     return Observable.empty();
                   }
-                )
+                );
             } else {
               switch (response.reason) {
                 case OnDataSavingReasons.validationErrors:
@@ -308,52 +321,67 @@ export class PlaylistStore implements OnDestroy {
           }
         );
     } else {
-      console.error(new Error(`Failed to create a new instance of the playlist type '${this.playlist ? typeof this.playlist : 'n/a'}`));
+      this._logger.warn(`Failed to save/create instance of the playlist type '${this.playlist ? typeof this.playlist : 'n/a'}`);
       this._state.next({ action: ActionTypes.PlaylistPrepareSavingFailed });
     }
   }
 
   public reloadPlaylist(): void {
+      this._logger.info(`handle reload playlist action`);
     if (this._getPlaylistId()) {
       this._loadPlaylist(this.playlistId);
+    } else {
+        this._logger.info(`current playlistId is not defined, abort action`);
     }
   }
 
   public openSection(sectionKey: string): void {
+      this._logger.info(`handle open section action by user`, { sectionKey });
     const navigatePath = this._sectionToRouteMapping[sectionKey];
 
     if (navigatePath) {
+        this._logger.info(`navigate to ${navigatePath} section`);
       this._router.navigate([navigatePath], { relativeTo: this._playlistRoute });
+    } else {
+        this._logger.info(`unknown section, abort action`);
     }
   }
 
   public openPlaylist(playlistId: string) {
+      this._logger.info(`handle open playlist action by user`, { playlistId });
     if (this.playlistId !== playlistId) {
       this.canLeaveWithoutSaving()
         .cancelOnDestroy(this)
         .subscribe(
           response => {
             if (response.allowed) {
+                this._logger.info(`navigate to playlist`, { playlistId });
               this._router.navigate(['playlist', playlistId], { relativeTo: this._playlistRoute.parent });
             }
           }
         );
+    } else {
+        this._logger.info(`playlist is already opened, abort action`);
     }
   }
 
   public canLeaveWithoutSaving(): Observable<{ allowed: boolean }> {
+      this._logger.info(`check if user can leave page without confirmation`);
     return Observable.create(observer => {
       if (this._playlistIsDirty) {
+          this._logger.info(`playlists is dirty, show confirmation`);
         this._browserService.confirm(
           {
-            header: 'Cancel Edit',
-            message: 'Discard all changes?',
+            header: this._appLocalization.get('applications.content.playlistDetails.cancelEdit'),
+            message: this._appLocalization.get('applications.content.playlistDetails.discardAllChanges'),
             accept: () => {
+                this._logger.info(`user confirmed, allow to leave`);
               this._playlistIsDirty = false;
               observer.next({ allowed: true });
               observer.complete();
             },
             reject: () => {
+                this._logger.info(`user didn't confirm, forbid to leave`);
               observer.next({ allowed: false });
               observer.complete();
             }
@@ -367,6 +395,7 @@ export class PlaylistStore implements OnDestroy {
   }
 
   public returnToPlaylists(): void {
+      this._logger.info(`handle return to playlists action by user`);
     this.canLeaveWithoutSaving()
       .cancelOnDestroy(this)
       .filter(({ allowed }) => allowed)

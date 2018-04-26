@@ -14,6 +14,7 @@ import { KalturaEntryModerationStatus } from 'kaltura-ngx-client/api/types/Kaltu
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { PlaylistRule } from './playlist-rule.interface';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kPlaylistRule',
@@ -21,7 +22,8 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
   styleUrls: ['./playlist-rule.component.scss'],
   providers: [
     PlaylistRuleParserService,
-    { provide: EntriesStorePaginationCacheToken, useValue: 'entries-list' }
+    { provide: EntriesStorePaginationCacheToken, useValue: 'entries-list' },
+      KalturaLogger.createLogger('PlaylistRuleComponent')
   ]
 })
 export class PlaylistRuleComponent implements OnInit {
@@ -87,6 +89,7 @@ export class PlaylistRuleComponent implements OnInit {
   constructor(public _entriesStore: EntriesStore,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger,
               private _playlistRuleParser: PlaylistRuleParserService) {
   }
 
@@ -96,6 +99,7 @@ export class PlaylistRuleComponent implements OnInit {
 
   private _prepare(): void {
     if (this.rule) {
+        this._logger.info(`enter edit rule mode`, { ruleName: this.rule.name, selectionId: this.rule.selectionId });
       this._resultsLimit = this.rule.limit;
       this._ruleName = this.rule.name;
       this._orderBy = this.rule.orderBy;
@@ -104,6 +108,7 @@ export class PlaylistRuleComponent implements OnInit {
       this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.save');
       this._applyFilters(this.rule);
     } else {
+        this._logger.info(`enter new rule mode`);
       this._title = this._appLocalization.get('applications.content.playlists.addRule');
       this._saveBtnLabel = this._appLocalization.get('applications.content.playlists.addToPlaylist');
 
@@ -145,9 +150,11 @@ export class PlaylistRuleComponent implements OnInit {
   }
 
   public _save(): void {
+      this._logger.info(`handle save rule action`, { ruleName: this._ruleName });
     const ruleName = (this._ruleName || '').trim();
 
     if (ruleName) {
+        this._logger.debug(`convert rule data to playlist rule`);
       this._playlistRuleParser.toPlaylistRule({
         name: ruleName,
         limit: this._resultsLimit,
@@ -155,17 +162,23 @@ export class PlaylistRuleComponent implements OnInit {
         rule: this.rule
       }).subscribe(
         updatedRule => {
+            this._logger.debug(`convert successful, proceed action`);
           this.onSaveRule.emit(updatedRule);
           this.onClosePopupWidget.emit();
         },
         error => {
+            this._logger.debug(`convert failed, abort action, show blocker message`, { errorMessage: error.message });
           this._blockerMessage = this._createErrorMessage(error.message, () => this._save());
         });
     } else {
+        this._logger.info(`rule name is not provided, abort action, show alert`);
       this._nameRequiredError = true;
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.playlistDetails.errors.invalidInput'),
-        message: this._appLocalization.get('applications.content.playlistDetails.errors.nameRequired')
+        message: this._appLocalization.get('applications.content.playlistDetails.errors.nameRequired'),
+          accept: () => {
+            this._logger.info(`user dismissed alert`);
+          }
       });
     }
   }

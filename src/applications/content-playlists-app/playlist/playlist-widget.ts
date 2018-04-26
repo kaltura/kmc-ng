@@ -34,7 +34,7 @@ export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, 
           ...this._createBackToPlaylistsButton(),
           ...message.buttons
         ]
-      })
+      });
     }
 
     this.showSectionLoader = false;

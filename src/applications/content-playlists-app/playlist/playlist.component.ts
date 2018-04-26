@@ -13,6 +13,7 @@ import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widge
 import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kPlaylist',
@@ -25,7 +26,8 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
     PlaylistDetailsWidget,
     ManualContentWidget,
     PlaylistMetadataWidget,
-    RuleBasedContentWidget
+    RuleBasedContentWidget,
+      KalturaLogger.createLogger('PlaylistComponent')
   ]
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
@@ -51,6 +53,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               private _playlistsStore: PlaylistsStore,
               private _permissionsService: KMCPermissionsService,
               private _playlistWidgetsManager: PlaylistWidgetsManager,
+              private _logger: KalturaLogger,
               widget1: PlaylistSectionsListWidget,
               widget2: PlaylistDetailsWidget,
               widget3: ManualContentWidget,
@@ -60,6 +63,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+      this._logger.info(`init component, subscribe to state updates`);
     let errorMessage;
 
     this._playlistStore.state$
@@ -71,6 +75,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
           this._areaBlockerMessage = null;
 
           if (status) {
+              this._logger.debug(`store state updated`, { status });
             switch (status.action) {
               case ActionTypes.PlaylistLoading:
                 this._showLoader = true;

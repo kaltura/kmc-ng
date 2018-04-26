@@ -3,11 +3,13 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { PlaylistRule } from '../playlist-rule/playlist-rule.interface';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kPlaylistRulesTable',
   templateUrl: './playlist-rules-table.component.html',
-  styleUrls: ['./playlist-rules-table.component.scss']
+  styleUrls: ['./playlist-rules-table.component.scss'],
+    providers: [KalturaLogger.createLogger('PlaylistRulesTableComponent')]
 })
 export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('dataTable') private dataTable: DataTable;
@@ -32,7 +34,7 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
       this._rules = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredRules = data
+      this._deferredRules = data;
     }
   }
 
@@ -49,6 +51,7 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
 
   constructor(private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
+              private _logger: KalturaLogger,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -110,6 +113,8 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
   public _viewRule(rule: PlaylistRule): void {
     if (this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE)) {
       this.onActionSelected.emit({ action: 'view', rule: rule });
+    } else {
+        this._logger.info(`user does not have permission to update playlist, abort action`);
     }
   }
 

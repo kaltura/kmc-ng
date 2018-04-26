@@ -13,6 +13,7 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Injectable()
 export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy {
@@ -23,8 +24,12 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   public entriesDuration = 0;
   public entriesTotalCount = 0;
 
-  constructor(private _kalturaClient: KalturaClient, private _appLocalization: AppLocalization) {
+  constructor(private _kalturaClient: KalturaClient,
+              private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger) {
     super(PlaylistWidgetKeys.ContentRuleBased);
+
+      this._logger = _logger.subLogger('RuleBasedContentWidget');
   }
 
   ngOnDestroy() {
@@ -127,9 +132,15 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     this.entriesDuration = duration;
     this.entriesTotalCount = count;
     this.rulesTotalCount = this.rules.length;
+
+      this._logger.info(
+          `recalculate entries duration, total count and rules total count`,
+          { entriesDuration: this.entriesDuration, entriesTotalCount: this.entriesTotalCount, rulesTotalCount: this.rulesTotalCount }
+      );
   }
 
   private _deleteRuleFromPlaylist(rule: PlaylistRule): void {
+      this._logger.info(`handle delete rule action by user`, { selectionId: rule.selectionId });
     const ruleIndex = this.rules.indexOf(rule);
 
     if (ruleIndex !== -1) {
@@ -137,22 +148,27 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
       this._updateDurationAndCount();
 
       this._setDirty();
+    } else {
+        this._logger.info(`rule wasn't found in the list, abort action`);
     }
   }
 
   private _moveUpRules(selectedRules: PlaylistRule[]): void {
+      this._logger.info(`handle move up rules action by user`);
     if (KalturaUtils.moveUpItems(this.rules, selectedRules)) {
       this._setDirty();
     }
   }
 
   private _moveDownRules(selectedRules: PlaylistRule[]): void {
+      this._logger.info(`handle move down rules action by user`);
     if (KalturaUtils.moveDownItems(this.rules, selectedRules)) {
       this._setDirty();
     }
   }
 
   public deleteSelectedRules(rules: PlaylistRule[]): void {
+      this._logger.info(`handle delete selected rules action by user`);
     rules.forEach(rule => this._deleteRuleFromPlaylist(rule));
   }
 
@@ -181,12 +197,15 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   }
 
   public updateRules(rule: PlaylistRule): void {
+      this._logger.info(`handle add/update rule action by user`);
     const relevantRuleIndex = this.rules.findIndex(item => item.selectionId === rule.selectionId);
     const isNewRule = relevantRuleIndex === -1;
     if (isNewRule) {
       rule.selectionId = this._selectionIdGenerator.generateUnique(this.rules.map(item => item.selectionId));
-      this.rules.push(rule);
+        this._logger.info(`rule is new, add new rule to the rules list`, { selectionId: rule.selectionId });
+        this.rules.push(rule);
     } else {
+        this._logger.info(`update existing rule in the rules list`, { selectionId: rule.selectionId });
       this.rules[relevantRuleIndex] = rule;
     }
 

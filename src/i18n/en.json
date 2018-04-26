@@ -1866,6 +1866,8 @@
                 "title": "Live Dashboard"
             },
             "playlistDetails": {
+                "cancelEdit": "Cancel Edit",
+                "discardAllChanges": "Discard all changes?",
                 "sections": {
                     "metadata": "Metadata",
                     "content": "Content"
