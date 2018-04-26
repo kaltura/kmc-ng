@@ -16,6 +16,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {serverConfig} from "config/server";
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -72,6 +73,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _uploadManagement: UploadManagement,
               private _permissionsService: KMCPermissionsService,
               public _entriesStore: EntriesStore,
+              private _contentEntryViewService: ContentEntryViewService,
               private _contentEntriesAppService: ContentEntriesAppService) {
   }
 
@@ -109,7 +111,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         this._appEvents.publish(new PreviewAndEmbedEvent(entry));
         break;
       case 'view':
-        this._viewEntry(entry.id);
+          this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
         break;
       case 'delete':
         this._browserService.confirm(
@@ -128,14 +130,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
       default:
         break;
-    }
-  }
-
-  private _viewEntry(entryId: string): void {
-    if (entryId) {
-      this._router.navigate(['/content/entries/entry', entryId]);
-    } else {
-      console.error('EntryId is not defined');
     }
   }
 

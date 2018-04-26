@@ -34,11 +34,13 @@ export interface ContentEntryViewArgs {
     entry: KalturaMediaEntry;
     section?: ContentEntryViewSections;
     activatedRoute?: ActivatedRoute;
+    reloadEntriesListOnNavigateOut?: boolean;
 }
 
 
 @Injectable()
 export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEntryViewArgs> {
+    public reloadEntriesListOnNavigateOut: boolean;
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
@@ -199,11 +201,16 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     protected _open(args: ContentEntryViewArgs): Observable<boolean> {
         const sectionToken = this._getSectionRouteToken(args.section);
         this._logger.info('handle open entry view request by the user', { entryId: args.entry.id, sectionToken });
-        return Observable.fromPromise(this._router.navigateByUrl(`/content/entries/entry/${args.entry.id}/${sectionToken}`));
+        return Observable.fromPromise(
+            this._router.navigateByUrl(
+                `/content/entries/entry/${args.entry.id}/${sectionToken}`,
+                { queryParams: { reloadEntriesListOnNavigateOut: args.reloadEntriesListOnNavigateOut } }
+            )
+        );
     }
 
-    public openById(entryId: string): Observable<boolean> {
-        this._logger.info('handle open entry view by id request by the user, load category data', { entryId });
+    public openById(entryId: string, reloadEntriesListOnNavigateOut?: boolean): Observable<boolean> {
+        this._logger.info('handle open entry view by id request by the user, load entry data', { entryId });
         const baseEntryAction = new BaseEntryGetAction({ entryId })
             .setRequestOptions({
                 responseProfile: new KalturaDetachedResponseProfile({
@@ -213,6 +220,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             });
         return this._kalturaClient.request(baseEntryAction)
             .map(response => {
+                console.warn(response);
                 if (response instanceof KalturaMediaEntry) {
                     return response;
                 } else {
@@ -221,7 +229,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             })
             .switchMap(entry => {
                 this._logger.info(`handle successful request, proceed navigation`);
-                return this._open({ entry });
+                return this._open({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut });
             })
             .catch(err => {
                 this._logger.info(`handle failed request, show alert, abort navigation`);
