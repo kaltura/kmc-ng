@@ -17,8 +17,9 @@ import {
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'kCategoriesList',
@@ -135,6 +136,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     private _registerToDataChanges(): void {
         this._categoriesService.categories.state$
+            .observeOn(async)
             .cancelOnDestroy(this)
             .subscribe(
                 result => {
@@ -299,7 +301,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     _onActionSelected({action, category}: { action: string, category: KalturaCategory }) {
         switch (action) {
             case 'edit':
-                this._contentCategoryView.open({ category });
+                this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
                 break;
             case 'delete':
                 this.deleteCategory(category);
@@ -376,13 +378,13 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
         this.tags.updateLayout();
     }
 
-    onCategoryAdded({categoryId}: { categoryId: number }): void {
-        if (!categoryId) {
-            console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters')
+    onCategoryAdded(category: KalturaCategory): void {
+        if (!category) {
+            console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters');
         } else {
             this._categoriesService.reload();
             // use a flag so the categories will be refreshed upon clicking 'back' from the category page
-            this.router.navigate(['/content/categories/category', categoryId]);
+            this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
         }
     }
 }

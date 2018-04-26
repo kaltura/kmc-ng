@@ -20,17 +20,13 @@ export interface ContentNewCategoryViewArgs {
 
 @Injectable()
 export class ContentNewCategoryViewService extends KmcDetailsViewBaseService<ContentNewCategoryViewArgs> implements OnDestroy {
-
     private _newCategoryData: ContentNewCategoryViewArgs;
-    private _logger: KalturaLogger;
 
     constructor(private _appPermissions: KMCPermissionsService,
-                logger: KalturaLogger,
                 private _contentCategoriesMainView: ContentCategoriesMainViewService,
-                private _router: Router) {
-        super();
-        this._logger = logger.subLogger('ContentNewCategoryViewService');
-
+                _logger: KalturaLogger,
+                _browserService: BrowserService) {
+        super(_logger.subLogger('ContentNewCategoryViewService'), _browserService);
     }
 
     isAvailable(args: ContentNewCategoryViewArgs): boolean {

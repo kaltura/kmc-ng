@@ -331,21 +331,25 @@ export class CategoryService implements OnDestroy {
       .request(new CategoryGetAction({id}))
 			.cancelOnDestroy(this)
 			.subscribe(category => {
-			this._loadCategorySubscription = null;
+                if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute })) {
+                    this._loadCategorySubscription = null;
 
-				this._category.next(category);
+                    this._category.next(category);
 
-				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
+                    const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
 
-				if (dataLoadedResult.errors.length) {
-					this._state.next({
-						action: ActionTypes.CategoryLoadingFailed,
-						error: new Error(`one of the widgets failed while handling data loaded event`)
-					});
-				} else {
-					this._state.next({ action: ActionTypes.CategoryLoaded });
-				}
-			},
+                    if (dataLoadedResult.errors.length) {
+                        this._state.next({
+                            action: ActionTypes.CategoryLoadingFailed,
+                            error: new Error(`one of the widgets failed while handling data loaded event`)
+                        });
+                    } else {
+                        this._state.next({ action: ActionTypes.CategoryLoaded });
+                    }
+                } else {
+                    this._browserService.handleUnpermittedAction(true);
+                }
+            },
 			error => {
 				this._loadCategorySubscription = null;this._state.next({ action: ActionTypes.CategoryLoadingFailed, error });
 }
@@ -356,19 +360,6 @@ export class CategoryService implements OnDestroy {
 	public openSection(section: ContentCategoryViewSections): void {
 		this._contentCategoryView.open({ section, category: this.category, ignoreWarningTag: true });
 	}
-
-	public openCategory(categoryId: number) {
-		if ( this.categoryId !== categoryId) {
-		this.canLeaveWithoutSaving()
-			.cancelOnDestroy(this)
-			.subscribe(
-			response => {
-				if (response.allowed) {
-					this._router.navigate(['category', categoryId], { relativeTo: this._categoryRoute.parent });
-				}
-			}
-			);
-	}}
 
 	public canLeaveWithoutSaving(): Observable<{ allowed: boolean }> {
 		return Observable.create(observer => {
@@ -394,6 +385,27 @@ export class CategoryService implements OnDestroy {
 		}).monitor('category store: check if can leave section without saving');
 	}
 
+    public openCategory(category: KalturaCategory | number) {
+        const categoryId = category instanceof KalturaCategory ? category.id : category;
+        if (this.categoryId !== categoryId) {
+            this.canLeaveWithoutSaving()
+                .filter(({ allowed }) => allowed)
+                .cancelOnDestroy(this)
+                .subscribe(() => {
+                    if (category instanceof KalturaCategory) {
+                        this._contentCategoryView.open({ category });
+                    } else {
+                        this._state.next({ action: ActionTypes.CategoryLoading });
+                        this._contentCategoryView.openById(category)
+                            .cancelOnDestroy(this)
+                            .subscribe(() => {
+                                this._state.next({ action: ActionTypes.CategoryLoaded });
+                            });
+                    }
+                });
+        }
+    }
+
 	public returnToCategories(force = false) {
 
     	if (force)
@@ -402,8 +414,7 @@ export class CategoryService implements OnDestroy {
 		    this._updatePageExitVerification();
 	    }
 
-	    this._contentCategoriesMainViewService.open();
-		this._router.navigate(['content/categories']);
+        this._contentCategoriesMainViewService.open();
 	}
 }
 

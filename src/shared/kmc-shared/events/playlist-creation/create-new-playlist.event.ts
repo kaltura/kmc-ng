@@ -1,5 +1,6 @@
 import { AppEvent } from 'shared/kmc-shared/app-events/app-event';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export interface CreateNewPlaylistEventArgs {
   name?: string;
@@ -9,7 +10,7 @@ export interface CreateNewPlaylistEventArgs {
 }
 
 export class CreateNewPlaylistEvent extends AppEvent {
-  constructor(public data: CreateNewPlaylistEventArgs, public tabName?: 'content' | 'metadata') {
+  constructor(public data: CreateNewPlaylistEventArgs, public section?: ContentPlaylistViewSections) {
     super('CreateNewPlaylist');
   }
 }

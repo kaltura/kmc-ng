@@ -77,7 +77,8 @@
             "done": "Done",
             "save": "Save",
             "error": "Error",
-            "connectionError": "Error connecting to server"
+            "connectionError": "Error connecting to server",
+            "error": "Error"
         },
         "redirect":{
             "redirect1": "Redirecting to default view...",
