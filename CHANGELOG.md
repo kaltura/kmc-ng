@@ -1,3 +1,39 @@
+<a name="4.2.0"></a>
+# [4.2.0](https://github.com/kaltura/kmc-ng/compare/v4.1.0...v4.2.0) (2018-04-15)
+
+
+### Bug Fixes
+
+* **administration/roles:** show required violation indication for description when trying to create new role without a value 
+* **administration/users:** fix last login time format 
+* **content/category:** fix UI issues in Add Users window 
+* **content/entries:** reload entries list after file was uploaded, not prepared 
+* **content/entry:** display "copy to clipboard" button for broadcasting URLs in Universal stream 
+* **content/entry:** display "Export XML to FMLE" and live dashboard link for Kaltura live entry drill-down 
+* **content/entry:** don't display non-supported languages in captions language drop-down 
+* **content/entry:** hide "clip & trim" option for live, image and non-ready entries 
+* **content/entry:** hide distribution link for live, audio and image entries
+* **content/moderation:** close moderation report window before navigating to entry details view 
+* **content/playlists:** fix name column header alignment 
+* **content/syndication:** typo fix
+* **login:** fix reset password condition 
+* **settings/access-control:** fix confirmation header 
+* **settings/access-control-profile:** display validation message on blur 
+* **settings/access-control-profiles:** disable profile name editing for the default profile 
+* **content/categories:** handle categories lazy mode when permission DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD is provided 
+* **content/categories:** perform move of categories  
+* **settings/transcoding-profiles:** provide headers for alerts 
+* center dialog boxes on screen according to content height
+* set "Delete" action to be last in all menus and marked in red
+* updated entry metadata and live layouts 
+
+
+### Features
+
+* ignore metadata profiles with corrupted XSD values
+* implement permissions
+
+
 <a name="4.1.0"></a>
 # [4.1.0](https://github.com/kaltura/kmc-ng/compare/v4.0.1...v4.1.0) (2018-04-02)
 

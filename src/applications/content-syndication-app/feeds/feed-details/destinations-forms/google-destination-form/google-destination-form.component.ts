@@ -5,8 +5,9 @@ import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorPar
 import {KalturaGoogleVideoSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGoogleVideoSyndicationFeed';
 import {AppAuthentication} from 'app-shared/kmc-shell';
 import {KalturaGoogleSyndicationFeedAdultValues} from 'kaltura-ngx-client/api/types/KalturaGoogleSyndicationFeedAdultValues';
-import {DestinationComponentBase} from '../../feed-details.component';
+import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
 import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kGoogleDestinationForm',
@@ -15,6 +16,7 @@ import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
   providers: [{provide: DestinationComponentBase, useExisting: GoogleDestinationFormComponent}]
 })
 export class GoogleDestinationFormComponent extends DestinationComponentBase implements OnInit, OnDestroy {
+  @Input() mode: FeedFormMode;
 
   @Output()
   onFormStateChanged = new EventEmitter<{ isValid: boolean, isDirty: boolean }>();
@@ -33,6 +35,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
   public _availablePlayers: Array<{ value: number, label: string }> = [];
 
   constructor(private _fb: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
               private _appAuthentication: AppAuthentication) {
     super();
     // prepare form
@@ -44,21 +47,25 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
     this._fillAvailablePlayers();
     this._restartFormData();
 
-    this.onFormStateChanged.emit({
-      isValid: this._form.status === 'VALID',
-      isDirty: this._form.dirty
-    });
+    if (this.mode === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+      this._form.disable({ emitEvent: false });
+    } else {
+      this.onFormStateChanged.emit({
+        isValid: this._form.status === 'VALID',
+        isDirty: this._form.dirty
+      });
 
-    this._form.valueChanges
-      .cancelOnDestroy(this)
-      .subscribe(
-        () => {
-          this.onFormStateChanged.emit({
-            isValid: this._form.status === 'VALID',
-            isDirty: this._form.dirty
-          });
-        }
-      );
+      this._form.valueChanges
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            this.onFormStateChanged.emit({
+              isValid: this._form.status === 'VALID',
+              isDirty: this._form.dirty
+            });
+          }
+        );
+    }
   }
 
   ngOnDestroy() {

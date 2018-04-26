@@ -11,8 +11,6 @@ export interface KeditHosterConfig {
     preActivateMessage?: string,
     preSaveMessage?: string,
     preSaveAsMessage?: string};
-    playerUiConfId: string;
-    previewPlayerUiConfId: string;
     callbackActions?: {
       clipCreated?: (data: {originalEntryId: string, newEntryId: string, newEntryName: string}) => void,
       advertisementsModified?: (data: {entryId: string}) => void,
@@ -184,13 +182,6 @@ export class KeditHosterComponent implements OnInit, OnDestroy {
 
         /* id of the entry to start with */
         'entry_id': config.entryId,
-
-        /* id of uiconf to be used for internal player,
-        * if left empty the default deployed player will be used */
-        'player_uiconf_id': config.playerUiConfId,
-
-        /* id of uiconf to be used for preview. if not passed, main player is used */
-        'preview_player_uiconf_id': config.previewPlayerUiConfId,
 
         /* should a KS be appended to the thumbnails url, for access control issues */
         'load_thumbnail_with_ks': false,

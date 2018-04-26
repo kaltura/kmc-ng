@@ -127,7 +127,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> | void {
     const prepare = () => {
-      if (firstTimeActivating) {
+      if (firstTimeActivating && (this.isNewData || this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE))) {
         this._monitorFormChanges();
       }
 
@@ -137,6 +137,12 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
         defaultEntryId: this.data.defaultEntryId,
         storageProfileId: this.data.storageProfileId || null
       });
+
+      if (!this.isNewData && !this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE)) {
+
+        this.metadataForm.disable();
+        this.metadataForm.markAsUntouched();
+      }
     };
     super._showLoader();
 

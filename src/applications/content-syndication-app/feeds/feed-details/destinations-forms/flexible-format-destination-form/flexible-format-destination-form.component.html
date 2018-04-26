@@ -6,7 +6,10 @@
        [ngClass]="{'kHasError': _error }">*
   </div>
   <div class="kControlContainer">
-    <button pButton class="kButtonDefault kBrowse" (click)="fileDialog.open($event)" label="{{'applications.content.syndication.details.destinationsForms.flexibleFormat.xslCode.browse' | translate}}"></button>
+    <button pButton class="kButtonDefault kBrowse"
+            [disabled]="_disableFileSelection"
+            [label]="'applications.content.syndication.details.destinationsForms.flexibleFormat.xslCode.browse' | translate"
+            (click)="fileDialog.open($event)"></button>
     <k-area-blocker [showLoader]="_loading">
       <textarea [ngClass]="{'kHasError': _error}" [(ngModel)]="_xslCode" class="kControl threeRows" [disabled]="true" pInputTextarea></textarea>
     </k-area-blocker>

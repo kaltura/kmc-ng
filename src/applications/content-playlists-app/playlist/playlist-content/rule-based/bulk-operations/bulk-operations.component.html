@@ -8,13 +8,17 @@
         <div class="kBulkActions" *ngIf="selectedRules.length; else addRuleWrap">
           <button pButton
                   class="kButtonDefault kMoveBtn kMoveBtnTop"
+                  [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
                   icon="kIcondropdown_arrow_top"
                   (click)="_moveRules('up')"></button>
           <button pButton
                   class="kButtonDefault kMoveBtn kMoveBtnBottom"
+                  [class.kMoveBtnBottomDisabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
+                  [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
                   icon="kIcondropdown_arrow_bottom"
                   (click)="_moveRules('down')"></button>
           <button pButton class="kButtonDanger kBulkDeleteBtn"
+                  [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
                   [label]="'applications.content.playlists.remove' | translate"
                   (click)="deleteRules.emit(selectedRules)"></button>
         </div>
@@ -24,6 +28,7 @@
             type="button"
             icon="kIconplus"
             iconPos="left"
+            [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
             [label]="'applications.content.playlistDetails.content.addRule' | translate"
             class="kButtonDefault kAddRuleBtn"
             (click)="addRule.emit()">

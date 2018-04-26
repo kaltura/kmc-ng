@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
@@ -37,6 +38,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   public _selectedProfiles: KalturaConversionProfileWithAsset[] = [];
   public _tableIsBusy = false;
   public _tableBlockerMessage: AreaBlockerMessage;
+  public _kmcPermissions = KMCPermissions;
 
   public _query = {
     pageIndex: 0,

@@ -20,7 +20,6 @@ import * as Immutable from 'seamless-immutable';
 import {AppUser} from './app-user';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
-import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
 import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
 import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
@@ -29,6 +28,7 @@ import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsAction';
 
 export interface IUpdatePasswordPayload {
     email: string;
@@ -247,20 +247,19 @@ export class AppAuthentication {
         this._logout();
     }
 
-    public loginAutomatically(): Observable<boolean> {
+    public loginByKS(loginToken: string): Observable<boolean> {
         return Observable.create((observer: any) => {
             if (!this.isLogged()) {
-                const loginToken = this._browserService.getFromSessionStorage('auth.login.ks');  // get ks from session storage
                 if (loginToken) {
                     const requests = [
                         new UserGetAction({})
                             .setRequestOptions({
-                            ks: loginToken
-                        }),
+                                ks: loginToken
+                            }),
                         new PartnerGetInfoAction({})
                             .setRequestOptions({
-                            ks: loginToken
-                        })
+                                ks: loginToken
+                            })
                             .setDependency(['id', 0, 'partnerId']),
                         new UserRoleGetAction({ userRoleId: 0})
                             .setRequestOptions({
@@ -305,6 +304,11 @@ export class AppAuthentication {
                 }
             }
         });
+    }
+
+    public loginAutomatically(): Observable<boolean> {
+        const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
+        return this.loginByKS(loginToken);
     }
 
     public switchPartnerId(partnerId: number): Observable<void> {
