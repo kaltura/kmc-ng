@@ -11,7 +11,7 @@
 
 export const environment = {
   production: false,
-    configurationUri: 'configuration/server-config.json',
+    configurationUri: 'kmc-config.json',
     configurationTimeout: 10000,
     client: {
       useSecuredProtocol: false

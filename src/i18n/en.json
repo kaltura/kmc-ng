@@ -76,6 +76,7 @@
             "apply": "Apply",
             "done": "Done",
             "save": "Save",
+            "error": "Error",
             "connectionError": "Error connecting to server"
         },
         "redirect":{
@@ -225,7 +226,8 @@
             },
             "uploadMenu": {
                 "uploadFromDesktop": "Upload from Desktop",
-                "highSpeed": "Need High-speed Upload?",
+                "needHighSpeed": "Need High-speed Upload?",
+                "highSpeed": "High-Speed Upload",
                 "bulkUpload": {
                     "title": "Bulk Upload",
                     "samplesLink": "Download CSV/XML Samples"
@@ -483,7 +485,8 @@
                     "error": "Categories update failed.",
                     "cancelEdit": "Cancel Edit.",
                     "discard": "Discard all changes?",
-                    "noPrivacyContext": "Some of the selected categories do not  have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page  Settings tab."
+                    "noPrivacyContext": "Some of the selected categories do not  have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page  Settings tab.",
+                    "failedToLoadCategoryData": "Could not load category data. Category ID: {{0}}"
                 },
                 "deleteCategories": "Delete Categories",
                 "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
@@ -536,6 +539,7 @@
                 "name": "Name",
                 "categoryMovedSuccessfully": "Category moved successfully.",
                 "errors": {
+                    "failedToLoadParentCategoryData": "Could not load parent category data",
                     "cannotLinkEntries": "The Category was created, but some of the entries failed to link. Please review the created category.",
                     "createFailed": "An error occurred while trying to add the new category",
                     "requiredName": "You must enter a name.",
@@ -1144,6 +1148,7 @@
                     "advertisements": "Advertisements"
                 },
                 "preview": {
+                    "clipAndTrim": "Clip & Trim",
                     "pande": "Share & Embed",
                     "previewInPlayer": "Preview in Player",
                     "details": "Details",
@@ -1190,7 +1195,8 @@
                     "nameRequired": "You must enter an Entry Name",
                     "customDataError": "\"{{0}}\" Custom Data Error",
                     "missingEntriesWarning": "The following entries were not found: {{0}}",
-                    "replaceLinkedEntry": "Selecting a new entry will replace the current entry. Continue?"
+                    "replaceLinkedEntry": "Selecting a new entry will replace the current entry. Continue?",
+                    "maxCategoriesLinked": "Entry can be linked with a maximum of {{0}} categories"
                 },
                 "thumbnails": {
                     "tags": "Tags",

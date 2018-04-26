@@ -9,7 +9,7 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-        "configuration/server-config.json",
+        "kmc-config.json",
         "assets",
         "i18n",
         "favicon.ico",
