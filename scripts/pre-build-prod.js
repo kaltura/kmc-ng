@@ -1,7 +1,6 @@
 
 const fs = require('fs');
 const path = require('path');
-
 var packageRoot = findRoot(process.cwd());
 if (!packageRoot) throw new Error("couldn't find package root");
 
