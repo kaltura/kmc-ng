@@ -26,6 +26,7 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntrySta
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kBulkActions',
@@ -99,9 +100,9 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     const creationEvent = new CreateNewPlaylistEvent({
       type: KalturaPlaylistType.staticList,
       name: this._appLocalization.get('applications.content.bulkActions.newPlaylist'),
-    }, 'metadata');
+    }, ContentPlaylistViewSections.Metadata);
     const invalidEntries = this.selectedEntries.filter(entry => {
-      return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1
+        return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1;
     });
 
     if (!invalidEntries.length) {

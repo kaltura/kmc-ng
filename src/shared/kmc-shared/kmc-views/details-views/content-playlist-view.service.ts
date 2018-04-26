@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -18,6 +18,7 @@ export enum ContentPlaylistViewSections {
 export interface ContentPlaylistViewArgs {
     playlist: KalturaPlaylist;
     section?: ContentPlaylistViewSections;
+    activatedRoute?: ActivatedRoute;
 }
 
 
@@ -32,7 +33,22 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
     }
 
     isAvailable(args: ContentPlaylistViewArgs): boolean {
-        return this._isSectionEnabled(args.section, args.playlist);
+        const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute, args.playlist);
+        return this._isSectionEnabled(section, args.playlist);
+    }
+
+    private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute, playlist: KalturaPlaylist): ContentPlaylistViewSections {
+        const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+        switch (sectionToken) {
+            case 'content':
+                return playlist.playlistType === KalturaPlaylistType.staticList
+                    ? ContentPlaylistViewSections.Content
+                    : ContentPlaylistViewSections.ContentRuleBased;
+            case 'metadata':
+                return ContentPlaylistViewSections.Metadata;
+            default:
+                return null;
+        }
     }
 
     private _getSectionRouteToken(section?: ContentPlaylistViewSections): string {

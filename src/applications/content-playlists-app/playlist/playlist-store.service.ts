@@ -151,22 +151,26 @@ export class PlaylistStore implements OnDestroy {
       .request(new PlaylistGetAction({ id }))
       .cancelOnDestroy(this)
       .subscribe(playlist => {
-          if (playlist.playlistType === KalturaPlaylistType.dynamic) {
-            if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
-              playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
-            }
-          }
+          if (this._contentPlaylistView.isAvailable({ playlist, activatedRoute: this._playlistRoute })) {
+              if (playlist.playlistType === KalturaPlaylistType.dynamic) {
+                  if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
+                      playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
+                  }
+              }
 
-          this._loadPlaylistSubscription = null;
-          this._playlist.next({ playlist });
-          const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(playlist, { isNewData: false });
-          if (playlistLoadedResult.errors.length) {
-            this._state.next({
-              action: ActionTypes.PlaylistLoadingFailed,
-              error: new Error('one of the widgets failed while handling data loaded event')
-            });
+              this._loadPlaylistSubscription = null;
+              this._playlist.next({ playlist });
+              const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(playlist, { isNewData: false });
+              if (playlistLoadedResult.errors.length) {
+                  this._state.next({
+                      action: ActionTypes.PlaylistLoadingFailed,
+                      error: new Error('one of the widgets failed while handling data loaded event')
+                  });
+              } else {
+                  this._state.next({ action: ActionTypes.PlaylistLoaded });
+              }
           } else {
-            this._state.next({ action: ActionTypes.PlaylistLoaded });
+              this._browserService.handleUnpermittedAction(true);
           }
         },
         error => {
