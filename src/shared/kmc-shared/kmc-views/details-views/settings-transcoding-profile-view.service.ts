@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -21,6 +21,7 @@ export enum SettingsTranscodingProfileViewSections {
 export interface SettingsTranscodingProfileViewArgs {
     profile: KalturaConversionProfileWithAsset;
     section?: SettingsTranscodingProfileViewSections;
+    activatedRoute?: ActivatedRoute;
 }
 
 
@@ -35,7 +36,21 @@ export class SettingsTranscodingProfileViewService extends KmcDetailsViewBaseSer
     }
 
     isAvailable(args: SettingsTranscodingProfileViewArgs): boolean {
-        return this._isSectionEnabled(args.section, args.profile);
+        const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute);
+        return this._isSectionEnabled(section, args.profile);
+    }
+
+    private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute): SettingsTranscodingProfileViewSections {
+        const routeToken = activatedRoute.snapshot.firstChild.url[0].path;
+
+        switch (routeToken) {
+            case 'flavors':
+                return SettingsTranscodingProfileViewSections.Flavors;
+            case 'metadata':
+                return SettingsTranscodingProfileViewSections.Metadata;
+            default:
+                return null;
+        }
     }
 
     private _getSectionRouteToken(section?: SettingsTranscodingProfileViewSections): string {

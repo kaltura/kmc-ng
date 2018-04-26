@@ -13,6 +13,11 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import {
+    SettingsTranscodingProfileViewSections,
+    SettingsTranscodingProfileViewService
+} from 'app-shared/kmc-shared/kmc-views/details-views';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -48,6 +53,8 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _router: Router,
               private _logger: KalturaLogger,
+              private _browserService: BrowserService,
+              private _settingsTranscodingProfileViewService: SettingsTranscodingProfileViewService,
               private _liveTranscodingProfilesStore: LiveTranscodingProfilesStore,
               private _mediaTranscodingProfilesStore: MediaTranscodingProfilesStore) {
   }
@@ -309,7 +316,12 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
       case 'edit':
         this._logger.info(`handle 'edit' profile action by the user`, { profileId: event.profile.id });
-        this._router.navigate(['/settings/transcoding/profile', event.profile.id]);
+        if (this._settingsTranscodingProfileViewService.isAvailable({ profile: event.profile, section: SettingsTranscodingProfileViewSections.Metadata })) {
+            this._settingsTranscodingProfileViewService.open({ profile: event.profile });
+        } else {
+            this._logger.info(`user cannot access the profile details view, abort action, show alert`);
+            this._browserService.handleUnpermittedAction(false);
+        }
         break;
 
       case 'delete':

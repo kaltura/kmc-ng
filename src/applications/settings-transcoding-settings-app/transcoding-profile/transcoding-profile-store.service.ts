@@ -339,19 +339,23 @@ export class TranscodingProfileStore implements OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this._profile.data.next(response);
-          this._profileId = String(response.id);
-          this._setProfilesStoreServiceByType(response.type);
+            if (this._settingsTranscodingProfileViewService.isAvailable({ profile: response, activatedRoute: this._profileRoute })) {
+                this._profile.data.next(response);
+                this._profileId = String(response.id);
+                this._setProfilesStoreServiceByType(response.type);
 
-          const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
-          if (dataLoadedResult.errors.length) {
-            this._profile.state.next({
-              action: ActionTypes.ProfileLoadingFailed,
-              error: new Error(`one of the widgets failed while handling data loaded event`)
-            });
-          } else {
-            this._profile.state.next({ action: ActionTypes.ProfileLoaded });
-          }
+                const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
+                if (dataLoadedResult.errors.length) {
+                    this._profile.state.next({
+                        action: ActionTypes.ProfileLoadingFailed,
+                        error: new Error(`one of the widgets failed while handling data loaded event`)
+                    });
+                } else {
+                    this._profile.state.next({ action: ActionTypes.ProfileLoaded });
+                }
+            } else {
+                this._browserService.handleUnpermittedAction(true);
+            }
         },
         error => {
           this._profile.state.next({ action: ActionTypes.ProfileLoadingFailed, error });
