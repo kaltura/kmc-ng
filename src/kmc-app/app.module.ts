@@ -85,7 +85,8 @@ import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 import { LoginActionsComponent } from './components/login/login-actions/login-actions.component';
-import { KmcAuthenticationInterceptor } from './kmc-authentication-interceptor';
+import { InvalidKsInterceptorService } from '../shared/kmc-shell/auth/invalid-ks-interceptor/invalid-ks-interceptor.service';
+import { InvalidKsInterceptorModule } from 'app-shared/kmc-shell/auth/invalid-ks-interceptor/invalid-ks-interceptor.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -143,7 +144,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     AccessControlProfileModule.forRoot(),
       KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
-    KalturaClientModule.forRoot(kalturaClientOptionsFactory)
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      InvalidKsInterceptorModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -176,12 +178,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
           provide: APP_AUTH_EVENTS, useClass: KMCAuthenticationEvents
       },
     { provide: AppStorage, useExisting: BrowserService },
-    ConfirmationService,
-      {
-          provide: HTTP_INTERCEPTORS,
-          useClass: KmcAuthenticationInterceptor,
-          multi: true
-      }
+    ConfirmationService
   ]
 })
 export class AppModule {

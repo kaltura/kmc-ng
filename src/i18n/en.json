@@ -77,7 +77,8 @@
             "done": "Done",
             "save": "Save",
             "error": "Error",
-            "connectionError": "Error connecting to server"
+            "connectionError": "Error connecting to server",
+            "invalidKs": "User session is expired. Please re-login."
         },
         "login": {
             "login": {
