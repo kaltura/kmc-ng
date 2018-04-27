@@ -13,6 +13,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -90,6 +91,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
   private _registerToDataChanges(): void {
     this._storeService.profiles.state$
+        .observeOn(async)
       .cancelOnDestroy(this)
       .subscribe(
         result => {

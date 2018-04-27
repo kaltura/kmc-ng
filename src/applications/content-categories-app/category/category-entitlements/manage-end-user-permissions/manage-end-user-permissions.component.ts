@@ -17,6 +17,7 @@ import {
     RefineList
 } from './manage-end-user-permissions-refine-filters.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { async } from 'rxjs/scheduler/async';
 
 export interface UserActionData {
   action: 'activate' | 'deactivate' | 'permissionLevel'| 'updateMethod' | 'delete',
@@ -139,6 +140,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
     private _registerToDataChanges(): void {
         this._usersService.users.state$
+            .observeOn(async)
             .cancelOnDestroy(this)
             .subscribe(
                 result => {

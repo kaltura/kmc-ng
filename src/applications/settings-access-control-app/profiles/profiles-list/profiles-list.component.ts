@@ -10,6 +10,7 @@ import { AccessControlProfileUpdatedEvent } from 'app-shared/kmc-shared/events/a
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'kAccessControlProfilesList',
@@ -59,6 +60,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
   private _registerToDataChanges(): void {
     this._store.profiles.state$
+        .observeOn(async)
       .cancelOnDestroy(this)
       .subscribe(
         result => {

@@ -13,6 +13,7 @@ import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullab
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { async } from 'rxjs/scheduler/async';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
@@ -125,6 +126,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
   private _monitorFormChanges() {
     Observable.merge(this.entitlementsForm.valueChanges, this.entitlementsForm.statusChanges)
+        .observeOn(async)
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(
         () => {

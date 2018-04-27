@@ -7,6 +7,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'kRolesList',
@@ -75,6 +76,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   private _registerToDataChanges(): void {
     this._rolesStore.roles.state$
+        .observeOn(async)
       .cancelOnDestroy(this)
       .subscribe(
         result => {
