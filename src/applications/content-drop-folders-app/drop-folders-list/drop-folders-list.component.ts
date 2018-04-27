@@ -8,6 +8,7 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'kDropFoldersList',
@@ -84,6 +85,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
     private _registerToDataChanges(): void {
         this._dropFoldersStore.dropFolders.state$
+            .observeOn(async)
             .cancelOnDestroy(this)
             .subscribe(
                 result => {

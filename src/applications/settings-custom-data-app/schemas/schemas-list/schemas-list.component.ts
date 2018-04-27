@@ -9,6 +9,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'kSchemasList',
@@ -81,6 +82,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   private _registerToDataChanges(): void {
     this._schemasStore.schemas.state$
       .cancelOnDestroy(this)
+        .observeOn(async)
       .subscribe(
         result => {
 

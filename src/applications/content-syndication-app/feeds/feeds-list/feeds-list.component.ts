@@ -8,6 +8,7 @@ import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBa
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'kFeedsList',
@@ -243,6 +244,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   private _registerToDataChanges(): void {
     this._feedsService.feeds.state$
       .cancelOnDestroy(this)
+        .observeOn(async)
       .subscribe(
         result => {
 

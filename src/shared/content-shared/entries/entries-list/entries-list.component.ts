@@ -14,6 +14,7 @@ import { EntriesRefineFiltersService,
 
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'kEntriesList',
@@ -154,6 +155,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     private _registerToDataChanges(): void {
         this._entriesStore.entries.state$
             .cancelOnDestroy(this)
+            .observeOn(async)
             .subscribe(
                 result => {
 

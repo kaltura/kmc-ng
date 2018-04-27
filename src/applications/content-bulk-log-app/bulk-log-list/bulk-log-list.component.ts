@@ -14,6 +14,7 @@ import {
 } from '../bulk-log-store/bulk-log-refine-filters.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { async } from 'rxjs/scheduler/async';
 
 
 @Component({
@@ -100,6 +101,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     private _registerToDataChanges(): void {
         this._store.bulkLog.state$
             .cancelOnDestroy(this)
+            .observeOn(async)
             .subscribe(
                 result => {
 
