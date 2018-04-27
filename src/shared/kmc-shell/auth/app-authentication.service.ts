@@ -202,9 +202,16 @@ export class AppAuthentication {
             ));
     }
 
-    private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): Observable<void> {
+    private _afterLogin(ks: string,
+                        user: KalturaUser,
+                        partner: KalturaPartner,
+                        userRole: KalturaUserRole,
+                        permissionList: KalturaPermissionListResponse,
+                        updateSessionStorage = true): Observable<void> {
 
-        this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
+        if (updateSessionStorage) {
+            this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
+        }
 
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
@@ -247,7 +254,7 @@ export class AppAuthentication {
         this._logout();
     }
 
-    public loginByKS(loginToken: string): Observable<boolean> {
+    public loginByKS(loginToken: string, updateSessionStorage = true): Observable<boolean> {
         return Observable.create((observer: any) => {
             if (!this.isLogged()) {
                 if (loginToken) {
@@ -286,7 +293,13 @@ export class AppAuthentication {
 
                     return this.kalturaServerClient.multiRequest(requests)
                         .switchMap((response) => {
-                            return this._afterLogin(loginToken, response[0].result, response[1].result, response[2].result, response[3].result);
+                            return this._afterLogin(
+                                loginToken,
+                                response[0].result,
+                                response[1].result,
+                                response[2].result,
+                                response[3].result,
+                                updateSessionStorage);
                         })
                         .subscribe(
                             () => {

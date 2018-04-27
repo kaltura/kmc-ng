@@ -1,19 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { AppAuthentication } from 'app-shared/kmc-shell';
-import { AppNavigator } from 'app-shared/kmc-shell/auth/app-navigator.service';
+import { AppAuthentication, AppNavigator, BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
-    selector: 'kKMCLoginActions',
+    selector: 'kKMCAppActions',
     template: '<k-area-blocker classes="kAreaBlockerCoverAll" [showLoader]="true"></k-area-blocker>',
-    providers: [KalturaLogger.createLogger('LoginActionsComponent')]
+    providers: [KalturaLogger.createLogger('AppActionsComponent')]
 })
-export class LoginActionsComponent implements OnInit, OnDestroy {
+export class AppActionsComponent implements OnInit, OnDestroy {
     constructor(private _route: ActivatedRoute,
                 private _router: Router,
                 private _appAuth: AppAuthentication,
                 private _appNavigator: AppNavigator,
+                private _browserService: BrowserService,
                 private _logger: KalturaLogger) {
 
     }
@@ -52,7 +52,9 @@ export class LoginActionsComponent implements OnInit, OnDestroy {
 
         this._logger.info(`try to login by ks provided from query params`, { ks });
 
-        this._appAuth.loginByKS(ks)
+        this._browserService.removeFromSessionStorage('auth.login.ks');
+
+        this._appAuth.loginByKS(ks, false)
             .cancelOnDestroy(this)
             .subscribe(result => {
                 if (result) {
