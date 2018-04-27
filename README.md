@@ -49,9 +49,12 @@ npm install
 npm run start -- -o
 ```
 
-> Note: By default, the `server-config.json` file is configured against the Kaltura production server. We advice you to check that the application works as expected using the default configuration before customizing it against your own server.
+> Note: By default, the `configuration/kmc-config-example.json` file is configured against the Kaltura production server. We advice you to check that the application works as expected using the default configuration before customizing it against your own server.
 >
-> For CI and on-prem server integrations, you can use the template file `server-config.template.json`.
+> when building for development purposes (`npm run build`, `npm start` or `npm run start`), a check is done to verify that file `src/kmc-config.json` exists, if not it is being created automatically with the content of `configuration/kmc-config-example.json`. This file is being removed when building to production.
+>
+> For CI and on-prem server integrations, you can use the template file `configuration/kmc-config.template.json`.
+
 
 
 ## KMC-ng Configuration
@@ -68,7 +71,7 @@ The configuration of the kmc-ng application is split into several files. Each fi
  | Shared modules configuration | src/shared/modules-config.ts | import { modulesConfig } from 'config/modules'; | folder 'shared' | transpile into the app bundle (3) |
  | KMC application configuration | src/kmc-app/kmc-app-config.ts | import { kmcAppConfig } from '../../kmc-app-config'; (4) | folder 'kmc-app' | transpile into the app bundle (3) |
 **remarks:**
-- (1) a matching configuration file `src/configuration/server-config.json` is loaded by the browser. By default the file is configured against the Kaltura production server. We advice you to check that the application works as expected using the default configuration before customizing it against your own server.
+- (1) a matching configuration file `kmc-config.json` is loaded by the browser. By default the file is configured against the Kaltura production server. We advice you to check that the application works as expected using the default configuration before customizing it against your own server.
 - (2) for CI and on-prem server integrations, you can use the template file `server-config.template.json`.
 - (3) this configuration file can be modified only before building the application
 - (4) the path is relative to the file that contains the import statement
@@ -110,7 +113,7 @@ $ npm run build -- --prod
 A distributed standalone application will be created in the `dist/` folder.
 
 ### External (standalone) applications integrations
-The KMC integrates several standalone applications using iFrames. It contains a dedicated bridge component responsible for the communication with between the KMC shell and standalone application. External applications are not part of the KMC deployment process, they are configured at runtime by the server as part of file `src/configuration/server-config.json`. Read [__local_machine_only__/README.md](./__local_machine_only__/README.md) to learn more about standalone applications integration.
+The KMC integrates several standalone applications using iFrames. It contains a dedicated bridge component responsible for the communication with between the KMC shell and standalone application. External applications are not part of the KMC deployment process, they are configured at runtime by the server as part of the configuration file `kmc-config.json`. Read [__local_machine_only__/README.md](./__local_machine_only__/README.md) to learn more about standalone applications integration.
 
 
 ### Configuring the server

@@ -30,12 +30,13 @@
   ],
   "homepage": "https://github.com/kaltura/kmc-ng#readme",
   "scripts": {
-    "build": "ng build --aot --preserve-symlinks",
+    "build": "npm run pre-build && ng build --aot --preserve-symlinks",
     "build:prod": "npm run pre-build:prod && ng build --prod --preserve-symlinks --aot --extract-licenses && npm run post-build:prod",
     "build:prod:analyze": "npm run pre-build:prod:analyze && node --max_old_space_size=8092 ./node_modules/@angular/cli/bin/ng build --prod--preserve-symlinks --aot --extract-licenses --named-chunks --stats-json  && webpack-bundle-analyzer dist/stats.json && npm run post-build:prod:analyze",
     "kws": "kws",
     "lint": "ng lint",
     "ng": "ng",
+    "pre-build": "node ./scripts/pre-build.js",
     "pre-build:prod": "node ./scripts/pre-build-prod.js",
     "pre-build:prod:analyze": "node ./scripts/pre-build-prod.js",
     "post-build:prod": "node ./scripts/post-build-prod.js",
@@ -44,7 +45,7 @@
     "release:publish": "kws release --prepare=false",
     "standalone": "node ./scripts/checkout-standalone.js",
     "standalone:update": "npm run kws -- bookmark standalone --update && git commit -am 'chore: update standalone commit' && git push",
-    "start": "ng serve --preserve-symlinks",
+    "start": "npm run pre-build && ng serve --preserve-symlinks",
     "test": "ng test"
   },
   "dependencies": {

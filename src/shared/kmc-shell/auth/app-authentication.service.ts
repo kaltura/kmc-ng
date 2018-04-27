@@ -21,7 +21,6 @@ import {AppUser} from './app-user';
 import {AppStorage} from '@kaltura-ng/kaltura-common';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
-import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
 import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
 import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
@@ -29,6 +28,7 @@ import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsAction';
 
 export interface IUpdatePasswordPayload {
     email: string;
