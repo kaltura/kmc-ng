@@ -8,12 +8,16 @@ import {KalturaGoogleSyndicationFeedAdultValues} from 'kaltura-ngx-client/api/ty
 import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
 import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kGoogleDestinationForm',
   templateUrl: './google-destination-form.component.html',
   styleUrls: ['./google-destination-form.component.scss'],
-  providers: [{provide: DestinationComponentBase, useExisting: GoogleDestinationFormComponent}]
+  providers: [
+      {provide: DestinationComponentBase, useExisting: GoogleDestinationFormComponent},
+      KalturaLogger.createLogger('GoogleDestinationFormComponent')
+  ]
 })
 export class GoogleDestinationFormComponent extends DestinationComponentBase implements OnInit, OnDestroy {
   @Input() mode: FeedFormMode;
@@ -43,6 +47,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
   }
 
   ngOnInit() {
+      // TODO stas
     this._fillAvailableContentFlavors();
     this._fillAvailablePlayers();
     this._restartFormData();

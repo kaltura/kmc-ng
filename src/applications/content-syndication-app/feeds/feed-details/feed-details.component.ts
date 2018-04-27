@@ -28,7 +28,8 @@ export type FeedFormMode = 'edit' | 'new';
 @Component({
   selector: 'kFeedDetails',
   templateUrl: './feed-details.component.html',
-  styleUrls: ['./feed-details.component.scss']
+  styleUrls: ['./feed-details.component.scss'],
+    providers: [KalturaLogger.createLogger('FeedDetailsComponent')]
 })
 export class FeedDetailsComponent implements OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
@@ -132,7 +133,9 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
+      this._logger.info(`prepare component, load data`);
     if (this._isReady) {
+        this._logger.info(`component is already prepared, skip duplicating action`);
       return undefined;
     }
 
@@ -140,6 +143,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     this._queryData()
       .cancelOnDestroy(this)
       .subscribe(response => {
+          this._logger.info(`handle successful data loading`);
         this._isBusy = false;
         this._isReady = true;
         this._players = response.players;
@@ -168,6 +172,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
           };
         }
       }, error => {
+          this._logger.warn(`handle failed data loading, show confirmation`, { errorMessage: error.message });
         this._isBusy = false;
         this._blockerMessage = new AreaBlockerMessage({
           message: this._appLocalization.get('applications.content.syndication.details.errors.loadFailed'),
@@ -175,12 +180,14 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
             {
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
+                  this._logger.info(`user confirmed, retry action`);
                 this._blockerMessage = null;
                 this._prepare();
               }
             }, {
               label: this._appLocalization.get('app.common.close'),
               action: () => {
+                  this._logger.info(`user didn't confirm, abort action`);
                 this._blockerMessage = null;
                 this._close();
               }
@@ -191,7 +198,9 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _queryData(): Observable<{ players: KalturaUiConf[], flavors: KalturaFlavorParams[], entriesCount?: KalturaSyndicationFeedEntryCount }> {
+      this._logger.debug(`query data`, { mode: this._mode });
     if (this._mode === 'edit' && (!this.feed || !this.feed.id)) {
+        this._logger.warn(`cannot load data for edit mode without feedId`);
       return Observable.throw('An error occurred while trying to load feed');
     }
 
@@ -200,6 +209,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     const requests: Observable<any>[] = [getPlayers$, getFlavours$];
 
     if (this._mode === 'edit') {
+        this._logger.debug(`get entries for edit mode`);
       const getEntriesCount$ = this._feedsService.getFeedEntryCount(this.feed.id).cancelOnDestroy(this);
       requests.push(getEntriesCount$);
     }
@@ -217,6 +227,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
 
   // Create empty structured form on loading
   private _createForm(): void {
+      this._logger.debug(`create details form`);
     this._form = this._fb.group({
       name: ['', Validators.required],
       contentType: ['allContent'],
@@ -226,6 +237,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _restartFormData(): void {
+      this._logger.debug(`reset form data`, { data: this.feed });
     this._form.reset({
       name: this._mode === 'edit' ? this.feed.name : this._form.get('name').value || '',
       contentType: this._mode === 'edit' ? (this.feed.playlistId ? 'playlist' : 'allContent') : this._form.get('contentType').value || 'allContent',
@@ -274,18 +286,22 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _addNewFeed(syndicationFeed: KalturaBaseSyndicationFeed): void {
+      this._logger.info(`handle add new feed request`, { feed: syndicationFeed });
     this._blockerMessage = null;
 
     this._feedsService.create(syndicationFeed)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe((feed) => {
+          this._logger.info(`handle successful request`);
         this._feedsService.reload();
         this._close();
       }, error => {
+          this._logger.warn(`handle failed request, show confirmation`, { errorMessage: error.message });
         const buttons = [{
           label: this._appLocalization.get('app.common.close'),
           action: () => {
+              this._logger.info(`user didn't confirm, abort request`);
             this._blockerMessage = null;
             this._close();
           }
@@ -295,6 +311,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
           buttons.unshift({
             label: this._appLocalization.get('app.common.retry'),
             action: () => {
+                this._logger.info(`user confirmed, retry request`);
               this._blockerMessage = null;
               this._addNewFeed(syndicationFeed);
             }
@@ -309,18 +326,22 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _updateFeed(id: string, syndicationFeed: KalturaBaseSyndicationFeed): void {
+      this._logger.info(`handle update feed request`, { feedId: id, feed: syndicationFeed });
     this._blockerMessage = null;
 
     this._feedsService.update(id, syndicationFeed)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(() => {
+          this._logger.info(`handle successful request`);
         this._feedsService.reload();
         this._close();
       }, error => {
+          this._logger.warn(`handle failed request, show confirmation`, { errorMessage: error.message });
         const buttons = [{
           label: this._appLocalization.get('app.common.close'),
           action: () => {
+              this._logger.info(`user didn't confirm, abort request`);
             this._blockerMessage = null;
             this._close();
           }
@@ -330,6 +351,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
           buttons.unshift({
             label: this._appLocalization.get('app.common.retry'),
             action: () => {
+                this._logger.info(`user confirmed, retry request`);
               this._blockerMessage = null;
               this._updateFeed(id, syndicationFeed);
             }
@@ -344,39 +366,49 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   public _close(): void {
+      this._logger.info(`handle close action by user`);
     if (this.parentPopupWidget) {
       this.parentPopupWidget.close();
+    } else {
+        this._logger.debug(`parentPopupWidget is not provided abort action`);
     }
   }
 
   public _updateCurrentDestinationFormState($event: { isValid: boolean, isDirty: boolean }) {
+      this._logger.info(`handle update current destination from state action`, { event: $event });
     this._currentDestinationFormState = $event;
   }
 
   public _deleteFeed() {
+      this._logger.info(`handle delete feed action by user`, { feedId: this.feed.id });
     const executeDelete = () => {
       this._blockerMessage = null;
+      this._logger.info(`handle delete feed request`, { feedId: this.feed.id });
       this._feedsService.deleteFeeds([this.feed.id])
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(
           result => {
+              this._logger.info(`handle successful request`);
             this._feedsService.reload();
             this._close();
           }, // reload is handled by service
           error => {
+              this._logger.warn(`handle failed request, show confirmation`, { errorMessage: error.message });
             this._blockerMessage = new AreaBlockerMessage({
               message: error.message,
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
+                      this._logger.info(`user confirmed, retry request`);
                     this._blockerMessage = null;
                     executeDelete();
                   }
                 }, {
                   label: this._appLocalization.get('app.common.cancel'),
                   action: () => {
+                      this._logger.info(`user didn't confirm, abort request`);
                     this._blockerMessage = null;
                   }
                 }
@@ -387,6 +419,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     };
 
     if (this._mode === 'edit') {
+        this._logger.info(`handle delete feeds action in edit mode`);
       this._feedsService.confirmDelete([this.feed])
         .cancelOnDestroy(this)
         .subscribe(result => {
@@ -394,12 +427,14 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
             executeDelete();
           }
         }, error => {
+            this._logger.warn(`handle failed confirmation request, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [
               {
                 label: this._appLocalization.get('app.common.ok'),
                 action: () => {
+                    this._logger.info(`user dismissed alert`);
                   this._blockerMessage = null;
                 }
               }

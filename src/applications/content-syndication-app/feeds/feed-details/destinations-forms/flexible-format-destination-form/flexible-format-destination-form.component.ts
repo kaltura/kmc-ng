@@ -3,12 +3,16 @@ import { DestinationComponentBase, FeedFormMode } from '../../feed-details.compo
 import {KalturaGenericXsltSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGenericXsltSyndicationFeed';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kFlexibleFormatDestinationForm',
   templateUrl: './flexible-format-destination-form.component.html',
   styleUrls: ['./flexible-format-destination-form.component.scss'],
-  providers: [{provide: DestinationComponentBase, useExisting: FlexibleFormatDestinationFormComponent}]
+  providers: [
+      {provide: DestinationComponentBase, useExisting: FlexibleFormatDestinationFormComponent},
+      KalturaLogger.createLogger('FlexibleFormatDestinationFormComponent')
+  ]
 })
 export class FlexibleFormatDestinationFormComponent extends DestinationComponentBase implements OnInit, OnDestroy {
 
@@ -29,12 +33,16 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
     return this.mode === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE);
   }
 
-  constructor(private _appLocalization: AppLocalization, private _permissionsService: KMCPermissionsService) {
+  constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
+              private _logger: KalturaLogger) {
     super();
   }
 
   ngOnInit() {
+      this._logger.debug(`prepare component`, { feed: this.feed, mode: this.mode });
     if (this.mode !== 'edit' || this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+        this._logger.debug(`user has entered new mode or has SYNDICATION_UPDATE permission`);
       this.onFormStateChanged.emit({
         isValid: false,
         isDirty: false
@@ -50,7 +58,9 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
   }
 
   public _onFileSelected(selectedFiles: FileList) {
+      this._logger.info(`handle file selected action`, { files: selectedFiles });
     const showLoadError = () => {
+        this._logger.info(`handle load error`, { fileName: fileData.name });
       this._loading = false;
       this.onFormStateChanged.emit({isValid: false, isDirty: true});
       this._xslCode = null;
@@ -81,7 +91,7 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
         this._fileReader.onerror = (e) => {
           this._loading = false;
           showLoadError();
-        }
+        };
 
       } catch (ex) {
         showLoadError();
