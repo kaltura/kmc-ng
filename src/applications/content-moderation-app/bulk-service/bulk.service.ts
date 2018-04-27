@@ -50,7 +50,7 @@ export class BulkService implements OnDestroy {
           : typeof error === 'string'
             ? error
             : this._appLocalization.get('applications.content.moderation.errorConnecting');
-        throw new Error(message)
+        throw new Error(message);
       });
   }
 
@@ -59,7 +59,8 @@ export class BulkService implements OnDestroy {
       return Observable.throw(new Error(this._appLocalization.get('applications.content.moderation.missingIds')));
     }
 
-    return this._transmit(entryIds.map(entryId => new BaseEntryApproveAction({ entryId })), true);
+    return this._transmit(entryIds.map(entryId => new BaseEntryApproveAction({ entryId })), true)
+        .monitor('BulkService: approveEntry');
   }
 
   public rejectEntry(entryIds: string[]): Observable<{}> {
@@ -67,7 +68,8 @@ export class BulkService implements OnDestroy {
       return Observable.throw(new Error(this._appLocalization.get('applications.content.moderation.missingIds')));
     }
 
-    return this._transmit(entryIds.map(entryId => new BaseEntryRejectAction({ entryId })), true);
+    return this._transmit(entryIds.map(entryId => new BaseEntryRejectAction({ entryId })), true)
+        .monitor('BulkService: rejectEntry');
   }
 }
 

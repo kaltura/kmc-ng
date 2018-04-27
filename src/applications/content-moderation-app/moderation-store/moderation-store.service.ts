@@ -35,6 +35,7 @@ export class ModerationStore implements OnDestroy {
           })
         })
       ])
+        .monitor('ModerationStore: loadEntryModerationDetails')
       .map(([entry, flag]) => ({
         entry: entry.result,
         flag: flag.result
@@ -47,9 +48,10 @@ export class ModerationStore implements OnDestroy {
   public banCreator(userId: string): Observable<void> {
     return this._kalturaServerClient
       .request(new UserNotifyBanAction({ userId }))
+        .monitor('ModerationStore: banCreator')
       .catch(() => {
         return Observable.throw(new Error(this._appLocalization.get('applications.content.moderationDetails.errors.ban')));
-      })
+      });
   }
 }
 

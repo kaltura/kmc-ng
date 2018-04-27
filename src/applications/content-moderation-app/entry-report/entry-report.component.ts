@@ -17,6 +17,7 @@ import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType'
 import { Observer } from 'rxjs/Observer';
 import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface Tabs {
   name: string;
@@ -28,7 +29,10 @@ export interface Tabs {
   selector: 'kEntryReport',
   templateUrl: './entry-report.component.html',
   styleUrls: ['./entry-report.component.scss'],
-  providers: [ModerationStore]
+  providers: [
+      ModerationStore,
+      KalturaLogger.createLogger('EntryReportComponent')
+  ]
 })
 
 export class EntryReportComponent implements OnInit, OnDestroy {
@@ -61,7 +65,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
               private _bulkService: BulkService,
               private appAuthentication: AppAuthentication,
               private _permissionsService: KMCPermissionsService,
-              private _entriesStore: EntriesStore) {
+              private _entriesStore: EntriesStore,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -85,17 +90,20 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   private _getObserver(retryFn: () => void): Observer<any> {
     return {
       next: () => {
+          this._logger.info(`handle successful request`);
         this._closePopup();
         this._entriesStore.reload();
         this._areaBlockerMessage = null;
       },
       error: (error) => {
+          this._logger.warn(`handle failed request, show confirmation`, { errorMessage: error.message });
         this._areaBlockerMessage = new AreaBlockerMessage({
           message: error.message,
           buttons: [
             {
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
+                  this._logger.info(`user confirmed, retry request`);
                 this._areaBlockerMessage = null;
                 retryFn();
               }
@@ -103,6 +111,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
             {
               label: this._appLocalization.get('app.common.cancel'),
               action: () => {
+                  this._logger.info(`user didn't confirm, abort request`);
                 this._areaBlockerMessage = null;
               }
             }
@@ -116,6 +125,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   private _doApproveEntry(): void {
+      this._logger.info(`handle approve entry request by user`, { entryId: this._entry.id });
     const retryFn = () => this._doApproveEntry();
     this._areaBlockerMessage = null;
     this._bulkService.approveEntry([this._entry.id])
@@ -125,6 +135,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   private _doRejectEntry(): void {
+      this._logger.info(`handle reject entry request by user`, { entryId: this._entry.id });
     const retryFn = () => this._doRejectEntry();
     this._areaBlockerMessage = null;
     this._bulkService.rejectEntry([this._entry.id])
@@ -134,6 +145,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   private _loadEntryModerationDetails(): void {
+      this._logger.info(`handle load entry moderation details data request`);
     this._isBusy = true;
     this._tabs = [
       { name: this._appLocalization.get('applications.content.moderation.report'), isActive: false, disabled: false },
@@ -143,6 +155,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+            this._logger.info(`handle successful request`);
           this._isBusy = false;
           this._areaBlockerMessage = null;
           if (response.entry && response.flag) {
@@ -181,6 +194,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
           }
         },
         error => {
+            this._logger.warn(`handle failed request, show confirmation`, { errorMessage: error.message });
           this._isBusy = false;
           this._areaBlockerMessage = new AreaBlockerMessage({
             message: error.message,
@@ -188,6 +202,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
               {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                    this._logger.info(`user confirmed, retry action`);
                   this._areaBlockerMessage = null;
                   this._loadEntryModerationDetails();
                 }
@@ -195,6 +210,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
               {
                 label: this._appLocalization.get('app.common.cancel'),
                 action: () => {
+                    this._logger.info(`user didn't confirm, abort action`);
                   this._closePopup();
                   this._areaBlockerMessage = null;
                 }
@@ -206,12 +222,16 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _closePopup(): void {
+      this._logger.info(`handle close popup action by user`);
     if (this.parentPopupWidget) {
       this.parentPopupWidget.close();
+    } else {
+        this._logger.debug('parentPopupWidget is not provided, abort action');
     }
   }
 
   public _changeTab(index: number): void {
+      this._logger.info(`handle change tab action`, { tabName: this._tabs[index].name });
     if (!this._tabs[index].disabled) {
       this._tabs.forEach(tab => tab.isActive = false);
       this._tabs[index].isActive = true;
@@ -219,27 +239,32 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(entryId): void {
-    this.parentPopupWidget.close();
+      this._logger.info(`handle navigate to entry action by user`, { entryId });
+      this._closePopup();
     this._router.navigate(['content/entries/entry', entryId]);
   }
 
   public _banCreator(): void {
+      this._logger.info(`handle ban creator action by user`, { userId: this._userId });
     this._moderationStore.banCreator(this._userId)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         () => {
+            this._logger.info(`handle successful action, show alert`);
           this._browserService.alert({
             message: this._appLocalization.get('applications.content.moderation.notificationHasBeenSent')
           });
         },
         error => {
+            this._logger.warn(`handle failed action, show confirmation`);
           this._areaBlockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                    this._logger.info(`user confirmed, retry action`);
                   this._areaBlockerMessage = null;
                   this._banCreator();
                 }
@@ -247,6 +272,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
               {
                 label: this._appLocalization.get('app.common.cancel'),
                 action: () => {
+                    this._logger.info(`user didn't confirm, retry action`);
                   this._areaBlockerMessage = null;
                 }
               }
@@ -257,11 +283,19 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _approveEntry(): void {
+      this._logger.info(`handle approve entry action by user`, { entryId: this._entry.id });
     if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
+        this._logger.info(`user has FEATURE_KMC_VERIFY_MODERATION permission, show confirmation`);
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.approveMedia'),
         message: this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: this._entry.name }),
-        accept: () => this._doApproveEntry()
+        accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
+            this._doApproveEntry();
+        },
+          reject: () => {
+              this._logger.info(`user didn't confirm, abort action`);
+          }
       });
     } else {
       this._doApproveEntry();
@@ -269,11 +303,19 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _rejectEntry(): void {
+      this._logger.info(`handle reject entry action by user`, { entryId: this._entry.id });
     if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
+        this._logger.info(`user has FEATURE_KMC_VERIFY_MODERATION permission, show confirmation`);
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
         message: this._appLocalization.get('applications.content.moderation.sureToReject', { 0: this._entry.name }),
-        accept: () => this._doRejectEntry()
+        accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
+            this._doRejectEntry();
+        },
+          reject: () => {
+              this._logger.info(`user didn't confirm, abort action`);
+          }
       });
     } else {
       this._doRejectEntry();
