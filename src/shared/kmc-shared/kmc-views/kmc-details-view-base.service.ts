@@ -14,7 +14,9 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
 
     open(args: TArgs): void {
         if (this.isAvailable(args)) {
-            this._open(args).subscribe(
+            this._open(args)
+                .map(result => result === null ? true : result) // treat navigation to save route as successful operation
+                .subscribe(
                 result => {
                     if (!result) {
                         this._logger.info('open view operation failed');
