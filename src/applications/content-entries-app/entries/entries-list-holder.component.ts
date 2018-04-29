@@ -15,6 +15,7 @@ import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entrie
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @Component({
@@ -72,6 +73,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _uploadManagement: UploadManagement,
               private _permissionsService: KMCPermissionsService,
               public _entriesStore: EntriesStore,
+              private _contentEntryViewService: ContentEntryViewService,
               private _contentEntriesAppService: ContentEntriesAppService,
               private _liveDashboardAppViewService: LiveDashboardAppViewService) {
   }
@@ -110,7 +112,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         this._appEvents.publish(new PreviewAndEmbedEvent(entry));
         break;
       case 'view':
-        this._viewEntry(entry.id);
+          this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
         break;
       case 'delete':
         this._browserService.confirm(
@@ -129,14 +131,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
       default:
         break;
-    }
-  }
-
-  private _viewEntry(entryId: string): void {
-    if (entryId) {
-      this._router.navigate(['/content/entries/entry', entryId]);
-    } else {
-      console.error('EntryId is not defined');
     }
   }
 
