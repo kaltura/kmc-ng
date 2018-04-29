@@ -3,7 +3,7 @@ import {AppAuthentication} from 'app-shared/kmc-shell/auth';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {UpdateClipsEvent} from 'app-shared/kmc-shared/events/update-clips-event';
-import {AppEventsService} from 'app-shared/kmc-shared';
+import {AppEventsService} from 'app-shared/kmc-shared/app-events';
 
 
 @Component({
@@ -134,13 +134,9 @@ export class KeditHosterComponent implements OnInit, OnDestroy {
       case 'quiz':
       case 'editor':
         this.keditUrl = serverConfig.externalApps.clipAndTrim.uri;
-        playerUiConfId = serverConfig.externalApps.clipAndTrim.uiConfId;
-        previewPlayerUiConfId = serverConfig.externalApps.clipAndTrim.uiConfId;
         break;
       case 'advertisements':
         this.keditUrl = serverConfig.externalApps.advertisements.uri;
-        playerUiConfId = serverConfig.externalApps.advertisements.uiConfId;
-        previewPlayerUiConfId = serverConfig.externalApps.advertisements.uiConfId;
         break;
     }
 
@@ -180,13 +176,6 @@ export class KeditHosterComponent implements OnInit, OnDestroy {
 
         /* id of the entry to start with */
         'entry_id': this.entryId,
-
-        /* id of uiconf to be used for internal player,
-        * if left empty the default deployed player will be used */
-        'player_uiconf_id': playerUiConfId,
-
-        /* id of uiconf to be used for preview. if not passed, main player is used */
-        'preview_player_uiconf_id': previewPlayerUiConfId,
 
         /* should a KS be appended to the thumbnails url, for access control issues */
         'load_thumbnail_with_ks': false,

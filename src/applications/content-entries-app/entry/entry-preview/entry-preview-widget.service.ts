@@ -15,7 +15,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
 
     constructor(private appAuthentication: AppAuthentication,
                 private _permissionsService: KMCPermissionsService,
-                appEvents: AppEventsService,) {
+                appEvents: AppEventsService) {
         super('entryPreview');
 
 

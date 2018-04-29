@@ -3,15 +3,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {globalConfig} from 'config/global';
 import {EntryClipsWidget} from './entry-clips-widget.service';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
-import {KEditHosterService} from 'app-shared/kmc-shared';
-
+import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @Component({
     selector: 'kEntryClips',
     templateUrl: './entry-clips.component.html',
     styleUrls: ['./entry-clips.component.scss'],
     providers: [
-      KEditHosterService,
       KalturaLogger.createLogger('EntryClipsComponent')
     ]
 })
@@ -23,7 +21,7 @@ export class EntryClips implements OnInit, OnDestroy {
     public _clipAndTrimDisabledReason: string = null;
 
     constructor(public _widgetService: EntryClipsWidget,
-                private _keditHosterService: KEditHosterService,
+                private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
                 logger: KalturaLogger) {
     }
 
@@ -31,8 +29,8 @@ export class EntryClips implements OnInit, OnDestroy {
         return value ? 1 : -1;
 
     }
-    public _onSortChanged(event: any)
-    {
+
+    public _onSortChanged(event: any) {
         this._widgetService.sortAsc = event.order === 1;
         this._widgetService.sortBy = event.field;
 
@@ -50,15 +48,15 @@ export class EntryClips implements OnInit, OnDestroy {
     ngOnInit() {
         this._widgetService.attachForm();
 
-      this._widgetService.data$.subscribe(
-        data => {
-          if (data) {
-              const isAvailableResult = this._keditHosterService.isClipAndTrimAvailable(data);
-              this._clipAndTrimEnabled = isAvailableResult.isAvailable;
-              this._clipAndTrimDisabledReason = isAvailableResult.reason;
-          }
-        }
-      );
+        this._widgetService.data$
+            .cancelOnDestroy(this)
+            .subscribe(
+            data => {
+                if (data) {
+                    this._clipAndTrimEnabled = this._clipAndTrimAppViewService.isAvailable({entry: data});
+                }
+            }
+        );
     }
 
     ngOnDestroy() {

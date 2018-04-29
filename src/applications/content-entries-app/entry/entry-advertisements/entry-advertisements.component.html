@@ -4,7 +4,7 @@
         <div class="kTitle">{{'applications.content.entryDetails.advertisements.title' | translate}}</div>
         <div class="kDescription">{{'applications.content.entryDetails.advertisements.description' | translate}}</div>
         <div class="kButtons">
-            <div [kTooltip]="_advertisementsDisabledReason">
+            <div>
                 <button pButton class="kButtonDefault"
                         [disabled]="!_advertisementsEnabled"
                         (click)="advertisements.open()"

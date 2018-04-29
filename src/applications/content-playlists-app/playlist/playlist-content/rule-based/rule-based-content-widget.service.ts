@@ -1,10 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { PlaylistWidget } from '../../playlist-widget';
-import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
 import { Observable } from 'rxjs/Observable';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
@@ -13,6 +12,7 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Injectable()
 export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy {
@@ -24,7 +24,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   public entriesTotalCount = 0;
 
   constructor(private _kalturaClient: KalturaClient, private _appLocalization: AppLocalization) {
-    super(PlaylistWidgetKeys.ContentRuleBased);
+    super(ContentPlaylistViewSections.ContentRuleBased);
   }
 
   ngOnDestroy() {

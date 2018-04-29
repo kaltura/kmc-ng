@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppAuthentication, BrowserService, UnpermittedActionReasons} from 'app-shared/kmc-shell';
+import {AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
@@ -21,7 +21,7 @@ export class AnalyticsLiveComponent implements OnInit, OnDestroy {
   ngOnInit() {
     try {
       if (!serverConfig.externalApps.liveAnalytics.enabled) { // Deep link when disabled handling
-        this.browserService.handleUnpermittedAction(UnpermittedActionReasons.InvalidConfiguration);
+          this.browserService.handleUnpermittedAction(true);
         return undefined;
       }
       const cdnUrl = serverConfig.cdnServers.serverUri.replace('http://', '').replace('https://', '');
