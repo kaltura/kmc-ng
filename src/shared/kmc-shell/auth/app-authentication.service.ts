@@ -191,7 +191,7 @@ export class AppAuthentication {
             .switchMap(
                 response => {
                     if (!response.hasErrors()) {
-                        return this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result, response[4].result)
+                        return this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result)
                             .map(() => {
                                 return {success: true, error: null};
                             });
@@ -202,12 +202,8 @@ export class AppAuthentication {
             ));
     }
 
-    private _afterLogin(ks: string,
-                        user: KalturaUser,
-                        partner: KalturaPartner,
-                        userRole: KalturaUserRole,
-                        permissionList: KalturaPermissionListResponse,
-                        updateSessionStorage = true): Observable<void> {
+    private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse,
+                        updateSessionStorage = false): Observable<void> {
 
         if (updateSessionStorage) {
             this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
@@ -247,9 +243,13 @@ export class AppAuthentication {
         return !!this._appUser;
     }
 
+    clearSessionCredentials(): void {
+        this.appStorage.removeFromSessionStorage('auth.login.ks');
+    }
+
     logout() {
         this._appUser = null;
-        this.appStorage.removeFromSessionStorage('auth.login.ks');
+        this.clearSessionCredentials();
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._logout();
     }
@@ -293,12 +293,7 @@ export class AppAuthentication {
 
                     return this.kalturaServerClient.multiRequest(requests)
                         .switchMap((response) => {
-                            return this._afterLogin(
-                                loginToken,
-                                response[0].result,
-                                response[1].result,
-                                response[2].result,
-                                response[3].result,
+                            return this._afterLogin(loginToken,false, response[0].result, response[1].result, response[2].result, response[3].result,
                                 updateSessionStorage);
                         })
                         .subscribe(

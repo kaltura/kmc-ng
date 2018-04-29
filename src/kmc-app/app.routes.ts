@@ -5,6 +5,7 @@ import {LoginComponent} from './components/login/login.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {ErrorComponent} from './components/error/error.component';
 import { AppActionsComponent } from './components/app-actions/app-actions.component';
+import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 
 const routes: Routes = <Routes>[
   {
@@ -22,6 +23,9 @@ const routes: Routes = <Routes>[
       },
       {
         path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
+          {
+              path: 'default', component: AppDefaultViewComponent
+          },
         {
           path: 'content', children: [
           { path: '', redirectTo: 'entries', pathMatch: 'full' },

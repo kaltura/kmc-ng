@@ -20,7 +20,6 @@ import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaM
 import { CategoryEntryAddAction } from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
 import { CategoryEntryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryEntryDeleteAction';
 import { KalturaCategoryEntry } from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
-import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from 'app-shared/kmc-shared';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
@@ -35,6 +34,7 @@ import 'rxjs/add/operator/catch';
 import { EntryWidget } from '../entry-widget';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 
 @Injectable()
@@ -56,7 +56,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 private _dynamicMetadataFormFactory : DynamicMetadataFormFactory,
                 private _metadataProfileStore : MetadataProfileStore)
     {
-        super(EntryWidgetKeys.Metadata);
+        super(ContentEntryViewSections.Metadata);
 
         this._buildForm();
     }

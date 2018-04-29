@@ -16,7 +16,6 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 
 import {EntryStore} from '../entry-store.service';
-import {EntryWidgetKeys} from '../entry-widget-keys';
 import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
@@ -25,6 +24,7 @@ import {serverConfig} from "config/server";
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 export interface ClipsData
 {
@@ -57,7 +57,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
               private browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _logger: KalturaLogger) {
-    super(EntryWidgetKeys.Clips);
+    super(ContentEntryViewSections.Clips);
   }
 
   /**
@@ -87,8 +87,8 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
     }
   }
 
-  public navigateToEntry(entryId) {
-    this._store.openEntry(entryId);
+  public navigateToEntry(entry: KalturaMediaEntry): void {
+    this._store.openEntry(entry);
   }
 
   private _updateClipProperties(clips: any[]): any[] {

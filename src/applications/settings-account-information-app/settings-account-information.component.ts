@@ -6,7 +6,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-
+import { SettingsAccountInformationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 function phoneValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: boolean} | null => {
@@ -41,15 +41,20 @@ export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
               private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
               private _browserService: BrowserService,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _settingsAccountInformationMainView: SettingsAccountInformationMainViewService) {
   }
 
   ngOnInit() {
     this._logger.info(`initiate account information view`);
     this._createForm();
-    this._canContactSalesForceInformation = this._accountInformationService.canContactSalesForceInformation();
-    if (!this._canContactSalesForceInformation) {
-      this._logger.warn('Cannot send message to SalesForce: missing \'contactsalesforce\' configuration');
+    if (this._settingsAccountInformationMainView.isAvailable()) {
+        this._canContactSalesForceInformation = this._accountInformationService.canContactSalesForceInformation();
+        if (this._canContactSalesForceInformation) {
+            this._logger.warn('Cannot send message to SalesForce: missing \'contactsalesforce\' configuration');
+        }
+    }else{
+        this._browserService.handleUnpermittedAction(true);
     }
   }
 

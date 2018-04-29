@@ -6,9 +6,9 @@ const findRoot = require('./libs/find-root');
 const packageRoot = findRoot(process.cwd());
 if (!packageRoot) throw new Error("couldn't find package root");
 
-const sourceFileName = "configuration/kmc-config-example.json";
+const sourceFileName = "src/configuration/server-config-example.json";
 const sourceFilePath = path.resolve(packageRoot,sourceFileName);
-const targetFileName = "src/kmc-config.json";
+const targetFileName = "src/server-config.json";
 const targetFilePath = path.resolve(packageRoot,targetFileName);
 
 if (!fs.existsSync(targetFilePath)) {

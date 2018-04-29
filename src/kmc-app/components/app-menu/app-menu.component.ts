@@ -6,13 +6,19 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
 
 import * as R from 'ramda';
-import { kmcAppConfig, KMCAppMenuItem } from '../../kmc-app-config';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
     selector: 'kKMCAppMenu',
     templateUrl: './app-menu.component.html',
-    styleUrls: ['./app-menu.component.scss']
+    styleUrls: ['./app-menu.component.scss'],
+    providers: [
+        KalturaLogger.createLogger('AppMenuComponent')
+    ]
+
 })
 export class AppMenuComponent implements OnInit, OnDestroy{
 
@@ -24,23 +30,30 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _helpMenuOpened = false;
 
     menuConfig: KMCAppMenuItem[];
+    leftMenuConfig: KMCAppMenuItem[];
+    rightMenuConfig: KMCAppMenuItem[];
     selectedMenuItem: KMCAppMenuItem;
-    showSubMenu: boolean = true;
-
+    showSubMenu = true;
 
     constructor(private userAuthentication: AppAuthentication,
-                private appNavigator: AppNavigator,
+                private _kmcMainViews: KmcMainViewsService,
+                private _logger: KalturaLogger,
                 private router: Router,
                 private _browserService: BrowserService) {
 
         this.sub = router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                this.setSelectedRoute(event.url);
+                this.setSelectedRoute(event.urlAfterRedirects);
             }
         });
         this._userContext = userAuthentication.appUser;
-        this.menuConfig = kmcAppConfig.menuItems;
-
+        this.menuConfig = this._kmcMainViews.createMenu();
+        this.leftMenuConfig = this.menuConfig.filter( (item: KMCAppMenuItem) => {
+            return item.position === 'left';
+        });
+        this.rightMenuConfig = this.menuConfig.filter( (item: KMCAppMenuItem) => {
+            return item.position === 'right';
+        });
         if (router.navigated)
         {
             this.setSelectedRoute(router.routerState.snapshot.url);
@@ -49,13 +62,14 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     ngOnInit() {
     }
-
+    
     setSelectedRoute(path) {
-
-        let item = R.find(R.propEq('routePath', path.split("/")[1]))(this.menuConfig);
-        if (item) {
-            this.selectedMenuItem = item;
-            this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
+        if (this.menuConfig) {
+            this.selectedMenuItem = this.menuConfig.find(item => item.isActiveView(path));
+            this.showSubMenu = this.selectedMenuItem && this.selectedMenuItem.children && this.selectedMenuItem.children.length > 0;
+        } else {
+            this.selectedMenuItem = null;
+            this.showSubMenu = false;
         }
     }
 

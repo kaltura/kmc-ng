@@ -211,7 +211,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
       const currentProfileIndex = currentProfile ? profiles.indexOf(currentProfile) : -1;
       if (currentProfileIndex > 0) {
         const prevProfile = profiles[currentProfileIndex - 1];
-        this._profileStore.openProfile(String(prevProfile.id));
+        this._profileStore.openProfile(prevProfile);
       }
     }
   }
@@ -224,7 +224,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
       const currentProfileIndex = currentProfile ? profiles.indexOf(currentProfile) : -1;
       if (currentProfileIndex >= 0 && (currentProfileIndex < profiles.length - 1)) {
         const nextProfile = profiles[currentProfileIndex + 1];
-        this._profileStore.openProfile(String(nextProfile.id));
+        this._profileStore.openProfile(nextProfile);
       }
     }
   }
