@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {EntryAdvertisementsWidget} from './entry-advertisements-widget.service';
 import { AdvertisementsAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
-
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
     selector: 'kEntryAdvertisements',
@@ -21,7 +21,9 @@ export class EntryAdvertisementsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this._widgetService.attachForm();
 
-        this._widgetService.data$.subscribe(
+        this._widgetService.data$
+            .cancelOnDestroy(this)
+            .subscribe(
             data => {
                 if (data) {
                     this._advertisementsEnabled = this._advertisementsAppViewService.isAvailable({ entry: data });

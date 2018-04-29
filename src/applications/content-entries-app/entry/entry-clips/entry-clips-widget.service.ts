@@ -25,6 +25,8 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { UpdateClipsEvent } from 'app-shared/kmc-shared/events/update-clips-event';
 
 export interface ClipsData
 {
@@ -56,8 +58,17 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
               private _kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _appEvents: AppEventsService,
               private _logger: KalturaLogger) {
     super(ContentEntryViewSections.Clips);
+
+      this._appEvents.event(UpdateClipsEvent)
+          .cancelOnDestroy(this)
+          .subscribe(() => {
+              this.updateClips();
+              this._store.setRefreshEntriesListUponLeave();
+          });
+
   }
 
   /**
@@ -196,10 +207,5 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
 
   ngOnDestroy() {
 
-  }
-
-  public onClipCreated(): void {
-    this.updateClips();
-    this._store.setRefreshEntriesListUponLeave();
   }
 }

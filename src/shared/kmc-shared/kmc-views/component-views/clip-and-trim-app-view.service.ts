@@ -74,13 +74,17 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
         const isEntryReplacing = entry.replacementStatus !== KalturaEntryReplacementStatus.none;
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
         const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1 && !isExternalMedia;
-
-        const result = entryReady && !isEntryReplacing && isEntryRelevant;
+        const isLiveEntry = entry.mediaType === KalturaMediaType.liveStreamFlash ||
+            entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamQuicktime;
+        const result = entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
 
         this._logger.trace(`conditions used to check availability status by data`, () => (
             {
                 result,
                 entryReady,
+                isLiveEntry,
                 isEntryReplacing,
                 isExternalMedia,
                 entryMediaType: entry.mediaType,
@@ -90,4 +94,6 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
 
         return result;
     }
+
+
 }

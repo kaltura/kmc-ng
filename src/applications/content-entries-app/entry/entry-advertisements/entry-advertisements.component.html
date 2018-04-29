@@ -16,6 +16,6 @@
 
 <kPopupWidget #advertisements [fullScreen]="true">
   <ng-template>
-    <kAdvertisements [entryId]="_widgetService.data.id" [parentPopupWidget]="advertisements"></kAdvertisements>
+    <kAdvertisements [entry]="_widgetService.data" [parentPopupWidget]="advertisements"></kAdvertisements>
   </ng-template>
 </kPopupWidget>

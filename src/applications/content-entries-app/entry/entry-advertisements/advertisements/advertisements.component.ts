@@ -3,6 +3,7 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 
 @Component({
   selector: 'kAdvertisements',
@@ -12,7 +13,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 export class AdvertisementsComponent implements OnInit, OnDestroy {
 
   @Input()
-  entryId: string = null;
+  entry: KalturaMediaEntry = null;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
 
@@ -24,10 +25,6 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (!this.entryId) {
-      this._logger.warn(`error occurred while trying to initialize AdvertisementsComponent, Please provide entry ID`);
-      return undefined;
-    }
   }
 
   ngOnDestroy() {
