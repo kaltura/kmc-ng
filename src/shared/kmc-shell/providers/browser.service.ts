@@ -286,7 +286,6 @@ export class BrowserService implements IAppStorage {
     public handleUnpermittedAction(navigateToDefault: boolean): void {
 
         if (navigateToDefault) {
-            // TODO sakal ask Amir to change the messages
             this.alert(
                 {
                     header: this._appLocalization.get('app.UnpermittedActionReasons.header'),

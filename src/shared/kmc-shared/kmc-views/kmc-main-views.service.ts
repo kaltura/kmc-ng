@@ -25,57 +25,14 @@ import { ContentCategoriesMainViewService,
 
 
 export interface KMCAppMenuItem {
-    id?: any; // TODO sakal remove
     titleToken: string;
     icon?: string;
-    isAvailable?: boolean; // TODO sakal make required
-    isActiveView?: (activePath: string) => boolean; // TODO sakal make required
+    isAvailable: boolean;
+    isActiveView: (activePath: string) => boolean;
     position?: string;
     open?: () => void;
     children?: KMCAppMenuItem[];
 }
-//
-//
-// private _syncAppMenuConfigWithPermissions(): void {
-//
-//     const isItemEnabled = (menuItem: KMCAppMenuItem | KMCAppSubMenuItem): boolean => {
-//         switch (menuItem.id) {
-//             case 'usageDashboard':
-//                 this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
-//                 return serverConfig.externalApps.usageDashboard.enabled;
-//             case 'studio':
-//                 this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
-//                 return serverConfig.externalApps.studio.enabled;
-//             case 'kava':
-//                 this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
-//                 return serverConfig.externalApps.kava.enabled;
-//             case 'liveAnalytics':
-//                 this._logger.info(`The external app '${menuItem.id}' is disabled, removing relevant menu item.`);
-//                 return serverConfig.externalApps.liveAnalytics.enabled;
-//             default:
-//                 return true;
-//         }
-//     }
-//
-//     const hasViewPermission = (menuItem: KMCAppMenuItem | KMCAppSubMenuItem): boolean => {
-//         const itemPermissions = appRoutePermissionsMapping[menuItem.routePath];
-//
-//         let result = false;
-//         if (itemPermissions && itemPermissions.length) {
-//             result = this._permissions.hasPermission(itemPermissions);
-//         }
-//
-//         if (!result) {
-//             this._logger.info(`The user doesn't have sufficient permission to access app '${menuItem.id}', removing relevant menu item.`);
-//             return false;
-//         } else {
-//             return true;
-//         }
-//     }
-//
-//
-//
-// }
 
 @Injectable()
 export class KmcMainViewsService {
@@ -173,7 +130,6 @@ export class KmcMainViewsService {
                     {
                         isAvailable: this._contentBulkUploadsMain.isAvailable(),
                         isActiveView:  (path) => this._contentBulkUploadsMain.isActiveView(path),
-
                         open: () => {
                             this._contentBulkUploadsMain.open();
                         },
@@ -210,7 +166,6 @@ export class KmcMainViewsService {
                 titleToken: 'Usage Dashboard',
             },
             {
-                id: 'analytics',
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
                 position: 'left',
                 isAvailable: true,
@@ -226,12 +181,12 @@ export class KmcMainViewsService {
                     },
                     {
                         isAvailable: false,
+                        isActiveView: (path) => false,
                         titleToken: 'Kava'
                     }
                 ]
             },
             {
-                id: 'settings',
                 isActiveView: (activePath: string) => activePath.indexOf(`/settings`) !== -1,
                 isAvailable: true,
                 titleToken: 'Settings',
@@ -303,7 +258,6 @@ export class KmcMainViewsService {
                     }
                 ]
             }, {
-                id: 'administration',
                 isActiveView: (activePath: string) => activePath.indexOf(`/administration`) !== -1,
                 isAvailable: true,
                 titleToken: 'Administration',
@@ -369,7 +323,8 @@ export class KmcMainViewsService {
                     });
                 }
             } else {
-                this._logger.debug(`remove menu item from app main views list`, {titleToken: item.titleToken, isAvailable: !!item.isAvailable});
+                this._logger.debug(`remove menu item from app main views list`, {titleToken: item.titleToken,
+                    isAvailable: !!item.isAvailable});
             }
 
             return target;

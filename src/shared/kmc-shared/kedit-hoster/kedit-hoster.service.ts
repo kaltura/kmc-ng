@@ -3,10 +3,10 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client/api/types/KalturaEntryReplacementStatus';
 import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { serverConfig } from 'config/server';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @Injectable()
 export class KEditHosterService {
@@ -14,6 +14,7 @@ export class KEditHosterService {
 
   constructor(
     private _permissionsService: KMCPermissionsService,
+    private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
     logger: KalturaLogger
   ) {
     this._logger = logger.subLogger('KEditHosterService');
@@ -23,7 +24,7 @@ export class KEditHosterService {
     const entryReady = entry.status.toString() === KalturaEntryStatus.ready.toString();
     const isEntryReplacing = entry.replacementStatus !== KalturaEntryReplacementStatus.none;
     const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
-    const clipAndTrimAppEnabled = serverConfig.externalApps.clipAndTrim.enabled;
+    const clipAndTrimAppEnabled = this._clipAndTrimAppViewService.isAvailable();
     const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1  && !isExternalMedia;
     const hasIngestClipPermission = this._permissionsService.hasAnyPermissions([
       KMCPermissions.CONTENT_INGEST_CLIP_MEDIA,

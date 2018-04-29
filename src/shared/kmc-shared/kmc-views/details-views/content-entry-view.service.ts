@@ -201,12 +201,9 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     protected _open(args: ContentEntryViewArgs): Observable<boolean> {
         const sectionToken = this._getSectionRouteToken(args.section);
         this._logger.info('handle open entry view request by the user', { entryId: args.entry.id, sectionToken });
-        return Observable.fromPromise(
-            this._router.navigateByUrl(
-                `/content/entries/entry/${args.entry.id}/${sectionToken}`,
+        return Observable.fromPromise(this._router.navigateByUrl(`/content/entries/entry/${args.entry.id}/${sectionToken}`,
                 { queryParams: { reloadEntriesListOnNavigateOut: args.reloadEntriesListOnNavigateOut } }
-            )
-        );
+            ));
     }
 
     public openById(entryId: string, reloadEntriesListOnNavigateOut?: boolean): Observable<boolean> {
