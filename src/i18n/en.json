@@ -77,7 +77,13 @@
             "done": "Done",
             "save": "Save",
             "error": "Error",
-            "connectionError": "Error connecting to server"
+            "connectionError": "Error connecting to server",
+            "error": "Error"
+        },
+        "redirect":{
+            "redirect1": "Redirecting to default view...",
+            "redirect2": "If you are not redirected in few seconds, click ",
+            "redirect3": "here"
         },
         "login": {
             "login": {
@@ -148,9 +154,9 @@
             "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
         },
         "UnpermittedActionReasons": {
-            "InvalidConfiguration": {
-                "message": "This view cannot be loaded. If the problem persists - please contact Kaltura Support.\nClick OK to navigate to the entries view."
-            }
+            "header": "View Disabled",
+            "message": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.",
+            "messageNav": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.\nClick OK to navigate to the main view."
         }
     },
     "applications": {

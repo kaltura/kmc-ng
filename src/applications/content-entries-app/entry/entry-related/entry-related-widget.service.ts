@@ -23,17 +23,14 @@ import { AttachmentAssetDeleteAction } from 'kaltura-ngx-client/api/types/Attach
 import { AttachmentAssetUpdateAction } from 'kaltura-ngx-client/api/types/AttachmentAssetUpdateAction';
 import { AttachmentAssetAddAction } from 'kaltura-ngx-client/api/types/AttachmentAssetAddAction';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-
-
-import { EntryWidgetKeys } from '../entry-widget-keys';
-
-import '@kaltura-ng/kaltura-common/rxjs/add/operators'
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
 import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client/api/types/KalturaAttachmentAssetListResponse';
 import { getKalturaServerUri } from 'config/server';
 import { globalConfig } from 'config/global';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 export interface RelatedFile extends KalturaAttachmentAsset {
   uploading?: boolean,
@@ -65,7 +62,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               private _objectDiffers: KeyValueDiffers,
               private _listDiffers: IterableDiffers,
               private _uploadManagement: UploadManagement) {
-    super(EntryWidgetKeys.Related);
+    super(ContentEntryViewSections.Related);
   }
 
 

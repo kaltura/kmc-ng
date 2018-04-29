@@ -20,6 +20,7 @@ import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/fil
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { globalConfig } from 'config/global';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { AdminRolesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export enum SortDirection {
   Desc = -1,
@@ -47,9 +48,14 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
   constructor(private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              adminRolesMainViewService: AdminRolesMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('RolesStoreService'));
-    this._prepare();
+    if (adminRolesMainViewService.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy() {

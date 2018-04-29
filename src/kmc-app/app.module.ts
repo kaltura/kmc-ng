@@ -74,7 +74,6 @@ import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-creation';
-import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
 import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
@@ -84,7 +83,9 @@ import { getKalturaServerUri } from 'config/server';
 import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
+import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { LoginActionsComponent } from './components/login/login-actions/login-actions.component';
+import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -135,17 +136,18 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     StickyModule.forRoot(),
     OperationTagModule.forRoot(),
     PlaylistCreationModule.forRoot(),
-    CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
     AccessControlProfileModule.forRoot(),
-      KMCPermissionsModule.forRoot(),
+    KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
-    KalturaClientModule.forRoot(kalturaClientOptionsFactory)
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      KmcViewsModule.forRoot(),
   ],
   declarations: <any>[
     AppComponent,
+      AppDefaultViewComponent,
     DashboardComponent,
     AppMenuComponent,
     AppMenuContentComponent,
