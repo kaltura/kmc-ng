@@ -1,7 +1,10 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { kmcAppConfig } from '../../kmc-app-config';
 
-import { AppAuthentication, AppNavigator, BrowserService, ILoginError, ILoginResponse } from 'app-shared/kmc-shell';
+import {
+    AppAuthentication, AppNavigator, AutomaticLoginErrorReasons, BrowserService, ILoginError,
+    ILoginResponse
+} from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
 import { serverConfig } from 'config/server';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
@@ -73,14 +76,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this._errorCode = error.code;
 
     if (error.passwordExpired) {
-      this._username = username;
-      return this._setScreen(LoginScreens.PasswordExpired);
-    }
-
-    if (!error.custom) {
+        this._username = username;
+        return this._setScreen(LoginScreens.PasswordExpired);
+    } else if (error.closedForBeta) {
         this._errorMessage = this._appLocalization.get(error.message);
-    } else if (!this._appAuthentication.hasAccessToBeta) {
-        this._errorMessage = this._appLocalization.get('app.login.error.userForbiddenForBeta');
+    } else if (!error.custom) {
+        this._errorMessage = this._appLocalization.get(error.message);
     } else {
         this._errorMessage = error.message;
     }
@@ -95,8 +96,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this._showLogin = true;
             this._username = this._browserService.getFromLocalStorage('login.username');
-            this._errorMessage = !this._appAuthentication.hasAccessToBeta
-                ? this._appLocalization.get('app.login.error.userForbiddenForBeta')
+            this._errorMessage = this._appAuthentication.automaticLoginErrorReason === AutomaticLoginErrorReasons.closedForBeta ? this._appLocalization.get('app.login.error.userForbiddenForBeta')
                 : null;
         }
     }

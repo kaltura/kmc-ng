@@ -27,7 +27,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
             rawRolePermissionList,
             rawPartnerPermissionList
         }));
-
+        
         const rolePermissionList: Set<KMCPermissions> = new Set();
         const partnerPermissionList: Set<KMCPermissions> = new Set();
         const filteredRolePermissionList: Set<KMCPermissions> = new Set<KMCPermissions>();

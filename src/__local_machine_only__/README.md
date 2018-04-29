@@ -24,57 +24,51 @@ Follow these instructions to test external apps integration:
 
 ```
   "studio": {
-      "enabled": true,
-      "uri": "__local_machine_only__/studio_v2_2_1/index.html",
-      "version": "v2.2.1",
-      "html5_version":"v2.57.2",
-      "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
-    },
-    "studioV3": {
-      "enabled": true,
-      "uri": "__local_machine_only__/studio_v3_1_1/index.html",
-      "version": "v3.1.1",
-      "html5_version":"v2.67",
-      "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.67/mwEmbedLoader.php"
-    },
-    "liveDashboard": {
-      "enabled": true,
-      "uri": "__local_machine_only__/live-dashboard_v1_4_1/index.html",
-      "version": "v1.4.1"
-    },
-    "kava": {
-      "enabled": false,
-      "version": "",
-      "uri": ""
-    },
-     "liveAnalytics": {
-        "enabled": true,
-        "uri": "__local_machine_only__/live-analytics-vFuture/index.html",
-        "uiConfId": 36060752,
-        "version": "future_version_above_v2_6"
-    },
-    "usageDashboard": {
-      "enabled": true,
-      "version": "v0.11.2",
-      "uri": "__local_machine_only__/usage-dashboard-v0_11_2/index.html",
-      "uiConfId": 36060752,
-      "map_urls": [
-        "cf1.kaltura.com/content/static/maps/v1",
-        "cf2.kaltura.com/content/static/maps/v1",
-        "cf3.kaltura.com/content/static/maps/v1"
-      ],
-      "map_zoom_levels": "12"
-    },
-    "clipAndTrim": {
-      "enabled": true,
-      "uri": "__local_machine_only__/kedit-vFuture/index.html",
-      "uiConfId": "36060752",
-      "version": "future version above v2.22.3"
-    },
-    "advertisements": {
-      "enabled": true,
-      "uri": "__local_machine_only__/kedit-vFuture/index.html",
-      "uiConfId": "36060752",
-      "version": "future version above v2.22.3"
-    }
+            "enabled": true,
+            "uri": "/__local_machine_only__/studio_v2_2_1/index.html",
+            "html5_version":"v2.57.2",
+            "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
+        },
+        "studioV3": {
+            "enabled": true,
+            "uri": "/__local_machine_only__/studio_v3_1_1/index.html",
+            "html5_version":"v2.67",
+            "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.67/mwEmbedLoader.php"
+        },
+        "liveDashboard": {
+            "enabled": true,
+            "uri": "/__local_machine_only__/live-dashboard_v1_4_1/index.html"
+        },
+        "kava": {
+            "enabled": false,
+            "uri": ""
+        },
+        "liveAnalytics": {
+            "enabled": true,
+            "uri": "/__local_machine_only__/live-analytics-vFuture/index.html",
+            "uiConfId": 36060752
+        },
+        "usageDashboard": {
+            "enabled": true,
+            "uri": "/__local_machine_only__/usage-dashboard-v0_11_2/index.html",
+            "uiConfId": 36060752,
+            "map_urls": [
+                "cf1.kaltura.com/content/static/maps/v1",
+                "cf2.kaltura.com/content/static/maps/v1",
+                "cf3.kaltura.com/content/static/maps/v1"
+            ],
+            "map_zoom_levels": "12"
+        },
+        "clipAndTrim": {
+            "enabled": true,
+            "uri": "/__local_machine_only__/kedit-vFuture/index.html"
+        },
+        "advertisements": {
+            "enabled": true,
+            "uri": "/__local_machine_only__/kedit-vFuture/index.html"
+        }
 ```
+
+#### External application supported versions
+
+For extrenal application supported versions, please see the general [README.md](../../README.md) file 

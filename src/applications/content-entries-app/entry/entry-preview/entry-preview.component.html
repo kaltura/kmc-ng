@@ -16,6 +16,6 @@
 
 <kPopupWidget #clipAndTrim [fullScreen]="true">
   <ng-template>
-    <kClipAndTrim [entryId]="_widgetService.data.id" [parentPopupWidget]="clipAndTrim"></kClipAndTrim>
+    <kClipAndTrim [entry]="_widgetService.data" [parentPopupWidget]="clipAndTrim"></kClipAndTrim>
   </ng-template>
 </kPopupWidget>

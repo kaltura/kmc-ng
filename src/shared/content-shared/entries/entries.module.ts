@@ -42,6 +42,7 @@ import {LiveDashboardHostComponent} from 'app-shared/content-shared/entries/live
 import { LinkedEntriesTableComponent } from './link-entries-selector/linked-entries-table/linked-entries-table.component';
 import { LinkedEntriesAddEntriesComponent } from './link-entries-selector/linked-entries-add-entries/linked-entries-add-entries.component';
 import {LinkedEntriesComponent} from './link-entries-selector/linked-entries/linked-entries.component';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -70,7 +71,8 @@ import {LinkedEntriesComponent} from './link-entries-selector/linked-entries/lin
     InputTextModule,
     StickyModule,
     FiltersModule,
-    CategoriesModule
+    CategoriesModule,
+    KMCPermissionsModule
   ],
   declarations: [
     EntryStatusPipe,
