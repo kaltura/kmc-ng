@@ -13,9 +13,9 @@ import {UploadManagement} from '@kaltura-ng/kaltura-common/upload-management/upl
 import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {serverConfig} from "config/server";
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
+import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -54,7 +54,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       label: this._appLocalization.get('applications.content.table.liveDashboard'),
       commandName: 'liveDashboard',
       styleClass: '',
-      disabled: !serverConfig.externalApps.liveDashboard.enabled
+      disabled: !this._liveDashboardAppViewService.isAvailable()
     },
     {
       label: this._appLocalization.get('applications.content.table.delete'),
@@ -72,7 +72,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _uploadManagement: UploadManagement,
               private _permissionsService: KMCPermissionsService,
               public _entriesStore: EntriesStore,
-              private _contentEntriesAppService: ContentEntriesAppService) {
+              private _contentEntriesAppService: ContentEntriesAppService,
+              private _liveDashboardAppViewService: LiveDashboardAppViewService) {
   }
 
   ngOnInit() {

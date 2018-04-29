@@ -12,6 +12,7 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @Injectable()
 export class EntryPreviewWidget extends EntryWidget implements OnDestroy
@@ -23,7 +24,8 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
     constructor( private appAuthentication: AppAuthentication,private _permissionsService: KMCPermissionsService,
                 kalturaServerClient: KalturaClient, appEvents: AppEventsService,
                 private _store: EntryStore,
-                private _logger: KalturaLogger) {
+                private _logger: KalturaLogger,
+                 private _clipAndTrimAppViewService: ClipAndTrimAppViewService) {
         super('entryPreview');
 
 
@@ -93,7 +95,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
 	    this._iframeSrc = this._createUrl();
 
         const entry: KalturaMediaEntry = this.data ? this.data as KalturaMediaEntry : null;
-        this.clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled &&
+        this.clipAndTrimEnabled = this._clipAndTrimAppViewService.isAvailable() &&
             entry && !this._isLiveMediaEntry(entry.mediaType) && entry.mediaType !== KalturaMediaType.image && entry.status === KalturaEntryStatus.ready;
 
 

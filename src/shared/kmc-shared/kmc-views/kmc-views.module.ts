@@ -1,33 +1,40 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
+import { KmcMainViewsService } from './kmc-main-views.service';
 import {
+    AdminRolesMainViewService,
+    AdminUsersMainViewService,
+    ContentBulkUploadsMainViewService,
     ContentCategoriesMainViewService,
+    ContentDropFoldersMainViewService,
     ContentEntriesMainViewService,
     ContentModerationMainViewService,
     ContentPlaylistsMainViewService,
     ContentSyndicationMainViewService,
     ContentUploadsMainViewService,
-    ContentBulkUploadsMainViewService,
-    ContentDropFoldersMainViewService,
-    StudioMainViewService,
-    UsageDashboardMainViewService,
     LiveAnalyticsMainViewService,
-    AdminUsersMainViewService,
-    AdminRolesMainViewService,
+    SettingsAccessControlMainViewService,
+    SettingsAccountInformationMainViewService,
     SettingsAccountSettingsMainViewService,
     SettingsIntegrationSettingsMainViewService,
-    SettingsAccessControlMainViewService,
-    SettingsTranscodingMainViewService,
     SettingsMetadataMainViewService,
     SettingsMyUserSettingsMainViewService,
-    SettingsAccountInformationMainViewService
+    SettingsTranscodingMainViewService,
+    StudioMainViewService,
+    UsageDashboardMainViewService
 } from './main-views';
 import {
-    ContentCategoryViewService, ContentPlaylistViewService
-} from 'app-shared/kmc-shared/kmc-views/details-views';
-import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
-import { SettingsTranscodingProfileViewService } from 'app-shared/kmc-shared/kmc-views/details-views/settings-transcoding-profile-view.service';
-import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
-import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
+    ContentCategoryViewService,
+    ContentEntryViewService,
+    ContentNewCategoryViewService,
+    ContentPlaylistViewService,
+    SettingsTranscodingProfileViewService
+} from './details-views';
+import {
+    AdvertisementsAppViewService,
+    ClipAndTrimAppViewService,
+    KavaAppViewService,
+    LiveDashboardAppViewService
+} from './component-views';
 
 @NgModule({
     imports: <any[]>[],
@@ -66,6 +73,10 @@ export class KmcViewsModule {
                 SettingsTranscodingProfileViewService,
                 ContentEntryViewService,
                 ContentNewCategoryViewService,
+                LiveDashboardAppViewService,
+                KavaAppViewService,
+                ClipAndTrimAppViewService,
+                AdvertisementsAppViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };
