@@ -62,7 +62,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     ngOnInit() {
     }
-    
+
     setSelectedRoute(path) {
         if (this.menuConfig) {
             this.selectedMenuItem = this.menuConfig.find(item => item.isActiveView(path));
@@ -99,10 +99,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     navigate(path):void{
         this.router.navigate([path]);
-    }
-
-    logout() {
-        this.userAuthentication.logout();
     }
 
     ngOnDestroy() {

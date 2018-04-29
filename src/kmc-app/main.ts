@@ -23,7 +23,7 @@ initializeConfiguration()
                 if (errorElement) {
                     errorElement.style.display = 'block';
                 }
-            }catch(innerError) {
+            } catch(innerError) {
             }
 
             console.error(error);
