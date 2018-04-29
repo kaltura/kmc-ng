@@ -185,6 +185,10 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             case ContentEntryViewSections.Distribution:
                 result = !this._isLiveMediaEntry(entry.mediaType) && mediaType !== KalturaMediaType.audio && mediaType !== KalturaMediaType.image;
                 break;
+            case ContentEntryViewSections.AccessControl:
+            case ContentEntryViewSections.Scheduling:
+            case ContentEntryViewSections.Related:
+            case ContentEntryViewSections.Users:
             case ContentEntryViewSections.Metadata:
                 result = true;
                 break;
