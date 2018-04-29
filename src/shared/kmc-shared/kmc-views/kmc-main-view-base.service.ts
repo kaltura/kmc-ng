@@ -47,15 +47,16 @@ export abstract class KmcMainViewBaseService {
             if (this.isAvailable()) {
                 this._open().subscribe(
                     result => {
-                        if (!result) {
-                            this._logger.info('open view operation failed');
+                        const openState = result === null ? true : result; // treat navigation to save route as successful operation
+                        if (!openState) {
+                            this._logger.info('handle open view operation failure');
                             this._browserService.handleUnpermittedAction(false);
                         }
 
-                        observer.next({opened: result});
+                        observer.next({opened: openState});
                         observer.complete();
                     }, error => {
-                        this._logger.info('open view operation failed', { errorMessage: error ? error.message : '' });
+                        this._logger.info('handle open view operation failure', { errorMessage: error ? error.message : '' });
                         this._browserService.handleUnpermittedAction(false);
                         observer.next({opened: false});
                         observer.complete();
