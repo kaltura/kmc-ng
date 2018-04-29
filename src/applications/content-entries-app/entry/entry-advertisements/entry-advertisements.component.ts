@@ -12,7 +12,6 @@ import { AdvertisementsAppViewService } from 'app-shared/kmc-shared/kmc-views/co
 export class EntryAdvertisementsComponent implements OnInit, OnDestroy {
 
     public _advertisementsEnabled = false;
-    public _advertisementsDisabledReason: string = null;
 
     constructor(public _widgetService: EntryAdvertisementsWidget,
                 private _advertisementsAppViewService: AdvertisementsAppViewService,
