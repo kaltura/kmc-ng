@@ -226,7 +226,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
           .cancelOnDestroy(this)
           .subscribe(() => {
               this._isBusy = false;
-              
+              // no needed to close the popup. if navigating it will be closed anyway and if not we want it to stay open
           });
   }
 
