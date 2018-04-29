@@ -40,7 +40,7 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
             }
         );
 
-        const availableByConfiguration = this._isAvailableByConfiguration();
+        const availableByConfiguration = serverConfig.externalApps.advertisements.enabled;
         const availableByPermissions = this._isAvailableByPermission();
         const availableByData = this._isAvailableByData(args.entry);
         const result = availableByConfiguration && availableByData && availableByPermissions;
@@ -48,7 +48,6 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
             result,
             validByPermissions: availableByPermissions,
             validByData: availableByData,
-            validByConfiguration: availableByConfiguration
         });
         return result;
     }
@@ -61,14 +60,7 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
         ]);
     }
 
-    private _isAvailableByConfiguration(): boolean {
-        if (serverConfig.externalApps.advertisements.enabled) {
-            return !!serverConfig.externalApps.advertisements.uri &&
-                !serverConfig.externalApps.advertisements.uri.match(/\s/g); // not contains white spaces
-        }
 
-        return false;
-    }
 
     private _isAvailableByData(entry: KalturaMediaEntry): boolean {
         const entryReady = entry.status === KalturaEntryStatus.ready;

@@ -40,7 +40,7 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
             }
         );
 
-        const availableByConfiguration = this._isAvailableByConfiguration();
+        const availableByConfiguration = serverConfig.externalApps.clipAndTrim.enabled;
         const availableByPermissions = this._isAvailableByPermission();
         const availableByData = this._isAvailableByData(args.entry);
         const result = availableByConfiguration && availableByData && availableByPermissions;
@@ -58,15 +58,6 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
             KMCPermissions.CONTENT_INGEST_CLIP_MEDIA,
             KMCPermissions.CONTENT_INGEST_INTO_READY
         ]);
-    }
-
-    private _isAvailableByConfiguration(): boolean {
-        if (serverConfig.externalApps.clipAndTrim.enabled) {
-            return !!serverConfig.externalApps.clipAndTrim.uri &&
-                !serverConfig.externalApps.clipAndTrim.uri.match(/\s/g); // not contains white spaces
-        }
-
-        return false;
     }
 
     private _isAvailableByData(entry: KalturaMediaEntry): boolean {

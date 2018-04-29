@@ -1,10 +1,7 @@
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/delay';
-import {globalConfig} from './global-config';
-import {Observable} from 'rxjs/Observable';
-import {environment} from 'environments/environment';
-import * as Ajv from 'ajv';
-import { ServerConfigSchema } from './server-config-schema';
+import { ExternalAppsAdapter } from './server-config-utils';
+import { globalConfig } from 'config/global';
 
 /*************************************
  * Developer Notice:
@@ -19,6 +16,51 @@ import { ServerConfigSchema } from './server-config-schema';
  * - for new external apps you should also update the zip file 'samples-for-tests-only.zip'
  *************************************/
 
+export interface ExternalApplications {
+    studio: {
+        enabled: boolean,
+        uri: string,
+        html5_version: string,
+        html5lib: string,
+        showFlashStudio: boolean
+    };
+    studioV3: {
+        enabled: boolean,
+        uri: string,
+        html5_version: string,
+        html5lib: string,
+        showFlashStudio: boolean
+    };
+    liveDashboard: {
+        enabled: boolean,
+        uri: string,
+    };
+    kava: {
+        enabled: boolean,
+        uri: string
+    };
+    usageDashboard: {
+        enabled: boolean,
+        uri: string,
+        uiConfId: number,
+        map_urls: string[],
+        map_zoom_levels: string,
+    };
+    liveAnalytics: {
+        enabled: boolean,
+        uiConfId: number,
+        uri: string
+    };
+    clipAndTrim: {
+        enabled: boolean,
+        uri: string
+    };
+    advertisements: {
+        enabled: boolean,
+        uri: string
+    };
+}
+
 export interface ServerConfig {
     kalturaServer: {
         uri: string,
@@ -32,50 +74,7 @@ export interface ServerConfig {
         serverUri: string,
         securedServerUri: string
     };
-    externalApps: {
-        studio: {
-            enabled: boolean,
-            uri: string,
-            html5_version: string,
-            html5lib: string,
-            showFlashStudio: boolean
-        },
-        studioV3: {
-            enabled: boolean,
-            uri: string,
-            html5_version: string,
-            html5lib: string,
-            showFlashStudio: boolean
-        },
-        liveDashboard: {
-            enabled: boolean,
-            uri: string,
-        },
-        kava: {
-            enabled: boolean,
-            uri: string
-        },
-        usageDashboard: {
-            enabled: boolean,
-            uri: string,
-            uiConfId: number,
-            map_urls: string[],
-            map_zoom_levels: string,
-        },
-        liveAnalytics: {
-            enabled: boolean,
-            uiConfId: number,
-            uri: string
-        },
-        clipAndTrim: {
-          enabled: boolean,
-          uri: string
-        },
-        advertisements: {
-          enabled: boolean,
-          uri: string
-        }
-    };
+    externalApps: ExternalApplications;
     externalLinks: {
         previewAndEmbed: {
             embedTypes: string,
@@ -105,7 +104,146 @@ export interface ServerConfig {
     };
 }
 
-export const serverConfig: ServerConfig = <any>{};
+function buildExternalApplicationUri(externalApplicationUrlSuffix: string): string {
+    let result = '';
+    try {
+        const port = (window.location.port) ? ':' + window.location.port : '';
+        const base_host = window.location.hostname + port;
+        const base_url = window.location.protocol + '//' + base_host;
+        return `${base_url}${externalApplicationUrlSuffix}`;
+    } catch (e) {
+        result = '';
+    }
+
+    return result;
+}
+
+export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalApplications> = {
+    advertisements: (configuration) => {
+        {
+            let result = false;
+
+            if (configuration.enabled) {
+
+                result = !!configuration.uri &&
+                    !configuration.uri.match(/\s/g); // not contains white spaces
+                if (result) {
+                    configuration.uri = buildExternalApplicationUri(configuration.uri);
+                }
+            }
+
+            return result;
+        }
+    },
+    studio: (configuration) => {
+        let result = false;
+        if (configuration.enabled) {
+            result =  !!configuration.uri &&
+                !configuration.uri.match(/\s/g) && // not contains white spaces
+                !!configuration.html5_version &&
+                !!configuration.html5lib;
+
+            if (result) {
+                configuration.uri = buildExternalApplicationUri(configuration.uri);
+            }
+        }
+
+        return result;
+    },
+    studioV3: (configuration) => {
+        let result = false;
+
+        if (configuration.enabled) {
+            result = !!configuration.uri &&
+                !configuration.uri.match(/\s/g) && // not contains white spaces
+                !!configuration.html5_version &&
+                !!configuration.html5lib;
+
+            if (result) {
+                configuration.uri = buildExternalApplicationUri(configuration.uri);
+            }
+        }
+
+        return result;
+    },
+    liveDashboard: (configuration) => {
+        let result = false;
+
+        if (configuration.enabled) {
+            result = !!configuration.uri &&
+                !configuration.uri.match(/\s/g); // not contains white spaces
+
+            if (result) {
+                configuration.uri = buildExternalApplicationUri(configuration.uri);
+            }
+        }
+
+        return result;
+    },
+    kava: (configuration) => {
+        let result = false;
+
+        if (configuration.enabled) {
+            result = !!configuration.uri &&
+                !configuration.uri.match(/\s/g); // not contains white spaces
+
+            if (result) {
+                configuration.uri = buildExternalApplicationUri(configuration.uri);
+            }
+        }
+
+        return result;
+    },
+    usageDashboard: (configuration) => {
+        let result = false;
+
+        if (configuration.enabled) {
+            result = !!configuration.uri &&
+                !configuration.uri.match(/\s/g) && // not contains white spaces
+                typeof (configuration.uiConfId) !== 'undefined' &&
+                configuration.uiConfId !== null &&
+                configuration.map_urls &&
+                configuration.map_urls.length &&
+                configuration.map_urls.indexOf('') === -1 && // no empty url
+                !!configuration.map_zoom_levels;
+
+            if (result) {
+                configuration.uri = buildExternalApplicationUri(configuration.uri);
+            }
+        }
+
+        return result;
+    },
+    liveAnalytics: (configuration) => {
+        let result = false;
+
+        if (configuration.enabled) {
+            result = !!configuration.uri &&
+                !configuration.uri.match(/\s/g) && // not contains white spaces
+                !!configuration.uiConfId;
+
+            if (result) {
+                configuration.uri = buildExternalApplicationUri(configuration.uri);
+            }
+        }
+
+        return result;
+    },
+    clipAndTrim: (configuration) => {
+        let result = false;
+
+        if (configuration.enabled) {
+            result = !!configuration.uri &&
+                !configuration.uri.match(/\s/g); // not contains white spaces
+
+            if (result) {
+                configuration.uri = buildExternalApplicationUri(configuration.uri);
+            }
+        }
+
+        return result;
+    }
+};
 
 export function getKalturaServerUri(suffix: string = ''): string {
     if (serverConfig.kalturaServer) {
@@ -117,88 +255,4 @@ export function getKalturaServerUri(suffix: string = ''): string {
     }
 }
 
-
-function validateSeverConfig(data: ServerConfig): { isValid: boolean, error?: string } {
-    const ajv = new Ajv({allErrors: true, verbose: true});
-    const validate = ajv.compile(ServerConfigSchema);
-    const isValid = !!validate(data);
-    let error = null;
-
-    if (!isValid) {
-        error = ajv.errorsText(validate.errors);
-    }
-
-    return { isValid, error };
-}
-
-
-function getConfiguration(): Observable<ServerConfig> {
-    if (window && (<any>window).kmcConfig) {
-        return Observable.of((<any>window).kmcConfig);
-    }
-
-    return Observable.create(observer =>
-    {
-        let completed = false;
-        const xhr = new XMLHttpRequest();
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                let resp;
-
-                completed = true;
-
-                try {
-                    if (xhr.status === 200) {
-                        resp = JSON.parse(xhr.response);
-                    } else {
-                        if (globalConfig.client.production) {
-                            resp = new Error('failed to load configuration file from server with error ' + xhr.statusText);
-                        }else {
-                            resp = new Error('failed to load configuration file from server with error ' + xhr.statusText + ' (did you remember to create a configuration file from the provided template in the app folder?)');
-                        }
-
-                    }
-                } catch (e) {
-                    resp = e;
-                }
-
-                if (resp instanceof Error) {
-                    observer.error(resp);
-                } else {
-                    observer.next(resp);
-                    observer.complete();
-                }
-            }
-        };
-
-        xhr.open('Get', `${environment.configurationUri}?v=${globalConfig.client.appVersion}`);
-
-        xhr.send();
-
-        return () =>
-        {
-            if (!completed) {
-                console.warn('request to get application configuration was aborted');
-                xhr.abort();
-            }
-        }
-    });
-}
-
-export function initializeConfiguration(): Observable<void> {
-
-    return getConfiguration()
-        .takeUntil(Observable.of(true).delay(environment.configurationTimeout))
-        .do(response => {
-            const validationResult = validateSeverConfig(response);
-            if (validationResult.isValid) {
-                Object.assign(serverConfig, response);
-            } else {
-                throw Error(validationResult.error || 'Invalid server configuration');
-            }
-        })
-        .map(() => {
-            return undefined;
-        });
-}
+export const serverConfig: ServerConfig = <any>{};

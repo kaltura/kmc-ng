@@ -21,26 +21,8 @@ export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return this._isLiveAnalyticsAppValid() && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE) && this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM);
+        return serverConfig.externalApps.liveAnalytics.enabled && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE) && this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM);
     }
-
-    private _isLiveAnalyticsAppValid(): boolean {
-        let isValid = false;
-        if (serverConfig.externalApps.liveAnalytics.enabled) {
-            isValid =
-                !!serverConfig.externalApps.liveAnalytics.uri &&
-                !serverConfig.externalApps.liveAnalytics.uri.match(/\s/g) && // not contains white spaces
-                !!serverConfig.externalApps.liveAnalytics.uiConfId;
-
-            if (!isValid) {
-                this._logger.debug(`Disabling Live Analytics standalone application - configuration is invalid`, {uri: serverConfig.externalApps.liveAnalytics.uri, uiconfID: serverConfig.externalApps.liveAnalytics.uiConfId});
-            }
-        }else{
-            this._logger.debug(`Disabling Live Analytics standalone application - Live Analytics is disabled`);
-        }
-        return isValid;
-    }
-
 
     getRoutePath(): string {
         return 'analytics/liveAnalytics';

@@ -21,27 +21,6 @@ export class LiveDashboardAppViewService extends KmcComponentViewBaseService<voi
     }
 
     isAvailable(): boolean {
-        this._logger.info(
-            `handle isAvailable action for liveDashboard app`,
-            {
-                liveDashboardConfig: {
-                    enabled: serverConfig.externalApps.liveDashboard.enabled,
-                    uri: serverConfig.externalApps.liveDashboard.uri
-                }
-            }
-        );
-        let isValid = false;
-        if (serverConfig.externalApps.liveDashboard.enabled) {
-            isValid =
-                !!serverConfig.externalApps.liveDashboard.uri &&
-                !serverConfig.externalApps.liveDashboard.uri.match(/\s/g); // not contains white spaces
-            if (!isValid) {
-                this._logger.warn('Disabling Live Dashboard standalone application - configuration is invalid');
-            }
-        }
-
-        this._logger.info(`availability result`, { isAvailable: isValid });
-
-        return isValid;
+        return serverConfig.externalApps.liveDashboard.enabled;
     }
 }
