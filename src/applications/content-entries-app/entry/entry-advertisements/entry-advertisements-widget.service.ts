@@ -4,19 +4,20 @@ import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/detail
 
 @Injectable()
 export class EntryAdvertisementsWidget extends EntryWidget implements OnDestroy {
-  constructor() {
-    super(ContentEntryViewSections.Advertisements);
-  }
 
-  /**
-   * Do some cleanups if needed once the section is removed
-   */
-  protected onReset() {
-  }
+    constructor() {
+        super(ContentEntryViewSections.Advertisements);
+    }
 
-  ngOnDestroy() {
-  }
+    /**
+     * Do some cleanups if needed once the section is removed
+     */
+    protected onReset() {
+    }
 
-  protected onActivate(firstTimeActivating: boolean) {
-  }
+    ngOnDestroy() {
+    }
+
+    protected onActivate(firstTimeActivating: boolean) {
+    }
 }

@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {EntryAdvertisementsWidget} from './entry-advertisements-widget.service';
 import { AdvertisementsAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
-
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
     selector: 'kEntryAdvertisements',
@@ -16,14 +16,20 @@ export class EntryAdvertisementsComponent implements OnInit, OnDestroy {
     constructor(public _widgetService: EntryAdvertisementsWidget,
                 private _advertisementsAppViewService: AdvertisementsAppViewService,
                 logger: KalturaLogger) {
-      this._advertisementsEnabled = this._advertisementsAppViewService.isAvailable();
-      if (!this._advertisementsEnabled) {
-        logger.warn('Advertisements (kedit) is not enabled, please check configuration');
-      }
     }
 
     ngOnInit() {
         this._widgetService.attachForm();
+
+        this._widgetService.data$
+            .cancelOnDestroy(this)
+            .subscribe(
+            data => {
+                if (data) {
+                    this._advertisementsEnabled = this._advertisementsAppViewService.isAvailable({ entry: data });
+                }
+            }
+        );
     }
 
     ngOnDestroy() {
