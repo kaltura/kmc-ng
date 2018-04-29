@@ -226,7 +226,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
           .cancelOnDestroy(this)
           .subscribe(() => {
               this._isBusy = false;
-              this.parentPopupWidget.close();
+              
           });
   }
 
