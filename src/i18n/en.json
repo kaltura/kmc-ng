@@ -1,539 +1,540 @@
 {
-  "app": {
-    "menu": {
-      "upload": "Create",
-      "Content": "Content",
-      "Entries": "Entries",
-      "Moderation": "Moderation",
-      "Playlists": "Playlists",
-      "Syndication": "Syndication",
-      "Categories": "Categories",
-      "Studio": "Studio",
-      "Analytics": "Analytics",
-      "Kava": "Kava",
-      "Live Analytics": "Live Real-Time Dashboard",
-      "Usage Dashboard": "Usage Dashboard",
-      "Administration": "Administration",
-      "Settings": "Settings",
-      "Users": "Users",
-      "Account Settings": "Account Settings",
-      "Integration Settings": "Integration Settings",
-      "Account Information": "Account Information",
-      "My User Settings": "My User Settings",
-      "Roles": "Roles",
-      "UploadControl": "Upload Control",
-      "BulkUpload": "Bulk Upload",
-      "DropFolders": "Drop Folders",
-      "UploadMonitor": "Upload Monitor",
-      "CustomData": "Custom Data",
-      "AccessControl": "Access Control",
-      "Transcoding settings": "Transcoding Settings"
-    },
-    "userSettings": {
-      "changeAccount": "Change Account",
-      "logout": "Logout"
-    },
-    "changeAccount": {
-      "title": "Change Account",
-      "choose": "Choose a different partner:",
-      "continue": "Continue",
-      "errors": {
-        "loadPartners": "An error occurred while loading accounts."
-      }
-    },
-    "helpMenu": {
-      "gettingStarted": "Getting Started",
-      "kmcOverview": "KMC Overview",
-      "mediaManagement": "Media Management & Workflow",
-      "productTour": "Watch the Product Tour",
-      "support": "Help and Support",
-      "userManual": "Download User Manual",
-      "contact": "Contact Support",
-      "currentPage": "Current Page",
-      "changelog": "Changelog"
-    },
-    "languageMenu": {
-      "selectLang": "Select Language"
-    },
-    "common": {
-      "n_a": "N/A",
-      "copyToClipboard": "Copy to clipboard",
-      "copySuccess": "Copied to clipboard",
-      "copyFailure": "Copy operation failed",
-      "on": "On",
-      "off": "Off",
-      "ok": "OK",
-      "cancel": "Cancel",
-      "retry": "Retry",
-      "dismiss": "Dismiss",
-      "reload": "Reload",
-      "confirm": "Confirm",
-      "close": "Close",
-      "note": "Note:",
-      "attention": "Attention",
-      "yes": "Yes",
-      "no": "No",
-      "apply": "Apply",
-      "done": "Done",
-      "save": "Save",
-      "error": "Error",
-      "connectionError": "Error connecting to server",
-    "error": "Error"
+    "app": {
+        "menu": {
+            "upload": "Create",
+            "Content": "Content",
+            "Entries": "Entries",
+            "Moderation": "Moderation",
+            "Playlists": "Playlists",
+            "Syndication": "Syndication",
+            "Categories": "Categories",
+            "Studio": "Studio",
+            "Analytics": "Analytics",
+            "Kava": "Kava",
+            "Live Analytics": "Live Real-Time Dashboard",
+            "Usage Dashboard": "Usage Dashboard",
+            "Administration": "Administration",
+            "Settings": "Settings",
+            "Users": "Users",
+            "Account Settings": "Account Settings",
+            "Integration Settings": "Integration Settings",
+            "Account Information": "Account Information",
+            "My User Settings": "My User Settings",
+            "Roles": "Roles",
+            "UploadControl": "Upload Control",
+            "BulkUpload": "Bulk Upload",
+            "DropFolders": "Drop Folders",
+            "UploadMonitor": "Upload Monitor",
+            "CustomData": "Custom Data",
+            "AccessControl": "Access Control",
+            "Transcoding settings": "Transcoding Settings"
+        },
+        "userSettings": {
+            "changeAccount": "Change Account",
+            "logout": "Logout"
+        },
+        "changeAccount": {
+            "title": "Change Account",
+            "choose": "Choose a different partner:",
+            "continue": "Continue",
+            "errors": {
+                "loadPartners": "An error occurred while loading accounts."
+            }
+        },
+        "helpMenu": {
+            "gettingStarted": "Getting Started",
+            "kmcOverview": "KMC Overview",
+            "mediaManagement": "Media Management & Workflow",
+            "productTour": "Watch the Product Tour",
+            "support": "Help and Support",
+            "userManual": "Download User Manual",
+            "contact": "Contact Support",
+            "currentPage": "Current Page",
+            "changelog": "Changelog"
+        },
+        "languageMenu": {
+            "selectLang": "Select Language"
+        },
+        "common": {
+            "n_a": "N/A",
+            "copyToClipboard": "Copy to clipboard",
+            "copySuccess": "Copied to clipboard",
+            "copyFailure": "Copy operation failed",
+            "on": "On",
+            "off": "Off",
+            "ok": "OK",
+            "cancel": "Cancel",
+            "retry": "Retry",
+            "dismiss": "Dismiss",
+            "reload": "Reload",
+            "confirm": "Confirm",
+            "close": "Close",
+            "note": "Note:",
+            "attention": "Attention",
+            "yes": "Yes",
+            "no": "No",
+            "apply": "Apply",
+            "done": "Done",
+            "save": "Save",
+            "error": "Error",
+            "connectionError": "Error connecting to server",
+            "error": "Error"
         },
         "redirect":{
             "redirect1": "Redirecting to default view...",
             "redirect2": "If you are not redirected in few seconds, click ",
-            "redirect3": "here"},
-    "login": {
-      "login": {
-        "title": "Login",
-        "forgotPassword": "Forgot Password?",
-        "placeholder": {
-          "username": "Enter Email",
-          "password": "Enter Password"
+            "redirect3": "here"
         },
-        "browserVer1": "Browser version not supported",
-        "browserVer2": "Please use Internet Explorer version 11 or above"
-      },
-      "invalidLoginHash": {
-        "title": "Invalid Login Link",
-        "placeholder": "Enter Email",
-        "instructions": "This link is invalid or has expired. Please enter your email address to receive a new link",
-        "sent": {
-          "instructions": "An Email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
-        }
-      },
-      "forgotPassword": {
-        "title": "Forgot Password",
-        "placeholder": "Your Email",
-        "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please ",
-        "contactUs": "contact us.",
-        "sent": {
-          "emailSent": "An Email has been sent to your inbox!",
-          "instructions": "If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
-          "redirectTo": "Redirect to",
-          "login": "login"
-        }
-      },
-      "passwordExpired": {
-        "title": "Your password is older than 90 days. To continue using the system you need to change your password now.",
-        "error": {
-          "equal": "Passwords do not match",
-          "required": "Field is required"
+        "login": {
+            "login": {
+                "title": "Login",
+                "forgotPassword": "Forgot Password?",
+                "placeholder": {
+                    "username": "Enter Email",
+                    "password": "Enter Password"
+                },
+                "browserVer1": "Browser version not supported",
+                "browserVer2": "Please use Internet Explorer version 11 or above"
+            },
+            "invalidLoginHash": {
+                "title": "Invalid Login Link",
+                "placeholder": "Enter Email",
+                "instructions": "This link is invalid or has expired. Please enter your email address to receive a new link",
+                "sent": {
+                    "instructions": "An Email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
+                }
+            },
+            "forgotPassword": {
+                "title": "Forgot Password",
+                "placeholder": "Your Email",
+                "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please ",
+                "contactUs": "contact us.",
+                "sent": {
+                    "emailSent": "An Email has been sent to your inbox!",
+                    "instructions": "If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
+                    "redirectTo": "Redirect to",
+                    "login": "login"
+                }
+            },
+            "passwordExpired": {
+                "title": "Your password is older than 90 days. To continue using the system you need to change your password now.",
+                "error": {
+                    "equal": "Passwords do not match",
+                    "required": "Field is required"
+                },
+                "placeholder": {
+                    "current": "Enter your password",
+                    "new": "Enter new password",
+                    "confirm": "Confirm new password"
+                }
+            },
+            "error": {
+                "email": "Incorrect Email format",
+                "badCredentials": "The username or password you entered is incorrect.",
+                "retriesExceeded": "Your account has been locked and will not be available for 24 hours. Contact Kaltura Support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
+                "userNotFound": "The username or password you entered is incorrect.",
+                "invalidStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules:\n- Must be of length between 8 and 14.\n- Must not contain your name.\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}.\n- Must not contain the following characters: < or >",
+                "alreadyUsed": "Invalid Password. <br> This password has been used in the past. Please select a new password.",
+                "loginBlocked": "Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura Support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
+                "newPasswordHashKeyInvalid": "This link is not valid.",
+                "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
+                "wrongOldPassword": "Old password is incorret.",
+                "invalidField": "Value in field {{value}} is not valid.",
+                "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon."
+            },
+            "send": "Send",
+            "wait": "Wait…",
+            "signUp": "Sign Up",
+            "rememberMe": "Remember me",
+            "dontHaveAccount": "Don't have an account?"
         },
-        "placeholder": {
-          "current": "Enter your password",
-          "new": "Enter new password",
-          "confirm": "Confirm new password"
-        }
-      },
-      "error": {
-        "email": "Incorrect Email format",
-        "badCredentials": "The username or password you  entered is incorrect.",
-        "retriesExceeded": "Your account has been locked and will not be available for 24 hours. Contact Kaltura Support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
-        "userNotFound": "The username or password you  entered is incorrect.",
-        "invalidStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules:\n- Must be of length between 8 and 14.\n- Must not contain your name.\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}.\n- Must not contain the following characters: < or >",
-        "alreadyUsed": "Invalid Password. <br> This password has been used in the past. Please select a new password.",
-        "loginBlocked": "Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura Support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
-        "newPasswordHashKeyInvalid": "This link is not valid.",
-        "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
-        "wrongOldPassword": "Old password is incorret.",
-        "invalidField": "Value in field {{value}} is not valid.",
-      "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon."},
-      "send": "Send",
-      "wait": "Wait…",
-      "signUp": "Sign Up",
-      "rememberMe": "Remember me",
-      "dontHaveAccount": "Don't have an account?"
-    },
-    "changelog": {
-      "header": "Change Log"
-    },
-    "pageExitVerification": {
-      "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
-    },
-    "UnpermittedActionReasons": {
-      "header": "View Disabled",
-        "message": "This view cannot be loaded. \nIf the problem persists - contact Kaltura support.",
+        "changelog": {
+            "header": "Change Log"
+        },
+        "pageExitVerification": {
+            "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
+        },
+        "UnpermittedActionReasons": {
+            "header": "View Disabled",
+            "message": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.",
             "messageNav": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.\nClick OK to navigate to the main view."
-      }
-    },
-
-  "applications": {
-    "embed":{
-      "previewShare": "Share & Embed",
-      "previewInPlayer": "Preview in Player",
-      "embedType": "Embed Type",
-      "selectPlayer": "Select Player",
-      "embedIframe": "IFrame Embed",
-      "embedDynamic": "Dynamic Embed",
-      "embedAuto": "Auto Embed",
-      "embedThumb": "Thumbnail Embed",
-      "embedCode": "Embed Code",
-      "copy": "Copy",
-      "seo": "Include Search Engine Optimization Data",
-      "https": "Support for HTTPS Embed Code",
-      "qr": "Scan Code for Mobile Preview",
-      "view": "Standalone Preview",
-      "advanced": "Advanced Settings",
-      "settings": "List Arrangement Settings",
-      "name": "Name",
-      "added": "Date added",
-      "updated": "Date updated",
-      "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
-      "helpTip2": "Read more",
-      "helpTip3": "about the different embed code types.",
-      "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. Learn more about enforcing",
-      "helpTip5": "specific delivery protocols.",
-      "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
-      "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
-    },
-    "entries": {
-      "entryMetadata": {
-        "searchTagsPH": "Search Tags",
-        "searchCategoriesPH": "Search Categories",
-        "categoryTooltip": {
-          "privacyContext": "Privacy Context",
-          "contentPrivacy": "Content Privacy",
-          "categoryListing": "Category Listing",
-          "contributionPolicy": "Contribution Policy",
-          "specificEndUserPermissions": "Specific End User Permissions",
-          "noRestriction": "No Restriction",
-          "requiresAuth": "Requires Authentication",
-          "noMembers": "No Members",
-          "private": "Private"
         }
-      }
     },
-    "upload": {
-      "fileStatus": {
-        "preProcess": "Pre process",
-        "queued": "Queued",
-        "uploading": "Uploading",
-        "complete": "Complete",
-        "failed": "Failed"
-      },
-      "inDevelopment": {
-        "title": "Sorry",
-        "message": "Feature in development"
-      },
-      "validation": {
-        "error": "Error",
-        "wrongType": "Select media type",
-        "missingTranscodingProfile": "Select Transcoding Profile",
-        "fileSizeExceeded": "File size exceeded",
-        "fileSizeExceededFor": "File size exceeded for:",
-        "fileNameRequired": "File name is required"
-      },
-      "uploadMenu": {
-        "uploadFromDesktop": "Upload from Desktop",
-        "needHighSpeed": "Need High-speed Upload?",
+    "applications": {
+        "embed":{
+            "previewShare": "Share & Embed",
+            "previewInPlayer": "Preview in Player",
+            "embedType": "Embed Type",
+            "selectPlayer": "Select Player",
+            "embedIframe": "IFrame Embed",
+            "embedDynamic": "Dynamic Embed",
+            "embedAuto": "Auto Embed",
+            "embedThumb": "Thumbnail Embed",
+            "embedCode": "Embed Code",
+            "copy": "Copy",
+            "seo": "Include Search Engine Optimization Data",
+            "https": "Support for HTTPS Embed Code",
+            "qr": "Scan Code for Mobile Preview",
+            "view": "Standalone Preview",
+            "advanced": "Advanced Settings",
+            "settings": "List Arrangement Settings",
+            "name": "Name",
+            "added": "Date added",
+            "updated": "Date updated",
+            "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
+            "helpTip2": "Read more",
+            "helpTip3": "about the different embed code types.",
+            "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. Learn more about enforcing",
+            "helpTip5": "specific delivery protocols.",
+            "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
+            "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
+        },
+        "entries": {
+            "entryMetadata": {
+                "searchTagsPH": "Search Tags",
+                "searchCategoriesPH": "Search Categories",
+                "categoryTooltip": {
+                    "privacyContext": "Privacy Context",
+                    "contentPrivacy": "Content Privacy",
+                    "categoryListing": "Category Listing",
+                    "contributionPolicy": "Contribution Policy",
+                    "specificEndUserPermissions": "Specific End User Permissions",
+                    "noRestriction": "No Restriction",
+                    "requiresAuth": "Requires Authentication",
+                    "noMembers": "No Members",
+                    "private": "Private"
+                }
+            }
+        },
+        "upload": {
+            "fileStatus": {
+                "preProcess": "Pre process",
+                "queued": "Queued",
+                "uploading": "Uploading",
+                "complete": "Complete",
+                "failed": "Failed"
+            },
+            "inDevelopment": {
+                "title": "Sorry",
+                "message": "Feature in development"
+            },
+            "validation": {
+                "error": "Error",
+                "wrongType": "Select media type",
+                "missingTranscodingProfile": "Select Transcoding Profile",
+                "fileSizeExceeded": "File size exceeded",
+                "fileSizeExceededFor": "File size exceeded for:",
+                "fileNameRequired": "File name is required"
+            },
+            "uploadMenu": {
+                "uploadFromDesktop": "Upload from Desktop",
+                "needHighSpeed": "Need High-speed Upload?",
                 "highSpeed": "High-Speed Upload",
-        "bulkUpload": {
-          "title": "Bulk Upload",
-          "samplesLink": "Download CSV/XML Samples"
+                "bulkUpload": {
+                    "title": "Bulk Upload",
+                    "samplesLink": "Download CSV/XML Samples"
+                },
+                "liveStream": "Create Live Stream Entry",
+                "entryList": {
+                    "title": "Prepare Entry",
+                    "video": "Video Entry",
+                    "audio": "Audio entry"
+                },
+                "createDraft": {
+                    "draftEntry": "Draft Entry"
+                },
+                "errors": {
+                    "prepareEntry": "An error occurred while preparing an entry."
+                }
+            },
+            "uploadSettings": {
+                "title": "Upload Settings",
+                "profile": "Transcoding Profile",
+                "addFileBtn": "Add Files",
+                "profilePlaceholder": "Default",
+                "mediaTypes": {
+                    "video": "Video",
+                    "audio": "Audio",
+                    "image": "Image"
+                },
+                "table": {
+                    "remove": "Remove",
+                    "edit": "Edit",
+                    "header": {
+                        "fileName": "File Name",
+                        "mediaType": "Media Type",
+                        "size": "Size"
+                    },
+                    "emptyMessage": {
+                        "title": "No files to upload",
+                        "getStarted": "Add some files to get started. ",
+                        "browse": "Browse"
+                    }
+                },
+                "uploadBtn": "Upload"
+            },
+            "uploadMonitor": {
+                "uploadFromDesktop": "Upload from Desktop",
+                "bulkUpload": "Bulk Upload",
+                "dropFolders": "Drop Folders",
+                "viewDetails": "View Details",
+                "uploading": "{{0}} Uploading",
+                "syncing": "{{0}} Syncing",
+                "queued": "{{0}} Queued",
+                "completed": "{{0}} Completed",
+                "error": "{{0}} Qrror",
+                "upToDate": "Up to Date",
+                "loading": "Loading...",
+                "errors": {
+                    "poll": "Cannot get upload status. Retrying...",
+                    "prepare": "Could not connect to Upload Monitor!"
+                }
+            },
+            "transcodingProfilesSelect": {
+                "titleVideo": "Prepare Video Entry",
+                "titleAudio": "Prepare Audio Entry",
+                "selectTranscodingProfile": "Select Transcoding Profile",
+                "defaultOption": "Default",
+                "apply": "Apply",
+                "errors": {
+                    "loadFailed": "An error occurred  while loading Transcoding Profiles."
+                }
+            },
+            "prepareLive": {
+                "createLiveStreamTitle": "Create Live Stream Entry.",
+                "streamTypeLabel": "Stream Type",
+                "streamTypes": {
+                    "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
+                    "universal": "Universal Streaming, Flash and Mobile (HDS/HLS)",
+                    "manual": "Manual Live Stream URLs"
+                },
+                "create": "Create",
+                "kalturaStreamType": {
+                    "name": "Name",
+                    "description": "Description",
+                    "transcodingProfile": "Live Transcoding Profiles",
+                    "liveDVR": "Live DVR",
+                    "liveDVR_message": "Seeking to previous parts of the live stream. The DVR window is 2 hours by default.",
+                    "enableRecording": "Enable Recording",
+                    "enableRecordingOptions": {
+                        "perSession": "Create new entries for every broadcast session",
+                        "appended": "Append recorded content to a single entry"
+                    },
+                    "previewMode": "Preview Mode",
+                    "errors": {
+                        "required": "This field is required."
+                    }
+                },
+                "manualStreamType": {
+                    "name": "Name",
+                    "description": "Description",
+                    "flashHDSURL": "Live Flash HDS stream URL",
+                    "hlsStreamUrl": "Live Mobile HLS stream URL",
+                    "useAkamaiHdProtocol": "Akamai HD protocol is used on this HDS URL.",
+                    "errors": {
+                        "required": "This field is required",
+                        "enterUrl": "You must enter at least one of HDS/HLS stream URLs",
+                        "invalidUrl": "You must enter a valid URL"
+                    }
+                },
+                "universalStreamType": {
+                    "name": "Name",
+                    "description": "Description",
+                    "primaryEncoderIp": "Primary Encoder IP",
+                    "secondaryEncoderIp": "Secondary Encoder IP",
+                    "secondaryEncoderIp_message": "By default Kaltura uses your public IP  to access this KMC.",
+                    "broadcastPassword": "Broadcast Password",
+                    "liveDvr": "Live DVR",
+                    "liveDVR_message": "Seeking to previous parts of the live stream. The DVR window is 2 hours by default.",
+                    "errors": {
+                        "required": "This field is required",
+                        "invalidIp": "You must enter a valid IP address"
+                    }
+                },
+                "confirmEntryNavigation": {
+                    "title": "Success",
+                    "generalMessage": "Live Stream Entry has been created successfully.",
+                    "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
+                    "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
+                    "manualMessage": "The URLs provided have been associated with the entry.{{0}}."
+                }
+            }
         },
-        "liveStream": "Create Live Stream Entry",
-        "entryList": {
-          "title": "Prepare Entry",
-          "video": "Video Entry",
-          "audio": "Audio entry"
-        },
-        "createDraft": {
-          "draftEntry": "Draft Entry"
-        },
-        "errors": {
-          "prepareEntry": "An error occurred while preparing an entry."
-        }
-      },
-      "uploadSettings": {
-        "title": "Upload Settings",
-        "profile": "Transcoding Profile",
-        "addFileBtn": "Add Files",
-        "profilePlaceholder": "Default",
-        "mediaTypes": {
-          "video": "Video",
-          "audio": "Audio",
-          "image": "Image"
-        },
-        "table": {
-          "remove": "Remove",
-          "edit": "Edit",
-          "header": {
-            "fileName": "File Name",
-            "mediaType": "Media Type",
-            "size": "Size"
-          },
-          "emptyMessage": {
-            "title": "No files to upload",
-            "getStarted": "Add some files to get started. ",
-            "browse": "Browse"
-          }
-        },
-        "uploadBtn": "Upload"
-      },
-      "uploadMonitor": {
-        "uploadFromDesktop": "Upload from Desktop",
-        "bulkUpload": "Bulk Upload",
-        "dropFolders": "Drop Folders",
-        "viewDetails": "View Details",
-        "uploading": "{{0}} Uploading",
-        "syncing": "{{0}} Syncing",
-        "queued": "{{0}} Queued",
-        "completed": "{{0}} Completed",
-        "error": "{{0}} Qrror",
-        "upToDate": "Up to Date",
-        "loading": "Loading...",
-        "errors": {
-          "poll": "Cannot get upload status. Retrying...",
-          "prepare": "Could not connect to Upload Monitor!"
-        }
-      },
-      "transcodingProfilesSelect": {
-        "titleVideo": "Prepare Video Entry",
-        "titleAudio": "Prepare Audio Entry",
-        "selectTranscodingProfile": "Select Transcoding Profile",
-        "defaultOption": "Default",
-        "apply": "Apply",
-        "errors": {
-          "loadFailed": "An error occurred while loadingTranscoding Profiles."
-        }
-      },
-      "prepareLive": {
-        "createLiveStreamTitle": "Create Live Stream Entry.",
-        "streamTypeLabel": "Stream Type",
-        "streamTypes": {
-          "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
-          "universal": "Universal Streaming, Flash and Mobile (HDS/HLS)",
-          "manual": "Manual Live Stream URLs"
-        },
-        "create": "Create",
-        "kalturaStreamType": {
-          "name": "Name",
-          "description": "Description",
-          "transcodingProfile": "Live Transcoding Profiles",
-          "liveDVR": "Live DVR",
-          "liveDVR_message": "Seeking to previous parts of the live stream. TheDVR window is 2 hours by default.",
-          "enableRecording": "Enable Recording",
-          "enableRecordingOptions": {
-            "perSession": "Create new entries for every broadcast session",
-            "appended": "Append recorded content to a single entry"
-          },
-          "previewMode": "Preview Mode",
-          "errors": {
-            "required": "This field is required."
-          }
-        },
-        "manualStreamType": {
-          "name": "Name",
-          "description": "Description",
-          "flashHDSURL": "Live Flash HDS stream URL",
-          "hlsStreamUrl": "Live Mobile HLS stream URL",
-          "useAkamaiHdProtocol": "Akamai HD protocol is used on this HDS URL.",
-          "errors": {
-            "required": "This field is required",
-            "enterUrl": "You must enter at least one of HDS/HLS stream URLs",
-            "invalidUrl": "You must enter a valid URL"
-          }
-        },
-        "universalStreamType": {
-          "name": "Name",
-          "description": "Description",
-          "primaryEncoderIp": "Primary Encoder IP",
-          "secondaryEncoderIp": "Secondary Encoder IP",
-          "secondaryEncoderIp_message": "By default Kaltura uses your public IP to access this KMC.",
-          "broadcastPassword": "Broadcast Password",
-          "liveDvr": "Live DVR",
-          "liveDVR_message": "Seeking to previous parts of the live stream. TheDVR window is 2 hours by default.",
-          "errors": {
-            "required": "This field is required",
-            "invalidIp": "You must enter a valid IP address"
-          }
-        },
-        "confirmEntryNavigation": {
-          "title": "Success",
-          "generalMessage": "Live Stream Entry has been created successfully.",
-          "kalturaMessage": "Live Stream Entry has been created successfully.\nDo you want to view entry details?",
-          "universalMessage": "Stream activation for broadcasting with the CDN may take up to 3 hours.",
-          "manualMessage": "The URLs provided have been associated with theentry .{{0}}."
-        }
-      }
-    },
-    "content": {
-      "uploadControl": {
-        "retryError": {
-          "header": "Retry Upload",
-          "message": "Cannot resume upload for the requested file. Please upload the file again."
-        },
-        "bulkCancel": {
-          "header": "Cancel Uploads",
-          "message": "Are you sure you want to cancel those uploads?"
-        },
-        "files": "{{0}} Files",
-        "selected": "{{0}} Selected",
-        "cancel": "Cancel",
-        "table": {
-          "fileName": "File Name",
-          "entryId": "ID",
-          "fileSize": "File Size",
-          "uploadedOn": "Uploaded On",
-          "progress": "Progress",
-          "remove": "Remove",
-          "retry": "Retry",
-          "status": {
-            "header": "Status",
-            "uploaded": "Complete",
-            "uploading": "Uploading",
-            "queued": "Queued",
-            "uploadFailure": "Failed"
-          }
-        }
-      },
-      "dropFolders": {
-        "search": "Search",
-        "allStatuses": "All Statuses",
-        "refresh" : "Refresh",
-        "deleteFiles": "Delete Files",
-        "confirmDelete": "Are you sure you want to permanently delete all selected files? \n {{0}}",
-        "confirmDeleteSingle": "Are you sure you want to permanently delete selected file? \n {{0}}",
-        "table": {
-          "fileName": "File Name",
-          "dropFolderName": "Drop Folder Name",
-          "createdOn": "Created on",
-          "fileSize": "File Size",
-          "entryId": "Entry ID",
-          "status": "Status",
-          "datesTooltip": "Upload start detected on: {{0}}\n Upload completion detected on: {{1}}\n File transfer from drop folder to Kaltura started on: {{2}} \n File transfer of drop folder to Kaltura ended on: {{3}}",
-          "notAvailable": "N/A",
-          "unknown": "Unknown",
-          "delete": "Delete"
-        },
-        "filters": {
-          "additionalFilters": "Additional Filters",
-          "createdBetween": "Created Between",
-          "clearDates": "Clear Dates",
-          "clearAll": "Clear All",
-          "close": "Close"
-        },
-        "dropFolderStatusLabels": {
-          "allStatuses": "All Statuses",
-          "uploading": "Uploading",
-          "downloading": "Downloading",
-          "pending": "Pending",
-          "processing": "Processing",
-          "parsedFromXml": "Parsed from XML",
-          "waitingForRelatedFiles": "Waiting for Related Files",
-          "waitingForMatchedEntry": "Waiting for Matched Entry",
-          "error": "Error",
-          "deleteFailed": "Delete Failed",
-          "done": "Done",
-          "downloadFailed": "Download Failed"
-        },
-        "dropFolderStatusTooltips": {
-          "uploading": "File is currently uploading to the drop folder.",
-          "downloading": "The file is currently importing from the drop folder to Kaltura.",
-          "pending": "File upload has completed . Waiting for thedrop folder processing to begin.",
-          "processing": "Drop folder engine is currently processing this file.",
-          "parsedFromXml": "File reference was parsed from the XML. File is expected but is not yet available in the drop folder.",
-          "waitingForRelatedFiles": "Processing of this file should continue when all related files are available in the drop folder (e.g. XML file, other media files referenced in the same XML or other flavors expected for the same entry).",
-          "waitingForMatchedEntry": "Processing of this file should continue when a matched entry is found.",
-          "error": "Drop folder engine processing failed.",
-          "deleteFailed": "Failed to delete the file from the drop folder.",
-          "done": "Drop folder processing was completed for this file.",
-          "downloadFailed": "Failed to import the file from the drop folder to Kaltura."
-        },
-        "errors": {
-          "retry": "Retry",
-          "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>",
-          "errorDropFoldersFiles": "An error occurred during thedrop folder files update.",
-          "errorLoad": "Failed to load drop folder."
-        }
-      },
-      "categories": {
-        "categories": "{{0}} Categories",
-        "search": "Search",
-        "refresh": "Refresh",
-        "addCategory": "Add Category",
-        "selected": "Selected",
-        "bulkActions": "Bulk Actions",
-        "deletedSuccessfully": "Categories have been deleted.",
-        "refine": "Refine",
-        "filterCategories": "Filter Categories",
-        "edit": "Edit",
-        "delete": "Delete",
-        "deleteCategory": "Delete Category",
-        "editCategory": "Edit Category",
-        "viewEntries": "View Entries",
-        "moveCategory": "Move Category",
-        "cancel": "Cancel",
-        "bActions": {
-          "addRemoveTags": "Add / Remove Tags",
-          "addTags": "Add Tags",
-          "addTagsLabel": "Enter tags to be appended to all selected categories.",
-          "removeTags": "Remove Tags",
-          "removeTagsLabel": "Select the tags you want to remove from the selected categories.",
-          "moveCategories": "Move Categories",
-          "changeContentPrivacy": "Change Content Privacy",
-          "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories.",
-          "changeCategoryListing": "Change Category Listing",
-          "changeCategoryListingLabel": " Change the Category Listing settings for all selected categories.",
-          "changeContributionPolicy": "Change theCategory Contribution Policy Settings",
-          "changeContributionPolicyLabel": "Change the Category Contribution Policy settings for all selected categories.",
-          "changeCategoryOwner": "Change Category Owner",
-          "delete": "Delete",
-          "save": "Save Changes",
-          "changeOwnerLabel": "Set a new owner for the selected categories.",
-          "error": "Categories update failed.",
-          "cancelEdit": "Cancel Edit.",
-          "discard": "Discard all changes?",
-          "noPrivacyContext": "Some of the selected categories do not have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page  Settings tab.",
-          "failedToLoadCategoryData": "Could not load category data. Category ID: {{0}}"
-        },
-        "deleteCategories": "Delete Categories",
-        "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
-        "deleteWithEditWarningTags": "This category was created by another application and deleting it will effect this application or site.\n Do you want to continue?",
-        "editWithEditWarningTags": "This category was created by another application and editing it will effect this application or site.\n Do you want to continue?",
-        "confirmDeleteWithSubCategories": "The category will be deleted with its sub-categories. Do you want to continue?",
-        "confirmDeleteSingle": "Are you sure you want to delete this category?",
-        "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?",
-        "confirmDeleteMultiple": "Are you sure you want to delete these categories?",
-        "categoryId": "Category ID: {{0}}",
-        "noRestriction": "No Restriction",
-        "requiresAuthentication": "Requires Authentication",
-        "private": "Private",
-        "selectedCategory": "Selected: {{0}}",
-        "deleteAction" : {
-          "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
-          "deleteWarningConfirmation": "This category was created by another application and deleting it will effect this application or site.\nAre you sure you want to delete this category?",
-          "deleteSubcategoriesConfirmation": "This category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
-          "deleteConfirmation": "Are you sure you want to delete this category?"
-        },
-        "deleteActionMultiple" : {
-          "deleteWarningSubcategoriesConfirmation": "Some of the selected categories were created by another application and deleting them will effect this application or site.\nCategories will be deleted with their sub-categories.\nDo you want to continue?",
-          "deleteWarningConfirmation": "Some of the selected categories were created by another application and deleting them will effect this application or site.\nAre you sure you want to delete these categories?",
-          "deleteSubcategoriesConfirmation": "Categories will be deleted with their sub-categories.\nDo you want to continue?",
-          "deleteConfirmation": "Are you sure you want to delete these categories?"
-        },
-        "errors": {
-          "deleteError": {
-            "header": "Error",
-            "message": "An unexpected error  occurred while trying to delete thiscategory."
-          }
-        },
-        "categoriesLockTitle": "Categories Locked",
-        "categoriesLockMsg": "TheCategory Tree is currently updating.\nThis operation may take a few minutes.\nCategory editing options will be released when theupdate has completed.",
-        "categoriesUpdateMsg": "Updating Categories"
-      },
-      "addNewCategory": {
-        "newCategory": "New Category",
-        "newSubcategory": "New Sub-Category",
-        "selectCategoryParent": "Select the parent category under which the new category will appear.",
-        "cancelEdit": "Cancel Edit",
-        "discard": "Discard all changes?",
-        "apply": "Apply",
-        "cancel": "Cancel",
-        "noParent":"No Parent",
-        "noSelection": "No Selection",
+        "content": {
+            "uploadControl": {
+                "retryError": {
+                    "header": "Retry Upload",
+                    "message": "Cannot resume upload for the requested file. Please upload the file again."
+                },
+                "bulkCancel": {
+                    "header": "Cancel Uploads",
+                    "message": "Are you sure you want to cancel those uploads?"
+                },
+                "files": "{{0}} Files",
+                "selected": "{{0}} Selected",
+                "cancel": "Cancel",
+                "table": {
+                    "fileName": "File Name",
+                    "entryId": "ID",
+                    "fileSize": "File Size",
+                    "uploadedOn": "Uploaded On",
+                    "progress": "Progress",
+                    "remove": "Remove",
+                    "retry": "Retry",
+                    "status": {
+                        "header": "Status",
+                        "uploaded": "Complete",
+                        "uploading": "Uploading",
+                        "queued": "Queued",
+                        "uploadFailure": "Failed"
+                    }
+                }
+            },
+            "dropFolders": {
+                "search": "Search",
+                "allStatuses": "All Statuses",
+                "refresh" : "Refresh",
+                "deleteFiles": "Delete Files",
+                "confirmDelete": "Are you sure you want to permanently delete all selected files? \n {{0}}",
+                "confirmDeleteSingle": "Are you sure you want to permanently delete selected file? \n {{0}}",
+                "table": {
+                    "fileName": "File Name",
+                    "dropFolderName": "Drop Folder Name",
+                    "createdOn": "Created on",
+                    "fileSize": "File Size",
+                    "entryId": "Entry ID",
+                    "status": "Status",
+                    "datesTooltip": "Upload start detected on: {{0}}\n Upload completion detected on: {{1}}\n File transfer from drop folder to Kaltura started on: {{2}} \n File transfer of drop folder to Kaltura ended on: {{3}}",
+                    "notAvailable": "N/A",
+                    "unknown": "Unknown",
+                    "delete": "Delete"
+                },
+                "filters": {
+                    "additionalFilters": "Additional Filters",
+                    "createdBetween": "Created Between",
+                    "clearDates": "Clear Dates",
+                    "clearAll": "Clear All",
+                    "close": "Close"
+                },
+                "dropFolderStatusLabels": {
+                    "allStatuses": "All Statuses",
+                    "uploading": "Uploading",
+                    "downloading": "Downloading",
+                    "pending": "Pending",
+                    "processing": "Processing",
+                    "parsedFromXml": "Parsed from XML",
+                    "waitingForRelatedFiles": "Waiting for Related Files",
+                    "waitingForMatchedEntry": "Waiting for Matched Entry",
+                    "error": "Error",
+                    "deleteFailed": "Delete Failed",
+                    "done": "Done",
+                    "downloadFailed": "Download Failed"
+                },
+                "dropFolderStatusTooltips": {
+                    "uploading": "File is currently uploading to the drop folder.",
+                    "downloading": "The file is currently importing from the drop folder to Kaltura.",
+                    "pending": "File upload has completed.  Waiting for the drop folder processing to begin.",
+                    "processing": "Drop folder engine is currently processing this file.",
+                    "parsedFromXml": "File reference was parsed from the XML. File is expected but is not yet available in the drop folder.",
+                    "waitingForRelatedFiles": "Processing of this file should continue when all related files are available in the drop folder (e.g. XML file, other media files referenced in the same XML or other flavors expected for the same entry).",
+                    "waitingForMatchedEntry": "Processing of this file should continue when a matched entry is found.",
+                    "error": "Drop folder engine processing failed.",
+                    "deleteFailed": "Failed to delete the file from the drop folder.",
+                    "done": "Drop folder processing was completed for this file.",
+                    "downloadFailed": "Failed to import the file from the drop folder to Kaltura."
+                },
+                "errors": {
+                    "retry": "Retry",
+                    "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>",
+                    "errorDropFoldersFiles": "An error occurred during the drop folder files update.",
+                    "errorLoad": "Failed to load drop folder."
+                }
+            },
+            "categories": {
+                "categories": "{{0}} Categories",
+                "search": "Search",
+                "refresh": "Refresh",
+                "addCategory": "Add Category",
+                "selected": "Selected",
+                "bulkActions": "Bulk Actions",
+                "deletedSuccessfully": "Categories have been deleted.",
+                "refine": "Refine",
+                "filterCategories": "Filter Categories",
+                "edit": "Edit",
+                "delete": "Delete",
+                "deleteCategory": "Delete Category",
+                "editCategory": "Edit Category",
+                "viewEntries": "View Entries",
+                "moveCategory": "Move Category",
+                "cancel": "Cancel",
+                "bActions": {
+                    "addRemoveTags": "Add / Remove Tags",
+                    "addTags": "Add Tags",
+                    "addTagsLabel": "Enter tags to be appended to all selected categories.",
+                    "removeTags": "Remove Tags",
+                    "removeTagsLabel": "Select the tags you want to remove from the selected categories.",
+                    "moveCategories": "Move Categories",
+                    "changeContentPrivacy": "Change Content Privacy",
+                    "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories.",
+                    "changeCategoryListing": "Change Category Listing",
+                    "changeCategoryListingLabel": " Change the Category Listing settings for all selected categories.",
+                    "changeContributionPolicy": "Change the Category Contribution Policy Settings",
+                    "changeContributionPolicyLabel": "Change the Category Contribution Policy settings for all selected categories.",
+                    "changeCategoryOwner": "Change Category Owner",
+                    "delete": "Delete",
+                    "save": "Save Changes",
+                    "changeOwnerLabel": "Set a new owner for the selected categories.",
+                    "error": "Categories update failed.",
+                    "cancelEdit": "Cancel Edit.",
+                    "discard": "Discard all changes?",
+                    "noPrivacyContext": "Some of the selected categories do not  have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page  Settings tab.",
+                    "failedToLoadCategoryData": "Could not load category data. Category ID: {{0}}"
+                },
+                "deleteCategories": "Delete Categories",
+                "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
+                "deleteWithEditWarningTags": "This category was created by another application and deleting it will effect this application or site.\n Do you want to continue?",
+                "editWithEditWarningTags": "This category was created by another application and editing it will effect this application or site.\n Do you want to continue?",
+                "confirmDeleteWithSubCategories": "The category will be deleted with its sub-categories. Do you want to continue?",
+                "confirmDeleteSingle": "Are you sure you want to delete this category?",
+                "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?",
+                "confirmDeleteMultiple": "Are you sure you want to delete these categories?",
+                "categoryId": "Category ID: {{0}}",
+                "noRestriction": "No Restriction",
+                "requiresAuthentication": "Requires Authentication",
+                "private": "Private",
+                "selectedCategory": "Selected: {{0}}",
+                "deleteAction" : {
+                    "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
+                    "deleteWarningConfirmation": "This category was created by another application and deleting it will effect this application or site.\nAre you sure you want to delete this category?",
+                    "deleteSubcategoriesConfirmation": "This category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
+                    "deleteConfirmation": "Are you sure you want to delete this category?"
+                },
+                "deleteActionMultiple" : {
+                    "deleteWarningSubcategoriesConfirmation": "Some of the selected categories were created by another application and deleting them will effect this application or site.\nCategories will be deleted with their sub-categories.\nDo you want to continue?",
+                    "deleteWarningConfirmation": "Some of the selected categories were created by another application and deleting them will effect this application or site.\nAre you sure you want to delete these categories?",
+                    "deleteSubcategoriesConfirmation": "Categories will be deleted with their sub-categories.\nDo you want to continue?",
+                    "deleteConfirmation": "Are you sure you want to delete these categories?"
+                },
+                "errors": {
+                    "deleteError": {
+                        "header": "Error",
+                        "message": "An unexpected error occurred while trying to delete this category."
+                    }
+                },
+                "categoriesLockTitle": "Categories Locked",
+                "categoriesLockMsg": "The Category Tree is currently updating.\nThis operation may take a few minutes.\nCategory editing options will be released when the update has completed.",
+                "categoriesUpdateMsg": "Updating Categories"
+            },
+            "addNewCategory": {
+                "newCategory": "New Category",
+                "newSubcategory": "New Sub-Category",
+                "selectCategoryParent": "Select the parent category under which the new category will appear.",
+                "cancelEdit": "Cancel Edit",
+                "discard": "Discard all changes?",
+                "apply": "Apply",
+                "cancel": "Cancel",
+                "noParent":"No Parent",
+                "noSelection": "No Selection",
 
                 "searchCategories": "Search Categories",
                 "selectedParentCategory":"Parent Category Id: {{value}}",
@@ -658,7 +659,7 @@
                         "numOfEntries": "{{0}} Entries",
                         "warning": "{{0}} Entries are not included in this feed.",
                         "moreInfo": "More Info.",
-                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
+                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
                         "flavorId": "(flavor ID) {{0}}"
                     },
                     "destination": "Destination",
@@ -780,8 +781,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Confirm Delete",
-                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
-                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
+                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
                     "moreThan5": "Are you sure you want to delete the selected feeds?"
                 },
                 "errors": {
@@ -1201,7 +1202,7 @@
                 },
                 "thumbnails": {
                     "tags": "Tags",
-          "thumbnails": "Thumbnails",
+                    "thumbnails": "Thumbnails",
                     "upload": "Upload",
                     "capture": {
                         "choose": "Choose Frame",
@@ -2397,7 +2398,7 @@
                 },
                 "profile": {
                     "save": "Save",
-          "metadata": "Metadata",
+                    "metadata": "Metadata",
                     "backToProfiles": "Back To Profiles",
                     "flavor": "Flavor",
                     "id": "ID {{0}}",
