@@ -59,7 +59,6 @@ export class BulkUploadMenuComponent {
     this._appEvents.publish(new BulkLogUploadingStartedEvent(response.id, response.status, response.uploadedOn));
   }
 
-  // TODO NEED TO TEST INVALID_KS ERROR CODE
   private _handleUploadError(error: KalturaAPIException): void {
     if (error.code === 'SERVICE_FORBIDDEN') {
       this._showErrorAlert(this._appLocalization.get(
@@ -67,7 +66,7 @@ export class BulkUploadMenuComponent {
         { value: error.message }
       ));
     } else if (error.code === 'INVALID_KS') {
-      this._userAuthentication.logout();
+        // todo kmcng
     } else {
       this._showErrorAlert(error.message);
     }

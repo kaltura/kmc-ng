@@ -15,7 +15,6 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 import {
     AppBootstrap,
-    APP_AUTH_EVENTS,
     AuthModule,
     BrowserService,
     KMCShellModule,
@@ -80,12 +79,11 @@ import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
-import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
-import { AppActionsComponent } from './components/app-actions/app-actions.component';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
+import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -161,7 +159,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ChangeAccountComponent,
     ChangelogComponent,
     ChangelogContentComponent,
-      AppActionsComponent
+    LoginByKSComponent,
   ],
   bootstrap: <any>[
     AppComponent
@@ -172,9 +170,6 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       KalturaLogger,
       {
           provide: KalturaLoggerName, useValue: 'kmc'
-      },
-      {
-          provide: APP_AUTH_EVENTS, useClass: KMCAuthenticationEvents
       },
     { provide: AppStorage, useExisting: BrowserService },
     ConfirmationService

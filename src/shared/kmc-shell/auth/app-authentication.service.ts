@@ -1,5 +1,5 @@
 import {Injectable, Optional, Inject} from '@angular/core';
-import { InjectionToken } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
@@ -29,6 +29,9 @@ import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsAction';
+import { KmcServerPolls } from '../../kmc-shared/server-polls';
+
+const ksSessionStorageKey = 'auth.login.ks';
 
 export interface IUpdatePasswordPayload {
     email: string;
@@ -53,20 +56,20 @@ export interface AppAuthenticationEvents {
     onUserLoggedIn: (appUser: Immutable.ImmutableObject<AppUser>) => Observable<void>;
     onUserLoggedOut: () => void;
 }
-export const APP_AUTH_EVENTS = new InjectionToken<AppAuthenticationEvents>('App Authentication Events');
-
 
 @Injectable()
 export class AppAuthentication {
 
+    private _automaticLoginCredentials: { ks: string} = null;
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
 
     constructor(private kalturaServerClient: KalturaClient,
-                @Inject(APP_AUTH_EVENTS) private _appAuthenticationEvents: AppAuthenticationEvents,
                 private appStorage: AppStorage,
                 private _pageExitVerificationService: PageExitVerificationService,
                 logger: KalturaLogger,
+                private _route: ActivatedRoute,
+                private _serverPolls: KmcServerPolls,
                 private _permissionsService: KMCPermissionsService,
                 private _appEvents: AppEventsService) {
         this._logger = logger.subLogger('AppAuthentication');
@@ -140,7 +143,7 @@ export class AppAuthentication {
         const expiry = (optional ? optional.expiry : null) || 86400;
         const privileges = optional ? optional.privileges : '';
 
-        this.appStorage.removeFromSessionStorage('auth.login.ks');  // clear session storage
+        this.appStorage.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage
 
         const request = new KalturaMultiRequest(
             new UserLoginByLoginIdAction(
@@ -161,10 +164,10 @@ export class AppAuthentication {
                     .setDependency(['ks', 0])
                     .setDependency(['id', 1, 'partnerId'])
             ),
-            new UserRoleGetAction({ userRoleId: 0})
+            new UserRoleGetAction({userRoleId: 0})
                 .setRequestOptions(
                     new KalturaRequestOptions({})
-                    .setDependency(['ks', 0])
+                        .setDependency(['ks', 0])
                 )
                 .setDependency(['userRoleId', 1, 'roleIds']),
             new PermissionListAction({
@@ -188,25 +191,22 @@ export class AppAuthentication {
         );
 
         return <any>(this.kalturaServerClient.multiRequest(request)
-            .switchMap(
+            .map(
                 response => {
                     if (!response.hasErrors()) {
-                        return this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result)
-                            .map(() => {
-                                return {success: true, error: null};
-                            });
+                        this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
+                        return {success: true, error: null};
                     }
 
-                    return Observable.of({success: false, error: this._getLoginErrorMessage(response[0])});
+                    return {success: false, error: this._getLoginErrorMessage(response[0])};
                 }
             ));
     }
 
-    private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse,
-                        updateSessionStorage = false): Observable<void> {
+    private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
 
-        if (updateSessionStorage) {
-            this.appStorage.setInSessionStorage('auth.login.ks', ks);  // save ks in session storage
+        if (storeCredentialsInSessionStorage) {
+            this.appStorage.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
         }
 
         const partnerPermissionList = permissionList.objects.map(item => item.name);
@@ -232,29 +232,31 @@ export class AppAuthentication {
             }
         });
 
-        return this._appAuthenticationEvents.onUserLoggedIn(appUser)
-            .do(() => {
-                this._appUser = appUser;
-                this._appEvents.publish(new UserLoginStatusEvent(true));
-            });
+        this.kalturaServerClient.setDefaultRequestOptions({
+            ks: appUser.ks
+        });
+
+        this._serverPolls.forcePolling();
+        this._appUser = appUser;
+        this._appEvents.publish(new UserLoginStatusEvent(true));
     }
 
     isLogged() {
         return !!this._appUser;
     }
 
-    clearSessionCredentials(): void {
-        this.appStorage.removeFromSessionStorage('auth.login.ks');
+    private _clearSessionCredentials(): void {
+        this._logger.debug(`clear previous stored credentials in session storage if found`);
+        this.appStorage.removeFromSessionStorage(ksSessionStorageKey);
     }
 
     logout() {
-        this._appUser = null;
-        this.clearSessionCredentials();
-        this._appEvents.publish(new UserLoginStatusEvent(false));
+        this._logger.info('handle logout request by the user');
+        this._clearSessionCredentials();
         this._logout();
     }
 
-    public loginByKS(loginToken: string, updateSessionStorage = true): Observable<boolean> {
+    private _loginByKS(loginToken: string, storeCredentialsInSessionStorage): Observable<boolean> {
         return Observable.create((observer: any) => {
             if (!this.isLogged()) {
                 if (loginToken) {
@@ -292,12 +294,9 @@ export class AppAuthentication {
                     ];
 
                     return this.kalturaServerClient.multiRequest(requests)
-                        .switchMap((response) => {
-                            return this._afterLogin(loginToken,false, response[0].result, response[1].result, response[2].result, response[3].result,
-                                updateSessionStorage);
-                        })
                         .subscribe(
-                            () => {
+                            (response) => {
+                                this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result);
                                 observer.next(true);
                                 observer.complete();
                             },
@@ -314,9 +313,27 @@ export class AppAuthentication {
         });
     }
 
+    public setAutomaticLoginCredentials(ks: string) {
+        this._automaticLoginCredentials = { ks };
+    }
     public loginAutomatically(): Observable<boolean> {
-        const loginToken = this.appStorage.getFromSessionStorage('auth.login.ks');  // get ks from session storage
-        return this.loginByKS(loginToken);
+
+        const ksFromApp = this._automaticLoginCredentials && this._automaticLoginCredentials.ks;
+        if (ksFromApp) {
+            this._logger.info(`try to login automatically with KS provided explicitly by the app`);
+            this._clearSessionCredentials();
+            return this._loginByKS(ksFromApp, false);
+        }
+
+        const ksFromSession = this.appStorage.getFromSessionStorage(ksSessionStorageKey);  // get ks from session storage;
+
+        if (ksFromSession) {
+            this._logger.info(`try to login automatically with KS stored in session storage`);
+            return this._loginByKS(ksFromSession, true);
+        }
+
+        this._logger.debug(`abort automatic login logic as no ks was provided by router or stored in session storage`);
+        return Observable.of(false);
     }
 
     public switchPartnerId(partnerId: number): Observable<void> {
@@ -324,7 +341,7 @@ export class AppAuthentication {
             return this.kalturaServerClient.request(new UserLoginByKsAction({requestedPartnerId: partnerId}))
                 .subscribe(
                     result => {
-                        this.appStorage.setInSessionStorage('auth.login.ks', result.ks);
+                        this.appStorage.setInSessionStorage(ksSessionStorageKey, result.ks);
                         this._logout();
 
                         // DEVELOPER NOTICE: observer next/complete not implemented by design
@@ -343,7 +360,10 @@ export class AppAuthentication {
     }
 
     private _logout() {
-        this._appAuthenticationEvents.onUserLoggedOut();
+        this.kalturaServerClient.setDefaultRequestOptions({});
+        this._permissionsService.flushPermissions();
+        this._appUser = null;
+        this._appEvents.publish(new UserLoginStatusEvent(false));
         this._pageExitVerificationService.removeAll();
         document.location.reload();
     }

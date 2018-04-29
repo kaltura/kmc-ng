@@ -4,14 +4,14 @@ import {AppBootstrap, AuthCanActivate} from 'app-shared/kmc-shell';
 import {LoginComponent} from './components/login/login.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {ErrorComponent} from './components/error/error.component';
-import { AppActionsComponent } from './components/app-actions/app-actions.component';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
+import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 
 const routes: Routes = <Routes>[
   {
     path: 'error', component: ErrorComponent
   },
-  { path: 'actions/:action', component: AppActionsComponent, pathMatch: 'full' },
+  { path: 'actions/login-by-ks/:ks', component: LoginByKSComponent, pathMatch: 'full' },
   {
     path: '', canActivate: [AppBootstrap],
     children: [
