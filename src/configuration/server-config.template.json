@@ -5,6 +5,12 @@
     "freeTrialExpiration": {
       "enabled": @kalturaServer.freeTrialExpiration.enabled@,
       "trialPeriodInDays": @kalturaServer.freeTrialExpiration.trialPeriodInDays@
+    },
+    "login": {
+        "limitAccess": {
+            "enabled": @kalturaServer.limitAccess.enabled@,
+            "verifyBetaServiceUrl": "@kalturaServer.limitAccess.verifyBetaServiceUrl@"
+        }
     }
   },
   "cdnServers": {
