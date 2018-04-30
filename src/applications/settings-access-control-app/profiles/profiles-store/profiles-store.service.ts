@@ -28,6 +28,7 @@ import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorP
 import { AccessControlUpdateAction } from 'kaltura-ngx-client/api/types/AccessControlUpdateAction';
 import { AccessControlAddAction } from 'kaltura-ngx-client/api/types/AccessControlAddAction';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { SettingsAccessControlMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { FlavoursStore } from 'app-shared/kmc-shared';
 
 
@@ -79,9 +80,14 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _flavorsStore: FlavoursStore,
+              settingsAccessControlMainView: SettingsAccessControlMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('AccessControlProfilesStore'));
-    this._prepare();
+    if (settingsAccessControlMainView.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy() {

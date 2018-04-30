@@ -4,6 +4,8 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 
 @Component({
   selector: 'k-transcoding-profiles-lists-holder',
@@ -19,8 +21,10 @@ export class TranscodingProfilesListsHolderComponent {
   public _newProfileType: KalturaConversionProfileType;
   public _kmcPermissions = KMCPermissions;
 
-  constructor(private _logger: KalturaLogger) {
-
+  constructor(private _logger: KalturaLogger, browserService: BrowserService, settingsTranscodingMainView: SettingsTranscodingMainViewService) {
+        if (!settingsTranscodingMainView.isAvailable()){
+            browserService.handleUnpermittedAction(true);
+        }
   }
 
   public _setBlockerMessage(message: AreaBlockerMessage): void {
