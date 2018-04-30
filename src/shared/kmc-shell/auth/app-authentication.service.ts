@@ -18,7 +18,6 @@ import {KalturaPermissionStatus} from 'kaltura-ngx-client/api/types/KalturaPermi
 import {UserRoleGetAction} from 'kaltura-ngx-client/api/types/UserRoleGetAction';
 import * as Immutable from 'seamless-immutable';
 import {AppUser} from './app-user';
-import {AppStorage} from '@kaltura-ng/kaltura-common';
 import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
@@ -29,6 +28,7 @@ import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { serverConfig } from 'config/server';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsAction';
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
 import { Http } from '@angular/http';
@@ -78,10 +78,9 @@ export class AppAuthentication {
 
 
     constructor(private kalturaServerClient: KalturaClient,
-                private appStorage: AppStorage,
+                private _browserService: BrowserService,
                 private _pageExitVerificationService: PageExitVerificationService,
                 logger: KalturaLogger,
-                private _route: ActivatedRoute,
                 private _serverPolls: KmcServerPolls,
                 private _permissionsService: KMCPermissionsService,
                 private _http: Http,
@@ -159,7 +158,7 @@ export class AppAuthentication {
         const privileges = optional ? optional.privileges : '';
 
         this._automaticLoginErrorReason = null;
-        this.appStorage.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage
+        this._browserService.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage
 
         const request = new KalturaMultiRequest(
             new UserLoginByLoginIdAction(
@@ -262,7 +261,7 @@ export class AppAuthentication {
     private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
 
         if (storeCredentialsInSessionStorage) {
-            this.appStorage.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
+            this._browserService.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
         }
 
         const partnerPermissionList = permissionList.objects.map(item => item.name);
@@ -303,7 +302,7 @@ export class AppAuthentication {
 
     private _clearSessionCredentials(): void {
         this._logger.debug(`clear previous stored credentials in session storage if found`);
-        this.appStorage.removeFromSessionStorage(ksSessionStorageKey);
+        this._browserService.removeFromSessionStorage(ksSessionStorageKey);
     }
 
     logout() {
@@ -395,7 +394,7 @@ export class AppAuthentication {
             return this._loginByKS(ksFromApp, false);
         }
 
-        const ksFromSession = this.appStorage.getFromSessionStorage(ksSessionStorageKey);  // get ks from session storage;
+        const ksFromSession = this._browserService.getFromSessionStorage(ksSessionStorageKey);  // get ks from session storage;
 
         if (ksFromSession) {
             this._logger.info(`try to login automatically with KS stored in session storage`);
@@ -411,7 +410,7 @@ export class AppAuthentication {
             return this.kalturaServerClient.request(new UserLoginByKsAction({requestedPartnerId: partnerId}))
                 .subscribe(
                     result => {
-                        this.appStorage.setInSessionStorage(ksSessionStorageKey, result.ks);
+                        this._browserService.setInSessionStorage(ksSessionStorageKey, result.ks);
                         this._logout();
 
                         // DEVELOPER NOTICE: observer next/complete not implemented by design

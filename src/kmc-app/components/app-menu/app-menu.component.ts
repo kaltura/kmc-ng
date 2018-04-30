@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
 import { AppAuthentication, AppUser, AppNavigator } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -7,6 +7,8 @@ import { serverConfig } from 'config/server';
 
 import * as R from 'ramda';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
@@ -24,10 +26,10 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     @ViewChild('helpmenu') private _helpmenu: PopupWidgetComponent;
 
-    private sub: any;
     public _userContext: AppUser;
     public _showChangelog = false;
     public _helpMenuOpened = false;
+    public _powerUser = false;
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -35,29 +37,35 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     selectedMenuItem: KMCAppMenuItem;
     showSubMenu = true;
 
-    constructor(private userAuthentication: AppAuthentication,
+    constructor(public _kmcLogs: KmcLoggerConfigurator,
+                private userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
                 private _logger: KalturaLogger,
                 private router: Router,
+                private _route: ActivatedRoute,
+                private _appEvents: AppEventsService,
                 private _browserService: BrowserService) {
 
-        this.sub = router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                this.setSelectedRoute(event.urlAfterRedirects);
-            }
-        });
+        router.events
+            .cancelOnDestroy(this)
+            .subscribe((event) => {
+                if (event instanceof NavigationEnd) {
+                    this.setSelectedRoute(event.urlAfterRedirects);
+                }
+            });
         this._userContext = userAuthentication.appUser;
         this.menuConfig = this._kmcMainViews.createMenu();
-        this.leftMenuConfig = this.menuConfig.filter( (item: KMCAppMenuItem) => {
+        this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'left';
         });
-        this.rightMenuConfig = this.menuConfig.filter( (item: KMCAppMenuItem) => {
+        this.rightMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'right';
         });
-        if (router.navigated)
-        {
+        if (router.navigated) {
             this.setSelectedRoute(router.routerState.snapshot.url);
         }
+
+        this._powerUser = this._browserService.getInitialQueryParam('mode') === 'poweruser';
     }
 
     ngOnInit() {
@@ -102,6 +110,5 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     ngOnDestroy() {
-        this.sub.unsubscribe();
     }
 }

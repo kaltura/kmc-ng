@@ -4,7 +4,7 @@ import {AppLocalization, IAppStorage} from '@kaltura-ng/kaltura-common';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute} from "@angular/router";
 
 export interface Confirmation {
 	message: string;
@@ -34,6 +34,7 @@ export type AppStatus = {
 @Injectable()
 export class BrowserService implements IAppStorage {
 
+    private _initialQueryParams: { [key: string]: any; } = {};
     private _growlMessage = new Subject<GrowlMessage>();
     private _sessionStartedAt: Date = new Date();
     public growlMessage$ = this._growlMessage.asObservable();
@@ -67,6 +68,7 @@ export class BrowserService implements IAppStorage {
                 private sessionStorage: SessionStorageService,
                 private _router: Router,
                 private _appLocalization: AppLocalization) {
+        this._recordInitialQueryParams();
     }
 
     private _downloadContent(url: string): void {
@@ -80,6 +82,21 @@ export class BrowserService implements IAppStorage {
             xhr.responseType = 'blob';
             xhr.send();
         });
+    }
+
+    public getInitialQueryParam(key: string): any {
+        return this._initialQueryParams[key];
+    }
+
+    private _recordInitialQueryParams(): void {
+        try {
+            const search = location.search.substring(1);
+            this._initialQueryParams = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
+                return key === '' ? value : decodeURIComponent(value)
+            });
+        } catch (e) {
+            console.warn('failed to extract initial query params, ignoring any existing parameters. error ' + (e ? e.message : ''));
+        }
     }
 
     public registerOnShowConfirmation(fn: OnShowConfirmationFn) {
