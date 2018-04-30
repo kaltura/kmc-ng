@@ -247,7 +247,7 @@ export class AppAuthentication {
 
     private _clearSessionCredentials(): void {
         this._logger.debug(`clear previous stored credentials in session storage if found`);
-        this.appStorage.removeFromSessionStorage(ksSessionStorageKey);
+        this._browserService.removeFromSessionStorage(ksSessionStorageKey);
     }
 
     logout() {
@@ -325,7 +325,7 @@ export class AppAuthentication {
             return this._loginByKS(ksFromApp, false);
         }
 
-        const ksFromSession = this.appStorage.getFromSessionStorage(ksSessionStorageKey);  // get ks from session storage;
+        const ksFromSession = this._browserService.getFromSessionStorage(ksSessionStorageKey);  // get ks from session storage;
 
         if (ksFromSession) {
             this._logger.info(`try to login automatically with KS stored in session storage`);

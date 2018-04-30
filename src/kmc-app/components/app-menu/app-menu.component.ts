@@ -49,31 +49,23 @@ export class AppMenuComponent implements OnInit, OnDestroy{
         router.events
             .cancelOnDestroy(this)
             .subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                this.setSelectedRoute(event.urlAfterRedirects);
-            }
-        });
+                if (event instanceof NavigationEnd) {
+                    this.setSelectedRoute(event.urlAfterRedirects);
+                }
+            });
         this._userContext = userAuthentication.appUser;
         this.menuConfig = this._kmcMainViews.createMenu();
-        this.leftMenuConfig = this.menuConfig.filter( (item: KMCAppMenuItem) => {
+        this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'left';
         });
-        this.rightMenuConfig = this.menuConfig.filter( (item: KMCAppMenuItem) => {
+        this.rightMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'right';
         });
         if (router.navigated) {
             this.setSelectedRoute(router.routerState.snapshot.url);
         }
 
-        _route.queryParams
-            .cancelOnDestroy(this)
-            .map(params => params['mode'])
-            .filter(Boolean)
-            .subscribe(mode => {
-              if (mode === 'poweruser') {
-                  this._powerUser = true;
-              }
-            });
+        this._powerUser = this._browserService.getQueryParam('mode') === 'poweruser';
     }
 
     ngOnInit() {

@@ -4,7 +4,7 @@ import {AppLocalization, IAppStorage} from '@kaltura-ng/kaltura-common';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute} from "@angular/router";
 
 export interface Confirmation {
 	message: string;
@@ -34,6 +34,7 @@ export type AppStatus = {
 @Injectable()
 export class BrowserService implements IAppStorage {
 
+    private _queryParams: { [key: string]: any; } = {}
     private _growlMessage = new Subject<GrowlMessage>();
     private _sessionStartedAt: Date = new Date();
     public growlMessage$ = this._growlMessage.asObservable();
@@ -66,7 +67,9 @@ export class BrowserService implements IAppStorage {
     constructor(private localStorage: LocalStorageService,
                 private sessionStorage: SessionStorageService,
                 private _router: Router,
+                private _route: ActivatedRoute,
                 private _appLocalization: AppLocalization) {
+        this._recordQueryParams();
     }
 
     private _downloadContent(url: string): void {
@@ -80,6 +83,16 @@ export class BrowserService implements IAppStorage {
             xhr.responseType = 'blob';
             xhr.send();
         });
+    }
+
+    public getQueryParam(key: string): any {
+        return this._queryParams[key];
+    }
+
+    private _recordQueryParams(): void {
+        if (this._route) {
+            this._queryParams = Object.assign({}, this._route.snapshot.params);
+        }
     }
 
     public registerOnShowConfirmation(fn: OnShowConfirmationFn) {

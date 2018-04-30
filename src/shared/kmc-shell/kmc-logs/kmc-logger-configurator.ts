@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { KalturaLogger, LogLevels } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 export interface LogsRecordMode {
     enabled: boolean;
@@ -18,12 +19,35 @@ export class KmcLoggerConfigurator implements OnDestroy {
         return this._logsRecordMode.asObservable();
     }
 
-    constructor(private _logger: KalturaLogger) {
+
+    constructor(private _logger: KalturaLogger,
+                private _browserService: BrowserService) {
         this._logger = _logger.subLogger('KmcLoggerConfigurator');
     }
 
     ngOnDestroy() {
         this._logsRecordMode.complete();
+    }
+
+    private _getLogLevel(value: string): LogLevels {
+        switch ((value || '').toLocaleLowerCase()) {
+            case 'all':
+                return 'All';
+            case 'trace':
+                return 'Trace';
+            case 'debug':
+                return 'Debug';
+            case 'info':
+                return 'Info';
+            case 'warn':
+                return 'Warn';
+            case 'error':
+                return 'Error';
+            case 'fatal':
+                return 'Fatal';
+            default:
+                return 'Off';
+        }
     }
 
     private _setLoggerLevel(level: LogLevels): void {
@@ -46,17 +70,25 @@ export class KmcLoggerConfigurator implements OnDestroy {
     public init(route: ActivatedRoute): void {
         if (!this._ready) {
             this._ready = true;
-            this._logger.info(`init service, listen to route's query params`);
-            route.queryParams
-                .cancelOnDestroy(this)
-                .subscribe(params => {
-                    if (params['log']) {
-                        this._setLoggerLevel(params['log']);
-                    }
-                    if (params['record']) {
-                        this._enableLogsRecordMode(params['record']);
-                    }
-                });
+
+            const logLevelAsString = this._browserService.getQueryParam('log');
+            const logLevel = this._getLogLevel(logLevelAsString);
+            const recordLogLevelAsString = this._browserService.getQueryParam('record');
+            const recordLogLevel = this._getLogLevel(recordLogLevelAsString);
+
+            if (logLevel !== 'Off' || recordLogLevel !== 'Off') {
+                console.log(`logger configurator: set log level '${logLevel}' and record log level '${recordLogLevel}'`);
+            }
+
+            if (logLevel !== 'Off') {
+                this._setLoggerLevel(logLevel);
+            }
+
+            if (recordLogLevel !== 'Off') {
+                this._enableLogsRecordMode(recordLogLevel);
+            }
+
+            this._logger.info(`initialize service, set log level and record log level`, { logLevelAsString, logLevel, recordLogLevelAsString, recordLogLevel});
         } else {
             this._logger.info(`logger configurator has already initialized, skip init phase`);
         }

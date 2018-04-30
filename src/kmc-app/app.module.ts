@@ -145,7 +145,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     TranscodingProfileCreationModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcLogsModule.forRoot(),
-      KalturaLoggerModule.forRoot()
+      KalturaLoggerModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcViewsModule.forRoot(),
   ],
@@ -165,7 +165,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ChangeAccountComponent,
     ChangelogComponent,
     ChangelogContentComponent,
-    LoginByKSComponent,
+    LoginByKSComponent
   ],
   bootstrap: <any>[
     AppComponent
