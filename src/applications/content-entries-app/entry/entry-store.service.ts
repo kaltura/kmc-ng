@@ -1,23 +1,26 @@
-import {Host, Injectable, OnDestroy} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {ISubscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
+import { Host, Injectable, OnDestroy } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ISubscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import {KalturaClient, KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import {BaseEntryUpdateAction} from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
+import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { BaseEntryUpdateAction } from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {EntryWidgetsManager} from './entry-widgets-manager';
-import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
+import { EntryWidgetsManager } from './entry-widgets-manager';
+import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 export enum ActionTypes
 {
@@ -42,7 +45,6 @@ declare type StatusArgs =
 export class EntryStore implements  OnDestroy {
 
 	private _loadEntrySubscription : ISubscription;
-	private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _state = new BehaviorSubject<StatusArgs>({ action : ActionTypes.EntryLoading, error : null});
   private _pageExitVerificationToken: string;
 
@@ -74,13 +76,13 @@ export class EntryStore implements  OnDestroy {
 				private _entriesStore : EntriesStore,
 				@Host() private _widgetsManager: EntryWidgetsManager,
 				private _entryRoute: ActivatedRoute,
+        private _contentEntryViewService: ContentEntryViewService,
+        private _contentEntriesMainViewService: ContentEntriesMainViewService,
         private _pageExitVerificationService: PageExitVerificationService,
         private _appLocalization: AppLocalization) {
 
 
 		this._widgetsManager.entryStore = this;
-
-		this._mapSections();
 
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
@@ -143,23 +145,6 @@ export class EntryStore implements  OnDestroy {
 		{
 			this._entriesStore.reload();
 		}
-	}
-
-	private _mapSections() : void{
-		if (!this._entryRoute || !this._entryRoute.snapshot.data.entryRoute)
-		{
-			throw new Error("this service can be injected from component that is associated to the entry route");
-		}
-
-		this._entryRoute.snapshot.routeConfig.children.forEach(childRoute =>
-		{
-			const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
-
-			if (routeSectionType !== null)
-			{
-				this._sectionToRouteMapping[routeSectionType] = childRoute.path;
-			}
-		});
 	}
 
 	private _onRouterEvents() : void {
@@ -283,19 +268,23 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
 				response => {
+                    if (this._contentEntryViewService.isAvailable({ entry: response, activatedRoute: this._entryRoute })) {
+                        this._entry.next(response);
+                        this._entryId = response.id;
 
-						this._entry.next(response);
-						this._entryId = response.id;
+                        const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
 
-						const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
-
-						if (dataLoadedResult.errors.length)
-						{
-							this._state.next({action: ActionTypes.EntryLoadingFailed,
-								error: new Error(`one of the widgets failed while handling data loaded event`)});
-						}else {
-							this._state.next({action: ActionTypes.EntryLoaded});
-						}
+                        if (dataLoadedResult.errors.length) {
+                            this._state.next({
+                                action: ActionTypes.EntryLoadingFailed,
+                                error: new Error(`one of the widgets failed while handling data loaded event`)
+                            });
+                        } else {
+                            this._state.next({ action: ActionTypes.EntryLoaded });
+                        }
+                    } else {
+                        this._browserService.handleUnpermittedAction(true);
+                    }
 				},
 				error => {
 					this._state.next({action: ActionTypes.EntryLoadingFailed, error});
@@ -304,13 +293,9 @@ export class EntryStore implements  OnDestroy {
 			);
 	}
 
-    public openSection(sectionKey : string) : void{
-		const navigatePath = this._sectionToRouteMapping[sectionKey];
-
-		if (navigatePath) {
-			this._router.navigate([navigatePath], {relativeTo: this._entryRoute});
-		}
-	}
+    public openSection(sectionKey: ContentEntryViewSections): void {
+        this._contentEntryViewService.open({ section: sectionKey, entry: this.entry });
+    }
 
 	private _getEntry(entryId:string) : Observable<KalturaMediaEntry>
 	{
@@ -333,20 +318,26 @@ export class EntryStore implements  OnDestroy {
 		}
 	}
 
-	public openEntry(entryId : string)
-	{
-		this.canLeave()
-            .cancelOnDestroy(this)
-			.subscribe(
-			response =>
-			{
-				if (response.allowed)
-				{
-					this._router.navigate(["entry", entryId, "metadata"],{ relativeTo : this._entryRoute.parent});
-				}
-			}
-		);
-	}
+    public openEntry(entry: KalturaMediaEntry | string): void {
+        const entryId = entry instanceof KalturaMediaEntry ? entry.id : entry;
+        if (entryId !== this.entryId) {
+            this.canLeave()
+                .filter(({ allowed }) => allowed)
+                .cancelOnDestroy(this)
+                .subscribe(() => {
+                    if (entry instanceof KalturaMediaEntry) {
+                        this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
+                    } else {
+                        this._state.next({ action: ActionTypes.EntryLoading });
+                        this._contentEntryViewService.openById(entry)
+                            .cancelOnDestroy(this)
+                            .subscribe(() => {
+                                this._state.next({ action: ActionTypes.EntryLoaded });
+                            });
+                    }
+                });
+        }
+    }
 
 	public canLeave() : Observable<{ allowed : boolean}>
 	{
@@ -376,14 +367,12 @@ export class EntryStore implements  OnDestroy {
 		}).monitor('entry store: check if can leave section without saving');
 	}
 
-	public returnToEntries(params : {force? : boolean} = {})
-	{
-		this._router.navigate(['content/entries']);
-	}
+    public returnToEntries(): void {
+        this._contentEntriesMainViewService.open();
+    }
 
 
 	public setRefreshEntriesListUponLeave() {
 	  this._refreshEntriesListUponLeave = true;
   }
-
 }

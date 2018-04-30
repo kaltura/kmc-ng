@@ -67,6 +67,10 @@
     margin: 0 20px 0 -4px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+
+    &.kMoveBtnBottomDisabled {
+      margin-left: -1px;
+    }
   }
 }
 

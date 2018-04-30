@@ -9,6 +9,8 @@ import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-up
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kKMCBulkUploadMenu',
@@ -33,12 +35,14 @@ export class BulkUploadMenuComponent {
   public _allowedExtensions = '';
   public _showFileDialog = true;
   public _blockerMessage: AreaBlockerMessage;
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _bulkUploadService: BulkUploadService,
               private _appLocalization: AppLocalization,
               private _userAuthentication: AppAuthentication,
               private _appNavigator: AppNavigator,
               private _router: Router,
+              private _contentBulkViewService: ContentBulkUploadsMainViewService,
               private _appEvents: AppEventsService) {
   }
 
@@ -55,7 +59,6 @@ export class BulkUploadMenuComponent {
     this._appEvents.publish(new BulkLogUploadingStartedEvent(response.id, response.status, response.uploadedOn));
   }
 
-  // TODO NEED TO TEST INVALID_KS ERROR CODE
   private _handleUploadError(error: KalturaAPIException): void {
     if (error.code === 'SERVICE_FORBIDDEN') {
       this._showErrorAlert(this._appLocalization.get(
@@ -63,7 +66,7 @@ export class BulkUploadMenuComponent {
         { value: error.message }
       ));
     } else if (error.code === 'INVALID_KS') {
-      this._userAuthentication.logout();
+        // todo kmcng
     } else {
       this._showErrorAlert(error.message);
     }
@@ -124,7 +127,7 @@ export class BulkUploadMenuComponent {
   }
 
   public _goToBulkUploadLog(): void {
-    this._router.navigate(['/content/bulk/list']);
+      this._contentBulkViewService.open();
     this.uploadSucceed.close();
     this.onClose.emit();
   }

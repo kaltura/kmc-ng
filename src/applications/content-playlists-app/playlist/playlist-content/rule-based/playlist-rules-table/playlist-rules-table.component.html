@@ -14,7 +14,10 @@
 
       <p-column field="name" header="{{'applications.content.table.ruleName' | translate}}">
         <ng-template let-col let-rule="rowData" pTemplate="body">
-          <span class="kTitle" (click)="_viewRule(rule)">{{rule[col.field]}}</span>
+          <span class="kTitle kTableColumn"
+                [kTooltip]="rule[col.field]"
+                [maxWidth]="300"
+                (click)="_viewRule(rule)">{{rule[col.field]}}</span>
         </ng-template>
       </p-column>
 
@@ -44,7 +47,7 @@
         </ng-template>
       </p-column>
 
-      <p-column header="" [style]="{'width': '70px'}">
+      <p-column header="" [style]="{'width': '70px'}" *ngIf="_isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)">
         <ng-template let-col let-rule="rowData" pTemplate="body" let-i="rowIndex">
           <div class="kPlaylistRulesTableActions">
             <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, i, rule)"></button>

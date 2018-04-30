@@ -16,12 +16,14 @@ import {PlayersStore} from 'app-shared/kmc-shared/players/players-store.service'
 import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {PlayerTypes} from 'app-shared/kmc-shared/players';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 export abstract class DestinationComponentBase {
   abstract getData(): KalturaBaseSyndicationFeed;
 }
 
+export type FeedFormMode = 'edit' | 'new';
 
 @Component({
   selector: 'kFeedDetails',
@@ -29,7 +31,7 @@ export abstract class DestinationComponentBase {
   styleUrls: ['./feed-details.component.scss']
 })
 export class FeedDetailsComponent implements OnInit, OnDestroy {
-
+  public _kmcPermissions = KMCPermissions;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
   @Input()
@@ -53,14 +55,21 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isReady = false; // determined when received entryCount, feed, flavors and players
-  public _mode: 'edit' | 'new' = 'new';
+  public _mode: FeedFormMode = 'new';
   public _newFeedText = 'New Feed';
+
+  public get _saveBtnDisabled(): boolean {
+    return !this._form.valid || !this._currentDestinationFormState.isValid
+      || (!this._form.dirty && !this._currentDestinationFormState.isDirty)
+      || (this._newFeedText === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE));
+  }
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
               private _feedsService: FeedsService,
               private _flavorsStore: FlavoursStore,
               private _playersStore: PlayersStore,
+              private _permissionsService: KMCPermissionsService,
               private _logger: KalturaLogger) {
     // prepare form
     this._createForm();
@@ -117,7 +126,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       {
         value: KalturaSyndicationFeedType.kalturaXslt,
         label: this._appLocalization
-          .get('applications.content.syndication.details.availableDestinations.flexibaleFormat')
+          .get('applications.content.syndication.details.availableDestinations.flexibleFormat')
       }
     ];
   }
@@ -228,7 +237,11 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
         disabled: this._mode === 'edit'
       },
     });
-  }
+
+    if (this._mode === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+      this._form.disable({ emitEvent: false });
+    }
+ }
 
   public _clearPlaylist(): void {
     this._form.patchValue({selectedPlaylist: null});

@@ -6,8 +6,6 @@
     align-items: center;
 
     .kTranscodingProfileName {
-      overflow: hidden;
-      text-overflow: ellipsis;
       font-size: 15px;
       font-weight: bold;
       color: $kGrayscale1;
@@ -31,10 +29,6 @@
     .kMoreActionsButton {
 
     }
-  }
-
-  .kTranscodingProfileDeleteAction {
-    color: $kDandger;
   }
 }
 
