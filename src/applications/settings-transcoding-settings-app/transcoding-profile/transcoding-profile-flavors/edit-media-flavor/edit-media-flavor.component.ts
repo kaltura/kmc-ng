@@ -14,11 +14,13 @@ import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorP
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kEditMediaFlavor',
   templateUrl: './edit-media-flavor.component.html',
-  styleUrls: ['./edit-media-flavor.component.scss']
+  styleUrls: ['./edit-media-flavor.component.scss'],
+  providers: [KalturaLogger.createLogger('EditMediaFlavorComponent')]
 })
 export class EditMediaFlavorComponent implements OnInit {
   @Input() profile: KalturaConversionProfileWithAsset;
@@ -29,6 +31,7 @@ export class EditMediaFlavorComponent implements OnInit {
 
   private _assetParams: ExtendedKalturaConversionProfileAssetParams;
 
+  public _kmcPermissions = KMCPermissions;
   public _availabilityOptions = [
     {
       value: KalturaFlavorReadyBehaviorType.inheritFlavorParams,
@@ -88,6 +91,7 @@ export class EditMediaFlavorComponent implements OnInit {
 
   constructor(private _fb: FormBuilder,
               private _permissionsService: KMCPermissionsService,
+              private _logger: KalturaLogger,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -101,6 +105,7 @@ export class EditMediaFlavorComponent implements OnInit {
   }
 
   private _prepare(): void {
+    this._logger.info(`enter edit media flavor mode`);
     const assetParams = this._getFlavorAssetParams();
 
     // default values:
@@ -195,6 +200,7 @@ export class EditMediaFlavorComponent implements OnInit {
   }
 
   public _saveFlavor(): void {
+    this._logger.info(`handle save flavor action by user`);
     const assetParams = this._assetParams;
     const formData = this._editFlavorForm.getRawValue();
 
@@ -202,8 +208,11 @@ export class EditMediaFlavorComponent implements OnInit {
     assetParams.origin = formData.origin;
     assetParams.systemName = formData.systemName;
     assetParams.forceNoneComplied = formData.forceNoneComplied;
-    assetParams.deletePolicy = formData.deletePolicy;
     assetParams.updated = this._editFlavorForm.dirty;
+
+    if (this._permissionsService.hasPermission(KMCPermissions.WIDEVINE_PLUGIN_PERMISSION)) {
+      assetParams.deletePolicy = formData.deletePolicy;
+    }
 
     this.saveFlavor.emit(assetParams);
     this.parentPopupWidget.close();

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
@@ -16,6 +15,7 @@ import 'rxjs/add/observable/forkJoin';
 import { EntryWidget } from '../entry-widget';
 import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -30,7 +30,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
               private _kalturaServerClient: KalturaClient,
               private _permissionsService: KMCPermissionsService)
     {
-        super(EntryWidgetKeys.Users);
+        super(ContentEntryViewSections.Users);
 	    this._buildForm();
     }
 	private _buildForm() : void{

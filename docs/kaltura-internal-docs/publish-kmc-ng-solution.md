@@ -39,7 +39,7 @@ git status
 ```
 2. Make sure you are working against updated version of master
 ```
-npm checkout master
+git checkout master
 git fetch
 ```
    * NOTICE: in order to sync tags you must run both `git fetch` and `git pull`
@@ -75,7 +75,7 @@ git status
 
 2. Make sure you are working against updated version of master
 ```
-npm checkout master
+git checkout master
 git fetch
 git pull
 ```
@@ -105,7 +105,9 @@ ws --spa index.html
 ```
    * If you don’t have `ws` you can either use your preferred web server or install `npm install -g local-web-server`
 
-7. Commit changes in **kmc-ng** with message: ‘chore: update kaltura libraries’. No need to push this commit.
+7. Update KMCng version in deploy/config.ini to the current KMCng version: vX.X.X
+
+8. Commit changes in **kmc-ng** with message: ‘chore: update kaltura libraries’. No need to push this commit.
 
 ### Publish application
 

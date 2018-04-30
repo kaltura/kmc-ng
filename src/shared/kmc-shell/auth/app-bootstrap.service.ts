@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization, AppStorage } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from './app-authentication.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { globalConfig } from 'config/global';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum BoostrappingStatus
 {
@@ -24,7 +25,7 @@ export class AppBootstrap implements CanActivate {
 
     constructor(private appLocalization: AppLocalization,
                 private auth: AppAuthentication,
-                private appStorage: AppStorage) {
+                private _browserService: BrowserService) {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -100,8 +101,8 @@ export class AppBootstrap implements CanActivate {
     private getCurrentLanguage(): string {
         let lang: string = null;
         // try getting last selected language from local storage
-        if (this.appStorage.getFromLocalStorage('kmc_lang') !== null) {
-            const userLanguage: string = this.appStorage.getFromLocalStorage('kmc_lang');
+        if (this._browserService.getFromLocalStorage('kmc_lang') !== null) {
+            const userLanguage: string = this._browserService.getFromLocalStorage('kmc_lang');
             if (kmcAppConfig.locales.find(locale => locale.id === userLanguage)) {
                 lang = userLanguage;
             }

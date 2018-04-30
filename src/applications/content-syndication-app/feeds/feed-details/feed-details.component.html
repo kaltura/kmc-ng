@@ -7,13 +7,13 @@
     <a class="kBulkCancel" (click)="_close()">
       {{'applications.content.syndication.details.header.cancel' | translate}}
     </a>
-    <button [disabled]="_isBusy || _blockerMessage" *ngIf="_mode === 'edit'" class="kDeletehBtn kButtonDanger" pButton icon="kIcontrash"
+    <button [disabled]="(_kmcPermissions.SYNDICATION_DELETE | kDisabledIfNotPermitted) || _isBusy || _blockerMessage" *ngIf="_mode === 'edit'" class="kDeletehBtn kButtonDanger" pButton icon="kIcontrash"
             label="{{'applications.content.syndication.details.header.delete' | translate}}"
             (click)="_deleteFeed()"></button>
 
     <button pButton class="kSaveBtn kButtonBranded"
             (click)="_save()"
-            [disabled]="!_form.valid || !_currentDestinationFormState.isValid || (!_form.dirty && !_currentDestinationFormState.isDirty)"
+            [disabled]="_saveBtnDisabled"
             label="{{'applications.content.syndication.details.header.save' | translate}}">
     </button>
   </div>
@@ -116,26 +116,31 @@
             <kGoogleDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.googleVideo" [feed]="feed"
               [contentFlavors]="_flavors" [players]="_players"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kGoogleDestinationForm>
             <!--Yahoo-->
             <kYahooDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.yahoo" [feed]="feed"
               [contentFlavors]="_flavors" [players]="_players"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kYahooDestinationForm>
             <!--Roku-->
             <kRokuDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.rokuDirectPublisher"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kRokuDestinationForm>
             <!--Opera-->
             <kOperaDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.operaTvSnap"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kOperaDestinationForm>
             <!--Flexible Format (xsl code)-->
             <kFlexibleFormatDestinationForm
+              [mode]="_mode"
               *ngSwitchCase="_kalturaSyndicationFeedType.kalturaXslt" [feed]="feed"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kFlexibleFormatDestinationForm>

@@ -98,6 +98,7 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
       {
         id: 'delete',
         label: this._appLocalization.get('applications.settings.accessControl.table.actions.delete'),
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', profile)
       },
     ];

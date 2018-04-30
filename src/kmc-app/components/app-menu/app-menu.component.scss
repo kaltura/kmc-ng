@@ -6,9 +6,13 @@
 }
 
 .appMenu {
-    background-color: $menuBkgColor;
+    background: $menuBkgColor; /* Old browsers */
+    background: -moz-linear-gradient(left, #1b4a97 0%, #2364c3 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #1b4a97 0%,#2364c3 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #1b4a97 0%,#2364c3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     height: 54px;
     display: flex;
+    align-items: center;
     position: fixed;
     z-index: 700;
     width: 100%;
@@ -116,13 +120,12 @@
         color: white;
         font-size: 32px;
         margin-left: 16px;
-        margin-top: 10px;
     }
     .kBeta{
         width:30px;
         height:15px;
-        margin-top: 8px;
         margin-right: 20px;
+        margin-top: -10px;
     }
 }
 
@@ -141,6 +144,9 @@
         &:hover{
             color: #000000;
         }
+    }
+    .kHelpLinkHidden {
+        display: none;
     }
     .kContexualHelp{
         background-color: $kGrayscale7;
