@@ -1,3 +1,49 @@
+<a name="4.3.0"></a>
+# [4.3.0](https://github.com/kaltura/kmc-ng/compare/v4.2.0...v4.3.0) (2018-04-30)
+
+
+### Bug Fixes
+
+* **content/entries:** in entry details metadata section, fix showing entries selector ([12c8ffc](https://github.com/kaltura/kmc-ng/commit/12c8ffc))
+
+
+### Features
+
+* add whitelist for login ([#589](https://github.com/kaltura/kmc-ng/issues/589)) ([1d1aba5](https://github.com/kaltura/kmc-ng/commit/1d1aba5))
+* allow login to the application by providing a valid ks value ([#614](https://github.com/kaltura/kmc-ng/issues/614)) ([611f31d](https://github.com/kaltura/kmc-ng/commit/611f31d))
+* allow user login by ks in query params ([#604](https://github.com/kaltura/kmc-ng/issues/604)) ([cf69ddf](https://github.com/kaltura/kmc-ng/commit/cf69ddf))
+* extend logs support ([#590](https://github.com/kaltura/kmc-ng/issues/590)) ([fd1a205](https://github.com/kaltura/kmc-ng/commit/fd1a205))
+* implement ATTACHMENT_MODIFY permission ([#498](https://github.com/kaltura/kmc-ng/issues/498)) KMCNG-1522 ([2c8ec3a](https://github.com/kaltura/kmc-ng/commit/2c8ec3a))
+* implement permission ACCESS_CONTROL_UPDATE ([#489](https://github.com/kaltura/kmc-ng/issues/489)) KMCNG-1508 ([3ecf2c6](https://github.com/kaltura/kmc-ng/commit/3ecf2c6))
+* implement permission ACCOUNT_UPDATE_SETTINGS ([#485](https://github.com/kaltura/kmc-ng/issues/485)) KMCNG-1503 ([aa7826b](https://github.com/kaltura/kmc-ng/commit/aa7826b))
+* implement permission ADMIN_USER_BULK ([#492](https://github.com/kaltura/kmc-ng/issues/492)) KMCNG-1515 ([89e7c84](https://github.com/kaltura/kmc-ng/commit/89e7c84))
+* implement permission ADMIN_USER_UPDATE ([#504](https://github.com/kaltura/kmc-ng/issues/504)) KMCNG-1544 ([df0b7db](https://github.com/kaltura/kmc-ng/commit/df0b7db))
+* implement permission ANALYTICS_BASE ([#539](https://github.com/kaltura/kmc-ng/issues/539)) KMCNG-1595 ([471fc1e](https://github.com/kaltura/kmc-ng/commit/471fc1e))
+* implement permission CONTENT_INGEST_BULK_UPLOAD ([#493](https://github.com/kaltura/kmc-ng/issues/493)) KMCNG-1516 ([7e42cc4](https://github.com/kaltura/kmc-ng/commit/7e42cc4))
+* implement permission CONTENT_INGEST_ORPHAN_VIDEO,  CONTENT_INGEST_ORPHAN_AUDIO and LIVE_STREAM_ADD ([#491](https://github.com/kaltura/kmc-ng/issues/491)) KMCNG-1512 ([9684d71](https://github.com/kaltura/kmc-ng/commit/9684d71))
+* implement permission CUSTOM_DATA_PROFILE_DELETE ([#484](https://github.com/kaltura/kmc-ng/issues/484)) KMCNG-1502 ([efc05cb](https://github.com/kaltura/kmc-ng/commit/efc05cb))
+* implement permission CUSTOM_DATA_PROFILE_UPDATE and CUSTOM_DATA_PROFILE_ADD ([#490](https://github.com/kaltura/kmc-ng/issues/490)) KMCNG-1510 ([0adf9f1](https://github.com/kaltura/kmc-ng/commit/0adf9f1))
+* implement permission FEATURE_DISABLE_KMC_LIST_THUMBNAILS ([#521](https://github.com/kaltura/kmc-ng/issues/521)) KMCNG-1561 ([1dab23b](https://github.com/kaltura/kmc-ng/commit/1dab23b))
+* implement permission FEATURE_END_USER_MANAGE ([#522](https://github.com/kaltura/kmc-ng/issues/522)) KMCNG-1562 ([6dd9776](https://github.com/kaltura/kmc-ng/commit/6dd9776))
+* implement permission FEATURE_ENTITLEMENT ([#523](https://github.com/kaltura/kmc-ng/issues/523)) KMCNG-1563 ([c9c1c17](https://github.com/kaltura/kmc-ng/commit/c9c1c17))
+* implement permission FEATURE_KMC_DRILLDOWN_TAGS_COLUMN ([#526](https://github.com/kaltura/kmc-ng/issues/526)) KMCNG-1567 ([ac83d27](https://github.com/kaltura/kmc-ng/commit/ac83d27))
+* implement permission LIVE_STREAM_UPDATE ([#512](https://github.com/kaltura/kmc-ng/issues/512)) KMCNG-1553 ([08af88d](https://github.com/kaltura/kmc-ng/commit/08af88d))
+* implement permission PLAYLIST_UPDATE ([#514](https://github.com/kaltura/kmc-ng/issues/514)) KMCNG-1554 ([74c7a26](https://github.com/kaltura/kmc-ng/commit/74c7a26))
+* implement permission SYNDICATION_UPDATE ([#516](https://github.com/kaltura/kmc-ng/issues/516)) KMCNG-1556 ([d8bab20](https://github.com/kaltura/kmc-ng/commit/d8bab20))
+* implement permission TRANSCODING_ADD ([#487](https://github.com/kaltura/kmc-ng/issues/487)) KMCNG-1506 ([b21f483](https://github.com/kaltura/kmc-ng/commit/b21f483))
+* implement permission TRANSCODING_DELETE ([#488](https://github.com/kaltura/kmc-ng/issues/488)) KMCNG-1507 ([e2d8c6e](https://github.com/kaltura/kmc-ng/commit/e2d8c6e))
+* implement permission TRANSCODING_UPDATE ([#518](https://github.com/kaltura/kmc-ng/issues/518)) KMCNG-1559 ([5cb8339](https://github.com/kaltura/kmc-ng/commit/5cb8339))
+* implement permission WIDEVINE_PLUGIN_PERMISSION ([#542](https://github.com/kaltura/kmc-ng/issues/542)) KMCNG-1598 ([fae35cf](https://github.com/kaltura/kmc-ng/commit/fae35cf))
+* implement permissions ADMIN_ROLE_ADD and ADMIN_ROLE_DELETE ([#496](https://github.com/kaltura/kmc-ng/issues/496)) KMCNG-1519 ([d8b0120](https://github.com/kaltura/kmc-ng/commit/d8b0120))
+* implement permissions ADMIN_USER_ADD and ADMIN_USER_DELETE ([#497](https://github.com/kaltura/kmc-ng/issues/497)) KMCNG-1521 KMCNG-1520 ([aee4f83](https://github.com/kaltura/kmc-ng/commit/aee4f83))
+* implement permissions BULK_LOG_DELETE and BULK_LOG_DOWNLOAD ([#499](https://github.com/kaltura/kmc-ng/issues/499)) KMCNG-1524 KMCNG-1523 ([a768336](https://github.com/kaltura/kmc-ng/commit/a768336))
+* implement permissions FEATURE_HIDE_ASPERA_LINK and FEATURE_SHOW_ASPERA_UPLOAD_BUTTON ([#524](https://github.com/kaltura/kmc-ng/issues/524)) KMCNG-1572 KMCNG-1564 ([fa379bb](https://github.com/kaltura/kmc-ng/commit/fa379bb))
+* implement permissions FEATURE_KALTURA_LIVE_STREAM and FEATURE_KMC_AKAMAI_UNIVERSAL_LIVE_STREAM_PROVISION ([#525](https://github.com/kaltura/kmc-ng/issues/525)) KMCNG-1566 KMCNG-1565 ([5340f69](https://github.com/kaltura/kmc-ng/commit/5340f69))
+* load application configuration into the index.html and fallback to file if not available ([20a21b8](https://github.com/kaltura/kmc-ng/commit/20a21b8))
+* modify external application api to use the domain and port of kmcng ([8500bf0](https://github.com/kaltura/kmc-ng/commit/8500bf0))
+
+
+
 <a name="4.2.0"></a>
 # [4.2.0](https://github.com/kaltura/kmc-ng/compare/v4.1.0...v4.2.0) (2018-04-15)
 
