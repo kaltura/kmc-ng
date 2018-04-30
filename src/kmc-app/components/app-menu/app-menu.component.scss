@@ -145,6 +145,9 @@
             color: #000000;
         }
     }
+    .kHelpLinkHidden {
+        display: none;
+    }
     .kContexualHelp{
         background-color: $kGrayscale7;
         margin: -15px;

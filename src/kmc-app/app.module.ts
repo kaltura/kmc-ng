@@ -81,6 +81,9 @@ import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
+import { APP_STORAGE_TOKEN } from '@kaltura-ng/kaltura-common/app-storage.service';
+import { KmcLogsModule } from 'app-shared/kmc-shell/kmc-logs/kmc-logs.module';
+import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger/kaltura-logger.module';
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
@@ -141,6 +144,9 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      KmcLogsModule.forRoot(),
+      KalturaLoggerModule.forRoot(),
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcViewsModule.forRoot(),
   ],
   declarations: <any>[
@@ -159,7 +165,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ChangeAccountComponent,
     ChangelogComponent,
     ChangelogContentComponent,
-    LoginByKSComponent,
+    LoginByKSComponent
   ],
   bootstrap: <any>[
     AppComponent
@@ -171,7 +177,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       {
           provide: KalturaLoggerName, useValue: 'kmc'
       },
-    { provide: AppStorage, useExisting: BrowserService },
+      {
+           provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
     ConfirmationService
   ]
 })
@@ -181,7 +188,7 @@ export class AppModule {
                 uploadManagement: UploadManagement) {
 
         if (globalConfig.client.production) {
-            kalturaLogger.setOptions({level: 'Warn'});
+            kalturaLogger.setOptions({level: 'Error'});
         } else {
             kalturaLogger.setOptions({level: 'All'});
         }

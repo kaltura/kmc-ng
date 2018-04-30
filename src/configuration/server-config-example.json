@@ -5,6 +5,12 @@
         "freeTrialExpiration": {
             "enabled": false,
             "trialPeriodInDays": 30
+        },
+        "login": {
+            "limitAccess": {
+                "enabled": false,
+                "verifyBetaServiceUrl": ""
+            }
         }
     },
     "cdnServers": {

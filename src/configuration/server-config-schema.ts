@@ -25,10 +25,24 @@ export const ServerConfigSchema = {
                     },
                     required: ['enabled', 'trialPeriodInDays'],
                     additionalProperties: false
-                }
+                },
+                login: {
+                    properties: {
+                        limitAccess: {
+                            properties: {
+                                enabled: {type: 'boolean'},
+                                verifyBetaServiceUrl: { type: 'string' },
+                            },
+                            required: ['enabled', 'verifyBetaServiceUrl'],
+                            additionalProperties: false
+                        }
+                    },
+                    required: ['limitAccess'],
+                    additionalProperties: false
+                },
 
             },
-            required: ['uri', 'previewUIConf', 'freeTrialExpiration'],
+            required: ['uri', 'previewUIConf', 'freeTrialExpiration', 'login'],
             additionalProperties: false
         },
         cdnServers: {

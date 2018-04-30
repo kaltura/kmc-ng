@@ -68,7 +68,13 @@ export interface ServerConfig {
         freeTrialExpiration: {
             enabled: boolean,
             trialPeriodInDays: number
-        }
+        },
+        login: {
+            limitAccess: {
+                enabled: boolean,
+                verifyBetaServiceUrl: string
+            }
+        };
     };
     cdnServers: {
         serverUri: string,
