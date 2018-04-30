@@ -10,6 +10,9 @@
             </div>
 
             <div class="kMenu-right">
+                <k-logs-record mode="button"
+                               *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
+                               [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"></k-logs-record>
                 <kUploadButton></kUploadButton>
                 <kUploadMonitor [appmenu]="appmenu"></kUploadMonitor>
 
@@ -59,8 +62,13 @@
         <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
         <p class="kHelpLink" (click)="openHelpLink('manual')">{{'app.helpMenu.userManual' | translate}}</p>
         <p class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
+        <k-logs-record mode="link"
+                       [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"
+                       [class.kHelpLinkHidden]="!(_kmcLogs.logsRecordMode | async).enabled"></k-logs-record>
         <hr>
         <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
+        <k-power-user-console [class.kHelpLinkHidden]="!_powerUser"></k-power-user-console>
+
         <!--div class="kContexualHelp">
             <hr>
             <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
