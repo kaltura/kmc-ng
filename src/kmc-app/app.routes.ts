@@ -23,9 +23,7 @@ const routes: Routes = <Routes>[
                 path: '', redirectTo: '/content/entries/list', pathMatch: 'full'
             },
             {
-                path: '',
-                component: DashboardComponent,
-                canActivate: [AuthCanActivate],
+                path: '',  component: DashboardComponent, canActivate: [AuthCanActivate],
                 children: [
                     {
                         path: 'default', component: AppDefaultViewComponent
