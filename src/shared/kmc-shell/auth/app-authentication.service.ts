@@ -31,7 +31,7 @@ import { serverConfig } from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsAction';
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 const ksSessionStorageKey = 'auth.login.ks';
 
@@ -83,7 +83,7 @@ export class AppAuthentication {
                 logger: KalturaLogger,
                 private _serverPolls: KmcServerPolls,
                 private _permissionsService: KMCPermissionsService,
-                private _http: Http,
+                private _http: HttpClient,
                 private _appEvents: AppEventsService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
@@ -207,13 +207,19 @@ export class AppAuthentication {
 
         return <any>(this.kalturaServerClient.multiRequest(request)
             .switchMap(
-                response => this._verifyBetaUser(response[2].result),
-                (response, isPartnerPartOfBeta) => ({ response, isPartnerPartOfBeta })
+                response => {
+                    if (!response.hasErrors()) {
+                        return this._checkIfPartnerCanAccess(response[2].result);
+                    } else {
+                        return Observable.of(true); // errors will be handled by the map function
+                    }
+                },
+                (response, isPartnerAllowed) => ({ response, isPartnerAllowed })
             )
             .map(
-                ({ response, isPartnerPartOfBeta }) => {
+                ({ response, isPartnerAllowed }) => {
                     if (!response.hasErrors()) {
-                        if (isPartnerPartOfBeta) {
+                        if (isPartnerAllowed) {
                             this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
                             return { success: true, error: null };
                         } else {
@@ -233,28 +239,30 @@ export class AppAuthentication {
         );
     }
 
-    private _verifyBetaUser(partner: KalturaPartner): Observable<boolean> {
+    private _checkIfPartnerCanAccess(partner: KalturaPartner): Observable<boolean> {
         const limitAccess = serverConfig.kalturaServer.login.limitAccess;
 
         if (!limitAccess.enabled) {
             return Observable.of(true);
         }
 
-        this._logger.info(`check if partner is participating in the beta program`, { partnerId: partner.id, limitAccess: true });
+        const url = limitAccess.verifyBetaServiceUrl + partner.id;
+        this._logger.debug(`check if partner can access the KMC`, {partnerId: partner.id, limitAccess: true, url});
 
-        const verifyBetaServiceUrl = limitAccess.verifyBetaServiceUrl;
-        return this._http.get(verifyBetaServiceUrl + partner.id)
+        return this._http.get(url, { responseType: 'json' })
             .map(res => {
-                const { isPartnerPartOfBeta } = res.json();
+                const {isPartnerPartOfBeta: canPartnerAccess} = <any>res;
 
-                this._automaticLoginErrorReason = isPartnerPartOfBeta ? null : AutomaticLoginErrorReasons.closedForBeta;
-
-                this._logger.info(`user is ${!isPartnerPartOfBeta ? 'not' : ''} allowed to login the beta program`, { partnerId: partner.id, isPartnerPartOfBeta });
-
-                return isPartnerPartOfBeta;
+                this._automaticLoginErrorReason = canPartnerAccess ? null : AutomaticLoginErrorReasons.closedForBeta;
+                this._logger.info(`query service to check if partner can access the KMC`, {
+                    partnerId: partner.id,
+                    canPartnerAccess
+                });
+                return canPartnerAccess;
             })
-            .catch(() => {
-                throw Error('Failed to verify beta user');
+            .catch((e) => {
+                this._logger.error('Failed to check if partner can access the KMC', e);
+                throw Error('Failed to check if partner can access the KMC');
             });
     }
 
@@ -352,22 +360,24 @@ export class AppAuthentication {
                         .switchMap(
                             response => {
                                 if (!response.hasErrors()) {
-                                    return this._verifyBetaUser(response[1].result);
+                                    return this._checkIfPartnerCanAccess(response[1].result);
+                                } else {
+                                    return Observable.of(true); // errors will be handled by the map function
                                 }
-                                throw Error('login by ks error');
                             },
-                            (response, isPartnerPartOfBeta) => ({ response, isPartnerPartOfBeta })
+                            (response, isPartnerAllowed) => ({ response, isPartnerAllowed })
                         )
                         .subscribe(
-                            ({ response, isPartnerPartOfBeta }) => {
-                                if (isPartnerPartOfBeta) {
+                            ({ response, isPartnerAllowed }) => {
+                                if (!response.hasErrors() && isPartnerAllowed) {
                                     this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result);
                                     observer.next(true);
                                     observer.complete();
-                                } else {
-                                    observer.next(false);
-                                    observer.complete();
+                                    return;
                                 }
+
+                                observer.next(false);
+                                observer.complete();
                             },
                             () => {
                                 observer.next(false);
@@ -401,7 +411,7 @@ export class AppAuthentication {
             return this._loginByKS(ksFromSession, true);
         }
 
-        this._logger.debug(`abort automatic login logic as no ks was provided by router or stored in session storage`);
+        this._logger.debug(`bypass automatic login logic as no ks was provided by router or stored in session storage`);
         return Observable.of(false);
     }
 
