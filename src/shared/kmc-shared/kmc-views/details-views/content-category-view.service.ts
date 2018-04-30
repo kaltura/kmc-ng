@@ -90,7 +90,11 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
     }
 
     private _isSectionEnabled(section: ContentCategoryViewSections, category: KalturaCategory): boolean {
-        return this._isAvailableByData(section, category) && this._isAvailableByPermission(section);
+        const availableByData = this._isAvailableByData(section, category);
+        const availableByPermission = this._isAvailableByPermission(section);
+
+        this._logger.debug('check if section is enabled', { availableByData, availableByPermission });
+        return availableByData && availableByPermission;
     }
 
     private _isAvailableByData(section: ContentCategoryViewSections, category: KalturaCategory): boolean {

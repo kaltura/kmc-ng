@@ -162,7 +162,11 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     }
 
     private _isSectionEnabled(section: ContentEntryViewSections, entry: KalturaMediaEntry): boolean {
-        return this._isAvailableByData(section, entry) && this._isAvailableByPermission(section);
+        const availableByData = this._isAvailableByData(section, entry);
+        const availableByPermission = this._isAvailableByPermission(section);
+
+        this._logger.debug('check if section is enabled', { availableByData, availableByPermission });
+        return availableByData && availableByPermission;
     }
 
     private _isAvailableByData(section: ContentEntryViewSections, entry: KalturaMediaEntry): boolean {
