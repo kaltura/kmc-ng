@@ -1,5 +1,4 @@
 import {Injectable, Optional, Inject} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
@@ -32,6 +31,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsAction';
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
 import { HttpClient } from '@angular/common/http';
+import { buildKalturaServerUri } from 'config/server';
 
 const ksSessionStorageKey = 'auth.login.ks';
 
@@ -246,7 +246,7 @@ export class AppAuthentication {
             return Observable.of(true);
         }
 
-        const url = limitAccess.verifyBetaServiceUrl + partner.id;
+        const url = buildKalturaServerUri(limitAccess.verifyBetaServiceUrl + partner.id);
         this._logger.debug(`check if partner can access the KMC`, {partnerId: partner.id, limitAccess: true, url});
 
         return this._http.get(url, { responseType: 'json' })
