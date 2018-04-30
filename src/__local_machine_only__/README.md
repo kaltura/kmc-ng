@@ -61,11 +61,11 @@ Follow these instructions to test external apps integration:
         },
         "clipAndTrim": {
             "enabled": true,
-            "uri": "/__local_machine_only__/kedit-vFuture/index.html"
+            "uri": "/__local_machine_only__/kea2-2.23.0/index.html"
         },
         "advertisements": {
             "enabled": true,
-            "uri": "/__local_machine_only__/kedit-vFuture/index.html"
+            "uri": "/__local_machine_only__/kea2-2.23.0/index.html"
         }
 ```
 
