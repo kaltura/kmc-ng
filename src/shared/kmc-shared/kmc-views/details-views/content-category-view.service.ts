@@ -90,16 +90,22 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
     }
 
     private _isSectionEnabled(section: ContentCategoryViewSections, category: KalturaCategory): boolean {
-        this._logger.debug(`check section availability for category`, { categoryId: category.id, section });
+        const availableByData = this._isAvailableByData(section, category);
+        const availableByPermission = this._isAvailableByPermission(section);
+
+        this._logger.debug('check if section is enabled', { availableByData, availableByPermission });
+        return availableByData && availableByPermission;
+    }
+
+    private _isAvailableByData(section: ContentCategoryViewSections, category: KalturaCategory): boolean {
+        this._logger.debug(`check section availability by data for category`, { categoryId: category.id, section });
         let result = false;
         switch (section) {
             case ContentCategoryViewSections.Metadata:
                 result = true;
                 break;
             case ContentCategoryViewSections.Entitlements:
-                const hasPrivacyContexts = category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
-                const hasFeatureEntitlementPermission = this._appPermissions.hasPermission(KMCPermissions.FEATURE_ENTITLEMENT);
-                result = hasPrivacyContexts && hasFeatureEntitlementPermission;
+                result = category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
                 break;
             case ContentCategoryViewSections.SubCategories:
                 result = category.directSubCategoriesCount > 0 &&
@@ -109,10 +115,31 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
                 break;
         }
 
-        this._logger.debug(`availability result`, { result });
+        this._logger.debug(`availability by data result`, { result });
 
         return result;
     }
+
+    private _isAvailableByPermission(section: ContentCategoryViewSections): boolean {
+        this._logger.debug(`check section availability by permissions`, { section });
+        let result = false;
+        switch (section) {
+            case ContentCategoryViewSections.Entitlements:
+                result = this._appPermissions.hasPermission(KMCPermissions.FEATURE_ENTITLEMENT);
+                break;
+            case ContentCategoryViewSections.Metadata:
+            case ContentCategoryViewSections.SubCategories:
+                result = true;
+                break;
+            default:
+                break;
+        }
+
+        this._logger.debug(`availability by permission result`, { result });
+
+        return result;
+    }
+
 
     protected _open(args: ContentCategoryViewArgs): Observable<boolean> {
         this._logger.info('handle open category view request by the user', { categoryId: args.category.id });
