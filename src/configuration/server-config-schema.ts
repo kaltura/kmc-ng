@@ -31,9 +31,9 @@ export const ServerConfigSchema = {
                         limitAccess: {
                             properties: {
                                 enabled: {type: 'boolean'},
-                                whitelist: { type: 'array', items: { type: 'number' } },
+                                verifyBetaServiceUrl: { type: 'string' },
                             },
-                            required: ['enabled', 'whitelist'],
+                            required: ['enabled', 'verifyBetaServiceUrl'],
                             additionalProperties: false
                         }
                     },

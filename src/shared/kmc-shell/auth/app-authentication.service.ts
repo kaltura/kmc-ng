@@ -31,6 +31,7 @@ import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { serverConfig } from 'config/server';
 import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsAction';
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
+import { Http } from '@angular/http';
 
 const ksSessionStorageKey = 'auth.login.ks';
 
@@ -83,6 +84,7 @@ export class AppAuthentication {
                 private _route: ActivatedRoute,
                 private _serverPolls: KmcServerPolls,
                 private _permissionsService: KMCPermissionsService,
+                private _http: Http,
                 private _appEvents: AppEventsService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
@@ -205,40 +207,52 @@ export class AppAuthentication {
         );
 
         return <any>(this.kalturaServerClient.multiRequest(request)
+            .switchMap(
+                response => this._verifyBetaUser(response[2].result),
+                (response, isPartnerPartOfBeta) => ({ response, isPartnerPartOfBeta })
+            )
             .map(
-                response => {
+                ({ response, isPartnerPartOfBeta }) => {
                     if (!response.hasErrors()) {
-
-                        if (this._verifyBetaUser(response[2].result)) {
+                        if (isPartnerPartOfBeta) {
                             this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
-                            return {success: true, error: null};
+                            return { success: true, error: null };
                         } else {
-                            return {success: false, error: {
-                                message: 'app.login.error.userForbiddenForBeta',
-                                custom: false,
-                                closedForBeta: true
-                            }};
+                            return {
+                                success: false, error: {
+                                    message: 'app.login.error.userForbiddenForBeta',
+                                    custom: false,
+                                    closedForBeta: true
+                                }
+                            };
                         }
                     }
 
-                    return {success: false, error: this._getLoginErrorMessage(response[0])};
+                    return { success: false, error: this._getLoginErrorMessage(response[0]) };
                 }
             ));
     }
 
-    private _verifyBetaUser(partner: KalturaPartner): boolean {
+    private _verifyBetaUser(partner: KalturaPartner): Observable<boolean> {
         const limitAccess = serverConfig.kalturaServer.login.limitAccess;
 
         if (!limitAccess.enabled) {
-            return true;
+            return Observable.of(true);
         }
 
-        const hasAccessToBeta = partner && limitAccess.whitelist.indexOf(partner.id) !== -1;
+        this._logger.info(`check if partner is participating in the beta program`, { partnerId: partner.id, limitAccess: true });
 
-        this._logger.info(`check if partner is participating in the beta program`, { partnerId: partner.id, limitAccess: true, hasAccessToBeta });
-        this._automaticLoginErrorReason = hasAccessToBeta ? null : AutomaticLoginErrorReasons.closedForBeta;
-        this._clearSessionCredentials();
-        return hasAccessToBeta;
+        const verifyBetaServiceUrl = limitAccess.verifyBetaServiceUrl;
+        return this._http.get(verifyBetaServiceUrl + partner.id)
+            .map(res => {
+                const { isPartnerPartOfBeta } = res.json();
+
+                this._automaticLoginErrorReason = isPartnerPartOfBeta ? null : AutomaticLoginErrorReasons.closedForBeta;
+
+                this._logger.info(`user is ${!isPartnerPartOfBeta ? 'not' : ''} allowed to login the beta program`, { partnerId: partner.id, isPartnerPartOfBeta });
+
+                return isPartnerPartOfBeta;
+            });
     }
 
     private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
@@ -332,18 +346,25 @@ export class AppAuthentication {
                     ];
 
                     return this.kalturaServerClient.multiRequest(requests)
-                        .subscribe(
-                            (response) => {
+                        .switchMap(
+                            response => {
                                 if (!response.hasErrors()) {
-                                    if (this._verifyBetaUser(response[1].result)) {
-                                        this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result);
-                                        observer.next(true);
-                                        observer.complete();
-                                    }
+                                    return this._verifyBetaUser(response[1].result);
                                 }
-
-                                observer.next(false);
-                                observer.complete();
+                                throw Error('login by ks error');
+                            },
+                            (response, isPartnerPartOfBeta) => ({ response, isPartnerPartOfBeta })
+                        )
+                        .subscribe(
+                            ({ response, isPartnerPartOfBeta }) => {
+                                if (isPartnerPartOfBeta) {
+                                    this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result);
+                                    observer.next(true);
+                                    observer.complete();
+                                } else {
+                                    observer.next(false);
+                                    observer.complete();
+                                }
                             },
                             () => {
                                 observer.next(false);

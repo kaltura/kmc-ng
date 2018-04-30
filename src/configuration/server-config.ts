@@ -72,7 +72,7 @@ export interface ServerConfig {
         login: {
             limitAccess: {
                 enabled: boolean,
-                whitelist: number[]
+                verifyBetaServiceUrl: string
             }
         };
     };

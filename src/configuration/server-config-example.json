@@ -9,7 +9,7 @@
         "login": {
             "limitAccess": {
                 "enabled": false,
-                "whitelist": []
+                "verifyBetaServiceUrl": null
             }
         }
     },
