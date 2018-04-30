@@ -45,8 +45,10 @@ export class KmcLoggerConfigurator implements OnDestroy {
                 return 'Error';
             case 'fatal':
                 return 'Fatal';
-            default:
+            case 'off':
                 return 'Off';
+            default:
+                return null;
         }
     }
 
@@ -71,20 +73,20 @@ export class KmcLoggerConfigurator implements OnDestroy {
         if (!this._ready) {
             this._ready = true;
 
-            const logLevelAsString = this._browserService.getQueryParam('log');
+            const logLevelAsString = this._browserService.getInitialQueryParam('log');
             const logLevel = this._getLogLevel(logLevelAsString);
-            const recordLogLevelAsString = this._browserService.getQueryParam('record');
+            const recordLogLevelAsString = this._browserService.getInitialQueryParam('record');
             const recordLogLevel = this._getLogLevel(recordLogLevelAsString);
 
-            if (logLevel !== 'Off' || recordLogLevel !== 'Off') {
+            if (logLevel || recordLogLevel) {
                 console.log(`logger configurator: set log level '${logLevel}' and record log level '${recordLogLevel}'`);
             }
 
-            if (logLevel !== 'Off') {
+            if (logLevel) {
                 this._setLoggerLevel(logLevel);
             }
 
-            if (recordLogLevel !== 'Off') {
+            if (recordLogLevel) {
                 this._enableLogsRecordMode(recordLogLevel);
             }
 

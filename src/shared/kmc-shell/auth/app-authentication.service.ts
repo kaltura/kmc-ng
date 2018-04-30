@@ -68,7 +68,6 @@ export class AppAuthentication {
                 private _browserService: BrowserService,
                 private _pageExitVerificationService: PageExitVerificationService,
                 logger: KalturaLogger,
-                private _route: ActivatedRoute,
                 private _serverPolls: KmcServerPolls,
                 private _permissionsService: KMCPermissionsService,
                 private _appEvents: AppEventsService) {

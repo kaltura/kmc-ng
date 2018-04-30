@@ -65,7 +65,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
             this.setSelectedRoute(router.routerState.snapshot.url);
         }
 
-        this._powerUser = this._browserService.getQueryParam('mode') === 'poweruser';
+        this._powerUser = this._browserService.getInitialQueryParam('mode') === 'poweruser';
     }
 
     ngOnInit() {

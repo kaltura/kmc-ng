@@ -34,7 +34,7 @@ export type AppStatus = {
 @Injectable()
 export class BrowserService implements IAppStorage {
 
-    private _queryParams: { [key: string]: any; } = {}
+    private _initialQueryParams: { [key: string]: any; } = {};
     private _growlMessage = new Subject<GrowlMessage>();
     private _sessionStartedAt: Date = new Date();
     public growlMessage$ = this._growlMessage.asObservable();
@@ -67,9 +67,8 @@ export class BrowserService implements IAppStorage {
     constructor(private localStorage: LocalStorageService,
                 private sessionStorage: SessionStorageService,
                 private _router: Router,
-                private _route: ActivatedRoute,
                 private _appLocalization: AppLocalization) {
-        this._recordQueryParams();
+        this._recordInitialQueryParams();
     }
 
     private _downloadContent(url: string): void {
@@ -85,13 +84,18 @@ export class BrowserService implements IAppStorage {
         });
     }
 
-    public getQueryParam(key: string): any {
-        return this._queryParams[key];
+    public getInitialQueryParam(key: string): any {
+        return this._initialQueryParams[key];
     }
 
-    private _recordQueryParams(): void {
-        if (this._route) {
-            this._queryParams = Object.assign({}, this._route.snapshot.params);
+    private _recordInitialQueryParams(): void {
+        try {
+            const search = location.search.substring(1);
+            this._initialQueryParams = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
+                return key === '' ? value : decodeURIComponent(value)
+            });
+        } catch (e) {
+            console.warn('failed to extract initial query params, ignoring any existing parameters. error ' + (e ? e.message : ''));
         }
     }
 
