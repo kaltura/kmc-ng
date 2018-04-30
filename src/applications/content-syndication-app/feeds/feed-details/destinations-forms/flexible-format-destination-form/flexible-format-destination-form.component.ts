@@ -100,9 +100,12 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
   }
 
   public getData(): KalturaGenericXsltSyndicationFeed {
+      this._logger.info(`handle get data action`);
     const data = new KalturaGenericXsltSyndicationFeed({
       xslt: this._xslCode
     });
+
+    this._logger.debug(`feed data`, { data });
 
     return data;
   }

@@ -153,7 +153,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-            this._logger.warb(`handle failed loading of feeds data`, { errorMessage });
+            this._logger.warn(`handle failed loading of feeds data`, { errorMessage });
           this._feeds.state.next({loading: false, errorMessage});
         });
   }
