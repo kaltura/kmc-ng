@@ -230,7 +230,8 @@ export class AppAuthentication {
 
                     return { success: false, error: this._getLoginErrorMessage(response[0]) };
                 }
-            ));
+            )
+        );
     }
 
     private _verifyBetaUser(partner: KalturaPartner): Observable<boolean> {
@@ -252,6 +253,9 @@ export class AppAuthentication {
                 this._logger.info(`user is ${!isPartnerPartOfBeta ? 'not' : ''} allowed to login the beta program`, { partnerId: partner.id, isPartnerPartOfBeta });
 
                 return isPartnerPartOfBeta;
+            })
+            .catch(() => {
+                throw Error('Failed to verify beta user');
             });
     }
 
