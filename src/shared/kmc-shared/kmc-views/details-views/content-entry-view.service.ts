@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KMCPermissionsService } from '../../kmc-permissions';
+import { KMCPermissionsService, KMCPermissions } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -162,7 +162,11 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     }
 
     private _isSectionEnabled(section: ContentEntryViewSections, entry: KalturaMediaEntry): boolean {
-        this._logger.debug(`check section availability for entry`, { categoryId: entry.id, section });
+        return this._isAvailableByData(section, entry) && this._isAvailableByPermission(section);
+    }
+
+    private _isAvailableByData(section: ContentEntryViewSections, entry: KalturaMediaEntry): boolean {
+        this._logger.debug(`check section availability by data for entry`, { categoryId: entry.id, section });
         const mediaType = entry.mediaType;
         const externalMedia = entry instanceof KalturaExternalMediaEntry;
         let result = false;
@@ -197,7 +201,49 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 break;
         }
 
-        this._logger.debug(`availability result`, { result });
+        this._logger.debug(`availability by data result`, { result });
+
+        return result;
+    }
+
+    private _isAvailableByPermission(section: ContentEntryViewSections): boolean {
+        this._logger.debug(`check section availability by permissions`, { section });
+        let result = false;
+        switch (section) {
+            case ContentEntryViewSections.Users:
+                result = this._appPermissions.hasPermission(KMCPermissions.FEATURE_END_USER_MANAGE);
+                break;
+            case ContentEntryViewSections.Related:
+                result = this._appPermissions.hasPermission(KMCPermissions.ATTACHMENT_PLUGIN_PERMISSION);
+                break;
+            case ContentEntryViewSections.Live:
+                result = this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM);
+                break;
+            case ContentEntryViewSections.Advertisements:
+                result = this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);
+                break;
+            case ContentEntryViewSections.Captions:
+                result = this._appPermissions.hasPermission(KMCPermissions.CAPTION_PLUGIN_PERMISSION);
+                break;
+            case ContentEntryViewSections.Distribution:
+                result = this._appPermissions.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_BASE);
+                break;
+            case ContentEntryViewSections.Metadata:
+                result = this._appPermissions.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION);
+                break;
+            case ContentEntryViewSections.Thumbnails:
+            case ContentEntryViewSections.Flavours:
+            case ContentEntryViewSections.Clips:
+            case ContentEntryViewSections.AccessControl:
+            case ContentEntryViewSections.Scheduling:
+                result = true;
+                break;
+            default:
+                result = true;
+                break;
+        }
+
+        this._logger.debug(`availability by permissions result`, { result });
 
         return result;
     }
