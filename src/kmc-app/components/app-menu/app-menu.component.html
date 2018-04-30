@@ -57,10 +57,10 @@
         <p class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
         <p class="kHelpLink" (click)="openHelpLink('kmcOverview')">{{'app.helpMenu.kmcOverview' | translate}}</p>
         <p class="kHelpLink" (click)="openHelpLink('mediaManagement')">{{'app.helpMenu.mediaManagement' | translate}}</p>
-        <p class="kHelpLink" (click)="openHelpLink('')">{{'app.helpMenu.productTour' | translate}}</p>
+        <p class="kDisabled">{{'app.helpMenu.productTour' | translate}}</p>
         <hr>
         <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
-        <p class="kHelpLink" (click)="openHelpLink('manual')">{{'app.helpMenu.userManual' | translate}}</p>
+        <p class="kDisabled">{{'app.helpMenu.userManual' | translate}}</p>
         <p class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
         <k-logs-record mode="link"
                        [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"
