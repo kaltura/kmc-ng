@@ -4,8 +4,9 @@ import { AppModule } from './app.module';
 import { environment } from 'environments/environment';
 import { initializeConfiguration } from '../configuration/server-config-utils';
 import { globalConfig } from 'config/global';
+import { externalAppsConfigurationAdapter } from 'config/server';
 
-initializeConfiguration()
+initializeConfiguration(externalAppsConfigurationAdapter)
     .subscribe(
         () =>
         {
@@ -23,7 +24,7 @@ initializeConfiguration()
                 if (errorElement) {
                     errorElement.style.display = 'block';
                 }
-            }catch(innerError) {
+            } catch(innerError) {
             }
 
             console.error(error);

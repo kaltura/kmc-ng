@@ -8,6 +8,7 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
+import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kDropFoldersList',
@@ -37,6 +38,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
               private _refineFiltersService: DropFoldersRefineFiltersService,
               private _appLocalization: AppLocalization,
               private _router: Router,
+              private _contentEntryViewService: ContentEntryViewService,
               private _browserService: BrowserService) {
   }
 
@@ -78,7 +80,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                             }
                         }
                         ]
-                    })
+                    });
                 });
     }
 
@@ -101,7 +103,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                                 }
                             }
                             ]
-                        })
+                        });
                     } else {
                         this._tableBlockerMessage = null;
                     }
@@ -184,7 +186,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                   }
                 }
               ]
-            })
+            });
           }
         );
     };
@@ -238,16 +240,14 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
   public _navigateToEntry(entryId: string): void {
     this._dropFoldersStore.isEntryExist(entryId)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
-      .subscribe(
-        exists => {
-          if (exists) {
-            this._router.navigate(['/content/entries/entry', entryId]);
-          }
-        },
-        ({ message }) => this._browserService.alert({ message })
-      );
+        .cancelOnDestroy(this)
+        .tag('block-shell')
+        .filter(Boolean)
+        .switchMap(() => this._contentEntryViewService.openById(entryId))
+        .subscribe(
+            () => {},
+            ({ message }) => this._browserService.alert({ message })
+        );
   }
 
   public _deleteDropFolderFiles(event): void {
