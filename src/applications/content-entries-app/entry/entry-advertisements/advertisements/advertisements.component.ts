@@ -17,7 +17,7 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
 
-  private _confirmClose = false;
+  public _confirmClose = false;
 
   constructor(private _logger: KalturaLogger,
               private _browserService: BrowserService,

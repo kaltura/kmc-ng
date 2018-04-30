@@ -226,3 +226,8 @@
   </ng-template-->
 </kPopupWidget>
 
+<kPopupWidget #liveDashboard [fullScreen]="true">
+    <ng-template>
+        <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
+    </ng-template>
+</kPopupWidget>
