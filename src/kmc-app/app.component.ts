@@ -67,6 +67,6 @@ export class AppComponent implements OnInit {
       }
     );
 
-      this._loggerConfigurator.init(this._route);
+      this._loggerConfigurator.init();
   }
 }

@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { KalturaLogger, LogLevels } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
@@ -69,7 +68,7 @@ export class KmcLoggerConfigurator implements OnDestroy {
         });
     }
 
-    public init(route: ActivatedRoute): void {
+    public init(): void {
         if (!this._ready) {
             this._ready = true;
 
