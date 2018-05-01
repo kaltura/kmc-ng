@@ -8,12 +8,14 @@ import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/po
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {Menu, MenuItem, SelectItem} from 'primeng/primeng';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 @Component({
     selector: 'kEntryRelated',
     templateUrl: './entry-related.component.html',
-    styleUrls: ['./entry-related.component.scss']
+    styleUrls: ['./entry-related.component.scss'],
+    providers: [KalturaLogger.createLogger('EntryRelated')]
 })
 export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
   public _kmcPermissions = KMCPermissions;
@@ -36,6 +38,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 	private _editPopupStateChangeSubscribe : ISubscription;
 
 	constructor(public _widgetService: EntryRelatedWidget,
+				private _logger: KalturaLogger,
 				private _appLocalization: AppLocalization) {
     }
 
@@ -89,6 +92,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 	private actionSelected(action: string): void{
 		switch (action){
 			case "edit":
+			    this._logger.info(`handle edit file action by user`, { file: this._currentFile });
 				this.editPopup.open();
 				break;
 			case "delete":

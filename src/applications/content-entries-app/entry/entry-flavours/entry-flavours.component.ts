@@ -14,11 +14,13 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
     selector: 'kEntryFlavours',
     templateUrl: './entry-flavours.component.html',
-    styleUrls: ['./entry-flavours.component.scss']
+    styleUrls: ['./entry-flavours.component.scss'],
+    providers: [KalturaLogger.createLogger('EntryFlavours')]
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
@@ -47,7 +49,8 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
               private _uploadManagement: UploadManagement,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+                private _logger: KalturaLogger) {
     }
 
     ngOnInit() {
@@ -115,9 +118,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				this._widgetService.downloadFlavor(this._selectedFlavor);
 				break;
 			case "upload":
+			    this._logger.info(`handle upload action by user, open file selec dialog`);
 				this.fileDialog.open();
 				break;
 			case "import":
+			    this._logger.info(`handle import action by user`);
 				this.importPopup.open();
 				break;
 			case "convert":
@@ -127,9 +132,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				this._widgetService.reconvertFlavor(this._selectedFlavor);
 				break;
 			case "preview":
+			    this._logger.info(`handle preview action by user`);
 				this.previewPopup.open();
 				break;
 			case "drm":
+			    this._logger.info(`handle drm action by user`);
 				this.drmPopup.open();
 				break;
 		}
@@ -155,11 +162,13 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
+        this._logger.info(`handle file selected action`, { file: selectedFiles[0]});
       const fileData: File = selectedFiles[0];
 
       if (this._validateFileSize(fileData)) {
         this._widgetService.uploadFlavor(this._selectedFlavor, fileData);
       } else {
+          this._logger.info(`file size exceed, abort action, show alert`);
         this._browserService.alert({
           header: this._appLocalization.get('app.common.attention'),
           message: this._appLocalization.get('applications.upload.validation.fileSizeExceeded')

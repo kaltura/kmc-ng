@@ -21,6 +21,7 @@ import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-veri
 import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export enum ActionTypes
 {
@@ -76,12 +77,13 @@ export class EntryStore implements  OnDestroy {
 				private _entriesStore : EntriesStore,
 				@Host() private _widgetsManager: EntryWidgetsManager,
 				private _entryRoute: ActivatedRoute,
+        private _logger: KalturaLogger,
         private _contentEntryViewService: ContentEntryViewService,
         private _contentEntriesMainViewService: ContentEntriesMainViewService,
         private _pageExitVerificationService: PageExitVerificationService,
         private _appLocalization: AppLocalization) {
 
-
+        this._logger = _logger.subLogger('EntryStore');
 		this._widgetsManager.entryStore = this;
 
 		this._onSectionsStateChanges();
@@ -233,26 +235,28 @@ export class EntryStore implements  OnDestroy {
 	}
 	public saveEntry() : void {
 
+	    this._logger.info(`handle save entry action`, { entry: this.entry });
 		const newEntry = KalturaTypesFactory.createObject(this.entry);
 
 		if (newEntry && newEntry instanceof KalturaMediaEntry) {
 			this._transmitSaveRequest(newEntry)
 		} else {
-			console.error(new Error(`Failed to create a new instance of the entry type '${this.entry ? typeof this.entry : 'n/a'}`));
+			this._logger.warn(new Error(`Failed to create a new instance of the entry type '${this.entry ? typeof this.entry : 'n/a'}`));
 			this._state.next({action: ActionTypes.EntryPrepareSavingFailed});
 		}
 	}
 
-	public reloadEntry() : void
-	{
-		if (this.entryId)
-		{
-			this._loadEntry(this.entryId);
-		}
-	}
+    public reloadEntry(): void {
+        if (this.entryId) {
+            this._logger.info(`handle reload entry action`);
+            this._loadEntry(this.entryId);
+        }
+    }
 
 	private _loadEntry(entryId : string) : void {
+	    this._logger.info(`handle load entry request`, { entryId });
 		if (this._loadEntrySubscription) {
+		    this._logger.info(`another load entry request is in progres, abort it, start a new one`);
 			this._loadEntrySubscription.unsubscribe();
 			this._loadEntrySubscription = null;
 		}
@@ -268,6 +272,7 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
 				response => {
+				    this._logger.info(`handle successful load entry request`);
                     if (this._contentEntryViewService.isAvailable({ entry: response, activatedRoute: this._entryRoute })) {
                         this._entry.next(response);
                         this._entryId = response.id;
@@ -287,6 +292,7 @@ export class EntryStore implements  OnDestroy {
                     }
 				},
 				error => {
+                    this._logger.info(`handle failed load entry request`, { errorMessage: error.message });
 					this._state.next({action: ActionTypes.EntryLoadingFailed, error});
 
 				}
@@ -294,6 +300,7 @@ export class EntryStore implements  OnDestroy {
 	}
 
     public openSection(sectionKey: ContentEntryViewSections): void {
+	    this._logger.info(`handle open section action`, { sectionKey });
         this._contentEntryViewService.open({ section: sectionKey, entry: this.entry });
     }
 
@@ -320,6 +327,7 @@ export class EntryStore implements  OnDestroy {
 
     public openEntry(entry: KalturaMediaEntry | string): void {
         const entryId = entry instanceof KalturaMediaEntry ? entry.id : entry;
+        this._logger.info(`handle open entry action`, { entryId });
         if (entryId !== this.entryId) {
             this.canLeave()
                 .filter(({ allowed }) => allowed)
@@ -336,6 +344,8 @@ export class EntryStore implements  OnDestroy {
                             });
                     }
                 });
+        } else {
+            this._logger.info(`attemtp to navigate to the same entry, abort action`);
         }
     }
 

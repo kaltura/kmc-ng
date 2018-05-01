@@ -24,6 +24,7 @@ import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
 import {EntryWidget} from '../entry-widget';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 @Injectable()
@@ -53,8 +54,10 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
 
   constructor(private _accessControlProfileStore: AccessControlProfileStore,
               private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger,
               private _flavoursStore: FlavoursStore) {
     super(ContentEntryViewSections.AccessControl);
+      this._logger = _logger.subLogger('EntryAccessControlWidget');
   }
 
   /**
@@ -128,6 +131,7 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
     let entryACProfileIndex = R.findIndex(R.propEq('id', this.data.accessControlId))(profilesArr);
     entryACProfileIndex = entryACProfileIndex === -1 ? 0 : entryACProfileIndex;
     this.selectedProfile = profilesArr[entryACProfileIndex];
+      this._logger.info(`handle set profile action`, { profile: this.selectedProfile });
   }
 
   private _setRestrictions() {

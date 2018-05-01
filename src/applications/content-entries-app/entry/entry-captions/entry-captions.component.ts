@@ -13,12 +13,14 @@ import { EntryCaptionsWidget } from './entry-captions-widget.service';
 
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 @Component({
     selector: 'kEntryCaptions',
     templateUrl: './entry-captions.component.html',
-    styleUrls: ['./entry-captions.component.scss']
+    styleUrls: ['./entry-captions.component.scss'],
+    providers: [KalturaLogger.createLogger('EntryCaptions')]
 })
 export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
@@ -31,7 +33,11 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
 
 	private _popupStateChangeSubscribe: ISubscription;
-	constructor(public _widgetService: EntryCaptionsWidget, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+    constructor(public _widgetService: EntryCaptionsWidget,
+                private _appAuthentication: AppAuthentication,
+                private _appLocalization: AppLocalization,
+                private _logger: KalturaLogger,
+                private _browserService: BrowserService) {
     }
 
 	ngOnInit() {
@@ -79,6 +85,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	public _addCaption(){
+        this._logger.info(`handle add caption action by user`);
 		this._widgetService._addCaption();
 		setTimeout( () => {this.editPopup.open(); }, 0); // use a timeout to allow data binding of the new caption to update before opening the popup widget
 	}
@@ -86,18 +93,22 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	private actionSelected(action: string): void{
 		switch (action){
 			case "edit":
+			    this._logger.info(`handle edit cation action by user`, { caption: this._widgetService.currentCaption });
 				this.editPopup.open();
 				break;
 			case "delete":
+			    this._logger.info(`handle delete caption action by user`, { caption: this._widgetService.currentCaption });
 				this._widgetService.removeCaption();
 				break;
 			case "download":
+			    this._logger.info(`handle download file action by user`, { caption: this._widgetService.currentCaption });
 				this._downloadFile();
 				break;
 			case "preview":
 				this._widgetService.getCaptionPreviewUrl()
 					.subscribe(({ url }) =>
 					{
+                        this._logger.info(`handle preview caption by user`, { url });
                         this._browserService.openLink(url);
 					})
 
@@ -106,7 +117,9 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	private _downloadFile(): void {
+        this._logger.info(`handle download file request`);
 		if (this._browserService.isIE11()) { // IE11 - use download API
+		    this._logger.debug(`IE11 detected, open file using openLink`);
 			const baseUrl = serverConfig.cdnServers.serverUri;
 			const protocol = 'http';
 			const partnerId = this._appAuthentication.appUser.partnerId;

@@ -29,6 +29,7 @@ import {NewEntryFlavourFile} from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
@@ -43,8 +44,11 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
     constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
                 private _appAuthentication: AppAuthentication, private _browserService: BrowserService,
-                private _uploadManagement: UploadManagement, private _appEvents: AppEventsService) {
+                private _uploadManagement: UploadManagement, private _appEvents: AppEventsService,
+                private _logger: KalturaLogger) {
         super(ContentEntryViewSections.Flavours);
+
+        this._logger = _logger.subLogger('EntryFlavoursWidget');
     }
 
     /**
@@ -77,6 +81,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     private _loadFlavors(): Observable<void> {
+        this._logger.info(`handle load flavors data request`);
 
         this.sourceAvailabale = false;
 
@@ -198,11 +203,13 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     public deleteFlavor(flavor: Flavor): void {
+        this._logger.info(`handle delete flavor action by user, show confirmation`, { flavorId: flavor.id });
         this._browserService.confirm(
             {
                 header: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirmTitle'),
                 message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm', {"0": flavor.id}),
                 accept: () => {
+                    this._logger.info(`user confirmed, proceed action`);
                     this._kalturaServerClient.request(new FlavorAssetDeleteAction({
                         id: flavor.id
                     }))
@@ -211,10 +218,12 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         .monitor('delete flavor: ' + flavor.id)
                         .subscribe(
                             response => {
+                                this._logger.info(`handle successful delete flavor action`);
                                 this._refresh();
                                 this._browserService.scrollToTop();
                             },
                             error => {
+                                this._logger.warn(`handle failed delete flavor action, show alert`, { errorMessage: error.message });
                                 this._showBlockerMessage(new AreaBlockerMessage({
                                     message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure'),
                                     buttons: [{
@@ -224,11 +233,15 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                                 }), false);
                             }
                         );
+                },
+                reject: () => {
+                    this._logger.info(`user didn't confirm, abort action`);
                 }
             });
     }
 
     public downloadFlavor(flavor: Flavor): void {
+        this._logger.info(`handle download flavor action`, { flavor });
         const id = flavor.flavorAsset.id;
         this._kalturaServerClient.request(new FlavorAssetGetUrlAction({
             id: id
@@ -237,9 +250,11 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .monitor('get flavor asset URL')
             .subscribe(
                 dowmloadUrl => {
+                    this._logger.info(`handle successful download flavor action`);
                     this._browserService.openLink(dowmloadUrl);
                 },
                 error => {
+                    this._logger.warn(`handle failed download flavor action, show growl message`, { errorMessage: error});
                     this._browserService.showGrowlMessage({
                         severity: 'error',
                         detail: this._appLocalization.get('applications.content.entryDetails.flavours.downloadFailure')
@@ -262,6 +277,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     private _convert(flavor: Flavor, id: any, request: any): void {
+        this._logger.info(`handle convert request`, { id, flavor });
         flavor.status = KalturaFlavorAssetStatus.waitForConvert.toString();
         flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.converting');
         this._kalturaServerClient.request(request)
@@ -270,6 +286,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .monitor('convert flavor')
             .subscribe(
                 response => {
+                    this._logger.info(`handle successful convert request`);
                     let flavors: Flavor[] = Array.from(this._flavors.getValue().items);
                     flavors.forEach((fl: Flavor) => {
                         if (parseInt(fl.id) == id) {
@@ -279,11 +296,13 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     this._flavors.next({items: flavors});
                 },
                 error => {
+                    this._logger.warn(`handle failed convert request, show alert`, { errorMessage: error.message });
                     this._showBlockerMessage(new AreaBlockerMessage({
                         message: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure'),
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
+                                this._logger.info(`user dismissed alert`);
                                 this._refresh();
                                 this._removeBlockerMessage();
                             }
@@ -353,6 +372,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     private updateFlavor(flavor: Flavor, resource: KalturaContentResource): void {
+        this._logger.info(`handle update flavor action by user`, { flavorId: flavor.id });
         this._kalturaServerClient.request(new FlavorAssetSetContentAction({
             id: flavor.id,
             contentResource: resource
@@ -366,16 +386,19 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             })
             .subscribe(
                 response => {
+                    this._logger.info(`handle successful update flavor action by user`);
                     this._refresh(false, true);
                 },
                 error => {
+                    this._logger.warn(`handle successful update flavor action by user, show alert`, { errorMessage: error.message });
                     this._showBlockerMessage(new AreaBlockerMessage({
                         message: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure'),
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
+                                this._logger.info(`user dismissed alert`);
                                 this._refresh();
-                                this._removeBlockerMessage()
+                                this._removeBlockerMessage();
                             }
                         }]
                     }), false);
@@ -384,6 +407,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     private addNewFlavor(flavor: Flavor, resource: KalturaContentResource): void {
+        this._logger.info(`handle add flavor action by user`, { flavor: flavor });
         const flavorAsset: KalturaFlavorAsset = new KalturaFlavorAsset();
         flavorAsset.flavorParamsId = flavor.paramsId;
         this._kalturaServerClient.request(new FlavorAssetAddAction({
@@ -400,14 +424,17 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .subscribe(
                 response => {
                     flavor.id = response.id;
+                    this._logger.info(`handle successful add flavor action by user`, { flavorId: flavor.id });
                     this.updateFlavor(flavor, resource);
                 },
                 error => {
+                    this._logger.warn(`handle failed add flavor action by user, show alert`, { errorMessage: error.message });
                     this._showBlockerMessage(new AreaBlockerMessage({
                         message: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure'),
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
+                                this._logger.info(`user dismissed alert`);
                                 this._refresh();
                                 this._removeBlockerMessage();
                             }
@@ -430,11 +457,13 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     public _refresh(reset = false, showLoader = true) {
+        this._logger.info(`handle refresh flavors action`);
         super._showLoader();
 
         this._loadFlavors()
             .cancelOnDestroy(this, this.widgetReset$)
             .subscribe(() => {
+                    this._logger.info(`handle successful refresh flavors action`);
                     super._hideLoader();
                     const entryId = this.data ? this.data.id : null;
                     if (entryId) {
@@ -442,6 +471,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     }
                 },
                 (error) => {
+                    this._logger.info(`handle failed refresh flavors action, show alert`, { errorMessage: error.message });
                     super._hideLoader();
 
                     this._showBlockerMessage(new AreaBlockerMessage(
@@ -451,6 +481,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                                 {
                                     label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
                                     action: () => {
+                                        this._logger.info(`user selected retry, retry action`);
                                         this._refresh(reset);
                                     }
                                 }

@@ -62,6 +62,8 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
               private _logger: KalturaLogger) {
     super(ContentEntryViewSections.Clips);
 
+      this._logger = _logger.subLogger('EntryClipsWidget');
+
       this._appEvents.event(UpdateClipsEvent)
           .cancelOnDestroy(this)
           .subscribe(() => {
@@ -92,6 +94,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
    */
   public updateClips(): void {
     if (this.data) {
+        this._logger.info(`handle update clips action by user`);
       this._getEntryClips('reload').subscribe(() => {
         // do nothing
       });
@@ -99,6 +102,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
   }
 
   public navigateToEntry(entry: KalturaMediaEntry): void {
+      this._logger.info(`handle navigate to entry action by user`, { entryId: entry.id });
     this._store.openEntry(entry);
   }
 
@@ -129,6 +133,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
   }
 
   private _getEntryClips(origin: 'activation' | 'reload'): Observable<{ failed: boolean, error?: Error }> {
+      this._logger.info(`handle loading entry clips data request`, { origin });
     return Observable.create(observer => {
       const entry: KalturaMediaEntry = this.data;
 

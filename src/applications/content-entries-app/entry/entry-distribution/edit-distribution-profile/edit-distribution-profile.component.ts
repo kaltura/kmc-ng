@@ -16,6 +16,7 @@ import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNull
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -28,7 +29,8 @@ export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistr
 @Component({
   selector: 'kEditDistributionProfile',
   templateUrl: './edit-distribution-profile.component.html',
-  styleUrls: ['./edit-distribution-profile.component.scss']
+  styleUrls: ['./edit-distribution-profile.component.scss'],
+    providers: [KalturaLogger.createLogger('EditDistributionProfileComponent')]
 })
 export class EditDistributionProfileComponent implements OnInit {
   @Input() parentPopup: PopupWidgetComponent;
@@ -64,7 +66,8 @@ export class EditDistributionProfileComponent implements OnInit {
               private _fb: FormBuilder,
               private _appAuthentication: AppAuthentication,
               private _permissionsService: KMCPermissionsService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
     this._buildForm();
   }
 
@@ -161,7 +164,9 @@ export class EditDistributionProfileComponent implements OnInit {
   }
 
   private _prepare(): void {
+      this._logger.info(`init component`);
     if (!this.undistributedProfile) {
+        this._logger.warn(`there's no distribution profile, abort`);
       throw Error('Distribution profile must be defined');
     }
 
@@ -170,6 +175,7 @@ export class EditDistributionProfileComponent implements OnInit {
     this._profileName = this._profile.name;
 
     if (this._forDistribution) {
+        this._logger.info(`enter distribution mode`);
       this._startDateField.disable({ onlySelf: true });
       this._endDateField.disable({ onlySelf: true });
 
@@ -177,6 +183,7 @@ export class EditDistributionProfileComponent implements OnInit {
         this._updatesField.disable({ onlySelf: true });
       }
     } else {
+        this._logger.info(`enter edit distribution mode`);
       this._distributionName = this._widget.getProviderName(this.undistributedProfile.providerType);
 
       if (this.distributedProfile.hasSubmitSentDataLog === KalturaNullableBoolean.trueValue) {
@@ -217,6 +224,7 @@ export class EditDistributionProfileComponent implements OnInit {
   }
 
   private _prepareFlavors(): void {
+      this._logger.info(`handle loading flavors data`);
     const requiredFlavorsIds = (this.undistributedProfile.requiredFlavorParamsIds || '').split(',');
     if (requiredFlavorsIds.length) {
       const requiredFlavors = requiredFlavorsIds.map(flavorId => {
@@ -235,6 +243,7 @@ export class EditDistributionProfileComponent implements OnInit {
         this._widget.loadMissingFlavors(missingFlavors)
           .subscribe(
             response => {
+                this._logger.info(`handle successful loading flavors data`);
               response.forEach(item => {
                 const relevantMissingFlavor = requiredFlavors.find(({ id }) => id === item.id);
                 if (relevantMissingFlavor) {
@@ -245,6 +254,7 @@ export class EditDistributionProfileComponent implements OnInit {
               this._requiredFlavors = [...requiredFlavors];
             },
             error => {
+                this._logger.info(`handle failed loading flavors data, show alert`, { errorMessage: error.message });
               this._browserService.alert({
                 message: this._appLocalization.get(
                   'applications.content.entryDetails.distribution.errors.failedLoadMissingFlavors',
@@ -254,6 +264,7 @@ export class EditDistributionProfileComponent implements OnInit {
                   ]
                 ),
                 accept: () => {
+                    this._logger.info(`user dismissed alert`);
                   this.parentPopup.close();
                 }
               });

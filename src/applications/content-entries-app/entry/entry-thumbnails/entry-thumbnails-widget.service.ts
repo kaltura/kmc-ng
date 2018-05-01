@@ -29,6 +29,7 @@ import { globalConfig } from 'config/global';
 import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface ThumbnailRow {
   id: string;
@@ -56,8 +57,11 @@ export class EntryThumbnailsWidget extends EntryWidget {
 
     constructor(private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
                 private _permissionsService: KMCPermissionsService,
+                private _logger: KalturaLogger,
                 private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _browserService: BrowserService) {
         super(ContentEntryViewSections.Thumbnails);
+
+        this._logger = _logger.subLogger('EntryThumbnailsWidget');
     }
 
     /**
@@ -166,8 +170,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
     }
 
     private reloadThumbnails() {
+        this._logger.info(`handle reload thumbnails action`);
         super._showLoader();
-        const thumbs = Array.from(this._thumbnails.getValue().items);
         this._kalturaServerClient.request(new ThumbAssetGetByEntryIdAction(
             {
                 entryId: this.data.id
@@ -176,11 +180,13 @@ export class EntryThumbnailsWidget extends EntryWidget {
             .monitor('reload thumbnails')
             .subscribe(
                 (responses) => {
+                    this._logger.info(`handle successful reload thumbnails action`);
                     const thumbnails = responses || [];
                     this.buildThumbnailsData(thumbnails);
                     super._hideLoader();
                 },
                 (error) => {
+                    this._logger.info(`handle failed reload thumbnails action, show alert`, { errorMessage: error.message });
                     super._hideLoader();
                     this._showBlockerMessage(new AreaBlockerMessage(
                         {
@@ -205,6 +211,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
     }
 
     public _setAsDefault(thumb: ThumbnailRow): void {
+        this._logger.info(`handle set as default action by user`, { thumbId: thumb.id });
         const thumbs = Array.from(this._thumbnails.getValue().items);
 
         const entryId = this.data ? this.data.id : null;
@@ -215,8 +222,9 @@ export class EntryThumbnailsWidget extends EntryWidget {
             .monitor('set thumb as default')
             .subscribe(
                 () => {
-                    thumbs.forEach(thumb => {
-                        thumb.isDefault = false;
+                    this._logger.info(`handle successful set as default action by user`);
+                    thumbs.forEach(item => {
+                        item.isDefault = false;
                     });
                     thumb.isDefault = true;
 
@@ -225,6 +233,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                     }
                 },
                 error => {
+                    this._logger.warn(`handle failed set as default action by user, show confirmation`, { errorMessage: error.message });
                     this._showBlockerMessage(new AreaBlockerMessage(
                         {
                             message: 'Error setting default thumb',
@@ -232,6 +241,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                                 {
                                     label: 'Retry',
                                     action: () => {
+                                        this._logger.info(`user confirmed, retry action`);
                                         this._setAsDefault(thumb);
                                     }
                                 }
@@ -243,7 +253,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
     }
 
     public deleteThumbnail(id: string): void {
-        const thumbs = Array.from(this._thumbnails.getValue().items);
+        this._logger.info(`handle delete thumbnail action by user`, { id });
 
         this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
             .cancelOnDestroy(this, this.widgetReset$)
@@ -251,10 +261,12 @@ export class EntryThumbnailsWidget extends EntryWidget {
             .monitor('delete thumb')
             .subscribe(
                 () => {
+                    this._logger.info(`handle successful delete thumbnail action by user`);
                     this._browserService.scrollToTop();
                     this.reloadThumbnails();
                 },
                 error => {
+                    this._logger.info(`handle failed delete thumbnail action by user, show confirmation`, { errorMessage: error.message });
                     this._showBlockerMessage(new AreaBlockerMessage(
                         {
                             message: 'Error deleting thumbnail',
@@ -262,6 +274,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                                 {
                                     label: 'Retry',
                                     action: () => {
+                                        this._logger.info(`user confirmed, retry action`);
                                         this.deleteThumbnail(id);
                                     }
                                 }
@@ -273,16 +286,19 @@ export class EntryThumbnailsWidget extends EntryWidget {
     }
 
     public _onFileSelected(selectedFiles: FileList) {
+        this._logger.info(`handle file selected action`, { files: selectedFiles });
         if (selectedFiles && selectedFiles.length) {
             const fileData: File = selectedFiles[0];
             const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
             const fileSize = fileData.size / 1024 / 1024; // convert to Mb
             if (fileSize > maxFileSize) {
+                this._logger.info(`file size exceeded limit, abort action, show alert`, { maxFileSize, fileSize });
                 this._browserService.alert({
                     header: this._appLocalization.get('app.common.attention'),
                     message: this._appLocalization.get('applications.upload.validation.fileSizeExceeded')
                 });
             } else {
+                this._logger.info(`handle add thumb asset from image request`);
                 this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({
                     entryId: this.data.id,
                     fileData: fileData
@@ -291,8 +307,12 @@ export class EntryThumbnailsWidget extends EntryWidget {
                     .cancelOnDestroy(this, this.widgetReset$)
                     .monitor('add thumb')
                     .subscribe(
-                        () => this.reloadThumbnails(),
                         () => {
+                            this._logger.info(`handle successful add thumb asset from image request`);
+                            this.reloadThumbnails();
+                        },
+                        (error) => {
+                            this._logger.warn(`handle failed add thumb asset from image request, show alert`, { errorMessage: error.message });
                             this._showBlockerMessage(new AreaBlockerMessage({
                                 message: this._appLocalization.get('applications.content.entryDetails.errors.thumbnailsUploadError'),
                                 buttons: [{
@@ -303,11 +323,14 @@ export class EntryThumbnailsWidget extends EntryWidget {
                         }
                     );
             }
+        } else {
+            this._logger.info(`no files were selected, abort action`);
         }
     }
 
 
     public captureThumbnail(position: number): void {
+        this._logger.info(`handle capture thumbnail action by user`, { position });
         super._showLoader();
         let params: KalturaThumbParams = new KalturaThumbParams();
         params.videoOffset = position;
@@ -319,10 +342,12 @@ export class EntryThumbnailsWidget extends EntryWidget {
             .monitor('capture thumb from video')
             .subscribe(
                 () => {
+                    this._logger.info(`handle successful capture thumbnail action by user`);
                     super._hideLoader();
                     this.reloadThumbnails();
                 },
                 error => {
+                    this._logger.warn(`handle failed capture thumbnail action by user, show confirmation`);
                     super._hideLoader();
                     this._showBlockerMessage(new AreaBlockerMessage(
                         {
@@ -331,12 +356,14 @@ export class EntryThumbnailsWidget extends EntryWidget {
                                 {
                                     label: 'Dismiss',
                                     action: () => {
+                                        this._logger.info(`user didn't confirm, abort action`);
                                         this._removeBlockerMessage();
                                     }
                                 },
                                 {
                                     label: 'Retry',
                                     action: () => {
+                                        this._logger.info(`user confirmed, retry action`);
                                         this._removeBlockerMessage();
                                         this.captureThumbnail(position);
                                     }

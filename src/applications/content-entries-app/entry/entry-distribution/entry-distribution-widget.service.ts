@@ -37,6 +37,7 @@ import { EntryDistributionSubmitUpdateAction } from 'kaltura-ngx-client/api/type
 import { EntryDistributionRetrySubmitAction } from 'kaltura-ngx-client/api/types/EntryDistributionRetrySubmitAction';
 import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -69,8 +70,11 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _kalturaClient: KalturaClient,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
     super(ContentEntryViewSections.Distribution);
+
+      this._logger = _logger.subLogger('EntryDistributionWidget');
   }
 
   ngOnDestroy() {
@@ -231,6 +235,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   private _loadDistributionData(): Observable<DistributionWidgetData> {
+      this._logger.info(`handle load distribution data request`);
     const partnerDistributionListAction = new DistributionProfileListAction({
       pager: new KalturaFilterPager({ pageSize: 500 })
     });
@@ -302,6 +307,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(
         () => {
+            this._logger.info(`handle successful delete request`);
           if (typeof closePopupCallback === 'function') {
             closePopupCallback();
           }
@@ -309,6 +315,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
           this._browserService.scrollToTop();
         },
         error => {
+            this._logger.warn(`handle failed delete request`, { errorMessage: error.message });
           this._showBlockerMessage(new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDelete'),
             buttons: [
@@ -437,6 +444,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public deleteDistributionProfile(profile: ExtendedKalturaEntryDistribution, closePopupCallback?: () => void): void {
+      this._logger.info(`handle delete distribution profile request, show confirmation`, { profileId: profile });
     const entrySubmitted = [
       KalturaEntryDistributionStatus.ready,
       KalturaEntryDistributionStatus.errorUpdating
@@ -455,6 +463,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     }
 
     if (!action) {
+        this._logger.info(`profile has invalid status, abort action`, { status: profile.status });
       this._browserService.alert({
         message: this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDelete'),
       });
@@ -473,6 +482,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         {
           label: this._appLocalization.get('applications.content.entryDetails.distribution.delete'),
           action: () => {
+              this._logger.info(`user confirmed, proceed request`);
             this.popupMessage = null;
             this._performDeleteRequest(action, closePopupCallback);
           }
@@ -480,6 +490,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         {
           label: this._appLocalization.get('applications.content.entryDetails.distribution.cancel'),
           action: () => {
+              this._logger.info(`user didn't confirm, abort request`);
             this.popupMessage = null;
             this._removeBlockerMessage();
           }
@@ -490,6 +501,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public loadMissingFlavors(flavors: Partial<Flavor>[]): Observable<{ id: string, name: string }[]> {
+      this._logger.info(`handle load missing flavors request`, { flavors });
     const actions = flavors.map(({ id }) => new FlavorParamsGetAction({ id: Number(id) }));
     return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .map(responses => {
@@ -508,6 +520,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public distributeProfile(payload: { entryId: string, profileId: number, submitWhenReady: boolean }, closePopupCallback: () => void): void {
+      this._logger.info(`handle distribute profile request`, { payload });
     const newEntryDistribution = new KalturaEntryDistribution({
       entryId: payload.entryId,
       distributionProfileId: payload.profileId
@@ -536,16 +549,19 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       })
       .subscribe(
         () => {
+            this._logger.info(`handle successful distribute profile request`);
           this.refresh();
           this.popupMessage = null;
           closePopupCallback();
         },
         error => {
+            this._logger.warn(`handle failed distribute profile request, show alert`, { errorMessage: error.message });
           this.popupMessage = new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.cannotDistribute'),
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
+                  this._logger.info(`user dismissed alert`);
                 this.refresh();
                 this.popupMessage = null;
                 closePopupCallback();
@@ -557,6 +573,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public updateProfile(profile: ExtendedKalturaEntryDistribution, closePopupCallback: () => void): void {
+      this._logger.info(`handle update profile request by user`, { profileId: profile.id });
 
     this._kalturaClient.request(new EntryDistributionUpdateAction({
       id: profile.id,
@@ -566,10 +583,12 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
+            this._logger.info(`handle successful update profile request`);
           this.refresh();
           closePopupCallback();
         },
         error => {
+            this._logger.warn(`handle failed update profile request`, { errorMessage: error.message });
           this.popupMessage = new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
             buttons: [
@@ -587,21 +606,25 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public submitProfileUpdate(profileId: number): void {
+      this._logger.info(`handle submit profile update request`, { profileId });
     this._kalturaClient.request(new EntryDistributionSubmitUpdateAction({ id: profileId }))
       .cancelOnDestroy(this, this.widgetReset$)
       .tag('block-shell')
       .subscribe(
         () => {
+            this._logger.info(`handle successful submit profile update request`);
           this.refresh();
           this.popupMessage = null;
           this._removeBlockerMessage();
         },
         error => {
+            this._logger.warn(`handle failed submit profile update request, show alert`, { errorMessage: error.message });
           this.popupMessage = new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
+                  this._logger.info(`user dismissed alert`);
                 this.popupMessage = null;
                 this._removeBlockerMessage();
                 this.refresh();
@@ -613,21 +636,25 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public submitDistribution(profileId: number): void {
+      this._logger.info(`handle submit distribution request`, { profileId });
     this._kalturaClient.request(new EntryDistributionSubmitAddAction({ id: profileId }))
       .cancelOnDestroy(this, this.widgetReset$)
       .tag('block-shell')
       .subscribe(
         () => {
+            this._logger.info(`handle successful submit distribution request`);
           this.refresh();
           this.popupMessage = null;
           this._removeBlockerMessage();
         },
         error => {
+            this._logger.warn(`handle failed submit distribution request, show alert`, { errorMessage: error.message });
           this.popupMessage = new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.updateFailed'),
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
+                  this._logger.info(`user dismissed alert`);
                 this.popupMessage = null;
                 this._removeBlockerMessage();
                 this.refresh();
@@ -639,21 +666,25 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public retryDistribution(profileId: number): void {
+      this._logger.info(`handle retry distribution request`, { profileId });
     this._kalturaClient.request(new EntryDistributionRetrySubmitAction({ id: profileId }))
       .cancelOnDestroy(this, this.widgetReset$)
       .tag('block-shell')
       .subscribe(
         () => {
+            this._logger.info(`handle successful retry distribution request`);
           this.refresh();
           this.popupMessage = null;
           this._removeBlockerMessage();
         },
         error => {
+            this._logger.warn(`handle failed retry distribution request, show alert`, { errorMessage: error.message });
           this.popupMessage = new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.retryFailed'),
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
+                  this._logger.info(`user dismissed alert`);
                 this.popupMessage = null;
                 this._removeBlockerMessage();
                 this.refresh();
@@ -665,6 +696,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public getPartnerProfileById(profileId): KalturaDistributionProfile {
+      this._logger.info(`handle get partner profile by id request`, { profileId });
     const partnerProfiles = this._partnerDistributionProfiles.getValue().items;
 
     if (partnerProfiles) {
@@ -675,6 +707,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   }
 
   public refresh(): void {
+      this._logger.info(`handle refresh action by user`);
     super._showLoader();
 
     this._flavors.next({ items: [] });
@@ -686,6 +719,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(
         (response) => {
+            this._logger.info(`handle successful refresh action`);
           this._flavors.next({ items: response.flavors });
           this._thumbnails.next({ items: response.thumbnails });
           this._distributedProfiles.next({ items: response.distributedProfiles });
@@ -694,12 +728,16 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
           super._hideLoader();
         },
         error => {
+            this._logger.warn(`handle successful refresh action, show alert`, { errorMessage: error.message });
           super._hideLoader();
           super._showBlockerMessage(new AreaBlockerMessage({
             message: error.message || this._appLocalization.get('applications.content.entryDetails.distribution.errors.errorLoading'),
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
-              action: () => this.refresh()
+              action: () => {
+                  this._logger.info(`user dismissed action`);
+                  this.refresh();
+              }
             }]
           }), true);
         });

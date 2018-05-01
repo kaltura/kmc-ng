@@ -7,12 +7,14 @@ import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-com
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryUsersWidget } from './entry-users-widget.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 @Component({
   selector: 'kEntryUsers',
   templateUrl: './entry-users.component.html',
-  styleUrls: ['./entry-users.component.scss']
+  styleUrls: ['./entry-users.component.scss'],
+    providers: [KalturaLogger.createLogger('EntryUsers')]
 })
 export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
@@ -22,7 +24,9 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	public _usersProvider = new Subject<SuggestionsProviderData>();
 	public _kmcPermissions = KMCPermissions;
 
-	constructor(public _widgetService: EntryUsersWidget, private _appLocalization: AppLocalization) {
+	constructor(public _widgetService: EntryUsersWidget,
+                private _appLocalization: AppLocalization,
+                private _logger: KalturaLogger) {
 		this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this); // fix scope issues when binding to a property
     }
 
@@ -40,11 +44,13 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
     }
 
     public _openChangeOwner(): void{
+	    this._logger.info(`handle open change owner popup action`);
 	    this._widgetService.usersForm.patchValue({owners: null});
 	    this.ownerPopup.open();
     }
 
     public _saveAndClose(): void{
+	    this._logger.info(`handle save and close action by user`);
 	    this._widgetService.saveOwner();
 	    this.ownerPopup.close();
     }
@@ -68,6 +74,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
 
 	public _searchUsers(event, formControl?) : void {
+	    this._logger.info(`handle search users action by user`, { query: event.query });
 		this._usersProvider.next({ suggestions : [], isLoading : true});
 
 		if (this._searchUsersSubscription)
@@ -78,6 +85,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 		}
 
 		this._searchUsersSubscription = this._widgetService.searchUsers(event.query).subscribe(data => {
+                this._logger.info(`handle successful search users action by user`);
 				const suggestions = [];
 				(data || []).forEach((suggestedUser: KalturaUser) => {
 					let isSelectable = true;
@@ -96,6 +104,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 				this._usersProvider.next({suggestions: suggestions, isLoading: false});
 			},
 			(err) => {
+                this._logger.warn(`handle failed search users action by user`, { errorMessage: error.message });
 				this._usersProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
 			});
 	}

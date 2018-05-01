@@ -13,6 +13,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { globalConfig } from 'config/global';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 function urlValidator(control: AbstractControl): {[key: string]: boolean} | null {
 	let v: string = control.value;
@@ -22,7 +23,8 @@ function urlValidator(control: AbstractControl): {[key: string]: boolean} | null
 @Component({
     selector: 'kEntryCaptionsEdit',
     templateUrl: './entry-captions-edit.component.html',
-    styleUrls: ['./entry-captions-edit.component.scss']
+    styleUrls: ['./entry-captions-edit.component.scss'],
+    providers: [KalturaLogger.createLogger('EntryCaptionsEdit')]
 })
 export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 
@@ -45,7 +47,8 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
   constructor(private _appLocalization: AppLocalization,
               private _uploadManagement: UploadManagement,
               private _fb: FormBuilder,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
 
   }
 
@@ -159,25 +162,33 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 				context['newCaptionUrl'] = this.captionsEditForm.get("captionUrl").value;
 			}
 		}
+
+        this._logger.info(`handle save action by user`, { context });
+
 		this.parentPopupWidget.close(context);
 	}
 
 	public _uploadCaption(){
+      this._logger.info(`handle upload caption action by user, open file select`);
 		this.fileDialog.open();
 	}
 
   public _onFileSelected(selectedFiles: FileList) {
+      this._logger.info(`handle file selected action`, { file: selectedFiles[0] });
     if (selectedFiles && selectedFiles.length) {
       const file = selectedFiles[0];
       if (this._validateFileSize(file)) {
         this.fileToUpload = file;
         this._uploadFileName = this.fileToUpload.name;
       } else {
+          this._logger.info(`file size exceeded, abort action`);
         this._browserService.alert({
           header: this._appLocalization.get('app.common.attention'),
           message: this._appLocalization.get('applications.upload.validation.fileSizeExceeded')
         });
       }
+    } else {
+        this._logger.info(`no file was selected, abort action`);
     }
   }
 
