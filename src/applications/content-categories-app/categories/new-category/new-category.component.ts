@@ -92,6 +92,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
       this._createNewCategory();
     } else {
       this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.addNewCategory.errors.noParent')
       });
     }

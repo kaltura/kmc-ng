@@ -246,7 +246,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
         .switchMap(() => this._contentEntryViewService.openById(entryId))
         .subscribe(
             () => {},
-            ({ message }) => this._browserService.alert({ message })
+            ({ message }) => this._browserService.alert({ header: this._appLocalization.get('app.common.attention'), message })
         );
   }
 

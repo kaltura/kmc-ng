@@ -7,6 +7,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {AppLocalization} from "@kaltura-ng/kaltura-common";
 
 @Component({
   selector: 'kPrepareEntry',
@@ -21,7 +22,8 @@ export class PrepareEntryComponent implements OnDestroy {
   constructor(private _prepareEntryService: PrepareEntryService,
               private _permissionsService: KMCPermissionsService,
               private _contentEntryViewService: ContentEntryViewService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization) {
   }
 
   ngOnDestroy() {
@@ -53,6 +55,7 @@ export class PrepareEntryComponent implements OnDestroy {
         },
         error => {
           this._browserService.alert({
+              header: this._appLocalization.get('app.common.error'),
             message: error.message
           });
         });
