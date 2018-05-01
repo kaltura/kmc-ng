@@ -111,6 +111,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
               ]
             }
           );
+            this._updateAreaBlockerState(false, blockerMessage);
         });
   }
 
@@ -159,10 +160,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     this._blockerMessage = message;
   }
 
-  private _fillAccountOwnersOptions(accountOwners: string[]): void {
-    accountOwners.forEach((ownerName) => {
-      this.nameOfAccountOwnerOptions.push({label: ownerName, value: ownerName});
-    });
+  private _fillAccountOwnersOptions(accountOwners: {name: string, id: string}[]): void {
+      this.nameOfAccountOwnerOptions = accountOwners.map(({ name, id }) => ({ label: name, value: id }));
   }
 
   private _fillDescribeYourselfOptions(): void {
