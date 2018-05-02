@@ -642,7 +642,7 @@
                 },
                 "details": {
                     "choosePlaylist": "Choose Playlist",
-                    "missingPlaylist": "Playlist ID {{0}} could not be found.\nPlease select another playlist",
+                    "missingPlaylist": "Feed playlist ({{0}}) could not be found. Please select another playlist.",
                     "header": {
                         "newFeed": "New Feed",
                         "cancel": "Cancel",
