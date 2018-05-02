@@ -60,7 +60,6 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   public _availableDestinations: Array<{ value: KalturaSyndicationFeedType, label: string }> = [];
   public _availablePlaylists: Array<{ value: string, label: string }> = [];
   public _kalturaSyndicationFeedType = KalturaSyndicationFeedType;
-  public _kalturaPlaylistType = KalturaPlaylistType;
   public _currentDestinationFormState: { isValid: boolean, isDirty: boolean } = {isValid: true, isDirty: false};
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -152,7 +151,6 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       return undefined;
     }
 
-      this._missingPlaylist = this._isPlaylistMissing;
     this._isBusy = true;
     this._queryData()
       .cancelOnDestroy(this)
@@ -161,7 +159,8 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
         this._isReady = true;
         this._players = response.players;
         this._flavors = response.flavors;
-        if (this._missingPlaylist) {
+          this._missingPlaylist = this._isPlaylistMissing;
+        if (this._isPlaylistMissing) {
             this._form.patchValue({ playlistId: null });
         }
 
@@ -220,7 +219,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     const getFlavours$ = this._flavorsStore.get().cancelOnDestroy(this);
     const requests: Observable<any>[] = [getPlayers$, getFlavours$];
 
-    if (this._mode === 'edit' && !this._missingPlaylist) {
+    if (this._mode === 'edit' && !this._isPlaylistMissing) {
       const getEntriesCount$ = this._feedsService.getFeedEntryCount(this.feed.id).cancelOnDestroy(this);
       requests.push(getEntriesCount$);
     }
@@ -247,12 +246,16 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _restartFormData(): void {
+      const name = this._mode === 'edit' ? this.feed.name : this._form.get('name').value || '';
+      const contentType = this._mode === 'edit' ? (this.feed.playlistId ? 'playlist' : 'allContent') : this._form.get('contentType').value || 'allContent';
+      const selectedPlaylist = this._mode === 'edit'
+          ? this.feed.playlistId || null
+          : this._form.get('selectedPlaylist').value || (this._playlists && this._playlists.length && this._playlists[0].id);
+
     this._form.reset({
-      name: this._mode === 'edit' ? this.feed.name : this._form.get('name').value || '',
-      contentType: this._mode === 'edit' ? (this.feed.playlistId ? 'playlist' : 'allContent') : this._form.get('contentType').value || 'allContent',
-      selectedPlaylist: this._mode === 'edit' ?
-        (this.feed.playlistId && this._playlists.find(playlist => playlist.id === this.feed.playlistId)) :
-        this._form.get('selectedPlaylist').value || (this._playlists && this._playlists.length && this._playlists[0].id),
+      name,
+      contentType,
+      selectedPlaylist,
       destination: {
         value: this._mode === 'edit' ? this.feed.type : this._form.get('destination').value,
         disabled: this._mode === 'edit'
