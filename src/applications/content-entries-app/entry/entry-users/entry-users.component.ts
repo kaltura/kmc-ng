@@ -104,7 +104,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 				this._usersProvider.next({suggestions: suggestions, isLoading: false});
 			},
 			(err) => {
-                this._logger.warn(`handle failed search users action by user`, { errorMessage: error.message });
+                this._logger.warn(`handle failed search users action by user`, { errorMessage: err.message });
 				this._usersProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
 			});
 	}

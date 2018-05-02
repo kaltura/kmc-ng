@@ -241,7 +241,7 @@ export class EntryStore implements  OnDestroy {
 		if (newEntry && newEntry instanceof KalturaMediaEntry) {
 			this._transmitSaveRequest(newEntry)
 		} else {
-			this._logger.warn(new Error(`Failed to create a new instance of the entry type '${this.entry ? typeof this.entry : 'n/a'}`));
+			this._logger.warn(`Failed to create a new instance of the entry type '${this.entry ? typeof this.entry : 'n/a'}`);
 			this._state.next({action: ActionTypes.EntryPrepareSavingFailed});
 		}
 	}

@@ -122,7 +122,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
                 this._tagsProvider.next({suggestions: suggestions, isLoading: false});
             },
             (err) => {
-                this._logger.info(`handle failed search tags action by user`, { errorMessage: error.message });
+                this._logger.info(`handle failed search tags action by user`, { errorMessage: err.message });
                 this._tagsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
             });
     }
@@ -157,7 +157,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
                 this._categoriesProvider.next({suggestions: suggestions, isLoading: false});
             },
             (err) => {
-                this._logger.warn(`handle failed search categories action`, { errorMessage: error.message });
+                this._logger.warn(`handle failed search categories action`, { errorMessage: err.message });
                 this._categoriesProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
             });
     }
