@@ -105,9 +105,7 @@ ws --spa index.html
 ```
    * If you don’t have `ws` you can either use your preferred web server or install `npm install -g local-web-server`
 
-7. Update KMCng version in deploy/config.ini to the current KMCng version: vX.X.X
-
-8. Commit changes in **kmc-ng** with message: ‘chore: update kaltura libraries’. No need to push this commit.
+7. Commit changes in **kmc-ng** with message: ‘chore: update kaltura libraries’. No need to push this commit.
 
 ### Publish application
 
@@ -115,12 +113,10 @@ ws --spa index.html
 
 1. Prepare a release `npm run release:prepare`.
    * open file `src/configuration/global-config.ts` and make sure `appVersion` was updated correctly.
+   * Update KMCng version in deploy/config.ini to the current KMCng version: vX.X.X
+   * commit your changes with commit message 'chore: update version of deployed assets'
 
-2. Review version release notes in  `changelog.md` file and modify it as needed.
-   * Focus on the **"features section"** as it will be used in multiple places.
-   * Make sure you add context to features and arrange them by priority.
-   * If you modified the changelog, commit the change as ‘chore: update changlog.md file’.
-
+2. Update  `changelog.md` with new features (provided by product)
 
 3. publish the release
 ```
