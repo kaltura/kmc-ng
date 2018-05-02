@@ -53,14 +53,8 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
     }
 
     private _isAvailableByPermission(): boolean {
-        return this._appPermissions.hasAnyPermissions([
-            KMCPermissions.FEATURE_ALLOW_VAST_CUE_POINT_NO_URL,
-            KMCPermissions.CUEPOINT_MANAGE,
-            KMCPermissions.FEATURE_DISABLE_KMC_KDP_ALERTS
-        ]);
+        return this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);
     }
-
-
 
     private _isAvailableByData(entry: KalturaMediaEntry): boolean {
         const entryReady = entry.status === KalturaEntryStatus.ready;
