@@ -13,12 +13,13 @@ import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaUserFilter} from 'kaltura-ngx-client/api/types/KalturaUserFilter';
 import {UserListAction} from 'kaltura-ngx-client/api/types/UserListAction';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {CategoriesBulkChangeOwnerService} from '../../../categories/bulk-actions/services/categories-bulk-change-owner.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kCategoryChangeOwner',
   templateUrl: './change-owner.component.html',
-  styleUrls: ['./change-owner.component.scss']
+  styleUrls: ['./change-owner.component.scss'],
+    providers: [KalturaLogger.createLogger('CategoryChangeOwnerComponent')]
 })
 export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -36,7 +37,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
   private _confirmClose = true;
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService,
-              private categoriesBulkChangeOwnerService: CategoriesBulkChangeOwnerService) {
+              private _logger: KalturaLogger) {
       this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this); // fix scope issues when binding to a property
   }
 
@@ -94,6 +95,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   public _searchUsers(event): void {
+      this._logger.info(`handle search users action`, { query: event.query });
     this._usersProvider.next({suggestions: [], isLoading: true});
 
     if (this._searchUsersSubscription) {
@@ -119,6 +121,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
       .monitor('search owners')
       .subscribe(
         data => {
+            this._logger.info(`handle successful search users action`);
           const suggestions = [];
           (data.objects || []).forEach((suggestedUser: KalturaUser) => {
             suggestions.push({
@@ -130,6 +133,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
           this._usersProvider.next({suggestions: suggestions, isLoading: false});
         },
         err => {
+            this._logger.warn(`handle successful search users action`, { errorMessage: err.message });
           this._usersProvider.next({suggestions: [], isLoading: false, errorMessage: <any>(err.message || err)});
         }
       );
@@ -158,6 +162,9 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
 
   public _apply() {
     const owner: KalturaUser = Array.isArray(this._owner) ? this._owner[0] : this._owner;
+
+      this._logger.info(`handle change owner action by user`, { owner });
+
     if (owner.id && this._isOwnerValid(owner.id)) {
       this._confirmClose = false;
       this.ownerChanged.emit(owner);
@@ -165,6 +172,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
         this.parentPopupWidget.close();
       }
     } else {
+        this._logger.info(`invalid owner or owner is not provided, abort action, show alert`);
       const message = owner.id ?
         this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.errors.invalidOwner', {'0': owner.id}) :
         this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.errors.ownerRequired');
@@ -173,6 +181,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
         buttons: [{
           label: this._appLocalization.get('app.common.close'),
           action: () => {
+              this._logger.info(`user dismissed alert`);
             this._blockerMessage = null;
           }
         }
