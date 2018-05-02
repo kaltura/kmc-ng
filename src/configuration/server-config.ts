@@ -64,6 +64,7 @@ export interface ExternalApplications {
 export interface ServerConfig {
     kalturaServer: {
         uri: string,
+        deployUrl: string,
         previewUIConf: number,
         freeTrialExpiration: {
             enabled: boolean,
@@ -251,6 +252,10 @@ export function buildKalturaServerUri(suffix: string): string {
     }
 
     return result;
+}
+
+export function buildDeployUrl(suffix: string): string {
+    return `${serverConfig.kalturaServer.deployUrl}${suffix}`;
 }
 
 export function getKalturaServerUri(suffix: string = ''): string {

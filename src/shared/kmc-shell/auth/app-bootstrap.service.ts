@@ -7,6 +7,7 @@ import { AppAuthentication } from './app-authentication.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { globalConfig } from 'config/global';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { serverConfig } from 'config/server';
 
 export enum BoostrappingStatus
 {
@@ -76,7 +77,9 @@ export class AppBootstrap implements CanActivate {
             this._initialized = true;
 
             // init localization, wait for localization to load before continuing
-            this.appLocalization.setFilesHash(globalConfig.client.appVersion);
+            const prefix = serverConfig.kalturaServer.deployUrl ? `${serverConfig.kalturaServer.deployUrl}i18n` : null;
+            this.appLocalization.setFilesHash(globalConfig.client.appVersion, prefix);
+
             const language = this.getCurrentLanguage();
             this.appLocalization.load(language, 'en').subscribe(
                 () => {
