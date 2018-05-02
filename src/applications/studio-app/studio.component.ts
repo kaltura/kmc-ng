@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import {AppAuthentication, BrowserService, UnpermittedActionReasons} from 'app-shared/kmc-shell';
+import {AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
@@ -21,7 +21,7 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     try {
       if (!serverConfig.externalApps.studio.enabled) { // Deep link when disabled handling
-        this.browserService.handleUnpermittedAction(UnpermittedActionReasons.InvalidConfiguration)
+          this.browserService.handleUnpermittedAction(true);
         return undefined;
       }
       window['kmc'] = {
@@ -36,19 +36,16 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
           'api_url': getKalturaServerUri(),
           'studio':{
             'config': {
-              'version': serverConfig.externalApps.studio.version,
               'name': 'Video Studio V2',
               'tags': 'studio_v2',
               'html5_version': serverConfig.externalApps.studio.html5_version,
               'html5lib': serverConfig.externalApps.studio.html5lib
             },
             'showFlashStudio': false,
-            'showStudioV3': this._permissionsService.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION),
-            'version': serverConfig.externalApps.studio.version
+            'showStudioV3': this._permissionsService.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION)
           },
           'studioV3':{
             'config': {
-              'version': serverConfig.externalApps.studioV3.version,
               'name': 'Video Studio V3',
               'tags': 'studio_v3',
               'html5_version': serverConfig.externalApps.studioV3.html5_version,
@@ -57,8 +54,7 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
             'publisherEnvType': this.appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
             'html5_version': serverConfig.externalApps.studioV3.html5_version,
             'showFlashStudio': false,
-            'showHTMLStudio': this._permissionsService.hasPermission(KMCPermissions.FEATURE_SHOW_HTML_STUDIO),
-            'version': serverConfig.externalApps.studioV3.version
+            'showHTMLStudio': this._permissionsService.hasPermission(KMCPermissions.FEATURE_SHOW_HTML_STUDIO)
           }
         },
         'functions':{

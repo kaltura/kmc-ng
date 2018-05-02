@@ -7,7 +7,7 @@ import {
   AccountInfoService
 } from 'applications/settings-integration-settings-app/account-info/account-info.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-
+import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kAccountInfo',
@@ -27,11 +27,14 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
 
   constructor(private _accountInfoService: AccountInfoService,
               private _logger: KalturaLogger,
+              private _settingsIntegrationSettingsMainView: SettingsIntegrationSettingsMainViewService,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
-    this._loadPartnerAccountInfo();
+      if (this._settingsIntegrationSettingsMainView.isAvailable()) {
+          this._loadPartnerAccountInfo();
+      }
   }
 
   ngOnDestroy(): void {

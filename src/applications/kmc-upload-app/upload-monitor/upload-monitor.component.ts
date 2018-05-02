@@ -3,6 +3,12 @@ import { BulkUploadMonitorService } from './bulk-upload-monitor.service';
 import { NewUploadMonitorService } from './new-upload-monitor.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { DropFoldersMonitorService } from './drop-folders-monitor.service';
+import {
+    ContentBulkUploadsMainViewService,
+    ContentDropFoldersMainViewService,
+    ContentUploadsMainViewService
+} from 'app-shared/kmc-shared/kmc-views';
+import { buildDeployUrl } from 'config/server';
 
 export interface UploadMonitorStatuses {
   uploading: number;
@@ -20,7 +26,7 @@ export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
 
   private _sectionHeight = 91;
-
+    public _syncUri = buildDeployUrl('./assets/sync.svg');
   public _popupHeight = 273; // default height that fits 3 sections
   public _showErrorIcon = false;
   public _menuOpened = false;
@@ -49,7 +55,10 @@ export class UploadMonitorComponent implements OnDestroy {
 
   constructor(private _bulkUploadMonitor: BulkUploadMonitorService,
               private _newUploadMonitor: NewUploadMonitorService,
-              private _dropFoldersMonitor: DropFoldersMonitorService) {
+              private _dropFoldersMonitor: DropFoldersMonitorService,
+              public _contentUploadsMainViewService: ContentUploadsMainViewService,
+              public _contentBulkUploadsMainViewService: ContentBulkUploadsMainViewService,
+              public _contentDropFoldersMainViewService: ContentDropFoldersMainViewService) {
     this._newUploadMonitor.totals$
       .cancelOnDestroy(this)
       .subscribe(totals => {
