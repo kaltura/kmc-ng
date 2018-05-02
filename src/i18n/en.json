@@ -282,7 +282,7 @@
                 "syncing": "{{0}} Syncing",
                 "queued": "{{0}} Queued",
                 "completed": "{{0}} Completed",
-                "error": "{{0}} Qrror",
+                "error": "{{0}} Error(s)",
                 "upToDate": "Up to Date",
                 "loading": "Loading...",
                 "errors": {
