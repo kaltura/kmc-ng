@@ -15,7 +15,7 @@ import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceTyp
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { Observer } from 'rxjs/Observer';
-import { serverConfig } from 'config/server';
+import { serverConfig, getKalturaServerUri } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
@@ -43,6 +43,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   private _isRecordedLive = false;
   private _userId = '';
 
+  public serverUri = getKalturaServerUri();
   public _areaBlockerMessage: AreaBlockerMessage = null;
   public _tabs: Tabs[] = [];
   public _flags: KalturaModerationFlag[] = null;
