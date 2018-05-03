@@ -148,10 +148,10 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
           const clipAndTrimAvailable = this._clipAndTrimAppViewService.isAvailable({entry: this.entry});
           const advertismentsAvailable = this._advertisementsAppViewService.isAvailable({entry: this.entry});
 
+          // quiz configuration : 'quiz': {name: 'quiz', permissions: ['quiz'], userPermissions: ['quiz']},
           if (clipAndTrimAvailable) {
               this._logger.debug('clip&trim views are available, add configuration for tabs: edit, quiz');
               Object.assign(tabs, {
-                  'quiz': {name: 'quiz', permissions: ['quiz'], userPermissions: ['quiz']},
                   'edit': {name: 'edit', permissions: ['clip', 'trim'], userPermissions: ['clip', 'trim']}
               });
           }

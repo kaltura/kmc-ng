@@ -4,6 +4,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { serverConfig } from 'config/server';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { globalConfig } from 'config/global';
+import * as moment from 'moment';
 
 @Component({
     selector: 'k-logs-record',
@@ -58,9 +59,32 @@ export class LogsRecordComponent {
     }
 
     private _getLogFileName(): string {
-        const timestamp = +(new Date());
+        const timestamp = moment().format('YY-DD-MM_HH-mm-ss');
         const partnerId = this._appAuth.appUser.partnerId;
-        return `logs-${partnerId}-${timestamp}.txt`;
+        return `logs_${partnerId}_${timestamp}.txt`;
+    }
+
+    private _getContent(): string {
+        const recordedLogs = this._logger.getRecordedLogs();
+        let result = '';
+
+        if (recordedLogs && recordedLogs.length) {
+            const formattedLogs = recordedLogs.map(item => {
+                if (typeof item === 'string') {
+                    return item;
+                }
+
+                const message = item.message;
+                const level = item.level;
+                delete item.level;
+                delete item.message;
+
+                return `[${level}] ${message} ${JSON.stringify(item)}`;
+            });
+            result = formattedLogs.join('\r\n');
+        }
+
+        return result;
     }
 
     private _stopRecord(): void {
@@ -80,8 +104,8 @@ export class LogsRecordComponent {
     }
 
     public _downloadLogs(): void {
-        const recordedLogs = this._logger.getRecordedLogs();
-        this._browserService.download(JSON.stringify(recordedLogs), this._getLogFileName(), 'plain/text');
+        const content = this._getContent();
+        this._browserService.download(content, this._getLogFileName(), 'plain/text');
         this._cancel();
     }
 
