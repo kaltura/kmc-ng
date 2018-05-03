@@ -225,7 +225,8 @@
                 "missingTranscodingProfile": "Select Transcoding Profile",
                 "fileSizeExceeded": "File size exceeded",
                 "fileSizeExceededFor": "File size exceeded for:",
-                "fileNameRequired": "File name is required"
+                "fileNameRequired": "File name is required",
+                "emptyUrl": "URL is required"
             },
             "uploadMenu": {
                 "uploadFromDesktop": "Upload from Desktop",
@@ -1354,6 +1355,7 @@
                         "profilePlaceholder": "Default",
                         "addFileBtn": "Add File",
                         "fileName": "File name",
+                        "fileUrl": "File URL",
                         "flavor": "Transcoding Flavor",
                         "size": "Size",
                         "select": "Select flavor",

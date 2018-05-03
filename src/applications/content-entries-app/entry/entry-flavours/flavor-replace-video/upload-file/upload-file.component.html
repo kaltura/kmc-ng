@@ -22,7 +22,7 @@
                         class="kButtonDefault kAddFileButton"
                         pButton icon="kIconplus"
                         [label]="'applications.content.entryDetails.flavours.replaceVideo.addFileBtn' | translate"
-                        (click)="fileDialog.open()"></button>
+                        (click)="_addFile()"></button>
             </form>
 
             <div class="kTable" [class.empty]="_files.length === 0">
@@ -32,11 +32,22 @@
                              scrollable="true">
                     <p-column [style]="{'width': '28px'}"></p-column>
                     <p-column field="name"
+                              *ngIf="replaceType === 'upload'"
                               class="kFileNameCol"
                               [sortable]="false"
                               [header]="'applications.content.entryDetails.flavours.replaceVideo.fileName' | translate">
                         <ng-template let-col let-file="rowData" pTemplate="body">
                             <span class="kFileName kTableColumn" [kTooltip]="file.name">{{ file.name }}</span>
+                        </ng-template>
+                    </p-column>
+                    <p-column *ngIf="replaceType === 'import'"
+                              [sortable]="false"
+                              [header]="'applications.content.entryDetails.flavours.replaceVideo.fileUrl' | translate">
+                        <ng-template let-col let-file="rowData" pTemplate="body">
+                            <input pInputText type="text"
+                                   class="kReplaceUrl"
+                                   [class.kHasError]="file.hasError"
+                                   [(ngModel)]="file.url">
                         </ng-template>
                     </p-column>
                     <p-column field="type"
@@ -62,6 +73,7 @@
                         </ng-template>
                     </p-column>
                     <p-column field="size"
+                              *ngIf="replaceType === 'upload'"
                               [sortable]="false"
                               [style]="{ 'width': '100px' }"
                               [header]="'applications.content.entryDetails.flavours.replaceVideo.size' | translate">
@@ -93,7 +105,7 @@
                     </h1>
                     <p>
                         {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.getStarted' | translate }}
-                        <a (click)="fileDialog.open()">
+                        <a (click)="_addFile()">
                             {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.browse' | translate }}
                         </a>
                     </p>

@@ -30,12 +30,13 @@ export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConve
 }
 
 export interface UploadReplacementFile {
-    file: File;
-    name: string;
+    file?: File;
+    name?: string;
     hasError?: boolean;
     errorToken?: string;
-    size: number;
+    size?: number;
     flavor?: number;
+    url?: string;
 }
 
 @Component({
@@ -89,10 +90,7 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        if (this.replaceType === 'upload') {
-            this._fileDialog.open();
-        }
-
+        this._addFile();
         this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
     }
 
@@ -316,17 +314,26 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
         files.forEach((file, index) => {
             const fileSize = file.size / 1024 / 1024; // convert to Mb
 
-            if (!Number.isInteger(file.flavor) && !this._flavorsFieldDisabled && this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
-                isValid = false;
-                file.errorToken = 'applications.upload.validation.selectFlavor';
-                file.hasError = true;
-            } else if (!(this._uploadManagement.supportChunkUpload(new NewEntryUploadFile(null, null, null, null)) || fileSize < maxFileSize)) {
-                isValid = false;
-                file.hasError = true;
-                file.errorToken = 'applications.upload.validation.fileSizeExceeded';
+            file.errorToken = null;
+            file.hasError = false;
+
+            if (this.replaceType === 'upload') {
+                if (!Number.isInteger(file.flavor) && !this._flavorsFieldDisabled && this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
+                    isValid = false;
+                    file.errorToken = 'applications.upload.validation.selectFlavor';
+                    file.hasError = true;
+                } else if (!(this._uploadManagement.supportChunkUpload(new NewEntryUploadFile(null, null, null, null)) || fileSize < maxFileSize)) {
+                    isValid = false;
+                    file.hasError = true;
+                    file.errorToken = 'applications.upload.validation.fileSizeExceeded';
+                }
             } else {
-                file.hasError = false;
-                file.errorToken = null;
+                const url = file.url ? file.url.trim() : '';
+                if (!url) {
+                    isValid = false;
+                    file.hasError = true;
+                    file.errorToken = 'applications.upload.validation.emptyUrl';
+                }
             }
 
             if (files.indexOf(file) !== index) {
@@ -349,6 +356,16 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
         if (file.hasError && file.errorToken === 'applications.upload.validation.selectFlavor') {
             file.errorToken = null;
             file.hasError = false;
+        }
+    }
+
+    public _addFile(): void {
+        if (this.replaceType === 'upload') {
+            this._fileDialog.open();
+        } else {
+            setTimeout(() => {
+                this._files = [...this._files, { url: '' }];
+            }, 0);
         }
     }
 }

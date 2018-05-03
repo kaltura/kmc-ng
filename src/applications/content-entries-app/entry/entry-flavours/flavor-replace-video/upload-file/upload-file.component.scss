@@ -91,6 +91,14 @@
                 display: none;
                 cursor: pointer;
             }
+
+            .kReplaceUrl {
+                width: 400px;
+
+                &.kHasError {
+                    border-color: $kDandger;
+                }
+            }
         }
 
         .kEmptyMessage {
