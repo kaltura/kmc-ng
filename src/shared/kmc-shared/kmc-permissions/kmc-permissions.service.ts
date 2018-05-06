@@ -21,13 +21,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
     load(rawRolePermissionList: string[], rawPartnerPermissionList: string[]): void {
 
         super.flushPermissions();
-
-
-        this._logger.error('DANGER!!!!!!!!!!! test code added! should remove before commiting!!');
-        const tempRemoveThis = 'CONTENT_INGEST_REFERENCE_MODIFY';
-        rawRolePermissionList = rawRolePermissionList.filter(item => item !== tempRemoveThis);
-        rawPartnerPermissionList = rawPartnerPermissionList.filter(item => item !== tempRemoveThis);
-
+        
         this._logger.info(`prepare user permissions set based on role permissions and partner permissions`);
         this._logger.trace('load()', () => ({
             rawRolePermissionList,
