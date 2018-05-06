@@ -156,8 +156,8 @@ export class EditMediaFlavorComponent implements OnInit {
     }, { emitEvent: false });
 
     if (!this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
-      this._editFlavorForm.get('systemName').disable({ onlySelf: true });
-      this._editFlavorForm.get('forceNoneComplied').disable({ onlySelf: true });
+        this._editFlavorForm.get('systemName').disable({onlySelf: true});
+        this._originField.disable({onlySelf: true});
     }
   }
 
