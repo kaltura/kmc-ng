@@ -121,10 +121,12 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     let restrictedDomains = [];
     if (profile.view.domain) {
       const domain = profile.view.domain;
-      const isAuthorized = domain.isAuthorized;
-      domainsType = isAuthorized ? KalturaSiteRestrictionType.allowSiteList : KalturaSiteRestrictionType.restrictSiteList;
-      allowedDomains = isAuthorized ? domain.details.map(value => ({ value, __tooltip: value })) : [];
-      restrictedDomains = !isAuthorized ? domain.details.map(value => ({ value, __tooltip: value })) : [];
+      if (domain.isAuthorized !== null) {
+          const isAuthorized = domain.isAuthorized;
+          domainsType = isAuthorized ? KalturaSiteRestrictionType.allowSiteList : KalturaSiteRestrictionType.restrictSiteList;
+          allowedDomains = isAuthorized ? domain.details.map(value => ({value, __tooltip: value})) : [];
+          restrictedDomains = !isAuthorized ? domain.details.map(value => ({value, __tooltip: value})) : [];
+      }
     }
 
     let countriesType = null;
@@ -132,10 +134,12 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     let restrictedCountries = [];
     if (profile.view.countries) {
       const countries = profile.view.countries;
-      const isAuthorized = countries.isAuthorized;
-      countriesType = isAuthorized ? KalturaCountryRestrictionType.allowCountryList : KalturaCountryRestrictionType.restrictCountryList;
-      allowedCountries = isAuthorized ? countries.details : [];
-      restrictedCountries = !isAuthorized ? countries.details : [];
+        if (countries.isAuthorized !== null) {
+            const isAuthorized = countries.isAuthorized;
+            countriesType = isAuthorized ? KalturaCountryRestrictionType.allowCountryList : KalturaCountryRestrictionType.restrictCountryList;
+            allowedCountries = isAuthorized ? countries.details : [];
+            restrictedCountries = !isAuthorized ? countries.details : [];
+        }
     }
 
     let ipsType = null;
@@ -143,10 +147,12 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     let restrictedIps = [];
     if (profile.view.ips) {
       const ips = profile.view.ips;
-      const isAuthorized = ips.isAuthorized;
-      ipsType = isAuthorized ? KalturaIpAddressRestrictionType.allowList : KalturaIpAddressRestrictionType.restrictList;
-      allowedIps = isAuthorized ? ips.details.map(value => ({ value, __tooltip: value })) : [];
-      restrictedIps = !isAuthorized ? ips.details.map(value => ({ value, __tooltip: value })) : [];
+        if (ips.isAuthorized !== null) {
+            const isAuthorized = ips.isAuthorized;
+            ipsType = isAuthorized ? KalturaIpAddressRestrictionType.allowList : KalturaIpAddressRestrictionType.restrictList;
+            allowedIps = isAuthorized ? ips.details.map(value => ({value, __tooltip: value})) : [];
+            restrictedIps = !isAuthorized ? ips.details.map(value => ({value, __tooltip: value})) : [];
+        }
     }
 
     let flavorsType = null;
@@ -154,10 +160,12 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     let restrictedFlavors = [];
     if (profile.view.flavors) {
       const flavors = profile.view.flavors;
-      const isAuthorized = flavors.isAuthorized;
-      flavorsType = isAuthorized ? KalturaLimitFlavorsRestrictionType.allowList : KalturaLimitFlavorsRestrictionType.restrictList;
-      allowedFlavors = isAuthorized ? flavors.details.map(item => item.id) : [];
-      restrictedFlavors = !isAuthorized ? flavors.details.map(item => item.id) : [];
+        if (flavors.isAuthorized !== null) {
+            const isAuthorized = flavors.isAuthorized;
+            flavorsType = isAuthorized ? KalturaLimitFlavorsRestrictionType.allowList : KalturaLimitFlavorsRestrictionType.restrictList;
+            allowedFlavors = isAuthorized ? flavors.details.map(item => item.id) : [];
+            restrictedFlavors = !isAuthorized ? flavors.details.map(item => item.id) : [];
+        }
     }
 
     let secureVideo = false;
