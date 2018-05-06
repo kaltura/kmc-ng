@@ -20,7 +20,6 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
                 result => {
                     if (!result) {
                         this._logger.info('open view operation failed');
-                        this._browserService.handleUnpermittedAction(false);
                     }
 
                 }, error => {

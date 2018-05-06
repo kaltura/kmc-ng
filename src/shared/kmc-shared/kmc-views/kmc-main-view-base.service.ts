@@ -50,7 +50,6 @@ export abstract class KmcMainViewBaseService {
                         const openState = result === null ? true : result; // treat navigation to save route as successful operation
                         if (!openState) {
                             this._logger.info('handle open view operation failure');
-                            this._browserService.handleUnpermittedAction(false);
                         }
 
                         observer.next({opened: openState});

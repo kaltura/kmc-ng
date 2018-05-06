@@ -21,10 +21,9 @@ export class UsageDashboardMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return serverConfig.externalApps.usageDashboard.enabled && this._appPermissions.hasAnyPermissions([
-            KMCPermissions.FEATURE_ENABLE_USAGE_DASHBOARD,
-            KMCPermissions.ANALYTICS_BASE
-        ]);
+        return serverConfig.externalApps.usageDashboard.enabled &&
+            this._appPermissions.hasPermission(KMCPermissions.FEATURE_ENABLE_USAGE_DASHBOARD) &&
+            this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE);
     }
 
     getRoutePath(): string {

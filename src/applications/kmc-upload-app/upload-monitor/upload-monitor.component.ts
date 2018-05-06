@@ -8,6 +8,7 @@ import {
     ContentDropFoldersMainViewService,
     ContentUploadsMainViewService
 } from 'app-shared/kmc-shared/kmc-views';
+import { buildDeployUrl } from 'config/server';
 
 export interface UploadMonitorStatuses {
   uploading: number;
@@ -25,7 +26,7 @@ export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
 
   private _sectionHeight = 91;
-
+    public _syncUri = buildDeployUrl('./assets/sync.svg');
   public _popupHeight = 273; // default height that fits 3 sections
   public _showErrorIcon = false;
   public _menuOpened = false;
