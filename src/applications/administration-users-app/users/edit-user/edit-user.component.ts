@@ -9,6 +9,7 @@ import { IsUserExistsStatuses } from '../user-exists-statuses';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -29,6 +30,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   private _roles: KalturaUserRole[] = [];
   private _users: KalturaUser[];
 
+  public _kmcPermissions = KMCPermissions;
   public _rolesList: SelectItem[] = [];
   public _selectedRoleDescription = '';
   public _userForm: FormGroup;
@@ -44,6 +46,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   constructor(public _usersStore: UsersStore,
               private _formBuilder: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
     // build FormControl group
@@ -105,12 +108,16 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._userForm.get('lastName').disable();
 
           if (this.user.id === this._partnerInfo.adminUserId) {
-            this._userForm.get('roleIds').disable()
+            this._userForm.get('roleIds').disable();
           } else {
             this._userForm.get('roleIds').enable();
           }
 
           this._setRoleDescription(relevantUser.roleIds);
+
+          if (!this._permissionsService.hasPermission(KMCPermissions.ADMIN_USER_UPDATE)) {
+            this._userForm.disable({ emitEvent: false });
+          }
         }
       });
   }
@@ -130,6 +137,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
             switch (status) {
                 case IsUserExistsStatuses.kmcUser:
                     this._browserService.alert({
+                        header: this._appLocalization.get('app.common.attention'),
                         message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: email})
                     });
                     break;
@@ -170,7 +178,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this._usersStore.reload(true);
-          this._browserService.alert({ message: this._appLocalization.get('applications.administration.users.successSavingUser') });
+          this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
+              message: this._appLocalization.get('applications.administration.users.successSavingUser')
+          });
           this.parentPopupWidget.close();
         },
         error => {

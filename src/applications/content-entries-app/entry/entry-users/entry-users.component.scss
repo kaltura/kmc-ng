@@ -114,6 +114,10 @@ form{
   li.userAdded{
     background-color: transparentize($kPrimary, 0.5) !important;
   }
+
+  .ui-state-disabled {
+    background-color: $kGrayscale5 !important;
+  }
 }
 
 /deep/ kPopupWidget .kPopupWidget {

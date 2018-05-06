@@ -33,7 +33,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     StickyModule,
     CategoriesModule,
     KMCPermissionsModule,
-    InputHelperModule
+    InputHelperModule,
+    KMCPermissionsModule
   ],
   declarations: [
     SettingsIntegrationSettingsComponent,

@@ -7,6 +7,7 @@ export interface PartnerInfo {
     partnerPackage: PartnerPackageTypes;
     landingPage: string;
     adultContent: boolean;
+    publisherEnvironmentType: number;
 }
 
 export enum PartnerPackageTypes {

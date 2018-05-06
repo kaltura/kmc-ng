@@ -1,10 +1,9 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {KeditHosterConfig} from 'app-shared/kmc-shared/kedit-hoster/kedit-hoster.component';
-import {serverConfig} from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 
 @Component({
   selector: 'kAdvertisements',
@@ -14,13 +13,11 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 export class AdvertisementsComponent implements OnInit, OnDestroy {
 
   @Input()
-  entryId: string = null;
+  entry: KalturaMediaEntry = null;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
 
-  public _keditConfig: KeditHosterConfig;
-
-  private _confirmClose = false;
+  public _confirmClose = false;
 
   constructor(private _logger: KalturaLogger,
               private _browserService: BrowserService,
@@ -28,29 +25,6 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (!this.entryId) {
-      this._logger.warn(`error occurred while trying to initialize AdvertisementsComponent, Please provide entry ID`);
-      return undefined;
-    }
-
-    const permissions: string[] = []; // todo: eran sakal - need to implement permissions array after permissions branch is merged
-
-    this._keditConfig = {
-      entryId: this.entryId,
-      keditUrl: serverConfig.externalApps.advertisements.uri,
-      tab: {
-        name: 'advertisements',
-        // put 'vastUrlValidationNotRequired' permission if permissions contains 'FEATURE_ALLOW_VAST_CUE_POINT_NO_URL'
-        permissions: [...(permissions.indexOf('FEATURE_ALLOW_VAST_CUE_POINT_NO_URL') > -1 ? ['vastUrlValidationNotRequired'] : [] )],
-        userPermissions: []
-      },
-      playerUiConfId: serverConfig.externalApps.advertisements.uiConfId,
-      previewPlayerUiConfId: serverConfig.externalApps.advertisements.uiConfId,
-      callbackActions: {
-        advertisementsModified: this._advertisementsModified.bind(this),
-        advertisementsSaved: this._advertisementsSaved.bind(this)
-      }
-    };
   }
 
   ngOnDestroy() {
@@ -76,18 +50,6 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
       if (this.parentPopupWidget) {
         this.parentPopupWidget.close();
       }
-    }
-  }
-
-  private _advertisementsModified(data: { entryId: string }) {
-    if (data && data.entryId === this.entryId) {
-      this._confirmClose = true;
-    }
-  }
-
-  private _advertisementsSaved(data: { entryId: string }) {
-    if (data && data.entryId === this.entryId) {
-      this._confirmClose = false;
     }
   }
 }

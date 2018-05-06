@@ -10,6 +10,7 @@
           type="button"
           [label]="'applications.content.moderation.approveEntry' | translate"
           (click)="_approveEntry()"
+          *ngIf="_kmcPermissions.CONTENT_MODERATE_APPROVE_REJECT | kNgIfPermitted"
           class="kButtonBranded kApproveEntryBtn"></button>
 
         <button
@@ -17,13 +18,14 @@
           type="button"
           [label]="'applications.content.moderation.rejectEntry' | translate"
           (click)="_rejectEntry()"
+          *ngIf="_kmcPermissions.CONTENT_MODERATE_APPROVE_REJECT | kNgIfPermitted"
           class="kButtonDefault kRejectEntryBtn"></button>
       </div>
     </div>
 
     <div class="kContainer">
       <div class="kFrame">
-        <k-player #player [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [flashvars]="_playerConfig.flashvars" [width]="340" [height]="190" [lazy]="true"></k-player>
+        <k-player #player [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [flashvars]="_playerConfig.flashvars" [width]="340" [height]="190" [lazy]="true"></k-player>
       </div>
 
       <div class="appSubMenu">

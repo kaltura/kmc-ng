@@ -1,7 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {DestinationComponentBase} from '../../feed-details.component';
+import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
 import {KalturaGenericXsltSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGenericXsltSyndicationFeed';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kFlexibleFormatDestinationForm',
@@ -17,20 +18,28 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
   @Input()
   feed: KalturaGenericXsltSyndicationFeed = null;
 
+  @Input() mode: FeedFormMode;
+
   public _error: string = null;
   public _xslCode: string = null;
   public _loading = false;
   private _fileReader: FileReader = new FileReader();
 
-  constructor(private _appLocalization: AppLocalization) {
-    super()
+  public get _disableFileSelection(): boolean {
+    return this.mode === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE);
+  }
+
+  constructor(private _appLocalization: AppLocalization, private _permissionsService: KMCPermissionsService) {
+    super();
   }
 
   ngOnInit() {
-    this.onFormStateChanged.emit({
-      isValid: false,
-      isDirty: false
-    });
+    if (this.mode !== 'edit' || this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+      this.onFormStateChanged.emit({
+        isValid: false,
+        isDirty: false
+      });
+    }
 
     if (this.feed) {
       this._xslCode = this.feed.xslt;
