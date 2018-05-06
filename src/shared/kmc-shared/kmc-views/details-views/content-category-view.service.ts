@@ -51,22 +51,26 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
         let result = null;
 
         if (activatedRoute) {
-            const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
-            switch (sectionToken) {
-                case 'subcategories':
-                    result = ContentCategoryViewSections.SubCategories;
-                    break;
-                case 'entitlements':
-                    result = ContentCategoryViewSections.Entitlements;
-                    break;
-                case 'metadata':
-                    result = ContentCategoryViewSections.Metadata;
-                    break;
-                default:
-                    break;
-            }
+            try {
+                const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+                switch (sectionToken) {
+                    case 'subcategories':
+                        result = ContentCategoryViewSections.SubCategories;
+                        break;
+                    case 'entitlements':
+                        result = ContentCategoryViewSections.Entitlements;
+                        break;
+                    case 'metadata':
+                        result = ContentCategoryViewSections.Metadata;
+                        break;
+                    default:
+                        break;
+                }
 
-            this._logger.debug(`resolve from activated route`, {section: result, sectionToken});
+                this._logger.debug(`resolve section from activated route`, {section: result, sectionToken});
+            } catch (e) {
+                this._logger.error(`failed to resolve section from activated route`);
+            }
         }
 
         return result;
