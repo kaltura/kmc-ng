@@ -299,9 +299,10 @@ export class AppAuthentication {
             ks: appUser.ks
         });
 
-        this._serverPolls.forcePolling();
         this._appUser = appUser;
         this._appEvents.publish(new UserLoginStatusEvent(true));
+
+        this._serverPolls.forcePolling();
     }
 
     isLogged() {
