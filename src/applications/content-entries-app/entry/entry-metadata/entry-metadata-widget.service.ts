@@ -54,7 +54,6 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 private _iterableDiffers : IterableDiffers,
                 private _permissionsService: KMCPermissionsService,
                 private _dynamicMetadataFormFactory : DynamicMetadataFormFactory,
-                private _permissionsService: KMCPermissionsService,
                 private _metadataProfileStore : MetadataProfileStore)
     {
         super(ContentEntryViewSections.Metadata);
@@ -78,12 +77,9 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             tags: null,
             categories: [null, categoriesValidator],
             offlineMessage: '',
+            referenceId: '',
             entriesIdList: null
         });
-
-        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REFERENCE_MODIFY)) {
-          this.metadataForm.addControl('referenceId', this._formBuilder.control(''));
-        }
     }
 
     private _monitorFormChanges() {
