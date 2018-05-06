@@ -331,7 +331,7 @@ export class CategoryService implements OnDestroy {
       .request(new CategoryGetAction({id}))
 			.cancelOnDestroy(this)
 			.subscribe(category => {
-                if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute })) {
+                if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  })) {
                     this._loadCategorySubscription = null;
 
                     this._category.next(category);
@@ -396,7 +396,7 @@ export class CategoryService implements OnDestroy {
                         this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
                     } else {
                         this._state.next({ action: ActionTypes.CategoryLoading });
-                        this._contentCategoryView.openById(category)
+                        this._contentCategoryView.openById(category, ContentCategoryViewSections.Metadata)
                             .cancelOnDestroy(this)
                             .subscribe(() => {
                                 this._state.next({ action: ActionTypes.CategoryLoaded });

@@ -17,12 +17,13 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 export enum ContentCategoryViewSections {
     Metadata = 'Metadata',
     Entitlements = 'Entitlements',
-    SubCategories = 'SubCategories'
+    SubCategories = 'SubCategories',
+    ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
 }
 
 export interface ContentCategoryViewArgs {
     category: KalturaCategory;
-    section?: ContentCategoryViewSections;
+    section: ContentCategoryViewSections;
     activatedRoute?: ActivatedRoute;
     ignoreWarningTag?: boolean;
 }
@@ -41,29 +42,32 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
     }
 
     isAvailable(args: ContentCategoryViewArgs): boolean {
-        const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute);
-        this._logger.info(`handle isAvailable action by user`, { categoryId: args.category.id, section });
+        const section = args.section === ContentCategoryViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
+        this._logger.info(`handle isAvailable action by user`, { categoryId: args.category.id, resolvedSection: section, sectionByUser: args.section });
         return this._isSectionEnabled(section, args.category);
     }
 
     private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute): ContentCategoryViewSections {
-        const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
         let result = null;
-        switch (sectionToken) {
-            case 'subcategories':
-                result = ContentCategoryViewSections.SubCategories;
-                break;
-            case 'entitlements':
-                result = ContentCategoryViewSections.Entitlements;
-                break;
-            case 'metadata':
-                result = ContentCategoryViewSections.Metadata;
-                break;
-            default:
-                break;
-        }
 
-        this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+        if (activatedRoute) {
+            const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+            switch (sectionToken) {
+                case 'subcategories':
+                    result = ContentCategoryViewSections.SubCategories;
+                    break;
+                case 'entitlements':
+                    result = ContentCategoryViewSections.Entitlements;
+                    break;
+                case 'metadata':
+                    result = ContentCategoryViewSections.Metadata;
+                    break;
+                default:
+                    break;
+            }
+
+            this._logger.debug(`resolve from activated route`, {section: result, sectionToken});
+        }
 
         return result;
     }
@@ -90,6 +94,11 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
     }
 
     private _isSectionEnabled(section: ContentCategoryViewSections, category: KalturaCategory): boolean {
+        if (!section) {
+            this._logger.debug('missing target section, reject request');
+            return false;
+        }
+
         const availableByData = this._isAvailableByData(section, category);
         const availableByPermission = this._isAvailableByPermission(section);
 
@@ -172,7 +181,7 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
         }
     }
 
-    public openById(categoryId: number): Observable<boolean> {
+    public openById(categoryId: number, section: ContentCategoryViewSections): Observable<boolean> {
         this._logger.info('handle open category view by id request by the user, load category data', { categoryId });
         const categoryGetAction = new CategoryGetAction({ id: categoryId })
             .setRequestOptions({
@@ -185,7 +194,7 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
             .request(categoryGetAction)
             .switchMap(category => {
                 this._logger.info(`handle successful request, proceed navigation`);
-                return this._open({ category });
+                return this._open({ category, section });
             })
             .catch(err => {
                 this._logger.info(`handle failed request, show alert, abort navigation`);
