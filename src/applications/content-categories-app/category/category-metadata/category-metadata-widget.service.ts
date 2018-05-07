@@ -91,50 +91,59 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
     }
 
     protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
-        if (!this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
-            return Observable.of({ failed: false });
-        }
-
         super._showLoader();
         super._removeBlockerMessage();
 
-        const actions: Observable<{ failed: boolean, error?: Error }>[] = [
-            this._loadCategoryMetadata(this.data)
-        ];
+        const actions: Observable<{ failed: boolean, error?: Error }>[] = [];
 
-        if (firstTimeActivating) {
-            actions.push(this._loadProfileMetadata());
+        if (this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
+            actions.push(this._loadCategoryMetadata(this.data));
+            if (firstTimeActivating) {
+                actions.push(this._loadProfileMetadata());
+            }
         }
 
         if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)) {
           this.metadataForm.disable({ emitEvent: false });
         }
 
+        if (!actions.length) {
+            super._hideLoader();
+            try {
+                // the sync function is dealing with dynamically created forms so mistakes can happen
+                // as result of undesired metadata schema.
+                this._syncHandlerContent();
+                return Observable.of({ failed: false });
+            } catch (e) {
+                super._showActivationError();
+                return Observable.of({ failed: true, error: e });
+            }
+        } else {
+            return Observable.forkJoin(actions)
+                .catch((error, caught) => {
+                    return Observable.of([{ failed: true }]);
+                })
+                .map(responses => {
+                    super._hideLoader();
 
-        return Observable.forkJoin(actions)
-            .catch((error, caught) => {
-                return Observable.of([{ failed: true }]);
-            })
-            .map(responses => {
-                super._hideLoader();
+                    const hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false);
 
-                const hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false);
-
-                if (hasFailure) {
-                    super._showActivationError();
-                    return { failed: true };
-                } else {
-                    try {
-                        // the sync function is dealing with dynamically created forms so mistakes can happen
-                        // as result of undesired metadata schema.
-                        this._syncHandlerContent();
-                        return { failed: false };
-                    } catch (e) {
+                    if (hasFailure) {
                         super._showActivationError();
-                        return { failed: true, error: e };
+                        return { failed: true };
+                    } else {
+                        try {
+                            // the sync function is dealing with dynamically created forms so mistakes can happen
+                            // as result of undesired metadata schema.
+                            this._syncHandlerContent();
+                            return { failed: false };
+                        } catch (e) {
+                            super._showActivationError();
+                            return { failed: true, error: e };
+                        }
                     }
-                }
-            });
+                });
+        }
     }
 
     private _syncHandlerContent() {
