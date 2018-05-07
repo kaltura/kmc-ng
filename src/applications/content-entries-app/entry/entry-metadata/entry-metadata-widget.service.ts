@@ -147,11 +147,14 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
         const actions: Observable<{failed: boolean, error?: Error}>[] = [
             this._loadEntryCategories(this.data),
-            this._loadEntryMetadata(this.data)
         ];
 
-        if (firstTimeActivating) {
-            actions.push(this._loadProfileMetadata());
+        if (this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
+            actions.push(this._loadEntryMetadata(this.data));
+
+            if (firstTimeActivating) {
+                actions.push(this._loadProfileMetadata());
+            }
         }
 
         if (!this._permissionsService.hasAnyPermissions([

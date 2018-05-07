@@ -91,6 +91,9 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
     }
 
     protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
+        if (!this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
+            return Observable.of({ failed: false });
+        }
 
         super._showLoader();
         super._removeBlockerMessage();
