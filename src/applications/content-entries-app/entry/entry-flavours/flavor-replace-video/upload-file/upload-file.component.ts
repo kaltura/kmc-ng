@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
+import { NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
@@ -24,6 +24,10 @@ import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/type
 import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
 import { Observable } from 'rxjs/Observable';
 import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/KalturaFlavorReadyBehaviorType';
+import { urlRegex } from '@kaltura-ng/kaltura-ui/validators/validators';
+import { NewReplaceVideoUploadService } from 'app-shared/kmc-shell/new-replace-video-upload';
+import { EntryStore } from '../../../entry-store.service';
+import { EntryFlavoursWidget } from '../../entry-flavours-widget.service';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];
@@ -58,8 +62,8 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
     public _transcodingProfilesOptions: { value: number, label: string }[];
     public _profileForm: FormGroup;
     public _transcodingProfileField: AbstractControl;
-    public _transcodingProfileError: AreaBlockerMessage;
-    public _transcodingProfileLoading = false;
+    public _blockerMessage: AreaBlockerMessage;
+    public _isLoading = false;
     public _files: UploadReplacementFile[] = [];
     public _kmcPermissions = KMCPermissions;
     public _title: string;
@@ -71,9 +75,10 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public _allowedExtensions: string;
 
-    constructor(private _newEntryUploadService: NewEntryUploadService,
+    constructor(private _newReplaceVideoUpload: NewReplaceVideoUploadService,
                 private _formBuilder: FormBuilder,
                 private _kalturaClient: KalturaClient,
+                private _widgetService: EntryFlavoursWidget,
                 private _transcodingProfileManagement: TranscodingProfileManagement,
                 private _uploadManagement: UploadManagement,
                 private _permissionsService: KMCPermissionsService,
@@ -139,7 +144,7 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private _loadTranscodingProfiles(): void {
-        this._transcodingProfileLoading = true;
+        this._isLoading = true;
 
         this._transcodingProfileManagement.get()
             .switchMap(
@@ -181,25 +186,25 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     this._updateFlavorsOption();
 
-                    this._transcodingProfileLoading = false;
+                    this._isLoading = false;
                 },
                 (error) => {
-                    this._transcodingProfileError = new AreaBlockerMessage({
+                    this._blockerMessage = new AreaBlockerMessage({
                         message: error.message,
                         buttons: [
                             {
                                 label: this._appLocalization.get('app.common.retry'),
                                 action: () => {
-                                    this._transcodingProfileError = null;
-                                    this._transcodingProfileLoading = false;
+                                    this._blockerMessage = null;
+                                    this._isLoading = false;
                                     this._loadTranscodingProfiles();
                                 }
                             },
                             {
                                 label: this._appLocalization.get('app.common.cancel'),
                                 action: () => {
-                                    this._transcodingProfileError = null;
-                                    this._transcodingProfileLoading = false;
+                                    this._blockerMessage = null;
+                                    this._isLoading = false;
                                     this.parentPopupWidget.close();
                                 }
                             }
@@ -246,12 +251,12 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
         const transcodingProfileId = this._profileForm.value.transcodingProfile;
 
         if (transcodingProfileId === null || typeof transcodingProfileId === 'undefined' || transcodingProfileId.length === 0) {
-            this._transcodingProfileError = new AreaBlockerMessage({
+            this._blockerMessage = new AreaBlockerMessage({
                 message: this._appLocalization.get('applications.upload.validation.missingTranscodingProfile'),
                 buttons: [{
                     label: this._appLocalization.get('app.common.ok'),
                     action: () => {
-                        this._transcodingProfileError = null;
+                        this._blockerMessage = null;
                     }
                 }]
             });
@@ -260,29 +265,27 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const { isValid, code } = this._validateFiles(this._files);
         if (isValid) {
-            this.parentPopupWidget.close();
-            const uploadFileDataList = this._files.map(fileData => ({
-                file: fileData.file,
-                entryName: fileData.name
-            }));
-
-            // this._newEntryUploadService.upload(uploadFileDataList, Number(transcodingProfileId));
+            if (this.replaceType === 'upload') {
+                this._uploadFiles(transcodingProfileId);
+            } else {
+                this._importFiles(transcodingProfileId);
+            }
         } else if (code) {
             if (code === 'uniqueFlavors') {
-                this._transcodingProfileError = new AreaBlockerMessage({
+                this._blockerMessage = new AreaBlockerMessage({
                     message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.errors.uniqueFlavors'),
                     buttons: [
                         {
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
-                                this._transcodingProfileError = null;
+                                this._blockerMessage = null;
                                 this.parentPopupWidget.close();
                             }
                         }
                     ]
                 });
             } else if (code === 'missingFlavors') {
-                this._transcodingProfileError = new AreaBlockerMessage({
+                this._blockerMessage = new AreaBlockerMessage({
                     message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.errors.uniqueFlavors'),
                     buttons: [
                         {
@@ -294,7 +297,7 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
                         {
                             label: this._appLocalization.get('app.common.cancel'),
                             action: () => {
-                                this._transcodingProfileError = null;
+                                this._blockerMessage = null;
                                 this.parentPopupWidget.close();
                             }
                         }
@@ -302,6 +305,43 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 });
             }
         }
+    }
+
+    private _importFiles(transcodingProfileId: string): void {
+        const importFileDataList = this._files.map(file => ({
+            url: file.url,
+            assetParamsId: file.flavor
+        }));
+        this._newReplaceVideoUpload.import(importFileDataList, this.entry.id, Number(transcodingProfileId))
+            .cancelOnDestroy(this)
+            .tag('block-shell')
+            .subscribe(
+                () => {
+                    this._widgetService.refresh(true);
+                    this.parentPopupWidget.close();
+                },
+                (error) => {
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: error.message,
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.ok'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._widgetService.refresh(true);
+                                this.parentPopupWidget.close();
+                            }
+                        }]
+                    });
+                });
+    }
+
+    private _uploadFiles(transcodingProfileId: string): void {
+        const uploadFileDataList = this._files.map(fileData => ({
+            file: fileData.file,
+            entryName: fileData.name
+        }));
+
+        // this._newReplaceVideoUpload.upload(uploadFileDataList, Number(transcodingProfileId));
     }
 
     private _validateFiles(files: UploadReplacementFile[]): { isValid: boolean, code?: string } {
@@ -335,6 +375,10 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
                     isValid = false;
                     file.hasError = true;
                     file.errorToken = 'applications.upload.validation.emptyUrl';
+                } else if (!urlRegex.test(url)) {
+                    isValid = false;
+                    file.hasError = true;
+                    file.errorToken = 'applications.upload.validation.invalidUrl';
                 }
             }
 

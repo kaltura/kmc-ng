@@ -1,5 +1,5 @@
-<k-area-blocker [showLoader]="_transcodingProfileLoading"
-                [message]="_transcodingProfileError">
+<k-area-blocker [showLoader]="_isLoading"
+                [message]="_blockerMessage">
     <div class="kUploadSettings">
         <div class="kHeader">
             <h1>{{_title}}</h1>
@@ -116,7 +116,7 @@
         <div class="kFooter">
             <button class="kButtonDefault kUploadButton"
                     pButton
-                    [disabled]="_files.length === 0 || _transcodingProfileLoading || !!_transcodingProfileError"
+                    [disabled]="_files.length === 0 || _isLoading || !!_blockerMessage"
                     [label]="'applications.content.entryDetails.flavours.replaceVideo.uploadBtn' | translate"
                     (click)="_upload()"></button>
         </div>

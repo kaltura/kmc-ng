@@ -9,7 +9,7 @@
             <kFlavorReplaceVideoBtn *ngIf="_showActionsView"
                                     [flavors]="(_widgetService._flavors$ | async)?.items"
                                     [entry]="_widgetService.data"></kFlavorReplaceVideoBtn>
-			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService._refresh()"></button>
+			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService.refresh(true)"></button>
 		</div>
 
 		<div class="kTable">

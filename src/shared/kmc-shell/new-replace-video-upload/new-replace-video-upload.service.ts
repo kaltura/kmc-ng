@@ -2,10 +2,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewReplaceVideoUploadFile } from './new-replace-video-upload-file';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
 import { KalturaAssetParamsResourceContainer } from 'kaltura-ngx-client/api/types/KalturaAssetParamsResourceContainer';
 import { KalturaAssetsParamsResourceContainers } from 'kaltura-ngx-client/api/types/KalturaAssetsParamsResourceContainers';
@@ -13,11 +11,17 @@ import { MediaUpdateContentAction } from 'kaltura-ngx-client/api/types/MediaUpda
 import { UploadTokenDeleteAction } from 'kaltura-ngx-client/api/types/UploadTokenDeleteAction';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaUrlResource } from 'kaltura-ngx-client/api/types/KalturaUrlResource';
 
-export interface KmcNewEntryUpload {
+export interface KmcNewReplaceEntryUpload {
     file: File;
     entryId: string;
     flavorParamsId: number;
+    assetParamsId: number;
+}
+
+export interface KmcNewReplaceEntryImport {
+    url: string;
     assetParamsId: number;
 }
 
@@ -116,11 +120,25 @@ export class NewReplaceVideoUploadService implements OnDestroy {
         return `${message}: ${errorMessage}`;
     }
 
-    public upload(files: KmcNewEntryUpload[], flavorParamsId: number): void {
+    public upload(files: KmcNewReplaceEntryUpload[], flavorParamsId: number): void {
         this._uploadManagement.addFiles(
             files.map(file =>
                 new NewReplaceVideoUploadFile(file.file, file.assetParamsId, flavorParamsId, file.entryId)
             )
         );
+    }
+
+    public import(files: KmcNewReplaceEntryImport[], entryId: string, conversionProfileId: number): Observable<void> {
+        const resources = files.map(file => {
+            return new KalturaAssetParamsResourceContainer({
+                resource: new KalturaUrlResource({ url: file.url }),
+                assetParamsId: file.assetParamsId || 0
+            });
+        });
+        const resource = new KalturaAssetsParamsResourceContainers({ resources });
+
+        return this._kalturaServerClient
+            .request(new MediaUpdateContentAction({ entryId, resource, conversionProfileId }))
+            .map(() => {});
     }
 }

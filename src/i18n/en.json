@@ -226,7 +226,8 @@
                 "fileSizeExceeded": "File size exceeded",
                 "fileSizeExceededFor": "File size exceeded for:",
                 "fileNameRequired": "File name is required",
-                "emptyUrl": "URL is required"
+                "emptyUrl": "URL is required",
+                "invalidUrl": "URL is invalid"
             },
             "uploadMenu": {
                 "uploadFromDesktop": "Upload from Desktop",

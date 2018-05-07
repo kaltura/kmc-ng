@@ -29,6 +29,7 @@ import {NewEntryFlavourFile} from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { EntryStore } from '../entry-store.service';
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
@@ -43,7 +44,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
     constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
                 private _appAuthentication: AppAuthentication, private _browserService: BrowserService,
-                private _uploadManagement: UploadManagement, private _appEvents: AppEventsService) {
+                private _uploadManagement: UploadManagement, private _appEvents: AppEventsService,
+                private _entryStore: EntryStore) {
         super(ContentEntryViewSections.Flavours);
     }
 
@@ -211,7 +213,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         .monitor('delete flavor: ' + flavor.id)
                         .subscribe(
                             response => {
-                                this._refresh();
+                                this.refresh();
                                 this._browserService.scrollToTop();
                             },
                             error => {
@@ -284,7 +286,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
-                                this._refresh();
+                                this.refresh();
                                 this._removeBlockerMessage();
                             }
                         }]
@@ -319,7 +321,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                             break;
 
                         case TrackedFileStatuses.uploadCompleted:
-                            this._refresh(false, false);
+                            this.refresh();
                             break;
 
                         case TrackedFileStatuses.failure:
@@ -327,7 +329,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                                 severity: 'error',
                                 detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
                             });
-                            this._refresh();
+                            this.refresh();
                             break;
 
                         default:
@@ -348,7 +350,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         severity: 'error',
                         detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
                     });
-                    this._refresh();
+                    this.refresh();
                 });
     }
 
@@ -366,7 +368,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             })
             .subscribe(
                 response => {
-                    this._refresh(false, true);
+                    this.refresh();
                 },
                 error => {
                     this._showBlockerMessage(new AreaBlockerMessage({
@@ -374,7 +376,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
-                                this._refresh();
+                                this.refresh();
                                 this._removeBlockerMessage()
                             }
                         }]
@@ -408,7 +410,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
-                                this._refresh();
+                                this.refresh();
                                 this._removeBlockerMessage();
                             }
                         }]
@@ -429,35 +431,42 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         }
     }
 
-    public _refresh(reset = false, showLoader = true) {
-        super._showLoader();
+    public refresh(refreshEntry = false) {
+        if (refreshEntry) {
+            this._entryStore.reloadEntry();
+        } else {
+            super._showLoader();
 
-        this._loadFlavors()
-            .cancelOnDestroy(this, this.widgetReset$)
-            .subscribe(() => {
-                    super._hideLoader();
-                    const entryId = this.data ? this.data.id : null;
-                    if (entryId) {
-                        this._appEvents.publish(new PreviewMetadataChangedEvent(entryId));
-                    }
-                },
-                (error) => {
-                    super._hideLoader();
-
-                    this._showBlockerMessage(new AreaBlockerMessage(
-                        {
-                            message: this._appLocalization.get('applications.content.entryDetails.errors.flavorsLoadError'),
-                            buttons: [
-                                {
-                                    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
-                                    action: () => {
-                                        this._refresh(reset);
-                                    }
-                                }
-                            ]
+            this._loadFlavors()
+                .cancelOnDestroy(this, this.widgetReset$)
+                .subscribe(() => {
+                        super._hideLoader();
+                        const entryId = this.data ? this.data.id : null;
+                        if (entryId) {
+                            this._appEvents.publish(new PreviewMetadataChangedEvent(entryId));
                         }
-                    ), true);
-                });
+                        if (refreshEntry) {
+                            this._entryStore.reloadEntry();
+                        }
+                    },
+                    (error) => {
+                        super._hideLoader();
+
+                        this._showBlockerMessage(new AreaBlockerMessage(
+                            {
+                                message: this._appLocalization.get('applications.content.entryDetails.errors.flavorsLoadError'),
+                                buttons: [
+                                    {
+                                        label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+                                        action: () => {
+                                            this.refresh(refreshEntry);
+                                        }
+                                    }
+                                ]
+                            }
+                        ), true);
+                    });
+        }
     }
 
     ngOnDestroy() {

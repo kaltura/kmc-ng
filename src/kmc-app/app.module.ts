@@ -87,6 +87,7 @@ import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger/kaltura-logger.m
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
+import { NewReplaceVideoUploadModule } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -131,6 +132,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     GrowlModule,
     KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),
+      NewReplaceVideoUploadModule.forRoot(),
     BulkUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
     RadioButtonModule,
