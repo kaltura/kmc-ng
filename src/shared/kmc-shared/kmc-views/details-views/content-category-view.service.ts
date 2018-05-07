@@ -127,8 +127,13 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
             case ContentCategoryViewSections.Entitlements:
                 result = this._appPermissions.hasPermission(KMCPermissions.FEATURE_ENTITLEMENT);
                 break;
-            case ContentCategoryViewSections.Metadata:
             case ContentCategoryViewSections.SubCategories:
+                result = true;
+                break;
+            case ContentCategoryViewSections.Metadata:
+                // metadata section is always available to the user.
+                // if you need to change this you will need to resolve at runtime
+                // the default section to open
                 result = true;
                 break;
             default:
