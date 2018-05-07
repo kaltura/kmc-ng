@@ -20,6 +20,7 @@ import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/
 import { DropFoldersRequestFactory } from './drop-folders-request-factory';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 
 interface DropFoldersUploadFile {
   status: KalturaDropFolderFileStatus;
@@ -50,9 +51,8 @@ export class DropFoldersMonitorService implements OnDestroy {
   private _dropFolderChangesFactory = new DropFoldersRequestFactory();
   private _activeStatuses = [
     KalturaDropFolderFileStatus.uploading,
-    KalturaDropFolderFileStatus.pending,
-    KalturaDropFolderFileStatus.waiting,
-    KalturaDropFolderFileStatus.uploading,
+    KalturaDropFolderFileStatus.processing,
+    KalturaDropFolderFileStatus.downloading
   ];
 
   public readonly totals = { data$: this._totals.data.asObservable(), state$: this._totals.state.asObservable() };
@@ -162,7 +162,8 @@ export class DropFoldersMonitorService implements OnDestroy {
       filter: new KalturaDropFolderFileFilter({
         dropFolderIdIn: dropFoldersIn,
         statusIn: this._activeStatuses.join(',')
-      })
+      }),
+      pager: new KalturaFilterPager({pageSize: 1000})
     });
     return this._kalturaClient.request(activeUploads)
   }
