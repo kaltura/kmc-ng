@@ -317,12 +317,14 @@ export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
             file.errorToken = null;
             file.hasError = false;
 
+            if (!Number.isInteger(file.flavor) && !this._flavorsFieldDisabled && this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
+                isValid = false;
+                file.errorToken = 'applications.upload.validation.selectFlavor';
+                file.hasError = true;
+            }
+
             if (this.replaceType === 'upload') {
-                if (!Number.isInteger(file.flavor) && !this._flavorsFieldDisabled && this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
-                    isValid = false;
-                    file.errorToken = 'applications.upload.validation.selectFlavor';
-                    file.hasError = true;
-                } else if (!(this._uploadManagement.supportChunkUpload(new NewEntryUploadFile(null, null, null, null)) || fileSize < maxFileSize)) {
+                if (!(this._uploadManagement.supportChunkUpload(new NewEntryUploadFile(null, null, null, null)) || fileSize < maxFileSize)) {
                     isValid = false;
                     file.hasError = true;
                     file.errorToken = 'applications.upload.validation.fileSizeExceeded';
