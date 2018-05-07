@@ -137,6 +137,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
             switch (status) {
                 case IsUserExistsStatuses.kmcUser:
                     this._browserService.alert({
+                        header: this._appLocalization.get('app.common.attention'),
                         message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: email})
                     });
                     break;
@@ -177,7 +178,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this._usersStore.reload(true);
-          this._browserService.alert({ message: this._appLocalization.get('applications.administration.users.successSavingUser') });
+          this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
+              message: this._appLocalization.get('applications.administration.users.successSavingUser')
+          });
           this.parentPopupWidget.close();
         },
         error => {

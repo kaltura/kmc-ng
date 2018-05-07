@@ -26,6 +26,7 @@ import { UserGetByLoginIdAction } from 'kaltura-ngx-client/api/types/UserGetByLo
 import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
 import { UserEnableLoginAction } from 'kaltura-ngx-client/api/types/UserEnableLoginAction';
 import { UserAddAction } from 'kaltura-ngx-client/api/types/UserAddAction';
+import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export interface QueryData {
   pageIndex: number,
@@ -63,14 +64,19 @@ export class UsersStore implements OnDestroy {
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
-              private _appAuthentication: AppAuthentication) {
+              private _appAuthentication: AppAuthentication,
+              adminUsersMainViewService: AdminUsersMainViewService) {
     const defaultPageSize = this._browserService.getFromLocalStorage('users.list.pageSize');
     if (defaultPageSize !== null) {
       this._updateQueryData({
         pageSize: defaultPageSize
       });
     }
-    this._loadData();
+    if (adminUsersMainViewService.isAvailable()) {
+        this._loadData();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy() {
