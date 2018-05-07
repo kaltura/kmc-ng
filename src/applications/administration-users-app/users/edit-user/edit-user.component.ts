@@ -172,7 +172,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     this._invalidUserId = false;
 
-    this._usersStore.updateUser(this._userForm, this.user.id)
+    this._usersStore.updateUser(this._userForm.getRawValue(), this.user.id)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
@@ -245,7 +245,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   private _updateUserPermissions(user: KalturaUser): void {
     this._blockerMessage = null;
-    this._usersStore.updateUserPermissions(user, this._userForm)
+      const { roleIds } = this._userForm.value;
+    this._usersStore.updateUserPermissions(user, roleIds)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
@@ -274,7 +275,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this._usersStore.addUser(this._userForm)
+    this._usersStore.addUser(this._userForm.value)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(

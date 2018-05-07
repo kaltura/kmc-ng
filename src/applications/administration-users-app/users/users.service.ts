@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { FormGroup } from '@angular/forms';
 import { IsUserExistsStatuses } from './user-exists-statuses';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
@@ -29,8 +28,8 @@ import { UserAddAction } from 'kaltura-ngx-client/api/types/UserAddAction';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export interface QueryData {
-  pageIndex: number,
-  pageSize: number
+  pageIndex: number;
+  pageSize: number;
 }
 
 interface UsersData {
@@ -201,8 +200,8 @@ export class UsersStore implements OnDestroy {
     return this._kalturaServerClient.request(new UserGetAction({ userId }));
   }
 
-  public addUser(userForm: FormGroup): Observable<void> {
-    const { roleIds, id, email, firstName, lastName } = userForm.value;
+  public addUser(userData: { roleIds: string, id: string, email: string, firstName: string, lastName: string }): Observable<void> {
+    const { roleIds, id, email, firstName, lastName } = userData;
 
     if (!email || !firstName || !lastName) {
       return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.addUserError')));
@@ -212,10 +211,10 @@ export class UsersStore implements OnDestroy {
       email,
       firstName,
       lastName,
-      roleIds: roleIds || this._usersDataValue.roles.items[0].id,
+      roleIds: roleIds || String(this._usersDataValue.roles.items[0].id),
       id: id || email,
       isAdmin: true,
-      loginEnabled: true
+      loginEnabled: false
     });
 
     return this._kalturaServerClient
@@ -223,16 +222,17 @@ export class UsersStore implements OnDestroy {
         .map(() => {});
   }
 
-  public updateUser(userForm: FormGroup, userId: string): Observable<void> {
-    const { roleIds, id, email } = userForm.getRawValue();
+  public updateUser(userData: { roleIds: string, id: string, email: string}, userId: string): Observable<void> {
+    const { roleIds, id, email } = userData;
 
     if (!id && !email || !userId) {
       return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.invalidUserId')));
     }
 
     const user = new KalturaUser({
-      roleIds: roleIds ? roleIds : this._usersDataValue.roles.items[0].id,
-      id: id || email
+      roleIds: roleIds ? roleIds : String(this._usersDataValue.roles.items[0].id),
+      id: id || email,
+        email: email
     });
     return this._kalturaServerClient
       .request(new UserUpdateAction({ userId, user }))
@@ -241,18 +241,14 @@ export class UsersStore implements OnDestroy {
       });
   }
 
-  public updateUserPermissions(user: KalturaUser, userForm: FormGroup): Observable<void> {
-    const { roleIds } = userForm.value;
+  public updateUserPermissions(user: KalturaUser, roleIds: string): Observable<void> {
     const updatedUser = new KalturaUser({
-      roleIds: roleIds ? roleIds : this._usersDataValue.roles.items[0].id,
+      roleIds: roleIds ? roleIds : String(this._usersDataValue.roles.items[0].id),
       isAdmin: true
     });
     const request = new KalturaMultiRequest(
       new UserUpdateAction({ userId: user.id, user: updatedUser }),
-      new UserEnableLoginAction({
-        userId: user.id,
-        loginId: user.email
-      }).setDependency(['password', 0, 'password'])
+      new UserEnableLoginAction({ userId: user.id, loginId: user.email })
     );
     return this._kalturaServerClient
       .multiRequest(request)
