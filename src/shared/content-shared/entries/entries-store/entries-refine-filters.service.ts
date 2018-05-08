@@ -63,24 +63,24 @@ export class EntriesRefineFiltersService {
     }
 
     public getFilters(): Observable<RefineGroup[]> {
-        this._logger.info(`handle get entries refine filters request`);
+        this._logger.debug(`handle get entries refine filters request`);
         if (!this._getRefineFilters$) {
             // execute the request
-            const getMetadata$ = this._getMetadataFilters();
-            const otherData$ = this._buildQueryRequest();
-            const getFlavours$ = this._flavoursStore.get();
-            this._getRefineFilters$ = Observable.forkJoin(getMetadata$, otherData$, getFlavours$)
+            const metadataFilters$ = this._getMetadataFilters();
+            const serverFilters$ = this._buildQueryRequest();
+            const flavorsFilter$ = this._flavoursStore.get();
+            this._getRefineFilters$ = Observable.forkJoin(metadataFilters$, serverFilters$, flavorsFilter$)
                 .map(
-                    (responses) => {
-                        if (responses[1].hasErrors()) {
+                    ([metadataResponse, serverResponse, flavorsResponse]) => {
+                        if (serverResponse.hasErrors()) {
                             throw new Error('failed to load refine filters');
                         } else {
-                            this._logger.info(`handle successful get entries refine filters request, mapping response`);
-                            const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1], responses[2].items);
+                            this._logger.debug(`handle successful get entries refine filters request, mapping response`);
+                            const defaultFilterGroup = this._buildDefaultFiltersGroup(serverResponse, flavorsResponse.items);
                             const result = [defaultFilterGroup];
 
-                            if (responses[0]) {
-                                const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
+                            if (metadataResponse) {
+                                const metadataData = this._buildMetadataFiltersGroups(metadataResponse.items);
                                 result.push(...metadataData.groups);
                             }
 

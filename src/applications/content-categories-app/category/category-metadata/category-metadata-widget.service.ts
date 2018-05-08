@@ -24,6 +24,7 @@ import {CategoryWidget} from '../category-widget';
 import {async} from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -31,14 +32,16 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
     public metadataForm: FormGroup;
     public customDataForms: DynamicMetadataForm[] = [];
     private _categoryMetadata: KalturaMetadata[] = [];
+    private _logger: KalturaLogger;
 
     constructor(private _kalturaServerClient: KalturaClient,
         private _formBuilder: FormBuilder,
         private _metadataProfileStore: MetadataProfileStore,
         private _permissionsService: KMCPermissionsService,
+        logger: KalturaLogger,
         private _dynamicMetadataFormFactory: DynamicMetadataFormFactory) {
         super(ContentCategoryViewSections.Metadata);
-
+        this._logger = logger.subLogger('CategoryMetadataWidget');
         this._buildForm();
     }
 
@@ -91,10 +94,25 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
     }
 
     protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
+
+        const afterOnActivated: () => { failed: boolean, error?: Error } = () => {
+            super._hideLoader();
+
+            try {
+                // the sync function is dealing with dynamically created forms so mistakes can happen
+                // as result of undesired metadata schema.
+                this._syncHandlerContent();
+                return { failed: false };
+            } catch (e) {
+                super._showActivationError();
+                return { failed: true, error: e };
+            }
+        };
+
         super._showLoader();
         super._removeBlockerMessage();
 
-        const actions: Observable<{ failed: boolean, error?: Error }>[] = [];
+        const actions: Observable<boolean>[] = [];
 
         if (this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
             actions.push(this._loadCategoryMetadata(this.data));
@@ -108,39 +126,22 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         }
 
         if (!actions.length) {
-            super._hideLoader();
-            try {
-                // the sync function is dealing with dynamically created forms so mistakes can happen
-                // as result of undesired metadata schema.
-                this._syncHandlerContent();
-                return Observable.of({ failed: false });
-            } catch (e) {
-                super._showActivationError();
-                return Observable.of({ failed: true, error: e });
-            }
+            return Observable.of(afterOnActivated());
         } else {
             return Observable.forkJoin(actions)
-                .catch((error, caught) => {
-                    return Observable.of([{ failed: true }]);
+                .catch(() => {
+                    return Observable.of([false]);
                 })
                 .map(responses => {
                     super._hideLoader();
 
-                    const hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false);
+                    const isValid = responses.reduce(((acc, response) => (acc && response)), true);
 
-                    if (hasFailure) {
+                    if (!isValid) {
                         super._showActivationError();
                         return { failed: true };
                     } else {
-                        try {
-                            // the sync function is dealing with dynamically created forms so mistakes can happen
-                            // as result of undesired metadata schema.
-                            this._syncHandlerContent();
-                            return { failed: false };
-                        } catch (e) {
-                            super._showActivationError();
-                            return { failed: true, error: e };
-                        }
+                        return afterOnActivated();
                     }
                 });
         }
@@ -182,7 +183,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         }
     }
 
-    private _loadCategoryMetadata(category: KalturaCategory): Observable<{ failed: boolean, error?: Error }> {
+    private _loadCategoryMetadata(category: KalturaCategory): Observable<boolean> {
 
         this._categoryMetadata = [];
 
@@ -201,11 +202,14 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             .do(response => {
                 this._categoryMetadata = response.objects;
             })
-            .map(response => ({ failed: false }))
-            .catch((error, caught) => Observable.of({ failed: true, error }))
+            .map(response => true)
+            .catch((error) => {
+                this._logger.error('failed to get category custom metadata', error);
+                return Observable.of(false);
+            });
     }
 
-    private _loadProfileMetadata(): Observable<{ failed: boolean, error?: Error }> {
+    private _loadProfileMetadata(): Observable<boolean> {
         return this._metadataProfileStore.get({
             type: MetadataProfileTypes.Category,
             ignoredCreateMode: MetadataProfileCreateModes.App
@@ -222,8 +226,11 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                     });
                 }
             })
-            .map(response => ({ failed: false }))
-            .catch((error, caught) => Observable.of({ failed: true, error }));
+            .map(response => true)
+            .catch((error, caught) => {
+                this._logger.error('failed to get categories custom metadata profiles', error);
+                return Observable.of(false);
+            });
     }
 
     protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {

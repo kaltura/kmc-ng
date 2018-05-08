@@ -13,7 +13,7 @@ import {
   MetadataProfileTypes
 } from 'app-shared/kmc-shared';
 
-import {DefaultFiltersList} from './default-filters-list';
+import {EntitlementsFiltersList} from './default-filters-list';
 
 import * as R from 'ramda';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
@@ -51,26 +51,25 @@ export class CategoriesRefineFiltersService {
   }
 
   public getFilters(): Observable<RefineGroup[]> {
-    this._logger.info(`handle get categories refine filters request`);
+    this._logger.debug(`handle get categories refine filters request`);
     if (!this._getRefineFilters$) {
       // execute the request
       this._getRefineFilters$ = this._getMetadataFilters()
         .map(
           (response) => {
-              this._logger.info(`handle successful get categories refine filters request, mapping response`);
+              this._logger.trace(`handle successful get categories refine filters request, mapping response`);
 
             const result = [];
             if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_ENTITLEMENT)) {
-              result.push(this._buildDefaultFiltersGroup());
+              result.push(this._buildEntitlementsFiltersGroup());
             } else {
-                this._logger.info(`user doesn't have FEATURE_ENTITLEMENT permission, ignore default filters group`);
+                this._logger.debug(`user doesn't have entitlement feature, ignore entitlements filters group`);
             }
 
             if (response) {
+                // response will be 'null' if user doesn't have permissions for metadata
                 const metadataData = this._buildMetadataFiltersGroups(response.items);
                 result.push(...metadataData.groups);
-            } else {
-                this._logger.info(`user doesn't have METADATA_PLUGIN_PERMISSION permission, ignore metadata filters group`);
             }
 
             return result;
@@ -95,6 +94,7 @@ export class CategoriesRefineFiltersService {
           });
       }
 
+      this._logger.debug(`user doesn't have metadata feature, ignore metadata filters group`);
       return Observable.of(null);
   }
 
@@ -128,8 +128,7 @@ export class CategoriesRefineFiltersService {
             group.items.push({
               value: item.value,
               label: item.text
-            })
-
+            });
           });
         });
       }
@@ -138,11 +137,11 @@ export class CategoriesRefineFiltersService {
     return result;
   }
 
-  private _buildDefaultFiltersGroup(): RefineGroup {
+  private _buildEntitlementsFiltersGroup(): RefineGroup {
     const result: RefineGroup = {label: '', lists: []};
 
     // build constant filters
-    DefaultFiltersList.forEach((defaultFilterList) => {
+    EntitlementsFiltersList.forEach((defaultFilterList) => {
       const newRefineFilter = new RefineGroupList(
         defaultFilterList.name,
         defaultFilterList.label
