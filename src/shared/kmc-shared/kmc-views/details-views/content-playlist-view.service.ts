@@ -90,6 +90,9 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
                 result = playlist.playlistType === KalturaPlaylistType.dynamic;
                 break;
             case ContentPlaylistViewSections.Metadata:
+                // metadata section is always available to the user.
+                // if you need to change this you will need to resolve at runtime
+                // the default section to open
                 result = true;
                 break;
             default:
