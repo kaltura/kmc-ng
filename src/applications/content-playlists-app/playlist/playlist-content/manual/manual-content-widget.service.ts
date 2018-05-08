@@ -76,6 +76,10 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
+    if (this.isNewData) {
+      this.updateState({ isDirty: true });
+    }
+
     super._showLoader();
 
     return this._getEntriesRequest()

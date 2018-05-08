@@ -59,6 +59,10 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   }
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
+    if (this.isNewData) {
+      this.updateState({ isDirty: true });
+    }
+
     super._showLoader();
     this.rules = [];
     this.rulesTotalCount = 0;
