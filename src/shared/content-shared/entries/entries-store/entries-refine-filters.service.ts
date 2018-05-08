@@ -26,10 +26,10 @@ import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/Kaltura
 import { DefaultFiltersList } from './default-filters-list';
 
 import * as R from 'ramda';
-import { KalturaAccessControlProfile } from 'kaltura-ngx-client/api/types/KalturaAccessControlProfile';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
 import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileListResponse';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface RefineGroupListItem
 { value: string, label: string }
@@ -57,33 +57,38 @@ export class EntriesRefineFiltersService {
     constructor(private kalturaServerClient: KalturaClient,
                 private _permissionsService: KMCPermissionsService,
                 private _metadataProfileStore: MetadataProfileStore,
-                private _flavoursStore: FlavoursStore) {
+                private _flavoursStore: FlavoursStore,
+                private _logger: KalturaLogger) {
+        this._logger = _logger.subLogger('EntriesRefineFiltersService');
     }
 
     public getFilters(): Observable<RefineGroup[]> {
-
+        this._logger.debug(`handle get entries refine filters request`);
         if (!this._getRefineFilters$) {
             // execute the request
-            const getMetadata$ = this._metadataProfileStore.get({
-                type: MetadataProfileTypes.Entry,
-                ignoredCreateMode: MetadataProfileCreateModes.App
-            });
-            const otherData$ = this._buildQueryRequest();
-            const getFlavours$ = this._flavoursStore.get();
-            this._getRefineFilters$ = Observable.forkJoin(getMetadata$, otherData$, getFlavours$)
+            const metadataFilters$ = this._getMetadataFilters();
+            const serverFilters$ = this._buildQueryRequest();
+            const flavorsFilter$ = this._flavoursStore.get();
+            this._getRefineFilters$ = Observable.forkJoin(metadataFilters$, serverFilters$, flavorsFilter$)
                 .map(
-                    (responses) => {
-                        if (responses[1].hasErrors()) {
+                    ([metadataResponse, serverResponse, flavorsResponse]) => {
+                        if (serverResponse.hasErrors()) {
                             throw new Error('failed to load refine filters');
                         } else {
-                            const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
-                            const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1], responses[2].items);
+                            this._logger.debug(`handle successful get entries refine filters request, mapping response`);
+                            const defaultFilterGroup = this._buildDefaultFiltersGroup(serverResponse, flavorsResponse.items);
+                            const result = [defaultFilterGroup];
 
-                            return [defaultFilterGroup, ...metadataData.groups];
+                            if (metadataResponse) {
+                                const metadataData = this._buildMetadataFiltersGroups(metadataResponse.items);
+                                result.push(...metadataData.groups);
+                            }
+
+                            return result;
                         }
                     })
                 .catch(err => {
-                    console.log(`log: [warn] [entries-refine-filters] failed to create refine filters: ${err}`);
+                    this._logger.warn(`failed to create refine filters`, { errorMessage: err.message });
                     this._getRefineFilters$ = null;
                     return Observable.throw(err);
                 })
@@ -92,6 +97,17 @@ export class EntriesRefineFiltersService {
         }
 
         return this._getRefineFilters$;
+    }
+
+    private _getMetadataFilters(): Observable<{ items: MetadataProfile[] }> {
+        if (this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
+            return this._metadataProfileStore.get({
+                type: MetadataProfileTypes.Entry,
+                ignoredCreateMode: MetadataProfileCreateModes.App
+            });
+        }
+
+        return Observable.of(null);
     }
 
     private _buildMetadataFiltersGroups(metadataProfiles: MetadataProfile[]): { metadataProfiles: number[], groups: RefineGroup[] } {
