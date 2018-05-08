@@ -216,9 +216,10 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     private _setNoFlavorsOption(): void {
         this._flavorOptions = [{
             label: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.noFlavors'),
-            value: null
+            value: 0
         }];
         this._flavorsFieldDisabled = true;
+        this._files.forEach(file => file.flavor = 0);
     }
 
     public _removeFile(file: UploadReplacementFile): void {
@@ -279,7 +280,6 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
                                 this._blockerMessage = null;
-                                this.parentPopupWidget.close();
                             }
                         }
                     ]
@@ -298,7 +298,6 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                             label: this._appLocalization.get('app.common.cancel'),
                             action: () => {
                                 this._blockerMessage = null;
-                                this.parentPopupWidget.close();
                             }
                         }
                     ]
@@ -350,6 +349,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
         const selectedProfile = this._transcodingProfiles.find(profile => profile.id === this._transcodingProfileField.value);
         const conversionProfileAssetParams = selectedProfile ? selectedProfile.assets : [];
+        const filesFlavors = files.map(({ flavor }) => flavor);
 
         files.forEach((file, index) => {
             const fileSize = file.size / 1024 / 1024; // convert to Mb
@@ -382,7 +382,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
 
-            if (files.indexOf(file) !== index) {
+            if (filesFlavors.indexOf(file.flavor) !== index) {
+                isValid = false;
                 code = 'uniqueFlavors';
             }
 
@@ -390,6 +391,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (asset.readyBehavior === KalturaFlavorReadyBehaviorType.required
                     && asset.origin === KalturaAssetParamsOrigin.ingest
                     && file.flavor !== asset.assetParamsId) {
+                    isValid = false;
                     code = 'missingFlavors';
                 }
             });

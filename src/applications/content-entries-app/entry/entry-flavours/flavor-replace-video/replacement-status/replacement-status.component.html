@@ -15,7 +15,8 @@
                 [disabled]="_approveBtnDisabled"
                 [label]="_approveBtnLabel"
                 (click)="_approveReplacement()"></button>
-        <kInputHelper class="kHelp" trigger="click">
+        <kInputHelper class="kHelp" icon="kIconlife_donut" trigger="click"
+                      [title]="'applications.content.entryDetails.flavours.replaceVideo.autoReplacement' | translate">
             <span>{{'applications.content.entryDetails.flavours.replaceVideo.approveReplacementTooltip' | translate}}</span>
         </kInputHelper>
     </div>
