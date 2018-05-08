@@ -21,13 +21,13 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
     load(rawRolePermissionList: string[], rawPartnerPermissionList: string[]): void {
 
         super.flushPermissions();
-
+        
         this._logger.info(`prepare user permissions set based on role permissions and partner permissions`);
         this._logger.trace('load()', () => ({
             rawRolePermissionList,
             rawPartnerPermissionList
         }));
-        
+
         const rolePermissionList: Set<KMCPermissions> = new Set();
         const partnerPermissionList: Set<KMCPermissions> = new Set();
         const filteredRolePermissionList: Set<KMCPermissions> = new Set<KMCPermissions>();

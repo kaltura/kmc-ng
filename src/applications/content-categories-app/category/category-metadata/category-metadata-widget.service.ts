@@ -19,11 +19,11 @@ import {
   MetadataProfileTypes
 } from 'app-shared/kmc-shared';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {CategoryWidgetKeys} from './../category-widget-keys';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
 import {async} from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -37,7 +37,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         private _metadataProfileStore: MetadataProfileStore,
         private _permissionsService: KMCPermissionsService,
         private _dynamicMetadataFormFactory: DynamicMetadataFormFactory) {
-        super(CategoryWidgetKeys.Metadata);
+        super(ContentCategoryViewSections.Metadata);
 
         this._buildForm();
     }

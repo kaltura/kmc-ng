@@ -80,6 +80,11 @@
             "connectionError": "Error connecting to server",
             "invalidKs": "User session is expired. Please re-login."
         },
+        "redirect":{
+            "redirect1": "Redirecting to default view...",
+            "redirect2": "If you are not redirected in few seconds, click ",
+            "redirect3": "here"
+        },
         "login": {
             "login": {
                 "title": "Login",
@@ -134,7 +139,8 @@
                 "newPasswordHashKeyInvalid": "This link is not valid.",
                 "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
                 "wrongOldPassword": "Old password is incorret.",
-                "invalidField": "Value in field {{value}} is not valid."
+                "invalidField": "Value in field {{value}} is not valid.",
+                "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon."
             },
             "send": "Send",
             "wait": "Wait…",
@@ -149,9 +155,9 @@
             "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
         },
         "UnpermittedActionReasons": {
-            "InvalidConfiguration": {
-                "message": "This view cannot be loaded. If the problem persists - please contact Kaltura Support.\nClick OK to navigate to the entries view."
-            }
+            "header": "View Disabled",
+            "message": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.",
+            "messageNav": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.\nClick OK to navigate to the main view."
         }
     },
     "applications": {
@@ -276,7 +282,7 @@
                 "syncing": "{{0}} Syncing",
                 "queued": "{{0}} Queued",
                 "completed": "{{0}} Completed",
-                "error": "{{0}} Qrror",
+                "error": "{{0}} Error(s)",
                 "upToDate": "Up to Date",
                 "loading": "Loading...",
                 "errors": {
@@ -635,6 +641,8 @@
                     }
                 },
                 "details": {
+                    "choosePlaylist": "Choose Playlist",
+                    "missingPlaylist": "Feed playlist ({{0}}) could not be found. Please select another playlist.",
                     "header": {
                         "newFeed": "New Feed",
                         "cancel": "Cancel",
@@ -653,7 +661,7 @@
                         "numOfEntries": "{{0}} Entries",
                         "warning": "{{0}} Entries are not included in this feed.",
                         "moreInfo": "More Info.",
-                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
+                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
                         "flavorId": "(flavor ID) {{0}}"
                     },
                     "destination": "Destination",
@@ -775,8 +783,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Confirm Delete",
-                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
-                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
+                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
                     "moreThan5": "Are you sure you want to delete the selected feeds?"
                 },
                 "errors": {
@@ -1196,7 +1204,7 @@
                 },
                 "thumbnails": {
                     "tags": "Tags",
-          "thumbnails": "Thumbnails",
+                    "thumbnails": "Thumbnails",
                     "upload": "Upload",
                     "capture": {
                         "choose": "Choose Frame",
@@ -2392,7 +2400,7 @@
                 },
                 "profile": {
                     "save": "Save",
-          "metadata": "Metadata",
+                    "metadata": "Metadata",
                     "backToProfiles": "Back To Profiles",
                     "flavor": "Flavor",
                     "id": "ID {{0}}",

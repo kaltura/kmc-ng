@@ -217,7 +217,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
         newPlaylist = playlists[currentPlaylistIndex - 1];
       }
       if (newPlaylist) {
-        this._playlistStore.openPlaylist(newPlaylist.id);
+        this._playlistStore.openPlaylist(newPlaylist);
       }
     }
   }
