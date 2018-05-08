@@ -4,6 +4,7 @@ import { NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { NewReplaceVideoUploadFile } from 'app-shared/kmc-shell/new-replace-video-upload';
 
 @Injectable()
 export class NewUploadMonitorService implements OnDestroy {
@@ -14,7 +15,7 @@ export class NewUploadMonitorService implements OnDestroy {
   constructor(private _uploadManagement: UploadManagement) {
     this._uploadManagement
       .onTrackedFileChanged$
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile || trackedFile.data instanceof NewEntryFlavourFile)
+      .filter(this._filterUploadsByType)
       .filter(({ status }) => TrackedFileStatuses.purged !== status)
       .cancelOnDestroy(this)
       .subscribe(trackedFile => {
@@ -33,6 +34,12 @@ export class NewUploadMonitorService implements OnDestroy {
 
   ngOnDestroy() {
     this._totals.complete();
+  }
+
+  private _filterUploadsByType(trackedFile): boolean {
+      return trackedFile.data instanceof NewEntryUploadFile
+          || trackedFile.data instanceof NewEntryFlavourFile
+          || trackedFile.data instanceof NewReplaceVideoUploadFile;
   }
 
   private _calculateTotalsFromState(): UploadMonitorStatuses {

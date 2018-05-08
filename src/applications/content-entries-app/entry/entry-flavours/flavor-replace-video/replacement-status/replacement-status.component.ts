@@ -4,6 +4,7 @@ import { EntryFlavoursWidget } from '../../entry-flavours-widget.service';
 import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client/api/types/KalturaEntryReplacementStatus';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { NewReplaceVideoUploadService } from 'app-shared/kmc-shell/new-replace-video-upload';
 
 export enum FlavorsTabs {
     current = 'current',
@@ -27,7 +28,8 @@ export class ReplacementStatusComponent implements OnInit {
 
     constructor(private _widgetService: EntryFlavoursWidget,
                 private _appLocalization: AppLocalization,
-                private _logger: KalturaLogger) {
+                private _logger: KalturaLogger,
+                private _newReplaceVideoUpload: NewReplaceVideoUploadService,) {
     }
 
     ngOnInit() {
@@ -44,6 +46,7 @@ export class ReplacementStatusComponent implements OnInit {
     public _cancelReplacement(): void {
         this._logger.info(`handle cancel replacement action by user`, { entryId: this.entry.id });
         this._widgetService.cancelReplacement();
+        this._newReplaceVideoUpload.cancelUploadByEntryId(this.entry.id);
     }
 
     public _approveReplacement(): void {

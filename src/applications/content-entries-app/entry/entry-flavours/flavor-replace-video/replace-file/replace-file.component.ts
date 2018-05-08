@@ -336,10 +336,31 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     private _uploadFiles(transcodingProfileId: string): void {
         const uploadFileDataList = this._files.map(fileData => ({
             file: fileData.file,
-            entryName: fileData.name
+            assetParamsId: fileData.flavor
         }));
 
-        // this._newReplaceVideoUpload.upload(uploadFileDataList, Number(transcodingProfileId));
+        this._newReplaceVideoUpload.upload(uploadFileDataList, this.entry.id, Number(transcodingProfileId))
+            .cancelOnDestroy(this)
+            .tag('block-shell')
+            .filter(entryId => entryId === this.entry.id)
+            .subscribe(
+                () => {
+                    this._widgetService.refresh(true);
+                    this.parentPopupWidget.close();
+                },
+                (error) => {
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: error.message,
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.ok'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._widgetService.refresh(true);
+                                this.parentPopupWidget.close();
+                            }
+                        }]
+                    });
+                });
     }
 
     private _validateFiles(files: UploadReplacementFile[]): { isValid: boolean, code?: string } {
