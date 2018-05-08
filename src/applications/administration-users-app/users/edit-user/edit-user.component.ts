@@ -88,7 +88,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
             firstName: '',
             lastName: '',
             id: '',
-            roleIds: null
+            roleIds: this._rolesList && this._rolesList.length ? this._rolesList[0].value : null
           });
           this._userForm.get('email').enable();
           this._userForm.get('firstName').enable();
@@ -141,16 +141,16 @@ export class EditUserComponent implements OnInit, OnDestroy {
                         message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: email})
                     });
                     break;
-                case IsUserExistsStatuses.otherSystemUser:
-                    this._isUserAssociated();
-                    break;
-                case IsUserExistsStatuses.unknownUser:
+                case IsUserExistsStatuses.otherKMCUser:
                     this._browserService.confirm({
                             header: this._appLocalization.get('applications.administration.users.alreadyExist'),
                             message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
-                            accept: () => this._isUserAssociated()
+                            accept: () => this._createOrUpdateUser()
                         }
                     );
+                    break;
+                case IsUserExistsStatuses.unknownUser:
+                    this._createOrUpdateUser();
                     break;
             }
         }else {
@@ -219,11 +219,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _isUserAssociated(): void {
+  private _createOrUpdateUser(): void {
     const { id, email } = this._userForm.value;
     const userId = id || email;
     this._isBusy = true;
-    this._usersStore.isUserAssociated(userId)
+    this._usersStore.getUserById(userId)
       .cancelOnDestroy(this)
       .subscribe(
         user => {
@@ -231,22 +231,36 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._browserService.confirm({
             header: this._appLocalization.get('applications.administration.users.userAssociatedCaption'),
             message: this._appLocalization.get('applications.administration.users.userAssociated', { 0: userId }),
-            accept: () => this._updateUserPermissions(user)
+            accept: () => {
+                this._blockerMessage = null;
+                this._associateUserToAccount(user);
+            }
           });
         },
         error => {
           this._isBusy = false;
           if (error.code === 'INVALID_USER_ID') {
             this._addNewUser();
+          } else {
+              this._blockerMessage = new AreaBlockerMessage(
+                  {
+                      message: error.message,
+                      buttons: [{
+                          label: this._appLocalization.get('app.common.ok'),
+                          action: () => {
+                              this._blockerMessage = null;
+                          }
+                      }]
+                  }
+              );
           }
         }
       );
   }
 
-  private _updateUserPermissions(user: KalturaUser): void {
-    this._blockerMessage = null;
+  private _associateUserToAccount(user: KalturaUser): void {
       const { roleIds } = this._userForm.value;
-    this._usersStore.updateUserPermissions(user, roleIds)
+    this._usersStore.associateUserToAccount(user, roleIds)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(

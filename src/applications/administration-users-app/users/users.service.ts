@@ -190,20 +190,20 @@ export class UsersStore implements OnDestroy {
       })
       .catch(error => {
         const status = error.code === 'LOGIN_DATA_NOT_FOUND'
-          ? IsUserExistsStatuses.otherSystemUser :
-          (error.code === 'USER_NOT_FOUND' ? IsUserExistsStatuses.unknownUser : null);
+          ? IsUserExistsStatuses.unknownUser :
+          (error.code === 'USER_NOT_FOUND' ? IsUserExistsStatuses.otherKMCUser : null);
         return Observable.of(status);
       });
   }
 
-  public isUserAssociated(userId: string): Observable<KalturaUser> {
+  public getUserById(userId: string): Observable<KalturaUser> {
     return this._kalturaServerClient.request(new UserGetAction({ userId }));
   }
 
   public addUser(userData: { roleIds: string, id: string, email: string, firstName: string, lastName: string }): Observable<void> {
     const { roleIds, id, email, firstName, lastName } = userData;
 
-    if (!email || !firstName || !lastName) {
+    if (!email || !firstName || !lastName || !roleIds) {
       return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.addUserError')));
     }
 
@@ -211,10 +211,10 @@ export class UsersStore implements OnDestroy {
       email,
       firstName,
       lastName,
-      roleIds: roleIds || String(this._usersDataValue.roles.items[0].id),
+      roleIds: roleIds,
       id: id || email,
       isAdmin: true,
-      loginEnabled: false
+      loginEnabled: true
     });
 
     return this._kalturaServerClient
@@ -225,12 +225,12 @@ export class UsersStore implements OnDestroy {
   public updateUser(userData: { roleIds: string, id: string, email: string}, userId: string): Observable<void> {
     const { roleIds, id, email } = userData;
 
-    if (!id && !email || !userId) {
+    if ((!id && !email) || !userId || !roleIds) {
       return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.invalidUserId')));
     }
 
     const user = new KalturaUser({
-      roleIds: roleIds ? roleIds : String(this._usersDataValue.roles.items[0].id),
+      roleIds,
       id: id || email,
         email: email
     });
@@ -241,9 +241,13 @@ export class UsersStore implements OnDestroy {
       });
   }
 
-  public updateUserPermissions(user: KalturaUser, roleIds: string): Observable<void> {
+  public associateUserToAccount(user: KalturaUser, roleIds: string): Observable<void> {
+
+      if (!user || !roleIds) {
+          return Observable.throw(new Error('cannot associate user to account'));
+      }
     const updatedUser = new KalturaUser({
-      roleIds: roleIds ? roleIds : String(this._usersDataValue.roles.items[0].id),
+      roleIds: roleIds,
       isAdmin: true
     });
     const request = new KalturaMultiRequest(
