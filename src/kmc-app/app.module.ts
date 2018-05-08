@@ -87,8 +87,7 @@ import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger/kaltura-logger.m
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
-import { InvalidKsInterceptorService } from '../shared/kmc-shell/auth/invalid-ks-interceptor/invalid-ks-interceptor.service';
-import { InvalidKsInterceptorModule } from 'app-shared/kmc-shell/auth/invalid-ks-interceptor/invalid-ks-interceptor.module';
+
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -101,7 +100,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
 
 @NgModule({
   imports: <any>[
-    AuthModule,
+    AuthModule.forRoot(),
     FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -146,7 +145,6 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
-      InvalidKsInterceptorModule.forRoot()
       KmcLogsModule.forRoot(),
       KalturaLoggerModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
