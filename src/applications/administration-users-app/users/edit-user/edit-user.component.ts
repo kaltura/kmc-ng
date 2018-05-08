@@ -125,7 +125,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  private _isUserAlreadyExists(): void {
+  private _createUser(): void {
+      if (!this._userForm.valid) {
+          return;
+      }
+
     const { email } = this._userForm.value;
     this._isBusy = true;
     this._usersStore.isUserAlreadyExists(email)
@@ -145,12 +149,12 @@ export class EditUserComponent implements OnInit, OnDestroy {
                     this._browserService.confirm({
                             header: this._appLocalization.get('applications.administration.users.alreadyExist'),
                             message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
-                            accept: () => this._createOrUpdateUser()
+                            accept: () => this._createOrAssociateUser()
                         }
                     );
                     break;
                 case IsUserExistsStatuses.unknownUser:
-                    this._createOrUpdateUser();
+                    this._createOrAssociateUser();
                     break;
             }
         }else {
@@ -219,7 +223,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _createOrUpdateUser(): void {
+  private _createOrAssociateUser(): void {
     const { id, email } = this._userForm.value;
     const userId = id || email;
     this._isBusy = true;
@@ -240,7 +244,26 @@ export class EditUserComponent implements OnInit, OnDestroy {
         error => {
           this._isBusy = false;
           if (error.code === 'INVALID_USER_ID') {
-            this._addNewUser();
+              this._usersStore.addUser(this._userForm.value)
+                  .cancelOnDestroy(this)
+                  .tag('block-shell')
+                  .subscribe(
+                      () => {
+                          this._usersStore.reload(true);
+                          this.parentPopupWidget.close();
+                      },
+                      error => {
+                          this._blockerMessage = new AreaBlockerMessage({
+                              message: error.message,
+                              buttons: [{
+                                  label: this._appLocalization.get('app.common.ok'),
+                                  action: () => {
+                                      this._blockerMessage = null;
+                                  }
+                              }]
+                          });
+                      }
+                  );
           } else {
               this._blockerMessage = new AreaBlockerMessage(
                   {
@@ -282,35 +305,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _addNewUser(): void {
-    this._blockerMessage = null;
-
-    if (!this._userForm.valid) {
-      return;
-    }
-
-    this._usersStore.addUser(this._userForm.value)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
-      .subscribe(
-        () => {
-          this._usersStore.reload(true);
-          this.parentPopupWidget.close();
-        },
-        error => {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: error.message,
-            buttons: [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-              }
-            }]
-          });
-        }
-      );
-  }
-
   public _setRoleDescription(event?: any): void {
     if (!event) {
       this._selectedRoleDescription = this._roles[0] ? this._roles[0].description : '';
@@ -323,9 +317,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   public _saveUser(): void {
-    if (this._userForm.valid) {
+      this._blockerMessage = null;
+
+      if (this._userForm.valid) {
       if (this._isNewUser) {
-        this._isUserAlreadyExists();
+        this._createUser();
       } else {
         this._updateUser();
       }
