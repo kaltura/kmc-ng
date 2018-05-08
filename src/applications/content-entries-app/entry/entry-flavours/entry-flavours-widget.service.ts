@@ -43,6 +43,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     public _entryStatus = "";
     public _entryStatusClassName = "";
     public sourceAvailabale: boolean = false;
+    public showFlavorActions = true;
+    public currentEntryId: string;
 
     constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
                 private _appAuthentication: AppAuthentication, private _browserService: BrowserService,
@@ -56,6 +58,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
      */
     protected onReset() {
         this.sourceAvailabale = false;
+        this.showFlavorActions = true;
+        this.currentEntryId = null;
         this._flavors.next({items: []});
     }
 
@@ -63,6 +67,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         if (firstTimeActivating) {
             this._trackUploadFiles();
         }
+
+        this.currentEntryId = this.data ? this.data.id : null;
 
         this._setEntryStatus();
 
@@ -81,12 +87,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     private _loadFlavors(): Observable<void> {
-
         this.sourceAvailabale = false;
 
-        return this._kalturaServerClient.request(new FlavorAssetGetFlavorAssetsWithParamsAction({
-            entryId: this.data.id
-        }))
+        return this._kalturaServerClient.request(new FlavorAssetGetFlavorAssetsWithParamsAction({ entryId: this.currentEntryId }))
             .cancelOnDestroy(this, this.widgetReset$)
             .monitor('get flavors')
             .map(
@@ -471,7 +474,16 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         }
     }
 
-    cancelReplacement(): void {
+    public loadFlavorsByEntryId(entryId: string) {
+        super._showLoader();
+
+        this.currentEntryId = entryId;
+        this.showFlavorActions = entryId === this.data.id;
+
+        this.refresh();
+    }
+
+    public cancelReplacement(): void {
         this._kalturaServerClient.request(new MediaCancelReplaceAction({ entryId: this.data.id }))
             .cancelOnDestroy(this)
             .tag('block-shell')
@@ -496,7 +508,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             );
     }
 
-    approveReplacement(): void {
+    public approveReplacement(): void {
         this._kalturaServerClient.request(new MediaApproveReplaceAction({ entryId: this.data.id }))
             .cancelOnDestroy(this)
             .tag('block-shell')

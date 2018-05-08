@@ -19,4 +19,14 @@
             <span>{{'applications.content.entryDetails.flavours.replaceVideo.approveReplacementTooltip' | translate}}</span>
         </kInputHelper>
     </div>
+    <div class="kFlavorsTabs">
+        <a [class.kSelected]="_currentTab === _flavorsTabs.current"
+           (click)="_selectFlavorsTab(_flavorsTabs.current)">
+            {{'applications.content.entryDetails.flavours.replaceVideo.currentFlavors' | translate}}
+        </a>
+        <a [class.kSelected]="_currentTab === _flavorsTabs.replacement"
+           (click)="_selectFlavorsTab(_flavorsTabs.replacement)">
+            {{'applications.content.entryDetails.flavours.replaceVideo.replacementFlavors' | translate}}
+        </a>
+    </div>
 </div>

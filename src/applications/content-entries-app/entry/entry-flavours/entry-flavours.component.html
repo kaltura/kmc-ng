@@ -10,7 +10,8 @@
                                     [flavors]="(_widgetService._flavors$ | async)?.items"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
             <kFlavorReplaceMediaStatus *ngIf="_widgetService.data?.replacingEntryId"
-                                    [entry]="_widgetService.data">
+                                       [currentEntryId]="_widgetService.currentEntryId"
+                                       [entry]="_widgetService.data">
             </kFlavorReplaceMediaStatus>
 			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService.refresh(true)"></button>
 		</div>
@@ -48,7 +49,7 @@
 				</p-column>
 				<p-column *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted" [style]="{'width':'80px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
-						<div *ngIf="flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8' && flavor.status !== '0'" class="kFlavorsTableActions">
+						<div *ngIf="_widgetService.showFlavorActions && flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8' && flavor.status !== '0'" class="kFlavorsTableActions">
 							<button type="button" class="kMoreActionsButton" pButton icon="kIconmore" (click)="openActionsMenu($event, flavor)"></button>
 						</div>
 						<div *ngIf="flavor.status === '1' || flavor.status === '6' || flavor.status === '7' || flavor.status === '8' || flavor.status === '0'" style="position: relative">

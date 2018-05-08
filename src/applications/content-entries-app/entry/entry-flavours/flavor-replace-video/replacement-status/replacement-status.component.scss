@@ -45,6 +45,8 @@
     }
 
     .kApprove {
+        margin-bottom: 24px;
+
         .kApproveReplacementBtn {
             width: 200px;
             font-weight: bold;
@@ -52,6 +54,17 @@
             /deep/ .kIconcheck-medium {
                 font-size: 1.3em;
             }
+        }
+    }
+
+    .kFlavorsTabs {
+        a {
+            margin-right: 40px;
+        }
+        .kSelected {
+            text-decoration: none;
+            font-weight: bold;
+            color: $kGrayscale1;
         }
     }
 }

@@ -237,7 +237,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             const assetParamsIds = relevantTranscodingProfile.assets.map(({ assetParamsId }) => assetParamsId);
             this._flavorOptions = this.flavors
                 .filter((flavor) => assetParamsIds.indexOf(flavor.paramsId) !== -1)
-                .map(({ name: label, id: value }) => ({ label, value }));
+                .map(({ name: label, paramsId: value }) => ({ label, value }));
 
             if (!this._flavorOptions.length) {
                 this._setNoFlavorsOption();
