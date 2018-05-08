@@ -15,6 +15,7 @@ import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
 export interface ClipAndTrimAppViewArgs {
     entry: KalturaMediaEntry;
+    hasSource: boolean;
 }
 
 @Injectable()
@@ -43,7 +44,7 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
         const availableByConfiguration = serverConfig.externalApps.clipAndTrim.enabled;
         const availableByPermissions = this._isAvailableByPermission();
         const availableByData = this._isAvailableByData(args.entry);
-        const result = availableByConfiguration && availableByData && availableByPermissions;
+        const result = availableByConfiguration && availableByData && availableByPermissions && args.hasSource;
         this._logger.info(`check if view is available`, {
             result,
             validByPermissions: availableByPermissions,

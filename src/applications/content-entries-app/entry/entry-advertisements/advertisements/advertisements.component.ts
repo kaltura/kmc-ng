@@ -15,6 +15,8 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
   @Input()
   entry: KalturaMediaEntry = null;
 
+    @Input() entryHasSource = false;
+
   @Input() parentPopupWidget: PopupWidgetComponent;
 
   public _confirmClose = false;

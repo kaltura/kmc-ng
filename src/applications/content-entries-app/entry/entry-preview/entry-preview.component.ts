@@ -54,7 +54,10 @@ export class EntryPreview implements OnInit, OnDestroy {
 					const entryHasContent = this._currentEntry.status.toString() !== KalturaEntryStatus.noContent.toString();
 
                     this._previewDisabled = !entryHasContent
-                    this._clipAndTrimEnabled = this._clipAndTrimAppViewService.isAvailable({entry: this._currentEntry });
+                    this._clipAndTrimEnabled = this._clipAndTrimAppViewService.isAvailable({
+                        entry: this._currentEntry,
+                        hasSource: this._widgetService.entryHasSource
+                    });
 				}
 			}
 		);

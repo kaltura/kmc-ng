@@ -6,6 +6,7 @@
   <div class="kKeditHoster">
     <kKeditHoster [tab]="'advertisements'"
                   [entry]="entry"
+                  [entryHasSource]="entryHasSource"
                   (enteredDraftMode)="_confirmClose = true"
                   (exitDraftMode)="_confirmClose = false"
     ></kKeditHoster>

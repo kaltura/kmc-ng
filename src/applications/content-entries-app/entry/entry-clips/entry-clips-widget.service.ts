@@ -51,6 +51,10 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
     return this._pageSize;
   }
 
+  public get entryHasSource(): boolean {
+      return this._store.hasSource;
+  }
+
   public pageIndex = 0;
   public pageSizesAvailable = [25, 50, 75, 100];
 

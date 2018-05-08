@@ -53,7 +53,10 @@ export class EntryClips implements OnInit, OnDestroy {
             .subscribe(
             data => {
                 if (data) {
-                    this._clipAndTrimEnabled = this._clipAndTrimAppViewService.isAvailable({entry: data});
+                    this._clipAndTrimEnabled = this._clipAndTrimAppViewService.isAvailable({
+                        entry: data,
+                        hasSource: this._widgetService.entryHasSource
+                    });
                 }
             }
         );

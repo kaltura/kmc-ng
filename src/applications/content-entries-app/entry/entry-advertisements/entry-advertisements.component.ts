@@ -26,7 +26,10 @@ export class EntryAdvertisementsComponent implements OnInit, OnDestroy {
             .subscribe(
             data => {
                 if (data) {
-                    this._advertisementsEnabled = this._advertisementsAppViewService.isAvailable({ entry: data });
+                    this._advertisementsEnabled = this._advertisementsAppViewService.isAvailable({
+                        entry: data,
+                        hasSource: this._widgetService.entryHasSource
+                    });
                 }
             }
         );

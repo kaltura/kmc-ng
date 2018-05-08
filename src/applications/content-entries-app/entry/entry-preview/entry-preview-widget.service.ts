@@ -6,6 +6,7 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import {EntryWidget} from '../entry-widget';
 import {serverConfig, getKalturaServerUri} from 'config/server';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import { EntryStore } from '../entry-store.service';
 
 
 @Injectable()
@@ -13,7 +14,12 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
     public _iframeSrc: string;
     private _urlHash: number = 0;
 
+    public get entryHasSource(): boolean {
+        return this._store.hasSource;
+    }
+
     constructor(private appAuthentication: AppAuthentication,
+                private _store: EntryStore,
                 private _permissionsService: KMCPermissionsService,
                 appEvents: AppEventsService) {
         super('entryPreview');
