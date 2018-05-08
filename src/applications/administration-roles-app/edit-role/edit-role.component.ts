@@ -86,7 +86,7 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
       }, { emitEvent: false });
     }
 
-    if (!this._permissionsService.hasPermission(KMCPermissions.ADMIN_ROLE_UPDATE)) {
+    if (!this._isNewRole && !this._permissionsService.hasPermission(KMCPermissions.ADMIN_ROLE_UPDATE)) {
       this._editRoleForm.disable({ emitEvent: false });
     }
   }

@@ -8,7 +8,7 @@
             {{'applications.administration.role.cancel' | translate}}
           </a>
           <button pButton class="kButtonBranded kSaveBtn"
-                  *ngIf="_kmcPermissions.ADMIN_ROLE_UPDATE | kNgIfPermitted"
+                  *ngIf="_isNewRole || (_kmcPermissions.ADMIN_ROLE_UPDATE | kNgIfPermitted)"
                   [label]="_actionBtnLabel"
                   [disabled]="_saveDisabled"
                   (click)="_performAction()"></button>
