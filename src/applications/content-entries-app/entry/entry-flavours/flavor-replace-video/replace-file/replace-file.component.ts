@@ -26,7 +26,6 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/KalturaFlavorReadyBehaviorType';
 import { urlRegex } from '@kaltura-ng/kaltura-ui/validators/validators';
 import { NewReplaceVideoUploadService } from 'app-shared/kmc-shell/new-replace-video-upload';
-import { EntryStore } from '../../../entry-store.service';
 import { EntryFlavoursWidget } from '../../entry-flavours-widget.service';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
