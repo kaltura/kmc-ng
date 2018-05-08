@@ -232,14 +232,17 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             case ContentEntryViewSections.Distribution:
                 result = this._appPermissions.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_BASE);
                 break;
-            case ContentEntryViewSections.Metadata:
-                result = this._appPermissions.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION);
-                break;
             case ContentEntryViewSections.Thumbnails:
             case ContentEntryViewSections.Flavours:
             case ContentEntryViewSections.Clips:
             case ContentEntryViewSections.AccessControl:
             case ContentEntryViewSections.Scheduling:
+                result = true;
+                break;
+            case ContentEntryViewSections.Metadata:
+                // metadata section is always available to the user.
+                // if you need to change this you will need to resolve at runtime
+                // the default section to open
                 result = true;
                 break;
             default:
