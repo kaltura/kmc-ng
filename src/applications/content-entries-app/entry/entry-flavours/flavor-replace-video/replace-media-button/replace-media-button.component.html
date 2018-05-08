@@ -20,9 +20,9 @@
 <kPopupWidget #uploadMenu [popupWidth]="791" [popupHeight]="607"
               [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
     <ng-template>
-        <kFlavorFileUploadSettings [entry]="entry"
+        <kFlavorReplaceFile [entry]="entry"
                                    [flavors]="flavors"
                                    [parentPopupWidget]="uploadMenu"
-                                   [replaceType]="_replaceType"></kFlavorFileUploadSettings>
+                                   [replaceType]="_replaceType"></kFlavorReplaceFile>
     </ng-template>
 </kPopupWidget>

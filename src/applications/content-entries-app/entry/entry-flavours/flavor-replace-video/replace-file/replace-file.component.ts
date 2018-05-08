@@ -44,11 +44,11 @@ export interface UploadReplacementFile {
 }
 
 @Component({
-    selector: 'kFlavorFileUploadSettings',
-    templateUrl: './upload-file.component.html',
-    styleUrls: ['./upload-file.component.scss']
+    selector: 'kFlavorReplaceFile',
+    templateUrl: './replace-file.component.html',
+    styleUrls: ['./replace-file.component.scss']
 })
-export class UploadFileComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Input() entry: KalturaMediaEntry;
     @Input() flavors: Flavor[] = [];

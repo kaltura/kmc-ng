@@ -34,11 +34,12 @@ import { DistributionProviderTypeIconPipe } from './entry-distribution/pipes/dis
 import { EditDistributionProfileFlavorsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-flavors/edit-distribution-profile-flavors.component';
 import { EditDistributionProfileMetadataComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-metadata/edit-distribution-profile-metadata.component';
 import { EditDistributionProfileThumbnailsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/edit-distribution-profile-thumbnails.component';
-import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';import {EntryAdvertisementsComponent} from './entry-advertisements/entry-advertisements.component';
+import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';
+import {EntryAdvertisementsComponent} from './entry-advertisements/entry-advertisements.component';
 import {AdvertisementsComponent} from './entry-advertisements/advertisements/advertisements.component';
-import { ReplaceVideoButtonComponent } from './entry-flavours/flavor-replace-video/replace-video-button/replace-video-button.component';
-import { UploadFileComponent } from './entry-flavours/flavor-replace-video/upload-file/upload-file.component';
-
+import { ReplacementStatusComponent } from './entry-flavours/flavor-replace-video/replacement-status/replacement-status.component';
+import { ReplaceMediaButtonComponent } from './entry-flavours/flavor-replace-video/replace-media-button/replace-media-button.component';
+import { ReplaceFileComponent } from './entry-flavours/flavor-replace-video/replace-file/replace-file.component';
 
 
 export const EntryComponentsList = [
@@ -80,6 +81,7 @@ export const EntryComponentsList = [
     EditDistributionProfileThumbnailItemComponent,
     ClipAndTrimComponent,
     AdvertisementsComponent,
-    ReplaceVideoButtonComponent,
-    UploadFileComponent
+    ReplaceMediaButtonComponent,
+    ReplacementStatusComponent,
+    ReplaceFileComponent
 ];

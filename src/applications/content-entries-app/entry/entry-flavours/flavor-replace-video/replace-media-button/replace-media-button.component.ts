@@ -8,15 +8,16 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { Flavor } from '../../flavor';
 
 @Component({
-    selector: 'kFlavorReplaceVideoBtn',
-    templateUrl: './replace-video-button.component.html',
-    styleUrls: ['./replace-video-button.component.scss']
+    selector: 'kFlavorReplaceMediaBtn',
+    templateUrl: './replace-media-button.component.html',
+    styleUrls: ['./replace-media-button.component.scss']
 })
-export class ReplaceVideoButtonComponent {
+export class ReplaceMediaButtonComponent {
     @Input() entry: KalturaMediaEntry;
     @Input() flavors: Flavor[] = [];
 
     @ViewChild('uploadMenu') _uploadMenu: PopupWidgetComponent;
+    @ViewChild('replaceVideoPopup') _replaceVideoPopup: PopupWidgetComponent;
 
     public _uploadFileLabel: string;
     public _importFileLabel: string;
@@ -52,6 +53,7 @@ export class ReplaceVideoButtonComponent {
 
     public _openUploadMenu(type: 'upload' | 'import'): void {
         this._replaceType = type;
+        this._replaceVideoPopup.close();
         this._uploadMenu.open();
     }
 }
