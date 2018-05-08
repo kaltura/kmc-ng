@@ -1,1 +1,57 @@
 @import 'app-theme/_variables.scss';
+
+.kReplacementStatus {
+    margin-left: 24px;
+
+    .kMetadata {
+        color: $kGrayscale1;
+        line-height: 1.5em;
+        margin-bottom: 24px;
+
+        .kDelimiter {
+            margin: 0 10px;
+
+            &:after {
+                content: '|';
+                font-size: 12px;
+                color: $kGrayscale4;
+                top: -2px;
+                position: relative;
+            }
+        }
+
+        .kStatusIcon {
+            font-size: 16px;
+            position: relative;
+            top: 1px;
+            margin-right: 5px;
+
+            &.kIconsync {
+                color: $kSecondary;
+            }
+
+            &.kIconcomplete {
+                color: $kSuccess;
+            }
+
+            &.kIconerror {
+                color: $kDandger;
+            }
+        }
+
+        .kCancelReplacement {
+            margin-left: 10px;
+        }
+    }
+
+    .kApprove {
+        .kApproveReplacementBtn {
+            width: 200px;
+            font-weight: bold;
+
+            /deep/ .kIconcheck-medium {
+                font-size: 1.3em;
+            }
+        }
+    }
+}

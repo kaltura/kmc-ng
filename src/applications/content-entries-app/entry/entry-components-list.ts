@@ -40,6 +40,7 @@ import {AdvertisementsComponent} from './entry-advertisements/advertisements/adv
 import { ReplacementStatusComponent } from './entry-flavours/flavor-replace-video/replacement-status/replacement-status.component';
 import { ReplaceMediaButtonComponent } from './entry-flavours/flavor-replace-video/replace-media-button/replace-media-button.component';
 import { ReplaceFileComponent } from './entry-flavours/flavor-replace-video/replace-file/replace-file.component';
+import { FlavorReplacementStatusPipe } from './entry-flavours/pipes/flavor-replacement-status.pipe';
 
 
 export const EntryComponentsList = [
@@ -83,5 +84,6 @@ export const EntryComponentsList = [
     AdvertisementsComponent,
     ReplaceMediaButtonComponent,
     ReplacementStatusComponent,
-    ReplaceFileComponent
+    ReplaceFileComponent,
+    FlavorReplacementStatusPipe
 ];

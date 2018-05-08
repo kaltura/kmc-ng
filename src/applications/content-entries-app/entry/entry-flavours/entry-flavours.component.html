@@ -2,14 +2,14 @@
 	<kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
 	<div class="kFlavours kOverrideFAIcons" #flavors>
 		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
-		<div class="kEntryStatus">
+		<div class="kEntryStatus" *ngIf="!_widgetService.data?.replacingEntryId">
 			<i class="{{_widgetService._entryStatusClassName}}"></i><span>{{_widgetService._entryStatus}}</span>
 		</div>
-		<div>
-            <kFlavorReplaceMediaBtn *ngIf="!_widgetService.data.replacingEntryId && _showActionsView"
+		<div class="kFlavorReplacement">
+            <kFlavorReplaceMediaBtn *ngIf="!_widgetService.data?.replacingEntryId && _showActionsView"
                                     [flavors]="(_widgetService._flavors$ | async)?.items"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
-            <kFlavorReplaceMediaStatus *ngIf="_widgetService.data.replacingEntryId"
+            <kFlavorReplaceMediaStatus *ngIf="_widgetService.data?.replacingEntryId"
                                     [entry]="_widgetService.data">
             </kFlavorReplaceMediaStatus>
 			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService.refresh(true)"></button>

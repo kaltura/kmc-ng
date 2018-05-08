@@ -1364,6 +1364,16 @@
                         "uploadBtn": "Upload",
                         "cancel": "Cancel",
                         "continue": "Continue",
+                        "tempEntryId": "Temp Entry ID: {{0}}",
+                        "cancelReplacement": "Cancel replacement",
+                        "autoReplacement": "Auto Replacement",
+                        "approveReplacement": "Approve Replacement",
+                        "approveReplacementTooltip": "All current flavors will be replaced upon replacement approval. Any time based metadata may be effected as well.",
+                        "replacementStatus": {
+                            "replacementInProcess": "Video Replacement is in Process",
+                            "readyForReplacement": "Video is Ready for Replacement",
+                            "replacementFailed": "Video Replacement failed"
+                        },
                         "errors": {
                             "uniqueFlavors": "More than one file is associated with the same Transcoding Flavor settings.",
                             "missingFlavor": "Some required Transcoding Flavors are missing. Continue?"

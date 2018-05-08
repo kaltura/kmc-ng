@@ -1,0 +1,22 @@
+<div class="kReplacementStatus">
+    <div class="kMetadata">
+        <i class="kStatusIcon" [ngClass]="entry | kFlavorReplacementStatus:'icon'"></i>
+        {{entry | kFlavorReplacementStatus:'label'}}
+        <span class="kDelimiter"></span>
+        {{'applications.content.entryDetails.flavours.replaceVideo.tempEntryId' | translate:[entry.replacingEntryId]}}
+        <a class="kCancelReplacement" (click)="_cancelReplacement()">
+            {{'applications.content.entryDetails.flavours.replaceVideo.cancelReplacement' | translate}}
+        </a>
+    </div>
+    <div class="kApprove">
+        <button pButton
+                class="kApproveReplacementBtn kButtonDefault"
+                icon="kIconcheck-medium"
+                [disabled]="_approveBtnDisabled"
+                [label]="_approveBtnLabel"
+                (click)="_approveReplacement()"></button>
+        <kInputHelper class="kHelp" trigger="click">
+            <span>{{'applications.content.entryDetails.flavours.replaceVideo.approveReplacementTooltip' | translate}}</span>
+        </kInputHelper>
+    </div>
+</div>
