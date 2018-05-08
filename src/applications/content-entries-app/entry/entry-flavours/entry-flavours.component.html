@@ -6,9 +6,12 @@
 			<i class="{{_widgetService._entryStatusClassName}}"></i><span>{{_widgetService._entryStatus}}</span>
 		</div>
 		<div>
-            <kFlavorReplaceMediaBtn *ngIf="_showActionsView"
+            <kFlavorReplaceMediaBtn *ngIf="!_widgetService.data.replacingEntryId && _showActionsView"
                                     [flavors]="(_widgetService._flavors$ | async)?.items"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
+            <kFlavorReplaceMediaStatus *ngIf="_widgetService.data.replacingEntryId"
+                                    [entry]="_widgetService.data">
+            </kFlavorReplaceMediaStatus>
 			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService.refresh(true)"></button>
 		</div>
 

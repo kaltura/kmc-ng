@@ -8,11 +8,11 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { Flavor } from '../../flavor';
 
 @Component({
-    selector: 'kFlavorReplaceMentStatus',
+    selector: 'kFlavorReplaceMediaStatus',
     templateUrl: './replacement-status.component.html',
     styleUrls: ['./replacement-status.component.scss']
 })
 export class ReplacementStatusComponent {
-
+    @Input() entry: KalturaMediaEntry;
 }
 
