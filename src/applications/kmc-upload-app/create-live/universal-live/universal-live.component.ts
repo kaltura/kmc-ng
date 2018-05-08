@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage, KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import {UniversalLiveService} from './universal-live.service';
 import {UniversalLive} from "./universal-live.interface";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kUniversalLive',
@@ -27,6 +28,7 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
   blockerStateChange = new EventEmitter<{ isBusy: boolean, message: AreaBlockerMessage }>();
 
   constructor(private _fb: FormBuilder,
+              private _logger: KalturaLogger,
               private universalLiveService: UniversalLiveService) {
   }
 
@@ -101,7 +103,8 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
           this._updateAreaBlockerState(false, null);
         },
         error => {
-          this._updateAreaBlockerState(false, error.message);
+          this._logger.info("Failed to retrieve Akalai server default encoder IPs.",{error: error.message});
+          this._updateAreaBlockerState(false, new AreaBlockerMessage({title: "Error", message: "Failed to load Akamai Edge Server IP URL.\nPlease update primary and secondary encoder IP manually.", buttons: []}));
         });
   }
 

@@ -318,4 +318,10 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
   }
+
+  public _updateAreaBlocker(event){
+      setTimeout(()=>{
+          this._blockerMessage = event.message;
+      },0);
+  }
 }
