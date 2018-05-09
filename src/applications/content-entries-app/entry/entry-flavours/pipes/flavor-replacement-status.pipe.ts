@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client/api/types/KalturaEntryReplacementStatus';
 
 @Pipe({ name: 'kFlavorReplacementStatus' })
@@ -9,17 +8,17 @@ export class FlavorReplacementStatusPipe implements PipeTransform {
 
     }
 
-    transform(entry: KalturaMediaEntry, type: 'icon' | 'label'): string {
+    transform(replacementStatus: KalturaEntryReplacementStatus, type: 'icon' | 'label'): string {
         const result = {
             icon: '',
             label: ''
         };
 
-        if (!entry) {
+        if (!replacementStatus) {
             return '';
         }
 
-        switch (entry.replacementStatus) {
+        switch (replacementStatus) {
             case KalturaEntryReplacementStatus.approvedButNotReady:
             case KalturaEntryReplacementStatus.notReadyAndNotApproved:
                 result.label = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.replacementStatus.replacementInProcess');

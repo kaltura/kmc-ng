@@ -4,6 +4,7 @@ import { BrowserService, GrowlMessage } from 'app-shared/kmc-shell/providers/bro
 import {AppLocalization, OperationTagManagerService} from '@kaltura-ng/kaltura-common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
+import { async } from 'rxjs/scheduler/async';
 
 /*
  * App Component
@@ -54,11 +55,11 @@ export class AppComponent implements OnInit {
       });
 
     // handle app status: busy and error messages. Allow closing error window using the 'OK' button
-    this._oprationsTagManager.tagStatus$.subscribe(
-      (tags: {[key: string]: number}) => {
-        this._isBusy = tags['block-shell'] > 0;
-      }
-    );
+    this._oprationsTagManager.tagStatus$
+        .observeOn(async)
+        .subscribe((tags: {[key: string]: number}) => {
+            this._isBusy = tags['block-shell'] > 0;
+        });
 
     // handle app growlMessages
     this._browserService.growlMessage$.subscribe(

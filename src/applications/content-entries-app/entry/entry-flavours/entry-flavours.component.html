@@ -2,22 +2,23 @@
 	<kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
 	<div class="kFlavours kOverrideFAIcons" #flavors>
 		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
-		<div class="kEntryStatus" *ngIf="!_widgetService.data?.replacingEntryId">
-			<i class="{{_widgetService._entryStatusClassName}}"></i><span>{{_widgetService._entryStatus}}</span>
+		<div class="kEntryStatus" *ngIf="!(_widgetService.replacementData$ | async)?.tempEntryId">
+			<i class="{{_widgetService.entryStatusClassName}}"></i><span>{{_widgetService.entryStatus}}</span>
 		</div>
 		<div class="kFlavorReplacement">
-            <kFlavorReplaceMediaBtn *ngIf="!_widgetService.data?.replacingEntryId && _showActionsView"
-                                    [flavors]="(_widgetService._flavors$ | async)?.items"
+            <kFlavorReplaceMediaBtn *ngIf="_showActionsView(_widgetService.replacementData$ | async)"
+                                    [flavors]="(_widgetService.flavors$ | async)"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
-            <kFlavorReplaceMediaStatus *ngIf="_widgetService.data?.replacingEntryId"
+            <kFlavorReplaceMediaStatus *ngIf="(_widgetService.replacementData$ | async)?.tempEntryId"
                                        [currentEntryId]="_widgetService.currentEntryId"
+                                       [replacementData]="_widgetService.replacementData$ | async"
                                        [entry]="_widgetService.data">
             </kFlavorReplaceMediaStatus>
-			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService.refresh(true)"></button>
+			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService.refresh()"></button>
 		</div>
 
 		<div class="kTable">
-			<p-dataTable [value]="(_widgetService._flavors$ | async)?.items" scrollable="true" scrollHeight="100%">
+			<p-dataTable [value]="_widgetService.selectedFlavors" scrollable="true" scrollHeight="100%">
 				<p-column field="name" header="{{'applications.content.entryDetails.flavours.flavour' | translate}}" [style]="{'width':'144px', 'padding-left': '24px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span class="kFlavorName" [class.kConvertedFlavor]="flavor.status === '2'">{{flavor.name}}</span>

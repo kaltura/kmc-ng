@@ -1,9 +1,9 @@
 <div class="kReplacementStatus">
     <div class="kMetadata">
-        <i class="kStatusIcon" [ngClass]="entry | kFlavorReplacementStatus:'icon'"></i>
-        {{entry | kFlavorReplacementStatus:'label'}}
+        <i class="kStatusIcon" [ngClass]="replacementData?.status | kFlavorReplacementStatus:'icon'"></i>
+        {{replacementData?.status | kFlavorReplacementStatus:'label'}}
         <span class="kDelimiter"></span>
-        {{'applications.content.entryDetails.flavours.replaceVideo.tempEntryId' | translate:[entry.replacingEntryId]}}
+        {{'applications.content.entryDetails.flavours.replaceVideo.tempEntryId' | translate:[replacementData?.tempEntryId]}}
         <a class="kCancelReplacement" (click)="_cancelReplacement()">
             {{'applications.content.entryDetails.flavours.replaceVideo.cancelReplacement' | translate}}
         </a>

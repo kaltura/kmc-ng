@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy, HostListener } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
@@ -7,7 +7,7 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { EntryFlavoursWidget } from './entry-flavours-widget.service';
+import { EntryFlavoursWidget, ReplacementData } from './entry-flavours-widget.service';
 import { Flavor } from './flavor';
 
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -44,13 +44,25 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
 	private _importPopupStateChangeSubscribe: ISubscription;
 
-    public get _showActionsView(): boolean {
-        if (!this._widgetService.data) {
+	constructor(public _widgetService: EntryFlavoursWidget,
+              private _uploadManagement: UploadManagement,
+              private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
+              private _browserService: BrowserService) {
+    }
+
+    ngOnInit() {
+	    this._documentWidth = document.body.clientWidth;
+        this._widgetService.attachForm();
+    }
+
+    public _showActionsView(replacementData: ReplacementData): boolean {
+        if (!replacementData || !this._widgetService.data) {
             return false;
         }
 
         const entry = this._widgetService.data;
-        const noCurrentlyReplacing = !entry.replacingEntryId;
+        const noCurrentlyReplacing = !replacementData.tempEntryId;
         const hasReplacePermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_INTO_READY);
         let showActionsView = true;
         switch (entry.status) {
@@ -70,23 +82,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
         return showActionsView;
     }
 
-	constructor(public _widgetService: EntryFlavoursWidget,
-              private _uploadManagement: UploadManagement,
-              private _appLocalization: AppLocalization,
-              private _permissionsService: KMCPermissionsService,
-              private _browserService: BrowserService) {
-    }
-
-    ngOnInit() {
-	    this._documentWidth = document.body.clientWidth;
-        this._widgetService.attachForm();
-    }
-
 	openActionsMenu(event: any, flavor: Flavor): void{
 		if (this.actionsMenu){
 			this._actions = [];
 			this._uploadFilter = this._setUploadFilter(this._widgetService.data);
-			if (this._widgetService.sourceAvailabale && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted.toString()))){
+			if (this._widgetService.sourceAvailable && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted.toString()))){
 				this._actions.push({id: 'convert', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.convert'), command: (event) => {this.actionSelected("convert");}});
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor)) || ( !flavor.isSource && flavor.id !== '' &&
@@ -105,7 +105,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 					(flavor.id !== "" && flavor.isWeb && (flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString()))){
 				this._actions.push({id: 'preview', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.preview'), command: (event) => {this.actionSelected("preview");}});
 			}
-			if (this._widgetService.sourceAvailabale && !flavor.isSource && (flavor.status === KalturaFlavorAssetStatus.error.toString() || flavor.status === KalturaFlavorAssetStatus.exporting.toString() ||
+			if (this._widgetService.sourceAvailable && !flavor.isSource && (flavor.status === KalturaFlavorAssetStatus.error.toString() || flavor.status === KalturaFlavorAssetStatus.exporting.toString() ||
 				flavor.status === KalturaFlavorAssetStatus.ready.toString() || flavor.status === KalturaFlavorAssetStatus.notApplicable.toString())){
 				this._actions.push({id: 'reconvert', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.reconvert'), command: (event) => {this.actionSelected("reconvert");}});
 			}
