@@ -142,7 +142,7 @@ export class NewReplaceVideoUploadService implements OnDestroy {
         const resource = new KalturaAssetsParamsResourceContainers({
             resources: files.map(file => {
                 const subSubResource = new KalturaUploadedFileTokenResource({ token: file.serverUploadToken });
-                return new KalturaAssetParamsResourceContainer({ resource: subSubResource, assetParamsId: file.assetParamsId });
+                return new KalturaAssetParamsResourceContainer({ resource: subSubResource, assetParamsId: file.assetParamsId || 0 });
             })
         });
 
