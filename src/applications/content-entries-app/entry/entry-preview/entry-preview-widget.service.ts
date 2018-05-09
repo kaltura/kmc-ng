@@ -14,10 +14,6 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
     public _iframeSrc: string;
     private _urlHash: number = 0;
 
-    public get entryHasSource(): boolean {
-        return this._store.hasSource;
-    }
-
     constructor(private appAuthentication: AppAuthentication,
                 private _store: EntryStore,
                 private _permissionsService: KMCPermissionsService,

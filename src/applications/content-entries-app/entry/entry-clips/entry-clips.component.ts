@@ -4,6 +4,7 @@ import {globalConfig} from 'config/global';
 import {EntryClipsWidget} from './entry-clips-widget.service';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { EntryStore } from '../entry-store.service';
 
 @Component({
     selector: 'kEntryClips',
@@ -22,7 +23,8 @@ export class EntryClips implements OnInit, OnDestroy {
 
     constructor(public _widgetService: EntryClipsWidget,
                 private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
-                logger: KalturaLogger) {
+                logger: KalturaLogger,
+                private _store: EntryStore) {
     }
 
     _convertSortValue(value: boolean): number {
@@ -55,8 +57,10 @@ export class EntryClips implements OnInit, OnDestroy {
                 if (data) {
                     this._clipAndTrimEnabled = this._clipAndTrimAppViewService.isAvailable({
                         entry: data,
-                        hasSource: this._widgetService.entryHasSource
+                        hasSource: this._store.hasSource.value()
                     });
+                }else {
+                    this._clipAndTrimEnabled = false;
                 }
             }
         );

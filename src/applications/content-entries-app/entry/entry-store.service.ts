@@ -51,15 +51,16 @@ export class EntryStore implements  OnDestroy {
 
 	public state$ = this._state.asObservable();
 	private _entryIsDirty : boolean;
-    private _hasSource = false;
 
 	public get entryIsDirty() : boolean{
 		return this._entryIsDirty;
 	}
 
-    public get hasSource(): boolean {
-        return this._hasSource;
-    }
+    private _hasSource = new BehaviorSubject<boolean>(false);
+    public  readonly hasSource = {
+        value$: this._hasSource.asObservable(),
+        value: () => this._hasSource.getValue()
+    };
 
 	private _refreshEntriesListUponLeave = false;
 	private _entry : BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
@@ -272,7 +273,7 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
                 ({ entry, hasSource }) => {
-                    this._hasSource = hasSource;
+                    this._hasSource.next(hasSource);
                     if (this._contentEntryViewService.isAvailable({ entry, activatedRoute: this._entryRoute })) {
                         this._entry.next(entry);
                         this._entryId = entry.id;
@@ -386,5 +387,9 @@ export class EntryStore implements  OnDestroy {
 
 	public setRefreshEntriesListUponLeave() {
 	  this._refreshEntriesListUponLeave = true;
+  }
+
+  public updateHasSourceStatus(value: boolean) : void {
+	    this._hasSource.next(value);
   }
 }

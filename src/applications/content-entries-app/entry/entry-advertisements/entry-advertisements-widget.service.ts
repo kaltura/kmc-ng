@@ -5,11 +5,8 @@ import { EntryStore } from '../entry-store.service';
 
 @Injectable()
 export class EntryAdvertisementsWidget extends EntryWidget implements OnDestroy {
-    public get entryHasSource(): boolean {
-        return this._store.hasSource;
-    }
 
-    constructor(private _store: EntryStore) {
+    constructor() {
         super(ContentEntryViewSections.Advertisements);
     }
 
