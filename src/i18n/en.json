@@ -1136,6 +1136,11 @@
                 "downloadFailed": "The Download request failed."
             },
             "entryDetails": {
+                "entryEditor": {
+                    "title": "Editor",
+                    "cancelEdit": "Cancel Edit",
+                    "discard": "Discard all changes?"
+                },
                 "save": "Save",
                 "sections": {
                     "metadata": "Metadata",
@@ -1152,7 +1157,7 @@
                     "advertisements": "Advertisements"
                 },
                 "preview": {
-                    "clipAndTrim": "Clip & Trim",
+                    "clipAndTrim": "Editor",
                     "pande": "Share & Embed",
                     "previewInPlayer": "Preview in Player",
                     "details": "Details",

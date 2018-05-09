@@ -5,6 +5,9 @@ import {EntryClipsWidget} from './entry-clips-widget.service';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { EntryStore } from '../entry-store.service';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/merge';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
     selector: 'kEntryClips',
@@ -50,20 +53,23 @@ export class EntryClips implements OnInit, OnDestroy {
     ngOnInit() {
         this._widgetService.attachForm();
 
-        this._widgetService.data$
+        Observable.merge(
+            this._widgetService.data$,
+            this._store.hasSource.value$
+        )
             .cancelOnDestroy(this)
             .subscribe(
-            data => {
-                if (data) {
-                    this._clipAndTrimEnabled = this._clipAndTrimAppViewService.isAvailable({
-                        entry: data,
-                        hasSource: this._store.hasSource.value()
-                    });
-                }else {
-                    this._clipAndTrimEnabled = false;
+                () => {
+                    if (this._widgetService.data) {
+                        this._clipAndTrimEnabled = this._clipAndTrimAppViewService.isAvailable({
+                            entry: this._widgetService.data,
+                            hasSource: this._store.hasSource.value()
+                        });
+                    }else {
+                        this._clipAndTrimEnabled = false;
+                    }
                 }
-            }
-        );
+            );
     }
 
     ngOnDestroy() {
