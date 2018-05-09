@@ -498,7 +498,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         }
     }
 
-    public refresh() {
+    public refresh(): void {
         super._showLoader();
 
         this._loadFlavorsSectionData()
@@ -535,7 +535,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 });
     }
 
-    public loadFlavorsByEntryId(entryId: string) {
+    public loadFlavorsByEntryId(entryId: string): void {
         this.currentEntryId = entryId;
         this.showFlavorActions = entryId === this.data.id;
         this.selectedFlavors = this.showFlavorActions ? this._flavors.getValue() : this._replacementData.getValue().flavors;

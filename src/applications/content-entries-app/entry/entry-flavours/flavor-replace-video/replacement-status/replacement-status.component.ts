@@ -22,25 +22,27 @@ export class ReplacementStatusComponent implements OnInit {
     @Input() currentEntryId: string;
     @Input() replacementData: ReplacementData;
 
-    public _approveBtnDisabled: boolean;
-    public _approveBtnLabel: string;
     public _flavorsTabs = FlavorsTabs;
     public _currentTab = FlavorsTabs.current;
+
+    public get _approveBtnDisabled(): boolean {
+        return this.replacementData.status === KalturaEntryReplacementStatus.approvedButNotReady
+            || this.replacementData.status === KalturaEntryReplacementStatus.failed;
+    }
+
+    public get _approveBtnLabel(): string {
+        return this.replacementData.status === KalturaEntryReplacementStatus.approvedButNotReady
+            ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.autoReplacement')
+            : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.approveReplacement');
+    }
 
     constructor(private _widgetService: EntryFlavoursWidget,
                 private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
-                private _newReplaceVideoUpload: NewReplaceVideoUploadService,) {
+                private _newReplaceVideoUpload: NewReplaceVideoUploadService) {
     }
 
     ngOnInit() {
-        this._approveBtnDisabled = this.replacementData.status === KalturaEntryReplacementStatus.approvedButNotReady
-            || this.replacementData.status === KalturaEntryReplacementStatus.failed;
-
-        this._approveBtnLabel = this.replacementData.status === KalturaEntryReplacementStatus.approvedButNotReady
-            ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.autoReplacement')
-            : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.approveReplacement');
-
         this._currentTab = this.entry.id === this.currentEntryId ? FlavorsTabs.current : FlavorsTabs.replacement;
     }
 

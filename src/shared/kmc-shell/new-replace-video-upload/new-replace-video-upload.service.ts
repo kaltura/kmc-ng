@@ -57,7 +57,6 @@ export class NewReplaceVideoUploadService implements OnDestroy {
             .filter(trackedFile => trackedFile.data instanceof NewReplaceVideoUploadFile)
             .subscribe(
                 trackedFile => {
-                    // NOTE: this service handles only 'purged' and 'prepared' statuses by design.
                     switch (trackedFile.status) {
                         case TrackedFileStatuses.cancelled:
                             this._cancelReplacement(trackedFile);

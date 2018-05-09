@@ -315,7 +315,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             .tag('block-shell')
             .subscribe(
                 () => {
-                    this._widgetService.refresh(true);
+                    this._widgetService.refresh();
                     this.parentPopupWidget.close();
                 },
                 (error) => {
@@ -325,7 +325,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
                                 this._blockerMessage = null;
-                                this._widgetService.refresh(true);
+                                this._widgetService.refresh();
                                 this.parentPopupWidget.close();
                             }
                         }]
@@ -345,7 +345,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             .filter(entryId => entryId === this.entry.id)
             .subscribe(
                 () => {
-                    this._widgetService.refresh(true);
+                    this._widgetService.refresh();
                     this.parentPopupWidget.close();
                 },
                 (error) => {
@@ -355,7 +355,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
                                 this._blockerMessage = null;
-                                this._widgetService.refresh(true);
+                                this._widgetService.refresh();
                                 this.parentPopupWidget.close();
                             }
                         }]
