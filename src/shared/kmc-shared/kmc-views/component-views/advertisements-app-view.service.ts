@@ -43,8 +43,8 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
 
         const availableByConfiguration = serverConfig.externalApps.advertisements.enabled;
         const availableByPermissions = this._isAvailableByPermission();
-        const availableByData = this._isAvailableByData(args.entry);
-        const result = availableByConfiguration && availableByData && availableByPermissions && args.hasSource;
+        const availableByData = this._isAvailableByData(args);
+        const result = availableByConfiguration && availableByData && availableByPermissions;
         this._logger.info(`check if view is available`, {
             result,
             validByPermissions: availableByPermissions,
@@ -57,7 +57,8 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
         return this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);
     }
 
-    private _isAvailableByData(entry: KalturaMediaEntry): boolean {
+    private _isAvailableByData(args: AdvertisementsAppViewArgs): boolean {
+        const { entry, hasSource} = args;
         const entryReady = entry.status === KalturaEntryStatus.ready;
         const isEntryReplacing = entry.replacementStatus !== KalturaEntryReplacementStatus.none;
         const isLiveEntry = entry.mediaType === KalturaMediaType.liveStreamFlash ||
@@ -67,11 +68,12 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
         const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1 && !isExternalMedia;
 
-        const result = entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
+        const result = hasSource && entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
 
         this._logger.debug(`conditions used to check availability status by data`, () => (
             {
                 result,
+                hasSource,
                 entryReady,
                 isLiveEntry,
                 isEntryReplacing,
