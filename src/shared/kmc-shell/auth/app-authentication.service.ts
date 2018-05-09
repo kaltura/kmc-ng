@@ -32,6 +32,7 @@ import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsA
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
 import { HttpClient } from '@angular/common/http';
 import { buildKalturaServerUri } from 'config/server';
+import { AppNavigator } from './app-navigator.service';
 
 const ksSessionStorageKey = 'auth.login.ks';
 
@@ -84,6 +85,7 @@ export class AppAuthentication {
                 private _serverPolls: KmcServerPolls,
                 private _permissionsService: KMCPermissionsService,
                 private _http: HttpClient,
+                private _appNavigator: AppNavigator,
                 private _appEvents: AppEventsService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
@@ -422,6 +424,7 @@ export class AppAuthentication {
                 .subscribe(
                     result => {
                         this._browserService.setInSessionStorage(ksSessionStorageKey, result.ks);
+                        this._appNavigator.navigateToDefault();
                         this._logout();
 
                         // DEVELOPER NOTICE: observer next/complete not implemented by design
