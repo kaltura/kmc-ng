@@ -145,6 +145,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         flavors: replacingEntryFlavors
                     });
                 } else {
+                    this.currentEntryId = this.data.id;
                     this._replacementData.next({ status: null, tempEntryId: null, flavors: [] });
                 }
 
