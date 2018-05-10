@@ -77,7 +77,13 @@
             "done": "Done",
             "save": "Save",
             "error": "Error",
-            "connectionError": "Error connecting to server"
+            "connectionError": "Error connecting to server",
+            "invalidKs": "User session has expired. Please re-login."
+        },
+        "redirect":{
+            "redirect1": "Redirecting to default view...",
+            "redirect2": "If you are not redirected in few seconds, click ",
+            "redirect3": "here"
         },
         "login": {
             "login": {
@@ -133,7 +139,8 @@
                 "newPasswordHashKeyInvalid": "This link is not valid.",
                 "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
                 "wrongOldPassword": "Old password is incorret.",
-                "invalidField": "Value in field {{value}} is not valid."
+                "invalidField": "Value in field {{value}} is not valid.",
+                "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon."
             },
             "send": "Send",
             "wait": "Wait…",
@@ -148,9 +155,9 @@
             "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
         },
         "UnpermittedActionReasons": {
-            "InvalidConfiguration": {
-                "message": "This view cannot be loaded. If the problem persists - please contact Kaltura Support.\nClick OK to navigate to the entries view."
-            }
+            "header": "View Disabled",
+            "message": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.",
+            "messageNav": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.\nClick OK to navigate to the main view."
         }
     },
     "applications": {
@@ -177,8 +184,9 @@
             "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
             "helpTip2": "Read more",
             "helpTip3": "about the different embed code types.",
-            "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. Learn more about enforcing",
-            "helpTip5": "specific delivery protocols.",
+            "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. ",
+            "helpTip5": "Learn more about enforcing ",
+            "helpTip6": "specific delivery protocols.",
             "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
             "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
         },
@@ -275,7 +283,7 @@
                 "syncing": "{{0}} Syncing",
                 "queued": "{{0}} Queued",
                 "completed": "{{0}} Completed",
-                "error": "{{0}} Qrror",
+                "error": "{{0}} Error(s)",
                 "upToDate": "Up to Date",
                 "loading": "Loading...",
                 "errors": {
@@ -634,6 +642,8 @@
                     }
                 },
                 "details": {
+                    "choosePlaylist": "Choose Playlist",
+                    "missingPlaylist": "Feed playlist ({{0}}) could not be found. Please select another playlist.",
                     "header": {
                         "newFeed": "New Feed",
                         "cancel": "Cancel",
@@ -652,7 +662,7 @@
                         "numOfEntries": "{{0}} Entries",
                         "warning": "{{0}} Entries are not included in this feed.",
                         "moreInfo": "More Info.",
-                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
+                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
                         "flavorId": "(flavor ID) {{0}}"
                     },
                     "destination": "Destination",
@@ -774,8 +784,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Confirm Delete",
-                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
-                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
+                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
                     "moreThan5": "Are you sure you want to delete the selected feeds?"
                 },
                 "errors": {
@@ -1127,6 +1137,11 @@
                 "downloadFailed": "The Download request failed."
             },
             "entryDetails": {
+                "entryEditor": {
+                    "title": "Editor",
+                    "cancelEdit": "Cancel Edit",
+                    "discard": "Discard all changes?"
+                },
                 "save": "Save",
                 "sections": {
                     "metadata": "Metadata",
@@ -1143,7 +1158,7 @@
                     "advertisements": "Advertisements"
                 },
                 "preview": {
-                    "clipAndTrim": "Clip & Trim",
+                    "clipAndTrim": "Editor",
                     "pande": "Share & Embed",
                     "previewInPlayer": "Preview in Player",
                     "details": "Details",
@@ -1195,7 +1210,7 @@
                 },
                 "thumbnails": {
                     "tags": "Tags",
-          "thumbnails": "Thumbnails",
+                    "thumbnails": "Thumbnails",
                     "upload": "Upload",
                     "capture": {
                         "choose": "Choose Frame",
@@ -2391,7 +2406,7 @@
                 },
                 "profile": {
                     "save": "Save",
-          "metadata": "Metadata",
+                    "metadata": "Metadata",
                     "backToProfiles": "Back To Profiles",
                     "flavor": "Flavor",
                     "id": "ID {{0}}",

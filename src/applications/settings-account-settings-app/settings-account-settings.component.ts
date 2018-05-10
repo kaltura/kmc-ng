@@ -8,7 +8,8 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-
+import { SettingsAccountSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 
 function phoneValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: boolean} | null => {
@@ -46,7 +47,9 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
+              private _browserService: BrowserService,
               private _logger: KalturaLogger,
+              private _settingsAccountSettingsMainView: SettingsAccountSettingsMainViewService,
               private _fb: FormBuilder) {
   }
 
@@ -54,7 +57,11 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     this._logger.info(`initiate account settings view`);
     this._createForm();
     this._fillDescribeYourselfOptions();
-    this._loadPartnerAccountSettings();
+    if (this._settingsAccountSettingsMainView.isAvailable()) {
+        this._loadPartnerAccountSettings();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy(): void {
