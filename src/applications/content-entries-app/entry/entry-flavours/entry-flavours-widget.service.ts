@@ -171,6 +171,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         replacementData: Partial<KalturaMediaEntry>
     }): void {
         const { currentEntryFlavors, replacingEntryFlavors, replacementData } = response;
+        const hasSource = !!currentEntryFlavors.find(flavor => flavor.isSource);
+        this._entryStore.updateHasSourceStatus(hasSource);
         this._flavors.next(currentEntryFlavors);
 
         if (replacementData.replacingEntryId) {
