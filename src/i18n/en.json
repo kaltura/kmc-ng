@@ -78,7 +78,7 @@
             "save": "Save",
             "error": "Error",
             "connectionError": "Error connecting to server",
-            "error": "Error"
+            "invalidKs": "User session has expired. Please re-login."
         },
         "redirect":{
             "redirect1": "Redirecting to default view...",
@@ -184,8 +184,9 @@
             "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
             "helpTip2": "Read more",
             "helpTip3": "about the different embed code types.",
-            "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. Learn more about enforcing",
-            "helpTip5": "specific delivery protocols.",
+            "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. ",
+            "helpTip5": "Learn more about enforcing ",
+            "helpTip6": "specific delivery protocols.",
             "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
             "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
         },
@@ -282,7 +283,7 @@
                 "syncing": "{{0}} Syncing",
                 "queued": "{{0}} Queued",
                 "completed": "{{0}} Completed",
-                "error": "{{0}} Qrror",
+                "error": "{{0}} Error(s)",
                 "upToDate": "Up to Date",
                 "loading": "Loading...",
                 "errors": {
@@ -641,6 +642,8 @@
                     }
                 },
                 "details": {
+                    "choosePlaylist": "Choose Playlist",
+                    "missingPlaylist": "Feed playlist ({{0}}) could not be found. Please select another playlist.",
                     "header": {
                         "newFeed": "New Feed",
                         "cancel": "Cancel",
@@ -1134,6 +1137,11 @@
                 "downloadFailed": "The Download request failed."
             },
             "entryDetails": {
+                "entryEditor": {
+                    "title": "Editor",
+                    "cancelEdit": "Cancel Edit",
+                    "discard": "Discard all changes?"
+                },
                 "save": "Save",
                 "sections": {
                     "metadata": "Metadata",
@@ -1150,7 +1158,7 @@
                     "advertisements": "Advertisements"
                 },
                 "preview": {
-                    "clipAndTrim": "Clip & Trim",
+                    "clipAndTrim": "Editor",
                     "pande": "Share & Embed",
                     "previewInPlayer": "Preview in Player",
                     "details": "Details",

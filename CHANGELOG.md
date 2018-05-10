@@ -1,3 +1,32 @@
+<a name="4.4.1"></a>
+## [4.4.1](https://github.com/kaltura/kmc-ng/compare/v4.4.0...v4.4.1) (2018-05-03)
+
+
+### Bug Fixes
+
+* use secured protocol when showing player component ([#625](https://github.com/kaltura/kmc-ng/issues/625)) ([3ac3bc9](https://github.com/kaltura/kmc-ng/commit/3ac3bc9))
+
+
+
+<a name="4.4.0"></a>
+# [4.4.0](https://github.com/kaltura/kmc-ng/compare/v4.3.0...v4.4.0) (2018-05-02)
+
+
+### Bug Fixes
+
+* enable prod mode before running application logic ([9c36b4e](https://github.com/kaltura/kmc-ng/commit/9c36b4e))
+* fix advertisements permissions logic ([3c3c52e](https://github.com/kaltura/kmc-ng/commit/3c3c52e))
+* fix usage dashboard permissions logic ([86c37bf](https://github.com/kaltura/kmc-ng/commit/86c37bf))
+* remove undesired message when user cancel navigation back to list when has draft changes ([cff21b8](https://github.com/kaltura/kmc-ng/commit/cff21b8))
+
+
+### Features
+
+* support CDN configuration provided at runtime ([3090075](https://github.com/kaltura/kmc-ng/commit/3090075))
+* **content/syndication:** handle feeds with deleted playlists ([#623](https://github.com/kaltura/kmc-ng/issues/623)) KMCNG-1679 ([b54e3b4](https://github.com/kaltura/kmc-ng/commit/b54e3b4))
+
+
+
 <a name="4.3.0"></a>
 # [4.3.0](https://github.com/kaltura/kmc-ng/compare/v4.2.0...v4.3.0) (2018-04-30)
 

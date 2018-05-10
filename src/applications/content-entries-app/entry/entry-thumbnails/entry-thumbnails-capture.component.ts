@@ -1,7 +1,7 @@
 import { Component, AfterContentInit, Input } from '@angular/core';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { serverConfig } from 'config/server';
+import { serverConfig, getKalturaServerUri } from 'config/server';
 
 @Component({
     selector: 'kThumbnailCapture',
@@ -13,8 +13,9 @@ export class EntryThumbnailCapture implements AfterContentInit{
 	@Input() entryId: string;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 
-	playerConfig: any;
-	kdp: any;
+    serverUri = getKalturaServerUri();
+    playerConfig: any;
+    kdp: any;
 
     constructor(private _appAuthentication: AppAuthentication) {
     }

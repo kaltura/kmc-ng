@@ -88,12 +88,13 @@
         </div>
         <div class="kTooltipContent">
             <span>{{'applications.embed.helpTip1' | translate }}</span>
-            <a (click)="openLink('embedTypes')"> {{'applications.embed.helpTip2' | translate }}</a>
-            <span> {{'applications.embed.helpTip3' | translate }}</span>
+            <a [hidden]="!_embedTypesHelpExists" (click)="openLink('embedTypes')"> {{'applications.embed.helpTip2' | translate }}</a>
+            <span [hidden]="!_embedTypesHelpExists"> {{'applications.embed.helpTip3' | translate }}</span>
         </div>
         <div class="kTooltipContent">
             <span>{{'applications.embed.helpTip4' | translate }}</span>
-            <a (click)="openLink('deliveryProtocols')"> {{'applications.embed.helpTip5' | translate }}</a>
+            <span [hidden]="!_deliveryProtocolsHelpExists">{{'applications.embed.helpTip5' | translate }}</span>
+            <a [hidden]="!_deliveryProtocolsHelpExists" (click)="openLink('deliveryProtocols')"> {{'applications.embed.helpTip6' | translate }}</a>
         </div>
 
     </div>
