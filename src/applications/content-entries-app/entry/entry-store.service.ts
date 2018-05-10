@@ -274,7 +274,11 @@ export class EntryStore implements  OnDestroy {
             .subscribe(
                 ({ entry, hasSource }) => {
                     this._hasSource.next(hasSource);
-                    if (this._contentEntryViewService.isAvailable({ entry, activatedRoute: this._entryRoute })) {
+                    if (this._contentEntryViewService.isAvailable({
+                        entry,
+                        activatedRoute: this._entryRoute,
+                        section: ContentEntryViewSections.ResolveFromActivatedRoute
+                    })) {
                         this._entry.next(entry);
                         this._entryId = entry.id;
 
@@ -342,7 +346,7 @@ export class EntryStore implements  OnDestroy {
                         this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
                     } else {
                         this._state.next({ action: ActionTypes.EntryLoading });
-                        this._contentEntryViewService.openById(entry)
+                        this._contentEntryViewService.openById(entry, ContentEntryViewSections.Metadata)
                             .cancelOnDestroy(this)
                             .subscribe(() => {
                                 this._state.next({ action: ActionTypes.EntryLoaded });
