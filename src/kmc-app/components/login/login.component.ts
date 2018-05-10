@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { kmcAppConfig } from '../../kmc-app-config';
 
-import { AppAuthentication, AppNavigator, BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
+import { AppAuthentication, AppNavigator, AutomaticLoginErrorReasons,BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
 import { serverConfig } from 'config/server';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _loginScreens = LoginScreens;
   public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
+  public _signUpLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.signUp;
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -73,28 +74,30 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this._errorCode = error.code;
 
     if (error.passwordExpired) {
-      this._username = username;
-      return this._setScreen(LoginScreens.PasswordExpired);
-    }
-
-    if (!error.custom) {
+        this._username = username;
+        return this._setScreen(LoginScreens.PasswordExpired);
+    } else if (error.closedForBeta) {
+        this._errorMessage = this._appLocalization.get(error.message);
+    } else if (!error.custom) {
         this._errorMessage = this._appLocalization.get(error.message);
     } else {
-      this._errorMessage = error.message;
+        this._errorMessage = error.message;
     }
     this._inProgress = false;
   }
 
-  ngOnInit() {
-    if (this._appAuthentication.isLogged()) {
-      this._appNavigator.navigateToDefault();
-    } else if (typeof document['documentMode'] !== "undefined" && document['documentMode'] < 11){
-        this._showIEMessage = true;
-      } else{
-        this._showLogin = true;
-        this._username = this._browserService.getFromLocalStorage('login.username');
+    ngOnInit() {
+        if (this._appAuthentication.isLogged()) {
+            this._appNavigator.navigateToDefault();
+        } else if (typeof document['documentMode'] !== 'undefined' && document['documentMode'] < 11) {
+            this._showIEMessage = true;
+        } else {
+            this._showLogin = true;
+            this._username = this._browserService.getFromLocalStorage('login.username');
+            this._errorMessage = this._appAuthentication.automaticLoginErrorReason === AutomaticLoginErrorReasons.closedForBeta ? this._appLocalization.get('app.login.error.userForbiddenForBeta')
+                : null;
+        }
     }
-  }
 
   ngOnDestroy() {
     // for cancelOnDestroy

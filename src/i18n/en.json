@@ -1,231 +1,238 @@
 {
-  "app": {
-    "menu": {
-      "upload": "Create",
-      "Content": "Content",
-      "Entries": "Entries",
-      "Moderation": "Moderation",
-      "Playlists": "Playlists",
-      "Syndication": "Syndication",
-      "Categories": "Categories",
-      "Studio": "Studio",
-      "Analytics": "Analytics",
-      "Kava": "Kava",
-      "Live Analytics": "Live Real-Time Dashboard",
-      "Usage Dashboard": "Usage Dashboard",
-      "Administration": "Administration",
-      "Settings": "Settings",
-      "Users": "Users",
-      "Account Settings": "Account Settings",
-      "Integration Settings": "Integration Settings",
-      "Account Information": "Account Information",
-      "My User Settings": "My User Settings",
-      "Roles": "Roles",
-      "UploadControl": "Upload Control",
-      "BulkUpload": "Bulk Upload",
-      "DropFolders": "Drop Folders",
-      "UploadMonitor": "Upload Monitor",
-      "CustomData": "Custom Data",
-      "AccessControl": "Access Control",
-      "Transcoding settings": "Transcoding Settings"
-    },
-    "userSettings": {
-      "changeAccount": "Change Account",
-      "logout": "Logout"
-    },
-    "changeAccount": {
-      "title": "Change Account",
-      "choose": "Choose a different partner:",
-      "continue": "Continue",
-      "errors": {
-        "loadPartners": "An error occurred while loading accounts."
-      }
-    },
-    "helpMenu": {
-      "gettingStarted": "Getting Started",
-      "kmcOverview": "KMC Overview",
-      "mediaManagement": "Media Management & Workflow",
-      "productTour": "Watch the Product Tour",
-      "support": "Help and Support",
-      "userManual": "Download User Manual",
-      "contact": "Contact Support",
-      "currentPage": "Current Page",
-      "changelog": "Changelog"
-    },
-    "languageMenu": {
-      "selectLang": "Select Language"
-    },
-    "common": {
-      "n_a": "N/A",
-      "copyToClipboard": "Copy to clipboard",
-      "copySuccess": "Copied to clipboard",
-      "copyFailure": "Copy operation failed",
-      "on": "On",
-      "off": "Off",
-      "ok": "OK",
-      "cancel": "Cancel",
-      "retry": "Retry",
-      "dismiss": "Dismiss",
-      "reload": "Reload",
-      "confirm": "Confirm",
-      "close": "Close",
-      "note": "Note:",
-      "attention": "Attention",
-      "yes": "Yes",
-      "no": "No",
-      "apply": "Apply",
-      "done": "Done",
-      "save": "Save",
-      "error": "Error",
-      "connectionError": "Error connecting to server"
-    },
-    "login": {
-      "login": {
-        "title": "Login",
-        "forgotPassword": "Forgot Password?",
-        "placeholder": {
-          "username": "Enter Email",
-          "password": "Enter Password"
+    "app": {
+        "menu": {
+            "upload": "Create",
+            "Content": "Content",
+            "Entries": "Entries",
+            "Moderation": "Moderation",
+            "Playlists": "Playlists",
+            "Syndication": "Syndication",
+            "Categories": "Categories",
+            "Studio": "Studio",
+            "Analytics": "Analytics",
+            "Kava": "Kava",
+            "Live Analytics": "Live Real-Time Dashboard",
+            "Usage Dashboard": "Usage Dashboard",
+            "Administration": "Administration",
+            "Settings": "Settings",
+            "Users": "Users",
+            "Account Settings": "Account Settings",
+            "Integration Settings": "Integration Settings",
+            "Account Information": "Account Information",
+            "My User Settings": "My User Settings",
+            "Roles": "Roles",
+            "UploadControl": "Upload Control",
+            "BulkUpload": "Bulk Upload",
+            "DropFolders": "Drop Folders",
+            "UploadMonitor": "Upload Monitor",
+            "CustomData": "Custom Data",
+            "AccessControl": "Access Control",
+            "Transcoding settings": "Transcoding Settings"
         },
-        "browserVer1": "Browser version not supported",
-        "browserVer2": "Please use Internet Explorer version 11 or above"
-      },
-      "invalidLoginHash": {
-        "title": "Invalid Login Link",
-        "placeholder": "Enter Email",
-        "instructions": "This link is invalid or has expired. Please enter your email address to receive a new link",
-        "sent": {
-          "instructions": "An Email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
-        }
-      },
-      "forgotPassword": {
-        "title": "Forgot Password",
-        "placeholder": "Your Email",
-        "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please ",
-        "contactUs": "contact us.",
-        "sent": {
-          "emailSent": "An Email has been sent to your inbox!",
-          "instructions": "If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
-          "redirectTo": "Redirect to",
-          "login": "login"
-        }
-      },
-      "passwordExpired": {
-        "title": "Your password is older than 90 days. To continue using the system you need to change your password now.",
-        "error": {
-          "equal": "Passwords do not match",
-          "required": "Field is required"
+        "userSettings": {
+            "changeAccount": "Change Account",
+            "logout": "Logout"
         },
-        "placeholder": {
-          "current": "Enter your password",
-          "new": "Enter new password",
-          "confirm": "Confirm new password"
-        }
-      },
-      "error": {
-        "email": "Incorrect Email format",
-        "badCredentials": "The username or password you  entered is incorrect.",
-        "retriesExceeded": {
+        "changeAccount": {
+            "title": "Change Account",
+            "choose": "Choose a different partner:",
+            "continue": "Continue",
+            "errors": {
+                "loadPartners": "An error occurred while loading accounts."
+            }
+        },
+        "helpMenu": {
+            "gettingStarted": "Getting Started",
+            "kmcOverview": "KMC Overview",
+            "mediaManagement": "Media Management & Workflow",
+            "productTour": "Watch the Product Tour",
+            "support": "Help and Support",
+            "userManual": "Download User Manual",
+            "contact": "Contact Support",
+            "currentPage": "Current Page",
+            "changelog": "Changelog"
+        },
+        "languageMenu": {
+            "selectLang": "Select Language"
+        },
+        "common": {
+            "n_a": "N/A",
+            "copyToClipboard": "Copy to clipboard",
+            "copySuccess": "Copied to clipboard",
+            "copyFailure": "Copy operation failed",
+            "on": "On",
+            "off": "Off",
+            "ok": "OK",
+            "cancel": "Cancel",
+            "retry": "Retry",
+            "dismiss": "Dismiss",
+            "reload": "Reload",
+            "confirm": "Confirm",
+            "close": "Close",
+            "note": "Note:",
+            "attention": "Attention",
+            "yes": "Yes",
+            "no": "No",
+            "apply": "Apply",
+            "done": "Done",
+            "save": "Save",
+            "error": "Error",
+            "connectionError": "Error connecting to server",
+        "invalidKs": "User session has expired. Please re-login."
+        },
+        "redirect":{
+            "redirect1": "Redirecting to default view...",
+            "redirect2": "If you are not redirected in few seconds, click ",
+            "redirect3": "here"},
+        "login": {
+            "login": {
+                "title": "Login",
+                "forgotPassword": "Forgot Password?",
+                "placeholder": {
+                    "username": "Enter Email",
+                    "password": "Enter Password"
+                },
+                "browserVer1": "Browser version not supported",
+                "browserVer2": "Please use Internet Explorer version 11 or above"
+            },
+            "invalidLoginHash": {
+                "title": "Invalid Login Link",
+                "placeholder": "Enter Email",
+                "instructions": "This link is invalid or has expired. Please enter your email address to receive a new link",
+                "sent": {
+                    "instructions": "An Email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
+                }
+            },
+            "forgotPassword": {
+                "title": "Forgot Password",
+                "placeholder": "Your Email",
+                "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please ",
+                "contactUs": "contact us.",
+                "sent": {
+                    "emailSent": "An Email has been sent to your inbox!",
+                    "instructions": "If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
+                    "redirectTo": "Redirect to",
+                    "login": "login"
+                }
+            },
+            "passwordExpired": {
+                "title": "Your password is older than 90 days. To continue using the system you need to change your password now.",
+                "error": {
+                    "equal": "Passwords do not match",
+                    "required": "Field is required"
+                },
+                "placeholder": {
+                    "current": "Enter your password",
+                    "new": "Enter new password",
+                    "confirm": "Confirm new password"
+                }
+            },
+            "error": {
+                "email": "Incorrect Email format",
+                "badCredentials": "The username or password you entered is incorrect.",
+                "retriesExceeded": {
             "yourAccountHasBeenLocked":"Your account has been locked and will not be available for 24 hours. Contact Kaltura Support at ",
             "toUnblockYourAccount": " to unblock your account."
-        },"userNotFound": "The username or password you  entered is incorrect.",
-        "invalidStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules:\n- Must be of length between 8 and 14.\n- Must not contain your name.\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}.\n- Must not contain the following characters: < or >",
-        "alreadyUsed": "Invalid Password. <br> This password has been used in the past. Please select a new password.",
-        "loginBlocked": {
+                },"userNotFound": "The username or password you entered is incorrect.",
+                "invalidStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules:\n- Must be of length between 8 and 14.\n- Must not contain your name.\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}.\n- Must not contain the following characters: < or >",
+                "alreadyUsed": "Invalid Password. <br> This password has been used in the past. Please select a new password.",
+                "loginBlocked": {
             "loginDenied":"Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura Support at ",
             "toUnblockYourAccount": " to unblock your account."
-        },"newPasswordHashKeyInvalid": "This link is not valid.",
-        "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
-        "wrongOldPassword": "Old password is incorret.",
-        "invalidField": "Value in field {{value}} is not valid."
-      },
-      "send": "Send",
-      "wait": "Wait…",
-      "signUp": "Sign Up",
-      "rememberMe": "Remember me",
-      "dontHaveAccount": "Don't have an account?"
-    },
-    "changelog": {
-      "header": "Change Log"
-    },
-    "pageExitVerification": {
-      "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
-    },
-    "UnpermittedActionReasons": {
-      "InvalidConfiguration": {
-        "message": "This view cannot be loaded. If the problem persists - please contact Kaltura Support.\nClick OK to navigate to theentries view."
-      }
-    }
-  },
-  "applications": {
-    "embed":{
-      "previewShare": "Share & Embed",
-      "previewInPlayer": "Preview in Player",
-      "embedType": "Embed Type",
-      "selectPlayer": "Select Player",
-      "embedIframe": "IFrame Embed",
-      "embedDynamic": "Dynamic Embed",
-      "embedAuto": "Auto Embed",
-      "embedThumb": "Thumbnail Embed",
-      "embedCode": "Embed Code",
-      "copy": "Copy",
-      "seo": "Include Search Engine Optimization Data",
-      "https": "Support for HTTPS Embed Code",
-      "qr": "Scan Code for Mobile Preview",
-      "view": "Standalone Preview",
-      "advanced": "Advanced Settings",
-      "settings": "List Arrangement Settings",
-      "name": "Name",
-      "added": "Date added",
-      "updated": "Date updated",
-      "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
-      "helpTip2": "Read more",
-      "helpTip3": "about the different embed code types.",
-      "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. Learn more about enforcing",
-      "helpTip5": "specific delivery protocols.",
-      "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
-      "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
-    },
-    "entries": {
-      "entryMetadata": {
-        "searchTagsPH": "Search Tags",
-        "searchCategoriesPH": "Search Categories",
-        "categoryTooltip": {
-          "privacyContext": "Privacy Context",
-          "contentPrivacy": "Content Privacy",
-          "categoryListing": "Category Listing",
-          "contributionPolicy": "Contribution Policy",
-          "specificEndUserPermissions": "Specific End User Permissions",
-          "noRestriction": "No Restriction",
-          "requiresAuth": "Requires Authentication",
-          "noMembers": "No Members",
-          "private": "Private"
-        }
-      }
-    },
-    "upload": {
-      "fileStatus": {
-        "preProcess": "Pre process",
-        "queued": "Queued",
-        "uploading": "Uploading",
-        "complete": "Complete",
-        "failed": "Failed"
-      },
-      "inDevelopment": {
-        "title": "Sorry",
-        "message": "Feature in development"
-      },
-      "validation": {
-        "error": "Error",
-        "wrongType": "Select media type",
-        "missingTranscodingProfile": "Select Transcoding Profile",
-        "fileSizeExceeded": "File size exceeded",
-        "fileSizeExceededFor": "File size exceeded for:",
-        "fileNameRequired": "File name is required"
-      },
-      "uploadMenu": {
-        "uploadFromDesktop": "Upload from Desktop",
-        "needHighSpeed": "Need High-speed Upload?",
+                },"newPasswordHashKeyInvalid": "This link is not valid.",
+                "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
+                "wrongOldPassword": "Old password is incorret.",
+                "invalidField": "Value in field {{value}} is not valid.",
+            "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon."},
+            "send": "Send",
+            "wait": "Wait…",
+            "signUp": "Sign Up",
+            "rememberMe": "Remember me",
+            "dontHaveAccount": "Don't have an account?"
+        },
+        "changelog": {
+            "header": "Change Log"
+        },
+        "pageExitVerification": {
+            "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
+        },
+        "UnpermittedActionReasons": {
+            "header": "View Disabled",
+                "message": "This view cannot be loaded. \nIf the problem persists -  contact Kaltura support.",
+            "messageNav": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.\nClick OK to navigate to the main view."
+            }
+        },
+
+    "applications": {
+        "embed":{
+            "previewShare": "Share & Embed",
+            "previewInPlayer": "Preview in Player",
+            "embedType": "Embed Type",
+            "selectPlayer": "Select Player",
+            "embedIframe": "IFrame Embed",
+            "embedDynamic": "Dynamic Embed",
+            "embedAuto": "Auto Embed",
+            "embedThumb": "Thumbnail Embed",
+            "embedCode": "Embed Code",
+            "copy": "Copy",
+            "seo": "Include Search Engine Optimization Data",
+            "https": "Support for HTTPS Embed Code",
+            "qr": "Scan Code for Mobile Preview",
+            "view": "Standalone Preview",
+            "advanced": "Advanced Settings",
+            "settings": "List Arrangement Settings",
+            "name": "Name",
+            "added": "Date added",
+            "updated": "Date updated",
+            "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
+            "helpTip2": "Read more",
+            "helpTip3": "about the different embed code types.",
+            "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. ",
+            "helpTip5": "Learn more about enforcing",
+            "helpTip6": "specific delivery protocols.",
+            "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
+            "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
+        },
+        "entries": {
+            "entryMetadata": {
+                "searchTagsPH": "Search Tags",
+                "searchCategoriesPH": "Search Categories",
+                "categoryTooltip": {
+                    "privacyContext": "Privacy Context",
+                    "contentPrivacy": "Content Privacy",
+                    "categoryListing": "Category Listing",
+                    "contributionPolicy": "Contribution Policy",
+                    "specificEndUserPermissions": "Specific End User Permissions",
+                    "noRestriction": "No Restriction",
+                    "requiresAuth": "Requires Authentication",
+                    "noMembers": "No Members",
+                    "private": "Private"
+                }
+            }
+        },
+        "upload": {
+            "fileStatus": {
+                "preProcess": "Pre process",
+                "queued": "Queued",
+                "uploading": "Uploading",
+                "complete": "Complete",
+                "failed": "Failed"
+            },
+            "inDevelopment": {
+                "title": "Sorry",
+                "message": "Feature in development"
+            },
+            "validation": {
+                "error": "Error",
+                "wrongType": "Select media type",
+                "missingTranscodingProfile": "Select Transcoding Profile",
+                "fileSizeExceeded": "File size exceeded",
+                "fileSizeExceededFor": "File size exceeded for:",
+                "fileNameRequired": "File name is required"
+            },
+            "uploadMenu": {
+                "uploadFromDesktop": "Upload from Desktop",
+                "needHighSpeed": "Need High-speed Upload?",
                 "highSpeed": "High-Speed Upload",
         "bulkUpload": {
           "title": "Bulk Upload",
@@ -279,7 +286,7 @@
         "syncing": "{{0}} Syncing",
         "queued": "{{0}} Queued",
         "completed": "{{0}} Completed",
-        "error": "{{0}} Qrror",
+        "error": "{{0}} Error(s)",
         "upToDate": "Up to Date",
         "loading": "Loading...",
         "errors": {
@@ -638,6 +645,8 @@
                     }
                 },
                 "details": {
+                    "choosePlaylist": "Choose Playlist",
+                    "missingPlaylist": "Feed playlist ({{0}}) could not be found. Please select another playlist.",
                     "header": {
                         "newFeed": "New Feed",
                         "cancel": "Cancel",
@@ -656,7 +665,7 @@
                         "numOfEntries": "{{0}} Entries",
                         "warning": "{{0}} Entries are not included in this feed.",
                         "moreInfo": "More Info.",
-                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
+                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
                         "flavorId": "(flavor ID) {{0}}"
                     },
                     "destination": "Destination",
@@ -778,8 +787,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Confirm Delete",
-                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
-                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
+                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
                     "moreThan5": "Are you sure you want to delete the selected feeds?"
                 },
                 "errors": {
@@ -1131,6 +1140,11 @@
                 "downloadFailed": "The Download request failed."
             },
             "entryDetails": {
+                "entryEditor": {
+                    "title": "Editor",
+                    "cancelEdit": "Cancel Edit",
+                    "discard": "Discard all changes?"
+                },
                 "save": "Save",
                 "sections": {
                     "metadata": "Metadata",
@@ -1147,7 +1161,7 @@
                     "advertisements": "Advertisements"
                 },
                 "preview": {
-                    "clipAndTrim": "Clip & Trim",
+                    "clipAndTrim": "Editor",
                     "pande": "Share & Embed",
                     "previewInPlayer": "Preview in Player",
                     "details": "Details",
@@ -1199,7 +1213,7 @@
                 },
                 "thumbnails": {
                     "tags": "Tags",
-          "thumbnails": "Thumbnails",
+                    "thumbnails": "Thumbnails",
                     "upload": "Upload",
                     "capture": {
                         "choose": "Choose Frame",
@@ -2395,7 +2409,7 @@
                 },
                 "profile": {
                     "save": "Save",
-          "metadata": "Metadata",
+                    "metadata": "Metadata",
                     "backToProfiles": "Back To Profiles",
                     "flavor": "Flavor",
                     "id": "ID {{0}}",

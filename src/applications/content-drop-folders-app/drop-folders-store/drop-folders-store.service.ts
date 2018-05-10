@@ -29,6 +29,7 @@ import { DropFolderFileDeleteAction } from 'kaltura-ngx-client/api/types/DropFol
 import { subApplicationsConfig } from 'config/sub-applications';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { serverConfig } from 'config/server';
+import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
@@ -79,9 +80,14 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              contentDropFoldersMainView: ContentDropFoldersMainViewService,
               _logger: KalturaLogger) {
     super(_logger);
-    this._prepare();
+    if (contentDropFoldersMainView.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy() {
@@ -165,6 +171,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       .switchMap(({ dropFoldersList, error }) => {
         if (!dropFoldersList.length || error) {
           this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
             message: error || this._appLocalization.get(
                 'applications.content.dropFolders.errors.dropFoldersAlert',
                 [serverConfig.externalLinks.kaltura.contactUs, serverConfig.externalLinks.kaltura.dropFoldersManual]
