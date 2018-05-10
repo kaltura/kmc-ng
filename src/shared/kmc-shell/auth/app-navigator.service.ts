@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 
 import { AppAuthentication } from './app-authentication.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
@@ -14,8 +14,8 @@ export class AppNavigator {
     navigateToLogin(){
         this.router.navigateByUrl('/login');
     }
-    navigateToDefault(){
-        this.router.navigateByUrl('/');
+    navigateToDefault(extras?: NavigationExtras): void {
+        this.router.navigateByUrl('/', extras);
     }
     navigateToError(){
         this.router.navigateByUrl(kmcAppConfig.routing.errorRoute);
