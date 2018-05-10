@@ -99,6 +99,10 @@
                     border-color: $kDandger;
                 }
             }
+
+            .kHasError /deep/ .ui-dropdown {
+                border-color: $kDandger;
+            }
         }
 
         .kEmptyMessage {

@@ -10,6 +10,8 @@
 }
 
 .kReplaceVideoPopup {
+    padding-bottom: 17px;
+
     p {
         margin: 0;
         padding: 17px 17px 0 17px;
@@ -18,9 +20,6 @@
         color: $kGrayscale1;
         &:hover {
             color: #000000;
-        }
-        &:last-child {
-            padding-bottom: 17px;
         }
     }
     .kHidden {

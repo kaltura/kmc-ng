@@ -18,7 +18,8 @@
                     </ng-template>
                 </p-dropdown>
 
-                <button type="button"
+                <button *ngIf="_files?.length === 0 || (_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted)"
+                        type="button"
                         class="kButtonDefault kAddFileButton"
                         pButton icon="kIconplus"
                         [label]="'applications.content.entryDetails.flavours.replaceVideo.addFileBtn' | translate"
@@ -58,6 +59,7 @@
                         <ng-template let-col let-file="rowData" pTemplate="body">
                             <p-dropdown class="kTranscodingProfile"
                                         [options]="_flavorOptions"
+                                        [class.kHasError]="file.errorToken === 'applications.upload.validation.selectFlavor'"
                                         [autoWidth]="false"
                                         [disabled]="_flavorsFieldDisabled"
                                         appendTo="body"
@@ -89,7 +91,8 @@
                                placement="top"></i>
                         </ng-template>
                     </p-column>
-                    <p-column [style]="{ 'width': '45px', 'text-align': 'center'}">
+                    <p-column [style]="{ 'width': '45px', 'text-align': 'center'}"
+                              *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted">
                         <ng-template let-col let-file="rowData" pTemplate="body">
                             <i class="kIcontrash kIconRemoveFile"
                                [kTooltip]="'applications.content.entryDetails.flavours.replaceVideo.remove' | translate"
@@ -103,7 +106,7 @@
                     <h1>
                         {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.title' | translate }}
                     </h1>
-                    <p>
+                    <p *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted">
                         {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.getStarted' | translate }}
                         <a (click)="_addFile()">
                             {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.browse' | translate }}
