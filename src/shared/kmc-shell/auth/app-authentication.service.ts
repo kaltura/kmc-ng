@@ -1,4 +1,5 @@
 import {Injectable, Optional, Inject} from '@angular/core';
+import { Location } from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
@@ -33,7 +34,6 @@ import { KmcServerPolls } from '../../kmc-shared/server-polls';
 import { HttpClient } from '@angular/common/http';
 import { buildKalturaServerUri } from 'config/server';
 import { AppNavigator } from './app-navigator.service';
-
 const ksSessionStorageKey = 'auth.login.ks';
 
 export interface IUpdatePasswordPayload {
@@ -86,7 +86,8 @@ export class AppAuthentication {
                 private _permissionsService: KMCPermissionsService,
                 private _http: HttpClient,
                 private _appNavigator: AppNavigator,
-                private _appEvents: AppEventsService) {
+                private _appEvents: AppEventsService,
+                private _location: Location) {
         this._logger = logger.subLogger('AppAuthentication');
     }
 
@@ -426,9 +427,17 @@ export class AppAuthentication {
             return this.kalturaServerClient.request(new UserLoginByKsAction({requestedPartnerId: partnerId}))
                 .subscribe(
                     result => {
+                        this._logger.info(`switch partner account`, { partnerId });
                         this._browserService.setInSessionStorage(ksSessionStorageKey, result.ks);
-                        this._appNavigator.navigateToDefault();
-                        this._logout();
+                        const baseUrl = this._location.prepareExternalUrl('');
+
+                        if (baseUrl) {
+                            this._logger.info(`redirect the user to default page`, { url: baseUrl });
+                            this._logout(false);
+                            window.location.href = baseUrl;
+                        } else {
+                            this._logout();
+                        }
 
                         // DEVELOPER NOTICE: observer next/complete not implemented by design
                         // (since we are breaking the stream by reloading the page)
@@ -441,18 +450,20 @@ export class AppAuthentication {
     }
 
     public reload() {
-        // reload page
-        document.location.reload();
+        this._logger.info(` reload of browser`, { forceReload: false });
+        document.location.reload(false);
     }
 
     private _logout(reloadPage = true) {
+        this._logger.info(`log out user from the application`, { forceReload: reloadPage });
         this.kalturaServerClient.setDefaultRequestOptions({});
         this._permissionsService.flushPermissions();
         this._appUser = null;
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._pageExitVerificationService.removeAll();
         if (reloadPage) {
-            document.location.reload();
+            this._logger.info(`force reload of browser`);
+            document.location.reload(true);
         }
     }
 
