@@ -394,6 +394,8 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     const saveAction = profile.id
       ? new AccessControlUpdateAction({ id: profile.id, accessControl: profile })
       : new AccessControlAddAction({ accessControl: profile });
+      
+    profile.allowEmptyArray('restrictions');
 
     return this._kalturaServerClient.request(saveAction)
       .map(() => {

@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
@@ -88,6 +88,7 @@ import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 
+
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
@@ -99,7 +100,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
 
 @NgModule({
   imports: <any>[
-    AuthModule,
+    AuthModule.forRoot(),
     FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
