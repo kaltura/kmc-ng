@@ -19,45 +19,45 @@ import { globalConfig } from 'config/global';
 export interface ExternalApplications {
     studio: {
         enabled: boolean,
-        uri: string,
-        html5_version: string,
-        html5lib: string,
-        showFlashStudio: boolean
+        uri?: string,
+        html5_version?: string,
+        html5lib?: string,
+        showFlashStudio?: boolean
     };
     studioV3: {
         enabled: boolean,
-        uri: string,
-        html5_version: string,
-        html5lib: string,
-        showFlashStudio: boolean
+        uri?: string,
+        html5_version?: string,
+        html5lib?: string,
+        showFlashStudio?: boolean
     };
     liveDashboard: {
         enabled: boolean,
-        uri: string,
+        uri?: string,
     };
     kava: {
         enabled: boolean,
-        uri: string
+        uri?: string
     };
     usageDashboard: {
         enabled: boolean,
-        uri: string,
-        uiConfId: number,
-        map_urls: string[],
-        map_zoom_levels: string,
+        uri?: string,
+        uiConfId?: number,
+        map_urls?: string[],
+        map_zoom_levels?: string,
     };
     liveAnalytics: {
         enabled: boolean,
-        uiConfId: number,
-        uri: string
+        uiConfId?: number,
+        uri?: string
     };
     clipAndTrim: {
         enabled: boolean,
-        uri: string
+        uri?: string
     };
     advertisements: {
         enabled: boolean,
-        uri: string
+        uri?: string
     };
 }
 
@@ -70,10 +70,10 @@ export interface ServerConfig {
             enabled: boolean,
             trialPeriodInDays: number
         },
-        login: {
-            limitAccess: {
+        login?: {
+            limitAccess?: {
                 enabled: boolean,
-                verifyBetaServiceUrl: string
+                verifyBetaServiceUrl?: string
             }
         };
     };
@@ -83,30 +83,30 @@ export interface ServerConfig {
     };
     externalApps: ExternalApplications;
     externalLinks: {
-        previewAndEmbed: {
-            embedTypes: string,
-            deliveryProtocols: string
+        previewAndEmbed?: {
+            embedTypes?: string,
+            deliveryProtocols?: string
         },
-        entitlements: {
-            manage: string
+        entitlements?: {
+            manage?: string
         },
-        kaltura: {
-            userManual: string,
-            kmcOverview: string,
-            mediaManagement: string,
-            support: string,
-            signUp: string,
-            contactUs: string,
-            upgradeAccount: string,
-            contactSalesforce: string,
+        kaltura?: {
+            userManual?: string,
+            kmcOverview?: string,
+            mediaManagement?: string,
+            support?: string,
+            signUp?: string,
+            contactUs?: string,
+            upgradeAccount?: string,
+            contactSalesforce?: string,
         },
-        uploads: {
-            highSpeedUpload: string,
-            needHighSpeedUpload: string,
-            bulkUploadSamples: string
+        uploads?: {
+            highSpeedUpload?: string,
+            needHighSpeedUpload?: string,
+            bulkUploadSamples?: string
         },
-        live: {
-            akamaiEdgeServerIpURL: string
+        live?: {
+            akamaiEdgeServerIpURL?: string
         }
     };
 }

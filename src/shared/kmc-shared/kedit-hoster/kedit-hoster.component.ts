@@ -24,6 +24,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() entry: KalturaMediaEntry = null;
   @Input() tab: 'quiz' | 'editor' | 'advertisements' = null;
+    @Input() entryHasSource = false;
 
   @Output() enteredDraftMode = new EventEmitter<void>();
   @Output() exitDraftMode = new EventEmitter<void>();
@@ -145,8 +146,14 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
           const serviceUrl = getKalturaServerUri();
           const tabs = {};
-          const clipAndTrimAvailable = this._clipAndTrimAppViewService.isAvailable({entry: this.entry});
-          const advertismentsAvailable = this._advertisementsAppViewService.isAvailable({entry: this.entry});
+          const clipAndTrimAvailable = this._clipAndTrimAppViewService.isAvailable({
+              entry: this.entry,
+              hasSource: this.entryHasSource
+          });
+          const advertismentsAvailable = this._advertisementsAppViewService.isAvailable({
+              entry: this.entry,
+              hasSource: this.entryHasSource
+          });
 
           // quiz configuration : 'quiz': {name: 'quiz', permissions: ['quiz'], userPermissions: ['quiz']},
           if (clipAndTrimAvailable) {

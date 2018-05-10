@@ -110,7 +110,7 @@ export class PlaylistStore implements OnDestroy {
           const newDirtyState = Object.keys(sectionsState)
             .reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
 
-          if (this._playlistIsDirty !== newDirtyState) {
+          if (newDirtyState && this._playlistIsDirty !== newDirtyState) {
             this._playlistIsDirty = newDirtyState;
 
             this._updatePageExitVerification();
