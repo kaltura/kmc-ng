@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _loginScreens = LoginScreens;
   public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
+  public _signUpLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.signUp;
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')

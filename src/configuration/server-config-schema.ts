@@ -34,7 +34,7 @@ export const ServerConfigSchema = {
                                 enabled: {type: 'boolean'},
                                 verifyBetaServiceUrl: { type: 'string' },
                             },
-                            required: ['enabled', 'verifyBetaServiceUrl'],
+                            required: ['enabled'],
                             additionalProperties: false
                         }
                     },
@@ -43,7 +43,7 @@ export const ServerConfigSchema = {
                 },
 
             },
-            required: ['uri', 'previewUIConf', 'deployUrl', 'freeTrialExpiration', 'login'],
+            required: ['uri', 'previewUIConf', 'deployUrl', 'freeTrialExpiration'],
             additionalProperties: false
         },
         cdnServers: {
@@ -64,7 +64,7 @@ export const ServerConfigSchema = {
                         html5lib: {type: 'string'},
                         showStudioV3: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'html5_version', 'html5lib'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 studioV3: {
@@ -75,7 +75,7 @@ export const ServerConfigSchema = {
                         html5lib: {type: 'string'},
                         showHTMLStudio: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'html5_version', 'html5lib'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 usageDashboard: {
@@ -86,7 +86,7 @@ export const ServerConfigSchema = {
                         map_urls: { type: 'array', items: { type: 'string' } },
                         map_zoom_levels: {type: 'string'}
                     },
-                    required: ['enabled', 'uri', 'uiConfId', 'map_urls', 'map_zoom_levels'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 liveDashboard: {
@@ -94,7 +94,7 @@ export const ServerConfigSchema = {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled', 'uri'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 liveAnalytics: {
@@ -103,7 +103,7 @@ export const ServerConfigSchema = {
                         uri: {type: 'string'},
                         uiConfId: {type: 'number'}
                     },
-                    required: ['enabled', 'uri'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 clipAndTrim: {
@@ -111,7 +111,7 @@ export const ServerConfigSchema = {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled', 'uri'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 advertisements: {
@@ -119,7 +119,7 @@ export const ServerConfigSchema = {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled', 'uri'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 kava: {
@@ -127,7 +127,7 @@ export const ServerConfigSchema = {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled', 'uri'],
+                    required: ['enabled'],
                     additionalProperties: false
                 }
             },
@@ -141,7 +141,7 @@ export const ServerConfigSchema = {
                         embedTypes: {type: 'string'},
                         deliveryProtocols: {type: 'string'}
                     },
-                    required: ['embedTypes', 'deliveryProtocols'],
+                    required: [],
                     additionalProperties: false
                 },
                 kaltura: {
@@ -155,14 +155,14 @@ export const ServerConfigSchema = {
                         upgradeAccount: {type: 'string'},
                         contactSalesforce: {type: 'string'}
                     },
-                    required: ['userManual', 'support', 'signUp', 'contactUs', 'upgradeAccount', 'contactSalesforce'],
+                    required: [],
                     additionalProperties: false
                 },
                 entitlements: {
                     properties: {
                         manage: {type: 'string'}
                     },
-                    required: ['manage'],
+                    required: [],
                     additionalProperties: false
                 },
                 uploads: {
@@ -171,18 +171,18 @@ export const ServerConfigSchema = {
                         needHighSpeedUpload: {type: 'string'},
                         bulkUploadSamples: {type: 'string'}
                     },
-                    required: ['highSpeedUpload', 'needHighSpeedUpload', 'bulkUploadSamples'],
+                    required: [],
                     additionalProperties: false
                 },
                 live: {
                     properties: {
                         akamaiEdgeServerIpURL: {type: 'string'}
                     },
-                    required: ['akamaiEdgeServerIpURL'],
+                    required: [],
                     additionalProperties: false
                 }
             },
-            required: ['previewAndEmbed', 'kaltura', 'uploads', 'live'],
+            required: [],
             additionalProperties: false
         }
     },

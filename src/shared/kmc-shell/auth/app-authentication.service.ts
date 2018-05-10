@@ -240,6 +240,9 @@ export class AppAuthentication {
     }
 
     private _checkIfPartnerCanAccess(partner: KalturaPartner): Observable<boolean> {
+        if (!(!!serverConfig.kalturaServer.login && !!serverConfig.kalturaServer.login.limitAccess)){
+            return Observable.of(true);
+        }
         const limitAccess = serverConfig.kalturaServer.login.limitAccess;
 
         if (!limitAccess.enabled) {
