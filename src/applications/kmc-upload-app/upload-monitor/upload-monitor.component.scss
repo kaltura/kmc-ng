@@ -4,12 +4,10 @@
   position: relative;
   display: flex;
   margin-left: 12px;
+  margin-right: 12px;
   color: $headerTextColor;
   font-size: 24px;
   cursor: pointer;
-  &.upToDate {
-    margin-right: 12px;
-  }
 
   &:hover, &.open {
     opacity: 1;
@@ -52,8 +50,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    right: 11px;
+    position: absolute;
+    right: -8px;
     top: 11px;
   }
 }
