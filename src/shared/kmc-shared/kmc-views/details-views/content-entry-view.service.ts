@@ -274,7 +274,6 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             });
         return this._kalturaClient.request(baseEntryAction)
             .map(response => {
-                console.warn(response);
                 if (response instanceof KalturaMediaEntry) {
                     return response;
                 } else {

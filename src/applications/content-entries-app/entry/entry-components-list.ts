@@ -20,7 +20,7 @@ import {EntryPreview} from './entry-preview/entry-preview.component';
 import {EntryDetails} from './entry-details/entry-details.component';
 import {JumpToSection} from './entry-metadata/jump-to-section.component';
 import {CategoriesSelector} from './entry-metadata/category-selector/categories-selector.component';
-import {TagsPipe} from './entry-flavours/tags.pipe';
+import {TagsPipe} from './entry-flavours/pipes/tags.pipe';
 
 import { ClipAndTrimComponent} from './entry-clips/clip-and-trim/clip-and-trim.component';
 import {EntryDistributionComponent } from './entry-distribution/entry-distribution.component';
