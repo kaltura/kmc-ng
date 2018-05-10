@@ -21,7 +21,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { globalConfig } from 'config/global';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
 import { AdminRolesMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import { ROLE_PERMISSIONS, RolePermission } from '../permissions-table/permissions-list';
+import { PermissionTreeNodes, PermissionTreeNode } from './permission-tree-nodes';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export enum SortDirection {
@@ -38,7 +38,7 @@ const localStoragePageSizeKey = 'roles.list.pageSize';
 
 @Injectable()
 export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements OnDestroy {
-    static permissionsTree: RolePermission[] = null;
+    static permissionsTree: PermissionTreeNode[] = null;
 
     private _roles = {
     data: new BehaviorSubject<{ items: KalturaUserRole[], totalCount: number }>({ items: [], totalCount: 0 }),
@@ -64,8 +64,8 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
 
   }
 
-  public getPermissionsTree(): RolePermission[] {
-      const extendRoleTreeNode = (treeNode: RolePermission) => {
+  public getPermissionsTree(): PermissionTreeNode[] {
+      const extendRoleTreeNode = (treeNode: PermissionTreeNode) => {
           Object.assign(treeNode, {
               name: this._kmcPermissionsService.getPermissionNameByKey(treeNode.value)
           });
@@ -78,7 +78,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
       };
 
       if (RolesStoreService.permissionsTree === null) {
-          RolesStoreService.permissionsTree = ROLE_PERMISSIONS.map(treeNode => extendRoleTreeNode(treeNode));
+          RolesStoreService.permissionsTree = PermissionTreeNodes.map(treeNode => extendRoleTreeNode(treeNode));
       }
       return RolesStoreService.permissionsTree;
   }

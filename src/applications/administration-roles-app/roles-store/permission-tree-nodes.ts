@@ -1,15 +1,15 @@
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions';
 
-export interface RolePermission {
+export interface PermissionTreeNode {
   value: KMCPermissions;
   name?: string; // the name will be added by the service
   label: string;
   isAdvancedGroup?: boolean;
-  items?: RolePermission[];
+  items?: PermissionTreeNode[];
   noChildren?: boolean;
 }
 
-export const ROLE_PERMISSIONS: RolePermission[] = [
+export const PermissionTreeNodes: PermissionTreeNode[] = [
   {
     value: KMCPermissions.CONTENT_INGEST_BASE,
     label: 'Content Ingestion',

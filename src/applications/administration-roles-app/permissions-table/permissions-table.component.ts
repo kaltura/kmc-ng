@@ -1,10 +1,10 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { RolePermission } from './permissions-list';
+import { PermissionTreeNode } from '../roles-store/permission-tree-nodes';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { RolesStoreService } from '../roles-store/roles-store.service';
 
-export interface RolePermissionFormValue extends RolePermission {
+export interface RolePermissionFormValue extends PermissionTreeNode {
   checked?: boolean;
   formValue?: KMCPermissions[];
   items?: RolePermissionFormValue[];
