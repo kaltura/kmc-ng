@@ -153,7 +153,8 @@ export const ServerConfigSchema = {
                         signUp: {type: 'string'},
                         contactUs: {type: 'string'},
                         upgradeAccount: {type: 'string'},
-                        contactSalesforce: {type: 'string'}
+                        contactSalesforce: {type: 'string'},
+                        dropFoldersManual: {type: 'string'}
                     },
                     required: [],
                     additionalProperties: false

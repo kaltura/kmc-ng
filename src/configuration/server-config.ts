@@ -99,6 +99,7 @@ export interface ServerConfig {
             contactUs?: string,
             upgradeAccount?: string,
             contactSalesforce?: string,
+            dropFoldersManual?: string
         },
         uploads?: {
             highSpeedUpload?: string,
