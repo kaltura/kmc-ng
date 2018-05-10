@@ -17,6 +17,11 @@ export const ROLE_PERMISSIONS: RolePermission[] = [
     label: 'Content Ingestion',
     isAdvancedGroup: false,
     items: [
+        {
+            value: KMCPermissions.CONTENT_INGEST_UPLOAD,
+            name: 'CONTENT_INGEST_UPLOAD',
+            label: 'Upload from Desktop'
+        },
       {
         value: KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
         name: 'CONTENT_INGEST_BULK_UPLOAD',
@@ -28,7 +33,7 @@ export const ROLE_PERMISSIONS: RolePermission[] = [
         label: 'Set Link to Files on Remote Storage'
       },
       {
-        value: KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE,
+        value: KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_MATCH,
         name: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_MATCH',
         label: 'Match Media Files from Drop Folder'
       },

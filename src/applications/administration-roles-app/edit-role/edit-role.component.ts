@@ -50,7 +50,8 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
               private _listDiffers: IterableDiffers,
               private _rolesService: RolesStoreService,
               private _permissionsService: KMCPermissionsService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _kmcPermissionsService: KMCPermissionsService) {
     this._buildForm();
   }
 
@@ -79,16 +80,36 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
       this._logger.info(`enter edit role mode for existing role`,{ id: this.role.id, name: this.role.name });
       this._title = this._appLocalization.get('applications.administration.role.titleEdit');
       this._actionBtnLabel = this._appLocalization.get('applications.administration.role.save');
-      this._permissions = (this.role.permissionNames || '').split(',');
+      this._permissions = this._fixPermissionsList((this.role.permissionNames || '').split(','));
       this._editRoleForm.setValue({
         name: this.role.name,
         description: this.role.description
       }, { emitEvent: false });
-    }
 
-    if (!this._isNewRole && !this._permissionsService.hasPermission(KMCPermissions.ADMIN_ROLE_UPDATE)) {
-      this._editRoleForm.disable({ emitEvent: false });
+        if (!this._permissionsService.hasPermission(KMCPermissions.ADMIN_ROLE_UPDATE)) {
+            this._editRoleForm.disable({ emitEvent: false });
+        }
     }
+  }
+
+  private _fixPermissionsList(permissions: string[]) {
+      const result = [...permissions];
+      const uniquePermissions = new Set(permissions || []);
+
+      permissions.forEach(permission => {
+          const permissionKey = this._kmcPermissionsService.getPermissionKeyByName(permission);
+          const linkedPermissionKey = this._kmcPermissionsService.getLinkedPermissionByKey(permissionKey);
+          const linkedPermission = this._kmcPermissionsService.getPermissionNameByKey(linkedPermissionKey);
+          if (linkedPermission && result.indexOf(linkedPermission) === -1) {
+              result.push(linkedPermission);
+              this._logger.debug('add missing linked permission', () => ({
+                  linkedPermission,
+                      permission
+              }));
+          }
+      });
+
+      return result;
   }
 
   private _buildForm(): void {
