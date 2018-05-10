@@ -1,7 +1,10 @@
 /**
  * A list of permission tokens as provided by the server and supported in the KMC.
  *
- * DEVELOPER NOTICE: All the tokens must be UPPER_CASED and use underline (_) instead of dot ('.')
+ * DEVELOPER NOTICE:
+ * - All the tokens must be UPPER_CASED and use underline (_) instead of dot ('.')
+ * - if the original name doesn't match the naming standards, add the mapping manually in file 'kmc-permissions-rules' property 'customPermissionKeyToNameMapping'
+ *
  */
 export enum KMCPermissions {
     'ACCESS_CONTROL_ADD' = 1000,

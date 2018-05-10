@@ -80,7 +80,7 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
       this._logger.info(`enter edit role mode for existing role`,{ id: this.role.id, name: this.role.name });
       this._title = this._appLocalization.get('applications.administration.role.titleEdit');
       this._actionBtnLabel = this._appLocalization.get('applications.administration.role.save');
-      this._permissions = this._fixPermissionsList((this.role.permissionNames || '').split(','));
+      this._permissions = this._addMissingRolePermissions((this.role.permissionNames || '').split(','));
       this._editRoleForm.setValue({
         name: this.role.name,
         description: this.role.description
@@ -92,7 +92,7 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
     }
   }
 
-  private _fixPermissionsList(permissions: string[]) {
+  private _addMissingRolePermissions(permissions: string[]): string[] {
       const result = [...permissions];
       const uniquePermissions = new Set(permissions || []);
 
