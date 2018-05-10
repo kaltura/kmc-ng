@@ -218,6 +218,7 @@ export class PlaylistStore implements OnDestroy {
 
               if (newData) {
                 this._playlistId = currentPlaylistId;
+                this._playlistIsDirty = true;
 
                   const playlist = new KalturaPlaylist({
                       name: newData.name,
