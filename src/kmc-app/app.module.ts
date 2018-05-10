@@ -88,6 +88,7 @@ import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 import { NewReplaceVideoUploadModule } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload.module';
+import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
 
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
@@ -168,7 +169,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ChangeAccountComponent,
     ChangelogComponent,
     ChangelogContentComponent,
-    LoginByKSComponent
+    LoginByKSComponent,
+      NotFoundPageComponent
   ],
   bootstrap: <any>[
     AppComponent

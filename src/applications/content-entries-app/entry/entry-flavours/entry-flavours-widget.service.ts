@@ -40,6 +40,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { FlavorsDataRequestFactory } from './flavors-data-request-factory';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { EntryStore } from '../entry-store.service';
 
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
@@ -71,7 +72,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 private _uploadManagement: UploadManagement,
                 private _appEvents: AppEventsService,
                 private _kmcServerPolls: KmcServerPolls,
-                private _logger: KalturaLogger) {
+                private _logger: KalturaLogger,
+                private _entryStore: EntryStore) {
         super(ContentEntryViewSections.Flavours);
         this._logger = _logger.subLogger('EntryFlavoursWidget');
     }
@@ -350,6 +352,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         .monitor('delete flavor: ' + flavor.id)
                         .subscribe(
                             response => {
+                                if (flavor.isSource) {
+                                    this._entryStore.updateHasSourceStatus(false);
+                                }
                                 this.refresh();
                                 this._browserService.scrollToTop();
                             },

@@ -22,7 +22,6 @@ import {JumpToSection} from './entry-metadata/jump-to-section.component';
 import {CategoriesSelector} from './entry-metadata/category-selector/categories-selector.component';
 import {TagsPipe} from './entry-flavours/pipes/tags.pipe';
 
-import { ClipAndTrimComponent} from './entry-clips/clip-and-trim/clip-and-trim.component';
 import {EntryDistributionComponent } from './entry-distribution/entry-distribution.component';
 import { UndistributedProfileComponent } from './entry-distribution/undistributed-profile/undistributed-profile.component';
 import { DistributedProfileComponent } from './entry-distribution/distributed-profile/distributed-profile.component';
@@ -36,11 +35,11 @@ import { EditDistributionProfileMetadataComponent } from './entry-distribution/e
 import { EditDistributionProfileThumbnailsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/edit-distribution-profile-thumbnails.component';
 import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';
 import {EntryAdvertisementsComponent} from './entry-advertisements/entry-advertisements.component';
-import {AdvertisementsComponent} from './entry-advertisements/advertisements/advertisements.component';
 import { ReplacementStatusComponent } from './entry-flavours/flavor-replace-video/replacement-status/replacement-status.component';
 import { ReplaceMediaButtonComponent } from './entry-flavours/flavor-replace-video/replace-media-button/replace-media-button.component';
 import { ReplaceFileComponent } from './entry-flavours/flavor-replace-video/replace-file/replace-file.component';
 import { FlavorReplacementStatusPipe } from './entry-flavours/pipes/flavor-replacement-status.pipe';
+import {EntryEditorComponent} from './entry-editor/entry-editor.component';
 
 
 export const EntryComponentsList = [
@@ -80,10 +79,9 @@ export const EntryComponentsList = [
     EditDistributionProfileMetadataComponent,
     EditDistributionProfileThumbnailsComponent,
     EditDistributionProfileThumbnailItemComponent,
-    ClipAndTrimComponent,
-    AdvertisementsComponent,
     ReplaceMediaButtonComponent,
     ReplacementStatusComponent,
     ReplaceFileComponent,
-    FlavorReplacementStatusPipe
+    FlavorReplacementStatusPipe,
+    EntryEditorComponent
 ];
