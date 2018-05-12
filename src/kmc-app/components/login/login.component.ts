@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, 
 import { kmcAppConfig } from '../../kmc-app-config';
 
 import {
-    AppAuthentication, AppNavigator, AutomaticLoginErrorReasons, BrowserService, ILoginError,
+    AppAuthentication,  AutomaticLoginErrorReasons, BrowserService, ILoginError,
     ILoginResponse
 } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
@@ -47,7 +47,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   constructor(private _appAuthentication: AppAuthentication,
-              private _appNavigator: AppNavigator,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _el: ElementRef,
@@ -70,7 +69,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this._errorMessage = '';
 
     if (success) {
-      this._appNavigator.navigateToDefault();
+      this._browserService.navigateToDefault();
       return;
     }
 
@@ -91,7 +90,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnInit() {
         if (this._appAuthentication.isLogged()) {
-            this._appNavigator.navigateToDefault();
+            this._browserService.navigateToDefault();
         } else if (typeof document['documentMode'] !== 'undefined' && document['documentMode'] < 11) {
             this._showIEMessage = true;
         } else {

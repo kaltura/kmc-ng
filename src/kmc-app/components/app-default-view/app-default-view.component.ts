@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
     selector: 'app-default-view',
@@ -10,12 +11,16 @@ import { Router } from '@angular/router';
 })
 export class AppDefaultViewComponent {
     constructor(
-        private router: Router,
-    ) {
-        this.navigateToDefault();
-    }
+        logger: KalturaLogger,
+        viewsManager: KmcMainViewsService) {
 
-    navigateToDefault(){
-        this.router.navigateByUrl('/');
+    const menu = viewsManager.getMenu();
+        const firstItem = menu && menu.length ? menu[0] : null;
+
+        if (firstItem) {
+            firstItem.open();
+        } else {
+            logger.error('cannot navigate to default view, no available view found');
+        }
     }
 }

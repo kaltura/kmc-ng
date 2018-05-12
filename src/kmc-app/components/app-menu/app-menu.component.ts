@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
-import { AppAuthentication, AppUser, AppNavigator } from 'app-shared/kmc-shell';
+import { AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
 
@@ -109,9 +109,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
         this._helpmenu.close();
     }
 
-    navigate(path):void{
-        this.router.navigate([path]);
-    }
 
     ngOnDestroy() {
     }

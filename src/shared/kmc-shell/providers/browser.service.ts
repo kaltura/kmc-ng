@@ -1,10 +1,10 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
 import {AppLocalization, IAppStorage} from '@kaltura-ng/kaltura-common';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {Router, ActivatedRoute} from "@angular/router";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 
 export interface Confirmation {
 	message: string;
@@ -67,6 +67,7 @@ export class BrowserService implements IAppStorage {
     constructor(private localStorage: LocalStorageService,
                 private sessionStorage: SessionStorageService,
                 private _router: Router,
+                private _logger: KalturaLogger,
                 private _appLocalization: AppLocalization) {
         this._recordInitialQueryParams();
     }
@@ -308,7 +309,7 @@ export class BrowserService implements IAppStorage {
                     header: this._appLocalization.get('app.UnpermittedActionReasons.header'),
                     message: this._appLocalization.get('app.UnpermittedActionReasons.messageNav'),
                     accept: () => {
-                        this._router.navigate([ '/default']);
+                        this.navigateToDefault();
                     }
                 }
             );
@@ -322,6 +323,29 @@ export class BrowserService implements IAppStorage {
                 }
             );
         }
+    }
+
+    public navigateToLogin(): void {
+        this._logger.info(`navigate to login view`);
+        this._router.navigateByUrl('/login', { replaceUrl: true });
+    }
+
+    public navigateToDefault(removeCurrentFromBrowserHistory: boolean = true): void {
+        let extras: NavigationExtras = null;
+        if (removeCurrentFromBrowserHistory) {
+            extras = { replaceUrl: true };
+        }
+        this._logger.info(`navigate to default view`, {removeCurrentFromBrowserHistory});
+        this._router.navigate([ '/default'], extras);
+    }
+
+    public navigateToError(): void {
+        this._logger.info(`navigate to error view`);
+        this._router.navigateByUrl('/error', { replaceUrl: true });
+    }
+
+    public navigate(path: string): void {
+        this._router.navigateByUrl(path);
     }
 }
 
