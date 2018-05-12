@@ -5,6 +5,7 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 
 export interface Confirmation {
 	message: string;
@@ -327,7 +328,7 @@ export class BrowserService implements IAppStorage {
 
     public navigateToLogin(): void {
         this._logger.info(`navigate to login view`);
-        this._router.navigateByUrl('/login', { replaceUrl: true });
+        this._router.navigateByUrl(kmcAppConfig.routing.loginRoute, { replaceUrl: true });
     }
 
     public navigateToDefault(removeCurrentFromBrowserHistory: boolean = true): void {
@@ -336,12 +337,12 @@ export class BrowserService implements IAppStorage {
             extras = { replaceUrl: true };
         }
         this._logger.info(`navigate to default view`, {removeCurrentFromBrowserHistory});
-        this._router.navigate([ '/'], extras);
+        this._router.navigate([kmcAppConfig.routing.defaultRoute], extras);
     }
 
     public navigateToError(): void {
         this._logger.info(`navigate to error view`);
-        this._router.navigateByUrl('/error', { replaceUrl: true });
+        this._router.navigateByUrl(kmcAppConfig.routing.errorRoute, { replaceUrl: true });
     }
 
     public navigate(path: string): void {

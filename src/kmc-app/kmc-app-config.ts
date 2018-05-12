@@ -5,6 +5,11 @@ export interface KmcAppConfig {
       expiry: number;
       privileges: string;
   },
+  routing: {
+    errorRoute: string;
+    loginRoute: string;
+    defaultRoute: string;
+  },
   locales: {
     id: string;
     label: string;
@@ -17,6 +22,11 @@ export const kmcAppConfig: KmcAppConfig = {
   'kalturaServer': {
       "expiry": 86400,
       "privileges": "disableentitlement"
+  },
+  'routing': {
+    'errorRoute': '/error',
+    'loginRoute': '/login',
+    'defaultRoute': '/',
   },
   'locales': [
     {

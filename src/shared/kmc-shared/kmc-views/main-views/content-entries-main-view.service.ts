@@ -30,8 +30,7 @@ export class ContentEntriesMainViewService extends KmcMainViewBaseService {
             KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
             KMCPermissions.CONTENT_MANAGE_EMBED_CODE,
             KMCPermissions.CONTENT_MANAGE_DELETE,
-            KMCPermissions.CONTENT_MANAGE_RECONVERT,
-            KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
+            KMCPermissions.CONTENT_MANAGE_RECONVERT
         ]);
     }
 

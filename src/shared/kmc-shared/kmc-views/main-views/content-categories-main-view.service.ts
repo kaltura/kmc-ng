@@ -20,7 +20,10 @@ export class ContentCategoriesMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return true;
+        return this._appPermissions.hasAnyPermissions([
+            KMCPermissions.CONTENT_MANAGE_BASE,
+            KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
+            ]);
     }
 
     getRoutePath(): string {

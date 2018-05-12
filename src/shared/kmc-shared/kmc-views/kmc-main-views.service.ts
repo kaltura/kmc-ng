@@ -21,7 +21,7 @@ import { ContentCategoriesMainViewService,
     SettingsMyUserSettingsMainViewService,
     SettingsAccountInformationMainViewService
 } from './main-views';
-
+import { Observable } from 'rxjs/Observable';
 
 
 export interface KMCAppMenuItem {
@@ -31,6 +31,7 @@ export interface KMCAppMenuItem {
     isActiveView: (activePath: string) => boolean;
     position?: string;
     open?: () => void;
+    openWithState?: Observable<{ opened: boolean }>;
     children?: KMCAppMenuItem[];
 }
 
