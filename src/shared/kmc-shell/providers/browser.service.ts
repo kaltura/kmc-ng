@@ -336,7 +336,7 @@ export class BrowserService implements IAppStorage {
             extras = { replaceUrl: true };
         }
         this._logger.info(`navigate to default view`, {removeCurrentFromBrowserHistory});
-        this._router.navigate([ '/default'], extras);
+        this._router.navigate([ '/'], extras);
     }
 
     public navigateToError(): void {
