@@ -1,5 +1,6 @@
 <i #openuploadmonitor
    class="kIconfolder_large kUploadMonitorToggler"
+   [class.kDisabled]="!_isAvailable"
    [class.upToDate]="_upToDate"
    [class.open]="_menuOpened"
    [kTooltip]="'app.menu.UploadMonitor' | translate"
@@ -21,6 +22,7 @@
               (onClose)="_onMonitorClose()">
   <ng-template>
     <kUploadMonitorSection [detailsViewService]="_contentUploadsMainViewService"
+                           *ngIf="_isUploadAvailable"
                            [uploadMonitorPopup]="uploadmonitor"
                            [title]="'applications.upload.uploadMonitor.uploadFromDesktop' | translate"
                            [uploading]="_uploadFromDesktop.uploading"
@@ -29,6 +31,7 @@
                            [layout]="'totals'"
                            [errors]="_uploadFromDesktop.errors"></kUploadMonitorSection>
     <kUploadMonitorSection [detailsViewService]="_contentBulkUploadsMainViewService"
+                           *ngIf="_isBulkAvailable"
                            [title]="'applications.upload.uploadMonitor.bulkUpload' | translate"
                            [uploadMonitorPopup]="uploadmonitor"
                            [uploading]="_bulkUpload.uploading"
@@ -37,7 +40,7 @@
                            [errors]="_bulkUpload.errors"
                            [layout]="_bulkUploadLayout"
                            (requestToRecover)="_bulkTryReconnect()"></kUploadMonitorSection>
-    <kUploadMonitorSection *ngIf="_dropFoldersLayout"
+    <kUploadMonitorSection *ngIf="_isDropFolderAvailable && _dropFoldersLayout"
                            type="dropFolder"
                            [detailsViewService]="_contentDropFoldersMainViewService"
                            [title]="'applications.upload.uploadMonitor.dropFolders' | translate"
