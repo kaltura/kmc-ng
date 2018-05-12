@@ -38,6 +38,8 @@ export interface KMCAppMenuItem {
 export class KmcMainViewsService {
 
     private _logger: KalturaLogger;
+    private _cache: KMCAppMenuItem[] = [];
+
 
     constructor(
         logger: KalturaLogger,
@@ -287,7 +289,12 @@ export class KmcMainViewsService {
         ];
     }
 
-    createMenu(): KMCAppMenuItem[] {
+    getMenu(): KMCAppMenuItem[] {
+        return this._cache;
+    }
+
+
+    public rebuildMenu(): void {
         this._logger.info('build app menu');
 
         const openFirstChild = function(this: KMCAppMenuItem): void {
@@ -330,6 +337,6 @@ export class KmcMainViewsService {
             return target;
         };
 
-        return this._getMainViewsList().reduce(processItem, []);
+        this._cache = this._getMainViewsList().reduce(processItem, []);
     }
 }

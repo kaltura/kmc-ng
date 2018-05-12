@@ -58,7 +58,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 }
             });
         this._userContext = userAuthentication.appUser;
-        this.menuConfig = this._kmcMainViews.createMenu();
+        this.menuConfig = this._kmcMainViews.getMenu();
         this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'left';
         });
