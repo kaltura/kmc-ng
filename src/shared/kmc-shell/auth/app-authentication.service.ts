@@ -33,7 +33,7 @@ import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsA
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
 import { HttpClient } from '@angular/common/http';
 import { buildKalturaServerUri } from 'config/server';
-import { AppNavigator } from './app-navigator.service';
+import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 const ksSessionStorageKey = 'auth.login.ks';
 
 export interface IUpdatePasswordPayload {
@@ -85,9 +85,9 @@ export class AppAuthentication {
                 private _serverPolls: KmcServerPolls,
                 private _permissionsService: KMCPermissionsService,
                 private _http: HttpClient,
-                private _appNavigator: AppNavigator,
                 private _appEvents: AppEventsService,
-                private _location: Location) {
+                private _location: Location,
+                private _kmcViewsManager: KmcMainViewsService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
 
@@ -301,6 +301,7 @@ export class AppAuthentication {
             }
         });
 
+        this._kmcViewsManager.rebuildMenu();
         this.kalturaServerClient.setDefaultRequestOptions({
             ks: appUser.ks
         });
@@ -393,6 +394,8 @@ export class AppAuthentication {
                         );
                 } else {
                     observer.next(false);
+
+
                     observer.complete();
                 }
             }
