@@ -40,7 +40,7 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
   }
 
   ngOnInit() {
-      this._logger.debug(`prepare component`, { feed: this.feed, mode: this.mode });
+      this._logger.debug(`prepare component`, { mode: this.mode });
     if (this.mode !== 'edit' || this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
         this._logger.debug(`user has entered new mode or has SYNDICATION_UPDATE permission`);
       this.onFormStateChanged.emit({
@@ -58,9 +58,9 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
   }
 
   public _onFileSelected(selectedFiles: FileList) {
-      this._logger.info(`handle file selected action`, { files: selectedFiles });
+      this._logger.info(`handle file selected action`, { files: (selectedFiles || []).length });
     const showLoadError = () => {
-        this._logger.info(`handle load error`, { fileName: fileData.name });
+        this._logger.info(`handle load file error`);
       this._loading = false;
       this.onFormStateChanged.emit({isValid: false, isDirty: true});
       this._xslCode = null;
@@ -100,7 +100,7 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
   }
 
   public getData(): KalturaGenericXsltSyndicationFeed {
-      this._logger.info(`handle get data action`);
+      this._logger.debug(`handle get data action`);
     const data = new KalturaGenericXsltSyndicationFeed({
       xslt: this._xslCode
     });

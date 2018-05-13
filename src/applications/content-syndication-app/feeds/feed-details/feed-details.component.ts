@@ -148,9 +148,9 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
-      this._logger.info(`prepare component, load data`);
+      this._logger.debug(`prepare component, load data`);
     if (this._isReady) {
-        this._logger.info(`component is already prepared, skip duplicating action`);
+        this._logger.trace(`component is already prepared, skip duplicating action`);
       return undefined;
     }
 
@@ -158,7 +158,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     this._queryData()
       .cancelOnDestroy(this)
       .subscribe(response => {
-          this._logger.info(`handle successful data loading`);
+          this._logger.debug(`handle successful data loading`);
         this._isBusy = false;
         this._isReady = true;
         this._players = response.players;
@@ -324,7 +324,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _addNewFeed(syndicationFeed: KalturaBaseSyndicationFeed): void {
-      this._logger.info(`handle add new feed request`, { feed: syndicationFeed });
+      this._logger.info(`handle add new feed request`);
     this._blockerMessage = null;
 
     this._feedsService.create(syndicationFeed)
@@ -364,7 +364,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _updateFeed(id: string, syndicationFeed: KalturaBaseSyndicationFeed): void {
-      this._logger.info(`handle update feed request`, { feedId: id, feed: syndicationFeed });
+      this._logger.info(`handle update feed request`, { feedId: id });
     this._blockerMessage = null;
 
     this._feedsService.update(id, syndicationFeed)
@@ -413,7 +413,6 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   public _updateCurrentDestinationFormState($event: { isValid: boolean, isDirty: boolean }) {
-      this._logger.info(`handle update current destination from state action`, { event: $event });
     this._currentDestinationFormState = $event;
   }
 

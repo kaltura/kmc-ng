@@ -102,7 +102,6 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
       KalturaGoogleSyndicationFeedAdultValues.yes :
       KalturaGoogleSyndicationFeedAdultValues.no;
 
-    this._logger.debug(`feed data`, { data });
 
     return data;
   }
@@ -132,7 +131,6 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
         this._appAuthentication.appUser.partnerInfo.adultContent
     });
 
-      this._logger.debug(`reset form data`, { formData: this._form.value });
   }
 
   private _fillAvailableContentFlavors() {
@@ -141,8 +139,6 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
         value: cv.id,
         label: cv.name || cv.id.toString()
       }));
-
-        this._logger.debug(`fill available content flavors options`, { flavorsOptions: this._availableContentFlavors });
     }
   }
 
@@ -152,8 +148,6 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
         value: player.id,
         label: player.name || player.id.toString()
       }));
-
-        this._logger.debug(`fill available players options`, { playersOptions: this._availablePlayers });
     }
   }
 

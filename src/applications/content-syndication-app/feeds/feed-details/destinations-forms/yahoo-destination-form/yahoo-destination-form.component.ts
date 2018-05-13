@@ -106,8 +106,6 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
       data.allowEmbed = false;
     }
 
-      this._logger.debug(`feed data`, { data });
-
     return data;
   }
 
@@ -137,8 +135,6 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
       description: this.feed ? this.feed.feedDescription : '',
       selectedCategories: this.feed ? this.feed.categories.split(',') : []
     });
-
-      this._logger.debug(`reset form data`, { formData: this._form.value });
   }
 
   private _fillAvailableContentFlavors() {
@@ -147,8 +143,6 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
         value: cv.id,
         label: cv.name || cv.id.toString()
       }));
-
-        this._logger.debug(`fill available content flavors options`, { flavorsOptions: this._availableContentFlavors });
     }
   }
 
@@ -158,8 +152,6 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
         value: player.id,
         label: player.name || player.id.toString()
       }));
-
-        this._logger.debug(`fill available players options`, { playersOptions: this._availablePlayers });
     }
   }
 
@@ -169,8 +161,6 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
       label: this._appLocalization
         .get(`applications.content.syndication.details.destinationsForms.yahoo.category.availableCategories.${category}`)
     }));
-
-    this._logger.debug(`file available categories options`, { categoriesOptions: this._availableCategories });
   }
 
   public _clearPlayer(): void {
