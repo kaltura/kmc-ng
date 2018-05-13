@@ -12,7 +12,9 @@
 					<span [kTooltip]="_widgetService._owner?.screenName ? _widgetService._owner?.screenName : _widgetService._owner?.id">
             {{_widgetService._owner?.screenName ? _widgetService._owner?.screenName : _widgetService._owner?.id}}
           </span>
-					<a class="changeOwner" (click)="_openChangeOwner()">{{'applications.content.entryDetails.users.changeOwner' | translate}}</a>
+					<a class="changeOwner"
+             *ngIf="_kmcPermissions.CONTENT_MANAGE_ENTRY_USERS | kNgIfPermitted"
+             (click)="_openChangeOwner()">{{'applications.content.entryDetails.users.changeOwner' | translate}}</a>
 				</div>
 				<div class="kRow kSeparator">
 					<span class="kLabels">{{'applications.content.entryDetails.users.co-editors' | translate}}</span>

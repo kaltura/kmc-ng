@@ -24,6 +24,7 @@ import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-
 import { Subject } from 'rxjs/Subject';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
+import { globalConfig } from 'config/global';
 
 export enum SortDirection {
   Desc = -1,
@@ -69,6 +70,7 @@ export interface EntriesFilters {
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
+export const EntriesManualExecutionModeToken = new InjectionToken<boolean>('entries-data-provider');
 export const EntriesStorePaginationCacheToken = new InjectionToken('entries-store-pagination-cache-token');
 
 @Injectable()
@@ -94,13 +96,17 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
               private _metadataProfileService: MetadataProfileStore,
               @Inject(EntriesDataProviderToken) private _dataProvider: EntriesDataProvider,
               @Inject(EntriesStorePaginationCacheToken) @Optional() private _paginationCacheToken: string,
+              @Inject(EntriesManualExecutionModeToken) @Optional() manualExecutionMode: boolean,
               _logger: KalturaLogger) {
     super(_logger);
 
     if (!this._paginationCacheToken) {
       this._paginationCacheToken = 'default';
     }
-    this._prepare();
+
+    if (!manualExecutionMode) {
+        this._prepare();
+    }
   }
 
   protected _preFiltersReset(updates: Partial<EntriesFilters>): Partial<EntriesFilters> {
@@ -216,7 +222,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
   protected _createDefaultFiltersValue(): EntriesFilters {
     const savedAutoSelectChildren: CategoriesModes = this._browserService.getFromLocalStorage('contentShared.categoriesTree.selectionMode');
-    const pageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey()) || 50;
+    const pageSize = this._browserService.getFromLocalStorage(this._getPaginationCacheKey()) || globalConfig.client.views.tables.defaultPageSize;
     return this._dataProvider.getDefaultFilterValues(savedAutoSelectChildren, pageSize);
   }
 

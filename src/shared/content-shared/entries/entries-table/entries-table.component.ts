@@ -17,6 +17,9 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntrySta
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { globalConfig } from 'config/global';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -38,6 +41,8 @@ export interface CustomMenuItem extends MenuItem {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
+    public _kmcPermissions = KMCPermissions;
+    
   @Input() set columns(value: EntriesTableColumns) {
     this._columns = value || this._defaultColumns;
   }
@@ -46,7 +51,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     [key: string]: { style: SafeStyle, sortable: boolean }
   } = {};
 
-  @Input() rowActions: { label: string, commandName: string }[] = [];
+  @Input() rowActions: { label: string, commandName: string, styleClass: string }[] = [];
 
   @Input()
   set entries(data: any[]) {
@@ -89,8 +94,12 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _deferredLoading = true;
   public _emptyMessage = '';
   public _items: CustomMenuItem[];
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
-  constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef, private sanitization: DomSanitizer) {
+  constructor(private appLocalization: AppLocalization,
+              private cdRef: ChangeDetectorRef,
+              private _permissionsService: KMCPermissionsService,
+              private sanitization: DomSanitizer) {
   }
 
   ngOnInit() {
@@ -131,10 +140,12 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     const isViewCommand = commandName === 'view';
     const isKalturaLive = source === KalturaSourceType.liveStream;
     const isLiveDashboardCommand = commandName === 'liveDashboard';
+    const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
     return !(
       (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
       (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
-      (isLiveDashboardCommand && !isKalturaLive) // hide live-dashboard menu item for entry that isn't kaltura live
+      (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
+      cannotDeleteEntry
     );
   }
 

@@ -29,12 +29,10 @@ import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client/api/types/KalturaC
 import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { CaptionAssetServeAction } from 'kaltura-ngx-client/api/types/CaptionAssetServeAction';
-
-
-import { EntryWidgetKeys } from '../entry-widget-keys';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { EntryWidget } from '../entry-widget';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 export interface CaptionRow {
     uploading: boolean;
@@ -70,7 +68,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     constructor(private _objectDiffers: KeyValueDiffers, private _listDiffers: IterableDiffers,
                 private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _uploadManagement: UploadManagement) {
-        super(EntryWidgetKeys.Captions);
+        super(ContentEntryViewSections.Captions);
     }
 
   private _syncBusyState(): void {

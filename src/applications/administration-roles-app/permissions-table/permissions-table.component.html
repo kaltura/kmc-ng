@@ -1,0 +1,61 @@
+<div class="kPermissionsTable">
+  <p-table [value]="_rolePermissions" [customSort]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th [ngStyle]="{'width': '350px', 'padding-left': '28px'}">
+          {{'applications.administration.role.permissionsTable.featureSet' | translate}}
+        </th>
+        <th>{{'applications.administration.role.permissionsTable.permissions' | translate}}</th>
+        <th [ngStyle]="{'width': '80px'}"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-permission>
+      <tr [pSelectableRow]="permission" class="kTableRow">
+
+        <td [ngStyle]="{'width': '350px', 'padding-left': '28px'}">
+          <span class="kPermissionGroup">{{permission.label}}</span>
+        </td>
+
+        <td>
+          <kMultiSelect *ngIf="permission.items"
+                        class="kPermissionsList"
+                        [class.kHasError]="permission.hasError"
+                        panelStyleClass="kPermissionsListPanel"
+                        menuItemDisplayStyle="flex"
+                        [hideOnScroll]="scrollableContainer"
+                        [options]="permission.items"
+                        [disabled]="!permission.checked || permission.disabled || (!isNewRole && (_kmcPermissions.ADMIN_ROLE_UPDATE | kDisabledIfNotPermitted))"
+                        [showToggleAll]="true"
+                        [maxSelectedLabels]="0"
+                        [defaultLabel]="permission.isAdvancedGroup ? ('applications.administration.role.permissionsTable.viewOnly' | translate) : ('applications.administration.role.permissionsTable.selectPermissions' | translate)"
+                        [disabledLabel]="'applications.administration.role.permissionsTable.disabled' | translate"
+                        [allSelectedLabel]="'applications.administration.role.permissionsTable.allPermissions' | translate"
+                        [selectAllLabel]="'applications.administration.role.permissionsTable.allPermissions' | translate"
+                        [selectedItemsLabel]="'applications.administration.role.permissionsTable.custom' | translate"
+                        [appendTo]="'body'"
+                        [resetFilterOnHide]="true"
+                        (onChange)="_onChange($event, permission)"
+                        [(ngModel)]="permission.formValue">
+            <ng-template let-item pTemplate="item">
+              <span class="kPermissionItem">
+                {{item.label}}
+              </span>
+            </ng-template>
+          </kMultiSelect>
+
+          <i *ngIf="permission.hasError"
+             class="kIconerror kIconError"
+             [kTooltip]="'applications.administration.role.permissionsTable.requiredError' | translate"></i>
+        </td>
+
+        <td [ngStyle]="{'width': '80px'}">
+          <p-inputSwitch [disabled]="!isNewRole && (_kmcPermissions.ADMIN_ROLE_UPDATE | kDisabledIfNotPermitted)"
+                         [(ngModel)]="permission.checked"
+                         (onChange)="_togglePermission($event, permission)"></p-inputSwitch>
+        </td>
+
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

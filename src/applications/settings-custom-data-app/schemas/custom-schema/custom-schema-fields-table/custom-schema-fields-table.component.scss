@@ -9,7 +9,6 @@
     color: $kGrayscale1;
     font-weight: 700;
     cursor: pointer;
-    overflow: hidden;
     max-height: 45px;
     &:hover {
       color: #000000;
@@ -39,6 +38,7 @@
   .kFieldsTableActions {
     display: none;
     align-content: center;
+    justify-content: center;
     color: $kGrayscale1;
 
     i {

@@ -1,10 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {AppAuthentication, AppUser, PartnerPackageTypes, AppNavigator} from 'app-shared/kmc-shell';
+import {AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { kmcAppConfig } from '../../kmc-app-config';
-import {Md5} from 'ts-md5/dist/md5';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { serverConfig } from 'config/server';
 
 @Component({
   selector: 'kKMCUserSettings',
@@ -17,7 +15,7 @@ export class UserSettingsComponent {
   public _languages = [];
   public _selectedLanguage = 'en';
 
-  constructor(private userAuthentication: AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService) {
+  constructor(private userAuthentication: AppAuthentication, private browserService: BrowserService) {
     this._userContext = userAuthentication.appUser;
 
       kmcAppConfig.locales.forEach(locale => {
@@ -37,21 +35,6 @@ export class UserSettingsComponent {
 
   logout() {
     this.userAuthentication.logout();
-  }
-
-  openUserManual() {
-    this.browserService.openLink(serverConfig.externalLinks.kaltura.userManual, {}, '_blank');
-  }
-
-  openSupport() {
-    // check if this is a paying partner. If so - open support form. If not - redirect to general support. Use MD5 to pass as a parameter.
-    const payingCustomer: boolean = this._userContext.partnerInfo.partnerPackage === PartnerPackageTypes.PartnerPackagePaid;
-    const params = {
-      'type': Md5.hashStr(payingCustomer.toString()),
-      'pid': this._userContext.partnerId
-    };
-
-    this.browserService.openLink(serverConfig.externalLinks.kaltura.support, params, '_blank');
   }
 
   onLangSelected(event) {

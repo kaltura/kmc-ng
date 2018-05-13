@@ -1,4 +1,4 @@
-<div class="kTable">
+<div class="kTable" [class.kTagsVisible]="isTagsBarVisible">
     <p-dataTable #dataTable
                dataKey="id"
                scrollable="true"
@@ -10,7 +10,7 @@
                (selectionChange)="_onSelectionChange($event)"
                [rowTrackBy]="rowTrackBy"
                [(selection)]="selectedUsers"
-                 [class.kDisabled]="categoryInheritUserPermissions">
+               [class.kDisabled]="categoryInheritUserPermissions || _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kDisabledIfNotPermitted">
 
     <p-column styleClass="selectionColumn"
               selectionMode="multiple"></p-column>
@@ -20,7 +20,7 @@
               field="name"
               [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.userNameId' | translate">
       <ng-template let-col let-user="rowData" pTemplate="body">
-        <div class="kTitle" [kTooltip]="user[col.field]" [maxWidth]="300">
+        <div class="kTitle kTableColumn" [kTooltip]="user[col.field]" [maxWidth]="300">
           {{user[col.field]}}
         </div>
       </ng-template>
@@ -32,11 +32,10 @@
               field="permissionLevel">
       <ng-template let-col let-user="rowData" pTemplate="body">
         <p-dropdown [options]="_permissionLevelOptions"
-                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions"
+                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions || _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kDisabledIfNotPermitted"
                     [(ngModel)]="user[col.field]"
                     (onChange)="_onActionSelected({action: 'permissionLevel', users: user, payload: { level: user.permissionLevel}})"
-                    appendTo="body"
-        [disabled]="categoryInheritUserPermissions"></p-dropdown>
+                    appendTo="body"></p-dropdown>
       </ng-template>
     </p-column>
 
@@ -46,11 +45,10 @@
               field="updateMethod">
       <ng-template let-col let-user="rowData" let-i="rowIndex" pTemplate="body">
         <p-dropdown [options]="_updateMethodOptions"
-                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions"
+                    [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions || _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kDisabledIfNotPermitted"
                     [(ngModel)]="user[col.field]"
                     (onChange)="_onActionSelected({action: 'updateMethod', users: user, payload: { method: user.updateMethod} })"
-                    appendTo="body"
-                    [disabled]="categoryInheritUserPermissions"></p-dropdown>
+                    appendTo="body"></p-dropdown>
       </ng-template>
     </p-column>
 
@@ -69,13 +67,13 @@
         <p-inputSwitch *ngIf="user[col.field] === _kalturaCategoryUserStatus.active || user[col.field] === _kalturaCategoryUserStatus.notActive || user[col.field] === _kalturaCategoryUserStatus.pending" class="kInputSwitch"
                        [ngModel]="user[col.field] === _kalturaCategoryUserStatus.active"
                        (onChange)="_onActionSelected({action: $event.checked ? 'activate': 'deactivate', users: user, payload: {} })"
-                       [disabled]="categoryInheritUserPermissions"></p-inputSwitch>
+                       [disabled]="categoryInheritUserPermissions || _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kDisabledIfNotPermitted"></p-inputSwitch>
         <span class="kCategoryUserStatus">{{user[col.field] | kCategoryUserStatus}}</span>
       </ng-template>
     </p-column>
 
     <!--Remove-->
-    <p-column styleClass="removeColumn" header="">
+    <p-column styleClass="removeColumn" header="" *ngIf="_kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kNgIfPermitted">
       <ng-template let-user="rowData" pTemplate="body">
         <i class="kIconremove" [class.kEnabled]="!categoryInheritUserPermissions" (click)="_onActionSelected({action: 'delete', users: user, payload: {} })"></i>
       </ng-template>

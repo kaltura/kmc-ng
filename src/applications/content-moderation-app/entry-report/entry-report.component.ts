@@ -15,7 +15,10 @@ import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceTyp
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { Observer } from 'rxjs/Observer';
-import { serverConfig } from 'config/server';
+import { serverConfig, getKalturaServerUri } from 'config/server';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ISubscription } from 'rxjs/Subscription';
 
 export interface Tabs {
   name: string;
@@ -32,6 +35,7 @@ export interface Tabs {
 
 export class EntryReportComponent implements OnInit, OnDestroy {
 
+    public _kmcPermissions = KMCPermissions;
   @ViewChild('player') player: KalturaPlayerComponent;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
@@ -39,9 +43,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
 
   private _isRecordedLive = false;
   private _userId = '';
-  private _shouldConfirmEntryApproval = false; // TODO [kmcng] need to get such permissions from somewhere
-  private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
 
+  public serverUri = getKalturaServerUri();
   public _areaBlockerMessage: AreaBlockerMessage = null;
   public _tabs: Tabs[] = [];
   public _flags: KalturaModerationFlag[] = null;
@@ -60,6 +63,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               private _bulkService: BulkService,
               private appAuthentication: AppAuthentication,
+              private _contentEntryViewService: ContentEntryViewService,
+              private _permissionsService: KMCPermissionsService,
               private _entriesStore: EntriesStore) {
   }
 
@@ -71,6 +76,11 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       entryid: this.entryId,
       flashvars: {'closedCaptions': { 'plugin': true }, 'ks': this.appAuthentication.appUser.ks}
     };
+
+    const shouldDisableAlerts = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_KDP_ALERTS);
+    if (shouldDisableAlerts) {
+      this._playerConfig.flashvars['disableAlerts'] = true;
+    }
   }
 
   ngOnDestroy() {
@@ -213,7 +223,16 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(entryId): void {
-    this._router.navigate(['content/entries/entry', entryId]);
+      this._isBusy = true;
+      const scopedSubscription: ISubscription = this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata)
+          //.cancelOnDestroy(this) // NOTICE: should not use here .cancelOnDestroy
+          .subscribe((success) => {
+              this._isBusy = false;
+              if (success) {
+                  this.parentPopupWidget.close();
+              }
+              scopedSubscription.unsubscribe(); // always unsubscribe to clear memory
+          });
   }
 
   public _banCreator(): void {
@@ -223,6 +242,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
             message: this._appLocalization.get('applications.content.moderation.notificationHasBeenSent')
           });
         },
@@ -250,7 +270,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _approveEntry(): void {
-    if (!this._shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.approveMedia'),
         message: this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: this._entry.name }),
@@ -262,7 +282,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _rejectEntry(): void {
-    if (!this._shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
         message: this._appLocalization.get('applications.content.moderation.sureToReject', { 0: this._entry.name }),

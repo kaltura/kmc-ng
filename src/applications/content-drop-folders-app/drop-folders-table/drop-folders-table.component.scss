@@ -44,6 +44,11 @@
   .kIconGreen {
     color: #149347;
   }
+
+  .kTitle {
+    font-weight: bold;
+    color: #333;
+  }
 }
 
 :host {
@@ -60,15 +65,15 @@
 
 :host /deep/ .kFileNameColumn {
   width: 250px;
-  font-weight: bold;
-  color: #333;
 }
 
 :host /deep/ .ui-table .actionsColumn {
   overflow: visible;
   width: 80px;
 }
-
+:host /deep/ p-table .ui-table-scrollable-body{
+    margin-bottom: 34px;
+}
 :host /deep/ p-table .stickyHeader {
   z-index: 10;
   display: table;

@@ -12,6 +12,8 @@ import {
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { globalConfig } from 'config/global';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCategoriesTable',
@@ -52,11 +54,13 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   public _deferredLoading = true;
   public _emptyMessage = '';
   public _items: MenuItem[];
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private appLocalization: AppLocalization,
-              private cdRef: ChangeDetectorRef) {
+              private cdRef: ChangeDetectorRef,
+              private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
@@ -93,22 +97,35 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   buildMenu(category: KalturaCategory): void {
     this._items = [
       {
+        id: 'edit',
         label: this.appLocalization.get('applications.content.categories.edit'),
         command: () => this.onActionSelected('edit', category)
       },
       {
-        label: this.appLocalization.get('applications.content.categories.delete'),
-        command: () => this.onActionSelected('delete', category)
-      },
-      {
+        id: 'viewEntries',
         label: this.appLocalization.get('applications.content.categories.viewEntries'),
         command: () => this.onActionSelected('viewEntries', category)
       },
       {
+        id: 'moveCategory',
         label: this.appLocalization.get('applications.content.categories.moveCategory'),
         command: () => this.onActionSelected('moveCategory', category)
+      },
+      {
+        id: 'delete',
+        label: this.appLocalization.get('applications.content.categories.delete'),
+        styleClass: 'kDanger',
+        command: () => this.onActionSelected('delete', category)
       }
     ];
+
+    this._permissionsService.filterList(
+      <{ id: string }[]>this._items,
+      {
+        'moveCategory': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
+        'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
+      }
+    );
   }
 
   _onSelectionChange(event) {

@@ -13,6 +13,8 @@ import {Menu, MenuItem} from 'primeng/primeng';
 import {KalturaDropFolderFile} from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import {AppLocalization} from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
+import { globalConfig } from 'config/global';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kDropFoldersListTable',
@@ -47,6 +49,8 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   public _dropFolders: KalturaDropFolderFile[] = [];
   public _items: MenuItem[];
   public _emptyMessage = '';
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef) {
@@ -76,7 +80,7 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
     this._items = [
       {
         label: this._appLocalization.get('applications.content.dropFolders.table.delete'),
-        styleClass: 'kDeleteAction',
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('remove', rowIndex, folder)
       }
     ];

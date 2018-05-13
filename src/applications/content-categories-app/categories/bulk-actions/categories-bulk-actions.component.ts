@@ -24,6 +24,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import {CategoriesUtilsService} from "../../categories-utils.service";
 import {CategoriesStatusMonitorService} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -31,8 +32,10 @@ import {CategoriesStatusMonitorService} from 'app-shared/content-shared/categori
   styleUrls: ['./categories-bulk-actions.component.scss']
 })
 export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
+  private _selectedCateogoriesWithPrivacyContext: KalturaCategory[] = [];
 
   public _bulkActionsMenu: MenuItem[] = [];
+  public _kmcPermissions = KMCPermissions;
   public _bulkAction = '';
 
   @Input() selectedCategories: KalturaCategory[];
@@ -43,6 +46,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
               private _bulkAddTagsService: CategoriesBulkAddTagsService,
               private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
@@ -63,19 +67,34 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   }
 
+  private _filterPrivacyContext(): { hadNoPrivacyContext: boolean } {
+    this._selectedCateogoriesWithPrivacyContext = [];
+    const selectedCategoriesLength = this.selectedCategories.length;
+    this._selectedCateogoriesWithPrivacyContext = [...this.selectedCategories.filter(category => !!category.privacyContexts)];
+    const hadNoPrivacyContext = this._selectedCateogoriesWithPrivacyContext.length !== selectedCategoriesLength;
+
+    return { hadNoPrivacyContext };
+  }
+
   getBulkActionItems(): MenuItem[] {
-    return [
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'),
+    const items = [
+      { id: 'changeCategoryOwner',
+        label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'),
         command: () => { this.openBulkActionWindow('changeOwner', 500, 280) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'),
+      { id: 'changeContributionPolicy',
+        label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'),
         command: () => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'),
+      { id: 'changeCategoryListing',
+        label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'),
         command: () => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'),
+      { id: 'changeContentPrivacy',
+        label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'),
         command: () => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'),
+      { id: 'moveCategories',
+        label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'),
         command: () => { this._moveCategories() } },
       {
+        id: 'addRemoveTags',
         label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
         { label: this._appLocalization.get('applications.content.categories.bActions.addTags'),
           command: () => { this.openBulkActionWindow('addTags', 500, 500) } },
@@ -83,6 +102,17 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           command: () => { this.openBulkActionWindow('removeTags', 500, 500) } }]
       }
     ];
+
+    this._permissionsService.filterList(
+      <{ id: string }[]>items,
+      {
+        'changeContentPrivacy': KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS,
+        'changeContributionPolicy': KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS,
+        'changeCategoryListing': KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS,
+        'changeCategoryOwner': KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS
+      });
+
+    return items;
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
@@ -118,48 +148,114 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // add tags changed
   onAddTagsChanged(tags: string[]): void {
-    this.executeService(this._bulkAddTagsService, tags);
+    this.executeService(this.selectedCategories, this._bulkAddTagsService, tags);
   }
 
   // remove tags changed
   onRemoveTagsChanged(tags: string[]): void {
-    this.executeService(this._bulkRemoveTagsService, tags);
+    this.executeService(this.selectedCategories, this._bulkRemoveTagsService, tags);
   }
 
   // owner changed
   onOwnerChanged(owners: KalturaUser[]): void {
-    if (owners && owners.length) {
-      this.executeService(this._bulkChangeOwnerService, owners[0]);
+    const executeAction = () => {
+      if (this._selectedCateogoriesWithPrivacyContext.length && owners && owners.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeOwnerService, owners[0]);
+      }
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
     }
   }
 
   // change content privacy
   onChangeContentPrivacyChanged(privacyMode: PrivacyMode): void {
     let privacyType: KalturaPrivacyType;
-    if (privacyMode === PrivacyMode.NoRestriction)
-      privacyType = KalturaPrivacyType.all;
-    if (privacyMode === PrivacyMode.Private)
-      privacyType = KalturaPrivacyType.membersOnly;
-    if (privacyMode === PrivacyMode.RequiresAuthentication)
-      privacyType = KalturaPrivacyType.authenticatedUsers;
+    switch (true) {
+      case privacyMode === PrivacyMode.NoRestriction:
+        privacyType = KalturaPrivacyType.all;
+        break;
+      case privacyMode === PrivacyMode.Private:
+        privacyType = KalturaPrivacyType.membersOnly;
+        break;
+      case privacyMode === PrivacyMode.RequiresAuthentication:
+        privacyType = KalturaPrivacyType.authenticatedUsers;
+        break;
+      default:
+        break;
+    }
 
-    this.executeService(this._bulkChangeContentPrivacyService, privacyType);
+    const executeAction = () => {
+      if (this._selectedCateogoriesWithPrivacyContext.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeContentPrivacyService, privacyType);
+      }
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
+    }
   }
 
   // change category listing
   onChangeCategoryListingChanged(appearInList: AppearInListType): void {
     let appearInListType: KalturaAppearInListType;
-    if (appearInList === AppearInListType.NoRestriction)
+    if (appearInList === AppearInListType.NoRestriction) {
       appearInListType = KalturaAppearInListType.partnerOnly;
-    if (appearInList === AppearInListType.Private)
+    } else if (appearInList === AppearInListType.Private) {
       appearInListType = KalturaAppearInListType.categoryMembersOnly;
+    }
 
-    this.executeService(this._bulkChangeCategoryListingService, appearInListType);
+    const executeAction = () => {
+      if (this._selectedCateogoriesWithPrivacyContext.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeCategoryListingService, appearInListType);
+      }
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
+    }
   }
 
   // change contribution policy
   onChangeContributionPolicyChanged(policyType: KalturaContributionPolicyType): void {
-    this.executeService(this._bulkChangeContributionPolicyService, policyType);
+    const executeAction = () => {
+      if (this._selectedCateogoriesWithPrivacyContext.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeContributionPolicyService, policyType);
+      }
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
+    }
   }
 
   // bulk delete
@@ -170,12 +266,20 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (result.confirmed) {
           setTimeout(() => {
-            this.executeService(this._bulkDeleteService, {}, true, false, () => {this._categoriesStatusMonitorService.updateCategoriesStatus();});
+            this.executeService(
+              this.selectedCategories,
+              this._bulkDeleteService,
+              {},
+              true,
+              false,
+              () => this._categoriesStatusMonitorService.updateCategoriesStatus()
+            );
             // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
           }, 0);
         }
       }, error => {
         this._browserService.alert({
+            header: this._appLocalization.get('app.common.attention'),
           message: this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.categoriesCouldNotBeDeleted')
         });
       });
@@ -189,6 +293,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
       if (!movingOnlySiblings) {
         this._browserService.alert({
+            header: this._appLocalization.get('app.common.attention'),
           message: this._appLocalization.get('applications.content.moveCategory.errors.onlySiblingsMoveAllowed')
         });
       } else {
@@ -210,11 +315,16 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
 
-  private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
+  private executeService(selectedCategories: KalturaCategory[],
+                         service: CategoriesBulkActionBaseService<any>,
+                         data: any = {},
+                         reloadCategories: boolean = true,
+                         confirmChunks: boolean = true,
+                         callback?: Function): void {
     this._bulkAction = '';
 
     const execute = () => {
-      service.execute(this.selectedCategories, data)
+      service.execute(selectedCategories, data)
         .tag('block-shell')
         .subscribe(
         result => {
@@ -225,6 +335,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         },
         error => {
           this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
             message: this._appLocalization.get('applications.content.bulkActions.errorCategories')
           });
           this.onBulkChange.emit({ reload: reloadCategories });
@@ -232,7 +343,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       );
     };
 
-    if (confirmChunks && this.selectedCategories.length > subApplicationsConfig.shared.bulkActionsLimit) {
+    if (confirmChunks && selectedCategories.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
