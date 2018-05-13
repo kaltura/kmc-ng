@@ -16,7 +16,8 @@ import {PlayersStore} from 'app-shared/kmc-shared/players/players-store.service'
 import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {PlayerTypes} from 'app-shared/kmc-shared/players';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+
 
 export abstract class DestinationComponentBase {
   abstract getData(): KalturaBaseSyndicationFeed;
@@ -27,41 +28,64 @@ export type FeedFormMode = 'edit' | 'new';
 @Component({
   selector: 'kFeedDetails',
   templateUrl: './feed-details.component.html',
-  styleUrls: ['./feed-details.component.scss']
+  styleUrls: ['./feed-details.component.scss'],
+    providers: [KalturaLogger.createLogger('FeedDetailsComponent')]
 })
 export class FeedDetailsComponent implements OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
   @Input()
-  playlists: KalturaPlaylist[] = [];
-
-  @Input()
   feed: KalturaBaseSyndicationFeed = null;
+
+    @Input()
+    set playlists(data: KalturaPlaylist[]) {
+        if (data && data.length) {
+            this._idToPlaylistMap = new Map<string, KalturaPlaylist>();
+            data.forEach(playlist => {
+                this._idToPlaylistMap.set(playlist.id, playlist);
+            });
+            this._playlists = data;
+        }
+    }
 
   @ViewChild(DestinationComponentBase) destinationComponent: DestinationComponentBase;
 
+    public _playlists: KalturaPlaylist[] = [];
+    public _idToPlaylistMap: Map<string, KalturaPlaylist> = null; // map between KalturaPlaylist id to KalturaPlaylist.name object
   public _form: FormGroup;
   public _players: KalturaUiConf[] = null;
   public _flavors: KalturaFlavorParams[] = null;
   public _entriesCountData: { count: number, showWarning: boolean, warningCount: number, flavorName: string } =
     {count: 0, showWarning: false, warningCount: 0, flavorName: null};
   public _availableDestinations: Array<{ value: KalturaSyndicationFeedType, label: string }> = [];
-  public _availablePlaylists: Array<{ value: KalturaPlaylist, label: string }> = [];
+  public _availablePlaylists: Array<{ value: string, label: string }> = [];
   public _kalturaSyndicationFeedType = KalturaSyndicationFeedType;
-  public _kalturaPlaylistType = KalturaPlaylistType;
   public _currentDestinationFormState: { isValid: boolean, isDirty: boolean } = {isValid: true, isDirty: false};
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isReady = false; // determined when received entryCount, feed, flavors and players
   public _mode: FeedFormMode = 'new';
   public _newFeedText = 'New Feed';
+  public _missingPlaylist = false;
+
+  private get _isPlaylistMissing(): boolean {
+      return this.feed && this.feed.playlistId && !this._idToPlaylistMap.get(this.feed.playlistId);
+  }
+
+  public get _saveBtnDisabled(): boolean {
+    return !this._form.valid || !this._currentDestinationFormState.isValid
+      || (!this._form.dirty && !this._currentDestinationFormState.isDirty)
+      || (this._newFeedText === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE))
+      || this._missingPlaylist;
+  }
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
               private _feedsService: FeedsService,
               private _flavorsStore: FlavoursStore,
               private _playersStore: PlayersStore,
+              private _permissionsService: KMCPermissionsService,
               private _logger: KalturaLogger) {
     // prepare form
     this._createForm();
@@ -80,9 +104,9 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _fillAvailablePlaylists(): void {
-    if (this.playlists && this.playlists.length) {
-      this._availablePlaylists = this.playlists.map(playlist => ({
-        value: playlist,
+    if (this._playlists && this._playlists.length) {
+      this._availablePlaylists = this._playlists.map(playlist => ({
+        value: playlist.id,
         label: playlist.name || playlist.id
       }));
     }
@@ -124,7 +148,9 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
+      this._logger.debug(`prepare component, load data`);
     if (this._isReady) {
+        this._logger.trace(`component is already prepared, skip duplicating action`);
       return undefined;
     }
 
@@ -132,10 +158,16 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     this._queryData()
       .cancelOnDestroy(this)
       .subscribe(response => {
+          this._logger.debug(`handle successful data loading`);
         this._isBusy = false;
         this._isReady = true;
         this._players = response.players;
         this._flavors = response.flavors;
+          this._missingPlaylist = this._isPlaylistMissing;
+        if (this._isPlaylistMissing) {
+            this._form.patchValue({ playlistId: null });
+        }
+
         if (response.entriesCount) {
           const showEntriesCountWarning: boolean =
             [KalturaSyndicationFeedType.googleVideo, KalturaSyndicationFeedType.itunes, KalturaSyndicationFeedType.yahoo].indexOf(this.feed.type) >= 0;
@@ -160,6 +192,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
           };
         }
       }, error => {
+          this._logger.warn(`handle failed data loading, show confirmation`, { errorMessage: error.message });
         this._isBusy = false;
         this._blockerMessage = new AreaBlockerMessage({
           message: this._appLocalization.get('applications.content.syndication.details.errors.loadFailed'),
@@ -167,12 +200,14 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
             {
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
+                  this._logger.info(`user confirmed, retry action`);
                 this._blockerMessage = null;
                 this._prepare();
               }
             }, {
               label: this._appLocalization.get('app.common.close'),
               action: () => {
+                  this._logger.info(`user didn't confirm, abort action`);
                 this._blockerMessage = null;
                 this._close();
               }
@@ -183,7 +218,9 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _queryData(): Observable<{ players: KalturaUiConf[], flavors: KalturaFlavorParams[], entriesCount?: KalturaSyndicationFeedEntryCount }> {
+      this._logger.debug(`query data`, { mode: this._mode });
     if (this._mode === 'edit' && (!this.feed || !this.feed.id)) {
+        this._logger.warn(`cannot load data for edit mode without feedId`);
       return Observable.throw('An error occurred while trying to load feed');
     }
 
@@ -191,7 +228,8 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     const getFlavours$ = this._flavorsStore.get().cancelOnDestroy(this);
     const requests: Observable<any>[] = [getPlayers$, getFlavours$];
 
-    if (this._mode === 'edit') {
+    if (this._mode === 'edit' && !this._isPlaylistMissing) {
+        this._logger.debug(`get entries for edit mode`);
       const getEntriesCount$ = this._feedsService.getFeedEntryCount(this.feed.id).cancelOnDestroy(this);
       requests.push(getEntriesCount$);
     }
@@ -209,6 +247,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
 
   // Create empty structured form on loading
   private _createForm(): void {
+      this._logger.debug(`create details form`);
     this._form = this._fb.group({
       name: ['', Validators.required],
       contentType: ['allContent'],
@@ -218,22 +257,48 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _restartFormData(): void {
+      this._logger.debug(`reset form data`);
+      const name = this._mode === 'edit' ? this.feed.name : this._form.get('name').value || '';
+      const contentType = this._mode === 'edit' ? (this.feed.playlistId ? 'playlist' : 'allContent') : this._form.get('contentType').value || 'allContent';
+      const selectedPlaylist = this._mode === 'edit'
+          ? this.feed.playlistId || null
+          : this._form.get('selectedPlaylist').value || (this._playlists && this._playlists.length && this._playlists[0].id);
+
     this._form.reset({
-      name: this._mode === 'edit' ? this.feed.name : this._form.get('name').value || '',
-      contentType: this._mode === 'edit' ? (this.feed.playlistId ? 'playlist' : 'allContent') : this._form.get('contentType').value || 'allContent',
-      selectedPlaylist: this._mode === 'edit' ?
-        (this.feed.playlistId && this.playlists.find(playlist => playlist.id === this.feed.playlistId)) :
-        this._form.get('selectedPlaylist').value || (this.playlists && this.playlists.length && this.playlists[0].id),
+      name,
+      contentType,
+      selectedPlaylist,
       destination: {
         value: this._mode === 'edit' ? this.feed.type : this._form.get('destination').value,
         disabled: this._mode === 'edit'
       },
     });
-  }
 
-  public _clearPlaylist(): void {
-    this._form.patchValue({selectedPlaylist: null});
-  }
+    if (this._mode === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+      this._form.disable({ emitEvent: false });
+    }
+ }
+
+    public _setAllContent(): void {
+        this._missingPlaylist = false;
+        this._form.patchValue({ selectedPlaylist: null });
+    }
+
+    public _setPlaylist(): void {
+        this._missingPlaylist = this._isPlaylistMissing;
+        const selectedPlaylist = this._availablePlaylists.length ? this._availablePlaylists[0].value : null;
+        if (!this._missingPlaylist) {
+            this._form.patchValue({ selectedPlaylist });
+        } else {
+            this._form.patchValue({ selectedPlaylist: null });
+        }
+    }
+
+    public _onSelectPlaylist(event: { originalEvent: MouseEvent, value: string }): void {
+      if (event.value) {
+          this._missingPlaylist = false;
+      }
+    }
 
   public _save(): void {
     if (!this._form.valid ||
@@ -246,12 +311,9 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     const syndicationFeed = this.destinationComponent.getData();
 
     if (syndicationFeed) {
-      syndicationFeed.name = this._form.get('name').value;
-      syndicationFeed.playlistId =
-        this._form.get('contentType').value === 'allContent' ?
-          '' :
-          this._form.get('selectedPlaylist').value.id;
-
+        const { name, contentType, selectedPlaylist } = this._form.value;
+        syndicationFeed.name = name;
+        syndicationFeed.playlistId = contentType === 'playlist' ? selectedPlaylist : '';
 
       if (this._mode === 'edit') {
         this._updateFeed(this.feed.id, syndicationFeed);
@@ -262,18 +324,22 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _addNewFeed(syndicationFeed: KalturaBaseSyndicationFeed): void {
+      this._logger.info(`handle add new feed request`);
     this._blockerMessage = null;
 
     this._feedsService.create(syndicationFeed)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe((feed) => {
+          this._logger.info(`handle successful request`);
         this._feedsService.reload();
         this._close();
       }, error => {
+          this._logger.warn(`handle failed request, show confirmation`, { errorMessage: error.message });
         const buttons = [{
           label: this._appLocalization.get('app.common.close'),
           action: () => {
+              this._logger.info(`user didn't confirm, abort request`);
             this._blockerMessage = null;
             this._close();
           }
@@ -283,6 +349,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
           buttons.unshift({
             label: this._appLocalization.get('app.common.retry'),
             action: () => {
+                this._logger.info(`user confirmed, retry request`);
               this._blockerMessage = null;
               this._addNewFeed(syndicationFeed);
             }
@@ -297,18 +364,22 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _updateFeed(id: string, syndicationFeed: KalturaBaseSyndicationFeed): void {
+      this._logger.info(`handle update feed request`, { feedId: id });
     this._blockerMessage = null;
 
     this._feedsService.update(id, syndicationFeed)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(() => {
+          this._logger.info(`handle successful request`);
         this._feedsService.reload();
         this._close();
       }, error => {
+          this._logger.warn(`handle failed request, show confirmation`, { errorMessage: error.message });
         const buttons = [{
           label: this._appLocalization.get('app.common.close'),
           action: () => {
+              this._logger.info(`user didn't confirm, abort request`);
             this._blockerMessage = null;
             this._close();
           }
@@ -318,6 +389,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
           buttons.unshift({
             label: this._appLocalization.get('app.common.retry'),
             action: () => {
+                this._logger.info(`user confirmed, retry request`);
               this._blockerMessage = null;
               this._updateFeed(id, syndicationFeed);
             }
@@ -332,8 +404,11 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   public _close(): void {
+      this._logger.info(`handle close action by user`);
     if (this.parentPopupWidget) {
       this.parentPopupWidget.close();
+    } else {
+        this._logger.debug(`parentPopupWidget is not provided abort action`);
     }
   }
 
@@ -342,29 +417,35 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   }
 
   public _deleteFeed() {
+      this._logger.info(`handle delete feed action by user`, { feedId: this.feed.id });
     const executeDelete = () => {
       this._blockerMessage = null;
+      this._logger.info(`handle delete feed request`, { feedId: this.feed.id });
       this._feedsService.deleteFeeds([this.feed.id])
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(
           result => {
+              this._logger.info(`handle successful request`);
             this._feedsService.reload();
             this._close();
           }, // reload is handled by service
           error => {
+              this._logger.warn(`handle failed request, show confirmation`, { errorMessage: error.message });
             this._blockerMessage = new AreaBlockerMessage({
               message: error.message,
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
+                      this._logger.info(`user confirmed, retry request`);
                     this._blockerMessage = null;
                     executeDelete();
                   }
                 }, {
                   label: this._appLocalization.get('app.common.cancel'),
                   action: () => {
+                      this._logger.info(`user didn't confirm, abort request`);
                     this._blockerMessage = null;
                   }
                 }
@@ -375,6 +456,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     };
 
     if (this._mode === 'edit') {
+        this._logger.info(`handle delete feeds action in edit mode`);
       this._feedsService.confirmDelete([this.feed])
         .cancelOnDestroy(this)
         .subscribe(result => {
@@ -382,12 +464,14 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
             executeDelete();
           }
         }, error => {
+            this._logger.warn(`handle failed confirmation request, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [
               {
                 label: this._appLocalization.get('app.common.ok'),
                 action: () => {
+                    this._logger.info(`user dismissed alert`);
                   this._blockerMessage = null;
                 }
               }

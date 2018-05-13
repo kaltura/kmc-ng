@@ -8,7 +8,7 @@ export interface DefaultFilterList {
   items: { value: string, label: string }[]
 }
 
-export const DefaultFiltersList: DefaultFilterList[] = [
+export const EntitlementsFiltersList: DefaultFilterList[] = [
   {
     name: 'privacyTypes', label: 'All Content Privacy Options',
     items: [

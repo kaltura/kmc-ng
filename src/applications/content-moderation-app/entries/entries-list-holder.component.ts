@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import {
@@ -15,13 +15,14 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ModerationsListService } from './moderations-list.service';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
   templateUrl: './entries-list-holder.component.html',
   providers: [BulkService]
 })
-export class EntriesListHolderComponent implements OnDestroy {
+export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
   @ViewChild('moderationDetails') private _moderationDetails: PopupWidgetComponent;
 
@@ -71,11 +72,20 @@ export class EntriesListHolderComponent implements OnDestroy {
   constructor(private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _entriesStore: EntriesStore,
+              private _moderationsListService: ModerationsListService,
               private _permissionsService: KMCPermissionsService,
               private _bulkService: BulkService) {
+
+      if (this._moderationsListService.isViewAvailable) {
+          this._entriesStore.reload();
+      }
     if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MODERATE_APPROVE_REJECT)) {
       this._rowActions = [];
     }
+  }
+
+  ngOnInit() {
+
   }
 
   ngOnDestroy() {
