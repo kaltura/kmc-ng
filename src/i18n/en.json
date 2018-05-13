@@ -131,11 +131,17 @@
             "error": {
                 "email": "Incorrect Email format",
                 "badCredentials": "The username or password you entered is incorrect.",
-                "retriesExceeded": "Your account has been locked and will not be available for 24 hours. Contact Kaltura Support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
+                "retriesExceeded": {
+                    "yourAccountHasBeenLocked":"Your account has been locked and will not be available for 24 hours. Contact Kaltura Support at ",
+                    "toUnblockYourAccount": " to unblock your account."
+                },
                 "userNotFound": "The username or password you entered is incorrect.",
                 "invalidStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules:\n- Must be of length between 8 and 14.\n- Must not contain your name.\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}.\n- Must not contain the following characters: < or >",
                 "alreadyUsed": "Invalid Password. <br> This password has been used in the past. Please select a new password.",
-                "loginBlocked": "Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura Support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
+                "loginBlocked": {
+                    "loginDenied":"Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura Support at ",
+                    "toUnblockYourAccount": " to unblock your account."
+                },
                 "newPasswordHashKeyInvalid": "This link is not valid.",
                 "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
                 "wrongOldPassword": "Old password is incorret.",
@@ -446,7 +452,7 @@
                 },
                 "errors": {
                     "retry": "Retry",
-                    "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>",
+                    "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"{{0}}\" target=\"_blank\">contact us</a>.\n<a href=\"{{1}}\" target=\"_blank\">Learn more about drop folders</a>",
                     "errorDropFoldersFiles": "An error occurred during the drop folder files update.",
                     "errorLoad": "Failed to load drop folder."
                 }
