@@ -1383,7 +1383,7 @@
                 },
                 "live": {
                     "live": "Live Stream",
-                    "liveDashboard": "Live Dashabord",
+                    "liveDashboard": "Live Dashboard",
                     "urls": "Broadcasting URLs",
                     "primary": "Primary URL:",
                     "backup": "Backup URL:",

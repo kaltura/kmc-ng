@@ -117,6 +117,7 @@ ws --spa index.html
    * commit your changes with commit message 'chore: update version of deployed assets'
 
 2. Update  `changelog.md` with new features (provided by product)
+   * commit your changes with commit message 'chore: update changelog'
 
 3. publish the release
 ```

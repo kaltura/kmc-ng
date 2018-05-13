@@ -18,6 +18,7 @@ import { Observer } from 'rxjs/Observer';
 import { serverConfig, getKalturaServerUri } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ISubscription } from 'rxjs/Subscription';
 
 export interface Tabs {
   name: string;
@@ -223,11 +224,14 @@ export class EntryReportComponent implements OnInit, OnDestroy {
 
   public _navigateToEntry(entryId): void {
       this._isBusy = true;
-      this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata)
-          .cancelOnDestroy(this)
-          .subscribe(() => {
+      const scopedSubscription: ISubscription = this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata)
+          //.cancelOnDestroy(this) // NOTICE: should not use here .cancelOnDestroy
+          .subscribe((success) => {
               this._isBusy = false;
-              // no needed to close the popup. if navigating it will be closed anyway and if not we want it to stay open
+              if (success) {
+                  this.parentPopupWidget.close();
+              }
+              scopedSubscription.unsubscribe(); // always unsubscribe to clear memory
           });
   }
 

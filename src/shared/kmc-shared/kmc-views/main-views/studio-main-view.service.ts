@@ -5,7 +5,7 @@ import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
 import 'rxjs/add/observable/fromPromise';
 import { Router } from '@angular/router';
 import { serverConfig } from 'config/server';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 @Injectable()
 export class StudioMainViewService extends KmcMainViewBaseService {
