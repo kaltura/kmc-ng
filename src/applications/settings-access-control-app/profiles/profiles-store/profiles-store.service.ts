@@ -42,7 +42,7 @@ export interface AccessControlProfilesFilters {
 }
 
 export interface AccessControlProfileRestriction<T> {
-  isAuthorized: boolean;
+  isAuthorized: boolean | null;
   details: T;
   label: string;
 }
@@ -207,22 +207,22 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
       view: {
         hasAdditionalInfo: false,
         domain: {
-          isAuthorized: true,
+          isAuthorized: null,
           details: [],
           label: null
         },
         countries: {
-          isAuthorized: true,
+          isAuthorized: null,
           details: [],
           label: null
         },
         ips: {
-          isAuthorized: true,
+          isAuthorized: null,
           details: [],
           label: null
         },
         flavors: {
-          isAuthorized: true,
+          isAuthorized: null,
           details: [],
           label: null
         },
@@ -394,6 +394,8 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     const saveAction = profile.id
       ? new AccessControlUpdateAction({ id: profile.id, accessControl: profile })
       : new AccessControlAddAction({ accessControl: profile });
+      
+    profile.allowEmptyArray('restrictions');
 
     return this._kalturaServerClient.request(saveAction)
       .map(() => {

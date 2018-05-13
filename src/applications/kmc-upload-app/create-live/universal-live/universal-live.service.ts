@@ -11,6 +11,9 @@ export class UniversalLiveService {
   }
 
   public getDefaultIp(): Observable<string> {
+    if (!(!!serverConfig.externalLinks.live && !!serverConfig.externalLinks.live.akamaiEdgeServerIpURL)){
+        return Observable.throw(new Error("Failed to load Akamai Edge Server IP URL.\nPlease update primary and secondary encoder IP manually."));
+    }
     let akamaiEdgeServerIpURL = serverConfig.externalLinks.live.akamaiEdgeServerIpURL;
     const pattern = /^https?:\/\//;
 
@@ -26,7 +29,6 @@ export class UniversalLiveService {
         if (match.length > 1) {
           return match[1];
         }
-
         return '';
       });
   }

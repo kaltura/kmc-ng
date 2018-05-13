@@ -1,5 +1,5 @@
 import {Injectable, Optional, Inject} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
@@ -27,42 +27,56 @@ import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { serverConfig } from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsAction';
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
-
+import { HttpClient } from '@angular/common/http';
+import { buildKalturaServerUri } from 'config/server';
+import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 const ksSessionStorageKey = 'auth.login.ks';
 
-export interface IUpdatePasswordPayload {
+export interface UpdatePasswordPayload {
     email: string;
     password: string;
     newEmail: string;
     newPassword: string;
 }
 
-export interface ILoginError {
+export interface LoginError {
     message: string;
     custom: boolean;
     passwordExpired?: boolean;
+    closedForBeta?: boolean;
     code?: string;
 }
 
-export interface ILoginResponse {
+export interface LoginResponse {
     success: boolean;
-    error: ILoginError;
+    error: LoginError;
 }
 
 export interface AppAuthenticationEvents {
     onUserLoggedIn: (appUser: Immutable.ImmutableObject<AppUser>) => Observable<void>;
     onUserLoggedOut: () => void;
 }
+export enum AutomaticLoginErrorReasons {
+    closedForBeta
+};
 
 @Injectable()
 export class AppAuthentication {
 
+    private _automaticLoginErrorReason: AutomaticLoginErrorReasons = null;
+
+    public get automaticLoginErrorReason(): AutomaticLoginErrorReasons {
+        return this._automaticLoginErrorReason;
+    }
+
     private _automaticLoginCredentials: { ks: string} = null;
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
+
 
     constructor(private kalturaServerClient: KalturaClient,
                 private _browserService: BrowserService,
@@ -70,27 +84,29 @@ export class AppAuthentication {
                 logger: KalturaLogger,
                 private _serverPolls: KmcServerPolls,
                 private _permissionsService: KMCPermissionsService,
-                private _appEvents: AppEventsService) {
+                private _http: HttpClient,
+                private _appEvents: AppEventsService,
+                private _location: Location,
+                private _kmcViewsManager: KmcMainViewsService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
 
-    private _getLoginErrorMessage({error}): ILoginError {
+    private _getLoginErrorMessage({error}): LoginError {
         const message = (error ? error.message : null) || 'Failed to load partner information';
         const code = error ? error.code : null;
         const custom = true;
         const errors = {
             'USER_NOT_FOUND': 'app.login.error.badCredentials',
             'USER_WRONG_PASSWORD': 'app.login.error.badCredentials',
-            'LOGIN_RETRIES_EXCEEDED': 'app.login.error.retriesExceeded',
             'ADMIN_KUSER_NOT_FOUND': 'app.login.error.userNotFound',
             'PASSWORD_STRUCTURE_INVALID': 'app.login.error.invalidStructure',
             'PASSWORD_ALREADY_USED': 'app.login.error.alreadyUsed',
-            'LOGIN_BLOCKED': 'app.login.error.loginBlocked',
             'NEW_PASSWORD_HASH_KEY_INVALID': 'app.login.error.newPasswordHashKeyInvalid',
             'NEW_PASSWORD_HASH_KEY_EXPIRED': 'app.login.error.newPasswordHashKeyExpired',
             'ADMIN_KUSER_WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
             'WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
-            'INVALID_FIELD_VALUE': 'app.login.error.invalidField'
+            'INVALID_FIELD_VALUE': 'app.login.error.invalidField',
+            'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta'
         };
 
         if (code === 'PASSWORD_EXPIRED') {
@@ -125,7 +141,7 @@ export class AppAuthentication {
         }
     }
 
-    updatePassword(payload: IUpdatePasswordPayload): Observable<{ email: string, password: string }> {
+    updatePassword(payload: UpdatePasswordPayload): Observable<{ email: string, password: string }> {
         if (this.isLogged()) {
             return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
                 .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
@@ -137,11 +153,12 @@ export class AppAuthentication {
     login(loginId: string, password: string, optional: { privileges?, expiry? } = {
         privileges: '',
         expiry: 86400
-    }): Observable<ILoginResponse> {
+    }): Observable<LoginResponse> {
 
         const expiry = (optional ? optional.expiry : null) || 86400;
         const privileges = optional ? optional.privileges : '';
 
+        this._automaticLoginErrorReason = null;
         this._browserService.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage
 
         const request = new KalturaMultiRequest(
@@ -190,16 +207,67 @@ export class AppAuthentication {
         );
 
         return <any>(this.kalturaServerClient.multiRequest(request)
-            .map(
+            .switchMap(
                 response => {
                     if (!response.hasErrors()) {
-                        this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
-                        return {success: true, error: null};
+                        return this._checkIfPartnerCanAccess(response[2].result);
+                    } else {
+                        return Observable.of(true); // errors will be handled by the map function
+                    }
+                },
+                (response, isPartnerAllowed) => ({ response, isPartnerAllowed })
+            )
+            .map(
+                ({ response, isPartnerAllowed }) => {
+                    if (!response.hasErrors()) {
+                        if (isPartnerAllowed) {
+                            this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
+                            return { success: true, error: null };
+                        } else {
+                            return {
+                                success: false, error: {
+                                    message: 'app.login.error.userForbiddenForBeta',
+                                    custom: false,
+                                    closedForBeta: true
+                                }
+                            };
+                        }
                     }
 
-                    return {success: false, error: this._getLoginErrorMessage(response[0])};
+                    return { success: false, error: this._getLoginErrorMessage(response[0]) };
                 }
-            ));
+            )
+        );
+    }
+
+    private _checkIfPartnerCanAccess(partner: KalturaPartner): Observable<boolean> {
+        if (!(!!serverConfig.kalturaServer.login && !!serverConfig.kalturaServer.login.limitAccess)){
+            return Observable.of(true);
+        }
+        const limitAccess = serverConfig.kalturaServer.login.limitAccess;
+
+        if (!limitAccess.enabled) {
+            return Observable.of(true);
+        }
+
+        const url = buildKalturaServerUri(limitAccess.verifyBetaServiceUrl + partner.id);
+        this._logger.debug(`check if partner can access the KMC`, {partnerId: partner.id, limitAccess: true, url});
+
+        return this._http.get(url, { responseType: 'json' })
+            .map(res => {
+                const {isPartnerPartOfBeta: canPartnerAccess} = <any>res;
+
+                this._automaticLoginErrorReason = canPartnerAccess ? null : AutomaticLoginErrorReasons.closedForBeta;
+                this._logger.info(`query service to check if partner can access the KMC`, {
+                    partnerId: partner.id,
+                    canPartnerAccess
+                });
+                return canPartnerAccess;
+            })
+            .catch((e) => {
+                this._logger.error('Failed to check if partner can access the KMC', e);
+                throw Error('Failed to check if partner can access the KMC');
+            });
     }
 
     private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
@@ -231,13 +299,15 @@ export class AppAuthentication {
             }
         });
 
+        this._kmcViewsManager.rebuildMenu();
         this.kalturaServerClient.setDefaultRequestOptions({
             ks: appUser.ks
         });
 
-        this._serverPolls.forcePolling();
         this._appUser = appUser;
         this._appEvents.publish(new UserLoginStatusEvent(true));
+
+        this._serverPolls.forcePolling();
     }
 
     isLogged() {
@@ -293,10 +363,26 @@ export class AppAuthentication {
                     ];
 
                     return this.kalturaServerClient.multiRequest(requests)
+                        .switchMap(
+                            response => {
+                                if (!response.hasErrors()) {
+                                    return this._checkIfPartnerCanAccess(response[1].result);
+                                } else {
+                                    return Observable.of(true); // errors will be handled by the map function
+                                }
+                            },
+                            (response, isPartnerAllowed) => ({ response, isPartnerAllowed })
+                        )
                         .subscribe(
-                            (response) => {
-                                this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result);
-                                observer.next(true);
+                            ({ response, isPartnerAllowed }) => {
+                                if (!response.hasErrors() && isPartnerAllowed) {
+                                    this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result);
+                                    observer.next(true);
+                                    observer.complete();
+                                    return;
+                                }
+
+                                observer.next(false);
                                 observer.complete();
                             },
                             () => {
@@ -306,6 +392,8 @@ export class AppAuthentication {
                         );
                 } else {
                     observer.next(false);
+
+
                     observer.complete();
                 }
             }
@@ -331,7 +419,7 @@ export class AppAuthentication {
             return this._loginByKS(ksFromSession, true);
         }
 
-        this._logger.debug(`abort automatic login logic as no ks was provided by router or stored in session storage`);
+        this._logger.debug(`bypass automatic login logic as no ks was provided by router or stored in session storage`);
         return Observable.of(false);
     }
 
@@ -340,8 +428,17 @@ export class AppAuthentication {
             return this.kalturaServerClient.request(new UserLoginByKsAction({requestedPartnerId: partnerId}))
                 .subscribe(
                     result => {
+                        this._logger.info(`switch partner account`, { partnerId });
                         this._browserService.setInSessionStorage(ksSessionStorageKey, result.ks);
-                        this._logout();
+                        const baseUrl = this._location.prepareExternalUrl('');
+
+                        if (baseUrl) {
+                            this._logger.info(`redirect the user to default page`, { url: baseUrl });
+                            this._logout(false);
+                            window.location.href = baseUrl;
+                        } else {
+                            this._logout();
+                        }
 
                         // DEVELOPER NOTICE: observer next/complete not implemented by design
                         // (since we are breaking the stream by reloading the page)
@@ -354,17 +451,21 @@ export class AppAuthentication {
     }
 
     public reload() {
-        // reload page
-        document.location.reload();
+        this._logger.info(` reload of browser`, { forceReload: false });
+        document.location.reload(false);
     }
 
-    private _logout() {
+    private _logout(reloadPage = true) {
+        this._logger.info(`log out user from the application`, { forceReload: reloadPage });
         this.kalturaServerClient.setDefaultRequestOptions({});
         this._permissionsService.flushPermissions();
         this._appUser = null;
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._pageExitVerificationService.removeAll();
-        document.location.reload();
+        if (reloadPage) {
+            this._logger.info(`force reload of browser`);
+            document.location.reload(true);
+        }
     }
 
     public _updateNameManually(firstName: string, lastName: string, fullName: string): void {

@@ -8,7 +8,7 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
-import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kDropFoldersList',
@@ -243,10 +243,10 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .filter(Boolean)
-        .switchMap(() => this._contentEntryViewService.openById(entryId))
+        .switchMap(() => this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata))
         .subscribe(
             () => {},
-            ({ message }) => this._browserService.alert({ message })
+            ({ message }) => this._browserService.alert({ header: this._appLocalization.get('app.common.attention'), message })
         );
   }
 

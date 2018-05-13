@@ -1,9 +1,10 @@
 @import "app-theme/_variables.scss";
 
 .kHoster{
-
-  iframe{
     width: 100%;
     height: calc(100vh - 59px);
+  iframe{
+    width: 100%;
+    height: 672px;
   }
 }

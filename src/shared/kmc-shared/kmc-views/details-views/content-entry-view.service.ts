@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KMCPermissionsService } from '../../kmc-permissions';
+import { KMCPermissionsService, KMCPermissions } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,12 +27,13 @@ export enum ContentEntryViewSections {
     Clips = 'Clips',
     Advertisements = 'Advertisements',
     Users = 'Users',
-    Distribution = 'Distribution'
+    Distribution = 'Distribution',
+    ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
 }
 
 export interface ContentEntryViewArgs {
     entry: KalturaMediaEntry;
-    section?: ContentEntryViewSections;
+    section: ContentEntryViewSections;
     activatedRoute?: ActivatedRoute;
     reloadEntriesListOnNavigateOut?: boolean;
 }
@@ -52,7 +53,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     }
 
     isAvailable(args: ContentEntryViewArgs): boolean {
-        const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute);
+        const section = args.section === ContentEntryViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
         this._logger.info(`handle isAvailable action by user`, { categoryId: args.entry.id, section });
         return this._isSectionEnabled(section, args.entry);
     }
@@ -65,51 +66,57 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     }
 
     private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute): ContentEntryViewSections {
-        const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
         let result = null;
 
-        switch (sectionToken) {
-            case 'metadata':
-                result = ContentEntryViewSections.Metadata;
-                break;
-            case 'thumbnails':
-                result = ContentEntryViewSections.Thumbnails;
-                break;
-            case 'accesscontrol':
-                result = ContentEntryViewSections.AccessControl;
-                break;
-            case 'scheduling':
-                result = ContentEntryViewSections.Scheduling;
-                break;
-            case 'flavours':
-                result = ContentEntryViewSections.Flavours;
-                break;
-            case 'captions':
-                result = ContentEntryViewSections.Captions;
-                break;
-            case 'live':
-                result = ContentEntryViewSections.Live;
-                break;
-            case 'related':
-                result = ContentEntryViewSections.Related;
-                break;
-            case 'clips':
-                result = ContentEntryViewSections.Clips;
-                break;
-            case 'advertisements':
-                result = ContentEntryViewSections.Advertisements;
-                break;
-            case 'users':
-                result = ContentEntryViewSections.Users;
-                break;
-            case 'distribution':
-                result = ContentEntryViewSections.Distribution;
-                break;
-            default:
-                break;
-        }
+        if (activatedRoute) {
+            try {
+                const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
 
-        this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+                switch (sectionToken) {
+                    case 'metadata':
+                        result = ContentEntryViewSections.Metadata;
+                        break;
+                    case 'thumbnails':
+                        result = ContentEntryViewSections.Thumbnails;
+                        break;
+                    case 'accesscontrol':
+                        result = ContentEntryViewSections.AccessControl;
+                        break;
+                    case 'scheduling':
+                        result = ContentEntryViewSections.Scheduling;
+                        break;
+                    case 'flavours':
+                        result = ContentEntryViewSections.Flavours;
+                        break;
+                    case 'captions':
+                        result = ContentEntryViewSections.Captions;
+                        break;
+                    case 'live':
+                        result = ContentEntryViewSections.Live;
+                        break;
+                    case 'related':
+                        result = ContentEntryViewSections.Related;
+                        break;
+                    case 'clips':
+                        result = ContentEntryViewSections.Clips;
+                        break;
+                    case 'advertisements':
+                        result = ContentEntryViewSections.Advertisements;
+                        break;
+                    case 'users':
+                        result = ContentEntryViewSections.Users;
+                        break;
+                    case 'distribution':
+                        result = ContentEntryViewSections.Distribution;
+                        break;
+                    default:
+                        break;
+                }
+                this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+            } catch (e) {
+                this._logger.error(`failed to resolve section from activated route`);
+            }
+        }
 
         return result;
     }
@@ -162,7 +169,15 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     }
 
     private _isSectionEnabled(section: ContentEntryViewSections, entry: KalturaMediaEntry): boolean {
-        this._logger.debug(`check section availability for entry`, { categoryId: entry.id, section });
+        const availableByData = this._isAvailableByData(section, entry);
+        const availableByPermission = this._isAvailableByPermission(section);
+
+        this._logger.debug('check if section is enabled', { availableByData, availableByPermission });
+        return availableByData && availableByPermission;
+    }
+
+    private _isAvailableByData(section: ContentEntryViewSections, entry: KalturaMediaEntry): boolean {
+        this._logger.debug(`check section availability by data for entry`, { categoryId: entry.id, section });
         const mediaType = entry.mediaType;
         const externalMedia = entry instanceof KalturaExternalMediaEntry;
         let result = false;
@@ -197,7 +212,52 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 break;
         }
 
-        this._logger.debug(`availability result`, { result });
+        this._logger.debug(`availability by data result`, { result });
+
+        return result;
+    }
+
+    private _isAvailableByPermission(section: ContentEntryViewSections): boolean {
+        this._logger.debug(`check section availability by permissions`, { section });
+        let result = false;
+        switch (section) {
+            case ContentEntryViewSections.Users:
+                result = this._appPermissions.hasPermission(KMCPermissions.FEATURE_END_USER_MANAGE);
+                break;
+            case ContentEntryViewSections.Related:
+                result = this._appPermissions.hasPermission(KMCPermissions.ATTACHMENT_PLUGIN_PERMISSION);
+                break;
+            case ContentEntryViewSections.Live:
+                result = this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM);
+                break;
+            case ContentEntryViewSections.Advertisements:
+                result = this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);
+                break;
+            case ContentEntryViewSections.Captions:
+                result = this._appPermissions.hasPermission(KMCPermissions.CAPTION_PLUGIN_PERMISSION);
+                break;
+            case ContentEntryViewSections.Distribution:
+                result = this._appPermissions.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_BASE);
+                break;
+            case ContentEntryViewSections.Thumbnails:
+            case ContentEntryViewSections.Flavours:
+            case ContentEntryViewSections.Clips:
+            case ContentEntryViewSections.AccessControl:
+            case ContentEntryViewSections.Scheduling:
+                result = true;
+                break;
+            case ContentEntryViewSections.Metadata:
+                // metadata section is always available to the user.
+                // if you need to change this you will need to resolve at runtime
+                // the default section to open
+                result = true;
+                break;
+            default:
+                result = true;
+                break;
+        }
+
+        this._logger.debug(`availability by permissions result`, { result });
 
         return result;
     }
@@ -210,7 +270,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             ));
     }
 
-    public openById(entryId: string, reloadEntriesListOnNavigateOut?: boolean): Observable<boolean> {
+    public openById(entryId: string, section: ContentEntryViewSections, reloadEntriesListOnNavigateOut?: boolean): Observable<boolean> {
         this._logger.info('handle open entry view by id request by the user, load entry data', { entryId });
         const baseEntryAction = new BaseEntryGetAction({ entryId })
             .setRequestOptions({
