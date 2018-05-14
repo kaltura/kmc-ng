@@ -156,11 +156,11 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
   }
 
   private _fillAvailableCategories() {
-    this._availableCategories = this.categories.map(category => ({
-      value: category,
-      label: this._appLocalization
-        .get(`applications.content.syndication.details.destinationsForms.yahoo.category.availableCategories.${category}`)
-    }));
+    this._availableCategories = this.categories.map(category => {
+        const value = this._appLocalization
+            .get(`applications.content.syndication.details.destinationsForms.yahoo.category.availableCategories.${category}`);
+        return { value, label: value };
+    });
   }
 
   public _clearPlayer(): void {

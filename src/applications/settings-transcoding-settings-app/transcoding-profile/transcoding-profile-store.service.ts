@@ -66,7 +66,7 @@ export class TranscodingProfileStore implements OnDestroy {
   }
 
   public get profileId(): string {
-    return this._profileId;
+    return String(this._profileId);
   }
 
   public readonly profile = {
