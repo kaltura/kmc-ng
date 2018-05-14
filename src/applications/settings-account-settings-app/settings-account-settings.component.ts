@@ -10,6 +10,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { SettingsAccountSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
+import { Observable } from 'rxjs/Observable';
 
 function phoneValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: boolean} | null => {
@@ -85,6 +86,14 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     }
   }
 
+    private _markFormFieldsAsUntouched() {
+        this._logger.debug(`mark form fields as untouched and update form value & validity`);
+        for (let inner in this.accountSettingsForm.controls) {
+            this.accountSettingsForm.get(inner).markAsUntouched();
+            this.accountSettingsForm.get(inner).updateValueAndValidity();
+        }
+    }
+
 // Update Partner Account Settings
   private _updatePartnerAccountSettings() {
     this._logger.info(`handle update partner account settings request`);
@@ -95,6 +104,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       .subscribe(updatedPartner => {
           this._logger.info(`handle successful update partner account settings request`);
           this._fillForm(updatedPartner);
+              this._markFormFieldsAsUntouched();
         },
         error => {
           this._logger.info(`handle failed update partner account settings request`, { errorMessage: error.message });
@@ -202,4 +212,29 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       this.accountSettingsForm.disable({ emitEvent: false });
     }
    }
+
+    public canLeaveWithoutSaving(): Observable<boolean> {
+        return Observable.create(observer => {
+            if (this.accountSettingsForm.dirty) {
+                this._browserService.confirm(
+                    {
+                        header: this._appLocalization.get('applications.settings.accountSettings.cancelEdit'),
+                        message: this._appLocalization.get('applications.settings.accountSettings.discard'),
+                        accept: () => {
+                            this._markFormFieldsAsUntouched();
+                            observer.next(true);
+                            observer.complete();
+                        },
+                        reject: () => {
+                            observer.next(false);
+                            observer.complete();
+                        }
+                    }
+                );
+            } else {
+                observer.next(true);
+                observer.complete();
+            }
+        });
+    }
 }

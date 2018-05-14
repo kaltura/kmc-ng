@@ -2173,6 +2173,8 @@
                 "referenceId": "Account Reference ID",
                 "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
                 "apply": "Apply",
+                "cancelEdit": "Cancel Edit",
+                "discard": "Discard all changes?",
                 "errors": {
                     "requiredName": "You must enter name of publisher/company",
                     "requiredUserId": "You must enter name of account owner",
