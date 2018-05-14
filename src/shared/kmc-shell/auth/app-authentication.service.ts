@@ -305,6 +305,7 @@ export class AppAuthentication {
         this.kalturaServerClient.setDefaultRequestOptions({
             ks: appUser.ks
         });
+        window['kmcng'] = {ks};
 
         this._appUser = appUser;
         this._appEvents.publish(new UserLoginStatusEvent(true));
@@ -461,6 +462,7 @@ export class AppAuthentication {
         this._logger.info(`log out user from the application`, { forceReload: reloadPage });
         this.kalturaServerClient.setDefaultRequestOptions({});
         this._permissionsService.flushPermissions();
+        delete window['kmcng'];
         this._appUser = null;
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._pageExitVerificationService.removeAll();
