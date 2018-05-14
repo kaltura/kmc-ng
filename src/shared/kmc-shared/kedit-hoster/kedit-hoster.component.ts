@@ -115,6 +115,19 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
           } else if (postMessageData.messageType === 'kea-go-to-media') {
               console.log('I will now go to media: ' + postMessageData.data);
           }
+
+          /* request for user ks.
+		  * message.data = {userKS}
+		  * should return a message {messageType:kea-ks, data: ks}
+		  */
+          if (postMessageData.messageType === 'kea-get-ks') {
+              // send the user's display name based on the user ID
+              const ks = this.appAuthentication.appUser.ks;
+              e.source.postMessage({
+                  'messageType': 'kea-ks',
+                  'data': ks
+              }, e.origin);
+          }
       };
   }
 
@@ -179,7 +192,11 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
           if (quizAvailable) {
               this._logger.debug('quiz view is available, add configuration for tabs: quiz');
-              tabs['quiz'] = { name: 'quiz', permissions: ['quiz'], userPermissions: ['quiz'] };
+              tabs['quiz'] = {
+                  name: 'quiz',
+                  permissions: ['quiz'],
+                  userPermissions: ['quiz']
+              };
           }
 
 
