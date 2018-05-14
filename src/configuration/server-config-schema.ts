@@ -123,7 +123,7 @@ export const ServerConfigSchema = {
                     additionalProperties: false
                 }
             },
-            required: ['studio', 'usageDashboard', 'liveDashboard', 'kava'],
+            required: ['studio', 'studioV3', 'liveAnalytics', 'usageDashboard', 'liveDashboard', 'kava', 'editor'],
             additionalProperties: false
         },
         externalLinks: {
