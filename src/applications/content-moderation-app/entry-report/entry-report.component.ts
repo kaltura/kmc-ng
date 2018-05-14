@@ -56,6 +56,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   public EntryReportSections = EntryReportSections;
   public _playerConfig : any = {};
   public _isBusy = false;
+  public _isEntryLinkAvailable = false;
 
   constructor(public _moderationStore: ModerationStore,
               private _appLocalization: AppLocalization,
@@ -151,6 +152,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
           this._areaBlockerMessage = null;
           if (response.entry && response.flag) {
             this._entry = response.entry;
+            this._isEntryLinkAvailable = this._contentEntryViewService.isAvailable({entry: this._entry, section: ContentEntryViewSections.Metadata});
             this._flags = response.flag.objects;
             const moderationCount = this._entry.moderationCount;
             this._flagsAmount = moderationCount === 1
