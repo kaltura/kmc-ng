@@ -73,14 +73,20 @@
                            [limitToSuggestions]="false"
                            placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
                            [minLength]="3"
+
                            [suggestionsProvider]="_usersProvider"
+                           (onUnselect)="_updateApplyButtonState()"
+                           (onSelect)="_updateApplyButtonState()"
                            (completeMethod)="_searchUsers($event)">
             </kAutoComplete>
           </div>
 
           <div class="kFooter">
             <button type="button" class="kButtonDefault" [disabled]="false" (click)="ownerPopup.close()" pButton label="{{'app.common.cancel' | translate}}"></button>
-            <button type="button" class="kButtonBranded" [disabled]="false" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.users.save' | translate}}"></button>
+            <button pButton type="button" class="kButtonBranded"
+                    [label]="'applications.content.entryDetails.users.save' | translate"
+                    [disabled]="_disableSaveButton"
+                    (click)="_saveAndClose()"></button>
           </div>
 			</div>
 
