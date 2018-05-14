@@ -59,11 +59,7 @@ Follow these instructions to test external apps integration:
             ],
             "map_zoom_levels": "12"
         },
-        "clipAndTrim": {
-            "enabled": true,
-            "uri": "/__local_machine_only__/kea2-2.23.0/index.html"
-        },
-        "advertisements": {
+        "editor": {
             "enabled": true,
             "uri": "/__local_machine_only__/kea2-2.23.0/index.html"
         }
