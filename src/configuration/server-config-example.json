@@ -51,11 +51,7 @@
             "map_urls": [],
             "map_zoom_levels": ""
         },
-        "clipAndTrim": {
-            "enabled": false,
-            "uri": ""
-        },
-        "advertisements": {
+        "editor": {
             "enabled": false,
             "uri": ""
         }

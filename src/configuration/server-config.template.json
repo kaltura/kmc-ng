@@ -52,13 +52,9 @@
       ],
       "map_zoom_levels": "@externalApps.usageDashboard.map_zoom_levels@"
     },
-    "clipAndTrim": {
-      "enabled": @externalApps.clipAndTrim.enabled@,
-      "uri": "@externalApps.clipAndTrim.uri@"
-    },
-    "advertisements": {
-      "enabled": @externalApps.advertisements.enabled@,
-      "uri": "@externalApps.advertisements.uri@"
+    "editor": {
+      "enabled": @externalApps.editor.enabled@,
+      "uri": "@externalApps.editor.uri@"
     }
   },
   "externalLinks": {

@@ -179,14 +179,14 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               case 'quiz':
               case 'editor':
                   if (clipAndTrimAvailable) {
-                      keditUrl = serverConfig.externalApps.clipAndTrim.uri;
+                      keditUrl = serverConfig.externalApps.editor.uri;
                   } else {
                       requestedTabIsNotAvailable = true;
                   }
                   break;
               case 'advertisements':
                   if (advertismentsAvailable) {
-                      keditUrl = serverConfig.externalApps.advertisements.uri;
+                      keditUrl = serverConfig.externalApps.editor.uri;
                   } else {
                       requestedTabIsNotAvailable = true;
                   }

@@ -106,15 +106,7 @@ export const ServerConfigSchema = {
                     required: ['enabled'],
                     additionalProperties: false
                 },
-                clipAndTrim: {
-                    properties: {
-                        enabled: {type: 'boolean'},
-                        uri: {type: 'string'}
-                    },
-                    required: ['enabled'],
-                    additionalProperties: false
-                },
-                advertisements: {
+                editor: {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'}
