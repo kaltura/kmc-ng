@@ -4,7 +4,7 @@ import {AppLocalization, IAppStorage} from '@kaltura-ng/kaltura-common';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 
 export interface Confirmation {
@@ -39,6 +39,12 @@ export class BrowserService implements IAppStorage {
     private _growlMessage = new Subject<GrowlMessage>();
     private _sessionStartedAt: Date = new Date();
     public growlMessage$ = this._growlMessage.asObservable();
+    private _currentUrl: string;
+    private _previousUrl: string;
+
+    public get previousUrl(): string {
+        return this._previousUrl;
+    }
 
     private _onConfirmationFn: OnShowConfirmationFn = (confirmation: Confirmation) => {
         // this is the default confirmation dialog provided by the browser.
@@ -71,8 +77,18 @@ export class BrowserService implements IAppStorage {
                 private _logger: KalturaLogger,
                 private _appLocalization: AppLocalization) {
         this._recordInitialQueryParams();
+        this._recordRoutingActions();
     }
 
+    private _recordRoutingActions(): void {
+        this._currentUrl = this._router.url;
+        this._router.events
+            .filter(event => event instanceof NavigationEnd)
+            .subscribe((event: NavigationEnd) => {
+                this._previousUrl = this._currentUrl;
+                this._currentUrl = event.url;
+            });
+    }
     private _downloadContent(url: string): void {
         return Observable.create(observer => {
             const xhr = new XMLHttpRequest();
