@@ -1,0 +1,103 @@
+@import 'app-theme/_variables.scss';
+
+.kTitle {
+  height: 24px;
+  width: 100%;
+  color: $kGrayscale1;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 24px;
+}
+
+.kAddToDefaultTranscodingProfile {
+  padding-top: 11px;
+  /deep/ {
+    .ui-chkbox-label {
+      font-weight: normal;
+    }
+  }
+}
+
+.kHint {
+  width: 500px;
+  margin-top: 10px;
+}
+
+.kLabel, .kAsterix {
+  align-self: flex-start;
+}
+
+.kAsterix {
+  padding-top: 12px !important;
+}
+
+.threeRows {
+  width: 500px;
+}
+
+.kHasError {
+  /deep/ .ui-multiselect {
+    border: 1px solid $kDandger;
+  }
+}
+
+.kLandingPageExplanation {
+  color: $kGrayscale1;
+  width: 710px;
+  padding-top: 12px;
+  font-size: 15px;
+  line-height: 22px;
+  padding-bottom: 20px;
+}
+
+.kPlayback {
+  .kSelectPlayer {
+    padding-top: 17px;
+    display: flex;
+    align-items: center;
+
+    .kSelectPlayerLabel {
+      flex: 0 0 auto;
+    }
+    .kSelectPlayerControl {
+      padding-left:23px;
+    }
+  }
+
+  .kPlaybackLinkback {
+    padding-left: 31px;
+  }
+
+  .kSelectPlayerInfo {
+    padding-top: 12px;
+  }
+}
+
+:host /deep/ .kCategories {
+  .ui-multiselect {
+    padding-left: 0;
+  }
+
+  .ui-multiselect-label {
+    padding: .5em;
+    line-height: inherit;
+  }
+
+  .ui-widget-header {
+    border-radius: 0;
+  }
+}
+
+:host /deep/ {
+  .ui-dropdown .ui-dropdown-label {
+    text-overflow: ellipsis;
+  }
+
+  .ui-dropdown-item > span {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 210px;
+    text-overflow: ellipsis;
+  }
+}
