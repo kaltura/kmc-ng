@@ -6,7 +6,7 @@ import {UpdateClipsEvent} from 'app-shared/kmc-shared/events/update-clips-event'
 import {AppEventsService} from 'app-shared/kmc-shared/app-events';
 import {
     AdvertisementsAppViewService,
-    ClipAndTrimAppViewService
+    ClipAndTrimAppViewService, QuizAppViewService
 } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
@@ -37,6 +37,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
   constructor(private appAuthentication: AppAuthentication,
               private _advertisementsAppViewService: AdvertisementsAppViewService,
               private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
+              private _quizAppViewService: QuizAppViewService,
               private _permissionService: KMCPermissionsService,
               private _logger: KalturaLogger,
               private _appEvents: AppEventsService,
@@ -154,8 +155,11 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               entry: this.entry,
               hasSource: this.entryHasSource
           });
+          const quizAvailable = this._quizAppViewService.isAvailable({
+              entry: this.entry,
+              hasSource: this.entryHasSource
+          });
 
-          // quiz configuration : 'quiz': {name: 'quiz', permissions: ['quiz'], userPermissions: ['quiz']},
           if (clipAndTrimAvailable) {
               this._logger.debug('clip&trim views are available, add configuration for tabs: edit, quiz');
               Object.assign(tabs, {
@@ -173,10 +177,22 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               };
           }
 
+          if (quizAvailable) {
+              this._logger.debug('quiz view is available, add configuration for tabs: quiz');
+              tabs['quiz'] = { name: 'quiz', permissions: ['quiz'], userPermissions: ['quiz'] };
+          }
+
+
           let requestedTabIsNotAvailable = false;
           let keditUrl = null;
           switch (this.tab) {
               case 'quiz':
+                  if (quizAvailable) {
+                      keditUrl = serverConfig.externalApps.editor.uri;
+                  } else {
+                      requestedTabIsNotAvailable = true;
+                  }
+                  break;
               case 'editor':
                   if (clipAndTrimAvailable) {
                       keditUrl = serverConfig.externalApps.editor.uri;
