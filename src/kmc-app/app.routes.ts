@@ -20,17 +20,13 @@ const routes: Routes = <Routes>[
                 path: 'login', component: LoginComponent
             },
             {
-                path: '', redirectTo: '/content/entries/list', pathMatch: 'full'
+                path: '', component: AppDefaultViewComponent, pathMatch: 'full'
             },
             {
                 path: '',  component: DashboardComponent, canActivate: [AuthCanActivate],
                 children: [
                     {
-                        path: 'default', component: AppDefaultViewComponent
-                    },
-                    {
                         path: 'content', children: [
-                            { path: '', redirectTo: 'entries', pathMatch: 'full' },
                             {
                                 path: 'entries',
                                 loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule'
@@ -67,7 +63,6 @@ const routes: Routes = <Routes>[
                     },
                     {
                         path: 'settings', children: [
-                            { path: '', redirectTo: 'accountSettings', pathMatch: 'full' },
                             {
                                 path: 'accountSettings',
                                 loadChildren: '../applications/settings-account-settings-app/settings-account-settings-app.module#SettingsAccountSettingsAppModule'
@@ -100,7 +95,6 @@ const routes: Routes = <Routes>[
                     },
                     {
                         path: 'administration', children: [
-                            { path: '', redirectTo: 'users', pathMatch: 'full' },
                             {
                                 path: 'roles',
                                 loadChildren: '../applications/administration-roles-app/administration-roles-app.module#AdministrationRolesAppModule'
@@ -118,7 +112,6 @@ const routes: Routes = <Routes>[
                     },
                     {
                         path: 'analytics', children: [
-                            { path: '', redirectTo: 'liveAnalytics', pathMatch: 'full' },
                             {
                                 path: 'kava',
                                 loadChildren: '../applications/analytics-kava-app/analytics-kava-app.module#AnalyticsKavaAppModule'

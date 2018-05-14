@@ -135,6 +135,14 @@
               [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kYahooDestinationForm>
+            <!--iTunes-->
+            <kItunesDestinationForm
+              *ngSwitchCase="_kalturaSyndicationFeedType.itunes"
+              [feed]="feed"
+              [mode]="_mode"
+              [contentFlavors]="_flavors"
+              (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
+            </kItunesDestinationForm>
             <!--Roku-->
             <kRokuDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.rokuDirectPublisher"

@@ -1,10 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { kmcAppConfig } from '../../kmc-app-config';
 
-import {
-    AppAuthentication, AppNavigator, AutomaticLoginErrorReasons, BrowserService, ILoginError,
-    ILoginResponse
-} from 'app-shared/kmc-shell';
+import { AppAuthentication,  AutomaticLoginErrorReasons,BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
 import { serverConfig } from 'config/server';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
@@ -47,7 +44,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   constructor(private _appAuthentication: AppAuthentication,
-              private _appNavigator: AppNavigator,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _el: ElementRef,
@@ -58,19 +54,19 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onResize();
   }
 
-  private _makeLoginRequest(username: string, password: string): Observable<ILoginResponse> {
+  private _makeLoginRequest(username: string, password: string): Observable<LoginResponse> {
     return this._appAuthentication.login(username, password, {
       privileges: kmcAppConfig.kalturaServer.privileges,
       expiry: kmcAppConfig.kalturaServer.expiry
     }).cancelOnDestroy(this);
   }
 
-  private _handleLoginResponse(success: boolean, error: ILoginError, username: string): void {
+  private _handleLoginResponse(success: boolean, error: LoginError, username: string): void {
     this._errorCode = '';
     this._errorMessage = '';
 
     if (success) {
-      this._appNavigator.navigateToDefault();
+      this._browserService.navigateToDefault();
       return;
     }
 
@@ -91,7 +87,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnInit() {
         if (this._appAuthentication.isLogged()) {
-            this._appNavigator.navigateToDefault();
+            this._browserService.navigateToDefault();
         } else if (typeof document['documentMode'] !== 'undefined' && document['documentMode'] < 11) {
             this._showIEMessage = true;
         } else {
@@ -115,6 +111,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         this._handleLoginResponse(success, error, username);
       },
       (err) => {
+        this._errorCode = err.code;
         this._errorMessage = err.message;
         this._inProgress = false;
       }
@@ -175,9 +172,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(
         ({ success, error }) => {
           this._inProgress = false;
-          this._handleLoginResponse(success, error, this._username)
+          this._handleLoginResponse(success, error, this._username);
         },
-        (error: ILoginError) => {
+        (error: LoginError) => {
           this._inProgress = false;
           this._errorCode = error.code;
           if (!error.custom) {
