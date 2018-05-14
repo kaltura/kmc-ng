@@ -6,7 +6,8 @@ import {BrowserService} from 'app-shared/kmc-shell';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {AppLocalization} from "@kaltura-ng/kaltura-common";
 
 @Component({
   selector: 'kPrepareEntry',
@@ -21,7 +22,8 @@ export class PrepareEntryComponent implements OnDestroy {
   constructor(private _prepareEntryService: PrepareEntryService,
               private _permissionsService: KMCPermissionsService,
               private _contentEntryViewService: ContentEntryViewService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization) {
   }
 
   ngOnDestroy() {
@@ -44,7 +46,7 @@ export class PrepareEntryComponent implements OnDestroy {
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
         .tag('block-shell')
       .subscribe((draftEntry: DraftEntry) => {
-            this._contentEntryViewService.openById(draftEntry.id, true)
+            this._contentEntryViewService.openById(draftEntry.id, ContentEntryViewSections.Metadata, true)
                 .cancelOnDestroy(this)
                 .tag('block-shell')
                 .subscribe(() => {
@@ -53,6 +55,7 @@ export class PrepareEntryComponent implements OnDestroy {
         },
         error => {
           this._browserService.alert({
+              header: this._appLocalization.get('app.common.error'),
             message: error.message
           });
         });

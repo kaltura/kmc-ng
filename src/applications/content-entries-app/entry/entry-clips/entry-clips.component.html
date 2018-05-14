@@ -50,6 +50,9 @@
 
 <kPopupWidget #clipAndTrim [fullScreen]="true">
   <ng-template>
-    <kClipAndTrim [entry]="_widgetService.data" [parentPopupWidget]="clipAndTrim"></kClipAndTrim>
+      <kEntryEditor [entry]="_widgetService.data"
+                    [entryHasSource]="true"
+                    [tab]="'editor'"
+                    [parentPopupWidget]="clipAndTrim"></kEntryEditor>
   </ng-template>
 </kPopupWidget>

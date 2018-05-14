@@ -28,6 +28,7 @@ import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/
 import { DropFolderFileDeleteAction } from 'kaltura-ngx-client/api/types/DropFolderFileDeleteAction';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { serverConfig } from 'config/server';
 import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
@@ -170,7 +171,11 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       .switchMap(({ dropFoldersList, error }) => {
         if (!dropFoldersList.length || error) {
           this._browserService.alert({
-            message: error || this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert')
+              header: this._appLocalization.get('app.common.attention'),
+            message: error || this._appLocalization.get(
+                'applications.content.dropFolders.errors.dropFoldersAlert',
+                [serverConfig.externalLinks.kaltura.contactUs, serverConfig.externalLinks.kaltura.dropFoldersManual]
+            )
           });
 
           return Observable.of({
@@ -297,7 +302,13 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
           return { dropFoldersList, error: null }
         } else {
-          return { dropFoldersList: [], error: this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert') };
+          return {
+              dropFoldersList: [],
+              error: this._appLocalization.get(
+                  'applications.content.dropFolders.errors.dropFoldersAlert',
+                  [serverConfig.externalLinks.kaltura.contactUs, serverConfig.externalLinks.kaltura.dropFoldersManual]
+              )
+          };
         }
       })
       .publishReplay(1)

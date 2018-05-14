@@ -110,7 +110,7 @@ export class PlaylistStore implements OnDestroy {
           const newDirtyState = Object.keys(sectionsState)
             .reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
 
-          if (this._playlistIsDirty !== newDirtyState) {
+          if (newDirtyState && this._playlistIsDirty !== newDirtyState) {
             this._playlistIsDirty = newDirtyState;
 
             this._updatePageExitVerification();
@@ -151,7 +151,11 @@ export class PlaylistStore implements OnDestroy {
       .request(new PlaylistGetAction({ id }))
       .cancelOnDestroy(this)
       .subscribe(playlist => {
-          if (this._contentPlaylistView.isAvailable({ playlist, activatedRoute: this._playlistRoute })) {
+          if (this._contentPlaylistView.isAvailable({
+              playlist,
+              activatedRoute: this._playlistRoute,
+              section: ContentPlaylistViewSections.ResolveFromActivatedRoute
+          })) {
               if (playlist.playlistType === KalturaPlaylistType.dynamic) {
                   if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
                       playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
@@ -214,6 +218,7 @@ export class PlaylistStore implements OnDestroy {
 
               if (newData) {
                 this._playlistId = currentPlaylistId;
+                this._playlistIsDirty = true;
 
                   const playlist = new KalturaPlaylist({
                       name: newData.name,

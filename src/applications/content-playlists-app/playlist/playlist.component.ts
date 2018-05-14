@@ -39,11 +39,11 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
 
-  public get _disableSaveBtn(): boolean {
-    const hasUpdatePermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE);
-    const isNewPlaylist = this._playlistWidgetsManager.isNewData;
-    return !this._playlistStore.playlistIsDirty || (!isNewPlaylist && !hasUpdatePermission);
-  }
+    public get _enableSaveBtn(): boolean {
+        const hasUpdatePermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE);
+        const isNewPlaylist = this._playlistWidgetsManager.isNewData;
+        return  isNewPlaylist || (this._playlistStore.playlistIsDirty && !isNewPlaylist && hasUpdatePermission);
+    }
 
   constructor(private _browserService: BrowserService,
               public _playlistStore: PlaylistStore,
