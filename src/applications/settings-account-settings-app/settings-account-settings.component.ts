@@ -11,6 +11,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { SettingsAccountSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 import { Observable } from 'rxjs/Observable';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 function phoneValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: boolean} | null => {
@@ -35,7 +36,7 @@ function phoneValidator(): ValidatorFn {
   ],
 })
 export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
-
+    private _pageExitVerificationToken: string;
   public _kmcPermissions = KMCPermissions;
   public accountSettingsForm: FormGroup;
   public nameOfAccountOwnerOptions: SelectItem[] = [];
@@ -48,6 +49,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
+              private _pageExitVerificationService: PageExitVerificationService,
               private _browserService: BrowserService,
               private _logger: KalturaLogger,
               private _settingsAccountSettingsMainView: SettingsAccountSettingsMainViewService,
@@ -63,6 +65,11 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     }else{
         this._browserService.handleUnpermittedAction(true);
     }
+
+      this.accountSettingsForm
+          .statusChanges
+          .cancelOnDestroy(this)
+          .subscribe(() => this._updatePageExitVerification());
   }
 
   ngOnDestroy(): void {
@@ -91,6 +98,17 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
         for (let inner in this.accountSettingsForm.controls) {
             this.accountSettingsForm.get(inner).markAsUntouched();
             this.accountSettingsForm.get(inner).updateValueAndValidity();
+        }
+    }
+
+    private _updatePageExitVerification(): void {
+        if (this.accountSettingsForm.dirty) {
+            this._pageExitVerificationToken = this._pageExitVerificationService.add();
+        } else {
+            if (this._pageExitVerificationToken) {
+                this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+            }
+            this._pageExitVerificationToken = null;
         }
     }
 
