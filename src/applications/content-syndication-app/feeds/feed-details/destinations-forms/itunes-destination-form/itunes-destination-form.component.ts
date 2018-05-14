@@ -192,11 +192,11 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   }
 
   private _fillAvailableCategories(): void {
-    this._availableCategories = this._categories.map(category => ({
-      value: category,
-      label: this._appLocalization
-        .get(`applications.content.syndication.details.destinationsForms.itunes.categories.availableCategories.${category}`)
-    }));
+    this._availableCategories = this._categories.map(category => {
+        const value = this._appLocalization
+            .get(`applications.content.syndication.details.destinationsForms.itunes.categories.availableCategories.${category}`);
+        return { value, label: value };
+    });
   }
 
   private _fillAvailableContentFlavors() {
