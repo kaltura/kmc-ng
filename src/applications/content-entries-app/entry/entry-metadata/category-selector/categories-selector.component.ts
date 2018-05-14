@@ -215,7 +215,21 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
       if (categoryData) {
         this._selectedCategories.push(categoryData);
       } else {
-        // TODO sakal
+        this._categoriesSearchService.getCategory(node)
+          .subscribe(
+            loadedCategoryData => {
+              this._selectedCategories.push(loadedCategoryData);
+            },
+            error => {
+              this._browserService.alert({
+                header: this._appLocalization.get('app.common.error'),
+                message: error.message || this._appLocalization.get('applications.content.categories.bActions.failedToLoadCategoryData', [node]),
+                accept: () => {
+                  this._confirmClose = false;
+                  this.parentPopupWidget.close();
+                }
+              });
+            });
       }
     }
   }

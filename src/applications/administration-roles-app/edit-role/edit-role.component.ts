@@ -52,7 +52,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
               private _rolesService: RolesStoreService,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _kmcPermissionsService: KMCPermissionsService) {
     this._buildForm();
   }
 
@@ -81,16 +82,36 @@ import { BrowserService } from 'app-shared/kmc-shell';
       this._logger.info(`enter edit role mode for existing role`,{ id: this.role.id, name: this.role.name });
       this._title = this._appLocalization.get('applications.administration.role.titleEdit');
       this._actionBtnLabel = this._appLocalization.get('applications.administration.role.save');
-      this._permissions = (this.role.permissionNames || '').split(',');
+      this._permissions = this._addMissingRolePermissions((this.role.permissionNames || '').split(','));
       this._editRoleForm.setValue({
         name: this.role.name,
         description: this.role.description
       }, { emitEvent: false });
-    }
 
-    if (!this._permissionsService.hasPermission(KMCPermissions.ADMIN_ROLE_UPDATE)) {
-      this._editRoleForm.disable({ emitEvent: false });
+        if (!this._permissionsService.hasPermission(KMCPermissions.ADMIN_ROLE_UPDATE)) {
+            this._editRoleForm.disable({ emitEvent: false });
+        }
     }
+  }
+
+  private _addMissingRolePermissions(permissions: string[]): string[] {
+      const result = [...permissions];
+      const uniquePermissions = new Set(permissions || []);
+
+      permissions.forEach(permission => {
+          const permissionKey = this._kmcPermissionsService.getPermissionKeyByName(permission);
+          const linkedPermissionKey = this._kmcPermissionsService.getLinkedPermissionByKey(permissionKey);
+          const linkedPermission = this._kmcPermissionsService.getPermissionNameByKey(linkedPermissionKey);
+          if (linkedPermission && result.indexOf(linkedPermission) === -1) {
+              result.push(linkedPermission);
+              this._logger.debug('add missing linked permission', () => ({
+                  linkedPermission,
+                      permission
+              }));
+          }
+      });
+
+      return result;
   }
 
   private _buildForm(): void {
@@ -103,12 +124,18 @@ import { BrowserService } from 'app-shared/kmc-shell';
     this._descriptionField = this._editRoleForm.controls['description'];
   }
 
-  private _markFormFieldsAsTouched() {
-    this._editRoleForm.markAsTouched();
-    this._editRoleForm.updateValueAndValidity();
-  }
+    private _markFormFieldsAsTouched() {
+        for (const controlName in this._editRoleForm.controls) {
+            if (this._editRoleForm.controls.hasOwnProperty(controlName)) {
+                this._editRoleForm.get(controlName).markAsTouched();
+                this._editRoleForm.get(controlName).updateValueAndValidity();
+            }
+        }
+        this._editRoleForm.updateValueAndValidity();
+    }
 
-  private _getObserver(retryFn: () => void, successFn: () => void = null): Observer<void> {
+
+    private _getObserver(retryFn: () => void, successFn: () => void = null): Observer<void> {
     return <Observer<void>>{
       next: () => {
         if (typeof successFn === 'function') {

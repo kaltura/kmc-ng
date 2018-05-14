@@ -12,6 +12,7 @@ import { TranscodingProfileFlavorsWidget } from './transcoding-profile-flavors/t
 import { BaseTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { MediaTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/media-transcoding-profiles-store.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/live-transcoding-profiles-store.service';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kTranscodingProfile',
@@ -38,16 +39,22 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
   public _enableNextButton: boolean;
   public _profileHasChanges: boolean;
 
-  constructor(profileWidgetsManager: TranscodingProfileWidgetsManager,
-              widget1: TranscodingProfileSectionsListWidget,
+  public get _isSaveDisabled(): boolean {
+    const updateAllowed = this._profileWidgetsManager.isNewData || this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE);
+    return !this._profileStore.profileIsDirty || !updateAllowed;
+  }
+
+  constructor(widget1: TranscodingProfileSectionsListWidget,
               widget2: TranscodingProfileDetailsWidget,
               widget3: TranscodingProfileMetadataWidget,
               widget4: TranscodingProfileFlavorsWidget,
+              private _permissionsService: KMCPermissionsService,
+              private _profileWidgetsManager: TranscodingProfileWidgetsManager,
               private _appLocalization: AppLocalization,
               private _mediaTranscodingProfilesStore: MediaTranscodingProfilesStore,
               private _liveTranscodingProfilesStore: LiveTranscodingProfilesStore,
               public _profileStore: TranscodingProfileStore) {
-    profileWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4]);
+    _profileWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4]);
   }
 
   ngOnDestroy() {
@@ -204,7 +211,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
       const currentProfileIndex = currentProfile ? profiles.indexOf(currentProfile) : -1;
       if (currentProfileIndex > 0) {
         const prevProfile = profiles[currentProfileIndex - 1];
-        this._profileStore.openProfile(String(prevProfile.id));
+        this._profileStore.openProfile(prevProfile);
       }
     }
   }
@@ -217,7 +224,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
       const currentProfileIndex = currentProfile ? profiles.indexOf(currentProfile) : -1;
       if (currentProfileIndex >= 0 && (currentProfileIndex < profiles.length - 1)) {
         const nextProfile = profiles[currentProfileIndex + 1];
-        this._profileStore.openProfile(String(nextProfile.id));
+        this._profileStore.openProfile(nextProfile);
       }
     }
   }

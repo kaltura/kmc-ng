@@ -1,52 +1,52 @@
-import {EntryWidgetKeys} from '../entry-widget-keys';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 export const SectionsList = [
     {
         label : 'applications.content.entryDetails.sections.metadata',
-        key : EntryWidgetKeys.Metadata
+        key : ContentEntryViewSections.Metadata
     },
     {
         label : 'applications.content.entryDetails.sections.thumbnails',
-        key : EntryWidgetKeys.Thumbnails
+        key : ContentEntryViewSections.Thumbnails
     },
     {
         label : 'applications.content.entryDetails.sections.accessControl',
-        key : EntryWidgetKeys.AccessControl
+        key : ContentEntryViewSections.AccessControl
     },
     {
         label : 'applications.content.entryDetails.sections.scheduling',
-        key : EntryWidgetKeys.Scheduling
+        key : ContentEntryViewSections.Scheduling
     },
     {
         label : 'applications.content.entryDetails.sections.flavours',
-        key : EntryWidgetKeys.Flavours
+        key : ContentEntryViewSections.Flavours
     },
     {
         label : 'applications.content.entryDetails.sections.distribution',
-        key : EntryWidgetKeys.Distribution
+        key : ContentEntryViewSections.Distribution
     },
     {
         label : 'applications.content.entryDetails.sections.captions',
-        key : EntryWidgetKeys.Captions
+        key : ContentEntryViewSections.Captions
     },
     {
         label : 'applications.content.entryDetails.sections.live',
-        key : EntryWidgetKeys.Live
+        key : ContentEntryViewSections.Live
     },
     {
         label : 'applications.content.entryDetails.sections.relatedFiles',
-        key : EntryWidgetKeys.Related
+        key : ContentEntryViewSections.Related
     },
     {
         label : 'applications.content.entryDetails.sections.clips',
-        key : EntryWidgetKeys.Clips
+        key : ContentEntryViewSections.Clips
     },
     {
         label : 'applications.content.entryDetails.sections.users',
-        key : EntryWidgetKeys.Users
+        key : ContentEntryViewSections.Users
     },
     {
       label : 'applications.content.entryDetails.sections.advertisements',
-      key : EntryWidgetKeys.Advertisements
+      key : ContentEntryViewSections.Advertisements
     }
 ];

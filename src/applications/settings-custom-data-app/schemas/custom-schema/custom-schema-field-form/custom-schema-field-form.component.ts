@@ -4,6 +4,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { MetadataItem, MetadataItemTypes } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
@@ -26,6 +27,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   private _isNew = true;
   private _systemNames: string[] = [];
 
+  public _saveDisabled = false;
   public _title: string;
   public _saveBtnLabel: string;
   public _fieldForm: FormGroup;
@@ -61,6 +63,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
   constructor(private _fb: FormBuilder,
               private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _logger: KalturaLogger,
               private _browserService: BrowserService) {
     this._buildForm();
@@ -123,6 +126,11 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
     if (this.fields && this.fields.length) {
       this._systemNames = this.fields.map(({ name }) => name);
+    }
+
+    if (!this._isNew && !this._permissionsService.hasPermission(KMCPermissions.CUSTOM_DATA_PROFILE_UPDATE)) {
+      this._saveDisabled = true;
+      this._fieldForm.disable({ emitEvent: false });
     }
   }
 

@@ -8,6 +8,7 @@ import {BrowserService} from "app-shared/kmc-shell";
 import { serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kEntitlement',
@@ -26,6 +27,8 @@ export class EntitlementComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _currentEditEntitlement: KalturaCategory = null;
   public _kmcPermissions = KMCPermissions;
+  public _manageHelpLinkExists = !!serverConfig.externalLinks.entitlements && !!serverConfig.externalLinks.entitlements.manage;
+
   @ViewChild('editEntitlementPopup') editEntitlementPopup: PopupWidgetComponent;
   @ViewChild('addNewEntitlement') addEntitlementPopup: PopupWidgetComponent;
 
@@ -33,11 +36,14 @@ export class EntitlementComponent implements OnInit, OnDestroy {
   constructor(private _entitlementService: EntitlementService,
               private _appLocalization: AppLocalization,
               private _logger: KalturaLogger,
+              private _settingsIntegrationSettingsMainView: SettingsIntegrationSettingsMainViewService,
               private _browserService: BrowserService) {
   }
 
   ngOnInit() {
-    this._loadEntitlementSectionData();
+      if (this._settingsIntegrationSettingsMainView.isAvailable()) {
+          this._loadEntitlementSectionData();
+      }
   }
 
   ngOnDestroy() {

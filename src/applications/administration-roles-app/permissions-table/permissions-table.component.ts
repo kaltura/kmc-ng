@@ -1,13 +1,15 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ROLE_PERMISSIONS, RolePermission } from './permissions-list';
+import { PermissionTreeNode } from '../roles-store/permission-tree-nodes';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { RolesStoreService } from '../roles-store/roles-store.service';
 
-export interface RolePermissionFormValue extends RolePermission {
+export interface RolePermissionFormValue extends PermissionTreeNode {
   checked?: boolean;
   formValue?: KMCPermissions[];
   items?: RolePermissionFormValue[];
   hasError?: boolean;
+  disabled?: boolean;
 }
 
 @Component({
@@ -24,11 +26,11 @@ export class PermissionsTableComponent implements OnInit {
   @Output() rolePermissionsChange = new EventEmitter<RolePermissionFormValue[]>();
   @Output() setDirty = new EventEmitter<void>();
 
-  public _rolePermissionsOptions: RolePermission[] = ROLE_PERMISSIONS;
   public _rolePermissions: RolePermissionFormValue[] = [];
   public _kmcPermissions = KMCPermissions;
 
   constructor(private _permissionsService: KMCPermissionsService,
+              private _rolesService: RolesStoreService,
               private _logger: KalturaLogger) {
   }
 
@@ -40,7 +42,7 @@ export class PermissionsTableComponent implements OnInit {
     this._logger.info(`initiate permissions table`);
     const hasPermissionInList = (value) => this.permissions.indexOf(value) !== -1;
 
-    this._rolePermissions = this._rolePermissionsOptions.map(permission => {
+    this._rolePermissions = this._rolesService.getPermissionsTree().map(permission => {
       let hasError = false;
       let checked = false;
       let formValue = [];
