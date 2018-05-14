@@ -35,13 +35,13 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
             `handle isAvailable action for advertisements app`,
             {
                 advertisementsConfig: {
-                    enabled: serverConfig.externalApps.advertisements.enabled,
-                    uri: serverConfig.externalApps.advertisements.uri
+                    enabled: serverConfig.externalApps.editor.enabled,
+                    uri: serverConfig.externalApps.editor.uri
                 }
             }
         );
 
-        const availableByConfiguration = serverConfig.externalApps.clipAndTrim.enabled;
+        const availableByConfiguration = serverConfig.externalApps.editor.enabled;
         const availableByPermissions = this._isAvailableByPermission();
         const availableByData = this._isAvailableByData(args);
         const result = availableByConfiguration && availableByData && availableByPermissions;

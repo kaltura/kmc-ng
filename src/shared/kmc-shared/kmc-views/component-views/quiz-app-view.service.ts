@@ -13,13 +13,13 @@ import {KalturaEntryReplacementStatus} from 'kaltura-ngx-client/api/types/Kaltur
 import {KalturaExternalMediaEntry} from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
-export interface AdvertisementsAppViewArgs {
+export interface QuizAppViewArgs {
     entry: KalturaMediaEntry;
     hasSource: boolean;
 }
 
 @Injectable()
-export class AdvertisementsAppViewService extends KmcComponentViewBaseService<AdvertisementsAppViewArgs> {
+export class QuizAppViewService extends KmcComponentViewBaseService<QuizAppViewArgs> {
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
@@ -27,10 +27,10 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
                 private _router: Router,
                 _browserService: BrowserService,
                 _logger: KalturaLogger) {
-        super(_logger.subLogger('AdvertisementsAppViewService'));
+        super(_logger.subLogger('QuizAppViewService'));
     }
 
-    isAvailable(args: AdvertisementsAppViewArgs): boolean {
+    isAvailable(args: QuizAppViewArgs): boolean {
         this._logger.info(
             `handle isAvailable action for advertisements app`,
             {
@@ -54,10 +54,10 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
     }
 
     private _isAvailableByPermission(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);
+        return false; /*this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);*/
     }
 
-    private _isAvailableByData(args: AdvertisementsAppViewArgs): boolean {
+    private _isAvailableByData(args: QuizAppViewArgs): boolean {
         const { entry, hasSource} = args;
         const entryReady = entry.status === KalturaEntryStatus.ready;
         const isEntryReplacing = entry.replacementStatus !== KalturaEntryReplacementStatus.none;

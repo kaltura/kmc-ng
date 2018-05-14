@@ -51,11 +51,7 @@ export interface ExternalApplications {
         uiConfId?: number,
         uri?: string
     };
-    clipAndTrim: {
-        enabled: boolean,
-        uri?: string
-    };
-    advertisements: {
+    editor: {
         enabled: boolean,
         uri?: string
     };
@@ -115,7 +111,7 @@ export interface ServerConfig {
 
 
 export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalApplications> = {
-    advertisements: (configuration) => {
+    editor: (configuration) => {
         {
             let result = false;
 
@@ -217,20 +213,6 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g) && // not contains white spaces
                 !!configuration.uiConfId;
-
-            if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
-            }
-        }
-
-        return result;
-    },
-    clipAndTrim: (configuration) => {
-        let result = false;
-
-        if (configuration.enabled) {
-            result = !!configuration.uri &&
-                !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
                 configuration.uri = buildKalturaServerUri(configuration.uri);
