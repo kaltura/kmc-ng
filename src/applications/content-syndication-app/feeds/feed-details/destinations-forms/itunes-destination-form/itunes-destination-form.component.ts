@@ -3,18 +3,21 @@ import { DestinationComponentBase, FeedFormMode } from '../../feed-details.compo
 import { KalturaITunesSyndicationFeed } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeed';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KalturaValidators } from '@kaltura-ng/kaltura-ui/validators/validators';
-import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaITunesSyndicationFeedAdultValues } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeedAdultValues';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { LanguageOptionsService } from 'app-shared/kmc-shared/language-options';
 
 @Component({
   selector: 'kItunesDestinationForm',
   templateUrl: './itunes-destination-form.component.html',
   styleUrls: ['./itunes-destination-form.component.scss'],
-  providers: [{ provide: DestinationComponentBase, useExisting: ItunesDestinationFormComponent }]
+  providers: [
+      LanguageOptionsService,
+      { provide: DestinationComponentBase, useExisting: ItunesDestinationFormComponent }
+  ]
 })
 export class ItunesDestinationFormComponent extends DestinationComponentBase implements OnInit, OnDestroy {
   @Input() mode: FeedFormMode;
@@ -127,6 +130,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   public _availableContentFlavors: { value: number, label: string }[] = [];
 
   constructor(private _fb: FormBuilder,
+              private _languageOptions: LanguageOptionsService,
               private _permissionsService: KMCPermissionsService,
               private _appLocalization: AppLocalization,
               private _appAuth: AppAuthentication) {
@@ -184,24 +188,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   }
 
   private _fillAvailableLanguages(): void {
-    // load all supported languages
-    this._languages = [];
-    const excludedLanguages = ['he', 'id', 'yi']; // duplicated languages TODO [KMCNG] - should be checked with backend
-    for (const lang in KalturaLanguage) {
-      if (lang !== 'en' && excludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
-        const value = lang.toUpperCase();
-        const label = this._appLocalization.get(`languages.${value}`);
-        this._languages.push({ value, label});
-      }
-    }
-    // sort the language array by language alphabetically
-    this._languages.sort((a, b) => {
-      const x = a['label'];
-      const y = b['label'];
-      return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-    });
-    // put English on top
-    this._languages.unshift({ label: this._appLocalization.get('languages.EN'), value: 'EN' });
+    this._languages = this._languageOptions.get();
   }
 
   private _fillAvailableCategories(): void {
