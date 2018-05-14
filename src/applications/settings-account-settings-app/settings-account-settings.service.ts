@@ -79,19 +79,22 @@ export class SettingsAccountSettingsService {
             throw new Error('error occurred in action \'getPartnerAccountSettings\'');
           }
 
-          let accountOwners: string[] = [];
+          let accountOwners: {name: string, id: string }[] = [];
           let partnerData: KalturaPartner;
           data.forEach(response => {
             if (response.result instanceof KalturaUserListResponse) {
-              accountOwners = response.result.objects.map(user => user.fullName).filter(name => name && name !== '');
-              if (!accountOwners.length) {
-                throw new Error('error occurred in action \'getPartnerAccountSettings\'');
-              }
+                const usersList = response.result.objects;
+                accountOwners = usersList
+                  .filter(({ fullName }) => fullName && fullName !== '')
+                  .map(user => ({ name: user.fullName, id: user.id }));
+                if (!accountOwners.length) {
+                    throw new Error('error occurred in action \'getPartnerAccountSettings\'');
+                }
             } else if (response.result instanceof KalturaPartner) {
               partnerData = response.result;
             }
           });
           return {accountOwners, partnerData};
-        })
+        });
   }
 }
