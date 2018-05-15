@@ -31,6 +31,7 @@ import { UploadMenuType } from '../replace-media-button/replace-media-button.com
 import { StorageProfileListAction } from 'kaltura-ngx-client/api/types/StorageProfileListAction';
 import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { Observer } from 'rxjs/Observer';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];
@@ -62,6 +63,31 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];
     private _storageProfiles: KalturaStorageProfile[] = [];
+    private _replacementResultHandler: Observer<void> = {
+        next: () => {
+            this._logger.info(`handle successful replace files action, reload widget data`);
+            this._widgetService.refresh();
+            this.parentPopupWidget.close();
+        },
+        error: (error) => {
+            this._logger.warn(`handle failed replace files action, show alert`, { errorMessage: error.message });
+            this._blockerMessage = new AreaBlockerMessage({
+                message: error.message,
+                buttons: [{
+                    label: this._appLocalization.get('app.common.ok'),
+                    action: () => {
+                        this._logger.info(`user dismissed alert, reload widget data`);
+                        this._blockerMessage = null;
+                        this._widgetService.refresh();
+                        this.parentPopupWidget.close();
+                    }
+                }]
+            });
+        },
+        complete: () => {
+            // empty by design
+        }
+    };
 
     public _tableScrollableWrapper: Element;
     public _transcodingProfilesOptions: { value: number, label: string }[];
@@ -158,7 +184,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             return { file, name, size };
         });
 
-        this._logger.info(`handle file selected action by user`, { fileNames: newItems.map(({ name }) => name));
+        this._logger.info(`handle file selected action by user`, { fileNames: newItems.map(({ name }) => name) });
 
         this._files = [...this._files, ...newItems];
     }
@@ -430,27 +456,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         this._newReplaceVideoUpload.link(linkFileDataList, this.entry.id, Number(transcodingProfileId), this._selectedStorageProfile.id)
             .cancelOnDestroy(this)
             .tag('block-shell')
-            .subscribe(
-                () => {
-                    this._logger.info(`handle successful link files action, reload widget data`);
-                    this._widgetService.refresh();
-                    this.parentPopupWidget.close();
-                },
-                (error) => {
-                    this._logger.warn(`handle failed link files action, show alert`, { errorMessage: error.message });
-                    this._blockerMessage = new AreaBlockerMessage({
-                        message: error.message,
-                        buttons: [{
-                            label: this._appLocalization.get('app.common.ok'),
-                            action: () => {
-                                this._logger.info(`user dismissed alert, reload widget data`);
-                                this._blockerMessage = null;
-                                this._widgetService.refresh();
-                                this.parentPopupWidget.close();
-                            }
-                        }]
-                    });
-                });
+            .subscribe(this._replacementResultHandler);
     }
 
     private _importFiles(transcodingProfileId: string): void {
@@ -459,31 +465,15 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             assetParamsId: file.flavor
         }));
 
-        this._logger.info(`handle import files action`, { files: importFileDataList, entryId: this.entry.id, transcodingProfileId: Number(transcodingProfileId) });
+        this._logger.info(`handle import files action`, {
+            files: importFileDataList,
+            entryId: this.entry.id,
+            transcodingProfileId: Number(transcodingProfileId)
+        });
         this._newReplaceVideoUpload.import(importFileDataList, this.entry.id, Number(transcodingProfileId))
             .cancelOnDestroy(this)
             .tag('block-shell')
-            .subscribe(
-                () => {
-                    this._logger.info(`handle successful import files action, reload widget data`);
-                    this._widgetService.refresh();
-                    this.parentPopupWidget.close();
-                },
-                (error) => {
-                    this._logger.warn(`handle failed import files action, show alert`, { errorMessage: error.message });
-                    this._blockerMessage = new AreaBlockerMessage({
-                        message: error.message,
-                        buttons: [{
-                            label: this._appLocalization.get('app.common.ok'),
-                            action: () => {
-                                this._logger.info(`user dismissed alert, reload widget data`);
-                                this._blockerMessage = null;
-                                this._widgetService.refresh();
-                                this.parentPopupWidget.close();
-                            }
-                        }]
-                    });
-                });
+            .subscribe(this._replacementResultHandler);
     }
 
     private _uploadFiles(transcodingProfileId: string): void {
@@ -492,33 +482,18 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             assetParamsId: fileData.flavor
         }));
 
-        this._logger.info(`handle upload files action`, { files: uploadFileDataList, entryId: this.entry.id, transcodingProfileId: Number(transcodingProfileId) });
+        this._logger.info(`handle upload files action`, {
+            files: uploadFileDataList,
+            entryId: this.entry.id,
+            transcodingProfileId: Number(transcodingProfileId)
+        });
 
         this._newReplaceVideoUpload.upload(uploadFileDataList, this.entry.id, Number(transcodingProfileId))
             .cancelOnDestroy(this)
             .tag('block-shell')
             .filter(entryId => entryId === this.entry.id)
-            .subscribe(
-                () => {
-                    this._logger.info(`handle successful upload files action, reload widget data`);
-                    this._widgetService.refresh();
-                    this.parentPopupWidget.close();
-                },
-                (error) => {
-                    this._logger.warn(`handle failed upload files action, show alert`, { errorMessage: error.message });
-                    this._blockerMessage = new AreaBlockerMessage({
-                        message: error.message,
-                        buttons: [{
-                            label: this._appLocalization.get('app.common.ok'),
-                            action: () => {
-                                this._logger.info(`user dismissed alert, reload widget data`);
-                                this._blockerMessage = null;
-                                this._widgetService.refresh();
-                                this.parentPopupWidget.close();
-                            }
-                        }]
-                    });
-                });
+            .map(() => {})
+            .subscribe(this._replacementResultHandler);
     }
 
     private _validateFiles(files: UploadReplacementFile[]): { isValid: boolean, code?: string } {
