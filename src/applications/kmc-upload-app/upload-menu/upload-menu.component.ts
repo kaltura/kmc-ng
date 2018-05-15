@@ -29,15 +29,7 @@ export class UploadMenuComponent {
       this._enableNeedHighSpeedLink = !!serverConfig.externalLinks.uploads && !!serverConfig.externalLinks.uploads.needHighSpeedUpload;
       this._enableBulkUploadSamples = !!serverConfig.externalLinks.uploads && !!serverConfig.externalLinks.uploads.bulkUploadSamples;
   }
-
-  // TODO remove when all menu items will be implemented
-  public _inDevelopment(): void {
-    this._browserService.alert({
-      header: this._appLocalization.get('applications.upload.inDevelopment.title'),
-      message: this._appLocalization.get('applications.upload.inDevelopment.message')
-    });
-  }
-
+    
   onHighSpeedLinkClicked() {
     this._browserService.openLink(serverConfig.externalLinks.uploads.highSpeedUpload);
   }
