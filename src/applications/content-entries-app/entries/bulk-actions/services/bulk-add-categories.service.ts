@@ -65,7 +65,7 @@ export class BulkAddCategoriesService extends BulkActionBaseService<CategoryData
                             [entryName, categoryName]
                         )
                     ).join('\n');
-                    this._browserService.alert({ message });
+                    this._browserService.alert({ header: this._appLocalization.get('app.common.attention'), message });
                 }
             };
 

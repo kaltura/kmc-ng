@@ -1,8 +1,9 @@
 import {Component, Input} from '@angular/core';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {AppAuthentication, AppUser, AppNavigator} from 'app-shared/kmc-shell';
+import {AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { kmcAppConfig } from '../../kmc-app-config';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'kKMCUserSettings',
@@ -15,7 +16,7 @@ export class UserSettingsComponent {
   public _languages = [];
   public _selectedLanguage = 'en';
 
-  constructor(private userAuthentication: AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService) {
+  constructor(private userAuthentication: AppAuthentication, private browserService: BrowserService, private _router: Router) {
     this._userContext = userAuthentication.appUser;
 
       kmcAppConfig.locales.forEach(locale => {
@@ -41,5 +42,9 @@ export class UserSettingsComponent {
     this.browserService.setInLocalStorage('kmc_lang', event.value);
     this.userAuthentication.reload();
   }
+
+    egg(){
+        this._router.navigateByUrl(kmcAppConfig.routing.errorRoute, { replaceUrl: true });
+    }
 
 }

@@ -17,7 +17,7 @@
       <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
       <p-column styleClass="thumbnailColumn" field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div class="kThumbnailHolder" [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted" (click)="_goToEntry(entry.id)">
+          <div class="kThumbnailHolder" [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted" (click)="_goToEntry(entry)">
             <img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'">
           </div>
         </ng-template>
@@ -27,7 +27,7 @@
           <span class="kTitle kTableColumn"
                 [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
                 [kTooltip]="entry[col.field]"
-                (click)="_goToEntry(entry.id)">{{entry[col.field]}}</span>
+                (click)="_goToEntry(entry)">{{entry[col.field]}}</span>
         </ng-template>
       </p-column>
       <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" styleClass="mediaTypeColumn" sortable="custom">
