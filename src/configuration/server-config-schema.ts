@@ -84,7 +84,7 @@ export const ServerConfigSchema = {
                         uri: {type: 'string'}
                     },
                     required: ['enabled'],
-                    additionalProperties: false
+                    additionalProperties: true // TODO set this to false once the server updates the runtime configuration generator for this app
                 },
                 liveDashboard: {
                     properties: {
