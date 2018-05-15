@@ -50,8 +50,8 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe((response: KalturaPartnerStatistics) => {
         this._isBusy = false;
-        this._bandwidthNA = !response.bandwidth;
-        this._storageNA = !response.hosting;
+        this._bandwidthNA = typeof response.bandwidth !== 'number';
+        this._storageNA = typeof response.hosting !== 'number';
         this._bandwidth = !this._bandwidthNA ? response.bandwidth.toFixed(2) : this._appLocalization.get('app.common.n_a');
         this._storage = !this._storageNA ? response.hosting.toFixed(2) : this._appLocalization.get('app.common.n_a');
         this._logger.info(`handle successful loading statistics data`, { bandwidth: this._bandwidth, storage: this._storage });
