@@ -212,11 +212,7 @@ export class NewReplaceVideoUploadService implements OnDestroy {
     public link(files: KmcNewReplaceEntryLink[], entryId: string, conversionProfileId: number, storageProfileId: number): Observable<void> {
         const resources = files.map(file => {
             return new KalturaAssetParamsResourceContainer({
-                resource: new KalturaRemoteStorageResource({
-                    url: file.url,
-                    forceAsyncDownload: false,
-                    storageProfileId
-                }),
+                resource: new KalturaRemoteStorageResource({ url: file.url, storageProfileId }),
                 assetParamsId: file.assetParamsId || 0
             });
         });
