@@ -1,5 +1,5 @@
 <div class="kUploadMenu">
-  <div class="kUploadMenuListItem">
+  <div class="kUploadMenuListItem" *ngIf="_kmcPermissions.CONTENT_INGEST_UPLOAD | kNgIfPermitted">
     <i class="kIconUpload kUploadMenuUploadIcon"></i>
     <span>
       <a (click)="onItemSelected.emit('uploadFromDesktop')">{{ 'applications.upload.uploadMenu.uploadFromDesktop' | translate }}</a><br>
@@ -19,7 +19,7 @@
     <i class="kIconbulk kUploadMenuBulkUploadIcon"></i>
     <span>
       <a (click)="onItemSelected.emit('bulkUpload')">{{ 'applications.upload.uploadMenu.bulkUpload.title' | translate }}</a><br>
-      <a class="kBulkUploadSamplesLink" (click)="onDownloadSamplesClicked()">
+      <a class="kBulkUploadSamplesLink" [class.kDisabled]="!_enableBulkUploadSamples" (click)="_enableBulkUploadSamples && onDownloadSamplesClicked()">
         {{ 'applications.upload.uploadMenu.bulkUpload.samplesLink' | translate }}
       </a>
     </span>

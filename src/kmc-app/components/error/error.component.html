@@ -1,3 +1,37 @@
-<div class="alert alert-danger">
-  <strong>Error!</strong> Something strange happened. hmmm....
+<div *ngIf="showPage" class="container">
+    <div class="scene">
+        <div class="text">KMC is currently unavailable.</div>
+        <br><br>
+        <div class="text2">An unexpected condition was encountered.</div>
+        <div class="text2">Please contact Kaltura support for assistance.</div>
+        <br><br>
+        <div class="sheep">
+    <span class="top">
+      <div class="body"></div>
+      <div class="head">
+        <div class="eye one" (click)="_updateEgg('eye1')"></div>
+        <div class="eye two" (click)="_updateEgg('eye2')"></div>
+        <div class="ear one" (click)="_updateEgg('ear1')"></div>
+        <div class="ear two" (click)="_updateEgg('ear2')"></div>
+      </div>
+    </span>
+            <div class="legs">
+                <div class="leg"></div>
+                <div class="leg"></div>
+                <div class="leg"></div>
+                <div class="leg"></div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div [class.show]="eggReady" class="text2 egg">
+        <span>KMC Dev Team</span><br>
+        <span class="link1" (click)="openLink('https://github.com/esakal')">Eran Sakal</span><span style="font-size: 0.8em"> • </span>
+        <span class="link1" (click)="openLink('https://github.com/amirch1')">Amir Chervinsky</span><span style="font-size: 0.8em"> • </span>
+        <span class="link1" (click)="openLink('https://github.com/diamond-darrell')">Stanislav Kogut</span>
+    </div>
+</div>
+<div class="pyro" *ngIf="eggReady" >
+    <div class="before"></div>
+    <div class="after"></div>
 </div>

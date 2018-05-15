@@ -12,6 +12,7 @@ import {
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { SelectedCategory } from 'app-shared/content-shared/categories/category-selector/category-selector.component';
+import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 @Component({
   selector: 'kNewCategory',
@@ -22,7 +23,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() linkedEntries: {entryId: string}[] = [];
-  @Output() onApply = new EventEmitter<{ categoryId: number }>();
+  @Output() onApply = new EventEmitter<KalturaCategory>();
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedParentCategory: SelectedCategory = 'missing';
@@ -91,6 +92,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
       this._createNewCategory();
     } else {
       this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.addNewCategory.errors.noParent')
       });
     }
@@ -121,7 +123,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
         .tag('block-shell')
         .subscribe(({category}) => {
           this._showConfirmationOnClose = false;
-            this.onApply.emit({categoryId: category.id});
+            this.onApply.emit(category);
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
@@ -157,7 +159,9 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
                         if (navigateToCategory) {
                             this._showConfirmationOnClose = false;
                             if (error.context && error.context.categoryId) {
-                                this.onApply.emit({categoryId: error.context.categoryId});
+                                const category = new KalturaCategory();
+                                (<any>category).id = error.context.categoryId;
+                                this.onApply.emit(category);
                             }
                             if (this.parentPopupWidget) {
                                 this.parentPopupWidget.close();
