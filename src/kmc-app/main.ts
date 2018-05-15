@@ -10,7 +10,7 @@ declare var __webpack_require__: any;
 declare var kmcConfig;
 
 if (environment.client.useSecuredProtocol && location.protocol !== 'https:') {
-    console.error(`user tried to use insecure protocol, redirect to secured protocol`);
+    console.error(`user tries to use insecure protocol, redirect to secured protocol`);
     location.protocol = 'https:';
 } else {
 // if CDN is used, change the base uri being used by webpack to fetch static assets
