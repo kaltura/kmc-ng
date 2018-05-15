@@ -511,7 +511,7 @@
                 "private": "Private",
                 "selectedCategory": "Selected: {{0}}",
                 "deleteAction" : {
-                    "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
+                    "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
                     "deleteWarningConfirmation": "This category was created by another application and deleting it will effect this application or site.\nAre you sure you want to delete this category?",
                     "deleteSubcategoriesConfirmation": "This category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
                     "deleteConfirmation": "Are you sure you want to delete this category?"
