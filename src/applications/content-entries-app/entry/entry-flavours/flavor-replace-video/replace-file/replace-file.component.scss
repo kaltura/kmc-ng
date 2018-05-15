@@ -76,14 +76,13 @@
             color: $kGrayscale1;
             font-size: 15px;
 
-            /deep/ .kInputHelper {
-                margin-left: 0;
-                margin-right: 6px;
-            }
-
             .kStorageProfileMetadata {
                 display: inline-block;
                 padding: 5px 0;
+
+                .kStorageProfileMetadataTitle {
+                    font-weight: bold;
+                }
             }
 
             .kDelimiter {

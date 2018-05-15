@@ -1512,10 +1512,10 @@
                         "currentFlavors": "Current Flavors",
                         "replacementFlavors": "Replacement Flavors",
                         "storageProfile": {
-                            "name": "Name: {{0}}",
-                            "id": "ID: {{0}}",
-                            "url": "Storage URL: {{0}}",
-                            "directory": "Storage Base Directory: {{0}}",
+                            "name": "Name:",
+                            "id": "ID:",
+                            "url": "Storage URL:",
+                            "directory": "Storage Base Directory:",
                             "noteTitle": "Note",
                             "note": "When conversion by Kaltura is required, the file defined as Source will be imported to Kaltura."
                         },

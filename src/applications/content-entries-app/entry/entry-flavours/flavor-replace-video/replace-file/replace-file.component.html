@@ -18,6 +18,11 @@
                     </ng-template>
                 </p-dropdown>
 
+                <kInputHelper *ngIf="replaceType === 'link'" class="kHelp" icon="kIconlife_donut" trigger="click"
+                              [title]="'applications.content.entryDetails.flavours.replaceVideo.storageProfile.noteTitle' | translate">
+                    <span>{{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.note' | translate}}</span>
+                </kInputHelper>
+
                 <button *ngIf="_files?.length === 0 || (_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted)"
                         type="button"
                         class="kButtonDefault kAddFileButton"
@@ -27,24 +32,32 @@
             </form>
 
             <div *ngIf="replaceType === 'link'" class="kStorageProfile">
-                <kInputHelper class="kHelp" icon="kIconlife_donut" trigger="click"
-                              [title]="'applications.content.entryDetails.flavours.replaceVideo.storageProfile.noteTitle' | translate">
-                    <span>{{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.note' | translate}}</span>
-                </kInputHelper>
                 <div class="kStorageProfileMetadata">
-                    {{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.name' | translate:[_selectedStorageProfile?.name]}}
+                    <span class="kStorageProfileMetadataTitle">
+                        {{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.name' | translate}}
+                    </span>
+                    {{_selectedStorageProfile?.name}}
                     <span class="kDelimiter"></span>
                 </div>
                 <div class="kStorageProfileMetadata">
-                    {{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.id' | translate:[_selectedStorageProfile?.displayId]}}
+                    <span class="kStorageProfileMetadataTitle">
+                        {{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.id' | translate}}
+                    </span>
+                    {{_selectedStorageProfile?.displayId}}
                     <span class="kDelimiter"></span>
                 </div>
                 <div class="kStorageProfileMetadata">
-                    {{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.url' | translate:[_selectedStorageProfile?.url]}}
-                    <span class="kDelimiter"></span>
+                    <span class="kStorageProfileMetadataTitle">
+                        {{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.url' | translate}}
+                    </span>
+                    {{_selectedStorageProfile?.url}}
                 </div>
+                <br>
                 <div class="kStorageProfileMetadata">
-                    {{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.directory' | translate:[_selectedStorageProfile?.directory]}}
+                    <span class="kStorageProfileMetadataTitle">
+                        {{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.directory' | translate}}
+                    </span>
+                    {{_selectedStorageProfile?.directory}}
                 </div>
             </div>
 
