@@ -6,11 +6,15 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntrySta
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { Flavor } from '../../flavor';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+
+export type UploadMenuType = 'upload' | 'import' | 'link' | 'match';
 
 @Component({
     selector: 'kFlavorReplaceMediaBtn',
     templateUrl: './replace-media-button.component.html',
-    styleUrls: ['./replace-media-button.component.scss']
+    styleUrls: ['./replace-media-button.component.scss'],
+    providers: [KalturaLogger.createLogger('ReplaceMediaButtonComponent')]
 })
 export class ReplaceMediaButtonComponent {
     @Input() entry: KalturaMediaEntry;
@@ -22,7 +26,7 @@ export class ReplaceMediaButtonComponent {
     public _uploadFileLabel: string;
     public _importFileLabel: string;
     public _kmcPermissions = KMCPermissions;
-    public _replaceType: 'upload' | 'import';
+    public _replaceType: UploadMenuType;
 
     public get _actionBtnTitle(): string {
         if (!this.entry) {
@@ -41,6 +45,7 @@ export class ReplaceMediaButtonComponent {
     }
 
     constructor(private _appLocalization: AppLocalization,
+                private _logger: KalturaLogger,
                 private _permissionsService: KMCPermissionsService) {
         if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
             this._uploadFileLabel = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.uploadFiles');
@@ -51,7 +56,8 @@ export class ReplaceMediaButtonComponent {
         }
     }
 
-    public _openUploadMenu(type: 'upload' | 'import'): void {
+    public _openReplacementMenu(type: UploadMenuType): void {
+        this._logger.info(`handle open replacement menu action by user`, { type });
         this._replaceType = type;
         this._replaceVideoPopup.close();
         this._uploadMenu.open();

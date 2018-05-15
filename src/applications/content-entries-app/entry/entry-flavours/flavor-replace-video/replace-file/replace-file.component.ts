@@ -27,6 +27,10 @@ import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/Kal
 import { urlRegex } from '@kaltura-ng/kaltura-ui/validators/validators';
 import { NewReplaceVideoUploadService } from 'app-shared/kmc-shell/new-replace-video-upload';
 import { EntryFlavoursWidget } from '../../entry-flavours-widget.service';
+import { UploadMenuType } from '../replace-media-button/replace-media-button.component';
+import { StorageProfileListAction } from 'kaltura-ngx-client/api/types/StorageProfileListAction';
+import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];
@@ -45,17 +49,19 @@ export interface UploadReplacementFile {
 @Component({
     selector: 'kFlavorReplaceFile',
     templateUrl: './replace-file.component.html',
-    styleUrls: ['./replace-file.component.scss']
+    styleUrls: ['./replace-file.component.scss'],
+    providers: [KalturaLogger.createLogger('ReplaceFileComponent')]
 })
 export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Input() entry: KalturaMediaEntry;
     @Input() flavors: Flavor[] = [];
-    @Input() replaceType: 'upload' | 'import';
+    @Input() replaceType: UploadMenuType;
 
     @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
 
     private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];
+    private _storageProfiles: KalturaStorageProfile[] = [];
 
     public _tableScrollableWrapper: Element;
     public _transcodingProfilesOptions: { value: number, label: string }[];
@@ -68,6 +74,14 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     public _title: string;
     public _flavorOptions: SelectItem[] = [];
     public _flavorsFieldDisabled = false;
+    public _uploadBtnLabel: string;
+    public _selectedStorageProfile: { name: string, id: number, displayId: string, url: string, directory: string } = {
+        id: null,
+        name: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na'),
+        displayId: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na'),
+        url: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na'),
+        directory: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na')
+    };
 
     public _allowedVideoExtensions = `.flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v`;
     public _allowedAudioExtensions = `.flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav`;
@@ -81,6 +95,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 private _transcodingProfileManagement: TranscodingProfileManagement,
                 private _uploadManagement: UploadManagement,
                 private _permissionsService: KMCPermissionsService,
+                private _logger: KalturaLogger,
                 private _appLocalization: AppLocalization) {
         this._buildForm();
     }
@@ -104,6 +119,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private _prepare(): void {
+        this._logger.info(`prepare replace file view`, { type: this.replaceType, entryId: this.entry.id, mediaType: this.entry.mediaType });
         if (this.entry.mediaType === KalturaMediaType.video) {
             this._allowedExtensions = this._allowedVideoExtensions;
             this._title = this.entry.status === KalturaEntryStatus.noContent
@@ -116,7 +132,24 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.updateAudio');
         }
 
-        this._loadTranscodingProfiles();
+        switch (this.replaceType) {
+            case 'upload':
+                this._uploadBtnLabel = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.upload');
+                break;
+            case 'import':
+                this._uploadBtnLabel = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.import');
+                break;
+            case 'link':
+                this._uploadBtnLabel = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.link');
+                break;
+            case 'match':
+                this._uploadBtnLabel = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.match');
+                break;
+            default:
+                break;
+        }
+
+        this._loadReplaceData();
     }
 
     public _handleSelectedFiles(files: FileList): void {
@@ -124,6 +157,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             const { name, size } = file;
             return { file, name, size };
         });
+
+        this._logger.info(`handle file selected action by user`, { fileNames: newItems.map(({ name }) => name));
 
         this._files = [...this._files, ...newItems];
     }
@@ -142,7 +177,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             })).map(res => res.objects);
     }
 
-    private _loadTranscodingProfiles(): void {
+    private _loadReplaceData(): void {
+        this._logger.info(`handle loading of replacement data: transcoding profiles list and conversion profiles list`);
         this._isLoading = true;
 
         this._transcodingProfileManagement.get()
@@ -154,6 +190,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                             id: profile.id,
                             name: profile.name,
                             isDefault: profile.isDefault,
+                            storageProfileId: profile.storageProfileId,
                             assets: assets.filter(item => {
                                 return item.conversionProfileId === profile.id && item.origin === KalturaAssetParamsOrigin.convert;
                             })
@@ -161,8 +198,22 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                     });
                 }
             )
+            .switchMap(
+                () => {
+                    if (this.replaceType === 'link') {
+                        this._logger.debug(`link replace type detected, load storate profiles list`);
+                        return this._kalturaClient
+                            .request(new StorageProfileListAction())
+                            .map(response => response.objects);
+                    }
+
+                    return Observable.of(null);
+                },
+                (profilesWithAssets, storageProfiles) => ({ profilesWithAssets, storageProfiles }))
             .subscribe(
-                (profilesWithAssets) => {
+                ({ profilesWithAssets, storageProfiles }) => {
+                    this._logger.info(`handle successful loading of replacement data`);
+                    this._storageProfiles = storageProfiles;
                     const transcodingProfiles = [...profilesWithAssets];
                     const defaultProfileIndex = transcodingProfiles.findIndex(({ isDefault }) => !!isDefault);
                     if (defaultProfileIndex !== -1) {
@@ -184,24 +235,28 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                     this._transcodingProfiles = profilesWithAssets;
 
                     this._updateFlavorsOption();
+                    this._updateStorageProfile();
 
                     this._isLoading = false;
                 },
                 (error) => {
+                    this._logger.warn(`handle failed loading of replacement data, show confirmation`, { errorMessage: error.message });
                     this._blockerMessage = new AreaBlockerMessage({
                         message: error.message,
                         buttons: [
                             {
                                 label: this._appLocalization.get('app.common.retry'),
                                 action: () => {
+                                    this._logger.info(`user confirmed, retry action`);
                                     this._blockerMessage = null;
                                     this._isLoading = false;
-                                    this._loadTranscodingProfiles();
+                                    this._loadReplaceData();
                                 }
                             },
                             {
                                 label: this._appLocalization.get('app.common.cancel'),
                                 action: () => {
+                                    this._logger.info(`user didn't confirm, abort action`);
                                     this._blockerMessage = null;
                                     this._isLoading = false;
                                     this.parentPopupWidget.close();
@@ -222,6 +277,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public _removeFile(file: UploadReplacementFile): void {
+        this._logger.info(`handle remove file from the list action by user`, { fileName: file.name || file.url });
         const fileIndex = this._files.indexOf(file);
         if (fileIndex !== -1) {
             const newList = Array.from(this._files);
@@ -230,7 +286,40 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    public _updateStorageProfile(): void {
+        if (this.replaceType !== 'link') {
+            return;
+        }
+
+        this._logger.info(`handle transcoding profile changed action - update storage profile`);
+
+        const relevantTranscodingProfile = this._transcodingProfiles.find(profile => profile.id === this._transcodingProfileField.value);
+        const relevantStorageProfile = relevantTranscodingProfile
+            ? this._storageProfiles.find(({ id }) => id === relevantTranscodingProfile.storageProfileId)
+            : null;
+        if (relevantStorageProfile) {
+            this._logger.debug(`relevant storage profile was found, update _selectedStorageProfile property`, { profileId: relevantStorageProfile.id });
+            this._selectedStorageProfile = {
+                id: relevantStorageProfile.id,
+                name: relevantStorageProfile.name,
+                displayId: String(relevantStorageProfile.id),
+                url: relevantStorageProfile.storageUrl,
+                directory: relevantStorageProfile.storageBaseDir
+            };
+        } else {
+            this._logger.debug(`relevant storage profile was not found, update _selectedStorageProfile property with n/a values`);
+            this._selectedStorageProfile = {
+                id: null,
+                name: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na'),
+                displayId: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na'),
+                url: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na'),
+                directory: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na')
+            };
+        }
+    }
+
     public _updateFlavorsOption(): void {
+        this._logger.info(`handle transcoding profile changed action - update flavors options`);
         this._flavorsFieldDisabled = false;
         const relevantTranscodingProfile = this._transcodingProfiles.find(profile => profile.id === this._transcodingProfileField.value);
         if (relevantTranscodingProfile && relevantTranscodingProfile.assets.length) {
@@ -248,6 +337,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public _upload(): void {
+        this._logger.info(`handle upload action by user`);
         const transcodingProfileId = this._profileForm.value.transcodingProfile;
 
         if (transcodingProfileId === null || typeof transcodingProfileId === 'undefined' || transcodingProfileId.length === 0) {
@@ -263,14 +353,32 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
+        const proceedReplacement = () => {
+            switch (this.replaceType) {
+                case 'upload':
+                    this._uploadFiles(transcodingProfileId);
+                    break;
+                case 'import':
+                    this._importFiles(transcodingProfileId);
+                    break;
+                case 'link':
+                    this._linkFiles(transcodingProfileId);
+                    break;
+                case 'match':
+                    // TBD
+                    break;
+                default:
+                    this._logger.info(`unrecognized replace type, ignore action`, { replaceType: this.replaceType });
+                    break;
+            }
+        };
+
         const { isValid, code } = this._validateFiles(this._files);
         if (isValid) {
-            if (this.replaceType === 'upload') {
-                this._uploadFiles(transcodingProfileId);
-            } else {
-                this._importFiles(transcodingProfileId);
-            }
+            this._logger.info(`files are valid, proceed action`);
+            proceedReplacement();
         } else if (code) {
+            this._logger.info(`files are not valid, show confirmation`);
             if (code === 'uniqueFlavors') {
                 this._blockerMessage = new AreaBlockerMessage({
                     message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.errors.uniqueFlavors'),
@@ -278,6 +386,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                         {
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
+                                this._logger.info(`user confirmed, abort action`);
                                 this._blockerMessage = null;
                             }
                         }
@@ -285,17 +394,19 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 });
             } else if (code === 'missingFlavors') {
                 this._blockerMessage = new AreaBlockerMessage({
-                    message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.errors.uniqueFlavors'),
+                    message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.errors.missingFlavor'),
                     buttons: [
                         {
                             label: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.continue'),
                             action: () => {
-                                // TODO
+                                this._logger.info(`user confirmed, proceed action`);
+                                proceedReplacement();
                             }
                         },
                         {
                             label: this._appLocalization.get('app.common.cancel'),
                             action: () => {
+                                this._logger.info(`user didn't confirm, abort action`);
                                 this._blockerMessage = null;
                             }
                         }
@@ -305,25 +416,67 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    private _importFiles(transcodingProfileId: string): void {
-        const importFileDataList = this._files.map(file => ({
+    private _linkFiles(transcodingProfileId: string): void {
+        const linkFileDataList = this._files.map(file => ({
             url: file.url,
             assetParamsId: file.flavor
         }));
-        this._newReplaceVideoUpload.import(importFileDataList, this.entry.id, Number(transcodingProfileId))
+
+        this._logger.info(`handle link files action`, {
+            files: linkFileDataList, entryId: this.entry.id,
+            transcodingProfileId: Number(transcodingProfileId),
+            storageProfileId: this._selectedStorageProfile.id
+        });
+        this._newReplaceVideoUpload.link(linkFileDataList, this.entry.id, Number(transcodingProfileId), this._selectedStorageProfile.id)
             .cancelOnDestroy(this)
             .tag('block-shell')
             .subscribe(
                 () => {
+                    this._logger.info(`handle successful link files action, reload widget data`);
                     this._widgetService.refresh();
                     this.parentPopupWidget.close();
                 },
                 (error) => {
+                    this._logger.warn(`handle failed link files action, show alert`, { errorMessage: error.message });
                     this._blockerMessage = new AreaBlockerMessage({
                         message: error.message,
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
+                                this._logger.info(`user dismissed alert, reload widget data`);
+                                this._blockerMessage = null;
+                                this._widgetService.refresh();
+                                this.parentPopupWidget.close();
+                            }
+                        }]
+                    });
+                });
+    }
+
+    private _importFiles(transcodingProfileId: string): void {
+        const importFileDataList = this._files.map(file => ({
+            url: file.url,
+            assetParamsId: file.flavor
+        }));
+
+        this._logger.info(`handle import files action`, { files: importFileDataList, entryId: this.entry.id, transcodingProfileId: Number(transcodingProfileId) });
+        this._newReplaceVideoUpload.import(importFileDataList, this.entry.id, Number(transcodingProfileId))
+            .cancelOnDestroy(this)
+            .tag('block-shell')
+            .subscribe(
+                () => {
+                    this._logger.info(`handle successful import files action, reload widget data`);
+                    this._widgetService.refresh();
+                    this.parentPopupWidget.close();
+                },
+                (error) => {
+                    this._logger.warn(`handle failed import files action, show alert`, { errorMessage: error.message });
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: error.message,
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.ok'),
+                            action: () => {
+                                this._logger.info(`user dismissed alert, reload widget data`);
                                 this._blockerMessage = null;
                                 this._widgetService.refresh();
                                 this.parentPopupWidget.close();
@@ -339,21 +492,26 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             assetParamsId: fileData.flavor
         }));
 
+        this._logger.info(`handle upload files action`, { files: uploadFileDataList, entryId: this.entry.id, transcodingProfileId: Number(transcodingProfileId) });
+
         this._newReplaceVideoUpload.upload(uploadFileDataList, this.entry.id, Number(transcodingProfileId))
             .cancelOnDestroy(this)
             .tag('block-shell')
             .filter(entryId => entryId === this.entry.id)
             .subscribe(
                 () => {
+                    this._logger.info(`handle successful upload files action, reload widget data`);
                     this._widgetService.refresh();
                     this.parentPopupWidget.close();
                 },
                 (error) => {
+                    this._logger.warn(`handle failed upload files action, show alert`, { errorMessage: error.message });
                     this._blockerMessage = new AreaBlockerMessage({
                         message: error.message,
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
+                                this._logger.info(`user dismissed alert, reload widget data`);
                                 this._blockerMessage = null;
                                 this._widgetService.refresh();
                                 this.parentPopupWidget.close();
@@ -417,6 +575,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         });
 
+        this._logger.debug(`validate uploading/importing/linking/matching files`, { isValid, code });
+
         return { isValid, code };
     }
 
@@ -428,10 +588,13 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public _addFile(): void {
+        this._logger.info(`handle add file action by user`);
         if (this.replaceType === 'upload') {
+            this._logger.info(`open file selection dialog`);
             this._fileDialog.open();
         } else {
             setTimeout(() => {
+                this._logger.info(`add empty file row for non-upload replacement`);
                 this._files = [...this._files, { url: '' }];
             }, 0);
         }

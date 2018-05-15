@@ -10,9 +10,11 @@
               [placement]="{'x':'right', 'y': 'bottom'}">
     <div class="kReplaceVideoPopup">
         <p [hidden]="[_kmcPermissions.CONTENT_INGEST_UPLOAD, _kmcPermissions.CONTENT_INGEST_BASE] | kHiddenIfNotPermitted"
-           (click)="_openUploadMenu('upload')">{{_uploadFileLabel}}</p>
+           (click)="_openReplacementMenu('upload')">{{_uploadFileLabel}}</p>
         <p [hidden]="[_kmcPermissions.CONTENT_INGEST_BULK_UPLOAD, _kmcPermissions.CONTENT_INGEST_BASE] | kHiddenIfNotPermitted"
-           (click)="_openUploadMenu('import')">{{_importFileLabel}}</p>
+           (click)="_openReplacementMenu('import')">{{_importFileLabel}}</p>
+        <p [hidden]="[_kmcPermissions.FEATURE_REMOTE_STORAGE_INGEST, _kmcPermissions.CONTENT_INGEST_BASE, _kmcPermissions.CONTENT_INGEST_REMOTE_STORAGE] | kHiddenIfNotPermitted"
+           (click)="_openReplacementMenu('link')">{{'applications.content.entryDetails.flavours.replaceVideo.linkRemoteStorage' | translate}}</p>
     </div>
 </kPopupWidget>
 

@@ -9,7 +9,7 @@
             <kFlavorReplaceMediaBtn *ngIf="_showActionsView(_widgetService.replacementData$ | async)"
                                     [flavors]="(_widgetService.flavors$ | async)"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
-            <kFlavorReplaceMediaStatus *ngIf="(_widgetService.replacementData$ | async)?.tempEntryId"
+            <kFlavorReplaceMediaStatus *ngIf="(_widgetService.replacementData$ | async)?.tempEntryId && (_kmcPermissions.FEATURE_ENTRY_REPLACEMENT | kNgIfPermitted)"
                                        [currentEntryId]="_widgetService.currentEntryId"
                                        [replacementData]="_widgetService.replacementData$ | async"
                                        [entry]="_widgetService.data">

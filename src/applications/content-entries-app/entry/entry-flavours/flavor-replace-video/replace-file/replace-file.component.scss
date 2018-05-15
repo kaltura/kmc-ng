@@ -71,6 +71,34 @@
             }
         }
 
+        .kStorageProfile {
+            padding: 5px 28px;
+            color: $kGrayscale1;
+            font-size: 15px;
+
+            /deep/ .kInputHelper {
+                margin-left: 0;
+                margin-right: 6px;
+            }
+
+            .kStorageProfileMetadata {
+                display: inline-block;
+                padding: 5px 0;
+            }
+
+            .kDelimiter {
+                margin: 0 10px;
+
+                &:after {
+                    content: '|';
+                    font-size: 12px;
+                    color: $kGrayscale4;
+                    top: -2px;
+                    position: relative;
+                }
+            }
+        }
+
         .kTable {
             .kFileNameInput {
                 width: 380px;

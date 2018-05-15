@@ -16,6 +16,12 @@ import { Subject } from 'rxjs/Subject';
 import { MediaCancelReplaceAction } from 'kaltura-ngx-client/api/types/MediaCancelReplaceAction';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { KalturaRemoteStorageResource } from 'kaltura-ngx-client/api/types/KalturaRemoteStorageResource';
+
+export interface KmcNewReplaceEntryLink {
+    url: string;
+    assetParamsId: number;
+}
 
 export interface KmcNewReplaceEntryUpload {
     file: File;
@@ -201,5 +207,20 @@ export class NewReplaceVideoUploadService implements OnDestroy {
         this._uploadManagement.getTrackedFiles()
             .filter(file => file.data instanceof NewReplaceVideoUploadFile && file.data.entryId === entryId)
             .forEach(file => this._cancelUpload(file));
+    }
+
+    public link(files: KmcNewReplaceEntryLink[], entryId: string, conversionProfileId: number, storageProfileId: number): Observable<void> {
+        const resources = files.map(file => {
+            return new KalturaAssetParamsResourceContainer({
+                resource: new KalturaRemoteStorageResource({ url: file.url, storageProfileId }),
+                assetParamsId: file.assetParamsId || 0
+            });
+        });
+        const resource = new KalturaAssetsParamsResourceContainers({ resources });
+
+        return this._kalturaServerClient
+            .request(new MediaUpdateContentAction({ entryId, resource, conversionProfileId }))
+            .map(() => {
+            });
     }
 }
