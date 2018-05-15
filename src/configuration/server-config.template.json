@@ -45,12 +45,7 @@
     },
     "usageDashboard": {
       "enabled": @externalApps.usageDashboard.enabled@,
-      "uri": "@externalApps.usageDashboard.uri@",
-      "uiConfId": @externalApps.usageDashboard.uiConfId@,
-      "map_urls": [
-        @externalApps.usageDashboard.map_urls@
-      ],
-      "map_zoom_levels": "@externalApps.usageDashboard.map_zoom_levels@"
+      "uri": "@externalApps.usageDashboard.uri@"
     },
     "editor": {
       "enabled": @externalApps.editor.enabled@,

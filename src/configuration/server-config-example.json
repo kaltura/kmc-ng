@@ -46,10 +46,7 @@
         },
         "usageDashboard": {
             "enabled": false,
-            "uri": "",
-            "uiConfId": 0,
-            "map_urls": [],
-            "map_zoom_levels": ""
+            "uri": ""
         },
         "editor": {
             "enabled": false,
