@@ -218,7 +218,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                             isDefault: profile.isDefault,
                             storageProfileId: profile.storageProfileId,
                             assets: assets.filter(item => {
-                                return item.conversionProfileId === profile.id && item.origin === KalturaAssetParamsOrigin.convert;
+                                return item.conversionProfileId === profile.id && item.origin !== KalturaAssetParamsOrigin.convert;
                             })
                         };
                     });
