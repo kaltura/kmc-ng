@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router, NavigationEnd } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 @Injectable()
 export class AdminUsersMainViewService extends KmcMainViewBaseService {

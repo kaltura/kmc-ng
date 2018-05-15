@@ -8,6 +8,7 @@ export interface KmcAppConfig {
   routing: {
     errorRoute: string;
     loginRoute: string;
+    defaultRoute: string;
   },
   locales: {
     id: string;
@@ -25,6 +26,7 @@ export const kmcAppConfig: KmcAppConfig = {
   'routing': {
     'errorRoute': '/error',
     'loginRoute': '/login',
+    'defaultRoute': '/',
   },
   'locales': [
     {

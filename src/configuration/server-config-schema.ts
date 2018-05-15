@@ -81,13 +81,10 @@ export const ServerConfigSchema = {
                 usageDashboard: {
                     properties: {
                         enabled: {type: 'boolean'},
-                        uri: {type: 'string'},
-                        uiConfId: {type: 'number'},
-                        map_urls: { type: 'array', items: { type: 'string' } },
-                        map_zoom_levels: {type: 'string'}
+                        uri: {type: 'string'}
                     },
                     required: ['enabled'],
-                    additionalProperties: false
+                    additionalProperties: true // TODO set this to false once the server updates the runtime configuration generator for this app
                 },
                 liveDashboard: {
                     properties: {
@@ -106,15 +103,7 @@ export const ServerConfigSchema = {
                     required: ['enabled'],
                     additionalProperties: false
                 },
-                clipAndTrim: {
-                    properties: {
-                        enabled: {type: 'boolean'},
-                        uri: {type: 'string'}
-                    },
-                    required: ['enabled'],
-                    additionalProperties: false
-                },
-                advertisements: {
+                editor: {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'}
@@ -131,7 +120,7 @@ export const ServerConfigSchema = {
                     additionalProperties: false
                 }
             },
-            required: ['studio', 'usageDashboard', 'liveDashboard', 'kava'],
+            required: ['studio', 'studioV3', 'liveAnalytics', 'usageDashboard', 'liveDashboard', 'kava', 'editor'],
             additionalProperties: false
         },
         externalLinks: {
@@ -153,7 +142,8 @@ export const ServerConfigSchema = {
                         signUp: {type: 'string'},
                         contactUs: {type: 'string'},
                         upgradeAccount: {type: 'string'},
-                        contactSalesforce: {type: 'string'}
+                        contactSalesforce: {type: 'string'},
+                        dropFoldersManual: {type: 'string'}
                     },
                     required: [],
                     additionalProperties: false

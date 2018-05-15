@@ -42,20 +42,13 @@ export interface ExternalApplications {
     usageDashboard: {
         enabled: boolean,
         uri?: string,
-        uiConfId?: number,
-        map_urls?: string[],
-        map_zoom_levels?: string,
     };
     liveAnalytics: {
         enabled: boolean,
         uiConfId?: number,
         uri?: string
     };
-    clipAndTrim: {
-        enabled: boolean,
-        uri?: string
-    };
-    advertisements: {
+    editor: {
         enabled: boolean,
         uri?: string
     };
@@ -99,6 +92,7 @@ export interface ServerConfig {
             contactUs?: string,
             upgradeAccount?: string,
             contactSalesforce?: string,
+            dropFoldersManual?: string
         },
         uploads?: {
             highSpeedUpload?: string,
@@ -114,7 +108,7 @@ export interface ServerConfig {
 
 
 export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalApplications> = {
-    advertisements: (configuration) => {
+    editor: (configuration) => {
         {
             let result = false;
 
@@ -194,13 +188,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
 
         if (configuration.enabled) {
             result = !!configuration.uri &&
-                !configuration.uri.match(/\s/g) && // not contains white spaces
-                typeof (configuration.uiConfId) !== 'undefined' &&
-                configuration.uiConfId !== null &&
-                configuration.map_urls &&
-                configuration.map_urls.length &&
-                configuration.map_urls.indexOf('') === -1 && // no empty url
-                !!configuration.map_zoom_levels;
+                !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
                 configuration.uri = buildKalturaServerUri(configuration.uri);
@@ -216,20 +204,6 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g) && // not contains white spaces
                 !!configuration.uiConfId;
-
-            if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
-            }
-        }
-
-        return result;
-    },
-    clipAndTrim: (configuration) => {
-        let result = false;
-
-        if (configuration.enabled) {
-            result = !!configuration.uri &&
-                !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
                 configuration.uri = buildKalturaServerUri(configuration.uri);

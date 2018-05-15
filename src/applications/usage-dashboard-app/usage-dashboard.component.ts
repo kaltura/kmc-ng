@@ -27,12 +27,7 @@ export class UsageDashboardComponent implements OnInit, OnDestroy {
         'vars': {
           'ks': this.appAuthentication.appUser.ks,
           'partner_id': this.appAuthentication.appUser.partnerId,
-          'service_url': getKalturaServerUri(),
-          'liveanalytics': {
-            'player_id': +serverConfig.externalApps.usageDashboard.uiConfId,
-            'map_urls': +serverConfig.externalApps.usageDashboard.map_urls,
-            'map_zoom_levels': serverConfig.externalApps.usageDashboard.map_zoom_levels
-          }
+          'service_url': getKalturaServerUri()
         }
       }
     } catch (ex) {

@@ -95,7 +95,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 	    this._creator = "";
 	    this._owner = null;
 	    this.usersForm.reset({
-		    owners: null,
+		    owners: [],
 		    editors: [],
 		    publishers: []
 	    });
