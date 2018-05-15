@@ -42,9 +42,6 @@ export interface ExternalApplications {
     usageDashboard: {
         enabled: boolean,
         uri?: string,
-        uiConfId?: number,
-        map_urls?: string[],
-        map_zoom_levels?: string,
     };
     liveAnalytics: {
         enabled: boolean,
@@ -191,13 +188,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
 
         if (configuration.enabled) {
             result = !!configuration.uri &&
-                !configuration.uri.match(/\s/g) && // not contains white spaces
-                typeof (configuration.uiConfId) !== 'undefined' &&
-                configuration.uiConfId !== null &&
-                configuration.map_urls &&
-                configuration.map_urls.length &&
-                configuration.map_urls.indexOf('') === -1 && // no empty url
-                !!configuration.map_zoom_levels;
+                !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
                 configuration.uri = buildKalturaServerUri(configuration.uri);

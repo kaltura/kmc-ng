@@ -50,14 +50,7 @@ Follow these instructions to test external apps integration:
 },
 "usageDashboard": {
     "enabled": true,
-    "uri": "/__local_machine_only__/usage-dashboard-v0_11_2/index.html",
-    "uiConfId": 36060752,
-    "map_urls": [
-        "cf1.kaltura.com/content/static/maps/v1",
-        "cf2.kaltura.com/content/static/maps/v1",
-        "cf3.kaltura.com/content/static/maps/v1"
-    ],
-    "map_zoom_levels": "12"
+    "uri": "/__local_machine_only__/usage-dashboard-v1_0_0/index.html"
 },
 "editor": {
     "enabled": true,
