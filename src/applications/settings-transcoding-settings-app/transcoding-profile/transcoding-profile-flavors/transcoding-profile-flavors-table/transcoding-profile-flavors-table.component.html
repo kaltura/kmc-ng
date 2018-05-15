@@ -16,7 +16,7 @@
               [style]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}"
               [header]="'applications.settings.transcoding.flavors.table.name' | translate">
       <ng-template let-col let-flavor="rowData" pTemplate="body">
-        <div class="kTitle kTableColumn" [kTooltip]="flavor[col.field]" [maxWidth]="300"
+        <div class="kTitle kTableColumn" [kTooltip]="flavor[col.field]"
              (click)="_editFlavor(flavor)">{{flavor[col.field]}}</div>
       </ng-template>
     </p-column>
