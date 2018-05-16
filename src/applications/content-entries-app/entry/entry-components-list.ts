@@ -40,6 +40,7 @@ import { ReplaceMediaButtonComponent } from './entry-flavours/flavor-replace-vid
 import { ReplaceFileComponent } from './entry-flavours/flavor-replace-video/replace-file/replace-file.component';
 import { FlavorReplacementStatusPipe } from './entry-flavours/pipes/flavor-replacement-status.pipe';
 import {EntryEditorComponent} from './entry-editor/entry-editor.component';
+import { FlavorLinkComponent } from './entry-flavours/flavor-link/flavor-link.component';
 
 
 export const EntryComponentsList = [
@@ -83,5 +84,6 @@ export const EntryComponentsList = [
     ReplacementStatusComponent,
     ReplaceFileComponent,
     FlavorReplacementStatusPipe,
-    EntryEditorComponent
+    EntryEditorComponent,
+    FlavorLinkComponent
 ];

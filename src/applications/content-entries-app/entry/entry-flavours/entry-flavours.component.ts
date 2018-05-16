@@ -31,8 +31,9 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
 	@ViewChild('importPopup') importPopup: PopupWidgetComponent;
-	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
+    @ViewChild('linkPopup') linkPopup: FileDialogComponent;
+    @ViewChild('actionsmenu') private actionsMenu: Menu;
+    @ViewChild('fileDialog') private fileDialog: FileDialogComponent;
 	public _actions: MenuItem[] = [];
 	public _kmcPermissions = KMCPermissions;
 
@@ -100,6 +101,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			){
 				this._actions.push({id: 'upload', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.upload'), command: (event) => {this.actionSelected("upload");}});
 				this._actions.push({id: 'import', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.import'), command: (event) => {this.actionSelected("import");}});
+                this._actions.push({
+                    id: 'link',
+                    label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.link'),
+                    command: () => this.actionSelected('link')
+                });
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor) && flavor.isWeb) ||
 					(flavor.id !== "" && flavor.isWeb && (flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString()))){
@@ -159,6 +165,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			case "drm":
 				this.drmPopup.open();
 				break;
+            case 'link':
+                this.linkPopup.open();
+                break;
+            default:
+                break;
 		}
 	}
 

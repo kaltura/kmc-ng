@@ -227,7 +227,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             .switchMap(
                 () => {
                     if (this.replaceType === 'link') {
-                        this._logger.debug(`link replace type detected, load storate profiles list`);
+                        this._logger.debug(`link replace type detected, load storage profiles list`);
                         return this._kalturaClient
                             .request(new StorageProfileListAction())
                             .map(response => response.objects);

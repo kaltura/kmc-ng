@@ -77,4 +77,8 @@
 	<kPopupWidget #importPopup [popupWidth]="500" [popupHeight]="260" [modal]="true">
 		<kFlavorImport [currentFlavor]="_selectedFlavor" [parentPopupWidget]="importPopup"></kFlavorImport>
 	</kPopupWidget>
+
+    <kPopupWidget #linkPopup [popupWidth]="791" [popupHeight]="460" [modal]="true">
+        <kFlavorLink [flavor]="_selectedFlavor" [parentPopupWidget]="importPopup"></kFlavorLink>
+    </kPopupWidget>
 </k-area-blocker>

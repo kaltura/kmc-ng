@@ -1,0 +1,49 @@
+<form [formGroup]="_form" class="kFlavorLink" (submit)="_link()">
+    <div class="kHeader">
+        <span class="kTitle">{{'applications.content.entryDetails.flavours.link.updateVideo' | translate}}</span>
+    </div>
+    <div class="kContainer">
+        <div class="kStorageProfileInfo">
+            <div class="kStorageProfileInfoItem">
+                {{'applications.content.entryDetails.flavours.link.remoteStorageName' | translate}}
+                {{storageProfile?.name}}
+                <span class="kDelimiter"></span>
+            </div>
+            <div class="kStorageProfileInfoItem">
+                {{'applications.content.entryDetails.flavours.link.id' | translate}}
+                {{storageProfile?.id}}
+                <span class="kDelimiter"></span>
+            </div>
+            <div class="kStorageProfileInfoItem">
+                {{'applications.content.entryDetails.flavours.link.storageUrl' | translate}}
+                {{storageProfile?.storageUrl}}
+                <span class="kDelimiter"></span>
+            </div>
+            <br>
+            <div class="kStorageProfileInfoItem">
+                {{'applications.content.entryDetails.flavours.link.storageBaseDirectory' | translate}}
+                {{storageProfile?.storageBaseDir}}
+                <span class="kDelimiter"></span>
+            </div>
+        </div>
+        <div class="kFlavorUrlTitle">
+            <span>{{'applications.content.entryDetails.flavours.link.filePathName' | translate}}</span>
+        </div>
+        <div class="kFlavorUrl">
+            <input pInputText type="text"
+                   [class.kHasError]="_filePathField.touched && _filePathField.invalid"
+                   [formControl]="_filePathField"
+                   [placeholder]="'applications.content.entryDetails.flavours.link.enterFlavorUrl' | translate"/>
+            <div class="kInvalid" *ngIf="_filePathField.touched && _filePathField.invalid">
+                {{'applications.content.entryDetails.flavours.link.invalidUrl' | translate}}
+            </div>
+        </div>
+    </div>
+    <div class="kFooter">
+        <button type="button" class="kButtonDefault" pButton
+                [label]="'applications.content.entryDetails.flavours.link.cancel' | translate"></button>
+        <button type="submit" class="kButtonBranded" pButton
+                [disabled]="_form.invalid"
+                [label]="'applications.content.entryDetails.flavours.link.link' | translate"></button>
+    </div>
+</form>
