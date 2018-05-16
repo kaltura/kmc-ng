@@ -7,6 +7,8 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {ButtonModule, DropdownModule, InputTextModule} from "primeng/primeng";
 import {AreaBlockerModule} from "@kaltura-ng/kaltura-ui";
 import {TranslateModule} from "ng2-translate";
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { SettingsAccountSettingsCanDeactivateService } from './settings-account-settings-can-deactivate.service';
 
 @NgModule({
   imports: [
@@ -17,9 +19,11 @@ import {TranslateModule} from "ng2-translate";
     InputTextModule,
     ButtonModule,
     AreaBlockerModule,
-    TranslateModule
+    TranslateModule,
+    KMCPermissionsModule
   ],
-  declarations: [SettingsAccountSettingsComponent]
+  declarations: [SettingsAccountSettingsComponent],
+    providers:[SettingsAccountSettingsCanDeactivateService]
 })
 export class SettingsAccountSettingsAppModule {
 }

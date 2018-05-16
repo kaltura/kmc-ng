@@ -3,11 +3,11 @@
     <div #entriesTableHolder class="kAccessControlProfilesHolder kContent">
       <kSticky [stickyClass]="'kStickyClass'" stickyId="profilesFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kAccessControlProfileTableFilters kContent">
-          <button pButton
-                  class="kButtonBranded kAddProfileBtn"
-                  [class.kHidden]="_selectedProfiles.length"
-                  [label]="'applications.settings.accessControl.addProfile' | translate"
-                  (click)="_editProfile(null)"></button>
+            <button pButton
+                    class="kButtonBranded kAddProfileBtn"
+                    [class.kHidden]="_selectedProfiles.length || (_kmcPermissions.ACCESS_CONTROL_ADD | kHiddenIfNotPermitted)"
+                    [label]="'applications.settings.accessControl.addProfile' | translate"
+                    (click)="_editProfile(null)"></button>
           <span class="kSelectedEntriesNum" *ngIf="(_store.profiles.data$ | async)?.totalCount">
             {{'applications.settings.accessControl.table.header' | translate:[(_store.profiles.data$ | async)?.totalCount]}}
           </span>
@@ -16,7 +16,9 @@
             <span class="kSelectedEntriesLabel">
               • {{'applications.settings.accessControl.selected' | translate:[_selectedProfiles.length]}}
             </span>
-            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteProfiles()"></button>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                    [disabled]="_kmcPermissions.ACCESS_CONTROL_DELETE | kDisabledIfNotPermitted"
+                    (click)="_deleteProfiles()"></button>
 
             <a class="kAccessControlProfilesCancel" (click)="_clearSelection()">
               {{'applications.settings.accessControl.cancel' | translate}}

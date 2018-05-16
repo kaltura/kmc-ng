@@ -1,6 +1,5 @@
 import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {CategoryWidgetKeys} from './../category-widget-keys';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
@@ -12,6 +11,8 @@ import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheri
 import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
@@ -24,8 +25,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   constructor(private _kalturaClient: KalturaClient,
               private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _categoryService: CategoryService) {
-    super(CategoryWidgetKeys.Entitlements);
+    super(ContentCategoryViewSections.Entitlements);
 
     this._buildForm();
   }
@@ -44,6 +46,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
+    if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS)) {
+	    this.entitlementsForm.disable({emitEvent: false});
+    }
 
     super._showLoader();
 
@@ -51,10 +56,10 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       .monitor('get category parent category')
       .cancelOnDestroy(this, this.widgetReset$)
       .map(({owner, parentCategory}) => {
+        super._hideLoader();
         this.parentCategory = parentCategory || null;
         this._resetFormData(owner);
         this._monitorFormChanges();
-        super._hideLoader();
         return {failed: false};
       })
       .catch(error => {
@@ -112,7 +117,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       contentPublishPermissions: null,
       moderateContent: null,
       inheritUsersPermissions: null, // no
-      defaultPermissionLevel: {value: null, disabled: true},
+      defaultPermissionLevel: {value: null},
       owner: null,
       permittedUsers: []
     });
@@ -142,6 +147,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   private _resetFormData(owner: KalturaUser) {
+
+      const hasCanModifyPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS);
+
     this.inheritUsersPermissionsOriginalValue = this.parentCategory && this.data.inheritanceType === KalturaInheritanceType.inherit;
     this.entitlementsForm.reset(
       {
@@ -152,11 +160,11 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
         inheritUsersPermissions: this.inheritUsersPermissionsOriginalValue,
         defaultPermissionLevel: {
           value: this.data.defaultPermissionLevel,
-          disabled: this.inheritUsersPermissionsOriginalValue
+          disabled: !hasCanModifyPermission || this.inheritUsersPermissionsOriginalValue
         },
         owner: {
           value: owner,
-          disabled: this.inheritUsersPermissionsOriginalValue
+          disabled: !hasCanModifyPermission || this.inheritUsersPermissionsOriginalValue
         },
         permittedUsers: []
       }
@@ -208,9 +216,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   ngOnDestroy() {
   }
 
-  public openCategory(category: KalturaCategory) {
+  public openCategory(category: KalturaCategory): void {
     if (category && category.id) {
-      this._categoryService.openCategory(category.id);
+      this._categoryService.openCategory(category);
     }
   }
 }

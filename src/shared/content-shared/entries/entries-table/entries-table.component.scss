@@ -36,7 +36,6 @@
     color: $kGrayscale1;
     font-weight: 700;
     cursor: pointer;
-    overflow: hidden;
     max-height: 45px;
     &:hover {
       color: #000000;
@@ -44,6 +43,12 @@
     &.disable {
       color: $kGrayscale4;
       cursor: auto;
+    }
+  }
+  .kMediaTypeIcon{
+    font-size: 16px;
+    div{
+      display: inline-block;
     }
   }
   .kEntriesTableActions {

@@ -12,6 +12,22 @@
 		font-size: 20px;
 		font-weight: 700;
 	}
+  .kButtons{
+    padding-top: 12px;
+
+    .kButtonLiveDashboard {
+      height:34px;
+      width: 160px;
+      /deep/ .kIconstatistic{
+        line-height: 18px;
+
+        &:before {
+          font-size: 22px;
+          color: $kGrayscale3;
+        }
+      }
+    }
+  }
 	.kLiveDetails{
 		box-sizing: border-box;
 		width: 100%;
@@ -23,8 +39,11 @@
 			color: $kGrayscale1;
 			font-size: 16px;
 			font-weight: 700;
-			margin-top: 48px;
-			line-height: 48px;
+            padding-top: 42px;
+
+      &:first-child {
+        margin-top:0;
+      }
 		}
 		.kRow{
 			display: flex;
@@ -83,6 +102,10 @@
 		}
 		.kReportLink{
 			margin-left: 12px;
+			&.kDisabled{
+				pointer-events: none;
+				color: $kGrayscale4;
+			}
 		}
 		.kError{
 			line-height: 28px;

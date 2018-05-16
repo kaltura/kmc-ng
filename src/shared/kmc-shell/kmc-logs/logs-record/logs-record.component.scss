@@ -1,0 +1,93 @@
+@import "app-theme/_variables.scss";
+
+.kHelpLink {
+    font-size: 14px;
+    cursor: pointer;
+    color: $kGrayscale1;
+    &:hover {
+        color: #000000;
+    }
+}
+
+.kToggleRecord {
+    margin-right: 20px;
+}
+
+.kStartRecord {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-left: 14px solid rgba(255, 255, 255, 0.6);
+    border-bottom: 10px solid transparent;
+    cursor: pointer;
+
+    &:hover {
+        border-left-color: #ffffff;
+    }
+}
+
+.kStopRecord {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    background-color: $kDandger;
+    opacity: 0.6;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.kLogsRecordPopup {
+    .kHeader {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        color: $kGrayscale1;
+        border-bottom: 1px solid $kGrayscale4;
+        height: 60px;
+        font-size: 1.5em;
+        font-weight: bold;
+        justify-content: center;
+    }
+
+    .kFooter {
+        position: absolute;
+        bottom: 0;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+        border-top: 1px solid $kGrayscale4;
+
+        button {
+            height: 34px;
+            width: 120px;
+            margin-right: 20px;
+        }
+    }
+
+    .kContainer {
+        padding: 20px;
+        .kRow {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .kLabel {
+            width: 140px;
+            flex: 0 0 auto;
+        }
+
+        .kControl {
+            height: 34px;
+            width: 140px;
+            border-radius: 3px;
+        }
+    }
+}

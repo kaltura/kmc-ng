@@ -25,6 +25,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui/kaltura-primeng-ui.module';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.module';
 import { TimeSpinnerModule } from '@kaltura-ng/kaltura-primeng-ui/time-spinner/time-spinner.module';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import { TimeSpinnerModule } from '@kaltura-ng/kaltura-primeng-ui/time-spinner/t
     MultiSelectModule,
     SpinnerModule,
     InputSwitchModule,
+    KMCPermissionsModule,
     TimeSpinnerModule
   ],
   declarations: [

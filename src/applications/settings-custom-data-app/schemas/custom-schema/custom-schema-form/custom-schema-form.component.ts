@@ -3,6 +3,7 @@ import { SettingsMetadataProfile } from '../../schemas-store/settings-metadata-p
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
 import { KalturaAPIException } from 'kaltura-ngx-client';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCustomSchemaForm',
@@ -10,6 +11,9 @@ import { KalturaAPIException } from 'kaltura-ngx-client';
   styleUrls: ['./custom-schema-form.component.scss']
 })
 export class CustomSchemaFormComponent {
+
+    public _kmcPermissions = KMCPermissions;
+
   @Input() set serverValidationError(value: KalturaAPIException) {
     if (value) {
       if (value.code === 'SYSTEM_NAME_ALREADY_EXISTS') {
@@ -19,24 +23,30 @@ export class CustomSchemaFormComponent {
   }
 
   @Input() set schema(value: SettingsMetadataProfile) {
-    if (value) {
-      this._schema = value;
-      this._schemaForm.patchValue(
-        {
-          name: value.name,
-          description: value.description,
-          systemName: value.systemName,
-          applyTo: value.applyTo
-        },
-        { emitEvent: false }
-      );
+      if (value) {
+          this._schema = value;
+          this._schemaForm.patchValue(
+              {
+                  name: value.name,
+                  description: value.description,
+                  systemName: value.systemName,
+                  applyTo: value.applyTo
+              },
+              {emitEvent: false}
+          );
 
-      if (!this._schema.isNew) {
-        this._applyToField.disable({ onlySelf: true });
+          if (!this._schema.isNew) {
+
+              if (!this._permissionsService.hasPermission(KMCPermissions.CUSTOM_DATA_PROFILE_UPDATE)) {
+                  this._schemaForm.disable();
+              } else {
+                  this._applyToField.disable({onlySelf: true});
+              }
+          }
+
+      } else {
+          throw Error('schema must be provided');
       }
-    } else {
-      throw Error('schema must be provided');
-    }
   }
 
   @Output() schemaChanges = new EventEmitter<SettingsMetadataProfile>();
@@ -53,7 +63,9 @@ export class CustomSchemaFormComponent {
     category: KalturaMetadataObjectType.category.toString()
   };
 
-  constructor(private _fb: FormBuilder) {
+  constructor(private _fb: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
+  ) {
     this._buildForm();
   }
 
@@ -89,7 +101,7 @@ export class CustomSchemaFormComponent {
 
       if (change.applyTo) {
         const applyTo = change.applyTo;
-        if (!this._schema.applyTo === applyTo) {
+        if (this._schema.applyTo !== applyTo) {
           this._schema.applyTo = applyTo;
           sendUpdate = true;
         }
