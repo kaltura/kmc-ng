@@ -1,6 +1,6 @@
 <div *ngFor="let item of _items" class="subMenuContainer" [class.kLeft]="position === 'left'" [class.kRight]="position === 'right'"
-     [routerLinkActive]="['active']">
-  <a [routerLinkActive]="['activeLink']" [routerLink]="['/' + item.routePath]">
+     [class.active]="item === _selectedMenuItem">
+  <a [class.activeLink]="item === _selectedMenuItem" (click)="item.open()">
     {{'app.menu.' + item.titleToken | translate | uppercase}}</a>
   <div class="linkMarker"></div>
 </div>

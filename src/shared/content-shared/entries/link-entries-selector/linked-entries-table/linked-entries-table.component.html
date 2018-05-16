@@ -13,7 +13,8 @@
         <th *ngIf="allowMultiple && !disabled" style="width:44px; padding-left: 14px">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '14px', 'width': allowMultiple && !disabled ? '100px' : '114px'}">
+        <th [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '14px', 'width': allowMultiple && !disabled ? '100px' : '114px'}"
+            *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
           {{'applications.content.entryDetails.metadata.thumbnail' | translate}}
         </th>
         <th style="width: 100%">{{'applications.content.entryDetails.metadata.entryName' | translate}}</th>
@@ -29,14 +30,15 @@
           <p-tableCheckbox [value]="entry"></p-tableCheckbox>
         </td>
 
-        <td [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '14px', 'width': allowMultiple && !disabled ? '100px' : '114px'}">
+        <td [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '14px', 'width': allowMultiple && !disabled ? '100px' : '114px'}"
+        *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
           <div class="kThumbnailHolder"><span class="kHelper"></span>
             <img [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'">
           </div>
         </td>
 
         <td style="width: 100%">
-          <span [kTooltip]="entry.name" [maxWidth]="300" class="kTableColumn">{{entry.name}}</span>
+          <span [kTooltip]="entry.name" class="kTableColumn">{{entry.name}}</span>
         </td>
         <td style="width: 100px" [hidden]="_documentWidth < 1320">{{entry.id}}</td>
         <td *ngIf="!disabled" style="width: 50px">
