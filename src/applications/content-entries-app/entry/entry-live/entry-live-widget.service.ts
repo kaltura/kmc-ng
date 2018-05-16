@@ -23,6 +23,7 @@ import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullab
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
@@ -39,6 +40,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	public _liveType: string = "";
 	private dirty: boolean;
+    private _passthroughProfile: KalturaConversionProfile = null;
 
 	private _conversionProfiles: BehaviorSubject<{ items: any[]}> = new BehaviorSubject<{ items: any[]}>({items: []});
 	public _conversionProfiles$ = this._conversionProfiles.asObservable();
@@ -134,37 +136,35 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
             .cancelOnDestroy(this, this.widgetReset$)
             .monitor('get conversion profiles')
 
-            .catch((error, caught) => {
-              super._hideLoader();
-              super._showActivationError();
-              this._conversionProfiles.next({ items: [] });
-              return Observable.throw(error);
-            })
-            .do(response => {
-              if (response.objects && response.objects.length) {
-                // set the default profile first in the array
-                response.objects.sort((a, b) => {
-                  if (a.isDefault > b.isDefault) {
-                    return -1;
-                  }
-                  if (a.isDefault < b.isDefault) {
-                    return 1;
-                  }
-                  return 0;
-                });
-                // create drop down options array
-                const conversionProfiles = [];
-                response.objects.forEach(profile => {
-                  conversionProfiles.push({ label: profile.name, value: profile.id });
-                  if (this.data.conversionProfileId === profile.id) {
-                    this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
-                  }
-                });
-                this._conversionProfiles.next({ items: conversionProfiles });
-                super._hideLoader();
-              }
-            });
-        } else {
+					.catch((error, caught) =>{
+
+						super._hideLoader();
+						super._showActivationError();
+						this._conversionProfiles.next({items: []});
+						return Observable.throw(error);
+					})
+					.do(response => {
+						if (response.objects && response.objects.length) {
+							// set the default profile first in the array
+							response.objects.sort( (a, b) =>{
+								if (a.isDefault > b.isDefault){
+									return -1;
+								}if (a.isDefault < b.isDefault){
+									return 1;
+								}return 0;
+							});
+							this._passthroughProfile = response.objects.find(({ systemName }) => systemName === 'Passthrough_Live');// create drop down options array
+							const conversionProfiles = [];
+							response.objects.forEach(profile => {
+								conversionProfiles.push({label: profile.name, value: profile.id});
+								if (this.data.conversionProfileId === profile.id) {
+									this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
+								}
+							});
+							this._conversionProfiles.next({items: conversionProfiles});
+							super._hideLoader();
+						}
+					});} else {
           super._hideLoader();
           break;
         }
@@ -318,6 +318,10 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 				}
 			);
 	}
+
+    public isPassthroughProfile(id: number): boolean {
+        return this._passthroughProfile && this._passthroughProfile.id === id;
+    }
 
 	ngOnDestroy()
     {
