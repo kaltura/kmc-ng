@@ -2,7 +2,7 @@
 
 Maintaining complex software is almost impossible without good tracking of all errors and events. Logging the application enables you to:
 - Have a better understanding of how your application works.
-- Discvoer what errors you have.
+- Discover what errors you have.
 - find out if your services are running properly.
 
 ## Log events
@@ -58,10 +58,10 @@ this._logger.info(`abort action, role permissions has invalid selections`);
 ### Add logger instance to a component
 1. import `KalturaLogger`:
 ```
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 ```
 
-2. add provider to `KalturaLogger`:
+2. add provider to `KalturaLogger`, use the same name as the component name:
 ```
 @Component({
   providers: [
@@ -76,10 +76,10 @@ export class EditRoleComponent {
 ### Add logger instance to a service
 1. import `KalturaLogger`:
 ```
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 ```
 
-2. create sub logger as shown below:
+2. create sub logger as shown below, use the same name as the service name:
 ```
 @Injectable()
 export class YourServiceName {

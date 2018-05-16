@@ -15,9 +15,11 @@
       <div class="kStatistics">
         <div class="kBandwidth">
             {{'applications.settings.accountInformation.accountInfo.bandwidth' | translate: {'0': _bandwidth} }}
+            <span *ngIf="!_bandwidthNA">{{'applications.settings.accountInformation.accountInfo.gb' | translate}}</span>
         </div>
         <div class="kStorage">
-          {{'applications.settings.accountInformation.accountInfo.storage' | translate: {'0': _storage} }}
+            {{'applications.settings.accountInformation.accountInfo.storage' | translate: {'0': _storage} }}
+            <span *ngIf="!_storageNA">{{'applications.settings.accountInformation.accountInfo.gb' | translate}}</span>
         </div>
       </div>
       <div class="kContactUs">

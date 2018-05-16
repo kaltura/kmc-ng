@@ -5,8 +5,11 @@
   padding-top: 32px;
   height: $minTableHeight;
   box-sizing: border-box;
-  .kLeftColumn{
-    margin-right: 30px;
+  .kRightColumn{
+    margin-left: 30px;
+  }
+  .kRightColumnShown {
+    max-width: 586px;
   }
   .kColumn {
     flex: 1 1 auto;
@@ -40,9 +43,5 @@
         line-height: 24px;
       }
     }
-  }
-
-  .kColumn:first-child{
-    max-width: 586px;
   }
 }
