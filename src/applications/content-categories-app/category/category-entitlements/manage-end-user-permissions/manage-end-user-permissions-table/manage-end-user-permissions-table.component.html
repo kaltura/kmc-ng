@@ -20,7 +20,7 @@
               field="name"
               [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.userNameId' | translate">
       <ng-template let-col let-user="rowData" pTemplate="body">
-        <div class="kTitle kTableColumn" [kTooltip]="user[col.field]" [maxWidth]="300">
+        <div class="kTitle kTableColumn" [kTooltip]="user[col.field]">
           {{user[col.field]}}
         </div>
       </ng-template>

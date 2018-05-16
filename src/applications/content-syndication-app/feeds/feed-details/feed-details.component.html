@@ -60,7 +60,7 @@
                           [class.kInvalid]="_missingPlaylist"
                           [placeholder]="'applications.content.syndication.details.choosePlaylist' | translate"
                           formControlName="selectedPlaylist"
-                          filter="true"
+                          filter="true" [filterPlaceholder]="'applications.content.syndication.details.search' | translate"
                           [autoWidth]="false"
                           (onChange)="_onSelectPlaylist($event)">
                 <!--template for the selected item-->

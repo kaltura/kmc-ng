@@ -7,11 +7,19 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 
+export enum HeaderTypes {
+    error = 1,
+    attention = 2,
+    cancel = 3,
+    retry = 4
+}
+
 export interface Confirmation {
 	message: string;
 	key?: string;
 	icon?: string;
 	header?: string;
+	headerType?: HeaderTypes,
 	accept?: Function;
 	reject?: Function;
 	acceptVisible?: boolean;
@@ -123,13 +131,40 @@ export class BrowserService implements IAppStorage {
         }
     }
 
+    private _fixConfirmation(confirmation: Confirmation): void {
+        if (confirmation.headerType) {
+            switch (confirmation.headerType) {
+                case HeaderTypes.attention:
+                    confirmation.header = this._appLocalization.get('app.common.attention');
+                    break;
+                case HeaderTypes.error:
+                    confirmation.header = this._appLocalization.get('app.common.error');
+                    break;
+                case HeaderTypes.retry:
+                    confirmation.header = this._appLocalization.get('app.common.retry');
+                    break;
+                case HeaderTypes.cancel:
+                    confirmation.header = this._appLocalization.get('app.common.cancel');
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (!(confirmation.header || '').trim()) {
+            confirmation.header = this._appLocalization.get('app.common.attention');
+        }
+    }
+
     public confirm(confirmation: Confirmation) {
         confirmation.key = "confirm";
+        this._fixConfirmation(confirmation);
         this._onConfirmationFn(confirmation);
     }
 
     public alert(confirmation: Confirmation) {
         confirmation.key = "alert";
+        this._fixConfirmation(confirmation);
         this._onConfirmationFn(confirmation);
     }
 

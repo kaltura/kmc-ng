@@ -14,6 +14,19 @@
 	}
   .kButtons{
     padding-top: 12px;
+
+    .kButtonLiveDashboard {
+      height:34px;
+      width: 160px;
+      /deep/ .kIconstatistic{
+        line-height: 18px;
+
+        &:before {
+          font-size: 22px;
+          color: $kGrayscale3;
+        }
+      }
+    }
   }
 	.kLiveDetails{
 		box-sizing: border-box;

@@ -514,7 +514,7 @@
                 "private": "Private",
                 "selectedCategory": "Selected: {{0}}",
                 "deleteAction" : {
-                    "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
+                    "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
                     "deleteWarningConfirmation": "This category was created by another application and deleting it will effect this application or site.\nAre you sure you want to delete this category?",
                     "deleteSubcategoriesConfirmation": "This category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
                     "deleteConfirmation": "Are you sure you want to delete this category?"
@@ -590,7 +590,7 @@
                 "ruleName": "Rule Name",
                 "ruleNamePlaceholder": "Rule Name",
                 "resultsLimit": "Results Limit ({{0}})",
-                "orderBy": "Order by",
+                "orderBy": "Order by: {{0}}",
                 "totalDuration": "Total duration {{0}}",
                 "resultsLimitRange": "1 - 200 Entries",
                 "noEntries": "No entries"
@@ -663,9 +663,10 @@
                     "contentType" : {
                         "content": "Content",
                         "allContent": "All Content",
-                        "fromPlaylist": "From playlist"
+                        "fromPlaylist": "From Playlist"
                     },
-                    "playerName": "Player({{0}})",
+                    "search": "Search",
+          "playerName": "Player({{0}})",
                     "entriesCountData": {
                         "count": "Entries count",
                         "numOfEntries": "{{0}} Entries",
@@ -857,7 +858,7 @@
                                 "label": "Feed Description"
                             },
                             "category": {
-                                "label": "Category",
+                                "label": "Categories",
                                 "promptText": "Choose Category",
                                 "itemsSelected":"{0} Selected Categories",
                                 "availableCategories": {
@@ -2203,7 +2204,9 @@
                 "newRole": "newRole",
                 "contactUs": "Contact us",
                 "contactUsText": " to learn more about adding any disabled items below to your account.",
-                "errors": {
+                "roleUpdated": "Role updated",
+        "roleUpdatedMessage": "Changes will take effect immediately.\nBrowser page refresh should be recommended to the existing users associated with this role",
+        "errors": {
                     "required": "This field is required.",
                     "validationError": "The form contains some invalid information. Please review the sections marked as invalid."
                 },
@@ -2266,8 +2269,9 @@
                 "accountInfo": {
                     "header": "We are excited that you’re looking for more info on upgrading your account!",
                     "trial": "Your free trial expires on {{0}}",
-                    "bandwidth": "Monthly bandwidth consumption so far: {{0}} GB",
-                    "storage": "Current monthly storage usage so far: {{0}} GB",
+                    "gb": " GB",
+          "bandwidth": "Monthly bandwidth consumption so far: {{0}}",
+                    "storage": "Current monthly storage usage so far: {{0}}",
                     "contactUs": "Contact us to learn more about different packages and added- value services."
                 }
             },

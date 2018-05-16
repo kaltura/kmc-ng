@@ -12,7 +12,7 @@
       <p-column styleClass="kApplicationRootCategory"
                 field="fullName" [header]="'applications.settings.integrationSettings.entitlement.table.applicationRootCategory' | translate">
         <ng-template let-col let-entitlement="rowData" pTemplate="body">
-          <div class="kApplicationRootCategoryLabel kTableColumn" [kTooltip]="entitlement[col.field]" [maxWidth]="300">
+          <div class="kApplicationRootCategoryLabel kTableColumn" [kTooltip]="entitlement[col.field]">
             {{entitlement[col.field]}}
           </div>
         </ng-template>
@@ -20,7 +20,7 @@
       <p-column styleClass="kPrivacyContextLabel" field="privacyContext"
                 [header]="'applications.settings.integrationSettings.entitlement.table.privacyContextLabel' | translate">
         <ng-template let-col let-entitlement="rowData" pTemplate="body">
-          <span class="kTableColumn" [kTooltip]="entitlement[col.field]" [maxWidth]="300">{{entitlement[col.field]}}</span>
+          <span class="kTableColumn" [kTooltip]="entitlement[col.field]">{{entitlement[col.field]}}</span>
         </ng-template>
       </p-column>
       <p-column styleClass="kActionsColumn" header="" [style]="{'width':'60px'}">
