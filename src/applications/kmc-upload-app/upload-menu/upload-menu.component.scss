@@ -6,6 +6,12 @@
   a {
     color: #FFFFFF;
     text-decoration: none;
+    &:hover:not(.disabled) {
+      color: #FFFFFF;
+    }
+    &:active:not(.disabled) {
+      color: #FFFFFF;
+    }
   }
 
   .kUploadMenuListItem {
@@ -50,10 +56,16 @@
 
       .kBulkUploadSamplesLink {
         margin-top: 5px;
+        display: block;
         opacity: 0.6;
         font-size: 14px;
         font-weight: normal;
         text-decoration: underline;
+        &.kDisabled{
+            opacity: 0.2;
+            cursor: default;
+            pointer-events: none;
+        }
       }
     }
   }

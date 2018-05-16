@@ -3,11 +3,11 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angul
 import { Observable } from 'rxjs/Observable';
 import { AppAuthentication } from "./app-authentication.service";
 import { BoostrappingStatus, AppBootstrap } from './app-bootstrap.service';
-import { AppNavigator } from "./app-navigator.service";
+import { BrowserService } from '../providers/browser.service';
 
 @Injectable()
 export class AuthCanActivate implements CanActivate {
-    constructor(private appNavigator : AppNavigator, private appAuthentication : AppAuthentication, private appBootstrap: AppBootstrap) {}
+    constructor(private appAuthentication : AppAuthentication, private appBootstrap: AppBootstrap, private _browserService: BrowserService) {}
     canActivate(route: ActivatedRouteSnapshot,  state: RouterStateSnapshot):Observable<boolean> {
 
         if (this.appAuthentication.isLogged())
@@ -24,7 +24,7 @@ export class AuthCanActivate implements CanActivate {
                             observer.next(true);
                         }else{
                             observer.next(false);
-                            this.appNavigator.navigateToLogin();
+                            this._browserService.navigateToLogin();
                         }
                         observer.complete();
                         if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
@@ -33,7 +33,7 @@ export class AuthCanActivate implements CanActivate {
                             observer.next(false);
                             observer.complete();
                             if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
-                            this.appNavigator.navigateToError();
+                            this._browserService.navigateToError();
                         }
                     }
                 },
@@ -42,7 +42,7 @@ export class AuthCanActivate implements CanActivate {
                     observer.next(false);
                     observer.complete();
                     if (statusChangeSubscription) statusChangeSubscription.unsubscribe();
-                    this.appNavigator.navigateToError();
+                    this._browserService.navigateToError();
                 }
             );
         });

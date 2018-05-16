@@ -32,6 +32,7 @@ import { NewUploadMonitorService } from './upload-monitor/new-upload-monitor.ser
 import { BulkUploadMonitorService } from './upload-monitor/bulk-upload-monitor.service';
 import { DropFoldersMonitorService } from './upload-monitor/drop-folders-monitor.service';
 import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kal
     KalturaPrimeNgUIModule,
     SharedModule,
     InputSwitchModule,
-    CheckboxModule
+    CheckboxModule,
+    KMCPermissionsModule
   ],
   declarations: [
     UploadMenuComponent,

@@ -1,10 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {ConfirmationService} from 'primeng/primeng';
-import {AppStatus, BrowserService, GrowlMessage} from 'app-shared/kmc-shell/providers/browser.service';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
+import { BrowserService, GrowlMessage } from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization, OperationTagManagerService} from '@kaltura-ng/kaltura-common';
-import {NavigationEnd, Router} from '@angular/router';
-import { UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 
 /*
  * App Component
@@ -18,6 +17,9 @@ import { UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exi
 })
 export class AppComponent implements OnInit {
 
+  @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
+  @ViewChild('cd') private _alertDialog: ConfirmDialog;
+
   public _isBusy: boolean = false;
   public _growlMessages: GrowlMessage[] = [];
 
@@ -25,6 +27,8 @@ export class AppComponent implements OnInit {
               private _browserService : BrowserService,
               private _appLocalization: AppLocalization,
               private router: Router,
+              private _route: ActivatedRoute,
+              private _loggerConfigurator: KmcLoggerConfigurator,
               private _oprationsTagManager: OperationTagManagerService
               ) {
   }
@@ -35,6 +39,11 @@ export class AppComponent implements OnInit {
       let htmlMessageContent = message.message.replace(/\n/g,'<br/>');
       const newMessage = Object.assign({}, message, { message : htmlMessageContent });
       this._confirmationService.confirm(newMessage);
+      // fix for PrimeNG no being able to calculate the correct content height
+      const dialog: ConfirmDialog = (message.key && message.key === 'confirm') ? this._confirmDialog : this._alertDialog;
+      setTimeout(()=>{
+        dialog.center();
+      },0);
     });
 
     // scroll window to top upon navigation change
@@ -57,5 +66,7 @@ export class AppComponent implements OnInit {
         this._growlMessages = [ ...this._growlMessages, message ];
       }
     );
+
+      this._loggerConfigurator.init();
   }
 }

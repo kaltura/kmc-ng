@@ -95,7 +95,8 @@ export class MetadataProfileParser {
 		let result;
 
 		try {
-			if (kalturaMetadataProfile.xsd) {
+		    // DEVELOPER NOTICE: due to bug in kaltura server the parse logic should ignore empty string and 'false' value
+			if (kalturaMetadataProfile.xsd && kalturaMetadataProfile.xsd !== 'false' && kalturaMetadataProfile.xsd !== '<xml></xml>') {
 
 				const schemaContext: any = XmlParser.toJson(kalturaMetadataProfile.xsd);
 				const metadataElement = schemaContext.schema.element;
@@ -126,7 +127,7 @@ export class MetadataProfileParser {
 					console.warn("[kaltura] -> invalid secnario. first element must be 'metadata'");
 				}
 			} else {
-				result = {profile: null, error: new Error('missing metadata profile xsd')};
+                result = {profile: null};
 			}
 		}
 		catch (e) {

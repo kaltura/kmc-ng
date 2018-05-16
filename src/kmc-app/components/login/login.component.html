@@ -6,12 +6,14 @@
         <span>
           <strong>KALTURA</strong> MANAGEMENT CONSOLE
         </span>
+        <div class="k-beta-logo kBeta"></div>
       </div>
 
       <ng-container [ngSwitch]="_currentScreen">
         <kKMCLoginForm *ngSwitchCase="_loginScreens.Login"
                        [username]="_username"
                        [errorMessage]="_errorMessage"
+                       [errorCode]="_errorCode"
                        [inProgress]="_inProgress"
                        (onSetScreen)="_setScreen($event)"
                        (onRememberMe)="_rememberMe($event)"
@@ -39,7 +41,7 @@
       </ng-container>
     </div>
     <div class="kLoginControls">
-      <ng-container *ngIf="_currentScreen === _loginScreens.Login">
+      <ng-container *ngIf="_currentScreen === _loginScreens.Login && _signUpLinkExists">
         <p>{{ 'app.login.dontHaveAccount' | translate }}</p>
 
         <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate" (click)="_signUp()"></button>
@@ -51,7 +53,7 @@
                 [label]="'app.login.login.title' | translate"
                 (click)="_setScreen(_loginScreens.Login)"></button>
         <button class="kSignUpBtn"
-                pButton
+                pButton *ngIf="_signUpLinkExists"
                 [label]="'app.login.signUp' | translate"
                 (click)="_signUp()"></button>
       </ng-container>

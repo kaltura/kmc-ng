@@ -1,5 +1,5 @@
 <div class="kContainer kContent">
-  <div class="kColumn kLeftColumn">
+  <div class="kColumn" [class.kRightColumnShown]="_kmcPermissions.FEATURE_ENTITLEMENT | kNgIfPermitted">
     <div class="kAccountInfoContainer">
       <kAccountInfo></kAccountInfo>
     </div>
@@ -8,7 +8,7 @@
       <div>{{'applications.settings.integrationSettings.accountInfo.notifications.message' | translate}}</div>
     </div>
   </div>
-  <div class="kColumn">
+  <div class="kColumn kRightColumn" *ngIf="_kmcPermissions.FEATURE_ENTITLEMENT | kNgIfPermitted">
       <kEntitlement></kEntitlement>
   </div>
 </div>

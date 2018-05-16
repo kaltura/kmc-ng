@@ -9,7 +9,7 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-        "configuration/server-config.json",
+        "server-config.json",
         "assets",
         "i18n",
         "favicon.ico",
