@@ -660,9 +660,10 @@
                     "contentType" : {
                         "content": "Content",
                         "allContent": "All Content",
-                        "fromPlaylist": "From playlist"
+                        "fromPlaylist": "From Playlist"
                     },
-                    "playerName": "Player({{0}})",
+                    "search": "Search",
+          "playerName": "Player({{0}})",
                     "entriesCountData": {
                         "count": "Entries count",
                         "numOfEntries": "{{0}} Entries",
