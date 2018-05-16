@@ -67,7 +67,7 @@ export class ChangeAccountComponent implements OnInit {
     const account = this.changeAccountForm.get('account').value; // pass selected account
     // this.parentPopupWidget.close(account);
     this._isBusy = true;
-    this._userAuthentication.loginByKs(account)
+    this._userAuthentication.switchPartnerId(account)
       .subscribe(() => {
           this._isBusy = false;
           this._blockerMessage = null;

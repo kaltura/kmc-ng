@@ -16,6 +16,10 @@ export class PlaylistIconPipe implements PipeTransform {
     }
 
     const playlist = playlistsIdToNameMap.get(playlistId);
+    if (!playlist) {
+        return '';
+    }
+
     const playlistType = playlist.playlistType;
 
     if (typeof(playlistType) !== 'undefined' && playlistType !== null) {

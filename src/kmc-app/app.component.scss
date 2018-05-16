@@ -2,3 +2,12 @@
   position: fixed;
   z-index: 1200;
 }
+
+:host /deep/ {
+    .kAlignToLeft {
+        .ui-dialog.ui-confirmdialog .ui-dialog-content.ui-widget-content {
+            text-align: left;
+            line-height: 1.4em;
+        }
+    }
+}
