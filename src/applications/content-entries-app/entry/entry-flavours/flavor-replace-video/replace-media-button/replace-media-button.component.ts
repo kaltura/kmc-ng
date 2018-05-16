@@ -25,8 +25,11 @@ export class ReplaceMediaButtonComponent {
 
     public _uploadFileLabel: string;
     public _importFileLabel: string;
-    public _kmcPermissions = KMCPermissions;
     public _replaceType: UploadMenuType;
+
+    public _uploadEnabled = false;
+    public _importEnabled = false;
+    public _linkEnabled = false;
 
     public get _actionBtnTitle(): string {
         if (!this.entry) {
@@ -54,6 +57,14 @@ export class ReplaceMediaButtonComponent {
             this._uploadFileLabel = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.uploadFile');
             this._importFileLabel = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.importFile');
         }
+
+        this._uploadEnabled = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_UPLOAD)
+            && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_BASE);
+        this._importEnabled = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_BULK_UPLOAD)
+            && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_BASE);
+        this._linkEnabled = this._permissionsService.hasPermission(KMCPermissions.FEATURE_REMOTE_STORAGE_INGEST)
+            && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)
+            && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_BASE);
     }
 
     public _openReplacementMenu(type: UploadMenuType): void {
