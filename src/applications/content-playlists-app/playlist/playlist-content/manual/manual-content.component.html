@@ -2,6 +2,7 @@
   <div class="kPlaylistEntriesHolder">
       <kPlaylistEntryListBulkOperationsContent
         [selectedEntries]="_selectedEntries"
+        [isNewPlaylist]="_widgetService.isNewData"
         [duration]="_widgetService.entriesDuration"
         [entriesTotalCount]="_widgetService.entriesTotalCount"
         (addEntry)="addEntry.open()"
@@ -12,6 +13,7 @@
 
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"
+      [isNewPlaylist]="_widgetService.isNewData"
       [entries]="_widgetService.entries"
       (onActionSelected)="_onActionSelected($event)"
       (sortChanged)="_onSortChanged($event)"

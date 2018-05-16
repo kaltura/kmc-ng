@@ -15,6 +15,7 @@ import {
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -39,6 +40,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   public _currentCategoryId: number;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
+  public _kmcPermissions = KMCPermissions;
 
   constructor(categoryWidgetsManager: CategoryWidgetsManager,
               widget1: CategorySectionsListWidget,
@@ -224,7 +226,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
       if (currentCategoryIndex > 0) {
         const prevCategory = categories[currentCategoryIndex - 1];
-        this._categoryStore.openCategory(prevCategory.id);
+        this._categoryStore.openCategory(prevCategory);
       }
     }
   }
@@ -237,7 +239,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
       if (currentCategoryIndex >= 0 && (currentCategoryIndex < categories.length - 1)) {
         const nextEntry = categories[currentCategoryIndex + 1];
-        this._categoryStore.openCategory(nextEntry.id);
+        this._categoryStore.openCategory(nextEntry);
       }
     }
   }

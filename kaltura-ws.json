@@ -12,7 +12,7 @@
   "commands": {
     "bookmark": {
       "standalone": [
-        "c7cddadda9543287ae277326168d7d72af1dc74a"
+        "ec2ac2c8264eacef42889ab015a1542f9881ec45"
       ]
     },
     "release": {
@@ -21,7 +21,7 @@
         "key": "appVersion"
       },
       "changeLog": {
-        "htmlPath": "./src/kmc-app/components/changelog/changelog-content/changelog-content.component.html"
+        "htmlPath": ""
       }
     }
   }

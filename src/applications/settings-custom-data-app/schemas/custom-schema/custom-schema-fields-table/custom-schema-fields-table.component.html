@@ -23,7 +23,6 @@
       <ng-template let-col let-field="rowData" pTemplate="body">
         <div class="kTitle kTableColumn"
              [kTooltip]="'applications.settings.metadata.table.labelTT' | translate : {name: field['name']}"
-             [maxWidth]="300"
              (click)="_editField(field)">
           {{field[col.field]}}
         </div>
@@ -60,7 +59,7 @@
       </ng-template>
     </p-column>
 
-    <p-column>
+    <p-column *ngIf="(isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kNgIfPermitted)) || (!isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kNgIfPermitted))">
       <ng-template let-col let-field="rowData" let-i="rowIndex" pTemplate="body">
         <span class="kFieldsTableActions">
           <i class="kIconarrow_up kActionMoveDown"

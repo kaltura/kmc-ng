@@ -16,6 +16,7 @@
 			cursor: pointer;
 			color: $kGrayscale3;
 			margin-right: 8px;
+			font-size: 18px;
 		}
 		a{
 			cursor: pointer;
@@ -34,5 +35,14 @@
 			border: 0px solid white;
 			cursor: default;
 		}
+        .kLink{
+          display: flex;
+          align-items: center;
+        }
+        .kAlightRight{
+            margin-left: auto;
+            padding-right: 12px;
+        }
+
 	}
 }
