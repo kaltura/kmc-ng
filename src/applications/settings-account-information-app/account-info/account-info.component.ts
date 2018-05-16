@@ -62,6 +62,8 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       }, error => {
         this._logger.warn(`handle failed loading statistics data`, { errorMessage: error.message });
         this._isBusy = false;
+          this._bandwidthNA = true;
+          this._storageNA = true;
         this._bandwidth = this._appLocalization.get('app.common.n_a');
         this._storage = this._appLocalization.get('app.common.n_a');
       });
