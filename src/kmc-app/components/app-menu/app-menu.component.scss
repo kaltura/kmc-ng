@@ -137,6 +137,10 @@
         font-size: 14px;
         color: $kGrayscale3;
     }
+    .kDisabled{
+        color: $kGrayscale5;
+        cursor: default;
+    }
     .kHelpLink{
         font-size: 14px;
         cursor: pointer;
@@ -144,6 +148,9 @@
         &:hover{
             color: #000000;
         }
+    }
+    .kHelpLinkHidden {
+        display: none;
     }
     .kContexualHelp{
         background-color: $kGrayscale7;

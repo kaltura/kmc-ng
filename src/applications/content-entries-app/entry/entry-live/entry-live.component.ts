@@ -15,11 +15,11 @@ import { serverConfig } from "config/server";
 })
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
-	@ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
+	@ViewChild('liveAnalytics') _liveAnalytics: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
-	public enableLiveDashboard: boolean = false;
+	public enableLiveAnalytics: boolean = false;
 
     public get _isNoteShown(): boolean {
         return this._widgetService.isPassthroughProfile(this._widgetService._selectedConversionProfile);
@@ -38,7 +38,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnInit() {
 		this._widgetService.attachForm();
-		this.enableLiveDashboard = serverConfig.externalApps.liveDashboard.enabled;
+		this.enableLiveAnalytics = serverConfig.externalApps.liveAnalytics.enabled;
     }
 
     ngOnDestroy() {
@@ -70,9 +70,15 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 		);
 	}
 
-	public _openLiveReport(): void {
-		if (this.enableLiveDashboard){
-			this._liveDashboard.open();
+	public _openLiveAnalytics(): void {
+		if (this.enableLiveAnalytics){
+		    // TODO - load live analytics app
+			//this._liveAnalytics.open();
+            this._browserService.alert(
+                {
+                    message: "Not implemented for Beta",
+                }
+            );
 		}
 	}
 

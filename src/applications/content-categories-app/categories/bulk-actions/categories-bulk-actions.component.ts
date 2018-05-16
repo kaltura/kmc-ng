@@ -167,6 +167,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     const { hadNoPrivacyContext } = this._filterPrivacyContext();
     if (hadNoPrivacyContext) {
       this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
         accept: () => executeAction()
       });
@@ -201,6 +202,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     const { hadNoPrivacyContext } = this._filterPrivacyContext();
     if (hadNoPrivacyContext) {
       this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
         accept: () => executeAction()
       });
@@ -227,6 +229,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     const { hadNoPrivacyContext } = this._filterPrivacyContext();
     if (hadNoPrivacyContext) {
       this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
         accept: () => executeAction()
       });
@@ -246,6 +249,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     const { hadNoPrivacyContext } = this._filterPrivacyContext();
     if (hadNoPrivacyContext) {
       this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
         accept: () => executeAction()
       });
@@ -275,6 +279,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         }
       }, error => {
         this._browserService.alert({
+            header: this._appLocalization.get('app.common.attention'),
           message: this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.categoriesCouldNotBeDeleted')
         });
       });
@@ -288,6 +293,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
       if (!movingOnlySiblings) {
         this._browserService.alert({
+            header: this._appLocalization.get('app.common.attention'),
           message: this._appLocalization.get('applications.content.moveCategory.errors.onlySiblingsMoveAllowed')
         });
       } else {
@@ -329,6 +335,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         },
         error => {
           this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
             message: this._appLocalization.get('applications.content.bulkActions.errorCategories')
           });
           this.onBulkChange.emit({ reload: reloadCategories });

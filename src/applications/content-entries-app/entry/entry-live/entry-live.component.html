@@ -39,7 +39,7 @@
             <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"
                     [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
                     label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
-            <a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" [class.kDisabled]="!enableLiveDashboard" (click)="_openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
+            <a *ngIf="_widgetService._liveType === 'kaltura' && enableLiveAnalytics" class="kReportLink" [class.kDisabled]="!enableLiveAnalytics" (click)="_openLiveAnalytics()">{{'applications.content.entryDetails.live.report' | translate}}</a>
           </div>
         </div>
 
@@ -80,7 +80,7 @@
         </div>
 
 
-        <div>
+        <div *ngIf="_kmcPermissions.FEATURE_KALTURA_LIVE_STREAM | kNgIfPermitted">
             <span class="kSubTitle">{{'applications.content.entryDetails.live.transcoding' | translate}}</span>
             <div class="kRow">
                 <span class="kLabels">{{'applications.content.entryDetails.live.transcodingProfile' | translate}}</span>
@@ -224,9 +224,14 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #liveDashboard [fullScreen]="true">
-  <ng-template>
-    <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
-  </ng-template>
+<kPopupWidget #liveAnalytics [fullScreen]="true">
+  <!--ng-template>
+    <kAnalyticsLive></kAnalyticsLive>
+  </ng-template-->
 </kPopupWidget>
 
+<kPopupWidget #liveDashboard [fullScreen]="true">
+    <ng-template>
+        <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
+    </ng-template>
+</kPopupWidget>

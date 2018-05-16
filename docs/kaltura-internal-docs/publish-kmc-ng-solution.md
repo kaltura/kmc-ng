@@ -113,12 +113,11 @@ ws --spa index.html
 
 1. Prepare a release `npm run release:prepare`.
    * open file `src/configuration/global-config.ts` and make sure `appVersion` was updated correctly.
+   * Update KMCng version in deploy/config.ini to the current KMCng version: vX.X.X
+   * commit your changes with commit message 'chore: update version of deployed assets'
 
-2. Review version release notes in  `changelog.md` file and modify it as needed.
-   * Focus on the **"features section"** as it will be used in multiple places.
-   * Make sure you add context to features and arrange them by priority.
-   * If you modified the changelog, commit the change as ‘chore: update changlog.md file’.
-
+2. Update  `changelog.md` with new features (provided by product)
+   * commit your changes with commit message 'chore: update changelog'
 
 3. publish the release
 ```
@@ -138,14 +137,29 @@ npm run standalone:update
 npm run build:prod
 ```
 
-6. Create a version deployable zip
+6. Create a version deployable zip using the following structure:
 ```
-cd dist
-zip -r kmc-ng-vX.X.X.zip .
+kmc-ng-vX.X.X.zip
+| -> deploy (folder - copied from /deploy)
+| -> server-config-example.json (file - copied from /src/configuration)
+| -> vX.X.X (folder - copied from /dist)
 ```
-   * replace `vX.X.X` with the actual version number
+**Note**: replace `vX.X.X` with the actual version number
 
-7. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
+7.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
+
+7.1 update the title of the release, add `(Beta)` to the versin name
+
+7.2 add the following information at the bottom of the release notes
+```
+## Installation:
+1.  Unzip *inner folder* `v<version number>` into `/opt/kaltura/apps/kmcng/v<version number>`
+2.  Run uiconf deployment with `--ini=v<version number>/deploy/config.ini`
+```
+
+7.3 upload the zip file you created in step 6
+
+
 
 #### provide debug version
 1. Rebuild the application **without** production flag.
