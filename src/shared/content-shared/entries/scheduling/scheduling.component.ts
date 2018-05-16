@@ -9,7 +9,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
   styleUrls: ['./scheduling.component.scss']
 })
 export class SchedulingComponent implements OnInit, OnDestroy {
-
+  @Input() hideClearDates: boolean;
   @Input()
   set schedulingForm(form: FormGroup) {
     this._schedulingForm = form;

@@ -6,6 +6,7 @@
       pButton
       type="button"
       class="kButtonBranded kAddProfileBtn"
+      [disabled]="_kmcPermissions.TRANSCODING_ADD | kDisabledIfNotPermitted"
       [class.kHidden]="_selectedProfiles.length"
       [label]="'applications.settings.transcoding.addProfile' | translate"
       (click)="addProfile.emit(_profilesType)"></button>
@@ -17,7 +18,9 @@
       <span class="kSelectedProfilesLabel">
         • {{ 'applications.settings.transcoding.selected' | translate: [_selectedProfiles.length]}}
       </span>
-      <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteSelected()"></button>
+      <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+              [disabled]="_kmcPermissions.TRANSCODING_DELETE | kDisabledIfNotPermitted"
+              (click)="_deleteSelected()"></button>
       <a class="kBulkCancel" (click)="_clearSelection()">
         {{'applications.settings.transcoding.cancel' | translate}}
       </a>
@@ -30,7 +33,7 @@
                                   [(selectedProfiles)]="_selectedProfiles"></k-transcoding-profiles-table>
   </k-area-blocker>
 
-  <div class="kProfilesTableFooter" #footer *ngIf="(_storeService.profiles.data$ | async)?.totalCount">
+  <div class="kProfilesTableFooter kContent" #footer *ngIf="(_storeService.profiles.data$ | async)?.totalCount">
     <p-paginator
       [rows]="_query.pageSize"
       [first]="_query.pageIndex * _query.pageSize"
