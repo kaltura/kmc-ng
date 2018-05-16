@@ -22,7 +22,7 @@
 
     .kRow {
       display: flex;
-      padding-top: 16px;
+      padding-top: 22px;
 
       .kLabel {
         width: 196px;
@@ -59,6 +59,7 @@
 
       .kControl, k-prime-control {
         width: 100%;
+          max-width: 500px;
       }
     }
   }
@@ -77,13 +78,6 @@
   /* PrimeNG overrides */
   /*********************/
 
-  textarea.threeRows {
-    background: #FFFFFF;
-    border-radius: 3px;
-    border: 1px solid $kGrayscale4;
-    resize: none;
-    box-sizing: border-box;
-  }
 }
 
 :host /deep/ .kMetadataDetails {

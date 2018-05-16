@@ -44,6 +44,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _showEmbedParams = true;
   public _showAdvanced = false;
   public _title: string;
+  public _embedTypesHelpExists = !!serverConfig.externalLinks.previewAndEmbed && !!serverConfig.externalLinks.previewAndEmbed.embedTypes;
+  public _deliveryProtocolsHelpExists = !!serverConfig.externalLinks.previewAndEmbed && !!serverConfig.externalLinks.previewAndEmbed.deliveryProtocols;
 
   public _previewForm: FormGroup;
 

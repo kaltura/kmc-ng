@@ -115,7 +115,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       }];
       const isCurrentUser = this._appAuthentication.appUser.id === user.id;
       const isAdminUser = this._partnerInfo.adminUserId === user.id;
-      if (!isCurrentUser || !isAdminUser) {
+      if (!isCurrentUser && !isAdminUser) {
           this._items.push(
               {
                   id: 'blockUnblock', label: this._appLocalization.get('applications.content.table.blockUnblock'),

@@ -71,7 +71,9 @@
   overflow: visible;
   width: 80px;
 }
-
+:host /deep/ p-table .ui-table-scrollable-body{
+    margin-bottom: 34px;
+}
 :host /deep/ p-table .stickyHeader {
   z-index: 10;
   display: table;

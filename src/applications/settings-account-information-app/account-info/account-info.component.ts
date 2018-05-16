@@ -5,6 +5,7 @@ import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import {KalturaPartnerStatistics} from 'kaltura-ngx-client/api/types/KalturaPartnerStatistics';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { SettingsAccountInformationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { serverConfig } from 'config/server';
 
 
@@ -26,7 +27,8 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   constructor(private _accountInformationService: SettingsAccountInformationService,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _settingsAccountInformationMainView: SettingsAccountInformationMainViewService) {
   }
 
   ngOnInit() {
@@ -40,7 +42,9 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       this._trialExpirationDateString =
         (new DatePipe()).transform(this._appAuthentication.appUser.createdAt.getTime() + trialPeriod, 'dateOnly'); // "01/15/1992"
     }
-    this.loadStatistics();
+    if (this._settingsAccountInformationMainView.isAvailable()) {
+        this.loadStatistics();
+    }
   }
 
   private loadStatistics() {

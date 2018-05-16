@@ -25,7 +25,6 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlProfileTableName kTableColumn"
                 [kTooltip]="profile[col.field]"
-                [maxWidth]="300"
                 (click)="_onActionSelected('edit', profile)">
             {{ profile[col.field] }}
           </span>
@@ -50,8 +49,8 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile.view.domain.isAuthorized,
-            'kIconerror blocked': !profile.view.domain.isAuthorized
+            'kIconconfirmation authorized': profile.view.domain.isAuthorized === null || profile.view.domain.isAuthorized,
+            'kIconerror blocked': profile.view.domain.isAuthorized !== null && !profile.view.domain.isAuthorized
             }"></i>
             <span>{{ profile.view.domain.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
@@ -63,8 +62,8 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile.view.countries.isAuthorized,
-            'kIconerror blocked': !profile.view.countries.isAuthorized
+            'kIconconfirmation authorized': profile.view.countries.isAuthorized === null ||profile.view.countries.isAuthorized,
+            'kIconerror blocked': profile.view.countries.isAuthorized !== null && !profile.view.countries.isAuthorized
             }"></i>
             <span>{{ profile.view.countries.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
@@ -76,8 +75,8 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile.view.ips.isAuthorized,
-            'kIconerror blocked': !profile.view.ips.isAuthorized
+            'kIconconfirmation authorized': profile.view.ips.isAuthorized === null ||profile.view.ips.isAuthorized,
+            'kIconerror blocked': profile.view.ips.isAuthorized !== null && !profile.view.ips.isAuthorized
             }"></i>
             <span>{{ profile.view.ips.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
@@ -89,8 +88,8 @@
       <ng-template let-col let-profile="rowData" pTemplate="body">
           <span class="kAccessControlRestriction">
             <i class="kAccessControlRestrictionIcon" [ngClass]="{
-            'kIconconfirmation authorized': profile.view.flavors.isAuthorized,
-            'kIconerror blocked': !profile.view.flavors.isAuthorized
+            'kIconconfirmation authorized': profile.view.flavors.isAuthorized === null ||profile.view.flavors.isAuthorized,
+            'kIconerror blocked': profile.view.flavors.isAuthorized !== null && !profile.view.flavors.isAuthorized
             }"></i>
             <span>{{ profile.view.flavors.label || ('applications.settings.accessControl.table.allowAll' | translate) }}</span>
           </span>
