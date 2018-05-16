@@ -34,7 +34,9 @@
 						<span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
 					</ng-template>
 				</p-column>
-				<p-column field="tags" [hidden]="_documentWidth < 1400" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
+				<p-column field="tags"
+                  [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)"
+                  header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span>{{flavor.tags | tags}}</span>
 					</ng-template>

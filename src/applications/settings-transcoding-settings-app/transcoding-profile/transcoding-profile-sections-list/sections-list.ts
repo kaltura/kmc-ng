@@ -1,12 +1,12 @@
-import { TranscodingProfileWidgetKeys } from '../transcoding-profile-widget-keys';
+import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/settings-transcoding-profile-view.service';
 
 export const SectionsList = [
   {
     label: 'applications.settings.transcoding.sections.metadata',
-    key: TranscodingProfileWidgetKeys.Metadata
+    key: SettingsTranscodingProfileViewSections.Metadata
   },
   {
     label: 'applications.settings.transcoding.sections.flavors',
-    key: TranscodingProfileWidgetKeys.Flavors
+    key: SettingsTranscodingProfileViewSections.Flavors
   }
 ];

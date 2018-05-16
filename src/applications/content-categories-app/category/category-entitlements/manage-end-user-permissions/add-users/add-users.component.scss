@@ -1,7 +1,7 @@
 @import "app-theme/_variables.scss";
 
 $autoCompleteWidth: 326px;
-.kTitle{
+.kTitle {
   color: $kGrayscale1;
   font-size: 24px;
   font-weight: 700;
@@ -10,13 +10,14 @@ $autoCompleteWidth: 326px;
   height: 78px;
   line-height: 78px;
 }
-.kContent{
+
+.kContent {
   display: flex;
   flex-direction: column;
   height: 449px;
   width: 790px;
 
-  .kContainer{
+  .kContainer {
     height: 303px;
     padding: 32px;
     overflow: hidden;
@@ -33,6 +34,11 @@ $autoCompleteWidth: 326px;
         flex: 0 0 auto;
         word-wrap: break-word;
         padding-right: 12px;
+        text-align: center;
+        display: block;
+        margin-bottom: 10px;
+        padding-top: 7px;
+        font-size: 15px;
       }
 
       input {
@@ -53,11 +59,12 @@ $autoCompleteWidth: 326px;
     .kRow:first-child {
       padding-top: 0;
     }
-    .kLabel{
-    text-align: center;
-    display: block;
-    margin-bottom: 10px;
-  }
+
+    .kMultipleRow{
+      .kLabel{
+        padding-top:0;
+      }
+    }
 
     .kBlock {
       display: flex;
@@ -67,7 +74,7 @@ $autoCompleteWidth: 326px;
       .kRadio {
         padding-right: 40px;
 
-        /deep/ .ui-radiobutton-label{
+        /deep/ .ui-radiobutton-label {
           font-weight: normal;
         }
       }
@@ -79,7 +86,8 @@ $autoCompleteWidth: 326px;
     }
   }
 }
-.kFooter{
+
+.kFooter {
 
   display: flex;
   height: 66px;
@@ -89,7 +97,8 @@ $autoCompleteWidth: 326px;
   justify-content: center;
 
   .kButtonDefault, .kButtonBranded {
-    height: 34px;	width: 160px;
+    height: 34px;
+    width: 160px;
   }
 
   .kButtonDefault {
@@ -98,16 +107,15 @@ $autoCompleteWidth: 326px;
   }
 }
 
-
-:host /deep/ .ui-autocomplete.ui-widget{
+:host /deep/ .ui-autocomplete.ui-widget {
   width: $autoCompleteWidth;
   font-size: 15px;
 
-  input{
+  input {
     width: 100%;
   }
-  .ui-autocomplete-input-token{
-    width:100%;
+  .ui-autocomplete-input-token {
+    width: 100%;
   }
 
   ul.ui-autocomplete-multiple-container {
@@ -122,12 +130,12 @@ $autoCompleteWidth: 326px;
 }
 
 :host /deep/ {
-  .ui-dropdown{
+  .ui-dropdown {
     height: 34px;
     width: 326px !important;
     border: 1px solid $kGrayscale4;
 
-    .ui-dropdown-label{
+    .ui-dropdown-label {
       color: $kGrayscale1;
       font-size: 15px;
     }

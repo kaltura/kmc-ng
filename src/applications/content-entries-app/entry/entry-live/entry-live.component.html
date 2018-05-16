@@ -2,7 +2,7 @@
   <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
     <div class="kButtons">
-      <button pButton [disabled]="!_widgetService._liveDashboardEnabled" class="kButtonDefault" (click)="liveDashboard.open()" label="{{'applications.content.entryDetails.live.liveDashboard' | translate}}"></button>
+      <button pButton icon="kIconstatistic" [disabled]="!_widgetService._liveDashboardEnabled" class="kButtonDefault" (click)="liveDashboard.open()" label="{{'applications.content.entryDetails.live.liveDashboard' | translate}}"></button>
     </div>
     <div class="kLiveDetails">
 
@@ -22,23 +22,21 @@
         </div>
         <div class="kRow">
 			<span class="kLabels"></span>
-			<button pButton (click)="_regenerateToken()" class="kButtonDefault" label="{{'applications.content.entryDetails.live.regenerate' | translate}}" [kTooltip]="'applications.content.entryDetails.live.regenerateTooltip' | translate"></button>
+			<button pButton (click)="_regenerateToken()" class="kButtonDefault" label="{{'applications.content.entryDetails.live.regenerate' | translate}}" [kTooltip]="'applications.content.entryDetails.live.regenerateTooltip' | translate"
+                    [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"></button>
         </div>
         <div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
             <span>{{_widgetService.data?.streamName.replace('%i', '1')}}</span>
           </div>
-          <!--div class="kRow">
-            <span class="kLabels"></span>
-            <span>{{'applications.content.entryDetails.live.note' | translate}}</span>
-          </div>
           <div class="kRow">
             <span class="kLabels"></span>
             <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"
+                    [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
                     label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
-            <a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" (click)="_widgetService._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
-          </div-->
+            <a *ngIf="_widgetService._liveType === 'kaltura' && enableLiveAnalytics" class="kReportLink" [class.kDisabled]="!enableLiveAnalytics" (click)="_openLiveAnalytics()">{{'applications.content.entryDetails.live.report' | translate}}</a>
+          </div>
         </div>
 
         <div>
@@ -72,16 +70,20 @@
           </div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.entryDetails.live.autoStart' | translate}}</span>
-            <p-dropdown (onChange)="_widgetService.setDirty()" [options]="_widgetService._autoStartOptions" [(ngModel)]="_widgetService._explicitLive"></p-dropdown>
+            <p-dropdown (onChange)="_widgetService.setDirty()" [options]="_widgetService._autoStartOptions" [(ngModel)]="_widgetService._explicitLive"
+                        [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"></p-dropdown>
           </div>
         </div>
 
 
-        <div>
+        <div *ngIf="_kmcPermissions.FEATURE_KALTURA_LIVE_STREAM | kNgIfPermitted">
             <span class="kSubTitle">{{'applications.content.entryDetails.live.transcoding' | translate}}</span>
             <div class="kRow">
                 <span class="kLabels">{{'applications.content.entryDetails.live.transcodingProfile' | translate}}</span>
-                <p-dropdown (onChange)="_widgetService.setDirty()" [options]="(_widgetService._conversionProfiles$ | async)?.items" [(ngModel)]="_widgetService._selectedConversionProfile"></p-dropdown>
+                <p-dropdown (onChange)="_widgetService.setDirty()"
+                            [options]="(_widgetService._conversionProfiles$ | async)?.items"
+                            [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
+                            [(ngModel)]="_widgetService._selectedConversionProfile"></p-dropdown>
             </div>
         </div>
       </div>
@@ -91,21 +93,13 @@
           <span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
-            <div>
-              <span #primaryBroadcastingUrl>{{_widgetService.data?.primaryBroadcastingUrl}}</span>
-              <button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn"
-                      (click)="_copyToClipboard(primaryBroadcastingUrl.textContent)" icon="kIconCopy-to-clipboard"
-                      [kTooltip]="'app.common.copyToClipboard' | translate"></button>
-            </div>
+            <span #primaryBroadcastingUrl>{{_widgetService.data?.primaryBroadcastingUrl}}</span>
+            <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.primaryBroadcastingUrl" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
           </div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.entryDetails.live.backup' | translate}}</span>
-            <div>
-              <span #secondaryBroadcastingUrl>{{_widgetService.data?.secondaryBroadcastingUrl}}</span>
-              <button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn"
-                      (click)="_copyToClipboard(secondaryBroadcastingUrl.textContent)" icon="kIconCopy-to-clipboard"
-                      [kTooltip]="'app.common.copyToClipboard' | translate"></button>
-            </div>
+            <span #secondaryBroadcastingUrl>{{_widgetService.data?.secondaryBroadcastingUrl}}</span>
+            <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.secondaryBroadcastingUrl" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
           </div>
         </div>
         <div>
@@ -115,11 +109,9 @@
           </div>
           <div class="kRow">
             <span class="kLabels"></span>
-            <span>{{'applications.content.entryDetails.live.note' | translate}}</span>
-          </div>
-          <div class="kRow">
-            <span class="kLabels"></span>
-            <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"
+            <button pButton class="kButtonDefault"
+                    [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
+                    (click)="_widgetService._exportXML()"
                     label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
             <!--a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" (click)="_widgetService._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a-->
           </div>
@@ -163,22 +155,28 @@
               <span class="kLiveNumber">{{i+1}}.</span>
               <div class="kLiveBitrateCB">
                 <p-checkbox binary="true" [(ngModel)]="bitrate.enabled"
+                            [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
                             (onChange)="_widgetService._validateBitrates({updateDirtyMode : true})"></p-checkbox>
               </div>
               <div class="kLiveBitrate">
-                <p-dropdown [options]="_widgetService._availableBitrates" [disabled]="!bitrate.enabled"
+                <p-dropdown [options]="_widgetService._availableBitrates"
+                            [disabled]="!bitrate.enabled || _kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
                             [(ngModel)]="bitrate.bitrate"
                             (onChange)="_widgetService._validateBitrates({updateDirtyMode : true})"
                             [placeholder]="'applications.content.entryDetails.live.selectBitrate' | translate"></p-dropdown>
                 <span class="kLiveBitrate kLiveKbps"> Kbps</span>
               </div>
               <div class="kLiveWidth">
-                <p-spinner size="5" [min]="0" [max]="9999" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.width"
+                <p-spinner size="5" [min]="0" [max]="9999"
+                           [disabled]="!bitrate.enabled || _kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
+                           [(ngModel)]="bitrate.width"
                            (onChange)="_widgetService._validateBitrates({updateDirtyMode : true})"></p-spinner>
               </div>
               <span class="kLiveX">x</span>
               <div class="kLiveHeight">
-                <p-spinner size="5" [min]="0" [max]="9999" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.height"
+                <p-spinner size="5" [min]="0" [max]="9999"
+                           [disabled]="!bitrate.enabled || _kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
+                           [(ngModel)]="bitrate.height"
                            (onChange)="_widgetService._validateBitrates({updateDirtyMode : true})"></p-spinner>
               </div>
 
@@ -222,8 +220,14 @@
   </div>
 </k-area-blocker>
 
+<kPopupWidget #liveAnalytics [fullScreen]="true">
+  <!--ng-template>
+    <kAnalyticsLive></kAnalyticsLive>
+  </ng-template-->
+</kPopupWidget>
+
 <kPopupWidget #liveDashboard [fullScreen]="true">
-  <ng-template>
-    <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
-  </ng-template>
+    <ng-template>
+        <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
+    </ng-template>
 </kPopupWidget>

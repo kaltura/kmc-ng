@@ -33,9 +33,12 @@
             <div class="kOrderBy">
               <p-dropdown [options]="_orderByOptions"
                           [autoWidth]="false"
-                          [placeholder]="'applications.content.entries.orderBy' | translate"
                           (onChange)="_onOrderByChange()"
-                          [(ngModel)]="_orderBy"></p-dropdown>
+                          [(ngModel)]="_orderBy">
+                <ng-template let-item pTemplate="selectedItem">
+                  <span>{{'applications.content.entries.orderBy' | translate:[item.label]}}</span>
+                </ng-template>
+              </p-dropdown>
             </div>
           </div>
         </kEntriesList>

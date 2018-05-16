@@ -11,7 +11,9 @@
             <span class="kSelectedEntriesLabel">
               • {{selectedBulkLogItems.length}} {{'applications.content.bulkUpload.list.selected' | translate}}
             </span>
-            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteFiles()"></button>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+                    [disabled]="_kmcPermissions.BULK_LOG_DELETE | kDisabledIfNotPermitted"
+                    (click)="_deleteFiles()"></button>
 
             <a class="kBulkCancel" (click)="_clearSelection()">
               {{'applications.content.bulkUpload.list.cancel' | translate}}
