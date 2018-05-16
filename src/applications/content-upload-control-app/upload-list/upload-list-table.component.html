@@ -27,7 +27,7 @@
                 [header]="'applications.content.uploadControl.table.fileName' | translate"
                 [sortable]="false">
         <ng-template let-col let-file="rowData" pTemplate="body">
-          <span class="kUploadName kTableColumn" [kTooltip]="file[col.field]" [maxWidth]="300">{{ file[col.field] }}</span>
+          <span class="kUploadName kTableColumn" [kTooltip]="file[col.field]">{{ file[col.field] }}</span>
         </ng-template>
       </p-column>
 

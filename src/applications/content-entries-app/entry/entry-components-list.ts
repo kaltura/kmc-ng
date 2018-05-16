@@ -19,12 +19,9 @@ import {EntryComponent} from './entry.component';
 import {EntryPreview} from './entry-preview/entry-preview.component';
 import {EntryDetails} from './entry-details/entry-details.component';
 import {JumpToSection} from './entry-metadata/jump-to-section.component';
-import {LinkedEntries} from './entry-metadata/entry-selector/linked-entries.component';
-import {LinkedEntriesPopup} from './entry-metadata/entry-selector/linked-entries-popup.component';
 import {CategoriesSelector} from './entry-metadata/category-selector/categories-selector.component';
 import {TagsPipe} from './entry-flavours/tags.pipe';
 
-import { ClipAndTrimComponent} from './entry-clips/clip-and-trim/clip-and-trim.component';
 import {EntryDistributionComponent } from './entry-distribution/entry-distribution.component';
 import { UndistributedProfileComponent } from './entry-distribution/undistributed-profile/undistributed-profile.component';
 import { DistributedProfileComponent } from './entry-distribution/distributed-profile/distributed-profile.component';
@@ -36,8 +33,10 @@ import { DistributionProviderTypeIconPipe } from './entry-distribution/pipes/dis
 import { EditDistributionProfileFlavorsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-flavors/edit-distribution-profile-flavors.component';
 import { EditDistributionProfileMetadataComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-metadata/edit-distribution-profile-metadata.component';
 import { EditDistributionProfileThumbnailsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/edit-distribution-profile-thumbnails.component';
-import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';import {EntryAdvertisementsComponent} from './entry-advertisements/entry-advertisements.component';
-import {AdvertisementsComponent} from './entry-advertisements/advertisements/advertisements.component';
+import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';
+import {EntryAdvertisementsComponent} from './entry-advertisements/entry-advertisements.component';
+import {EntryEditorComponent} from './entry-editor/entry-editor.component';
+
 
 
 export const EntryComponentsList = [
@@ -64,8 +63,6 @@ export const EntryComponentsList = [
     FlavorImport,
     FlavorPreview,
     JumpToSection,
-    LinkedEntries,
-    LinkedEntriesPopup,
     TagsPipe,
     EntryDistributionComponent,
     DistributedProfileComponent,
@@ -79,6 +76,5 @@ export const EntryComponentsList = [
     EditDistributionProfileMetadataComponent,
     EditDistributionProfileThumbnailsComponent,
     EditDistributionProfileThumbnailItemComponent,
-    ClipAndTrimComponent,
-    AdvertisementsComponent
+    EntryEditorComponent
 ];

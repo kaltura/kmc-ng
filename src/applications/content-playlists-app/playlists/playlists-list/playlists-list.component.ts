@@ -11,6 +11,10 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { async } from 'rxjs/scheduler/async';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
+import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 
 @Component({
@@ -21,7 +25,9 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 })
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
-  @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
+	public _kmcPermissions = KMCPermissions;
+
+	@ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
   @ViewChild('tags') private tags: StickyComponent;
 
     public _isBusy = false;
@@ -46,6 +52,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
+              private _contentPlaylistViewService: ContentPlaylistViewService,
               public _bulkDeleteService: BulkDeleteService) {
   }
 
@@ -175,6 +182,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
     private _registerToDataChanges(): void {
         this._playlistsStore.playlists.state$
+            .observeOn(async)
             .cancelOnDestroy(this)
             .subscribe(
                 result => {
@@ -213,7 +221,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               this._appEvents.publish(new PreviewAndEmbedEvent(event.playlist));
               break;
           case 'view':
-              this._router.navigate(['/content/playlists/playlist', event.playlist.id]);
+              this._contentPlaylistViewService.open({ playlist: event.playlist, section: ContentPlaylistViewSections.Metadata });
               break;
           case 'delete':
               this._browserService.confirm(

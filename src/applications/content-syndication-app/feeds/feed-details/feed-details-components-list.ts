@@ -4,6 +4,7 @@ import {YahooDestinationFormComponent} from "./destinations-forms/yahoo-destinat
 import {RokuDestinationFormComponent} from "./destinations-forms/roku-destination-form/roku-destination-form.component";
 import {OperaDestinationFormComponent} from "applications/content-syndication-app/feeds/feed-details/destinations-forms/opera-destination-form/opera-destination-form.component";
 import {FlexibleFormatDestinationFormComponent} from "./destinations-forms/flexible-format-destination-form/flexible-format-destination-form.component";
+import { ItunesDestinationFormComponent } from './destinations-forms/itunes-destination-form/itunes-destination-form.component';
 
 export const FeedDetailsComponentsList = [
   FeedDetailsComponent,
@@ -11,5 +12,6 @@ export const FeedDetailsComponentsList = [
   YahooDestinationFormComponent,
   RokuDestinationFormComponent,
   OperaDestinationFormComponent,
-  FlexibleFormatDestinationFormComponent
+  FlexibleFormatDestinationFormComponent,
+  ItunesDestinationFormComponent
 ];

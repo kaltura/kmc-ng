@@ -19,13 +19,14 @@ import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {CreateNewCategoryEvent} from 'app-shared/kmc-shared/events/category-creation';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kBulkActions',
@@ -50,6 +51,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     KalturaEntryStatus.blocked.toString()
   ];
 
+  public _kmcPermissions = KMCPermissions;
   public _bulkActionsMenu: MenuItem[] = [];
   public _bulkWindowWidth = 500;
   public _bulkWindowHeight = 500;
@@ -74,7 +76,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkDownloadService: BulkDownloadService,
     private _bulkDeleteService: BulkDeleteService,
     private _appEvents: AppEventsService,
-    private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+              public _contentNewCategoryView: ContentNewCategoryViewService,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
               private _permissionsService: KMCPermissionsService) {
 
   }
@@ -97,9 +100,9 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     const creationEvent = new CreateNewPlaylistEvent({
       type: KalturaPlaylistType.staticList,
       name: this._appLocalization.get('applications.content.bulkActions.newPlaylist'),
-    }, 'metadata');
+    }, ContentPlaylistViewSections.Metadata);
     const invalidEntries = this.selectedEntries.filter(entry => {
-      return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1
+        return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1;
     });
 
     if (!invalidEntries.length) {
@@ -193,12 +196,9 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // owner changed
-  onOwnerChanged(owners: KalturaUser[]): void {
-    if (owners && owners.length) {
-      this.executeService(this._bulkChangeOwnerService, owners[0]);
-    }
+  onOwnerChanged(owner: KalturaUser): void {
+    this.executeService(this._bulkChangeOwnerService, owner);
   }
-
   // download changed
   onDownloadChanged(flavorId: number): void {
     const showSuccessMsg = (result) => {
@@ -286,8 +286,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       });
     }else {
       if (this.selectedEntries.length > 0) {
-        const creationEvent = new CreateNewCategoryEvent({entries: this.selectedEntries});
-        this._appEvents.publish(creationEvent);
+          this._contentNewCategoryView.open({entries: this.selectedEntries});
       }
     }
   }
@@ -297,9 +296,11 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           {
               label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => {
               this.downloadEntries()
-          }
+          },
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD)
           },
           {
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS),
               label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => {
               this.openBulkActionWindow('changeOwner', 500, 280)
           }
@@ -316,7 +317,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'),
                   command: (event) => {
                       this.performBulkAction('addToNewPlaylist')
-                  }
+                  },
+                disabled: !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_ADD)
               }]
           },
           {
@@ -335,6 +337,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               }]
           },
           {
+              disabled: !this._permissionsService.hasAnyPermissions([
+                KMCPermissions.CONTENT_MANAGE_METADATA,
+                KMCPermissions.CONTENT_MODERATE_METADATA
+              ]),
               label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
               {
                   label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => {
@@ -352,9 +358,11 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'),
               command: (event) => {
                   this.openBulkActionWindow('setAccessControl', 500, 550)
-              }
+              },
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL)
           },
           {
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_SCHEDULE),
               label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => {
               this.openBulkActionWindow('setScheduling', 500, 500)
           }

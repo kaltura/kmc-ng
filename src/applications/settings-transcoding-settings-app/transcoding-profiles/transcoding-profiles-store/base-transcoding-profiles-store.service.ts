@@ -19,6 +19,7 @@ import { ConversionProfileDeleteAction } from 'kaltura-ngx-client/api/types/Conv
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
 
 export interface ExtendedKalturaConversionProfileAssetParams extends KalturaConversionProfileAssetParams {
@@ -52,16 +53,16 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     data: () => this._profiles.data.value
   };
 
-  constructor(private _kalturaServerClient: KalturaClient,
-              private _browserService: BrowserService,
-              _logger: KalturaLogger) {
+  protected constructor(private _kalturaServerClient: KalturaClient,
+                        private _browserService: BrowserService,
+                        settingsTranscodingMainView: SettingsTranscodingMainViewService,
+                        _logger: KalturaLogger) {
     super(_logger);
-    setTimeout(() =>
-    {
-        this._prepare();
-    });
-
-
+    if (settingsTranscodingMainView.isAvailable()) {
+        setTimeout(() => {
+            this._prepare();
+        });
+    }
   }
 
   ngOnDestroy() {
@@ -88,11 +89,13 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
       this._browserService.setInLocalStorage(this.localStoragePageSizeKey, pageSize);
     }
 
+    this._logger.info(`loading data from the server`);
     this._profiles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+          this._logger.info(`handle success loading data from the server`);
           this._querySubscription = null;
 
           this._profiles.state.next({ loading: false, errorMessage: null });
@@ -105,6 +108,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          this._logger.warn(`handle failed loading data from the server`, { errorMessage });
           this._profiles.state.next({ loading: false, errorMessage });
         });
   }
@@ -154,7 +158,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
 
           const objects = profiles.map(profile => {
             const relevantAssets = assets.filter(({ conversionProfileId }) => conversionProfileId === profile.id);
-            const flavorsCount = (profile.flavorParamsIds || '').split(',').length;
+            const flavorsCount = profile.flavorParamsIds ? (profile.flavorParamsIds || '').split(',').length : 0;
             return Object.assign(profile, { assets: relevantAssets, flavors: flavorsCount });
           });
 
@@ -205,6 +209,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     // only after the line where we set isReady to true
 
     if (!this._isReady) {
+      this._logger.info(`initiate service`);
       this._isReady = true;
 
       this._registerToFilterStoreDataChanges();
@@ -237,7 +242,9 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
   }
 
   public reload(): void {
+    this._logger.info(`reload profiles list`);
     if (this._profiles.state.getValue().loading) {
+      this._logger.info(`reloading already in progress skip duplicating request`);
       return;
     }
 
