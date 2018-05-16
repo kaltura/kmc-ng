@@ -854,7 +854,7 @@
                                 "label": "Feed Description"
                             },
                             "category": {
-                                "label": "Category",
+                                "label": "Categories",
                                 "promptText": "Choose Category",
                                 "itemsSelected":"{0} Selected Categories",
                                 "availableCategories": {
