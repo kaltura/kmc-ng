@@ -10,6 +10,10 @@ import {
 } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
+import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 
 @Component({
@@ -28,17 +32,21 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
   @Output() enteredDraftMode = new EventEmitter<void>();
   @Output() exitDraftMode = new EventEmitter<void>();
+    @Output() closeEditor = new EventEmitter<void>();
 
 
   public keditUrl: string;
   public _windowEventListener = null;
   public _keditConfig: any = null;
 
-  constructor(private appAuthentication: AppAuthentication,
+  constructor(private _appAuthentication: AppAuthentication,
+              private _contentEntryViewService: ContentEntryViewService,
               private _advertisementsAppViewService: AdvertisementsAppViewService,
               private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
               private _quizAppViewService: QuizAppViewService,
               private _permissionService: KMCPermissionsService,
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization,
               private _logger: KalturaLogger,
               private _appEvents: AppEventsService,
               ) {
@@ -70,7 +78,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 		  */
           if (postMessageData.messageType === 'kea-get-display-name') {
               // send the user's display name based on the user ID
-              const displayName = this.appAuthentication.appUser.fullName;
+              const displayName = this._appAuthentication.appUser.fullName;
               e.source.postMessage({
                   'messageType': 'kea-display-name',
                   'data': displayName
@@ -113,7 +121,20 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
           if (postMessageData.messageType === 'kea-advertisements-saved') {
               this.exitDraftMode.emit();
           } else if (postMessageData.messageType === 'kea-go-to-media') {
-              console.log('I will now go to media: ' + postMessageData.data);
+              this._contentEntryViewService
+                  .openById(postMessageData.data, ContentEntryViewSections.Metadata)
+                  .cancelOnDestroy(this)
+                  .subscribe(
+                      () => {
+                          this.closeEditor.emit();
+                      },
+                      error => {
+                          this._browserService.alert({
+                              header: this._appLocalization.get('app.common.error'),
+                              message: error.message
+                          });
+                      }
+                  );
           }
 
           /* request for user ks.
@@ -122,7 +143,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 		  */
           if (postMessageData.messageType === 'kea-get-ks') {
               // send the user's display name based on the user ID
-              const ks = this.appAuthentication.appUser.ks;
+              const ks = this._appAuthentication.appUser.ks;
               e.source.postMessage({
                   'messageType': 'kea-ks',
                   'data': ks
@@ -240,10 +261,10 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
                       'service_url': serviceUrl,
 
                       /* the partner ID to use */
-                      'partner_id': this.appAuthentication.appUser.partnerId,
+                      'partner_id': this._appAuthentication.appUser.partnerId,
 
                       /* Kaltura session key to use */
-                      'ks': this.appAuthentication.appUser.ks,
+                      'ks': this._appAuthentication.appUser.ks,
 
                       /* language - used by priority:
 					  * 1. Custom locale (locale_url)
