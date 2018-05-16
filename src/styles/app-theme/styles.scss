@@ -231,6 +231,12 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
     color: $kGrayscale1 !important;
   }
 }
+
+.kDisabledLink {
+  color: $kGrayscale5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 @media screen and (max-width: 1090px) {
   .kmcDetailsLayout .kDetailsWrapper .kDetailsHeader .kBackBtn {
     margin-left: 0px;

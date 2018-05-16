@@ -17,7 +17,7 @@
                   [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
                   icon="kIcondropdown_arrow_bottom"
                   (click)="_moveRules('down')"></button>
-          <button pButton class="kButtonDanger kBulkDeleteBtn"
+          <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
                   [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
                   [label]="'applications.content.playlists.remove' | translate"
                   (click)="deleteRules.emit(selectedRules)"></button>
@@ -37,18 +37,17 @@
         <span class="kSelectedRulesNum" *ngIf="rulesTotalCount">
           {{'applications.content.playlistDetails.content.entriesInRules'| translate: [entriesTotalCount, rulesTotalCount]}}
       </span>
-        <div *ngIf="selectedRules.length" class="kSelected">
-        <span class="kSelectedRulesLabel">
-          {{'applications.content.playlists.selected' | translate: [selectedRules.length]}}
+        <span *ngIf="selectedRules.length" class="kSelectedRulesLabel">
+          •  {{'applications.content.playlists.selected' | translate: [selectedRules.length]}}
         </span>
-          <a class="kBulkCancel" (click)="clearSelection.emit()">
+        <span *ngIf="duration" class="kPlaylistRulesTableDuration">
+          , {{'applications.content.playlistDetails.details.duration'| translate: [(duration | kTime)]}}
+        </span>
+          <a *ngIf="selectedRules.length" class="kBulkCancel" (click)="clearSelection.emit()">
             {{'applications.content.playlists.cancel' | translate}}
           </a>
-        </div>
       </div>
-      <div *ngIf="duration" class="kPlaylistRulesTableDuration">
-        {{'applications.content.playlistDetails.details.duration'| translate: [(duration | kTime)]}}
-      </div>
+
     </div>
   </kSticky>
 </div>
