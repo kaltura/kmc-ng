@@ -39,7 +39,7 @@ git status
 ```
 2. Make sure you are working against updated version of master
 ```
-npm checkout master
+git checkout master
 git fetch
 ```
    * NOTICE: in order to sync tags you must run both `git fetch` and `git pull`
@@ -75,7 +75,7 @@ git status
 
 2. Make sure you are working against updated version of master
 ```
-npm checkout master
+git checkout master
 git fetch
 git pull
 ```
@@ -113,12 +113,11 @@ ws --spa index.html
 
 1. Prepare a release `npm run release:prepare`.
    * open file `src/configuration/global-config.ts` and make sure `appVersion` was updated correctly.
+   * Update KMCng version in deploy/config.ini to the current KMCng version: vX.X.X
+   * commit your changes with commit message 'chore: update version of deployed assets'
 
-2. Review version release notes in  `changelog.md` file and modify it as needed.
-   * Focus on the **"features section"** as it will be used in multiple places.
-   * Make sure you add context to features and arrange them by priority.
-   * If you modified the changelog, commit the change as ‘chore: update changlog.md file’.
-
+2. Update  `changelog.md` with new features (provided by product)
+   * commit your changes with commit message 'chore: update changelog'
 
 3. publish the release
 ```
@@ -138,16 +137,44 @@ npm run standalone:update
 npm run build:prod
 ```
 
-6. Update `configuration/server-config.json` file with relevant external applications configuration.
+6. Create a version deployable zip using the following structure:
+```
+kmc-ng-vX.X.X.zip
+| -> deploy (folder - copied from /deploy)
+| -> server-config-example.json (file - copied from /src/configuration)
+| -> vX.X.X (folder - copied from /dist)
+```
+**Note**: replace `vX.X.X` with the actual version number
 
-7. Create a version deployable zip
+7.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
+
+7.1 update the title of the release, add `(Beta)` to the versin name
+
+7.2 add the following information at the bottom of the release notes
+```
+## Installation:
+1.  Unzip *inner folder* `v<version number>` into `/opt/kaltura/apps/kmcng/v<version number>`
+2.  Run uiconf deployment with `--ini=v<version number>/deploy/config.ini`
+```
+
+7.3 upload the zip file you created in step 6
+
+
+
+#### provide debug version
+1. Rebuild the application **without** production flag.
+```
+npm run build
+```
+
+2. Create a version deployable zip, **add a suffix** `-DEBUG-ONLY` to the zip file name
 ```
 cd dist
-zip -r kmc-ng-vX.X.X.zip .
+zip -r kmc-ng-vX.X.X-DEBUG-ONLY.zip .
 ```
    * replace `vX.X.X` with the actual version number
 
-8. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
+3. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 
 ## Step 3: deploy kaltura to the dev server
 

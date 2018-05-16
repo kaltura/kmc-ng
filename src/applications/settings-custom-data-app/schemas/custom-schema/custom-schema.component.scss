@@ -51,6 +51,10 @@
         .kCustomSchemaTableControls {
           padding: 0 32px;
 
+          .kHidden {
+            margin: 0 !important;
+          }
+
           .kBulkControls {
             display: inline-flex;
             align-items: center;
@@ -85,6 +89,10 @@
               margin: 0 20px 0 -4px;
               border-top-left-radius: 0;
               border-bottom-left-radius: 0;
+
+                &.kMoveBtnBottomDisabled {
+                    margin-left: -1px;
+                }
             }
 
             .kBulkDeleteBtn {

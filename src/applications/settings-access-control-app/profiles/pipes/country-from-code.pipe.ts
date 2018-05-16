@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { buildDeployUrl } from 'config/server';
 
 @Pipe({ name: 'kCountryFromCode' })
 
@@ -16,7 +17,7 @@ export class CountryFromCodePipe implements PipeTransform {
     const countryCode = value.toLowerCase();
 
     return type === 'icon'
-      ? `/assets/flags/${countryCode}.gif`
+      ? buildDeployUrl(`assets/flags/${countryCode}.gif`)
       : this._appLocalization.get(`countries.${countryCode}`);
   }
 }

@@ -32,6 +32,8 @@ import {PlaylistIconPipe} from './pipes/playlist-icon.pipe';
 import {DestinationIconPipe} from './pipes/destination-icon.pipe';
 import {FeedDetailsComponentsList} from './feeds/feed-details/feed-details-components-list';
 import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { InputHelperModule } from '@kaltura-ng/kaltura-ui/input-helper/input-helper.module';
 
 @NgModule({
   imports: [
@@ -60,7 +62,9 @@ import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-cl
     StickyModule,
     FormsModule,
     CopyToClipboardModule,
-    TableModule
+    TableModule,
+    KMCPermissionsModule,
+    InputHelperModule
   ],
   declarations: [
     DestinationIconPipe,

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
@@ -15,6 +14,8 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import 'rxjs/add/observable/forkJoin';
 import { EntryWidget } from '../entry-widget';
 import { async } from 'rxjs/scheduler/async';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -25,9 +26,11 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 	public usersForm : FormGroup;
 
-	constructor( private _formBuilder : FormBuilder, private _kalturaServerClient: KalturaClient)
+	constructor(private _formBuilder: FormBuilder,
+              private _kalturaServerClient: KalturaClient,
+              private _permissionsService: KMCPermissionsService)
     {
-        super(EntryWidgetKeys.Users);
+        super(ContentEntryViewSections.Users);
 	    this._buildForm();
     }
 	private _buildForm() : void{
@@ -92,7 +95,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 	    this._creator = "";
 	    this._owner = null;
 	    this.usersForm.reset({
-		    owners: null,
+		    owners: [],
 		    editors: [],
 		    publishers: []
 	    });
@@ -103,6 +106,10 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 	    super._showLoader();
 
 	    let actions : Observable<void>[] = [];
+
+	    if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS)) {
+        this.usersForm.disable({ emitEvent: false });
+      }
 
       const fetchUsersData$ = this._kalturaServerClient.multiRequest(new KalturaMultiRequest(
         new UserGetAction({ userId: this.data.creatorId }),

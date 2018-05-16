@@ -12,6 +12,7 @@ import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-wi
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
 import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPlaylist',
@@ -38,17 +39,24 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
 
+    public get _enableSaveBtn(): boolean {
+        const hasUpdatePermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE);
+        const isNewPlaylist = this._playlistWidgetsManager.isNewData;
+        return  isNewPlaylist || (this._playlistStore.playlistIsDirty && !isNewPlaylist && hasUpdatePermission);
+    }
+
   constructor(private _browserService: BrowserService,
               public _playlistStore: PlaylistStore,
               private _appLocalization: AppLocalization,
               private _playlistsStore: PlaylistsStore,
-              playlistWidgetsManager: PlaylistWidgetsManager,
+              private _permissionsService: KMCPermissionsService,
+              private _playlistWidgetsManager: PlaylistWidgetsManager,
               widget1: PlaylistSectionsListWidget,
               widget2: PlaylistDetailsWidget,
               widget3: ManualContentWidget,
               widget4: PlaylistMetadataWidget,
               widget5: RuleBasedContentWidget) {
-    playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5])
+    _playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5])
   }
 
   ngOnInit() {
@@ -209,7 +217,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
         newPlaylist = playlists[currentPlaylistIndex - 1];
       }
       if (newPlaylist) {
-        this._playlistStore.openPlaylist(newPlaylist.id);
+        this._playlistStore.openPlaylist(newPlaylist);
       }
     }
   }
