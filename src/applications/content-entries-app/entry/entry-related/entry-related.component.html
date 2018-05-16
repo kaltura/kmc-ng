@@ -2,18 +2,21 @@
 	<kFileDialog #fileDialog [allowMultiple]="true" (onFileSelected)="_widgetService._onFileSelected($event)"></kFileDialog>
 	<div class="kRelated">
 		<p class="kTitle">{{'applications.content.entryDetails.related.related' | translate}}</p>
-		<button type="button" class="kButtonDefault" (click)="fileDialog.open($event)" pButton label="{{'applications.content.entryDetails.related.add' | translate}}"></button>
+		<button type="button" class="kButtonDefault" pButton
+            *ngIf="_kmcPermissions.ATTACHMENT_MODIFY | kNgIfPermitted"
+            [label]="'applications.content.entryDetails.related.add' | translate"
+            (click)="fileDialog.open($event)"></button>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService._relatedFiles$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_relatedTableRowStyle" >
 				<p-column styleClass="kFileName" field="filename" header="{{'applications.content.entryDetails.related.name' | translate}}" [style]="{'padding-left': '24px'}">
           <ng-template let-col let-file="rowData" pTemplate="body">
-            <span class="kTableColumn" [kTooltip]="file[col.field]" [maxWidth]="300">{{file[col.field]}}</span>
+            <span class="kTableColumn" [kTooltip]="file[col.field]">{{file[col.field]}}</span>
           </ng-template>
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}" [style]="{'width':'140px', 'overflow':'visible'}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
 						<p-dropdown
-                        [disabled]="file.uploading || file.uploadFailure"
+                        [disabled]="file.uploading || file.uploadFailure || (_kmcPermissions.ATTACHMENT_MODIFY | kDisabledIfNotPermitted)"
                         [options]="_fileTypes"
                         [autoWidth]="false"
                         [placeholder]="'applications.content.entryDetails.related.select' | translate"
@@ -37,7 +40,7 @@
 						</div>
 					</ng-template>
 				</p-column>
-				<p-column [style]="{'width':'80px'}">
+				<p-column [style]="{'width':'80px'}" *ngIf="_kmcPermissions.ATTACHMENT_MODIFY | kNgIfPermitted">
 					<ng-template let-col let-file="rowData" pTemplate="body">
 						<div class="kRelatedTableActions" *ngIf="!file.uploading && !file.uploadFailure">
 							<button type="button" pButton class="kMoreActionsButton" icon="kIconmore" (click)="openActionsMenu($event, file)"></button>

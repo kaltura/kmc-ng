@@ -4,6 +4,7 @@
     dataKey="id"
     scrollable="true"
     scrollHeight="100%"
+    [class.kDisabled]="!_isEditAllowed"
     [immutable]="false"
     [value]="_flavors"
     [emptyMessage]="_emptyMessage"
@@ -11,9 +12,11 @@
     [(selection)]="selectedFlavors">
     <p-column selectionMode="multiple" [style]="{'width': '44px'}"></p-column>
 
-    <p-column field="name" [header]="'applications.settings.transcoding.flavors.table.name' | translate">
+    <p-column field="name"
+              [style]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}"
+              [header]="'applications.settings.transcoding.flavors.table.name' | translate">
       <ng-template let-col let-flavor="rowData" pTemplate="body">
-        <div class="kTitle kTableColumn" [kTooltip]="flavor[col.field]" [maxWidth]="300"
+        <div class="kTitle kTableColumn" [kTooltip]="flavor[col.field]"
              (click)="_editFlavor(flavor)">{{flavor[col.field]}}</div>
       </ng-template>
     </p-column>
@@ -33,7 +36,7 @@
     <p-column field="dimensions" [header]="'applications.settings.transcoding.flavors.table.dimensions' | translate">
     </p-column>
 
-    <p-column header="" [style]="{'width': '60px'}">
+    <p-column header="" [style]="{'width': '60px'}" *ngIf="_isEditAllowed">
       <ng-template let-col let-flavor="rowData" pTemplate="body" let-i="rowIndex">
         <div class="kEditFlavorIconWrapper">
           <i class="kIconEdit kEditFlavorIcon" (click)="_editFlavor(flavor)"></i>

@@ -11,8 +11,9 @@
   <div class="kEntrySelectorBucket" *ngIf="selectedEntries.length">
     <div class="KEntrySelectorSelectedItemsWrapper">
       <div class="KEntrySelectorSelectedItem" *ngFor="let entry of selectedEntries">
-        <img [src]="entry.thumbnailUrl" [alt]="entry.name" onError="this.onerror=null;this.style.display='none'">
-        <span [kTooltip]="entry.name" [maxWidth]="300">{{ entry.name }}</span>
+        <img [src]="entry.thumbnailUrl" [alt]="entry.name" onError="this.onerror=null;this.style.display='none'"
+             *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+        <span [kTooltip]="entry.name">{{ entry.name }}</span>
         <i class="kIcontrash" (click)="_removeSelected(entry)"></i>
       </div>
     </div>

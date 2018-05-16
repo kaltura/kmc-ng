@@ -8,6 +8,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 export enum EntriesSelectorSelectionMode {
   multiple = 'multiple',
@@ -25,6 +26,9 @@ export enum EntriesSelectorSelectionMode {
   ]
 })
 export class EntriesSelectorComponent {
+
+  public _kmcPermissions = KMCPermissions;
+
   @Input() selectionMode: EntriesSelectorSelectionMode = EntriesSelectorSelectionMode.multiple;
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() enforcedFilters: Partial<EntriesFilters>;

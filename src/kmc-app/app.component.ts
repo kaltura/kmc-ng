@@ -1,10 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
-import {AppStatus, BrowserService, GrowlMessage} from 'app-shared/kmc-shell/providers/browser.service';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import { BrowserService, GrowlMessage } from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization, OperationTagManagerService} from '@kaltura-ng/kaltura-common';
-import {NavigationEnd, Router} from '@angular/router';
-import { UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 
 /*
  * App Component
@@ -19,7 +18,7 @@ import { UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exi
 export class AppComponent implements OnInit {
 
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
-  @ViewChild('alert') private _alertDialog: ConfirmDialog;
+  @ViewChild('cd') private _alertDialog: ConfirmDialog;
 
   public _isBusy: boolean = false;
   public _growlMessages: GrowlMessage[] = [];
@@ -28,6 +27,8 @@ export class AppComponent implements OnInit {
               private _browserService : BrowserService,
               private _appLocalization: AppLocalization,
               private router: Router,
+              private _route: ActivatedRoute,
+              private _loggerConfigurator: KmcLoggerConfigurator,
               private _oprationsTagManager: OperationTagManagerService
               ) {
   }
@@ -65,5 +66,7 @@ export class AppComponent implements OnInit {
         this._growlMessages = [ ...this._growlMessages, message ];
       }
     );
+
+      this._loggerConfigurator.init();
   }
 }

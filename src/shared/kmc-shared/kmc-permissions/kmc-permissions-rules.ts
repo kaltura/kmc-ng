@@ -1,6 +1,16 @@
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions';
 
-export const KMCPermissionsRules = {
+export const KMCPermissionsRules : {
+    customPermissionKeyToNameMapping: { [key: number]: string},
+    requiredPermissionMapping: { [key: number]: KMCPermissions},
+    linkedPermissionMapping: { [key: number]: KMCPermissions}
+} = {
+    customPermissionKeyToNameMapping: {
+      [KMCPermissions.CUEPOINT_MANAGE]: 'cuePoint.MANAGE',
+      [KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE]: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_DELETE',
+      [KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_MATCH]: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_MATCH',
+      [KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_BASE]: 'dropFolder.CONTENT_INGEST_DROP_FOLDER_BASE'
+    },
     requiredPermissionMapping: {
         [KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE]: KMCPermissions.FEATURE_REMOTE_STORAGE_INGEST,
         [KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_MATCH]: KMCPermissions.CONTENT_INGEST_DROP_FOLDER_MATCH,
