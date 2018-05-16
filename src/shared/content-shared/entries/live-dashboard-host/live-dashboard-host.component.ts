@@ -2,6 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {getKalturaServerUri, serverConfig} from 'config/server';
+import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @Component({
   selector: 'kLiveDashboardHost',
@@ -14,7 +15,10 @@ export class LiveDashboardHostComponent implements OnInit, OnDestroy {
   entryId: string = null;
   public _liveDashboardUrl = null;
 
-  constructor(private appAuthentication: AppAuthentication, private logger: KalturaLogger, private _browserService: BrowserService) {
+  constructor(private appAuthentication: AppAuthentication,
+              private logger: KalturaLogger,
+              private _browserService: BrowserService,
+              private _liveDasboardAppViewService: LiveDashboardAppViewService) {
   }
 
   ngOnInit() {
@@ -23,7 +27,7 @@ export class LiveDashboardHostComponent implements OnInit, OnDestroy {
       return undefined;
     }
 
-    if (!serverConfig.externalApps.liveDashboard.enabled) {
+    if (!this._liveDasboardAppViewService.isAvailable()) {
       this.logger.warn('Could not load live dashboard for provided entry, live dashboard not enabled for partner');
       return undefined;
     }
@@ -38,8 +42,7 @@ export class LiveDashboardHostComponent implements OnInit, OnDestroy {
           'ks': this.appAuthentication.appUser.ks,
           'service_url': getKalturaServerUri(),
           'liveDashboard': {
-            'entryId': this.entryId,
-            'version': serverConfig.externalApps.liveDashboard.version
+            'entryId': this.entryId
           }
         }
       };

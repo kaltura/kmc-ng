@@ -6,7 +6,7 @@
         {{'applications.settings.accessControl.cancel' | translate}}
       </a>
       <button pButton type="button" class="kButtonBranded kSaveButton"
-              [disabled]="_saveBtnDisabled"
+              [disabled]="_saveBtnDisabled || (_kmcPermissions.ACCESS_CONTROL_UPDATE | kDisabledIfNotPermitted)"
               [label]="'applications.settings.accessControl.save' | translate"
               (click)="_save()"></button>
     </div>
@@ -16,7 +16,12 @@
       <div class="kRow" [class.kHasError]="_nameField.touched && _nameField.invalid">
         <span class="kLabel">{{'applications.settings.accessControl.editForm.profileName' | translate}}</span>
         <div class="kRequired">*</div>
-        <input class="kControl" pInputText [formControl]="_nameField">
+        <div class="kControlWrapper">
+          <input class="kControl" pInputText [formControl]="_nameField">
+          <span class="kHasError" *ngIf="_nameField.touched && _nameField.invalid">
+            {{'applications.settings.accessControl.editForm.validationMessage.profileNameRequired' | translate}}
+          </span>
+        </div>
       </div>
       <div class="kRow">
         <span class="kLabel">{{'applications.settings.accessControl.editForm.description' | translate}}</span>
