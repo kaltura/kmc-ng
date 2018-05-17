@@ -14,7 +14,7 @@
   </kScrollToTopContainer>
 
   <p>
-    <a class="clearAll" (click)="_clearAllComponents()">
+    <a class="clearAll" [class.kDisabledLink]="!_createdAfter && !_createdBefore" (click)="_clearAllComponents()">
       {{'applications.content.bulkUpload.filters.clearDates' | translate}}
     </a>
     <a class="kClose" (click)="_close()">

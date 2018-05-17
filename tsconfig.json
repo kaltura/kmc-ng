@@ -2,248 +2,39 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "baseUrl": "src",
     "sourceMap": true,
     "declaration": false,
-    "module": "es2015",
+    "baseUrl": "./src",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "noEmitHelpers": true,
-    "importHelpers": true,
     "target": "es5",
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
-      "es2016",
-      "es2017",
+      "es2015",
       "dom"
     ],
     "paths": {
+      "config/global": [
+        "configuration/global-config"
+      ],
+      "config/server": [
+        "configuration/server-config.ts"
+      ],
+      "config/sub-applications": [
+        "applications/sub-applications-config"
+      ],
+      "config/modules": [
+        "shared/modules-config"
+      ],
       "app-shared/*": [
         "shared/*"
       ],
-      "app-environment": [
-        "app-config"
-      ],
       "app-theme/*": [
         "styles/app-theme/*"
-      ],
-      "@angular/animations": [
-        "../node_modules/@angular/animations"
-      ],
-      "@angular/animations/*": [
-        "../node_modules/@angular/animations/*"
-      ],
-      "@angular/common": [
-        "../node_modules/@angular/common"
-      ],
-      "@angular/common/*": [
-        "../node_modules/@angular/common/*"
-      ],
-      "@angular/compiler": [
-        "../node_modules/@angular/compiler"
-      ],
-      "@angular/compiler/*": [
-        "../node_modules/@angular/compiler/*"
-      ],
-      "@angular/core": [
-        "../node_modules/@angular/core"
-      ],
-      "@angular/core/*": [
-        "../node_modules/@angular/core/*"
-      ],
-      "@angular/forms": [
-        "../node_modules/@angular/forms"
-      ],
-      "@angular/forms/*": [
-        "../node_modules/@angular/forms/*"
-      ],
-      "@angular/http": [
-        "../node_modules/@angular/http"
-      ],
-      "@angular/http/*": [
-        "../node_modules/@angular/http/*"
-      ],
-      "@angular/platform-browser": [
-        "../node_modules/@angular/platform-browser"
-      ],
-      "@angular/platform-browser/*": [
-        "../node_modules/@angular/platform-browser/*"
-      ],
-      "@angular/platform-browser-dynamic": [
-        "../node_modules/@angular/platform-browser-dynamic"
-      ],
-      "@angular/platform-browser-dynamic/*": [
-        "../node_modules/@angular/platform-browser-dynamic/*"
-      ],
-      "@angular/router": [
-        "../node_modules/@angular/router"
-      ],
-      "@angular/router/*": [
-        "../node_modules/@angular/router/*"
-      ],
-      "@kaltura-ng/kaltura-common": [
-        "../node_modules/@kaltura-ng/kaltura-common"
-      ],
-      "@kaltura-ng/kaltura-common/*": [
-        "../node_modules/@kaltura-ng/kaltura-common/*"
-      ],
-      "@kaltura-ng/kaltura-logger": [
-        "../node_modules/@kaltura-ng/kaltura-logger"
-      ],
-      "@kaltura-ng/kaltura-logger/*": [
-        "../node_modules/@kaltura-ng/kaltura-logger/*"
-      ],
-      "@kaltura-ng/kaltura-primeng-ui": [
-        "../node_modules/@kaltura-ng/kaltura-primeng-ui"
-      ],
-      "@kaltura-ng/kaltura-primeng-ui/*": [
-        "../node_modules/@kaltura-ng/kaltura-primeng-ui/*"
-      ],
-      "angular2-qrcode": [
-        "../node_modules/angular2-qrcode"
-      ],
-      "angular2-qrcode/*": [
-        "../node_modules/angular2-qrcode/*"
-      ],
-      "@kaltura-ng/kaltura-ui": [
-        "../node_modules/@kaltura-ng/kaltura-ui"
-      ],
-      "@kaltura-ng/kaltura-ui/*": [
-        "../node_modules/@kaltura-ng/kaltura-ui/*"
-      ],
-      "@kaltura-ng/mc-shared": [
-        "../node_modules/@kaltura-ng/mc-shared"
-      ],
-      "@kaltura-ng/mc-shared/*": [
-        "../node_modules/@kaltura-ng/mc-shared/*"
-      ],
-      "@kaltura-ng/mc-theme": [
-        "../node_modules/@kaltura-ng/mc-theme"
-      ],
-      "@kaltura-ng/mc-theme/*": [
-        "../node_modules/@kaltura-ng/mc-theme/*"
-      ],
-      "@types/seamless-immutable": [
-        "../node_modules/@types/seamless-immutable"
-      ],
-      "@types/seamless-immutable/*": [
-        "../node_modules/@types/seamless-immutable/*"
-      ],
-      "core-js": [
-        "../node_modules/core-js"
-      ],
-      "core-js/*": [
-        "../node_modules/core-js/*"
-      ],
-      "intl": [
-        "../node_modules/intl"
-      ],
-      "intl/*": [
-        "../node_modules/intl/*"
-      ],
-      "jquery": [
-        "../node_modules/jquery"
-      ],
-      "jquery/*": [
-        "../node_modules/jquery/*"
-      ],
-      "jsnlog": [
-        "../node_modules/jsnlog"
-      ],
-      "jsnlog/*": [
-        "../node_modules/jsnlog/*"
-      ],
-      "kaltura-ngx-client": [
-        "../node_modules/kaltura-ngx-client"
-      ],
-      "kaltura-ngx-client/*": [
-        "../node_modules/kaltura-ngx-client/*"
-      ],
-      "moment": [
-        "../node_modules/moment"
-      ],
-      "moment/*": [
-        "../node_modules/moment/*"
-      ],
-      "ng2-page-scroll": [
-        "../node_modules/ng2-page-scroll"
-      ],
-      "ng2-page-scroll/*": [
-        "../node_modules/ng2-page-scroll/*"
-      ],
-      "ng2-translate": [
-        "../node_modules/ng2-translate"
-      ],
-      "ng2-translate/*": [
-        "../node_modules/ng2-translate/*"
-      ],
-      "ng2-webstorage": [
-        "../node_modules/ng2-webstorage"
-      ],
-      "ng2-webstorage/*": [
-        "../node_modules/ng2-webstorage/*"
-      ],
-      "normalize.css": [
-        "../node_modules/normalize.css"
-      ],
-      "normalize.css/*": [
-        "../node_modules/normalize.css/*"
-      ],
-      "primeng": [
-        "../node_modules/primeng"
-      ],
-      "primeng/*": [
-        "../node_modules/primeng/*"
-      ],
-      "ramda": [
-        "../node_modules/ramda"
-      ],
-      "ramda/*": [
-        "../node_modules/ramda/*"
-      ],
-      "rxjs": [
-        "../node_modules/rxjs"
-      ],
-      "rxjs/*": [
-        "../node_modules/rxjs/*"
-      ],
-      "seamless-immutable": [
-        "../node_modules/seamless-immutable"
-      ],
-      "seamless-immutable/*": [
-        "../node_modules/seamless-immutable/*"
-      ],
-      "ts-md5": [
-        "../node_modules/ts-md5"
-      ],
-      "ts-md5/*": [
-        "../node_modules/ts-md5/*"
-      ],
-      "tslib": [
-        "../node_modules/tslib"
-      ],
-      "tslib/*": [
-        "../node_modules/tslib/*"
-      ],
-      "web-animations-js": [
-        "../node_modules/web-animations-js"
-      ],
-      "web-animations-js/*": [
-        "../node_modules/web-animations-js/*"
-      ],
-      "zone.js": [
-        "../node_modules/zone.js"
-      ],
-      "zone.js/*": [
-        "../node_modules/zone.js/*"
       ]
     }
-  },
-  "angularCompilerOptions": {
-    "skipTemplateCodegen": true,
-    "debug": true
   }
 }

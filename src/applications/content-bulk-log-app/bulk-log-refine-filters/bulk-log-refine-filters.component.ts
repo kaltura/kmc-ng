@@ -1,16 +1,14 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
-import { BulkLogRefineFiltersProviderService } from './bulk-log-refine-filters-provider.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
-import { RefineList } from './bulk-log-refine-filters-provider.service';
+import { RefineList } from '../bulk-log-store/bulk-log-refine-filters.service';
 
 
 const listOfFilterNames: (keyof BulkLogFilters)[] = [
@@ -37,34 +35,38 @@ export interface PrimeList {
 @Component({
   selector: 'k-bulk-log-refine-filters',
   templateUrl: './bulk-log-refine-filters.component.html',
-  styleUrls: ['./bulk-log-refine-filters.component.scss'],
-  providers: [BulkLogRefineFiltersProviderService]
+  styleUrls: ['./bulk-log-refine-filters.component.scss']
 })
-export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
+export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
   @ViewChildren(RefinePrimeTree) public _primeTreesActions: RefinePrimeTree[];
-
+    @Input() refineFilters: RefineList[];
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
   // properties that are exposed to the template
   public _primeLists: PrimeList[];
 
-  public _showLoader = false;
-  public _blockerMessage: AreaBlockerMessage = null;
+  public _showLoader = true;
   public _uploadedAfter: Date;
   public _uploadedBefore: Date;
   public _createdAtFilterError: string = null;
-  public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
+  public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
 
-  constructor(private _bulkLogRefineFilters: BulkLogRefineFiltersProviderService,
-              private _bulkLogStore: BulkLogStoreService,
+  constructor(private _bulkLogStore: BulkLogStoreService,
               private _appLocalization: AppLocalization) {
   }
 
-  ngOnInit() {
-    this._prepare();
-  }
+    ngOnInit() {
+        this._registerToFilterStoreDataChanges();
+        this._handleFiltersChange();
+    }
+
+    ngOnChanges(changes) {
+        if (typeof changes.filters !== 'undefined') {
+            this._handleFiltersChange();
+        }
+    }
 
   // keep for cancelOnDestroy operator
   ngOnDestroy() {
@@ -78,24 +80,31 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   }
 
   private _updateComponentState(updates: Partial<BulkLogFilters>): void {
+      if (!this.refineFilters) {
+          return;
+      }
+
       if (typeof updates.createdAt !== 'undefined') {
           this._uploadedAfter = updates.createdAt.fromDate || null;
           this._uploadedBefore = updates.createdAt.toDate || null;
+          this._createdAtFilterError = null;
       }
 
       let updatedPrimeTreeSelections = false;
       Object.keys(this._primeListsMap).forEach(listName => {
           const listData = this._primeListsMap[listName];
-          const listFilter: { value: string, label: string }[] = updates[listName];
+          const listFilter: any[] = updates[listName];
 
           if (typeof listFilter !== 'undefined') {
+              // important: the above condition doesn't filter out 'null' because 'null' is valid value.
+
               const listSelectionsMap = this._bulkLogStore.filtersUtils.toMap(listData.selections, 'value');
-              const listFilterMap = this._bulkLogStore.filtersUtils.toMap(listFilter, 'value');
+              const listFilterMap = this._bulkLogStore.filtersUtils.toMap(listFilter);
               const diff = this._bulkLogStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
 
               diff.added.forEach(addedItem => {
                   const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-                  const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
+                  const matchingItem = listItems.find(item => item.value === addedItem);
                   if (!matchingItem) {
                       console.warn(`[bulk-log-refine-filters]: failed to sync filter for '${listName}'`);
                   } else {
@@ -134,32 +143,15 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _prepare(): void {
-    this._showLoader = true;
-    this._bulkLogRefineFilters.getFilters()
-      .cancelOnDestroy(this)
-      .first() // only handle it once, no need to handle changes over time
-      .subscribe(
-        lists => {
-          this._showLoader = false;
-          this._buildComponentLists(lists);
-          this._restoreFiltersState();
-          this._registerToFilterStoreDataChanges();
-        },
-        error => {
-          this._showLoader = false;
-          this._blockerMessage = new AreaBlockerMessage({
-            message: error.message || this._appLocalization.get('applications.content.filters.errorLoading'),
-            buttons: [{
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => {
-                this._blockerMessage = null;
-                this._prepare();
-              }
-            }]
-          });
-        });
-  }
+    private _handleFiltersChange(): void {
+        if (this.refineFilters) {
+            this._showLoader = false;
+            this._buildComponentLists();
+            this._restoreFiltersState();
+        } else {
+            this._showLoader = true;
+        }
+    }
 
   private _fixPrimeTreePropagation() {
     setTimeout(() => {
@@ -171,13 +163,13 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _buildComponentLists(lists: RefineList[]): void {
+  private _buildComponentLists(): void {
       this._primeListsMap = {};
       this._primeLists = [];
 
       // create root nodes
 
-      lists.forEach(list => {
+      (this.refineFilters || []).forEach(list => {
           if (list.items.length > 0) {
               const primeList = {items: [], selections: []};
               this._primeListsMap[list.name] = primeList;
@@ -239,7 +231,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     });
 
     if (updateResult.createdAt && updateResult.createdAt.failed) {
-      this._createdAtFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+      this._createdAtFilterError = this._appLocalization.get('applications.content.bulkUpload.filters.datesRangeError');
 
       setTimeout(() => {
         const createdAt = this._bulkLogStore.cloneFilter('createdAt', null);
@@ -258,7 +250,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
       const listData = this._primeListsMap[node.listName];
       if (listData) {
 
-        let newFilterItems: { value: string, label: string }[];
+        let newFilterItems: string[];
         let newFilterValue;
         const newFilterName = node.listName;
 
@@ -272,9 +264,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
             return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
           })
           .forEach(selectedNode => {
-            if (!newFilterItems.find(item => item.value === selectedNode.value)) {
-              newFilterItems.push({ value: selectedNode.value + '', label: selectedNode.label });
-            }
+              if (!newFilterItems.find(item => item === selectedNode.value)) {
+                  newFilterItems.push(selectedNode.value);
+              }
           });
         this._bulkLogStore.filter({ [newFilterName]: newFilterValue });
       }
@@ -288,7 +280,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
       const listData = this._primeListsMap[node.listName];
       if (listData) {
 
-        let newFilterItems: { value: string, label: string }[];
+        let newFilterItems:string[];
         let newFilterValue;
         const newFilterName = node.listName;
 
@@ -302,7 +294,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
             return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
           })
           .forEach(selectedNode => {
-            const itemIndex = newFilterItems.findIndex(item => item.value === selectedNode.value);
+            const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
             if (itemIndex > -1) {
               newFilterItems.splice(itemIndex, 1);
             }
@@ -313,7 +305,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     }
   }
 
-    
+
   /**
    * Invoke a request to the popup widget container to close the popup widget.
    *

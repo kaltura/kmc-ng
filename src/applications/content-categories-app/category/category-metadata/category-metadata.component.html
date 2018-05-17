@@ -9,10 +9,17 @@
     <k-jump-to-section [label]="'Metadata'"></k-jump-to-section>
     <span class="kSchemaTitle">{{'applications.content.categoryDetails.sections.metadata' | translate}}</span>
     <form [formGroup]="_widgetService.metadataForm" novalidate>
-      <div class="kRow kValign">
+      <div class="kRow kValign kNameRow">
         <span class="kLabel">{{'applications.content.categoryDetails.metadata.categoryName' | translate}}</span>
         <div class="kControl">
-          <input formControlName="name" type="text" pInputText/>
+          <input  formControlName="name" pInputText
+                 [ngClass]="{'kHasError':!_widgetService.metadataForm.controls['name'].valid &&
+                   _widgetService.metadataForm.controls['name'].touched}">
+          <div *ngIf="_widgetService.metadataForm.controls['name'].touched &&
+                 _widgetService.metadataForm.controls['name'].hasError('required')"
+               class="error">
+            {{'applications.content.categoryDetails.errors.fieldRequired' | translate}}
+          </div>
         </div>
       </div>
       <div class="kRow">
@@ -45,9 +52,12 @@
         <form novalidate [formGroup]="customDataForm.formGroup">
           <k-dynamic-form-item [control]="customDataForm.formSectionControl" [form]="customDataForm.formGroup">
             <ng-template let-item="item">
-              <k-linked-entries *ngIf="item.control.controlType === 'LinkedEntries'" [formControlName]="item.control.key" [control]="item.control"
-                [form]="item.form"></k-linked-entries>
-              <k-prime-control *ngIf="item.control.controlType !== 'LinkedEntries'" [control]="item.control" [form]="item.form"></k-prime-control>
+              <k-linked-entries *ngIf="item.control.controlType === 'LinkedEntriesComponent'"
+                                [profileName]="customDataForm.metadataProfile.name"
+                                [formControlName]="item.control.key"
+                                [control]="item.control"
+                                [form]="item.form"></k-linked-entries>
+              <k-prime-control *ngIf="item.control.controlType !== 'LinkedEntriesComponent'" [control]="item.control" [form]="item.form"></k-prime-control>
             </ng-template>
           </k-dynamic-form-item>
         </form>
@@ -55,12 +65,5 @@
 
     </div>
   </div>
-
-
-  <kPopupWidget #categoriesPopup [popupWidth]="560" [popupHeight]="586" [closeBtn]="true" [modal]="true">
-    <ng-template>
-       <!-- <kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateEntryCategories($event)" [value]="_widgetService.metadataForm.value.categories" [buttonLabel]="'applications.content.entryDetails.metadata.addCategories' | translate"></kCategoriesSelector>  -->
-    </ng-template>
-  </kPopupWidget>
 
 </k-area-blocker>

@@ -1,0 +1,29 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+  <div class="kPlaylistEntriesHolder">
+    <kPlaylistRulesListBulkOperationsContent
+      [selectedRules]="_selectedRules"
+      [isNewPlaylist]="_widgetService.isNewData"
+      [entriesTotalCount]="_widgetService.entriesTotalCount"
+      [duration]="_widgetService.entriesDuration"
+      [rulesTotalCount]="_widgetService.rulesTotalCount"
+      (addRule)="_onActionSelected({action: 'view', rule: null})"
+      (deleteRules)="_deleteSelected($event)"
+      (clearSelection)="_clearSelection()"
+      (moveRules)="_widgetService.moveRules($event)">
+    </kPlaylistRulesListBulkOperationsContent>
+    <kPlaylistRulesTable
+      class="kPlaylistRulesTable"
+      [isNewPlaylist]="_widgetService.isNewData"
+      [rules]="_widgetService.rules"
+      (onActionSelected)="_onActionSelected($event)"
+      [(selectedRules)]="_selectedRules"></kPlaylistRulesTable>
+  </div>
+
+  <kPopupWidget #playlistRule [popupWidth]="995" [slider]="true">
+    <ng-template>
+      <kPlaylistRule [rule]="_selectedRule"
+                     (onClosePopupWidget)="playlistRule.close()"
+                     (onSaveRule)="_saveRule($event)"></kPlaylistRule>
+    </ng-template>
+  </kPopupWidget>
+</k-area-blocker>

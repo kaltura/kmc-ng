@@ -17,17 +17,19 @@ import {
   TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 
 import { ContentDropFoldersComponent } from './content-drop-folders.component';
 import { DropFoldersComponentsList } from './drop-folders-components-list';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -54,9 +56,11 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
     FormsModule,
     ReactiveFormsModule,
     StickyModule,
-    ContentSharedModule,
+      EntriesModule,
     RouterModule.forChild(routing),
-    FiltersModule
+    FiltersModule,
+    TableModule,
+    KMCPermissionsModule
   ],
   declarations: [
     ContentDropFoldersComponent,

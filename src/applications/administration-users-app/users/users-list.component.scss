@@ -4,7 +4,7 @@
   font-size: 15px;
   background-color: $appBkgColor;
   height: $contentArea;
-  padding-top: 30px;
+  padding-top: 24px;
   width: 100%;
   min-width: $minAppWidth;
   box-sizing: border-box;
@@ -24,12 +24,12 @@
     font-size: 24px;
     border: none;
     min-width: inherit;
-    margin-right: 16px;
+    margin-right: 8px;
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
     right: 0;
-    position: absolute;
+    margin-left: auto;
     &:active {
       box-shadow: none;
       transform: rotate(45deg);
@@ -84,7 +84,6 @@
   }
 
   .kAddUserBtn {
-    width: 100px;
     height: 36px;
     margin-left: 14px;
     border: none;
@@ -145,5 +144,14 @@
       color: #01accd;
       margin: 0 5px;
     }
+  }
+}
+:host /deep/ .ui-button-icon-only .fa {
+  margin-left: -.5em;
+}
+
+:host /deep/ .kUsersTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
   }
 }

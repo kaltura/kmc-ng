@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaClient } from 'kaltura-ngx-client';
@@ -17,7 +17,7 @@ export abstract class BulkActionBaseService<T> {
   {
     let maxRequestsPerMultiRequest = requests.length;
     if (chunk){
-      maxRequestsPerMultiRequest = environment.modules.contentEntries.bulkActionsLimit;
+      maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit;
     }
 
     let multiRequests: Observable<KalturaMultiResponse>[] = [];

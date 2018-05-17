@@ -1,19 +1,9 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
-import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
+import { globalConfig } from 'config/global';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kBulkLogTable',
@@ -21,12 +11,6 @@ import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
   styleUrls: ['./bulk-log-table.component.scss']
 })
 export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
-
-  public _blockerMessage: AreaBlockerMessage = null;
-
-  public _bulkLog: any[] = [];
-  private _deferredEntries: any[];
-
   @Input()
   set list(data: any[]) {
     if (!this._deferredLoading) {
@@ -37,7 +21,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this._bulkLog = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredEntries = data
+      this._deferredEntries = data;
     }
   }
 
@@ -51,55 +35,29 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
-  private bulkLogItem: KalturaBulkUpload;
 
+  private _deferredEntries: any[];
+
+  public _bulkLog: any[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
-
   public _items: MenuItem[];
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+  public _actionsAllowed = true;
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
+  public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
-              private _cdRef: ChangeDetectorRef,
-              public _store: BulkLogStoreService) {
+              private _permissionsService: KMCPermissionsService,
+              private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this._store.bulkLog.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-      result => {
-        if (result.errorMessage) {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage || 'Error loading files',
-            buttons: [{
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => this._store.reload()
-            }
-            ]
-          })
-        } else {
-          this._blockerMessage = null;
-          if (result.loading) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-            }
-          }
-        }
-      },
-      error => {
-        console.warn('[kmcng] -> could not load files'); // navigate to error page
-        throw error;
-      });
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
+    this._actionsAllowed = this._permissionsService.hasAnyPermissions([
+      KMCPermissions.BULK_LOG_DELETE,
+      KMCPermissions.BULK_LOG_DOWNLOAD
+    ]);
   }
 
   ngAfterViewInit() {
@@ -118,21 +76,33 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.actionsMenu.hide();
   }
 
-  private _buildMenu(): void {
+  private _buildMenu(bulkLogItem: KalturaBulkUpload): void {
     this._items = [
       {
-        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
-        command: (event) => this._onActionSelected('delete', this.bulkLogItem)
-      },
-      {
+        id: 'downloadLog',
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),
-        command: (event) => this._onActionSelected('downloadLog', this.bulkLogItem)
+        command: () => this._onActionSelected('downloadLog', bulkLogItem)
       },
       {
+        id: 'downloadFile',
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadFile'),
-        command: (event) => this._onActionSelected('downloadFile', this.bulkLogItem)
+        command: () => this._onActionSelected('downloadFile', bulkLogItem)
+      },
+      {
+        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
+        styleClass: 'kDanger',
+        command: () => this._onActionSelected('delete', bulkLogItem)
       }
     ];
+
+    this._permissionsService.filterList(
+      <{ id: string }[]>this._items,
+      {
+        'delete': KMCPermissions.BULK_LOG_DELETE,
+        'downloadLog': KMCPermissions.BULK_LOG_DOWNLOAD,
+        'downloadFile': KMCPermissions.BULK_LOG_DOWNLOAD,
+      }
+    );
   }
 
   private _onActionSelected(action: string, bulkLogItem: KalturaBulkUpload): void {
@@ -142,11 +112,8 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _openActionsMenu(event: any, bulkLogItem: KalturaBulkUpload): void {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (!this.bulkLogItem || this.bulkLogItem.id !== bulkLogItem.id) {
-        this.bulkLogItem = bulkLogItem;
-        this._buildMenu();
-        this.actionsMenu.show(event);
-      }
+      this._buildMenu(bulkLogItem);
+      this.actionsMenu.show(event);
     }
   }
 

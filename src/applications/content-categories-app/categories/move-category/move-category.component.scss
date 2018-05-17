@@ -18,7 +18,7 @@
     }
   }
   .kContainer {
-    width: 520px;
+    width: 540px;
     margin: 0 auto;
     height: 437px;
 
@@ -27,7 +27,20 @@
       display: -ms-flexbox;
       display: flex;
       padding-bottom: 20px;
-
+      .kSelectParentMsg{
+        width: 100%;
+        text-align: left;
+      }
+      .kSpinnerBkg{
+        width: 20px;
+        height: 20px;
+        position: relative;
+        margin-top: -1px;
+        .kSpinnerAnim{
+          width: 12px;
+          height: 12px;
+        }
+      }
       &:first-child {
         padding-top: 20px;
       }
@@ -45,10 +58,17 @@
     height: 66px;
     .kButtonBranded {
       height: 34px;
-      width: 100px;
     }
     .kLink {
       padding-left: 24px;
     }
+  }
+}
+
+:host /deep/ .ui-autocomplete.ui-widget{
+  ul.ui-autocomplete-multiple-container {
+    width:100%;
+    height: 36px;
+    overflow: hidden;
   }
 }

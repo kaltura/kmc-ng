@@ -6,6 +6,8 @@ import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryUsersWidget } from './entry-users-widget.service';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -19,9 +21,13 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
 	private _searchUsersSubscription : ISubscription;
 	public _usersProvider = new Subject<SuggestionsProviderData>();
+	public _kmcPermissions = KMCPermissions;
+	public _disableSaveButton = true;
 
-
-	constructor(public _widgetService: EntryUsersWidget, private _appLocalization: AppLocalization) {
+	constructor(public _widgetService: EntryUsersWidget,
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService) {
+		this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this); // fix scope issues when binding to a property
     }
 
 
@@ -37,26 +43,35 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
     ngAfterViewInit() {
     }
 
-    public _openChangeOwner(): void{
-	    this._widgetService.usersForm.patchValue({owners: null});
-	    this.ownerPopup.open();
+    public _openChangeOwner(): void {
+      this._disableSaveButton = true;
+      this._widgetService.usersForm.patchValue({owners: []});
+      this.ownerPopup.open();
     }
 
     public _saveAndClose(): void{
-	    this._widgetService.saveOwner();
-	    this.ownerPopup.close();
+      const [owner] = this._widgetService.usersForm.value.owners;
+      const hasScreenName = owner && (owner.screenName || '').trim() !== '';
+      if (hasScreenName) {
+        this._widgetService.saveOwner();
+        this.ownerPopup.close();
+      } else {
+        this._browserService.alert({
+          message: this._appLocalization.get('applications.content.entryDetails.users.noScreenName')
+        });
+      }
     }
 
 	public _convertUserInputToValidValue(value : string) : any {
 		let result = null;
-		let tt = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
+		const tooltip = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
 		if (value) {
 			result =
 				{
 					id : value,
 					screenName: value,
-					userAdded: true,
-					tooltip: tt
+					__tooltip: tooltip,
+					__class: 'userAdded'
 				};
 
 		}
@@ -86,7 +101,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 						});
 					}
 					suggestions.push({
-						name: suggestedUser.screenName + " (" + suggestedUser.id + ")",
+            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
 						item: suggestedUser,
 						isSelectable: isSelectable
 					});
@@ -97,5 +112,10 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 				this._usersProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
 			});
 	}
+
+  public _updateApplyButtonState(): void {
+    const [owner] = this._widgetService.usersForm.value.owners;
+    this._disableSaveButton = !(owner instanceof KalturaUser);
+  }
 }
 

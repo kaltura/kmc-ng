@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UsersStore } from './users.service';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { Observer } from 'rxjs/Observer';
+import { serverConfig } from 'config/server';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -22,6 +24,7 @@ export interface PartnerInfo {
 export class UsersListComponent implements OnInit, OnDestroy {
   @ViewChild('editUserPopup') editUserPopup: PopupWidgetComponent;
 
+  public _kmcPermissions = KMCPermissions;
   public _usersAmount: string;
   public _usersTotalCount: number;
   public _usersInfo = '';
@@ -107,7 +110,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _upgradeAccount(): void {
-    this._browserService.openLink(environment.core.externalLinks.UPGRADE_ACCOUNT, {}, '_blank');
+    this._browserService.openLink(serverConfig.externalLinks.kaltura.upgradeAccount, {}, '_blank');
   }
 
   public _onPaginationChanged(state: any): void {

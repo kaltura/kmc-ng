@@ -1,9 +1,12 @@
-import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryLiveWidget } from './entry-live-widget.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
+import { serverConfig } from "config/server";
 
 @Component({
     selector: 'kEntryLive',
@@ -12,17 +15,26 @@ import { EntryLiveWidget } from './entry-live-widget.service';
 })
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
-    public _loadingError = null;
-	public _copyToClipboardEnabled: boolean = false;
+	@ViewChild('liveAnalytics') _liveAnalytics: PopupWidgetComponent;
+
+  public _kmcPermissions = KMCPermissions;
+	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
+	public enableLiveAnalytics: boolean = false;
 
 
 	constructor(public _widgetService: EntryLiveWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+		this._copyToClipboardTooltips = {
+			success: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.success'),
+			failure: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.failure'),
+			idle: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.idle'),
+			notSupported: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.notSupported')
+		};
     }
 
 
     ngOnInit() {
 		this._widgetService.attachForm();
-		this._copyToClipboardEnabled = this._browserService.copyToClipboardEnabled();
+		this.enableLiveAnalytics = serverConfig.externalApps.liveAnalytics.enabled;
     }
 
     ngOnDestroy() {
@@ -42,16 +54,6 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 
-	_copyToClipboard(text: string): void{
-		let copied: boolean = this._browserService.copyToClipboard(text);
-		if (copied){
-      this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('app.common.copySuccess')});
-		}else{
-      this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('app.common.copyFailure')});
-		}
-	}
-
-	/*
 	_regenerateToken():void{
 		this._browserService.confirm(
 			{
@@ -63,7 +65,19 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 			}
 		);
 	}
-	*/
+
+	public _openLiveAnalytics(): void {
+		if (this.enableLiveAnalytics){
+		    // TODO - load live analytics app
+			//this._liveAnalytics.open();
+            this._browserService.alert(
+                {
+                    message: "Not implemented for Beta",
+                }
+            );
+		}
+	}
+
 
 }
 

@@ -1,9 +1,9 @@
 <div class="kUploadsTableWrapper">
-  <div class="kUploadsTable" [class.noResults]="!uploads.length">
+  <div class="kUploadsTable" [class.noResults]="!uploads?.length">
     <p-dataTable #dataTable
                  [scrollable]="true"
                  scrollHeight="100%"
-                 dataKey="entryId"
+                 dataKey="id"
                  [immutable]="false"
                  [value]="uploads"
                  [emptyMessage]="!uploads.length ? _emptyMessage : ''"
@@ -27,7 +27,7 @@
                 [header]="'applications.content.uploadControl.table.fileName' | translate"
                 [sortable]="false">
         <ng-template let-col let-file="rowData" pTemplate="body">
-          <span class="kUploadName">{{ file[col.field] }}</span>
+          <span class="kUploadName kTableColumn" [kTooltip]="file[col.field]">{{ file[col.field] }}</span>
         </ng-template>
       </p-column>
 
@@ -80,7 +80,7 @@
              placement="top"
              (click)="onRetryUpload.emit(file)"></i>
           <i class="kIcontrash kIconRemoveFile"
-             *ngIf="!file.removing"
+             *ngIf="_canRemoveFile(file)"
              [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
              placement="top"
              (click)="onCancelUpload.emit(file)"></i>

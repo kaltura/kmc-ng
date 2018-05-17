@@ -1,15 +1,18 @@
+<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
 <kEntriesList [columns]="_columns"
               [rowActions]="_rowActions"
-              [blockerMessage]="_blockerMessage"
+              [defaultFilters]="_defaultFilters"
               (onActionsSelected)="_onActionSelected($event)">
   <div class="kBulkActions bulk-actions">
     <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton
+            [disabled]="_kmcPermissions.CONTENT_MODERATE_APPROVE_REJECT | kDisabledIfNotPermitted"
             [label]="'applications.content.moderation.selectAction' | translate"
             (click)="menu.toggle($event)"></button>
   </div>
-  <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons"
+  <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" class="kOverrideFAIcons" kMenuCloseOnScroll
                 [appendTo]="'body'"></p-tieredMenu>
 </kEntriesList>
+</k-area-blocker>
 
 <kPopupWidget #moderationDetails [slider]="true" [popupWidth]="792" [popupHeight]="700" [modal]="true"
               [closeBtn]="false" class="kPopupWidgetWrap">

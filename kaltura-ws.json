@@ -12,16 +12,16 @@
   "commands": {
     "bookmark": {
       "standalone": [
-        "13736b97fab7c4d88b0c65c00ab8150e2c768d20"
+        "ec2ac2c8264eacef42889ab015a1542f9881ec45"
       ]
     },
     "release": {
       "appConfig": {
-        "path": "./src/app-config/index.ts",
+        "path": "./src/configuration/global-config.ts",
         "key": "appVersion"
       },
       "changeLog": {
-        "htmlPath": "./src/app/components/changelog/changelog-content/changelog-content.component.html"
+        "htmlPath": ""
       }
     }
   }

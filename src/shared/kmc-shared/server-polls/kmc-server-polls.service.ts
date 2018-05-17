@@ -5,21 +5,34 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { AppEventsService } from 'app-shared/kmc-shared/app-events';
+import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
 
 @Injectable()
 export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
   private _onDestory = new Subject<void>();
-
+  private _isLogged = false;
   protected _getOnDestroy$(): Observable<void> {
       return this._onDestory.asObservable();
   }
 
-  constructor(private _kalturaClient: KalturaClient) {
-    super();
+  constructor(private _kalturaClient: KalturaClient, private _kalturaLogger: KalturaLogger, private _appEvents: AppEventsService) {
+      super(_kalturaLogger);
+
+      _appEvents.event(UserLoginStatusEvent).subscribe(
+          event => {
+              this._isLogged = event.isLogged;
+          }
+      )
   }
 
   protected _createGlobalError(error?: Error): KalturaAPIException {
-      return new KalturaAPIException('kmc-server_polls_global_error', error ? error.message : '');
+      return new KalturaAPIException( error ? error.message : '','kmc-server_polls_global_error', null);
+  }
+
+  protected _canExecute(): boolean {
+    return this._isLogged;
   }
 
   /*
@@ -45,7 +58,7 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
         throw new Error(`unsupported type of request provided '${typeof request}'`);
       }
     });
-    return this._kalturaClient.multiRequest(multiRequest)
+    return this._kalturaClient.multiRequest(multiRequest.setNetworkTag('pr'))
       .map(responses => {
         return requestsMapping.reduce((aggregatedResponses, requestSize) => {
           const response = responses.splice(0, requestSize);

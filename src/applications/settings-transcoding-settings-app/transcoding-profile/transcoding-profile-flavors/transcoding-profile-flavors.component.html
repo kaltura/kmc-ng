@@ -1,0 +1,53 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+  <div class="kTranscodingProfilesFlavorsHolder">
+    <div class="kTranscodingProfilesFlavorsTableHeader">
+      <span class="kTotalFlavorsCount" *ngIf="_widgetService.flavors.length">
+       {{'applications.settings.transcoding.flavors.flavors' | translate: [_widgetService.flavors.length]}}
+      </span>
+
+      <div class="kBulkOperations" [class.kHidden]="!_widgetService.selectedFlavors.length">
+        <span class="kSelectedFlavorsLabel">
+          • {{ 'applications.settings.transcoding.flavors.selected' | translate: [_widgetService.selectedFlavors.length]}}
+        </span>
+      </div>
+    </div>
+
+    <kTranscodingProfileFalvorsTable
+      class="kTranscodingProfilesFlavorsTable"
+      [flavors]="_widgetService.flavors"
+      [isNewProfile]="_widgetService.isNewData"
+      (selectedFlavorsChange)="_widgetService.updateSelectionState()"
+      (editFlavor)="_editFlavor($event)"
+      [(selectedFlavors)]="_widgetService.selectedFlavors">
+    </kTranscodingProfileFalvorsTable>
+  </div>
+</k-area-blocker>
+
+
+<kPopupWidget #editMediaProfileFlavor
+              [popupWidth]="792"
+              [popupHeight]="571"
+              [modal]="true"
+              [closeOnClickOutside]="false"
+              [preventPageScroll]="true">
+  <ng-template>
+    <kEditMediaFlavor [parentPopupWidget]="editMediaProfileFlavor"
+                      [profile]="_widgetService.data"
+                      [flavor]="_selectedFlavor"
+                      (saveFlavor)="_widgetService.updateFlavorAssetParams($event)"></kEditMediaFlavor>
+  </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #editLiveProfileFlavor
+              [popupWidth]="586"
+              [popupHeight]="353"
+              [modal]="true"
+              [closeOnClickOutside]="false"
+              [preventPageScroll]="true">
+  <ng-template>
+    <kEditLiveFlavor [parentPopupWidget]="editLiveProfileFlavor"
+                     [profile]="_widgetService.data"
+                     [flavor]="_selectedFlavor"
+                     (saveFlavor)="_widgetService.updateFlavorAssetParams($event)"></kEditLiveFlavor>
+  </ng-template>
+</kPopupWidget>

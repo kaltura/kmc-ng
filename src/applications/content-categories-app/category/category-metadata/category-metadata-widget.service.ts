@@ -1,26 +1,30 @@
-import { MetadataAddAction } from 'kaltura-ngx-client/api/types/MetadataAddAction';
-import { MetadataUpdateAction } from 'kaltura-ngx-client/api/types/MetadataUpdateAction';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter';
-import { TagSearchAction } from 'kaltura-ngx-client/api/types/TagSearchAction';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
-import { MetadataListAction } from 'kaltura-ngx-client/api/types/MetadataListAction';
-import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
-import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaMetadataFilter } from 'kaltura-ngx-client/api/types/KalturaMetadataFilter';
-import { KalturaMetadata } from 'kaltura-ngx-client/api/types/KalturaMetadata';
-import { CategoryListAction } from 'kaltura-ngx-client/api/types/CategoryListAction';
-import { Observable } from 'rxjs/Observable';
-import { DynamicMetadataForm, MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { CategoryWidgetKeys } from './../category-widget-keys';
-import { Injectable, OnDestroy } from '@angular/core';
-import { CategoryWidget } from "../category-widget";
-import { KalturaMultiRequest } from 'kaltura-ngx-client';
-import { async } from 'rxjs/scheduler/async';
+import {MetadataAddAction} from 'kaltura-ngx-client/api/types/MetadataAddAction';
+import {MetadataUpdateAction} from 'kaltura-ngx-client/api/types/MetadataUpdateAction';
+import {KalturaTagFilter} from 'kaltura-ngx-client/api/types/KalturaTagFilter';
+import {TagSearchAction} from 'kaltura-ngx-client/api/types/TagSearchAction';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaTaggedObjectType} from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
+import {MetadataListAction} from 'kaltura-ngx-client/api/types/MetadataListAction';
+import {KalturaMetadataObjectType} from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaMetadataFilter} from 'kaltura-ngx-client/api/types/KalturaMetadataFilter';
+import {KalturaMetadata} from 'kaltura-ngx-client/api/types/KalturaMetadata';
+import {Observable} from 'rxjs/Observable';
+import {
+  DynamicMetadataForm,
+  DynamicMetadataFormFactory,
+  MetadataProfileCreateModes,
+  MetadataProfileStore,
+  MetadataProfileTypes
+} from 'app-shared/kmc-shared';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Injectable, OnDestroy} from '@angular/core';
+import {CategoryWidget} from '../category-widget';
+import {async} from 'rxjs/scheduler/async';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -28,13 +32,16 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
     public metadataForm: FormGroup;
     public customDataForms: DynamicMetadataForm[] = [];
     private _categoryMetadata: KalturaMetadata[] = [];
+    private _logger: KalturaLogger;
 
     constructor(private _kalturaServerClient: KalturaClient,
         private _formBuilder: FormBuilder,
         private _metadataProfileStore: MetadataProfileStore,
+        private _permissionsService: KMCPermissionsService,
+        logger: KalturaLogger,
         private _dynamicMetadataFormFactory: DynamicMetadataFormFactory) {
-        super(CategoryWidgetKeys.Metadata);
-
+        super(ContentCategoryViewSections.Metadata);
+        this._logger = logger.subLogger('CategoryMetadataWidget');
         this._buildForm();
     }
 
@@ -88,51 +95,64 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
 
     protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
 
+        const afterOnActivated: () => { failed: boolean, error?: Error } = () => {
+            super._hideLoader();
+
+            try {
+                // the sync function is dealing with dynamically created forms so mistakes can happen
+                // as result of undesired metadata schema.
+                this._syncHandlerContent();
+                return { failed: false };
+            } catch (e) {
+                super._showActivationError();
+                return { failed: true, error: e };
+            }
+        };
+
         super._showLoader();
         super._removeBlockerMessage();
 
-        const actions: Observable<{ failed: boolean, error?: Error }>[] = [
-            this._loadCategoryMetadata(this.data)
-        ];
+        const actions: Observable<boolean>[] = [];
 
-        if (firstTimeActivating) {
-            actions.push(this._loadProfileMetadata());
+        if (this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
+            actions.push(this._loadCategoryMetadata(this.data));
+            if (firstTimeActivating) {
+                actions.push(this._loadProfileMetadata());
+            }
         }
 
+        if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)) {
+          this.metadataForm.disable({ emitEvent: false });
+        }
 
-        return Observable.forkJoin(actions)
-            .catch((error, caught) => {
-                return Observable.of([{ failed: true }]);
-            })
-            .map(responses => {
-                super._hideLoader();
+        if (!actions.length) {
+            return Observable.of(afterOnActivated());
+        } else {
+            return Observable.forkJoin(actions)
+                .catch(() => {
+                    return Observable.of([false]);
+                })
+                .map(responses => {
+                    super._hideLoader();
 
-                let hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false);;
+                    const isValid = responses.reduce(((acc, response) => (acc && response)), true);
 
-                if (hasFailure) {
-                    super._showActivationError();
-                    return { failed: true };
-                } else {
-                    try {
-                        // the sync function is dealing with dynamically created forms so mistakes can happen
-                        // as result of undesired metadata schema.
-                        this._syncHandlerContent();
-                        return { failed: false };
-                    } catch (e) {
+                    if (!isValid) {
                         super._showActivationError();
-                        return { failed: true, error: e };
+                        return { failed: true };
+                    } else {
+                        return afterOnActivated();
                     }
-                }
-            });
+                });
+        }
     }
 
     private _syncHandlerContent() {
 
         // validate reference ID
-        let referenceId: string = '';
-        if (!this.data.referenceId &&
-            this.data.referenceId != "" &&
-            this.data.referenceId != "__null_string__") {
+        let referenceId = '';
+        if (this.data.referenceId &&
+            this.data.referenceId !== '') {
             referenceId = this.data.referenceId;
         }
 
@@ -148,6 +168,9 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         // map category metadata to profile metadata
         if (this.customDataForms) {
             this.customDataForms.forEach(customDataForm => {
+                if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)) {
+                  customDataForm.disable();
+                }
                 const categoryMetadata = this._categoryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
 
                 // reset with either a valid category metadata or null if not found a matching metadata for that category
@@ -155,10 +178,12 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             });
         }
 
-        this._monitorFormChanges();
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)) {
+          this._monitorFormChanges();
+        }
     }
 
-    private _loadCategoryMetadata(category: KalturaCategory): Observable<{ failed: boolean, error?: Error }> {
+    private _loadCategoryMetadata(category: KalturaCategory): Observable<boolean> {
 
         this._categoryMetadata = [];
 
@@ -177,11 +202,14 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             .do(response => {
                 this._categoryMetadata = response.objects;
             })
-            .map(response => ({ failed: false }))
-            .catch((error, caught) => Observable.of({ failed: true, error }))
+            .map(response => true)
+            .catch((error) => {
+                this._logger.error('failed to get category custom metadata', error);
+                return Observable.of(false);
+            });
     }
 
-    private _loadProfileMetadata(): Observable<{ failed: boolean, error?: Error }> {
+    private _loadProfileMetadata(): Observable<boolean> {
         return this._metadataProfileStore.get({
             type: MetadataProfileTypes.Category,
             ignoredCreateMode: MetadataProfileCreateModes.App
@@ -198,8 +226,11 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                     });
                 }
             })
-            .map(response => ({ failed: false }))
-            .catch((error, caught) => Observable.of({ failed: true, error }));
+            .map(response => true)
+            .catch((error, caught) => {
+                this._logger.error('failed to get categories custom metadata profiles', error);
+                return Observable.of(false);
+            });
     }
 
     protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
@@ -276,7 +307,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                     );
 
                 return () => {
-                    console.log("categoryMetadataHandler.searchTags(): cancelled");
+                    console.log('categoryMetadataHandler.searchTags(): cancelled');
                     requestSubscription.unsubscribe();
                 }
             });
@@ -299,9 +330,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         });
     }
 
-    ngOnDestroy()
-    {
-
+    ngOnDestroy() {
     }
 }
 

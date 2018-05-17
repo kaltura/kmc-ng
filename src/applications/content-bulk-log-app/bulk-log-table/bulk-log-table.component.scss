@@ -49,17 +49,6 @@
   .kBulkLogTableActions {
     width: 100%;
     text-align: center;
-    button {
-      color: grey !important;
-      background-color: rgba(0, 0, 0, 0) !important;
-      border: none !important;
-      font-size: 16px !important;
-      outline: 0;
-    }
-  }
-
-  .kBulkLogTableStatusMessage {
-    margin-left: 12px;
   }
 
   .kBulkLogTableSuccess {
@@ -85,10 +74,10 @@
   margin: 0;
   flex-direction: column;
 }
-:host /deep/ p-datatable .ui-datatable-scrollable-body{
+:host /deep/ p-table .ui-table-scrollable-body{
   margin-bottom: 34px;
 }
-:host /deep/ p-datatable .stickyHeader{
+:host /deep/ p-table .stickyHeader{
   z-index: 10;
   display: table;
 }

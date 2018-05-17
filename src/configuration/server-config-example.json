@@ -1,0 +1,85 @@
+{
+    "kalturaServer": {
+        "uri" : "www.kaltura.com",
+        "defaultPrivileges": "",
+        "deployUrl": "",
+        "previewUIConf": 38524931,
+        "freeTrialExpiration": {
+            "enabled": false,
+            "trialPeriodInDays": 30
+        },
+        "login": {
+            "limitAccess": {
+                "enabled": false,
+                "verifyBetaServiceUrl": ""
+            }
+        }
+    },
+    "cdnServers": {
+        "serverUri": "http://cdnapi.kaltura.com",
+        "securedServerUri": "https://cdnapisec.kaltura.com"
+    },
+    "externalApps": {
+        "studio": {
+            "enabled": false,
+            "uri": "",
+            "html5_version":"",
+            "html5lib":""
+        },
+        "studioV3": {
+            "enabled": false,
+            "uri": "",
+            "html5_version":"",
+            "html5lib":""
+        },
+        "liveDashboard": {
+            "enabled": false,
+            "uri": ""
+        },
+        "kava": {
+            "enabled": false,
+            "uri": ""
+        },
+        "liveAnalytics": {
+            "enabled": false,
+            "uri": "",
+            "uiConfId": 0
+        },
+        "usageDashboard": {
+            "enabled": false,
+            "uri": ""
+        },
+        "editor": {
+            "enabled": false,
+            "uri": ""
+        }
+    },
+    "externalLinks": {
+        "previewAndEmbed": {
+            "embedTypes": "http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/embedcodetypes.htm",
+            "deliveryProtocols": "https://knowledge.kaltura.com/how-enforce-delivery-type-each-player-using-ui-variables"
+        },
+        "kaltura": {
+            "kmcOverview": "https://knowledge.kaltura.com/node/2023",
+            "mediaManagement": "https://knowledge.kaltura.com/node/2024",
+            "userManual": "http://knowledge.kaltura.com/node/1606/attachment/field_media",
+            "support": "mailto:customercare@kaltura.com",
+            "signUp": "https://corp.kaltura.com/free-trial",
+            "contactUs": "https://corp.kaltura.com/company/contact-us",
+            "upgradeAccount":"https://site.kaltura.com/Request-Users.html",
+            "contactSalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce",
+            "dropFoldersManual": "http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0"
+        },
+        "entitlements":{
+            "manage": "https://knowledge.kaltura.com/node/629#managing"
+        },
+        "uploads": {
+            "needHighSpeedUpload": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
+            "highSpeedUpload": "https://aspera.kaltura.com/",
+            "bulkUploadSamples": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_sample.zip"
+        },
+        "live": {
+            "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
+        }
+    }
+}

@@ -1,0 +1,148 @@
+@import 'app-theme/_variables.scss';
+
+.kCustomSchemaFieldFormWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 613px;
+
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid $kGrayscale4;
+
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+
+  .kFooter {
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .kButtonDefault {
+      border: 1px solid #cccccc;
+    }
+
+    button {
+      min-width: 100px;
+      height: 34px;
+      border-width: 0;
+      font-size: 14px;
+
+      &:first-child {
+        margin-right: 24px;
+      }
+
+      &:disabled {
+        border-width: 1px;
+      }
+    }
+  }
+
+  .kCustomSchemaFieldForm {
+    padding: 32px 28px;
+    flex: 1 1 auto;
+
+    .kRow {
+      display: flex;
+      padding-top: 20px;
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      .kAllowMultiple {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .kRadioLeft,
+        .kRadioRight {
+          display: flex;
+          margin-right: 55px;
+        }
+      }
+
+      .kRequired {
+        width: 20px;
+        font-size: 24px;
+        color: $kGrayscale3;
+        margin-left: -20px;
+        margin-right: 10px;
+        &.kHasError {
+          color: $kDandger;
+          font-weight: bold;
+        }
+      }
+
+      .kLabel {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+        height: 18px;
+        width: 195px;
+        color: $kGrayscale1;
+        font-size: 15px;
+        line-height: 18px;
+      }
+
+      .kControl {
+        height: 34px;
+        width: 335px;
+        color: $kGrayscale2;
+        border-radius: 3px;
+
+        &.kHasError {
+          border: 1px solid $kDandger;
+          background: initial;
+        }
+
+        .kTypeIcon {
+          font-size: 20px;
+          vertical-align: text-top;
+          margin-right: 11px;
+          color: $kGrayscale3;
+        }
+
+        &.kTextArea {
+          height: 66px;
+        }
+      }
+    }
+  }
+}
+
+:host /deep/ .kCustomSchemaFieldForm {
+  .ui-dropdown.ui-widget {
+    width: 335px;
+  }
+
+  .ui-dropdown-item {
+    position: relative;
+    &:after {
+      position: absolute;
+      top: 9px;
+      right: 5px;
+      float: none;
+    }
+    .ui-helper-clearfix {
+      margin-right: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+:host /deep/ .kAllowMultiple .ui-radiobutton-label {
+  font-weight: normal;
+  font-size: 15px;
+  margin-left: 5px;
+}

@@ -124,7 +124,8 @@ export class DropFoldersMonitorService implements OnDestroy {
         orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
         statusEqual: KalturaDropFolderStatus.enabled
       }),
-      acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
+    }).setRequestOptions({
+        acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
     });
 
     return this._kalturaClient.request(dropFolders)
@@ -132,7 +133,7 @@ export class DropFoldersMonitorService implements OnDestroy {
         if (response && response.objects) {
           return response.objects.reduce((list, object) => {
             if (object instanceof KalturaDropFolder) {
-              if (object.fileHandlerType.toString() === KalturaDropFolderFileHandlerType.content.toString()) {
+              if (object.fileHandlerType === KalturaDropFolderFileHandlerType.content) {
                 const cfg = object.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
                 if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
                   list.push(object);

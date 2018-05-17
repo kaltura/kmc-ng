@@ -1,9 +1,11 @@
 <div class="kBulkActions">
-  <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deleteEntries()"></button>
+  <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
+          [disabled]="_kmcPermissions.CONTENT_MANAGE_DELETE | kDisabledIfNotPermitted"
+          (click)="deleteEntries()"></button>
   <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.entries.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
 </div>
 
-<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
+<p-tieredMenu #menu kMenuCloseOnScroll [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
 
 
 <kPopupWidget #bulkActionsPopup [popupWidth]="_bulkWindowWidth" [popupHeight]="_bulkWindowHeight" [modal]="true">
@@ -17,9 +19,6 @@
       <kBulkRemoveCategories *ngSwitchCase="'removeFromCategories'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (removeCategoriesChanged)="onRemoveCategoriesChanged($event)"></kBulkRemoveCategories>
       <kBulkChangeOwner *ngSwitchCase="'changeOwner'" [parentPopupWidget]="bulkActionsPopup" (ownerChanged)="onOwnerChanged($event)"></kBulkChangeOwner>
       <kBulkDownload *ngSwitchCase="'download'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (downloadChanged)="onDownloadChanged($event)"></kBulkDownload>
-      <div *ngSwitchCase="'addToNewCategory'">
-        <span style="width: 100%; text-align: center; padding-top: 50px; display: block">Bulk add to a new category not implemented yet...</span>
-      </div>
     </div>
   </ng-template>
 </kPopupWidget>

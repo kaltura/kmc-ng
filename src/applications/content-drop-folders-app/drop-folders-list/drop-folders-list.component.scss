@@ -4,7 +4,7 @@
   font-size: 15px;
   background-color: $appBkgColor;
   height: $contentArea;
-  padding-top: 30px;
+  padding-top: 24px;
   width: 100%;
   min-width: $minAppWidth;
   box-sizing: border-box;
@@ -17,7 +17,7 @@
     height: 34px;
     background: $kMagnifyingGlassBkg;
     margin-right: 8px;
-    padding: 9px 4px 8px 30px;
+    padding: 9px 4px 8px 38px;
 
     &:focus {
       background-color: white;
@@ -30,6 +30,7 @@
   }
 
   .kDropFoldersHolder {
+    min-height: $minTableHeight;
     height: 100%;
     border: none;
     position: relative;
@@ -71,7 +72,7 @@
     font-size: 24px;
     border: none;
     min-width: inherit;
-    margin-right: 16px;
+    margin-right: 8px;
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
@@ -102,9 +103,9 @@
     flex: 0 0 auto;
     margin-top: 2px;
     margin-left: 8px;
-    padding: 4px;
+    padding: 5px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 10px;
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.3);
@@ -114,14 +115,13 @@
   }
 
   .kBulkOperations {
-    width: 400px;
     display: flex;
     align-items: center;
 
     .kBulkDeleteBtn {
       margin-right: 10px;
       width: 44px;
-      font-size: 18px;
+      font-size: 24px;
     }
   }
 
@@ -132,7 +132,7 @@
   .kBulkDeleteBtn {
     margin-right: 10px;
     width: 44px;
-    font-size: 18px;
+    font-size: 24px;
   }
 
   .kBulkActionsBtn {
@@ -231,6 +231,14 @@
   }
 }
 
+:host{
+  width: 100%;
+}
+
+:host /deep/ p-datatable .ui-datatable-scrollable-body{
+  margin-bottom: 34px;
+}
+
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {
   margin-left: -.5em;
 }
@@ -257,10 +265,16 @@
   margin-left: -.5em;
 }
 
-/deep/ .kActionsMenu .ui-menuitem-text {
+:host /deep/ .kActionsMenu .ui-menuitem-text {
   color: $kDandger;
 }
 
 :host /deep/ .kStickyClass {
   border-bottom: 1px solid $kGrayscale5;
+}
+
+:host /deep/ .kDropFoldersTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
 }

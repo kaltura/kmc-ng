@@ -7,10 +7,26 @@
 		font-weight: 700;
 		padding-left: 24px;
 	}
+  .kButtons{
+    display: flex;
+    padding-left: 24px;
+    padding-top: 12px;
+    margin-bottom: 20px;
+    button{
+      height: 32px;
+      font-weight: 400;
+      margin-right: 20px;
+    }
+  }
 	.kTable{
 		margin-top: 24px;
 	}
 }
 :host /deep/ .ui-paginator {
 	padding-right: 12px;
+}
+:host /deep/ .kTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
 }

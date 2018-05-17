@@ -29,26 +29,25 @@ import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client/api/types/KalturaC
 import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { CaptionAssetServeAction } from 'kaltura-ngx-client/api/types/CaptionAssetServeAction';
-
-
-import { EntryWidgetKeys } from '../entry-widget-keys';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { EntryWidget } from '../entry-widget';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 export interface CaptionRow {
-    uploading: boolean,
-    uploadFileId?: string,
-    serverUploadToken?: string,
-    uploadFailure?: boolean,
+    uploading: boolean;
+    uploadFileId?: string;
+    serverUploadToken?: string;
+    uploadFailure?: boolean;
     progress?: string;
-    uploadUrl: string,
-    id: string,
-    isDefault: number,
-    format: KalturaCaptionType,
-    language: KalturaLanguage,
-    label: string,
-    fileExt: string
+    uploadUrl: string;
+    id: string;
+    isDefault: number;
+    format: KalturaCaptionType;
+    language: KalturaLanguage;
+    label: string;
+    fileExt: string;
+    status?: KalturaCaptionAssetStatus;
 }
 
 @Injectable()
@@ -69,7 +68,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     constructor(private _objectDiffers: KeyValueDiffers, private _listDiffers: IterableDiffers,
                 private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _uploadManagement: UploadManagement) {
-        super(EntryWidgetKeys.Captions);
+        super(ContentEntryViewSections.Captions);
     }
 
   private _syncBusyState(): void {
@@ -96,12 +95,16 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         ({ relevantCaption, uploadedFile }) => {
           switch (uploadedFile.status) {
             case TrackedFileStatuses.prepared:
+              relevantCaption.uploading = true;
               relevantCaption.serverUploadToken = (<NewEntryCaptionFile>uploadedFile.data).serverUploadToken;
               this._syncBusyState();
               break;
             case TrackedFileStatuses.uploadCompleted:
               relevantCaption.uploading = false;
               relevantCaption.uploadFailure = false;
+              if (relevantCaption.partnerId) { // indicator that entry was saved
+                relevantCaption.status = KalturaCaptionAssetStatus.ready;
+              }
               break;
             case TrackedFileStatuses.failure:
               relevantCaption.uploading = false;
@@ -109,7 +112,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               this._syncBusyState();
               break;
             case TrackedFileStatuses.uploading:
-              relevantCaption.progress = (uploadedFile.progress * 100).toFixed(0);
+              const progress = Number((uploadedFile.progress * 100).toFixed(0));
+              relevantCaption.progress = progress > 100 ? 100 : progress;
               relevantCaption.uploading = true;
               relevantCaption.uploadFailure = false;
               break;
@@ -148,7 +152,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         this._updateCaptionsResponse(response);
 
         this._captions.next({ items: response.objects as any[] });
-        this.captionsListDiffer = this._listDiffers.find([]).create(null);
+        this.captionsListDiffer = this._listDiffers.find([]).create();
         this.captionsListDiffer.diff(this._captions.getValue().items);
 
         this.captionDiffer = {};
@@ -209,24 +213,28 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         return type;
     }
 
-    public _getCaptionStatus(caption: any): string {
-        let status = "";
-        if (caption.status) {
+    public _getCaptionStatus(caption: CaptionRow): string {
+      let status = '';
+      if (caption.status !== null) {
+        switch (caption.status) {
+          case KalturaCaptionAssetStatus.error:
+            status = this._appLocalization.get('applications.content.entryDetails.captions.error');
+            break;
+          case KalturaCaptionAssetStatus.ready:
+            status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
+            break;
+          default:
             status = this._appLocalization.get('applications.content.entryDetails.captions.processing');
-            switch (caption.status.toString()) {
-                case KalturaCaptionAssetStatus.error.toString():
-                    status = this._appLocalization.get('applications.content.entryDetails.captions.error');
-                    break;
-                case KalturaCaptionAssetStatus.ready.toString():
-                    status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
-                    break;
-            }
-        } else {
-            if (caption.serverUploadToken || caption.uploadUrl) {
-                status = this._appLocalization.get('applications.content.entryDetails.captions.ready');
-            }
+            break;
         }
-        return status;
+      } else {
+        if (caption.uploading) {
+          status = this._appLocalization.get('applications.content.entryDetails.captions.processing');
+        } else if (caption.serverUploadToken || caption.uploadUrl) {
+          status = this._appLocalization.get('applications.content.entryDetails.captions.ready');
+        }
+      }
+      return status;
     }
 
   public _addCaption(): any {
@@ -241,7 +249,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       language: KalturaLanguage.en,
       label: 'English',
       isDefault: 0,
-      fileExt: ''
+      fileExt: '',
+      status: null
     };
 
     // create a copy of the captions array without a reference to the original array

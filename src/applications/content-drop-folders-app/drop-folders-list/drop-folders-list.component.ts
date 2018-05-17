@@ -1,34 +1,44 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
+import { DropFoldersFilters, DropFoldersStoreService, SortDirection } from '../drop-folders-store/drop-folders-store.service';
 import { Router } from '@angular/router';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
-
+import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kDropFoldersList',
   templateUrl: './drop-folders-list.component.html',
-  styleUrls: ['./drop-folders-list.component.scss']
+  styleUrls: ['./drop-folders-list.component.scss'],
+    providers: [DropFoldersRefineFiltersService]
 })
 
 export class DropFoldersListComponent implements OnInit, OnDestroy {
   @ViewChild('tags') private _tags: StickyComponent;
 
-  public _blockerMessage: AreaBlockerMessage = null;
+    public _isBusy = false;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _tableIsBusy = false;
+    public _tableBlockerMessage: AreaBlockerMessage = null;
+    public _refineFilters: RefineList[];
   public _selectedDropFolders: KalturaDropFolderFile[] = [];
   public _query = {
     freeText: '',
     pageIndex: 0,
-    pageSize: null // pageSize is set to null by design. It will be modified after the first time loading drop folders
+    pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading drop folders
+    sortBy: 'createdAt',
+    sortDirection: SortDirection.Desc
   };
 
   constructor(public _dropFoldersStore: DropFoldersStoreService,
+              private _refineFiltersService: DropFoldersRefineFiltersService,
               private _appLocalization: AppLocalization,
               private _router: Router,
+              private _contentEntryViewService: ContentEntryViewService,
               private _browserService: BrowserService) {
   }
 
@@ -39,17 +49,79 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  private _prepare(): void {
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
-  }
+    private _prepare(): void {
+
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only once the filters were fetched successfully.
+
+        this._isBusy = true;
+        this._refineFiltersService.getFilters()
+            .cancelOnDestroy(this)
+            .first() // only handle it once, no need to handle changes over time
+            .subscribe(
+                lists => {
+                    this._isBusy = false;
+                    this._refineFilters = lists;
+                    this._restoreFiltersState();
+                    this._registerToFilterStoreDataChanges();
+                    this._registerToDataChanges();
+                },
+                error => {
+                    this._isBusy = false;
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: this._appLocalization.get('applications.content.filters.errorLoading'),
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.retry'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._prepare();
+                                this._dropFoldersStore.reload();
+                            }
+                        }
+                        ]
+                    });
+                });
+    }
+
+    private _registerToDataChanges(): void {
+        this._dropFoldersStore.dropFolders.state$
+            .cancelOnDestroy(this)
+            .subscribe(
+                result => {
+
+                    this._tableIsBusy = result.loading;
+
+                    if (result.errorMessage) {
+                        this._tableBlockerMessage = new AreaBlockerMessage({
+                            message: result.errorMessage || 'Error loading drop folders',
+                            buttons: [{
+                                label: 'Retry',
+                                action: () => {
+                                    this._tableBlockerMessage = null;
+                                    this._dropFoldersStore.reload();
+                                }
+                            }
+                            ]
+                        });
+                    } else {
+                        this._tableBlockerMessage = null;
+                    }
+                },
+                error => {
+                    console.warn('[kmcng] -> could not load drop folders'); // navigate to error page
+                    throw error;
+                });
+    }
 
   private _restoreFiltersState(): void {
     this._updateComponentState(this._dropFoldersStore.cloneFilters(
       [
         'pageSize',
         'pageIndex',
-        'freeText'
+        'freeText',
+        'sortBy',
+        'sortDirection'
       ]
     ));
   }
@@ -65,6 +137,14 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
     if (typeof updates.pageIndex !== 'undefined') {
       this._query.pageIndex = updates.pageIndex;
+    }
+
+    if (typeof updates.sortBy !== 'undefined') {
+      this._query.sortBy = updates.sortBy;
+    }
+
+    if (typeof updates.sortDirection !== 'undefined') {
+      this._query.sortDirection = updates.sortDirection;
     }
   }
 
@@ -106,12 +186,12 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                   }
                 }
               ]
-            })
+            });
           }
         );
     };
 
-    if (ids.length > environment.modules.dropFolders.bulkActionsLimit) {
+    if (ids.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.bulkActions.note'),
         message: this._appLocalization.get('applications.content.bulkActions.confirmDropFolders', { '0': ids.length }),
@@ -144,6 +224,15 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     this._dropFoldersStore.filter({ freeText: this._query.freeText });
   }
 
+  public _onSortChanged(event): void {
+      if (event.field !== this._query.sortBy || event.order !== this._query.sortDirection) {
+          this._dropFoldersStore.filter({
+              sortBy: event.field,
+              sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+          });
+      }
+  }
+
   public _reload(): void {
     this._clearSelection();
     this._dropFoldersStore.reload();
@@ -151,16 +240,14 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
   public _navigateToEntry(entryId: string): void {
     this._dropFoldersStore.isEntryExist(entryId)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
-      .subscribe(
-        exists => {
-          if (exists) {
-            this._router.navigate(['/content/entries/entry', entryId]);
-          }
-        },
-        ({ message }) => this._browserService.alert({ message })
-      );
+        .cancelOnDestroy(this)
+        .tag('block-shell')
+        .filter(Boolean)
+        .switchMap(() => this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata))
+        .subscribe(
+            () => {},
+            ({ message }) => this._browserService.alert({ header: this._appLocalization.get('app.common.attention'), message })
+        );
   }
 
   public _deleteDropFolderFiles(event): void {

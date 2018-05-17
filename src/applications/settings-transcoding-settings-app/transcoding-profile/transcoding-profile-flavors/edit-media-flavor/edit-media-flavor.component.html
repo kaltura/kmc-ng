@@ -1,0 +1,88 @@
+<div class="kEditMediaProfileFlavor">
+  <form [formGroup]="_editFlavorForm" novalidate>
+    <div class="kHeader">
+      <span class="kTitle">{{'applications.settings.transcoding.editFlavor.editFlavorSettings' | translate}}</span>
+    </div>
+
+    <div class="kContainer">
+      <div class="kRow">
+        <span class="kLabel">{{'applications.settings.transcoding.editFlavor.profileName' | translate}}</span>
+        <div class="kControl">
+          <input pInputText [formControl]="_profileNameField"/>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel">{{'applications.settings.transcoding.editFlavor.flavorName' | translate}}</span>
+        <div class="kControl">
+          <input pInputText [formControl]="_flavorNameField"/>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel">
+          {{'applications.settings.transcoding.editFlavor.impactOnEntryReadiness' | translate}}
+        </span>
+        <div class="kControl">
+          <p-dropdown [options]="_availabilityOptions"
+                      [formControl]="_readyBehaviorField"
+                      [autoWidth]="false"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel">
+          {{'applications.settings.transcoding.editFlavor.useKalturaTranscoding' | translate}}
+        </span>
+        <div class="kControl">
+          <p-dropdown [options]="_originOptions"
+                      [formControl]="_originField"
+                      [autoWidth]="false"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel">
+          {{'applications.settings.transcoding.editFlavor.systemName' | translate}}
+        </span>
+        <div class="kControl">
+          <input pInputText
+                 [formControl]="_systemNameField"
+                 [placeholder]="'applications.settings.transcoding.editFlavor.systemNamePlaceholder' | translate"/>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel">
+          {{'applications.settings.transcoding.editFlavor.flavorGenerationPolicy' | translate}}
+        </span>
+        <div class="kControl">
+          <p-dropdown [options]="_genOptions"
+                      [formControl]="_forceNoneCompliedField"
+                      [autoWidth]="false"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="kRow" *ngIf="_kmcPermissions.WIDEVINE_PLUGIN_PERMISSION | kNgIfPermitted">
+        <span class="kLabel">
+          {{'applications.settings.transcoding.editFlavor.intermediateFlavorHandling' | translate}}
+        </span>
+        <div class="kControl">
+          <p-dropdown [options]="_handleOptions"
+                      [formControl]="_deletePolicyField"
+                      [autoWidth]="false"></p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="kFooter">
+      <button type="button" pButton class="kButtonDefault"
+              [label]="'applications.settings.transcoding.cancel' | translate"
+              (click)="parentPopupWidget.close()"></button>
+      <button type="button" class="kButtonBranded kSaveBtn" pButton
+              [label]="'applications.settings.transcoding.save' | translate"
+              (click)="_saveFlavor()"></button>
+    </div>
+  </form>
+</div>
+

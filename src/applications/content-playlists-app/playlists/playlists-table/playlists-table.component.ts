@@ -1,10 +1,11 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { PlaylistsStore } from '../playlists-store/playlists-store.service';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { globalConfig } from 'config/global';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPlaylistsTable',
@@ -19,14 +20,15 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
       this._playlists = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredPlaylists = data
+      this._deferredPlaylists = data;
     }
   }
 
-  @Input() filter: any = {};
+  @Input() sortField: string = null;
+  @Input() sortOrder: number = null;
   @Input() selectedPlaylists: any[] = [];
 
-  @Output() sortChanged = new EventEmitter<any>();
+  @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
   @Output() selectedPlaylistsChange = new EventEmitter<any>();
   @Output() actionSelected = new EventEmitter<any>();
 
@@ -34,59 +36,21 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
   private _deferredPlaylists: KalturaPlaylist[];
 
-  private actionsMenuPlaylistId = '';
-  private actionsMenuPlaylist: KalturaPlaylist;
-
   public _deferredLoading = true;
   public _emptyMessage = '';
-  public _blockerMessage: AreaBlockerMessage = null;
   public _playlists: KalturaPlaylist[] = [];
   public _items: MenuItem[];
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
+  public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
-              public playlistsStore: PlaylistsStore,
+              private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this.playlistsStore.playlists.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-        result => {
-          if (result.errorMessage) {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: result.errorMessage || 'Error loading entries',
-              buttons: [{
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => {
-                  this.playlistsStore.reload();
-                }
-              }
-              ]
-            })
-          } else {
-            this._blockerMessage = null;
-            if (result.loading) {
-              this._emptyMessage = '';
-              loadedOnce = true;
-            } else {
-              if (loadedOnce) {
-                this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
-              }
-            }
-          }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load playlists'); // navigate to error page
-          throw error;
-        });
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
   ngAfterViewInit() {
@@ -104,11 +68,8 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   openActionsMenu(event: any, playlist: KalturaPlaylist) {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (this.actionsMenuPlaylistId !== playlist.id) {
-        this.buildMenu(playlist);
-        this.actionsMenuPlaylistId = playlist.id;
-        this.actionsMenu.show(event);
-      }
+      this.buildMenu(playlist);
+      this.actionsMenu.show(event);
     }
   }
 
@@ -119,24 +80,39 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   buildMenu(playlist: KalturaPlaylist): void {
     this._items = [
       {
-        label: this._appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
-        this.onActionSelected("preview", playlist);
-      }
+        id: 'previewAndEmbed',
+        label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
+        command: () => this.onActionSelected('preview', playlist)
       },
       {
-        label: this._appLocalization.get("applications.content.table.delete"), command: (event) => {
-        this.onActionSelected("delete", playlist);
-      }
+        id: 'view',
+        label: this._appLocalization.get('applications.content.table.view'),
+        command: () => this.onActionSelected('view', playlist)
       },
       {
-        label: this._appLocalization.get("applications.content.table.view"), command: (event) => {
-        this.onActionSelected("view", playlist);
-      }
+        id: 'delete',
+        label: this._appLocalization.get('applications.content.table.delete'),
+        styleClass: 'kDanger',
+        command: () => this.onActionSelected('delete', playlist)
       }
     ];
-    if (playlist.status instanceof KalturaEntryStatus && playlist.status.toString() != KalturaEntryStatus.ready.toString()) {
+
+    if (playlist.status !== KalturaEntryStatus.ready) {
       this._items.shift();
+    }else
+    {
+      const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
+      if (!hasEmbedPermission) {
+        this._items[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
+      }
     }
+
+    this._permissionsService.filterList(
+      <{id: string}[]>this._items,
+      {
+        'delete': KMCPermissions.PLAYLIST_DELETE
+      }
+    );
   }
 
 
@@ -145,11 +121,14 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   onActionSelected(action: string, playlist: KalturaPlaylist) {
-    this.actionSelected.emit({"action": action, "playlist": playlist});
+    this.actionSelected.emit({ 'action': action, 'playlist': playlist });
   }
 
   onSortChanged(event) {
-    this.sortChanged.emit(event);
+    if (event.field && event.order) {
+      // primeng workaround: must check that field and order was provided to prevent reset of sort value
+      this.sortChanged.emit({ field: event.field, order: event.order });
+    }
   }
 }
 

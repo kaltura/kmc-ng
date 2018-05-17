@@ -1,0 +1,126 @@
+<form [formGroup]="_form" novalidate>
+  <div class="kRow kTitle">
+    {{'applications.content.syndication.details.destinationsForms.yahoo.title' | translate}}
+  </div>
+  <div class="kContentFlavor">
+
+    <!--Content Flavor-->
+    <div class="kRow kMultiLine">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.yahoo.contentFlavor.label' | translate}}</span>
+      <div class="kControlContainer">
+        <span class="kControl">
+          <p-dropdown class="kControl" [options]="_availableContentFlavors" formControlName="contentFlavor"
+                      [autoWidth]="false" [filter]="true">
+          </p-dropdown>
+        </span>
+        <!--Add to default transcoding profile-->
+        <div class="kAddToDefaultTranscodingProfile">
+          <p-checkbox formControlName="addToDefaultTranscodingProfile"
+                      label="{{'applications.content.syndication.details.destinationsForms.yahoo.contentFlavor.checkbox' | translate}}"
+                      binary="true"></p-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <!--Landing Page-->
+    <div class="kRow" [class.kInputValidationError]="_form.get('landingPage').touched && _form.get('landingPage').invalid">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.yahoo.landingPage.label' | translate}}</span>
+      <div class="kAsterix"
+           [ngClass]="{'kHasError':!_form.get('landingPage').valid && _form.get('landingPage').touched}">*
+      </div>
+      <div class="kControlContainer">
+        <input class="kControl" formControlName="landingPage" pInputText placeholder="http://"
+               [ngClass]="{'kHasError':!_form.get('landingPage').valid && _form.get('landingPage').touched}">
+        <div *ngIf="_form.get('landingPage').touched && _form.get('landingPage').hasError('required')"
+             class="error">
+          {{'applications.content.syndication.details.destinationsForms.yahoo.errors.requiredLandingPage' | translate}}
+        </div>
+        <div *ngIf="_form.get('landingPage').touched && _form.get('landingPage').hasError('url')"
+             class="error">
+          {{'applications.content.syndication.details.destinationsForms.yahoo.errors.invalidLandingPage' | translate}}
+        </div>
+      </div>
+    </div>
+
+    <!--Landing Page Explanation-->
+    <div class="kLandingPageExplanation">
+      {{'applications.content.syndication.details.destinationsForms.yahoo.landingPage.explanation' | translate}}
+    </div>
+
+
+    <!--Playback-->
+    <div class="kRow kPlayback kMultiLine">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.yahoo.playback.label' | translate}}</span>
+      <div class="kControlContainer">
+            <span class="kControl">
+              <p-radioButton class="kFromYahoo" name="playback" (click)="_clearPlayer()"
+                             [value]="'fromYahoo'"
+                             formControlName="playback"
+                             label="{{'applications.content.syndication.details.destinationsForms.yahoo.playback.fromYahoo' | translate}}">
+              </p-radioButton>
+              <p-radioButton class="kPlaybackLinkback" name="playback"
+                             [value]="'linkback'"
+                             formControlName="playback"
+                             label="{{'applications.content.syndication.details.destinationsForms.yahoo.playback.linkback' | translate}}">
+              </p-radioButton>
+            </span>
+        <!--Select Player-->
+        <div class="kSelectPlayer" *ngIf="_form.get('playback').value === 'fromYahoo'">
+          <div class="kSelectPlayerLabel">{{'applications.content.syndication.details.destinationsForms.yahoo.playback.player' | translate}}</div>
+          <p-dropdown class="kSelectPlayerControl" [options]="_availablePlayers" formControlName="selectedPlayer"
+                      [autoWidth]="false" [filter]="true">
+          </p-dropdown>
+        </div>
+        <div class="kSelectPlayerInfo">
+          {{'applications.content.syndication.details.destinationsForms.yahoo.playback.playerMessage' | translate}}
+        </div>
+      </div>
+    </div>
+
+
+    <!--Website-->
+    <div class="kRow" [class.kInputValidationError]="_form.get('website').touched && _form.get('website').invalid">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.yahoo.website.label' | translate}}</span>
+      <div class="kAsterix"
+           [ngClass]="{'kHasError':!_form.get('website').valid && _form.get('website').touched}">*
+      </div>
+      <div class="kControlContainer">
+        <input class="kControl" formControlName="website" pInputText placeholder="http://"
+               [ngClass]="{'kHasError':!_form.get('website').valid && _form.get('website').touched}">
+        <div *ngIf="_form.get('website').touched && _form.get('website').hasError('required')"
+             class="error">
+          {{'applications.content.syndication.details.destinationsForms.yahoo.errors.requiredWebsite' | translate}}
+        </div>
+        <div *ngIf="_form.get('website').touched && _form.get('website').hasError('url')"
+             class="error">
+          {{'applications.content.syndication.details.destinationsForms.yahoo.errors.invalidWebsite' | translate}}
+        </div>
+      </div>
+    </div>
+
+    <!--Feed Description-->
+    <div class="kRow kMultiLine">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.yahoo.description.label' | translate}}</span>
+      <div class="kControlContainer">
+        <span class="kControl">
+          <textarea formControlName="description" class="threeRows" [rows]="6" [cols]="60" pInputTextarea></textarea>
+        </span>
+      </div>
+    </div>
+
+    <!--Categories-->
+    <div class="kRow">
+      <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.yahoo.category.label' | translate}}</span>
+      <div class="kControlContainer">
+        <span class="kControl">
+          <p-multiSelect class="kCategories"
+                         [options]="_availableCategories"
+                         formControlName="selectedCategories" [filter]="false" maxSelectedLabels="2"
+                         selectedItemsLabel="{{'applications.content.syndication.details.destinationsForms.yahoo.category.itemsSelected' | translate}}"
+                         defaultLabel="{{'applications.content.syndication.details.destinationsForms.yahoo.category.promptText' | translate}}"></p-multiSelect>
+        </span>
+      </div>
+    </div>
+
+  </div>
+</form>

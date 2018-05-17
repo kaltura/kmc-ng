@@ -18,8 +18,9 @@ import {
   TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { KalturaPrimeNgUIModule, PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -32,6 +33,7 @@ import { BulkLogRefineFiltersComponent } from './bulk-log-refine-filters/bulk-lo
 import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
 import { BulkLogTagsComponent } from './bulk-log-tags/bulk-log-tags.component';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -57,9 +59,10 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
     SharedModule,
     RouterModule.forChild(routing),
     TreeModule,
-    PrimeTreeModule,
     StickyModule,
-      FiltersModule
+      FiltersModule,
+    TableModule,
+    KMCPermissionsModule
   ],
   declarations: [
     ContentBulkLogAppComponent,

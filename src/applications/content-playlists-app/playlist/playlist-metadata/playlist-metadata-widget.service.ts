@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { PlaylistWidget } from '../playlist-widget';
-import { PlaylistWidgetKeys } from '../playlist-widget-keys';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { Observable } from 'rxjs/Observable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -11,14 +10,17 @@ import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTag
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { async } from 'rxjs/scheduler/async';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Injectable()
 export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy {
   public metadataForm: FormGroup;
 
   constructor(private _formBuilder: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
               private _kalturaServerClient: KalturaClient) {
-    super(PlaylistWidgetKeys.Metadata);
+    super(ContentPlaylistViewSections.Metadata);
     this._buildForm();
   }
 
@@ -48,10 +50,11 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
   }
 
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
-    const name = wasActivated ? this.metadataForm.value.name : this.data.name;
-    return Observable.of({
-      isValid: !!name.trim()
-    });
+      const name = wasActivated ? this.metadataForm.value.name : this.data.name;
+      const hasValue = (name || '').trim() !== '';
+      return Observable.of({
+          isValid: hasValue
+      });
   }
 
   protected onDataSaving(newData: KalturaPlaylist, request: KalturaMultiRequest): void {
@@ -83,6 +86,10 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
 
     if (firstTimeActivating) {
       this._monitorFormChanges();
+    }
+
+    if (!this.isNewData && !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE)) {
+      this.metadataForm.disable({ emitEvent: false, onlySelf: true });
     }
   }
 

@@ -1,0 +1,22 @@
+<div class="kUndistributedProfile">
+  <div [class]="'kProfileIcon ' + (profile?.providerType| kEntriesDistributionProviderTypeIcon)"></div>
+
+  <div class="kUndistributedProfileContent">
+    <span class="kTitle" [class.kClickable]="_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE | kNgIfPermitted">
+      <span class="kTitleLabel" (click)="_exportProfile(profile)">{{profile?.name}}</span>
+    </span>
+    <div class="kMetadata">
+      <span class="kStatus">
+        <i class="kIconinactive"></i>
+        {{'applications.content.entryDetails.distribution.status.notDistributed' | translate}}
+      </span>
+    </div>
+  </div>
+
+  <div class="kControls">
+    <button pButton class="kButtonDefault kExportBtn"
+            *ngIf="_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE | kNgIfPermitted"
+            [label]="'applications.content.entryDetails.distribution.export' | translate"
+            (click)="onExport.emit(profile)"></button>
+  </div>
+</div>

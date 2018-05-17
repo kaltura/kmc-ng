@@ -5,12 +5,17 @@
 
       <form [formGroup]="_widgetService.metadataForm" novalidate>
         <div class="kRow kValign">
-        <span class="kLabel" [ngClass]="{'extraPadding': _widgetService.metadataForm.invalid}">
+        <span class="kLabel" >
           {{'applications.content.playlistDetails.metadata.playlistName' | translate}}
         </span>
           <div class="kControl">
-            <input formControlName="name" type="text" pInputText #metadataNameInput/>
-            <div [ngClass]="{'invalid': _widgetService.metadataForm.invalid, 'hidden': _widgetService.metadataForm.valid}">
+            <input #metadataNameInput formControlName="name" pInputText
+                    (blur)="_trimNameValue()"
+                    [ngClass]="{'kHasError':!_widgetService.metadataForm.controls['name'].valid &&
+                   _widgetService.metadataForm.controls['name'].touched}">
+            <div *ngIf="_widgetService.metadataForm.controls['name'].touched &&
+                 _widgetService.metadataForm.controls['name'].hasError('required')"
+                 class="error">
               {{'applications.content.playlistDetails.metadata.nameIsMandatory' | translate}}
             </div>
           </div>

@@ -1,45 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { PlaylistContentWidget } from './playlist-content-widget.service';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 @Component({
   selector: 'kPlaylistContent',
-  templateUrl: './playlist-content.component.html',
-  styleUrls: ['./playlist-content.component.scss'],
+  templateUrl: './playlist-content.component.html'
 })
-export class PlaylistContentComponent implements OnInit, OnDestroy {
-  public _selectedEntries: KalturaMediaEntry[] = [];
-
-  constructor(public _playlistStore: PlaylistStore,
-              public _widgetService: PlaylistContentWidget) {
-  }
-
-  ngOnInit() {
-    this._widgetService.attachForm();
-  };
-
-  ngOnDestroy() {
-    this._widgetService.detachForm();
-  }
-
-  public _clearSelection() {
-    this._selectedEntries = [];
-  }
-
-  public _onActionSelected(event: { action: string, entry: KalturaMediaEntry }): void {
-    this._clearSelection();
-    this._widgetService.onActionSelected(event);
-  }
-
-  public _onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
-    this._clearSelection();
-    this._widgetService.onSortChanged(event);
-  }
-
-  public _deleteSelected(selectedEntries: KalturaMediaEntry[]): void {
-    this._clearSelection();
-    this._widgetService.deleteSelectedEntries(selectedEntries);
+export class PlaylistContentComponent {
+  public _playlistTypes = KalturaPlaylistType;
+  constructor(public _playlistStore: PlaylistStore) {
   }
 }
-

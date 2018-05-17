@@ -1,0 +1,98 @@
+@import 'app-theme/_variables.scss';
+
+.kEditMediaProfileFlavor {
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+
+  .kContainer {
+    height: 426px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 28px;
+
+    .kRow {
+      width: 100%;
+      display: flex;
+      margin-bottom: 20px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .kLabel {
+        width: 240px;
+        flex: 0 0 auto;
+        height: 18px;
+        color: $kGrayscale1;
+        font-size: 15px;
+        line-height: 18px;
+        padding: 8px 4px;
+      }
+
+      .kControl {
+        color: $kGrayscale2;
+        height: 34px;
+        border-radius: 3px;
+
+        input {
+          padding: 0 8px;
+          width: 400px;
+        }
+
+        .kInputError {
+          color: $kDandger;
+        }
+      }
+    }
+  }
+
+  .kFooter {
+    padding: 15px 0;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      width: 120px;
+      height: 34px;
+    }
+
+    .kSaveBtn {
+      border-width: 0;
+      font-size: 14px;
+      margin-left: 16px;
+
+      &:disabled {
+        border-width: 1px;
+      }
+    }
+  }
+}
+
+:host /deep/ .kEditMediaProfileFlavor {
+  .ui-dropdown.ui-widget {
+    width: 400px;
+  }
+
+  .ui-inputtext:disabled {
+    opacity: 1;
+    background-color: $kGrayscale6;
+    border: 1px solid $kGrayscale4;
+    color: $kGrayscale3;
+  }
+}

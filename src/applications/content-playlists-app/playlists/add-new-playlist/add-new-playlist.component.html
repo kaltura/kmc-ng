@@ -9,15 +9,12 @@
         {{('applications.content.addNewPlaylist.selectPlaylistType') | translate}}
       </div>
       <div class="selectPlaylistType">
-        <p-radioButton class="kRadioLeft" name="playlistType" value="manual" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.manualPlaylist' | translate}}"></p-radioButton>
-        <p-radioButton class="kRadioRight " name="playlistType" value="ruleBased" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.ruleBasedPlaylist' | translate}}"></p-radioButton>
-      </div>
-      <div class="ruleBasedSub">
-        <p-checkbox *ngIf="addNewPlaylistForm.controls['playlistType'].value !== 'manual'" name="ruleBasedSub" value="ruleBasedSub" formControlName="ruleBasedSub" label="{{'applications.content.addNewPlaylist.addRuleBasedSubPlaylist' | translate}}"></p-checkbox>
+        <p-radioButton class="kRadioLeft" name="playlistType" [value]="_playlistTypes.staticList" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.manualPlaylist' | translate}}"></p-radioButton>
+        <p-radioButton class="kRadioRight " name="playlistType" [value]="_playlistTypes.dynamic" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.ruleBasedPlaylist' | translate}}"></p-radioButton>
       </div>
       <div class="kRow">
         <div class="kControl">
-          <input formControlName="name" type="text" placeholder="{{'applications.content.addNewPlaylist.playlistName' | translate}}" pInputText #metadataNameInput />
+          <input kAutofocus formControlName="name" type="text" placeholder="{{'applications.content.addNewPlaylist.playlistName' | translate}}" pInputText />
         </div>
       </div>
       <div class="kRow">

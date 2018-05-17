@@ -1,0 +1,12 @@
+<div class="kBulkDeleteBtnContainer">
+  <button pButton class="kButtonDanger kBulkDeleteBtn"
+          label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.remove' | translate}}"
+          (click)="_deleteItems()"></button>
+</div>
+<button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton
+        label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.moreActions' | translate}}"
+        (click)="menu.toggle($event)"></button>
+<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" class="kOverrideFAIcons" kMenuCloseOnScroll
+              [appendTo]="'body'"></p-tieredMenu>
+
+ 

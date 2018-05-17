@@ -23,16 +23,14 @@ import { AttachmentAssetDeleteAction } from 'kaltura-ngx-client/api/types/Attach
 import { AttachmentAssetUpdateAction } from 'kaltura-ngx-client/api/types/AttachmentAssetUpdateAction';
 import { AttachmentAssetAddAction } from 'kaltura-ngx-client/api/types/AttachmentAssetAddAction';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-
-
-import { EntryWidgetKeys } from '../entry-widget-keys';
-
-import '@kaltura-ng/kaltura-common/rxjs/add/operators'
-import { environment } from 'app-environment';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
 import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client/api/types/KalturaAttachmentAssetListResponse';
+import { getKalturaServerUri } from 'config/server';
+import { globalConfig } from 'config/global';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 export interface RelatedFile extends KalturaAttachmentAsset {
   uploading?: boolean,
@@ -64,7 +62,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               private _objectDiffers: KeyValueDiffers,
               private _listDiffers: IterableDiffers,
               private _uploadManagement: UploadManagement) {
-    super(EntryWidgetKeys.Related);
+    super(ContentEntryViewSections.Related);
   }
 
 
@@ -94,6 +92,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               break;
 
             case TrackedFileStatuses.uploadCompleted:
+              relevantRelatedFile.progress = 100;
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = false;
               break;
@@ -110,7 +109,8 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               break;
 
             case TrackedFileStatuses.uploading:
-              relevantRelatedFile.progress = (uploadedFile.progress * 100).toFixed(0);
+              const progress = Number((uploadedFile.progress * 100).toFixed(0));
+              relevantRelatedFile.progress = progress >= 100 ? 100 : progress;
               relevantRelatedFile.uploading = true;
               relevantRelatedFile.uploadFailure = false;
               break;
@@ -156,7 +156,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
         this.relatedFileDiffer = {};
         this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
-          this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
+          this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create();
           this.relatedFileDiffer[asset.id].diff(asset);
         });
         super._hideLoader();
@@ -281,7 +281,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	}
 
   private _validateFileSize(file: File): boolean {
-    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
     const fileSize = file.size / 1024 / 1024; // convert to Mb
 
     return this._uploadManagement.supportChunkUpload(new NewEntryRelatedFile(null)) || fileSize < maxFileSize;
@@ -302,10 +302,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
   }
 
 	private _openFile(fileId: string, operation: string): void {
-		const serverEndpoint = environment.core.kaltura.serverEndpoint;
-        const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
-
-        let url = protocol + serverEndpoint + "/api_v3/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId;
+        let url = getKalturaServerUri("/api_v3/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId);
 		this._browserService.openLink(url);
 	}
 

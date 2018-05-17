@@ -1,0 +1,292 @@
+@import 'app-theme/_variables.scss';
+
+.kFeedDetailsContainer {
+
+  .kFeedDetailsContainerHeader {
+    height: 34px;
+    padding: 19px 28px 19px 28px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid $kGrayscale4;
+    .kFeedIcon {
+      flex: 0 0 auto;
+      font-size: 24px;
+      color: $kGrayscale3;
+
+    }
+    .kFeedName {
+      flex: 1 1 auto;
+      padding: 0 18px;
+      color: $kGrayscale1;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .kBulkCancel {
+      flex: 0 0 auto;
+      color: $kBlack;
+    }
+
+    .kDeletehBtn {
+      flex: 0 0 auto;
+      margin-left: 16px;
+      height: 34px;
+      width: 100px;
+    }
+
+    .kSaveBtn {
+      flex: 0 0 auto;
+      margin-left: 16px;
+      height: 34px;
+      width: 100px;
+    }
+  }
+  .kFeedDetailsContainerBody {
+    padding: 20px 28px;
+    height: calc(100vh - 193px);
+    overflow-y: auto;
+
+    .kDestination {
+      .kControl {
+        display: block;
+        width: 258px;
+
+        &.kHasError{
+          /deep/ .ui-widget.ui-dropdown {
+            border: none;
+            padding-top: 1px;
+          }
+        }
+
+        /deep/ .ui-dropdown-items-wrapper {
+          max-height:250px !important;
+        }
+      }
+    }
+
+    .kContentType {
+      .kSelectPlaylist {
+        padding-top: 17px;
+      }
+
+      .kContentTypePlaylist {
+        padding-left: 31px;
+      }
+
+        .kInvalid {
+            color: $kDandger;
+        }
+    }
+
+    .kEntriesCount {
+      .error {
+          display: flex;
+          align-items: center;
+
+        .kIconwarning {
+          font-size: 20px;
+          vertical-align: middle;
+          padding-right: 5px;
+        }
+
+        .kMoreInfo{
+          padding-left: 4px;
+          color: $kDandger;
+        }
+      }
+    }
+  }
+}
+
+:host /deep/ {
+  .kWarningMoreInfoTooltip {
+    font-size: 15px;
+    font-weight: normal;
+    color: $kGrayscale3;
+    padding: 16px;
+    line-height: 20px;
+  }
+}
+
+// Form styling
+:host /deep/ {
+  .kRow {
+    display: flex;
+    padding-bottom: 20px;
+    color: $kGrayscale1;
+    align-items: center;
+
+    &.kMultiLine {
+      align-items: flex-start;
+    }
+
+    .kAsterix {
+      width: 12px;
+      font-size: 16px;
+      padding-top: 8px;
+      color: $kGrayscale3;
+
+      &.kHasError {
+        color: $kDandger;
+        font-weight: bold;
+      }
+
+      & + .kControlContainer {
+        padding-left: 0;
+      }
+    }
+
+    .kLabel {
+      width: 180px;
+      flex: 0 0 auto;
+      height: 18px;
+      color: $kGrayscale1;
+      font-size: 15px;
+      line-height: 18px;
+      padding: 0px 4px 0px 0px;
+    }
+    .kControlContainer {
+      flex: 1 1 auto;
+      padding-left: 12px;
+
+      .kControl {
+        height: 34px;
+        color: $kGrayscale2;
+        width: 500px;
+        border-radius: 3px;
+        &.kHasError {
+          border: 1px solid $kDandger;
+          background: initial;
+        }
+      }
+    }
+
+    .error {
+      padding-top: 8px;
+    }
+
+    &.kInputValidationError{
+      align-items: flex-start;
+
+      .kLabel {
+        padding-top: 8px;
+      }
+
+      .kAsterix {
+        padding-top: 12px;
+      }
+    }
+  }
+
+  .kElipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  }
+}
+
+:host /deep/ {
+  .kPlaylist {
+    display: flex;
+    align-items: center;
+    float: left;
+    max-width: 200px;
+
+    .kPlaylistIcon {
+      font-size: 24px;
+      flex: 0 0 auto;
+      color: $kGrayscale3;
+    }
+    .kPlaylistLabel {
+      padding-left: 13px;
+      font-size: 15px;
+      flex: 1 1 auto;
+      max-width: 200px;
+      color: $kGrayscale1;
+    }
+  }
+
+  .ui-widget.ui-dropdown {
+    width: 258px;
+    font-size: 14px;
+  }
+
+  .ui-dropdown-filter-container {
+    width: 100%;
+  }
+
+
+
+  .ui-radiobutton-label {
+    color: $kGrayscale1;
+    font-weight: normal;
+    font-size: 15px;
+  }
+
+  .kIcontrash {
+    font-size: 24px !important;
+    left: 8px;
+
+    & + .ui-button-text {
+      padding-left: 30px;
+    }
+  }
+
+  textarea.threeRows {
+    border-radius: 3px;
+    border: 1px solid $kGrayscale4;
+    resize: none;
+    box-sizing: border-box;
+    outline: none;
+    padding: 8px;
+    font-size: 15px;
+
+    &:hover {
+      border-color: $kGrayscale2;
+    }
+
+    &:focus {
+      border-color: $kGrayscale2;
+      background: white;
+    }
+  }
+
+  .ui-multiselect{
+    width: 258px;
+    height: 34px;
+    color: $kGrayscale1;
+    padding-left: 8px;
+    font-size: 15px;
+
+    .ui-multiselect-label {
+      line-height: 22px;
+      word-break: break-all;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      width: 250px;
+      font-size: 15px;
+      font-weight: normal;
+    }
+
+    .ui-multiselect-trigger {
+      color: $kGrayscale3;
+      border: none;
+      padding-top: 7px;
+    }
+
+    .ui-widget-header {
+      border: none;
+      border-bottom: 1px solid $kGrayscale5;
+      width: 100%;
+    }
+  }
+
+  .ui-chkbox-label{
+    font-weight: normal;
+    font-size: 15px;
+    color: $kGrayscale1;
+  }
+}

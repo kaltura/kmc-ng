@@ -89,7 +89,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
       .kBackBtn{
         margin-top: 4px;
         margin-left: -46px;
-        margin-right: 26px;
+        margin-right: 28px;
         border: none;
         outline: none;
         background-color: transparent;
@@ -115,7 +115,6 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         color: $kGrayscale1;
         font-size: 24px;
         font-weight: 700;
-        margin-left: 24px;
         margin-right: 40px;
         white-space: nowrap;
         overflow: hidden;
@@ -200,9 +199,110 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   position: fixed !important;
   margin-top: 0px !important;
 }
+.kLocked{
+  opacity: 0.5;
+  pointer-events: none;
+}
+.kNotification{
+  height: 66px;
+  background-color: $kGrayscale4;
+  color: black;
+  border-radius: 3px;
+  font-size: 15px;
+  padding: 12px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.kHidden {
+  visibility: hidden;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+}
+.kMoreActionsButton {
+  color: $kGrayscale3 !important;
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: none !important;
+  font-size: 24px !important;
+  outline: 0;
+  &:active, &:hover{
+    color: $kGrayscale1 !important;
+  }
+}
+
+.kDisabledLink {
+  color: $kGrayscale5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 @media screen and (max-width: 1090px) {
   .kmcDetailsLayout .kDetailsWrapper .kDetailsHeader .kBackBtn {
     margin-left: 0px;
     margin-right: 12px;
+  }
+}
+
+.kTableColumn {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kShowAsDisabled {
+  opacity: 0.5 !important;
+  cursor: default !important;
+}
+
+.kPermissionsListPanel {
+  width: 320px;
+
+  &.ui-multiselect-panel {
+    .fa-minus {
+      background-color: #00a784;
+      border: 1px solid #00a784;
+      color: #ffffff;
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      top: -1px;
+      position: relative;
+      left: -1px;
+    }
+  }
+
+
+  .ui-multiselect-header {
+    margin-bottom: 0;
+  }
+
+  .ui-widget-header {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .ui-select-all label {
+    cursor: pointer;
+    font-weight: normal;
+  }
+
+  .ui-multiselect-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+  }
+
+  .ui-chkbox {
+    margin-right: 15px;
+  }
+
+  .kPermissionItem {
+    font-size: 15px;
   }
 }

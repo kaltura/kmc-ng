@@ -1,0 +1,74 @@
+@import 'app-theme/_variables.scss';
+
+.kMyUserSettingsWrapper {
+  height: 100%;
+  border: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .kFormContainer {
+    margin-top: 24px;
+    background: white;
+    padding: 27px 29px 10px;
+  }
+
+  .kTitle {
+    color: $kGrayscale1;
+    height: 29px;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 29px;
+    margin-bottom: 25px;
+    align-items: center;
+    display: flex;
+  }
+
+  .kInformationSection {
+    font-size: 15px;
+    align-items: center;
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .kIconwarning,
+  .kIconUsers,
+  .kIconpen {
+    font-size: 18px;
+    padding-right: 10px;
+    color: $kGrayscale3;
+  }
+
+  .kIconUsers {
+    font-size: 25px;
+    padding-right: 13px;
+  }
+
+  .kIconpen {
+    font-size: 15px;
+    padding-right: 0;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .kUserDetailsSection {
+    .kRow {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+
+      &:first-child {
+        padding-top: 10px;
+      }
+
+      .kLabel {
+        width: 272px;
+        flex: 0 0 auto;
+        height: 18px;
+        color: $kGrayscale1;
+        font-size: 15px;
+        line-height: 18px;
+      }
+    }
+  }
+}

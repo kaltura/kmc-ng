@@ -27,14 +27,16 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 	public _sectionBlockerMessage: AreaBlockerMessage;
 
 	public _usersProvider = new Subject<SuggestionsProviderData>();
-	public _owner: KalturaUser = null;
+	public _owner: KalturaUser[] = [];
+  public _disableApplyButton = true;
 
 	private _searchUsersSubscription: ISubscription;
 	private _parentPopupStateChangeSubscribe: ISubscription;
 	private _confirmClose: boolean = true;
 
 	constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
-	}
+        this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this); // fix scope issues when binding to a property
+    }
 
 	ngOnInit() {
 
@@ -102,7 +104,7 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 					(data.objects || []).forEach((suggestedUser: KalturaUser) => {
 						let isSelectable = true;
 						suggestions.push({
-							name: suggestedUser.screenName + " (" + suggestedUser.id + ")",
+              name: `${suggestedUser.screenName} (${suggestedUser.id})`,
 							item: suggestedUser,
 							isSelectable: isSelectable
 						});
@@ -121,24 +123,37 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 
 	public _convertUserInputToValidValue(value: string): any {
 		let result = null;
-		let tt = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
+		let tt = this._appLocalization.get('applications.content.entryDetails.users.tooltip', [value]);
 
 		if (value) {
 			result =
 				{
 					id: value,
 					screenName: value,
-					userAdded: true,
-					tooltip: tt
+					__tooltip: tt,
+					__class: 'userAdded'
 				}
 		}
 		return result;
 	}
 
-	public _apply() {
-		this.ownerChanged.emit(this._owner);
-		this._confirmClose = false;
-		this.parentPopupWidget.close();
-	}
+  public _apply() {
+    const [owner] = this._owner;
+    const hasScreenName = owner && (owner.screenName || '').trim() !== '';
+    if (hasScreenName) {
+      this.ownerChanged.emit(owner);
+      this._confirmClose = false;
+      this.parentPopupWidget.close();
+    } else {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.entryDetails.users.noScreenName')
+      });
+    }
+  }
+
+  public _updateApplyButtonState(): void {
+    const [owner] = this._owner;
+    this._disableApplyButton = !owner || (owner.screenName || '').trim() === '';
+  }
 }
 

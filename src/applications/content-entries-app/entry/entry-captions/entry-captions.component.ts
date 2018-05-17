@@ -11,7 +11,9 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
 
-import { environment } from 'app-environment';
+import { getKalturaServerUri, serverConfig } from 'config/server';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+
 
 @Component({
     selector: 'kEntryCaptions',
@@ -19,6 +21,7 @@ import { environment } from 'app-environment';
     styleUrls: ['./entry-captions.component.scss']
 })
 export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
+  public _kmcPermissions = KMCPermissions;
 
     public _loadingError = null;
 	public _actions: MenuItem[] = [];
@@ -37,8 +40,8 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		this._actions = [
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.edit'), command: (event) => {this.actionSelected("edit");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.download'), command: (event) => {this.actionSelected("download");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.captions.delete'), command: (event) => {this.actionSelected("delete");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.captions.preview'), command: (event) => {this.actionSelected("preview");}}
+			{label: this._appLocalization.get('applications.content.entryDetails.captions.preview'), command: (event) => {this.actionSelected("preview");}},
+			{label: this._appLocalization.get('applications.content.entryDetails.captions.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}}
 		];
 	}
 
@@ -104,16 +107,15 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
 	private _downloadFile(): void {
 		if (this._browserService.isIE11()) { // IE11 - use download API
-			const baseUrl = environment.core.kaltura.cdnUrl;
+			const baseUrl = serverConfig.cdnServers.serverUri;
 			const protocol = 'http';
 			const partnerId = this._appAuthentication.appUser.partnerId;
 			const entryId = this._widgetService.data.id;
 			let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._widgetService.currentCaption.id + '/format/download/protocol/' + protocol;
 			this._browserService.openLink(url);
 		}else {
-            const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
-			const serverEndpoint = environment.core.kaltura.serverEndpoint;
-			let url = protocol + serverEndpoint + "/api_v3/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._widgetService.currentCaption.id;
+            const url = getKalturaServerUri("/api_v3/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._widgetService.currentCaption.id);
+
 			this._browserService.download(url, this._widgetService.currentCaption.id + "." + this._widgetService.currentCaption.fileExt, this._widgetService.currentCaption.fileExt);
 		}
 	}

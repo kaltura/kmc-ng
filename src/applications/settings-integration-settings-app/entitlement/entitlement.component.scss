@@ -1,0 +1,94 @@
+@import 'app-theme/_variables.scss';
+
+.kContainer {
+  background-color: white;
+  box-sizing: border-box;
+  padding: 28px 28px 28px 30px;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+  width: 100%;
+  .kTitle {
+    color: $kGrayscale1;
+    padding-bottom: 32px;
+    width: 100%;
+    font-family: Lato;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 24px;
+    flex: 0 0 auto;
+    .kHelp {
+      /deep/ {
+        .kInputHelper {
+          vertical-align: top;
+          line-height: 15px;
+        }
+      }
+    }
+  }
+
+  .kExplanation {
+    color: $kGrayscale1;
+    font-family: Lato;
+    font-size: 15px;
+    line-height: 22px;
+    padding-bottom: 20px;
+    flex: 0 0 auto;
+  }
+
+  .kEntitlementReforcement{
+    display: flex;
+    padding-bottom: 32px;
+    flex: 0 0 auto;
+
+    .kApiDefault{
+      flex: 0 0 auto;
+      padding-right: 10px;
+      font-weight: bold;
+    }
+
+    .kEntitlementEnforcement{
+      flex: 1 1 auto;
+    }
+  }
+
+  .kAddEntitlement{
+    padding-bottom: 16px;
+    flex: 0 0 auto;
+
+    button {
+      font-weight: bold;
+      height: 34px;
+      font-size: 14px;
+    }
+  }
+
+  .kEntitlementsHolder{
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 5px;
+  }
+
+  .kRow {
+    padding-bottom: 20px;
+    display: flex;
+    font-size: 15px;
+    .kLabel {
+      flex: 0 0 auto;
+      color: $kGrayscale1;
+      font-weight: bold;
+      width: 200px;
+      word-wrap: break-word;
+    }
+
+    .kControl {
+      padding-left: 30px;
+      flex: 1 1 auto;
+      color: $kGrayscale1;
+    }
+  }
+
+}
+:host {
+  height: 100%;
+}

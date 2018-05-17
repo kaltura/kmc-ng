@@ -9,15 +9,10 @@
   .kPlaylistsTableActions {
     width: 100%;
     text-align: center;
-    button {
-      color: grey !important;
-      background-color: rgba(0, 0, 0, 0) !important;
-      border: none !important;
-      font-size: 16px !important;
-      outline: 0;
-    }
   }
-
+  .kNameHeader{
+    padding-left: 52px;
+  }
   .kTitle{
     color: $kGrayscale1;
     font-weight: 700;
@@ -34,7 +29,7 @@
     align-items: center;
 
     .kMediaTypeIcon {
-      font-size: 26px;
+      font-size: 24px;
       margin-right: 23px;
     }
   }
@@ -47,10 +42,10 @@
 	flex-direction: column;
 }
 
-:host /deep/ p-datatable .ui-datatable-scrollable-body{
+:host /deep/ p-table .ui-table-scrollable-body{
   margin-bottom: 34px;
 }
-:host /deep/ p-datatable .stickyHeader{
+:host /deep/ p-table .stickyHeader{
   z-index: 10;
   display: table;
 }

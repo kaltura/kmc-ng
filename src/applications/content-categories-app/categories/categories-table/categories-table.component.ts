@@ -9,13 +9,11 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {ISubscription} from 'rxjs/Subscription';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from 'app-shared/kmc-shell';
-import {CategoriesService} from '../categories.service';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { globalConfig } from 'config/global';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCategoriesTable',
@@ -23,90 +21,54 @@ import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
   styleUrls: ['./categories-table.component.scss']
 })
 export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-
-  public _blockerMessage: AreaBlockerMessage = null;
-
-  public _categories: KalturaCategory[] = [];
-  private _deferredCategories: any[];
-  public _deferredLoading = true;
-
   @Input()
   set categories(data: any[]) {
     if (!this._deferredLoading) {
-      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
-      // (ie when returning from entry page) - we should force detect changes on an empty list
+      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of categories
+      // (ie when returning from category page) - we should force detect changes on an empty list
       this._categories = [];
       this.cdRef.detectChanges();
       this._categories = data;
       this.cdRef.detectChanges();
     } else {
-      this._deferredCategories = data
+      this._deferredCategories = data;
     }
   }
 
-  @Input() filter: any = {};
+  @Input() sortField: string = null;
+  @Input() sortOrder: number = null;
   @Input() selectedCategories: KalturaCategory[] = [];
 
   @Output()
-  sortChanged = new EventEmitter<any>();
+  sortChanged = new EventEmitter<{ field: string, order: number}>();
   @Output()
-  actionSelected = new EventEmitter<any>();
+  actionSelected = new EventEmitter<{action: string, category: KalturaCategory}>();
   @Output()
   selectedCategoriesChange = new EventEmitter<any>();
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
-  private _actionsMenuCategory: KalturaCategory = null;
-  private _categoriesServiceStatusSubscription: ISubscription;
 
+  private _deferredCategories: KalturaCategory[];
+
+  public _categories: KalturaCategory[] = [];
+  public _deferredLoading = true;
   public _emptyMessage = '';
-
   public _items: MenuItem[];
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
+  public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private appLocalization: AppLocalization, public categoriesService: CategoriesService, private cdRef: ChangeDetectorRef, private _browserService: BrowserService) {
+  constructor(private appLocalization: AppLocalization,
+              private cdRef: ChangeDetectorRef,
+              private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
-    this._blockerMessage = null;
-    this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this._categoriesServiceStatusSubscription = this.categoriesService.categories.state$.subscribe(
-      result => {
-        if (result.errorMessage) {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage || 'Error loading entries',
-            buttons: [{
-              label: 'Retry',
-              action: () => {
-                this.categoriesService.reload();
-              }
-            }
-            ]
-          })
-        } else {
-          this._blockerMessage = null;
-          if (result.loading) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
-            }
-          }
-        }
-      },
-      error => {
-        console.warn('[kmcng] -> could not load categories'); // navigate to error page
-        throw error;
-      });
+      this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+
   }
 
   ngOnDestroy() {
-    this._categoriesServiceStatusSubscription.unsubscribe();
-    this._categoriesServiceStatusSubscription = null;
   }
 
   ngAfterViewInit() {
@@ -128,37 +90,42 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   openActionsMenu(event: any, category: KalturaCategory) {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (this._actionsMenuCategory.id !== category.id) {
-        this.buildMenu();
-        this._actionsMenuCategory = category;
-        this._actionsMenu.show(event);
-      }
+      this.buildMenu(category);
+      this._actionsMenu.show(event);
     }
   }
-
-  buildMenu(): void {
+  buildMenu(category: KalturaCategory): void {
     this._items = [
       {
-        label: this.appLocalization.get('applications.content.categories.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuCategory);
-      }
+        id: 'edit',
+        label: this.appLocalization.get('applications.content.categories.edit'),
+        command: () => this.onActionSelected('edit', category)
       },
       {
-        label: this.appLocalization.get('applications.content.categories.delete'), command: (event) => {
-        this.onActionSelected('delete', this._actionsMenuCategory);
-      }
+        id: 'viewEntries',
+        label: this.appLocalization.get('applications.content.categories.viewEntries'),
+        command: () => this.onActionSelected('viewEntries', category)
       },
       {
-        label: this.appLocalization.get('applications.content.categories.viewEntries'), command: (event) => {
-        this.onActionSelected('viewEntries', this._actionsMenuCategory);
-      }
+        id: 'moveCategory',
+        label: this.appLocalization.get('applications.content.categories.moveCategory'),
+        command: () => this.onActionSelected('moveCategory', category)
       },
       {
-        label: this.appLocalization.get('applications.content.categories.moveCategory'), command: (event) => {
-        this.onActionSelected('moveCategory', this._actionsMenuCategory);
-      }
+        id: 'delete',
+        label: this.appLocalization.get('applications.content.categories.delete'),
+        styleClass: 'kDanger',
+        command: () => this.onActionSelected('delete', category)
       }
     ];
+
+    this._permissionsService.filterList(
+      <{ id: string }[]>this._items,
+      {
+        'moveCategory': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
+        'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
+      }
+    );
   }
 
   _onSelectionChange(event) {
@@ -166,7 +133,10 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   }
 
   _onSortChanged(event) {
-    this.sortChanged.emit(event);
+    if (event.field && event.order) {
+      // primeng workaround: must check that field and order was provided to prevent reset of sort value
+      this.sortChanged.emit({field: event.field, order: event.order});
+    }
   }
 }
 

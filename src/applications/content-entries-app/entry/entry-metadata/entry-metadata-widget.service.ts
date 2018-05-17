@@ -20,58 +20,67 @@ import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaM
 import { CategoryEntryAddAction } from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
 import { CategoryEntryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryEntryDeleteAction';
 import { KalturaCategoryEntry } from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
-import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from 'app-shared/kmc-shared';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { DynamicMetadataForm, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
-import { CategoriesSearchService } from 'app-shared/content-shared/categories-search.service';
+import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 import { EntryWidget } from '../entry-widget';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { subApplicationsConfig } from 'config/sub-applications';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
-export interface EntryCategoryItem
-{
-    id : number,
-    fullIdPath : number[],
-    name : string,
-    fullNamePath : string[],
-    tooltip?: string
-}
 
 @Injectable()
 export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 {
-    private _entryCategoriesDiffers : IterableDiffer<EntryCategoryItem>;
-    public _entryCategories : EntryCategoryItem[]  = [];
-    private _entryMetadata : KalturaMetadata[] = [];
+    private _entryCategoriesDiffers : IterableDiffer<CategoryData>;
+    public _entryCategories: CategoryData[]  = [];
+    private _entryMetadata: KalturaMetadata[] = [];
 
     public isLiveEntry : boolean;
     public metadataForm : FormGroup;
     public customDataForms : DynamicMetadataForm[] = [];
+    private _logger: KalturaLogger;
 
     constructor(private _kalturaServerClient: KalturaClient,
                 private _categoriesSearchService : CategoriesSearchService,
                 private _formBuilder : FormBuilder,
                 private _iterableDiffers : IterableDiffers,
+                private _permissionsService: KMCPermissionsService,
                 private _dynamicMetadataFormFactory : DynamicMetadataFormFactory,
+                logger: KalturaLogger,
                 private _metadataProfileStore : MetadataProfileStore)
     {
-        super(EntryWidgetKeys.Metadata);
+        super(ContentEntryViewSections.Metadata);
+        this._logger = logger.subLogger('EntryMetadataWidget');
+
 
         this._buildForm();
     }
 
     private _buildForm() : void {
+        const categoriesValidator = (input: FormControl) => {
+          const categoriesCount = (Array.isArray(input.value) ? input.value : []).length;
+            const isCategoriesValid = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_CATEGORY_LIMIT)
+                ? categoriesCount <= subApplicationsConfig.contentEntriesApp.maxLinkedCategories.extendedLimit
+                : categoriesCount <= subApplicationsConfig.contentEntriesApp.maxLinkedCategories.defaultLimit;
+
+          return isCategoriesValid ? null : { maxLinkedCategoriesExceed: true };
+        };
+
         this.metadataForm = this._formBuilder.group({
             name: ['', Validators.required],
             description: '',
             tags: null,
-            categories: null,
+            categories: [null, categoriesValidator],
             offlineMessage: '',
             referenceId: '',
             entriesIdList: null
@@ -79,8 +88,20 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     }
 
     private _monitorFormChanges() {
-        const formGroups = [this.metadataForm, ...this.customDataForms.map(customDataForm => customDataForm.formGroup)];
+        const formGroups = [];
         const formsChanges: Observable<any>[] = [];
+
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) {
+          formGroups.push(this.metadataForm);
+        }
+
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
+          formGroups.push(...this.customDataForms.map(customDataForm => customDataForm.formGroup));
+        }
+
+        if (!formGroups.length) {
+          return;
+        }
 
         formGroups.forEach(formGroup => {
             formsChanges.push(formGroup.valueChanges, formGroup.statusChanges);
@@ -125,26 +146,42 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
         this.isLiveEntry = this.data instanceof KalturaLiveStreamEntry;
 
-        const actions: Observable<{failed: boolean, error?: Error}>[] = [
+        if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES)) {
+          this.metadataForm.get('categories').disable({ onlySelf: true });
+        }
+
+        const actions: Observable<boolean>[] = [
             this._loadEntryCategories(this.data),
-            this._loadEntryMetadata(this.data)
         ];
 
-        if (firstTimeActivating) {
-            actions.push(this._loadProfileMetadata());
+        if (this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
+            actions.push(this._loadEntryMetadata(this.data));
+
+            if (firstTimeActivating) {
+                actions.push(this._loadProfileMetadata());
+            }
+        }
+
+        if (!this._permissionsService.hasAnyPermissions([
+          KMCPermissions.CONTENT_MANAGE_METADATA,
+          KMCPermissions.CONTENT_MODERATE_METADATA
+        ])) {
+          this.metadataForm.get('name').disable({ onlySelf: true });
+          this.metadataForm.get('description').disable({ onlySelf: true });
+          this.metadataForm.get('tags').disable({ onlySelf: true });
         }
 
 
         return Observable.forkJoin(actions)
-            .catch((error, caught) => {
-                return Observable.of([{failed: true}]);
+            .catch(() => {
+                return Observable.of([false]);
             })
             .map(responses => {
                 super._hideLoader();
 
-                let hasFailure = (<Array<{failed: boolean, error?: Error}>>responses).reduce((result, response) => result || response.failed, false);;
+                const isValid = responses.reduce(((acc, response) => (acc && response)), true);
 
-                if (hasFailure) {
+                if (!isValid) {
                     super._showActivationError();
                     return {failed: true};
                 } else {
@@ -170,12 +207,11 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 tags: (this.data.tags ? this.data.tags.split(',').map(item => item.trim()) : null), // for backward compatibility we handle values separated with ',{space}'
                 categories: this._entryCategories,
                 offlineMessage: this.data instanceof KalturaLiveStreamEntry ? (this.data.offlineMessage || null) : '',
-                referenceId: this.data.referenceId || null,
-                entriesIdList : ['1_rbyysqbe','0_hp3s3647','1_4gs7ozgq']
+                referenceId: this.data.referenceId || null
             }
         );
 
-        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create<EntryCategoryItem>((index, item) =>
+        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create<CategoryData>((index, item) =>
         {
             // use track by function to identify category by its' id. this will prevent sending add/remove of the same item once
             // a user remove a category and then re-select it before he clicks the save button.
@@ -186,8 +222,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         // map entry metadata to profile metadata
         if (this.customDataForms)
         {
-            this.customDataForms.forEach(customDataForm =>
-            {
+            this.customDataForms.forEach(customDataForm => {
+                if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
+                  customDataForm.disable();
+                }
                 const entryMetadata = this._entryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
 
                 // reset with either a valid entry metadata or null if not found a matching metadata for that entry
@@ -198,7 +236,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         this._monitorFormChanges();
     }
 
-    private _loadEntryMetadata(entry : KalturaMediaEntry) : Observable<{failed : boolean, error? : Error}> {
+    private _loadEntryMetadata(entry : KalturaMediaEntry) : Observable<boolean> {
 
         // update entry categories
         this._entryMetadata = [];
@@ -215,13 +253,16 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             .cancelOnDestroy(this, this.widgetReset$)
             .monitor('get entry custom metadata')
             .do(response => {
-                    this._entryMetadata = response.objects;
-                })
-            .map(response => ({failed : false}))
-            .catch((error,caught) => Observable.of({failed : true, error}))
+                this._entryMetadata = response.objects;
+            })
+            .map(response => true)
+            .catch((error) => {
+                this._logger.error('failed to get category custom metadata', error);
+                return Observable.of(false);
+            });
     }
 
-    private _loadEntryCategories(entry : KalturaMediaEntry) : Observable<{failed : boolean, error? : Error}> {
+    private _loadEntryCategories(entry : KalturaMediaEntry) : Observable<boolean> {
 
         // update entry categories
         this._entryCategories = [];
@@ -233,7 +274,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                         entryIdEqual: entry.id
                     }),
                     pager: new KalturaFilterPager({
-                        pageSize: 32
+                        pageSize: 500
                     })
                 }
             ))
@@ -241,7 +282,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 const categoriesList = response.objects.map(category => category.categoryId);
 
                 if (categoriesList.length) {
-                    return this._categoriesSearchService.getCategoriesFromList(categoriesList);
+                    return this._categoriesSearchService.getCategories(categoriesList);
                 } else {
                     return Observable.of({items: []});
                 }
@@ -254,11 +295,14 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     this._entryCategories = categories.items;
                 }
             )
-            .map(response => ({failed : false}))
-            .catch((error,caught) => Observable.of({failed : true, error}));
+            .map(response => true)
+            .catch((error) => {
+                this._logger.error('failed to load entry categories', error);
+                return Observable.of(false);
+            });
     }
 
-    private _loadProfileMetadata() : Observable<{failed : boolean, error? : Error}> {
+    private _loadProfileMetadata() : Observable<boolean> {
         return this._metadataProfileStore.get({
             type: MetadataProfileTypes.Entry,
             ignoredCreateMode: MetadataProfileCreateModes.App
@@ -275,8 +319,11 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     });
                 }
             })
-            .map(response => ({failed: false}))
-            .catch((error, caught) => Observable.of({failed: true, error}));
+            .map(response => true)
+            .catch((error) => {
+                this._logger.error('failed to load entry custom metadata profiles', error);
+                return Observable.of(false);
+            });
     }
 
     protected onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
@@ -300,21 +347,21 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
             if (changes)
             {
-                changes.forEachAddedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
+                changes.forEachAddedItem((change : IterableChangeRecord<CategoryData>) =>
                 {
                     request.requests.push(new CategoryEntryAddAction({
                         categoryEntry : new KalturaCategoryEntry({
                             entryId : this.data.id,
-                            categoryId : change.item.id
+                            categoryId : Number(change.item.id)
                         })
                     }));
                 });
 
-                changes.forEachRemovedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
+                changes.forEachRemovedItem((change : IterableChangeRecord<CategoryData>) =>
                 {
                     request.requests.push(new CategoryEntryDeleteAction({
                         entryId : this.data.id,
-                        categoryId : change.item.id
+                        categoryId : Number(change.item.id)
                     }));
                 });
             }
@@ -408,7 +455,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     .subscribe(
                         result =>
                         {
-                            observer.next(result.items);
+                            observer.next(result);
                             observer.complete();
                         },
                         err =>
@@ -437,13 +484,21 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         this.isLiveEntry = false;
     }
 
-    onValidate(wasActivated: boolean) : Observable<{ isValid : boolean}>
-    {
-        return Observable.create(observer =>
-        {
-            this.metadataForm.updateValueAndValidity();
+    private _markFormFieldsAsTouched() {
+        for (const controlName in this.metadataForm.controls) {
+            if (this.metadataForm.controls.hasOwnProperty(controlName)) {
+                this.metadataForm.get(controlName).markAsTouched();
+                this.metadataForm.get(controlName).updateValueAndValidity();
+            }
+        }
+        this.metadataForm.updateValueAndValidity();
+    }
+
+    onValidate(wasActivated: boolean): Observable<{ isValid : boolean}> {
+        return Observable.create(observer => {
+            this._markFormFieldsAsTouched();
             const isValid = this.metadataForm.valid;
-            observer.next({  isValid });
+            observer.next({isValid});
             observer.complete();
         });
     }

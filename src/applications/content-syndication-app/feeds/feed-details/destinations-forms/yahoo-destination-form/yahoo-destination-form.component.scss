@@ -1,0 +1,66 @@
+@import 'app-theme/_variables.scss';
+
+.kTitle {
+  height: 24px;
+  width: 100%;
+  color: $kGrayscale1;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 24px;
+}
+
+.kAddToDefaultTranscodingProfile {
+  padding-top: 11px;
+  /deep/ {
+    .ui-chkbox-label {
+      font-weight: normal;
+    }
+  }
+}
+
+.kLandingPageExplanation {
+  color: $kGrayscale1;
+  width: 710px;
+  padding-top: 12px;
+  font-size: 15px;
+  line-height: 22px;
+  padding-bottom: 20px;
+}
+
+.kPlayback {
+  .kSelectPlayer {
+    padding-top: 17px;
+    display: flex;
+    align-items: center;
+
+    .kSelectPlayerLabel {
+      flex: 0 0 auto;
+    }
+    .kSelectPlayerControl {
+      padding-left:23px;
+    }
+  }
+
+  .kPlaybackLinkback {
+    padding-left: 31px;
+  }
+
+  .kSelectPlayerInfo {
+    padding-top: 12px;
+  }
+}
+
+:host /deep/ .kCategories {
+  .ui-multiselect {
+    padding-left: 0;
+  }
+
+  .ui-multiselect-label {
+    padding: .5em;
+    line-height: inherit;
+  }
+
+  .ui-widget-header {
+    border-radius: 0;
+  }
+}

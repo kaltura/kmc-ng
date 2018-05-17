@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistsFilters, PlaylistsStore, SortDirection } from '../playlists-store/playlists-store.service';
 import { BulkDeleteService } from '../bulk-service/bulk-delete.service';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
@@ -9,9 +9,13 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { async } from 'rxjs/scheduler/async';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
+import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+
 
 @Component({
   selector: 'kPlaylistsList',
@@ -21,10 +25,15 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 })
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
-  @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
+	public _kmcPermissions = KMCPermissions;
+
+	@ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
   @ViewChild('tags') private tags: StickyComponent;
 
-  public _blockerMessage: AreaBlockerMessage = null;
+    public _isBusy = false;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _tableIsBusy = false;
+    public _tableBlockerMessage: AreaBlockerMessage = null;
 
   public _query = {
     freetext: '',
@@ -43,12 +52,14 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
+              private _contentPlaylistViewService: ContentPlaylistViewService,
               public _bulkDeleteService: BulkDeleteService) {
   }
 
   ngOnInit() {
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
+      this._registerToDataChanges();
   }
 
   ngOnDestroy() {
@@ -65,7 +76,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({
-            message: this._appLocalization.get('applications.content.bulkActions.errorPlaylists'),
+            message: this._appLocalization.get('applications.content.bulkActions.cannotDeletePlaylists'),
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
@@ -78,7 +89,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _deletePlaylist(ids: string[]): void {
-    if (ids.length > environment.modules.contentPlaylists.bulkActionsLimit) {
+    if (ids.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
@@ -169,7 +180,38 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
       });
   }
 
-  public _onTagsChange(event): void {
+    private _registerToDataChanges(): void {
+        this._playlistsStore.playlists.state$
+            .observeOn(async)
+            .cancelOnDestroy(this)
+            .subscribe(
+                result => {
+
+                    this._tableIsBusy = result.loading;
+
+                    if (result.errorMessage) {
+                        this._tableBlockerMessage = new AreaBlockerMessage({
+                            message: result.errorMessage || 'Error loading playlists',
+                            buttons: [{
+                                label: 'Retry',
+                                action: () => {
+                                    this._tableBlockerMessage = null;
+                                    this._playlistsStore.reload();
+                                }
+                            }
+                            ]
+                        })
+                    } else {
+                        this._tableBlockerMessage = null;
+                    }
+                },
+                error => {
+                    console.warn('[kmcng] -> could not load playlists'); // navigate to error page
+                    throw error;
+                });
+    }
+
+  public _onTagsChange(): void {
     this.tags.updateLayout();
   }
 
@@ -179,11 +221,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               this._appEvents.publish(new PreviewAndEmbedEvent(event.playlist));
               break;
           case 'view':
-              if (event.playlist.playlistType !== KalturaPlaylistType.dynamic) {
-                  this._router.navigate(['/content/playlists/playlist', event.playlist.id]);
-              } else {
-                  this._onShowNotSupportedMsg(false);
-              }
+              this._contentPlaylistViewService.open({ playlist: event.playlist, section: ContentPlaylistViewSections.Metadata });
               break;
           case 'delete':
               this._browserService.confirm(
@@ -207,10 +245,12 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   public _onSortChanged(event): void {
-    this._playlistsStore.filter({
-      sortBy: event.field,
-      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
-    });
+      if (event.field !== this._query.sortBy || event.order !== this._query.sortDirection) {
+          this._playlistsStore.filter({
+              sortBy: event.field,
+              sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+          });
+      }
   }
 
   public _onPaginationChanged(state: any): void {
@@ -252,15 +292,5 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   public _addPlaylist(): void {
     this.addNewPlaylist.open();
-  }
-
-  public _onShowNotSupportedMsg(newPlaylist = true): void {
-    const message = newPlaylist ? 'applications.content.addNewPlaylist.notSupportedMsg' : 'applications.content.playlists.notSupportedMsg';
-    this._browserService.alert(
-      {
-        header: this._appLocalization.get('app.common.note'),
-        message: this._appLocalization.get(message)
-      }
-    );
   }
 }

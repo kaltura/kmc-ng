@@ -34,15 +34,17 @@
 						<span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
 					</ng-template>
 				</p-column>
-				<p-column field="tags" [hidden]="_documentWidth < 1400" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
+				<p-column field="tags"
+                  [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)"
+                  header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span>{{flavor.tags | tags}}</span>
 					</ng-template>
 				</p-column>
-				<p-column [style]="{'width':'80px'}">
+				<p-column *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted" [style]="{'width':'80px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<div *ngIf="flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8' && flavor.status !== '0'" class="kFlavorsTableActions">
-							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, flavor)"></button>
+							<button type="button" class="kMoreActionsButton" pButton icon="kIconmore" (click)="openActionsMenu($event, flavor)"></button>
 						</div>
 						<div *ngIf="flavor.status === '1' || flavor.status === '6' || flavor.status === '7' || flavor.status === '8' || flavor.status === '0'" style="position: relative">
 							<div class="k-spinner-background">

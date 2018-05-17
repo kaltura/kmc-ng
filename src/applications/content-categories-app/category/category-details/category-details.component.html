@@ -1,0 +1,13 @@
+<k-details-bar #detailsBar [data]="_currentCategory">
+
+  <kDetailInfo *ngIf="_parentCategoryId > 0" [label]="'applications.content.categoryDetails.headerProps.parent' | translate"
+               [value]="_parentCategoryId?.toString()"
+               (itemClick)="_onParentClicked($event)"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.id' | translate" [valueField]="'id'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.subCategories' | translate" [valueField]="'directSubCategoriesCount'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.entries' | translate" [valueField]="'entriesCount'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.creationDate' | translate" [valueField]="'createdAt'"
+               [value]="_currentCategory?.createdAt | kDate:'dateOnly'" [tooltip]="_currentCategory?.createdAt | kDate"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.lastUpdate' | translate"
+               [value]="_currentCategory?.updatedAt | kDate:'dateOnly'" [tooltip]="_currentCategory?.updatedAt | kDate"></kDetailInfo>
+</k-details-bar>

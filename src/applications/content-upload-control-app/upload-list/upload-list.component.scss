@@ -4,7 +4,7 @@
   font-size: 15px;
   background-color: $appBkgColor;
   height: $contentArea;
-  padding-top: 30px;
+  padding-top: 24px;
   width: 100%;
   min-width: $minAppWidth;
   box-sizing: border-box;
@@ -22,7 +22,7 @@
     font-size: 24px;
     border: none;
     min-width: inherit;
-    margin-right: 16px;
+    margin-right: 8px;
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
@@ -70,13 +70,12 @@
     margin-left: 5px;
   }
   .kBulkOperations {
-    width: 400px;
     display: flex;
     align-items: center;
     .kBulkDeleteBtn {
       margin-right: 10px;
       width: 44px;
-      font-size: 18px;
+      font-size: 24px;
     }
   }
   .kPaginatorShowRowsLabel {
@@ -91,7 +90,7 @@
   .kBulkDeleteBtn {
     margin-right: 10px;
     width: 44px;
-    font-size: 18px;
+    font-size: 24px;
   }
   .kBulkActionsBtn {
     font-weight: 400;

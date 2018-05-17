@@ -1,0 +1,70 @@
+@import 'app-theme/_variables.scss';
+
+.kTranscodingProfileFlavorsTable {
+  background-color: white;
+  overflow: hidden;
+  position: relative;
+  padding: 0;
+
+  .kEditFlavorIconWrapper {
+    display: none;
+    position: relative;
+
+    .kEditFlavorIcon {
+      font-size: 24px;
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      display: none;
+      cursor: pointer;
+    }
+  }
+
+  .kTitle {
+    color: #333333;
+    font-weight: 700;
+  }
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
+}
+
+:host /deep/ p-datatable {
+  tr.ui-state-highlight .kEditFlavorIcon {
+    display: block !important;
+  }
+
+  tr.ui-state-highlight .kTitle {
+    cursor: pointer;
+  }
+
+  tr:hover .kEditFlavorIconWrapper {
+    display: block !important;
+  }
+
+  .stickyHeader {
+    z-index: 10;
+    display: table;
+  }
+
+  .ui-chkbox {
+    margin-left: 10px !important;
+  }
+}
+
+:host /deep/ {
+    .kDisabled {
+        .ui-chkbox {
+            cursor: default;
+        }
+
+        .ui-chkbox-box {
+            pointer-events: none;
+            opacity: 0.3;
+        }
+    }
+}

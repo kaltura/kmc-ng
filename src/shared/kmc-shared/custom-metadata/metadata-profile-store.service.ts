@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { PartnerProfileStore } from '../partner-profile';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -11,6 +11,8 @@ import { MetadataProfileParser } from './kaltura-metadata-parser';
 import { KalturaMetadataProfileCreateMode } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileCreateMode';
 import { KalturaMetadataProfileFilter } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileFilter';
 import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
+import { AppEventsService } from 'app-shared/kmc-shared/app-events';
+import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 
 export enum MetadataProfileCreateModes {
     Api,
@@ -30,12 +32,26 @@ export interface GetFilters
 }
 
 @Injectable()
-export class MetadataProfileStore extends PartnerProfileStore
+export class MetadataProfileStore extends PartnerProfileStore implements OnDestroy
 {
     private _cachedProfiles : { [key : string] : MetadataProfile[]} = {};
 
-    constructor(private _kalturaServerClient: KalturaClient) {
+    constructor(private _kalturaServerClient: KalturaClient, _appEvents: AppEventsService) {
         super();
+
+        _appEvents.event(MetadataProfileUpdatedEvent)
+          .cancelOnDestroy(this)
+          .subscribe(() => {
+            this._clearMetadataProfilesCache();
+          })
+    }
+
+    ngOnDestroy() {
+
+    }
+
+    private _clearMetadataProfilesCache(): void {
+      this._cachedProfiles = {};
     }
 
     public get(filters : GetFilters) : Observable<{items : MetadataProfile[]}>
@@ -56,7 +72,7 @@ export class MetadataProfileStore extends PartnerProfileStore
                     	sub = null;
                         const parser = new MetadataProfileParser();
                         const parsedProfiles = [];
-                        let parseFirstError : Error = null;
+                        let parseFirstError: Error = null;
 
                         response.objects.forEach(kalturaProfile =>
                         {
@@ -64,7 +80,8 @@ export class MetadataProfileStore extends PartnerProfileStore
                             if (parsedProfile.error)
                             {
                                 parseFirstError = parsedProfile.error;
-                            }else
+                            }
+                            else if (parsedProfile.profile)
                             {
                                 parsedProfiles.push(parsedProfile.profile);
                             }
@@ -141,7 +158,7 @@ export class MetadataProfileStore extends PartnerProfileStore
                 case MetadataProfileTypes.Category:
                     metadataProfilesFilter.metadataObjectTypeEqual = KalturaMetadataObjectType.category;
                     break;
-                
+
             }
         }
 

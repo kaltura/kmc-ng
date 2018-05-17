@@ -8,9 +8,10 @@ import { routing } from './content-playlists-app.routes';
 
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, InputTextModule, MenuModule, PaginatorModule, RadioButtonModule,
-  SharedModule, TieredMenuModule
+  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
+  RadioButtonModule, InputTextareaModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -21,8 +22,10 @@ import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
+import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui/slider/slider.module';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
     imports: [
@@ -39,6 +42,7 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
       FormsModule,
       ReactiveFormsModule,
       InputTextModule,
+      InputTextareaModule,
       PopupWidgetModule,
       CalendarModule,
       MenuModule,
@@ -50,9 +54,13 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 	  DetailsBarModule,
       RouterModule.forChild(routing),
 	  StickyModule,
-      ContentSharedModule,
-    FiltersModule],
-    declarations: [
+        EntriesModule,
+    FiltersModule,
+    DropdownModule,
+    SliderModule,
+      TableModule,
+      KMCPermissionsModule
+  ],declarations: [
       ContentPlaylistsComponent,
       PlaylistsComponentsList,
       PlaylistComponentsList

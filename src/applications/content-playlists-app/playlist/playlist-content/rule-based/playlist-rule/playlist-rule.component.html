@@ -1,0 +1,67 @@
+<k-area-blocker [message]="_blockerMessage">
+  <div class="kPlaylistRuleWrap">
+    <div class="kFloater">
+      <div class="kHeader">
+        <span class="kTitle">{{_title}}</span>
+        <div class="kButtons">
+          <a class="kCancel" (click)="onClosePopupWidget.emit()">Cancel</a>
+          <button type="button"
+                  class="kButtonBranded KAddRule"
+                  pButton
+                  [label]="_saveBtnLabel"
+                  (click)="_save()"></button>
+        </div>
+      </div>
+      <div class="kContainer">
+        <kEntriesList [columns]="_columns" [enforcedFilters]="_enforcedFilters" [showReload]="false">
+          <div class="additional-filters kFilters">
+            <label for="ruleNameInput" class="kRuleNameLabel">
+              {{'applications.content.entries.ruleName' | translate}}
+            </label>
+            <input type="text"
+                   id="ruleNameInput"
+                   pInputText
+                   class="kRuleNameInput"
+                   [class.hasError]="_nameRequiredError"
+                   [(ngModel)]="_ruleName"
+                   [placeholder]="'applications.content.entries.ruleNamePlaceholder' | translate">
+            <div #resultsLimitBtn class="kResultsLimit">
+              <span
+                *ngIf="_resultsLimit">{{'applications.content.entries.resultsLimit' | translate:[_resultsLimit]}}</span>
+              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+            </div>
+            <div class="kOrderBy">
+              <p-dropdown [options]="_orderByOptions"
+                          [autoWidth]="false"
+                          (onChange)="_onOrderByChange()"
+                          [(ngModel)]="_orderBy">
+                <ng-template let-item pTemplate="selectedItem">
+                  <span>{{'applications.content.entries.orderBy' | translate:[item.label]}}</span>
+                </ng-template>
+              </p-dropdown>
+            </div>
+          </div>
+        </kEntriesList>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
+<kPopupWidget #resultsLimitPopup
+              [popupWidth]="260"
+              [popupHeight]="101"
+              [closeBtn]="false"
+              [targetRef]="resultsLimitBtn"
+              [targetOffset]="{'x': 0, 'y': 37}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'resultsLimitPopup'"
+              [scrollOffset]="80"
+              (onClose)="_applyResultsLimit()">
+  <div class="kResultsLimitPopup">
+    <div class="kResultsLimitSlider">
+      <kSlider [(ngModel)]="_resultsLimit" [min]="1" [max]="200" [step]="1"></kSlider>
+    </div>
+    <div class="kResultsLimitPopupFooter">
+      <span>{{ 'applications.content.entries.resultsLimitRange' | translate }}</span>
+      <a (click)="resultsLimitPopup.close()">{{ 'app.common.apply' | translate }}</a>
+    </div>
+  </div>
+</kPopupWidget>

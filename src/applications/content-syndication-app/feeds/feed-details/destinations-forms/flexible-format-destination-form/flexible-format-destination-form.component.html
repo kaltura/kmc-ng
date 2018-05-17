@@ -1,0 +1,18 @@
+<kFileDialog #fileDialog [filter]="'.xslt,.xsl'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
+
+<div class="kRow kMultiLine" [class.kInputValidationError]="_error">
+  <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.flexibleFormat.xslCode.label' | translate}}</span>
+  <div class="kAsterix"
+       [ngClass]="{'kHasError': _error }">*
+  </div>
+  <div class="kControlContainer">
+    <button pButton class="kButtonDefault kBrowse"
+            [disabled]="_disableFileSelection"
+            [label]="'applications.content.syndication.details.destinationsForms.flexibleFormat.xslCode.browse' | translate"
+            (click)="fileDialog.open($event)"></button>
+    <k-area-blocker [showLoader]="_loading">
+      <textarea [ngClass]="{'kHasError': _error}" [(ngModel)]="_xslCode" class="kControl threeRows" [disabled]="true" pInputTextarea></textarea>
+    </k-area-blocker>
+    <div *ngIf="_error" class="error">{{_error}}</div>
+  </div>
+</div>

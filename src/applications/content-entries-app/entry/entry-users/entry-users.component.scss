@@ -78,8 +78,18 @@ form{
   }
   /deep/ .ui-autocomplete.ui-widget{
     width: 100%;
+    font-size: 15px;
+
     input{
       width: 100%;
+    }
+
+    li.userAdded{
+      background-color: transparentize($kPrimary, 0.5) !important;
+    }
+
+    ul.ui-autocomplete-multiple-container {
+      height: auto;
     }
   }
   /deep/ kAutoComplete{
@@ -100,6 +110,14 @@ form{
 
 :host /deep/ kAutoComplete{
 	width: 100%;
+
+  li.userAdded{
+    background-color: transparentize($kPrimary, 0.5) !important;
+  }
+
+  .ui-state-disabled {
+    background-color: $kGrayscale5 !important;
+  }
 }
 
 /deep/ kPopupWidget .kPopupWidget {

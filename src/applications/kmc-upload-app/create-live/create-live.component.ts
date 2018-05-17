@@ -4,11 +4,16 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {Router} from '@angular/router';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
 import {ManualLive} from './manual-live/manual-live.interface';
 import {UniversalLive} from './universal-live/universal-live.interface';
+import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export enum StreamTypes {
   kaltura,
@@ -23,13 +28,15 @@ export enum StreamTypes {
   providers: [CreateLiveService]
 })
 export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
+  private _showConfirmationOnClose = true;
+
   public _selectedStreamType: StreamTypes = StreamTypes.kaltura;
   public kalturaLiveStreamData: KalturaLive = {
     name: '',
     description: '',
     transcodingProfile: null,
     liveDVR: false,
-    enableRecording: false,
+    enableRecording: this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM_RECORD),
     enableRecordingSelectedOption: KalturaRecordStatus.appended,
     previewMode: false
   };
@@ -48,10 +55,10 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     broadcastPassword: '',
     liveDvr: false
   };
-  public _availableStreamTypes: Array<{ value: StreamTypes, label: string }>;
+  public _availableStreamTypes: Array<{ id: string, value: StreamTypes, label: string }>;
   public _streamTypes = StreamTypes;
   public _blockerMessage: AreaBlockerMessage;
-  private _showConfirmationOnClose = true;
+  public _manualStreamOnly = false;
 
   @ViewChild('kalturaLiveStreamComponent') kalturaLiveStreamComponent;
   @ViewChild('manualLiveComponent') manualLiveComponent;
@@ -60,25 +67,43 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private createLiveService: CreateLiveService,
               private _appLocalization: AppLocalization,
+              private _appEvents: AppEventsService,
               private _browserService: BrowserService,
-              private _router: Router) {
+              private _permissionsService: KMCPermissionsService,
+              private _contentEntryViewService: ContentEntryViewService) {
   }
 
   ngOnInit() {
     this._availableStreamTypes = [
       {
+        id: 'kaltura',
         value: StreamTypes.kaltura,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.kaltura')
       },
       {
-        value: StreamTypes.manual,
-        label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')
-      },
-      {
+        id: 'universal',
         value: StreamTypes.universal,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.universal')
+      },
+      {
+        id: 'manual',
+        value: StreamTypes.manual,
+        label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')
       }
     ];
+
+    this._permissionsService.filterList(
+      this._availableStreamTypes,
+      {
+        'kaltura': KMCPermissions.FEATURE_KALTURA_LIVE_STREAM,
+        'universal': KMCPermissions.FEATURE_KMC_AKAMAI_UNIVERSAL_LIVE_STREAM_PROVISION
+      }
+    );
+
+    if (this._availableStreamTypes.length === 1) {
+      this._manualStreamOnly = true;
+      this._selectedStreamType = StreamTypes.manual;
+    }
   }
 
   ngAfterViewInit() {
@@ -162,22 +187,69 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  private _confirmEntryNavigation(id) {
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title'),
-        message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.message'),
-        accept: () => {
-          this._router.navigate(['/content/entries/entry', id], {queryParams: {reloadEntriesListOnNavigateOut: true}})
-          this._showConfirmationOnClose = false;
-          this.parentPopupWidget.close();
-        },
-        reject: () => {
-          this._showConfirmationOnClose = false;
-          this.parentPopupWidget.close();
-        }
-      }
-    );
+  private _confirmEntryNavigation(liveStream: KalturaLiveStreamEntry): void {
+    const header = this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title');
+
+    switch (liveStream.sourceType) {
+      case KalturaSourceType.liveStream:
+        this._browserService.confirm({
+          header,
+          message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.kalturaMessage'),
+          accept: () => {
+              this._contentEntryViewService.open({
+                  entry: liveStream,
+                  section: ContentEntryViewSections.Metadata,
+                  reloadEntriesListOnNavigateOut: true
+              });
+            this._showConfirmationOnClose = false;
+            this.parentPopupWidget.close();
+          },
+          reject: () => {
+            this._showConfirmationOnClose = false;
+            this._appEvents.publish(new UpdateEntriesListEvent());
+            this.parentPopupWidget.close();
+          }
+        });
+        break;
+
+      case KalturaSourceType.akamaiUniversalLive:
+        this._browserService.alert({
+          header,
+          message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.universalMessage'),
+          accept: () => {
+            this._showConfirmationOnClose = false;
+            this._appEvents.publish(new UpdateEntriesListEvent());
+            this.parentPopupWidget.close();
+          }
+        });
+        break;
+
+      case KalturaSourceType.manualLiveStream:
+        this._browserService.alert({
+          header,
+          message: this._appLocalization.get(
+            'applications.upload.prepareLive.confirmEntryNavigation.manualMessage',
+            [liveStream.id]
+          ),
+          accept: () => {
+            this._showConfirmationOnClose = false;
+            this._appEvents.publish(new UpdateEntriesListEvent());
+            this.parentPopupWidget.close();
+          }
+        });
+        break;
+
+      default:
+        this._browserService.alert({
+          header,
+          message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.generalMessage'),
+          accept: () => {
+            this._showConfirmationOnClose = false;
+            this.parentPopupWidget.close();
+          }
+        });
+        break;
+    }
   }
 
 
@@ -187,9 +259,18 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
-          this._confirmEntryNavigation(response.id);
+          this._confirmEntryNavigation(response);
         }, error => {
-          this._blockerMessage = error.message;
+          this._blockerMessage = new AreaBlockerMessage({
+            title: 'Error',
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }]
+          });
         });
     }
   }
@@ -200,9 +281,18 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
-          this._confirmEntryNavigation(response.id);
+          this._confirmEntryNavigation(response);
         }, error => {
-          this._blockerMessage = error.message;
+          this._blockerMessage = new AreaBlockerMessage({
+            title: 'Error',
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }]
+          });
         });
     }
   }
@@ -213,9 +303,18 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
-          this._confirmEntryNavigation(response.id);
+          this._confirmEntryNavigation(response);
         }, error => {
-          this._blockerMessage = error.message;
+          this._blockerMessage = new AreaBlockerMessage({
+            title: 'Error',
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }]
+          });
         });
     }
   }

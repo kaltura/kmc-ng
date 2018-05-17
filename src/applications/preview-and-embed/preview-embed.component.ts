@@ -5,7 +5,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { PreviewEmbedService } from './preview-and-embed.service';
 
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
@@ -14,6 +14,8 @@ import { KalturaUiConfListResponse } from 'kaltura-ngx-client/api/types/KalturaU
 import { KalturaUiConf } from 'kaltura-ngx-client/api/types/KalturaUiConf';
 import { KalturaShortLink } from 'kaltura-ngx-client/api/types/KalturaShortLink';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { serverConfig } from 'config/server';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPreviewEmbedDetails',
@@ -41,16 +43,26 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _shortLink = "";
   public _showEmbedParams = true;
   public _showAdvanced = false;
+  public _title: string;
+  public _embedTypesHelpExists = !!serverConfig.externalLinks.previewAndEmbed && !!serverConfig.externalLinks.previewAndEmbed.embedTypes;
+  public _deliveryProtocolsHelpExists = !!serverConfig.externalLinks.previewAndEmbed && !!serverConfig.externalLinks.previewAndEmbed.deliveryProtocols;
 
   public _previewForm: FormGroup;
 
   private generator: any;
   private _previewLink = null;
 
+  public get _showEmberCode(): boolean {
+    const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
+    const showForEntry = this.media instanceof KalturaMediaEntry && this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
+    return showForEntry || showForPlaylist;
+  }
+
   constructor(private _previewEmbedService: PreviewEmbedService,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
+              private _permissionsService: KMCPermissionsService,
               private _fb: FormBuilder) {
 
   }
@@ -61,6 +73,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this.setEmbedTypes();
     this.createForm();
     this.generator = this.getGenerator();
+    this._title = this._showEmberCode
+      ? this._appLocalization.get('applications.embed.previewShare')
+      : this._appLocalization.get('applications.embed.previewInPlayer');
   }
 
   ngAfterViewInit(){
@@ -141,9 +156,15 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private sortPlayers(sortBy){
     this._players.sort((a,b)=>{
-      if (a.value[sortBy] < b.value[sortBy])
+      let val1 = a.value[sortBy];
+      let val2 = b.value[sortBy];
+      if (sortBy === "name" && typeof val1 === "string" && typeof val2 === "string"){
+        val1 = val1.toLowerCase();
+        val2 = val2.toLowerCase();
+      }
+      if (val1 < val2)
         return 1;
-      if (a.value[sortBy] > b.value[sortBy])
+      if (val1 > val2)
         return -1;
       return 0;
     });
@@ -156,9 +177,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     const secured: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.secured');
     this._previewForm = this._fb.group({
       selectedPlayer: null,
-      selectedEmbedType: this._browserService.getFromLocalStorage('previewEmbed.embedType') || environment.modules.previewEmbed.embedType,
-      seo: seo !== null ? seo : environment.modules.previewEmbed.includeSeoMetadata,
-      secured: secured !== null ? secured : environment.modules.previewEmbed.secureEmbed
+      selectedEmbedType: this._browserService.getFromLocalStorage('previewEmbed.embedType') || subApplicationsConfig.previewAndEmbedApp.embedType,
+      seo: seo !== null ? seo : subApplicationsConfig.previewAndEmbedApp.includeSeoMetadata,
+      secured: secured !== null ? secured : subApplicationsConfig.previewAndEmbedApp.secureEmbed
     });
   }
 
@@ -172,14 +193,14 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private getGenerator():any{
-    const baseCdnUrl = environment.core.kaltura.cdnUrl.replace("http://","");
-    const securedCdnUrl = environment.core.kaltura.securedCdnUrl.replace("https://","");
+    const baseCdnUrl = serverConfig.cdnServers.serverUri.replace("http://","");
+    const securedCdnUrl = serverConfig.cdnServers.securedServerUri.replace("https://","");
     // 'kEmbedCodeGenerator' is bundled with the app. Location: assets/js/KalturaEmbedCodeGenerator.min.js
     return new window['kEmbedCodeGenerator']({
       host: baseCdnUrl,
       securedHost: securedCdnUrl,
       partnerId: this._appAuthentication.appUser.partnerId,
-      includeKalturaLinks: environment.modules.previewEmbed.includeKalturaLinks
+      includeKalturaLinks: subApplicationsConfig.previewAndEmbedApp.includeKalturaLinks
     });
   }
 
@@ -267,7 +288,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private createPreviewLink(isPreview: boolean):void{
       let url = '';
       try {
-        url = this.getProtocol(isPreview) + '://' + environment.core.kaltura.serverEndpoint + '/index.php/extwidget/preview';
+        url = this.getProtocol(isPreview) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
         url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
         url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.id;
         if (this.media instanceof KalturaMediaEntry) {
@@ -283,7 +304,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       // create short link
       this._previewEmbedService.generateShortLink(url).cancelOnDestroy(this).subscribe(
           (res: KalturaShortLink) => {
-            this._shortLink = 'http://' + environment.core.kaltura.serverEndpoint + '/tiny/' + res.id;
+            this._shortLink = 'http://' + serverConfig.kalturaServer.uri + '/tiny/' + res.id;
           },
           error => {
             console.log("could not generate short link for preview");
@@ -317,8 +338,15 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this.sortPlayers(sortBy);
   }
 
-  public openLink(link): void {
-    this._browserService.openLink(environment.core.externalLinks[link]);
+  public openLink(link: 'embedTypes' | 'deliveryProtocols'): void {
+    switch (link) {
+        case 'embedTypes':
+            this._browserService.openLink(serverConfig.externalLinks.previewAndEmbed.embedTypes);
+            break;
+        case 'deliveryProtocols':
+            this._browserService.openLink(serverConfig.externalLinks.previewAndEmbed.deliveryProtocols);
+            break;
+    }
   }
 
   public close(): void{

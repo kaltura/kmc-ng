@@ -1,0 +1,63 @@
+@import 'app-theme/_variables.scss';
+
+$app-styles-path: '../../../styles';
+@import '../../../styles/icons.scss';
+
+.kUndistributedProfile {
+  min-height: 52px;
+  display: flex;
+  border-bottom: 1px solid $kGrayscale4;
+  padding: 30px 28px 28px 28px;
+
+  .kProfileIcon {
+    width: 28px;
+    background-repeat: no-repeat;
+  }
+
+  .kUndistributedProfileContent {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 52px;
+    margin-left: 16px;
+
+    .kTitle {
+      margin-bottom: 16px;
+
+      &.kClickable {
+        cursor: pointer;
+      }
+
+      .kTitleLabel {
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 18px;
+      }
+    }
+
+    .kMetadata {
+      color: $kGrayscale1;
+
+      .kStatus {
+        .kIconinactive {
+          color: $kGrayscale3;
+          margin-right: 8px;
+          position: relative;
+          top: 1px;
+        }
+      }
+    }
+  }
+
+  .kControls {
+    display: flex;
+    position: relative;
+    top: -6px;
+
+    .kExportBtn {
+      height: 34px;
+      width: 100px;
+    }
+  }
+}

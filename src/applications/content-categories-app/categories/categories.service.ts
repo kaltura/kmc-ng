@@ -16,32 +16,41 @@ import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaC
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
 import {
-  DatesRangeAdapter,
-  DatesRangeType,
-  FiltersStoreBase,
-  GroupedListAdapter,
-  GroupedListType,
-  ListAdapter,
-  ListType,
-  NumberTypeAdapter,
-  StringTypeAdapter,
-  TypeAdaptersMapping
+    DatesRangeAdapter,
+    DatesRangeType,
+    FiltersStoreBase,
+     ListTypeAdapter,
+    GroupedListAdapter, GroupedListType,
+    NumberTypeAdapter,
+    StringTypeAdapter,
+    TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
-import {MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes} from 'app-shared/kmc-shared';
+import {
+    AppEventsService, MetadataProfileCreateModes, MetadataProfileStore,
+    MetadataProfileTypes
+} from 'app-shared/kmc-shared';
 import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
 import {KalturaMetadataSearchItem} from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
 import {KalturaSearchCondition} from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {CategoryMoveAction} from "kaltura-ngx-client/api/types/CategoryMoveAction";
-import {CategoryAddAction} from "kaltura-ngx-client/api/types/CategoryAddAction";
-import {KalturaInheritanceType} from "kaltura-ngx-client/api/types/KalturaInheritanceType";
-import {KalturaContributionPolicyType} from "kaltura-ngx-client/api/types/KalturaContributionPolicyType";
-import {KalturaAppearInListType} from "kaltura-ngx-client/api/types/KalturaAppearInListType";
-import {KalturaPrivacyType} from "kaltura-ngx-client/api/types/KalturaPrivacyType";
-import {KalturaCategoryEntry} from "kaltura-ngx-client/api/types/KalturaCategoryEntry";
-import {CategoryEntryAddAction} from "kaltura-ngx-client/api/types/CategoryEntryAddAction";
+import {CategoryMoveAction} from 'kaltura-ngx-client/api/types/CategoryMoveAction';
+import {CategoryAddAction} from 'kaltura-ngx-client/api/types/CategoryAddAction';
+import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
+import {KalturaCategoryEntry} from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
+import {CategoryEntryAddAction} from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
+
+import {
+  CategoriesModeAdapter,
+  CategoriesModes,
+  CategoriesModeType
+} from 'app-shared/content-shared/categories/categories-mode-type';
+import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
+import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
+import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -54,8 +63,8 @@ export interface Categories {
 }
 
 export enum SortDirection {
-  Desc,
-  Asc
+  Desc = -1,
+  Asc = 1
 }
 
 export interface MoveCategoryData {
@@ -76,11 +85,13 @@ export interface CategoriesFilters {
   sortBy: string,
   sortDirection: number,
   createdAt: DatesRangeType,
-  privacyTypes: ListType,
-  categoryListing: ListType,
-  contributionPolicy: ListType,
-  endUserPermissions: ListType,
-  customMetadata: GroupedListType
+  privacyTypes: string[],
+  categoryListing: string[],
+  contributionPolicy: string[],
+  endUserPermissions: string[],
+    categories: number[],
+    categoriesMode: CategoriesModeType,
+  customMetadata: GroupedListType<string>
 }
 
 
@@ -110,13 +121,24 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
     constructor(private _kalturaClient: KalturaClient,
                 private browserService: BrowserService,
                 private metadataProfileService: MetadataProfileStore,
+                private _appEvents: AppEventsService,
+                private _categoriesSearchService: CategoriesSearchService,
                 private _appLocalization: AppLocalization,
+                contentCategoriesMainViewService: ContentCategoriesMainViewService,
                 _logger: KalturaLogger) {
         super(_logger);
-        this._prepare();
+        if (contentCategoriesMainViewService.isAvailable()) {
+            this._prepare();
+        }else{
+            this.browserService.handleUnpermittedAction(true);
+        }
     }
 
     private _prepare(): void {
+        // NOTICE: do not execute here any logic that should run only once.
+        // this function will re-run if preparation failed. execute your logic
+        // only after the line where we set isReady to true
+
         if (!this._isReady) {
             this._categories.state.next({loading: true, errorMessage: null});
             this.metadataProfileService.get(
@@ -125,7 +147,6 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                     ignoredCreateMode: MetadataProfileCreateModes.App
                 })
                 .cancelOnDestroy(this)
-                .first()
                 .monitor('categories.service: get metadata profiles')
                 .subscribe(
                     metadataProfiles => {
@@ -169,7 +190,6 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         this._categories.data.complete();
     }
 
-
     public reload(): void {
         if (this._categories.state.getValue().loading) {
             return;
@@ -181,7 +201,6 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             this._prepare();
         }
     }
-
 
     public getNextCategoryId(categoryId: number): number | null {
         const categories = this._categories.data.getValue().items;
@@ -247,7 +266,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
 
                     this._categories.data.next({
                         items: response.objects,
-                        totalCount: <number>response.totalCount
+                        totalCount: response.totalCount
                     });
                 },
                 error => {
@@ -257,169 +276,180 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                 });
     }
 
-    private buildQueryRequest(): Observable<KalturaCategoryListResponse> {
-        try {
-            // create request items
-            const filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
-            let pagination: KalturaFilterPager = null;
-// update desired fields of entries
-            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-                type: KalturaResponseProfileType.includeFields,
-                fields: 'id, name, createdAt, directSubCategoriesCount, entriesCount, fullName, tags'
-            });
+  private buildQueryRequest(): Observable<KalturaCategoryListResponse> {
+    try {
+      // create request items
+      const filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
+      let pagination: KalturaFilterPager = null;
+      // update desired fields of entries
+      const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id, name, createdAt, directSubCategoriesCount, entriesCount, fullName, tags, parentId, privacyContexts'
+      });
 
-            const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-            advancedSearch.type = KalturaSearchOperatorType.searchAnd;
+      const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
+      advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
-            const data: CategoriesFilters = this._getFiltersAsReadonly();
+      const data: CategoriesFilters = this._getFiltersAsReadonly();
 
-// filter 'freeText'
-            if (data.freetext) {
-                filter.freeText = data.freetext;
-            }
+      // filter 'freeText'
+      if (data.freetext) {
+        filter.freeText = data.freetext;
+      }
 
-// filter 'createdAt'
-            if (data.createdAt) {
-                if (data.createdAt.fromDate) {
-                    filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
-                }
-
-                if (data.createdAt.toDate) {
-                    filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
-                }
-            }
-
-// filters of custom metadata lists
-            if (this._metadataProfiles && this._metadataProfiles.length > 0) {
-
-                this._metadataProfiles.forEach(metadataProfile => {
-                    // create advanced item for all metadata profiles regardless if the user filtered by them or not.
-                    // this is needed so freetext will include all metadata profiles while searching.
-                    const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
-                        {
-                            metadataProfileId: metadataProfile.id,
-                            type: KalturaSearchOperatorType.searchAnd,
-                            items: []
-                        }
-                    );
-                    advancedSearch.items.push(metadataItem);
-
-                    metadataProfile.lists.forEach(list => {
-                        const metadataProfileFilters = data.customMetadata[list.id];
-                        if (metadataProfileFilters && metadataProfileFilters.length > 0) {
-                            const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
-                                metadataProfileId: metadataProfile.id,
-                                type: KalturaSearchOperatorType.searchOr,
-                                items: []
-                            });
-                            metadataItem.items.push(innerMetadataItem);
-
-                            metadataProfileFilters.forEach(filterItem => {
-                                const searchItem = new KalturaSearchCondition({
-                                    field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                                    value: filterItem.value
-                                });
-
-                                innerMetadataItem.items.push(searchItem);
-                            });
-                        }
-                    });
-                });
-            }
-
-// update the sort by args
-            if (data.sortBy) {
-                filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
-            }
-
-
-// update pagination args
-            if (data.pageIndex || data.pageSize) {
-                pagination = new KalturaFilterPager(
-                    {
-                        pageSize: data.pageSize,
-                        pageIndex: data.pageIndex + 1
-                    }
-                );
-            }
-
-// filter 'privacyTypes'
-            if (data.privacyTypes && data.privacyTypes.length > 0) {
-                filter.privacyIn = data.privacyTypes.map(e => e.value).join(',');
-            }
-
-// filter 'categoryListing', set filter if only one option selected
-            if (data.categoryListing) {
-                if (data.categoryListing.length === 1) {
-                    switch (data.categoryListing[0].value) {
-                        case KalturaAppearInListType.categoryMembersOnly.toString():
-                            filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
-                            break;
-                        case KalturaAppearInListType.partnerOnly.toString():
-                            filter.appearInListEqual = KalturaAppearInListType.partnerOnly;
-                            break;
-                        default:
-                            break
-                    }
-                }
-            }
-
-// filter 'contributionPolicy', set filter if only one option selected
-            if (data.contributionPolicy) {
-                if (data.contributionPolicy.length === 1) {
-                    data.contributionPolicy.forEach(item => {
-                        switch (item.value) {
-                            case KalturaContributionPolicyType.all.toString():
-                                filter.contributionPolicyEqual = KalturaContributionPolicyType.all;
-                                break;
-                            case KalturaContributionPolicyType.membersWithContributionPermission.toString():
-                                filter.contributionPolicyEqual = KalturaContributionPolicyType.membersWithContributionPermission;
-                                break;
-                            default:
-                                break
-                        }
-                    });
-                }
-            }
-
-// filter 'endUserPermissions', set filter if only one option selected
-            if (data.endUserPermissions) {
-                if (data.endUserPermissions.length === 1) {
-                    data.endUserPermissions.forEach(item => {
-                        switch (item.value) {
-                            case 'has':
-                                filter.membersCountGreaterThanOrEqual = 1;
-                                filter.membersCountLessThanOrEqual = undefined;
-                                break;
-                            case 'no':
-                                filter.membersCountLessThanOrEqual = 0;
-                                filter.membersCountGreaterThanOrEqual = undefined;
-                                break;
-                            default:
-                                break
-                        }
-                    });
-                }
-            }
-
-// remove advanced search arg if it is empty
-            if (advancedSearch.items && advancedSearch.items.length === 0) {
-                delete filter.advancedSearch;
-            }
-
-// build the request
-            return this._kalturaClient.request(
-                new CategoryListAction({
-                    filter,
-                    pager: pagination,
-                    responseProfile
-                })
-            );
-        } catch (err) {
-            return Observable.throw(err);
+      // filter 'createdAt'
+      if (data.createdAt) {
+        if (data.createdAt.fromDate) {
+          filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
         }
 
+        if (data.createdAt.toDate) {
+          filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
+        }
+      }
+
+      // filters of custom metadata lists
+      if (this._metadataProfiles && this._metadataProfiles.length > 0) {
+
+        this._metadataProfiles.forEach(metadataProfile => {
+          // create advanced item for all metadata profiles regardless if the user filtered by them or not.
+          // this is needed so freetext will include all metadata profiles while searching.
+          const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
+            {
+              metadataProfileId: metadataProfile.id,
+              type: KalturaSearchOperatorType.searchAnd,
+              items: []
+            }
+          );
+          advancedSearch.items.push(metadataItem);
+
+          metadataProfile.lists.forEach(list => {
+            const metadataProfileFilters = data.customMetadata[list.id];
+            if (metadataProfileFilters && metadataProfileFilters.length > 0) {
+              const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
+                metadataProfileId: metadataProfile.id,
+                type: KalturaSearchOperatorType.searchOr,
+                items: []
+              });
+              metadataItem.items.push(innerMetadataItem);
+
+              metadataProfileFilters.forEach(filterItem => {
+                const searchItem = new KalturaSearchCondition({
+                  field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
+                  value: filterItem
+                });
+
+                innerMetadataItem.items.push(searchItem);
+              });
+            }
+          });
+        });
+      }
+
+
+        if (data.categories && data.categories.length) {
+            const categoriesValue = data.categories.join(',');
+            if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
+                filter.ancestorIdIn = categoriesValue;
+            } else {
+                filter.parentIdIn = categoriesValue;
+            }
+        }
+
+      // update the sort by args
+      if (data.sortBy) {
+        filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
+      }
+
+
+      // update pagination args
+      if (data.pageIndex || data.pageSize) {
+        pagination = new KalturaFilterPager(
+          {
+            pageSize: data.pageSize,
+            pageIndex: data.pageIndex + 1
+          }
+        );
+      }
+
+      // filter 'privacyTypes'
+      if (data.privacyTypes && data.privacyTypes.length > 0) {
+        filter.privacyIn = data.privacyTypes.map(e => e).join(',');
+      }
+
+      // filter 'categoryListing', set filter if only one option selected
+      if (data.categoryListing) {
+        if (data.categoryListing.length === 1) {
+          switch (data.categoryListing[0]) {
+            case KalturaAppearInListType.categoryMembersOnly.toString():
+              filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
+              break;
+            case KalturaAppearInListType.partnerOnly.toString():
+              filter.appearInListEqual = KalturaAppearInListType.partnerOnly;
+              break;
+            default:
+              break
+          }
+        }
+      }
+
+      // filter 'contributionPolicy', set filter if only one option selected
+      if (data.contributionPolicy) {
+        if (data.contributionPolicy.length === 1) {
+          data.contributionPolicy.forEach(item => {
+            switch (item) {
+              case KalturaContributionPolicyType.all.toString():
+                filter.contributionPolicyEqual = KalturaContributionPolicyType.all;
+                break;
+              case KalturaContributionPolicyType.membersWithContributionPermission.toString():
+                filter.contributionPolicyEqual = KalturaContributionPolicyType.membersWithContributionPermission;
+                break;
+              default:
+                break
+            }
+          });
+        }
+      }
+
+      // filter 'endUserPermissions', set filter if only one option selected
+      if (data.endUserPermissions) {
+        if (data.endUserPermissions.length === 1) {
+          data.endUserPermissions.forEach(item => {
+            switch (item) {
+              case 'has':
+                filter.membersCountGreaterThanOrEqual = 1;
+                filter.membersCountLessThanOrEqual = undefined;
+                break;
+              case 'no':
+                filter.membersCountLessThanOrEqual = 0;
+                filter.membersCountGreaterThanOrEqual = undefined;
+                break;
+              default:
+                break
+            }
+          });
+        }
+      }
+
+      // remove advanced search arg if it is empty
+      if (advancedSearch.items && advancedSearch.items.length === 0) {
+        delete filter.advancedSearch;
+      }
+
+      // build the request
+      return this._kalturaClient.request(
+        new CategoryListAction({
+          filter,
+          pager: pagination
+        }).setRequestOptions({
+            responseProfile
+        })
+      );
+    } catch (err) {
+      return Observable.throw(err);
     }
+
+  }
 
     public deleteCategory(categoryId: number): Observable<void> {
 
@@ -428,6 +458,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             if (categoryId && categoryId > 0) {
                 subscription = this._kalturaClient.request(new CategoryDeleteAction({id: categoryId})).subscribe(
                     result => {
+                        this._appEvents.publish(new CategoriesGraphUpdatedEvent());
                         observer.next();
                         observer.complete();
                     },
@@ -446,16 +477,34 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         });
     }
 
+    protected _preFiltersReset(updates: Partial<CategoriesFilters>): Partial<CategoriesFilters> {
+        delete updates.sortBy;
+        delete updates.sortDirection;
+        return updates;
+    }
+
     protected _preFilter(updates: Partial<CategoriesFilters>): Partial<CategoriesFilters> {
         if (typeof updates.pageIndex === 'undefined') {
             // reset page index to first page everytime filtering the list by any filter that is not page index
             updates.pageIndex = 0;
         }
 
+        if (typeof updates.categoriesMode !== 'undefined')
+        {
+            this.browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', updates.categoriesMode);
+        }
+
         return updates;
     }
 
     protected _createDefaultFiltersValue(): CategoriesFilters {
+
+        const savedAutoSelectChildren: CategoriesModes = this.browserService
+            .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
+        const categoriesMode = typeof savedAutoSelectChildren === 'number'
+            ? savedAutoSelectChildren
+            : CategoriesModes.SelfAndChildren;
+
         return {
             freetext: '',
             pageSize: 50,
@@ -467,6 +516,8 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             categoryListing: [],
             contributionPolicy: [],
             endUserPermissions: [],
+            categories: [],
+            categoriesMode,
             customMetadata: {}
         };
     }
@@ -479,11 +530,13 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             sortBy: new StringTypeAdapter(),
             sortDirection: new NumberTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
-            privacyTypes: new ListAdapter(),
-            categoryListing: new ListAdapter(),
-            contributionPolicy: new ListAdapter(),
-            endUserPermissions: new ListAdapter(),
-            customMetadata: new GroupedListAdapter()
+            privacyTypes: new ListTypeAdapter<string>(),
+            categoryListing: new ListTypeAdapter<string>(),
+            contributionPolicy: new ListTypeAdapter<string>(),
+            endUserPermissions: new ListTypeAdapter<string>(),
+            categories: new ListTypeAdapter<number>(),
+            categoriesMode: new CategoriesModeAdapter(),
+            customMetadata: new GroupedListAdapter<string>()
         };
     }
 
@@ -492,14 +545,16 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
      * @param newCategoryData {NewCategoryData} holds name and desired categoryParentId (if null - move to root)
      * @return {Observable<number>} new category ID
      */
-    public addNewCategory(newCategoryData: NewCategoryData): Observable<{ categoryId: number }> {
-        if (!newCategoryData || !newCategoryData.name) {
-            const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
-            return Observable.throw(new Error(nameRequiredErrorMessage));
+    public addNewCategory(newCategoryData: NewCategoryData): Observable<{ category: KalturaCategory }> {
+        const newCategoryName = newCategoryData ? (newCategoryData.name || '').trim() : null;
+        if (!newCategoryName) {
+            const error = new Error('missing category name');
+            (<any>error).code = 'missing_category_name';
+            return Observable.throw(error);
         }
         const category = new KalturaCategory({
             name: newCategoryData.name,
-            parentId: newCategoryData.categoryParentId || 0,
+            parentId: Number(newCategoryData.categoryParentId) || 0,
             privacy: KalturaPrivacyType.all,
             appearInList: KalturaAppearInListType.partnerOnly,
             contributionPolicy: KalturaContributionPolicyType.all,
@@ -526,13 +581,25 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             .map(
                 data => {
                     if (data.hasErrors()) {
-                        throw new Error('error occurred while trying to add new category');
+                        let message = 'An error occurred while trying to add new category';
+                        let errorCode = '';
+                        if (data[0].error) { // show error of CategoryAddAction
+                            errorCode = 'category_creation_failure';
+                        } else if (multiRequest.requests.length > 1) {
+                            errorCode = 'entries_link_issue';
+                        }
+                        const error = new Error(message);
+                        (<any>error).code = errorCode;
+                        (<any>error).context = { categoryId: data[0].result.id };
+                        throw error;
                     }
-                    return {categoryId: data[0].result.id};
-                })
-            .catch(error => {
-                throw new Error('error occurred while trying to add new category');
-            });
+
+                    if (data[0].result) {
+                        this._appEvents.publish(new CategoriesGraphUpdatedEvent());
+                    }
+
+                    return {category: data[0].result};
+                });
     }
 
     /**
@@ -560,29 +627,47 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
      * @return {boolean}
      */
     public isParentCategorySelectionValid(moveCategoryData: MoveCategoryData): boolean {
-
-        const isValid = (category) => {
-            // Only siblings are allowed to be moved
-            if (!category || !category.id || !category.fullIds || category.parentId !== moveCategoryData.categories[0].parentId) {
-                console.log('[CategoriesService.isParentCategorySelectionValid] invalid category');
-                return false;
-            }
-            // Check if we put the category as a descendant of itself
-            const selectedCategoryIdSameAsParent = moveCategoryData.categoryParent &&
-                category.id === moveCategoryData.categoryParent.id;
-
-            // Check that the parent category isn't a descendant of the category
-            const selectedParentIsDescendantOfCategoryToMove =
-                moveCategoryData.categoryParent.fullIds.includes(category.id);
-            return !selectedCategoryIdSameAsParent && !selectedParentIsDescendantOfCategoryToMove;
-        };
-
-
-        if (!moveCategoryData || !moveCategoryData.categories || !moveCategoryData.categories.length) {
-            console.log('[CategoriesService.isParentCategorySelectionValid] invalid categories parameter');
-            return false;
+      const isValid = (category) => {
+        // Only siblings are allowed to be moved
+        if (!category || !category.id || category.parentId !== moveCategoryData.categories[0].parentId) {
+          console.log('[CategoriesService.isParentCategorySelectionValid] invalid category');
+          return false;
         }
+        // Check if we put the category as a descendant of itself
+        const selectedCategoryIdSameAsParent = moveCategoryData.categoryParent &&
+          category.id === moveCategoryData.categoryParent.id;
 
-        return moveCategoryData.categories.every(isValid);
+        // Check that the parent category isn't a descendant of the category
+        const selectedParentIsDescendantOfCategoryToMove =
+          moveCategoryData.categoryParent.fullIds.indexOf(category.id) !== -1;
+        return !selectedCategoryIdSameAsParent && !selectedParentIsDescendantOfCategoryToMove;
+      };
+
+      if (!moveCategoryData) {
+        console.log('[CategoriesService.isParentCategorySelectionValid] invalid move category data parameter');
+        return false;
+      }
+
+      if (!moveCategoryData.categories || !moveCategoryData.categories.length) {
+        console.log('[CategoriesService.isParentCategorySelectionValid] invalid categories parameter');
+        return false;
+      }
+
+      if (!moveCategoryData.categoryParent || !moveCategoryData.categoryParent.fullIds) {
+        console.log('[CategoriesService.isParentCategorySelectionValid] invalid selected parent category');
+        return false;
+      }
+
+      return moveCategoryData.categories.every(isValid);
+    }
+
+    public getCategoryById(id: number): Observable<CategoryData> {
+      const category = this._categoriesSearchService.getCachedCategory(id);
+
+      if (!category) {
+        return this._categoriesSearchService.getCategory(id);
+      }
+
+      return Observable.of(category);
     }
 }

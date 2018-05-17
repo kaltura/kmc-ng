@@ -14,7 +14,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {environment} from 'app-environment';
+import {subApplicationsConfig} from 'config/sub-applications';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {PrivacyMode} from './components/bulk-change-content-privacy/bulk-change-content-privacy.component';
 import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
@@ -22,6 +22,9 @@ import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppea
 import {AppearInListType} from './components/bulk-change-category-listing/bulk-change-category-listing.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {CategoriesUtilsService} from "../../categories-utils.service";
+import {CategoriesStatusMonitorService} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -29,8 +32,10 @@ import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/Kaltur
   styleUrls: ['./categories-bulk-actions.component.scss']
 })
 export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
+  private _selectedCateogoriesWithPrivacyContext: KalturaCategory[] = [];
 
   public _bulkActionsMenu: MenuItem[] = [];
+  public _kmcPermissions = KMCPermissions;
   public _bulkAction = '';
 
   @Input() selectedCategories: KalturaCategory[];
@@ -40,14 +45,18 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
 
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
-    private _bulkAddTagsService: CategoriesBulkAddTagsService,
-    private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
-    private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
-    private _bulkDeleteService: CategoriesBulkDeleteService,
-    private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
-    private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
-    private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService) {
+  constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
+              private _browserService: BrowserService,
+              private _bulkAddTagsService: CategoriesBulkAddTagsService,
+              private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
+              private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
+              private _bulkDeleteService: CategoriesBulkDeleteService,
+              private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
+              private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
+              private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService,
+              private _categoriesUtilsService: CategoriesUtilsService,
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
   }
 
   ngOnInit() {
@@ -58,25 +67,57 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   }
 
+  private _filterPrivacyContext(): { hadNoPrivacyContext: boolean } {
+    this._selectedCateogoriesWithPrivacyContext = [];
+    const selectedCategoriesLength = this.selectedCategories.length;
+    this._selectedCateogoriesWithPrivacyContext = [...this.selectedCategories.filter(category => !!category.privacyContexts)];
+    const hadNoPrivacyContext = this._selectedCateogoriesWithPrivacyContext.length !== selectedCategoriesLength;
+
+    return { hadNoPrivacyContext };
+  }
+
   getBulkActionItems(): MenuItem[] {
-    return [
+    const items = [
+      { id: 'changeCategoryOwner',
+        label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'),
+        command: () => { this.openBulkActionWindow('changeOwner', 500, 280) } },
+      { id: 'changeContributionPolicy',
+        label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'),
+        command: () => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
+      { id: 'changeCategoryListing',
+        label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'),
+        command: () => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
+      { id: 'changeContentPrivacy',
+        label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'),
+        command: () => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
+      { id: 'moveCategories',
+        label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'),
+        command: () => { this._moveCategories() } },
       {
+        id: 'addRemoveTags',
         label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
-          { label: this._appLocalization.get('applications.content.categories.bActions.addTags'), command: (event) => { this.openBulkActionWindow('addTags', 500, 500) } },
-          { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'), command: (event) => { this.openBulkActionWindow('removeTags', 500, 500) } }]
-      },
-      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'), command: (event) => { this._moveCategories() } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'), command: (event) => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'), command: (event) => { this.openBulkActionWindow('changeOwner', 500, 280) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.delete'), command: (event) => { this.deleteCategories() } }
+        { label: this._appLocalization.get('applications.content.categories.bActions.addTags'),
+          command: () => { this.openBulkActionWindow('addTags', 500, 500) } },
+        { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'),
+          command: () => { this.openBulkActionWindow('removeTags', 500, 500) } }]
+      }
     ];
+
+    this._permissionsService.filterList(
+      <{ id: string }[]>items,
+      {
+        'changeContentPrivacy': KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS,
+        'changeContributionPolicy': KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS,
+        'changeCategoryListing': KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS,
+        'changeCategoryOwner': KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS
+      });
+
+    return items;
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
 
-    if (this.hasEditWarnings()) {
+    if (this._categoriesUtilsService.hasEditWarnings(this.selectedCategories)) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.categories.editCategory'),
@@ -107,86 +148,141 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // add tags changed
   onAddTagsChanged(tags: string[]): void {
-    this.executeService(this._bulkAddTagsService, tags);
+    this.executeService(this.selectedCategories, this._bulkAddTagsService, tags);
   }
 
   // remove tags changed
   onRemoveTagsChanged(tags: string[]): void {
-    this.executeService(this._bulkRemoveTagsService, tags);
+    this.executeService(this.selectedCategories, this._bulkRemoveTagsService, tags);
   }
 
   // owner changed
   onOwnerChanged(owners: KalturaUser[]): void {
-    if (owners && owners.length) {
-      this.executeService(this._bulkChangeOwnerService, owners[0]);
+    const executeAction = () => {
+      if (this._selectedCateogoriesWithPrivacyContext.length && owners && owners.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeOwnerService, owners[0]);
+      }
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
     }
   }
 
   // change content privacy
   onChangeContentPrivacyChanged(privacyMode: PrivacyMode): void {
     let privacyType: KalturaPrivacyType;
-    if (privacyMode === PrivacyMode.NoRestriction)
-      privacyType = KalturaPrivacyType.all;
-    if (privacyMode === PrivacyMode.Private)
-      privacyType = KalturaPrivacyType.membersOnly;
-    if (privacyMode === PrivacyMode.RequiresAuthentication)
-      privacyType = KalturaPrivacyType.authenticatedUsers;
+    switch (true) {
+      case privacyMode === PrivacyMode.NoRestriction:
+        privacyType = KalturaPrivacyType.all;
+        break;
+      case privacyMode === PrivacyMode.Private:
+        privacyType = KalturaPrivacyType.membersOnly;
+        break;
+      case privacyMode === PrivacyMode.RequiresAuthentication:
+        privacyType = KalturaPrivacyType.authenticatedUsers;
+        break;
+      default:
+        break;
+    }
 
-    this.executeService(this._bulkChangeContentPrivacyService, privacyType);
+    const executeAction = () => {
+      if (this._selectedCateogoriesWithPrivacyContext.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeContentPrivacyService, privacyType);
+      }
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
+    }
   }
 
   // change category listing
   onChangeCategoryListingChanged(appearInList: AppearInListType): void {
     let appearInListType: KalturaAppearInListType;
-    if (appearInList === AppearInListType.NoRestriction)
+    if (appearInList === AppearInListType.NoRestriction) {
       appearInListType = KalturaAppearInListType.partnerOnly;
-    if (appearInList === AppearInListType.Private)
+    } else if (appearInList === AppearInListType.Private) {
       appearInListType = KalturaAppearInListType.categoryMembersOnly;
+    }
 
-    this.executeService(this._bulkChangeCategoryListingService, appearInListType);
+    const executeAction = () => {
+      if (this._selectedCateogoriesWithPrivacyContext.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeCategoryListingService, appearInListType);
+      }
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
+    }
   }
 
   // change contribution policy
   onChangeContributionPolicyChanged(policyType: KalturaContributionPolicyType): void {
-    this.executeService(this._bulkChangeContributionPolicyService, policyType);
+    const executeAction = () => {
+      if (this._selectedCateogoriesWithPrivacyContext.length) {
+        this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeContributionPolicyService, policyType);
+      }
+    };
+
+    const { hadNoPrivacyContext } = this._filterPrivacyContext();
+    if (hadNoPrivacyContext) {
+      this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+        message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
+        accept: () => executeAction()
+      });
+    } else {
+      executeAction();
+    }
   }
 
   // bulk delete
   public deleteCategories(): void {
-    let message = '';
-    let deleteMessage = '';
 
-    if (this.hasEditWarnings()) {
-      deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
-    }
-
-    let isSubCategoriesExist = false;
-    this.selectedCategories.forEach(obj => {
-      if (obj.directSubCategoriesCount && obj.directSubCategoriesCount > 0) { isSubCategoriesExist = true; }
-    });
-    if (isSubCategoriesExist) {
-      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
-    }
-    else {
-      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultiple') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteSingle'));
-    }
-
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.content.categories.deleteCategories'),
-        message: message,
-        accept: () => {
+    this._categoriesUtilsService.confirmDeleteMultiple(this.selectedCategories)
+      .cancelOnDestroy(this)
+      .subscribe(result => {
+        if (result.confirmed) {
           setTimeout(() => {
-            this.executeService(this._bulkDeleteService, {}, true, false);
+            this.executeService(
+              this.selectedCategories,
+              this._bulkDeleteService,
+              {},
+              true,
+              false,
+              () => this._categoriesStatusMonitorService.updateCategoriesStatus()
+            );
             // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
           }, 0);
         }
-      }
-    );
+      }, error => {
+        this._browserService.alert({
+            header: this._appLocalization.get('app.common.attention'),
+          message: this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.categoriesCouldNotBeDeleted')
+        });
+      });
   }
 
   private _moveCategories(): void {
@@ -196,8 +292,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       });
 
       if (!movingOnlySiblings) {
-        this._browserService.setAppStatus(
-          {errorMessage: this._appLocalization.get('applications.content.moveCategory.errors.onlySiblingsMoveAllowed')});
+        this._browserService.alert({
+            header: this._appLocalization.get('app.common.attention'),
+          message: this._appLocalization.get('applications.content.moveCategory.errors.onlySiblingsMoveAllowed')
+        });
       } else {
         this.openBulkActionWindow('moveCategories', 586, 580);
       }
@@ -216,11 +314,17 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     return editWarningsExists;
   }
 
-  private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
+
+  private executeService(selectedCategories: KalturaCategory[],
+                         service: CategoriesBulkActionBaseService<any>,
+                         data: any = {},
+                         reloadCategories: boolean = true,
+                         confirmChunks: boolean = true,
+                         callback?: Function): void {
     this._bulkAction = '';
 
     const execute = () => {
-      service.execute(this.selectedCategories, data)
+      service.execute(selectedCategories, data)
         .tag('block-shell')
         .subscribe(
         result => {
@@ -230,17 +334,20 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           this.onBulkChange.emit({ reload: reloadCategories });
         },
         error => {
-          this._browserService.setAppStatus({ errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
+          this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
+            message: this._appLocalization.get('applications.content.bulkActions.errorCategories')
+          });
           this.onBulkChange.emit({ reload: reloadCategories });
         }
       );
     };
 
-    if (confirmChunks && this.selectedCategories.length > environment.modules.contentCategories.bulkActionsLimit) {
+    if (confirmChunks && selectedCategories.length > subApplicationsConfig.shared.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
-          message: this._appLocalization.get('applications.content.bulkActions.confirm', { '0': this.selectedCategories.length }),
+          message: this._appLocalization.get('applications.content.bulkActions.confirmCategories', { '0': this.selectedCategories.length }),
           accept: () => {
             execute();
           }

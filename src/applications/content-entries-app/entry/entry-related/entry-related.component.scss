@@ -18,13 +18,6 @@
 	.kRelatedTableActions {
 		width: 100%;
 		text-align: center;
-		button {
-			color: grey !important;
-			background-color: rgba(0, 0, 0, 0) !important;
-			border: none !important;
-			font-size: 16px !important;
-			outline: 0;
-		}
 	}
 	.kUploadMonitor{
 		display: flex;
@@ -48,3 +41,9 @@
 	overflow: visible;
 }
 
+:host /deep/ .kFileName {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  color: $kGrayscale3;
+}

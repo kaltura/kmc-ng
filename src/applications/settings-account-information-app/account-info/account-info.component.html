@@ -1,0 +1,30 @@
+<k-area-blocker [showLoader]="_isBusy">
+  <div class="kContainer">
+    <div class="kGraphicsContainer">
+      <i *ngIf="_showTrialUserInfo" class="kIcon kIconsettings-upgrade-2"></i>
+      <i *ngIf="!_showTrialUserInfo" class="kIcon kIconsettings-upgrade-1"></i>
+
+    </div>
+    <div class="kAccountInfoContainer">
+      <div class="kHeader">
+        {{'applications.settings.accountInformation.accountInfo.header' | translate}}
+      </div>
+      <div *ngIf="_showTrialUserInfo" class="kTrialExpiration">
+        {{'applications.settings.accountInformation.accountInfo.trial' | translate: {'0': _trialExpirationDateString} }}
+      </div>
+      <div class="kStatistics">
+        <div class="kBandwidth">
+            {{'applications.settings.accountInformation.accountInfo.bandwidth' | translate: {'0': _bandwidth} }}
+            <span *ngIf="!_bandwidthNA">{{'applications.settings.accountInformation.accountInfo.gb' | translate}}</span>
+        </div>
+        <div class="kStorage">
+            {{'applications.settings.accountInformation.accountInfo.storage' | translate: {'0': _storage} }}
+            <span *ngIf="!_storageNA">{{'applications.settings.accountInformation.accountInfo.gb' | translate}}</span>
+        </div>
+      </div>
+      <div class="kContactUs">
+        {{'applications.settings.accountInformation.accountInfo.contactUs' | translate}}
+      </div>
+    </div>
+  </div>
+</k-area-blocker>

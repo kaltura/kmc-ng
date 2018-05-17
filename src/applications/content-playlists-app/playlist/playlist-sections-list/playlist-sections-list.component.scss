@@ -7,6 +7,7 @@
 	background-color: #ffffff;
 	border: 1px solid #ffffff;
 	border-radius: 3px;
+	display: block;
 	ul {
 		list-style-type: none;
 		padding-left: 0px;
@@ -16,7 +17,7 @@
 			cursor: pointer;
 			color: $kGrayscale3;
 			font-weight: 700;
-			padding-left: 12px;
+			padding-left: 24px;
 			&:hover{
 				color: $kTertiary;
 			}

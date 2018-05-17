@@ -31,13 +31,25 @@
         display: flex;
         padding-top: 24px;
         align-items: center;
+
+        .kAccessControlProfileItem {
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 130px;
+          white-space: nowrap;
+        }
+
+        .kLongText {
+          max-width: 265px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
       }
       .kLabels{
         width: 180px;
         flex: 0 0 auto;
-      }
-      .kMultiLine{
-        white-space: pre-wrap;
       }
     }
   }
@@ -58,13 +70,19 @@
     padding: 0px;
     input{
       height: 34px;
-      padding-left: 4px;
+      padding-left: 8px;
       width: 472px;
     }
   }
 }
-:host /deep/ .ui-dropdown.ui-widget{
-  width: 180px !important;
+:host /deep/ {
+  .ui-dropdown.ui-widget {
+    width: 180px !important;
+  }
+
+  .ui-dropdown-label {
+    text-overflow: ellipsis;
+  }
 }
 
 :host /deep/ .ui-dropdown-label.ui-inputtext{

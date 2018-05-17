@@ -5,7 +5,7 @@
 .kPlaylists {
     font-size: 15px;
     background-color: $appBkgColor;
-    padding-top: 30px;
+    padding-top: 24px;
     width: 100%;
 	min-width: $minAppWidth;
 	box-sizing: border-box;
@@ -24,6 +24,7 @@
         border: none;
         position: relative;
 		background-color: white;
+		width: 100%;
 		flex: 1 1 auto;
     }
 	.kPlaylistsTableFooter {
@@ -67,7 +68,7 @@
 		font-size: 24px;
 		border: none;
 		min-width: inherit;
-		margin-right: 16px;
+		margin-right: 8px;
 		width: 40px;
 		outline: 0px;
 		color: $kGrayscale3;
@@ -81,8 +82,8 @@
 		}
 	}
 	.kBulkOperations {
-		margin-left: 15px;
-		width: 400px;
+    display: flex;
+    align-items: center;
 	}
 	.kSelectedPlaylistsLabel {
 		font-weight: bold;
@@ -92,7 +93,7 @@
 	.kSearchInput {
 		background: $kMagnifyingGlassBkg;
 		margin-right: 8px;
-		padding: 9px 4px 8px 30px;
+		padding: 9px 4px 8px 38px;
 		width: 260px;
 	}
 	.kTagContent {
@@ -108,9 +109,9 @@
 		flex: 0 0 auto;
 		margin-top: 2px;
 		margin-left: 8px;
-		padding: 4px;
+		padding: 5px;
 		cursor: pointer;
-		font-size: 12px;
+		font-size: 10px;
 		&:hover{
 			background-color: rgba(255,255,255,0.3);
 			border: 0 solid rgba(255,255,255,0.3);
@@ -128,7 +129,7 @@
 	.kBulkDeleteBtn {
 		margin-right: 10px;
 		width: 44px;
-		font-size: 18px;
+		font-size: 24px;
 	}
 	.kBulkActionsBtn {
 		font-weight: 400;
@@ -171,6 +172,10 @@
 	}
 }
 
+:host{
+	width: 100%;
+}
+
 :host /deep/ k-area-blocker>.kAreaBlockerContainer {
   z-index: 203;
 }
@@ -184,4 +189,10 @@
 }
 :host /deep/ .kStickyClass{
 	border-bottom: 1px solid $kGrayscale5;
+}
+
+:host /deep/ .kPlaylistsTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
 }

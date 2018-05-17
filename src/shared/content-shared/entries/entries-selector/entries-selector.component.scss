@@ -1,0 +1,80 @@
+@import 'app-theme/_variables.scss';
+
+.kEntrySelector {
+  display: flex;
+
+  .kEntrySelectorBucket {
+    height: calc(100vh - 158px);
+    width: 250px;
+    border-left: 1px solid $kGrayscale6;
+    overflow-y: auto;
+
+    .KEntrySelectorSelectedItem {
+      height: 36px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        background-color: $kGrayscale6;
+      }
+
+      img {
+        width: 64px;
+        height: 36px;
+        object-fit: cover;
+        margin-right: 8px;
+        border-radius: 3px;
+      }
+
+      span {
+        font-size: 15px;
+        font-weight: bold;
+        margin-right: 8px;
+        flex-grow: 1;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      i {
+        color: $kDandger;
+        font-size: 24px;
+        cursor: pointer;
+      }
+    }
+  }
+  .kEntrySelectorTable {
+    flex: 1 1 0;
+  }
+}
+
+:host /deep/ .kEntrySelector {
+  .kContent {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .kEntries {
+    padding-top: 0;
+    min-width: 0;
+  }
+
+  div.kEntriesTable {
+    height: calc(100vh - 223px);
+    overflow-y: auto;
+
+    &.kTagsVisible {
+      height: calc(100vh - 264px);
+    }
+  }
+
+  .kEntriesTableFooter {
+    width: 994px;
+  }
+
+  .kEntriesSelectorBucketOpened .kEntriesTableFooter {
+    width: 746px;
+    border-right: 1px solid #ebebeb;
+  }
+}

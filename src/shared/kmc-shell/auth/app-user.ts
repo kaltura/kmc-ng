@@ -1,27 +1,30 @@
-import { PartnerInfo } from "./partner-info";
-export class AppUser {
 
-    ks : string;
-    firstname : string;
-    id : string;
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+
+export interface PartnerInfo {
+    partnerId: number;
+    name: string;
+    partnerPackage: PartnerPackageTypes;
+    landingPage: string;
+    adultContent: boolean;
+    publisherEnvironmentType: number;
+}
+
+export enum PartnerPackageTypes {
+    PartnerPackageFree = 1,
+    PartnerPackagePaid = 2,
+    PartnerPackageDeveloper = 100
+}
+
+
+export interface AppUser {
+    ks: string;
+    id: string;
     partnerId: number;
     fullName: string;
     firstName: string;
     lastName: string;
-    roleIds: string;
-    roleNames: string;
-    isAccountOwner : string;
-    permissions : any;
-    permissionsFlags : string[];
     partnerInfo: PartnerInfo;
-
-    constructor()
-    {
-    }
-
-
-    get KS() : string {
-        return this.ks;
-    }
+    createdAt: Date;
 }
 

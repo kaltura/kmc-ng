@@ -1,0 +1,143 @@
+@import "app-theme/_variables.scss";
+
+$autoCompleteWidth: 326px;
+.kTitle {
+  color: $kGrayscale1;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 1px solid $kGrayscale4;
+  height: 78px;
+  line-height: 78px;
+}
+
+.kContent {
+  display: flex;
+  flex-direction: column;
+  height: 449px;
+  width: 790px;
+
+  .kContainer {
+    height: 303px;
+    padding: 32px;
+    overflow: hidden;
+
+    .kRow {
+      display: flex;
+      padding-top: 16px;
+
+      width: 574px;
+      margin: 0 auto;
+
+      .kLabel {
+        width: 150px;
+        flex: 0 0 auto;
+        word-wrap: break-word;
+        padding-right: 12px;
+        text-align: center;
+        display: block;
+        margin-bottom: 10px;
+        padding-top: 7px;
+        font-size: 15px;
+      }
+
+      input {
+        width: 100%;
+        height: 34px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 76px;
+      }
+
+      .kControl, k-prime-control {
+        width: 100%;
+      }
+    }
+
+    .kRow:first-child {
+      padding-top: 0;
+    }
+
+    .kMultipleRow{
+      .kLabel{
+        padding-top:0;
+      }
+    }
+
+    .kBlock {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 20px;
+      .kRadio {
+        padding-right: 40px;
+
+        /deep/ .ui-radiobutton-label {
+          font-weight: normal;
+        }
+      }
+    }
+
+    .kAutoCompleteContainer {
+      width: $autoCompleteWidth !important;
+      margin: 0 auto;
+    }
+  }
+}
+
+.kFooter {
+
+  display: flex;
+  height: 66px;
+  padding: 7px;
+  border-top: 1px solid $kGrayscale4;
+  align-items: center;
+  justify-content: center;
+
+  .kButtonDefault, .kButtonBranded {
+    height: 34px;
+    width: 160px;
+  }
+
+  .kButtonDefault {
+    border-radius: 0;
+    margin-right: 16px;
+  }
+}
+
+:host /deep/ .ui-autocomplete.ui-widget {
+  width: $autoCompleteWidth;
+  font-size: 15px;
+
+  input {
+    width: 100%;
+  }
+  .ui-autocomplete-input-token {
+    width: 100%;
+  }
+
+  ul.ui-autocomplete-multiple-container {
+
+    height: 85px;
+    overflow: auto;
+  }
+
+  .ui-autocomplete-panel {
+    height: 120px;
+  }
+}
+
+:host /deep/ {
+  .ui-dropdown {
+    height: 34px;
+    width: 326px !important;
+    border: 1px solid $kGrayscale4;
+
+    .ui-dropdown-label {
+      color: $kGrayscale1;
+      font-size: 15px;
+    }
+  }
+}

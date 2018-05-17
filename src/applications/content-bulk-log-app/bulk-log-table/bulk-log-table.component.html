@@ -1,73 +1,91 @@
-<k-area-blocker [showLoader]="(_store.bulkLog.state$ | async)?.loading || this._deferredLoading"
-                [message]="_blockerMessage">
-  <div class="kBulkLogTable" [class.noResults]="!_bulkLog.length">
-    <p-dataTable #dataTable
-                 dataKey="id"
-                 scrollable="true"
-                 scrollHeight="100%"
-                 [value]="_bulkLog"
-                 [emptyMessage]="_emptyMessage"
-                 [rowTrackBy]="rowTrackBy"
-                 (selectionChange)="_onSelectionChange($event)"
-                 [(selection)]="selectedBulkLogItems"
-                 kStickyHeader [sticksTo]="'bulklogTags'" stickyClass="stickyHeader" [stickyId]="'bulklogTable'">
-      <p-column [style]="{'width':'44px', 'padding-left': '14px'}"
-                selectionMode="multiple"></p-column>
+  <div class="kBulkLogTable" [class.noResults]="!_bulkLog?.length">
 
-      <p-column field="fileName"
-                [header]="'applications.content.bulkUpload.table.fileName' | translate"
-                [style]="{'width':'350px'}">
-        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <span class="kBulkLogFileName">{{ bulkLogItem[col.field] }}</span>
-        </ng-template>
-      </p-column>
+    <p-table
+            [scrollable]="true"
+            scrollHeight="100%"
+            [value]="_bulkLog"
+            dataKey="id"
+            [rowTrackBy]="rowTrackBy"
+            [defaultSortOrder]="_defaultSortOrder"
+            [(selection)]="selectedBulkLogItems"
+            (selectionChange)="_onSelectionChange($event)"
+            kStickyHeader [sticksTo]="'bulklogTags'" stickyClass="stickyHeader" [stickyId]="'bulklogTable'">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width:44px; padding-left: 14px">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th style="width:350px">
+            {{'applications.content.bulkUpload.table.fileName' | translate}}
+          </th>
+          <th style="width:90px">
+            {{'applications.content.bulkUpload.table.uploadedItem' | translate}}
+          </th>
+          <th>
+            {{'applications.content.bulkUpload.table.uploadedBy' | translate}}
+          </th>
+          <th>
+            {{'applications.content.bulkUpload.table.uploadedOn' | translate}}
+          </th>
+          <th style="width: 80px">
+            {{'applications.content.bulkUpload.table.numOfObjects' | translate}}
+          </th>
+          <th>
+            {{'applications.content.bulkUpload.table.status' | translate}}
+          </th>
+          <th style="width: 80px" *ngIf="_actionsAllowed"></th>
+        </tr>
+      </ng-template>
 
-      <p-column field="bulkUploadObjectType"
-                [header]="'applications.content.bulkUpload.table.uploadedItem' | translate"
-                [style]="{'width':'90px'}">
-        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <span>{{ bulkLogItem[col.field] | kBulkLogTableObjectType }}</span>
-        </ng-template>
-      </p-column>
+      <ng-template pTemplate="body" let-bulkLogItem>
+        <tr [pSelectableRow]="bulkLogItem">
 
-      <p-column field="uploadedBy"
-                [header]="'applications.content.bulkUpload.table.uploadedBy' | translate">
-        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <span>{{ bulkLogItem['uploadedBy'] || bulkLogItem['uploadedByUserId'] }}</span>
-        </ng-template>
-      </p-column>
+          <td style="width:44px; padding-left: 14px">
+            <p-tableCheckbox [value]="bulkLogItem"></p-tableCheckbox>
+          </td>
 
-      <p-column field="uploadedOn"
-                [header]="'applications.content.bulkUpload.table.uploadedOn' | translate">
-        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <span>{{ bulkLogItem[col.field] | kDate }}</span>
-        </ng-template>
-      </p-column>
+          <td style="width:350px">
+            <span class="kBulkLogFileName" [kTooltip]="bulkLogItem.fileName">{{ bulkLogItem.fileName }}</span>
+          </td>
 
-      <p-column field="numOfObjects"
-                [header]="'applications.content.bulkUpload.table.numOfObjects' | translate"
-                [style]="{'width':'80px'}">
-        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <span>{{ !bulkLogItem[col.field] || bulkLogItem[col.field] < 0 ? 0 : bulkLogItem[col.field] }}</span>
-        </ng-template>
-      </p-column>
+          <td style="width:90px">
+            <span [kTooltip]="bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType">
+              {{ bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType }}
+            </span>
+          </td>
 
-      <p-column field="status"
-                [header]="'applications.content.bulkUpload.table.status' | translate">
-        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <i [class]="bulkLogItem[col.field] | kBulkLogTableStatusIcon"></i>
-          <span class="kBulkLogTableStatusMessage">{{ bulkLogItem[col.field] | kBulkLogTableStatus }}</span>
-        </ng-template>
-      </p-column>
+          <td>
+            <span [kTooltip]="bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId">
+              {{ bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId }}
+            </span>
+          </td>
 
-      <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
-        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <div class="kBulkLogTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, bulkLogItem)"></button>
-          </div>
-        </ng-template>
-      </p-column>
-    </p-dataTable>
+          <td>
+            <span>{{ bulkLogItem.uploadedOn | kDate }}</span>
+          </td>
+
+          <td style="width:80px">
+            <span>{{ !bulkLogItem.numOfObjects || bulkLogItem.numOfObjects < 0 ? 0 : bulkLogItem.numOfObjects }}</span>
+          </td>
+
+          <td>
+            <i [class]="bulkLogItem.status | kBulkLogTableStatusIcon"></i>
+            <span class="kBulkLogTableStatusMessage">{{ bulkLogItem.status | kBulkLogTableStatus }}</span>
+          </td>
+
+          <td style="overflow: visible; width: 80px" *ngIf="_actionsAllowed">
+            <div class="kBulkLogTableActions">
+              <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, bulkLogItem)"></button>
+            </div>
+          </td>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <div class="emptymessage">{{_emptyMessage}}</div>
+      </ng-template>
+    </p-table>
+
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
   </div>
-</k-area-blocker>

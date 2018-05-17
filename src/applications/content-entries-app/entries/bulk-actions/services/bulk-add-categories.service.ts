@@ -5,89 +5,98 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaCategoryEntry } from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
 import { BulkActionBaseService } from './bulk-action-base.service';
-import { CategoryEntryAddAction } from "kaltura-ngx-client/api/types/CategoryEntryAddAction";
+import { CategoryEntryAddAction } from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
 import { CategoryEntryListAction } from 'kaltura-ngx-client/api/types/CategoryEntryListAction';
 import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
-
-export interface EntryCategoryItem
-{
-  id : number,
-  fullIdPath : number[],
-  name : string,
-  fullNamePath : string[]
-}
+import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 @Injectable()
-export class BulkAddCategoriesService extends BulkActionBaseService<EntryCategoryItem[]> {
+export class BulkAddCategoriesService extends BulkActionBaseService<CategoryData[]> {
 
-  constructor(_kalturaServerClient: KalturaClient) {
+  constructor(_kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService) {
     super(_kalturaServerClient);
   }
 
-  public execute(selectedEntries: KalturaMediaEntry[], categories : EntryCategoryItem[]) : Observable<{}>{
-    return Observable.create(observer =>{
+  public execute(entries: KalturaMediaEntry[], categories: CategoryData[]): Observable<void> {
+    return Observable.create(observer => {
+      if (!entries || !entries.length || !categories || !categories.length) {
+        observer.error(new Error(this._appLocalization.get('applications.content.bulkActions.noCategoriesOrEntries')));
+      }
 
       // load all category entries so we can check if an entry category already exists and prevent sending it
-      const filter: KalturaCategoryEntryFilter = new KalturaCategoryEntryFilter();
-      let entriesIds = "";
-      selectedEntries.forEach((entry, index) => {
-        entriesIds += entry.id;
-        if (index < selectedEntries.length -1){
-          entriesIds += ",";
-        }
+      const filter = new KalturaCategoryEntryFilter({
+        entryIdIn: entries.map(({ id }) => id).join(',')
       });
-      filter.entryIdIn = entriesIds;
-      this._kalturaServerClient.request(new CategoryEntryListAction({
-        filter: filter
-      })).subscribe(
-        response => {
-          // got all entry categories - continue with execution
-          const entryCategories: KalturaCategoryEntry[] = response.objects;
-          let requests: CategoryEntryAddAction[] = [];
-
-          selectedEntries.forEach(entry => {
-            // add selected categories
-            categories.forEach(category => {
-              // add the request only if the category entry doesn't exist yet
-              if (!this.categoryEntryExists(entry, category, entryCategories)) {
-                requests.push(new CategoryEntryAddAction({
-                  categoryEntry: new KalturaCategoryEntry({
-                    entryId: entry.id,
-                    categoryId: category.id
-                  })
-                }));
-              }
+      this._kalturaServerClient
+        .request(new CategoryEntryListAction({ filter }))
+        .subscribe(
+          response => {
+            // got all entry categoriesId - continue with execution
+            const entryCategories: KalturaCategoryEntry[] = response.objects;
+            const requests: CategoryEntryAddAction[] = [];
+            const alreadyAdded: { entryName: string, categoryName: string }[] = [];
+            entries.forEach(entry => {
+              // add selected categories
+              categories.forEach(category => {
+                // add the request only if the category entry doesn't exist yet
+                if (!this.categoryEntryExists(entry.id, category.id, entryCategories)) {
+                  requests.push(new CategoryEntryAddAction({
+                    categoryEntry: new KalturaCategoryEntry({
+                      entryId: entry.id,
+                      categoryId: category.id
+                    })
+                  }));
+                } else {
+                  alreadyAdded.push({ entryName: entry.name, categoryName: category.name });
+                }
+              });
             });
-          });
 
-          this.transmit(requests, true).subscribe(
-            result => {
-              observer.next({})
+            const notifyAlreadyAdded = () =>
+            {
+                if (alreadyAdded.length) {
+                    const message = alreadyAdded.map(({ entryName, categoryName }) =>
+                        this._appLocalization.get(
+                            'applications.content.bulkActions.entryAlreadyAssignedToCategory',
+                            [entryName, categoryName]
+                        )
+                    ).join('\n');
+                    this._browserService.alert({ header: this._appLocalization.get('app.common.attention'), message });
+                }
+            };
+
+            if (requests && requests.length) {
+              this.transmit(requests, true).subscribe(
+                () => {
+                  observer.next();
+                  observer.complete();
+                    notifyAlreadyAdded();
+                },
+                error => {
+                  observer.error(error);
+                }
+              );
+            } else {
+              observer.next();
               observer.complete();
-            },
-            error => {
-              observer.error(error);
+                notifyAlreadyAdded();
             }
-          );
-
-        },
-        error => {
-          observer.error(error);
-        }
-      );
-
+          },
+          error => {
+            observer.error(error);
+          }
+        );
     });
   }
 
-  private categoryEntryExists(entry: KalturaMediaEntry, category: EntryCategoryItem, entryCategories: KalturaCategoryEntry[]): boolean{
-    let found = false;
-    for (let i = 0;  i < entryCategories.length; i++){
-      if (entryCategories[i].categoryId === category.id && entryCategories[i].entryId === entry.id){
-        found = true;
-        break;
-      }
-    }
-    return found;
+  private categoryEntryExists(entryId: string, categoryId: number, entryCategories: KalturaCategoryEntry[]): boolean {
+    return !!entryCategories.find(entryCategory => {
+      return entryCategory.categoryId === categoryId && entryCategory.entryId === entryId;
+    });
   }
 
 }

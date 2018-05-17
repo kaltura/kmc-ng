@@ -5,11 +5,20 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { BulkActionBaseService } from './bulk-action-base.service';
 import { XInternalXAddBulkDownloadAction } from './XInternalXAddBulkDownloadAction';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+
+export class BulkDownloadError extends Error {
+  type = 'bulkDownload';
+
+  constructor(message: string) {
+    super(message);
+  }
+}
 
 @Injectable()
 export class BulkDownloadService extends BulkActionBaseService<number> {
 
-  constructor(_kalturaServerClient: KalturaClient) {
+  constructor(_kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization) {
     super(_kalturaServerClient);
   }
 
@@ -35,7 +44,7 @@ export class BulkDownloadService extends BulkActionBaseService<number> {
             observer.complete();
           },
           error => {
-            observer.error(error);
+            observer.error(new BulkDownloadError(this._appLocalization.get('applications.content.bulkActions.downloadFailed')));
           }
       );
     });

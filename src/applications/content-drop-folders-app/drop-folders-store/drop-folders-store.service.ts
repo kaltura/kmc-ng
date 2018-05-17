@@ -18,28 +18,34 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { DropFolderFileListAction } from 'kaltura-ngx-client/api/types/DropFolderFileListAction';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { ListAdapter, ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
-import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters/filter-types/dates-range-type';
+import { DatesRangeAdapter, DatesRangeType, ListTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
 import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
 import { DropFolderFileDeleteAction } from 'kaltura-ngx-client/api/types/DropFolderFileDeleteAction';
-import { environment } from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { serverConfig } from 'config/server';
+import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
+
+export enum SortDirection {
+  Desc = -1,
+  Asc = 1
+}
 
 export interface DropFoldersFilters {
   pageSize: number,
   pageIndex: number,
   freeText: string,
   createdAt: DatesRangeType,
-  status: ListType
+  status: string[],
+  sortBy: string,
+  sortDirection: number
 }
 
 @Injectable()
@@ -74,9 +80,14 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              contentDropFoldersMainView: ContentDropFoldersMainViewService,
               _logger: KalturaLogger) {
     super(_logger);
-    this._prepare();
+    if (contentDropFoldersMainView.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy() {
@@ -85,6 +96,11 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
   }
 
   private _prepare(): void {
+
+    // NOTICE: do not execute here any logic that should run only once.
+    // this function will re-run if preparation failed. execute your logic
+    // only after the line where we set isReady to true
+
     if (!this._isReady) {
       this._isReady = true;
 
@@ -155,7 +171,11 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       .switchMap(({ dropFoldersList, error }) => {
         if (!dropFoldersList.length || error) {
           this._browserService.alert({
-            message: error || this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert')
+              header: this._appLocalization.get('app.common.attention'),
+            message: error || this._appLocalization.get(
+                'applications.content.dropFolders.errors.dropFoldersAlert',
+                [serverConfig.externalLinks.kaltura.contactUs, serverConfig.externalLinks.kaltura.dropFoldersManual]
+            )
           });
 
           return Observable.of({
@@ -168,9 +188,6 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         const filter = new KalturaDropFolderFileFilter({});
         let pager: KalturaFilterPager = null;
 
-        const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-        advancedSearch.type = KalturaSearchOperatorType.searchAnd;
-
         const data: DropFoldersFilters = this._getFiltersAsReadonly();
 
         // use selected folders - list of folders ids separated by comma
@@ -179,6 +196,11 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         // filter 'freeText'
         if (data.freeText) {
           filter.fileNameLike = data.freeText;
+        }
+
+        // update the sort by args
+        if (data.sortBy) {
+          filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
         }
 
         // filter 'createdAt'
@@ -228,8 +250,8 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
   }
 
-  private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaDropFolderFileFilter, requestFilterProperty: keyof KalturaDropFolderFileFilter): void {
-    const value = (list || []).map(item => item.value).join(',');
+  private _updateFilterWithJoinedList(list: string[], requestFilter: KalturaDropFolderFileFilter, requestFilterProperty: keyof KalturaDropFolderFileFilter): void {
+    const value = (list || []).map(item => item).join(',');
 
     if (value) {
       requestFilter[requestFilterProperty] = value;
@@ -248,8 +270,9 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         filter: new KalturaDropFolderFilter({
           orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
           statusEqual: KalturaDropFolderStatus.enabled
-        }),
-        acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
+        })
+      }).setRequestOptions({
+          acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
       }))
       .map(response => {
         this._dropFolders.state.next({ loading: false, errorMessage: null });
@@ -260,7 +283,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
           response.objects.forEach(object => {
             if (object instanceof KalturaDropFolder) {
               df = object;
-              if (df.fileHandlerType.toString() === KalturaDropFolderFileHandlerType.content.toString()) {
+              if (df.fileHandlerType === KalturaDropFolderFileHandlerType.content) {
                 const cfg: KalturaDropFolderContentFileHandlerConfig = df.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
                 if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
                   dropFoldersList.push(df);
@@ -279,7 +302,13 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
           return { dropFoldersList, error: null }
         } else {
-          return { dropFoldersList: [], error: this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert') };
+          return {
+              dropFoldersList: [],
+              error: this._appLocalization.get(
+                  'applications.content.dropFolders.errors.dropFoldersAlert',
+                  [serverConfig.externalLinks.kaltura.contactUs, serverConfig.externalLinks.kaltura.dropFoldersManual]
+              )
+          };
         }
       })
       .publishReplay(1)
@@ -299,7 +328,9 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       pageIndex: 0,
       freeText: '',
       createdAt: { fromDate: null, toDate: null },
-      status: []
+      status: [],
+      sortBy: 'createdAt',
+      sortDirection: SortDirection.Desc,
     };
   }
 
@@ -309,7 +340,9 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       pageIndex: new NumberTypeAdapter(),
       freeText: new StringTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
-      status: new ListAdapter()
+      status: new ListTypeAdapter<string>(),
+      sortBy: new StringTypeAdapter(),
+      sortDirection: new NumberTypeAdapter(),
     };
   }
 
@@ -332,7 +365,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
     const requests = ids.map(id => new DropFolderFileDeleteAction({ dropFolderFileId: id }));
 
-    const maxRequestsPerMultiRequest = environment.modules.dropFolders.bulkActionsLimit;
+    const maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit;
 
     // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest
     const splittedRequests = [];

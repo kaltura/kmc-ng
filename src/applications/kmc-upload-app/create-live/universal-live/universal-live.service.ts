@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {environment} from 'app-environment';
+import { subApplicationsConfig } from 'config/sub-applications';
 import {Http} from '@angular/http';
+import { serverConfig } from 'config/server';
 
 @Injectable()
 export class UniversalLiveService {
@@ -10,7 +11,10 @@ export class UniversalLiveService {
   }
 
   public getDefaultIp(): Observable<string> {
-    let akamaiEdgeServerIpURL = environment.modules.createLive.akamaiEdgeServerIpURL;
+    if (!(!!serverConfig.externalLinks.live && !!serverConfig.externalLinks.live.akamaiEdgeServerIpURL)){
+        return Observable.throw(new Error("Failed to load Akamai Edge Server IP URL.\nPlease update primary and secondary encoder IP manually."));
+    }
+    let akamaiEdgeServerIpURL = serverConfig.externalLinks.live.akamaiEdgeServerIpURL;
     const pattern = /^https?:\/\//;
 
     if (!pattern.test(akamaiEdgeServerIpURL)) {
@@ -25,7 +29,6 @@ export class UniversalLiveService {
         if (match.length > 1) {
           return match[1];
         }
-
         return '';
       });
   }

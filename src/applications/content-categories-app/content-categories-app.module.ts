@@ -8,7 +8,8 @@ import {
   CategoriesBulkRemoveTagsService
 } from './categories/bulk-actions/services';
 import {CategoriesBulkActionsComponent} from './categories/bulk-actions/categories-bulk-actions.component';
-import {ContentSharedModule} from 'app-shared/content-shared/content-shared.module';
+import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
+
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
@@ -23,6 +24,7 @@ import {
   ConfirmDialogModule,
   DataTableModule,
   DropdownModule,
+  InputSwitchModule,
   InputTextareaModule,
   InputTextModule,
   MenuModule,
@@ -32,19 +34,25 @@ import {
   SharedModule,
   SpinnerModule,
   TieredMenuModule,
-  TreeModule
+  TreeModule,
 } from 'primeng/primeng';
+import {TableModule} from 'primeng/table';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 
 import {routing} from './content-categories-app.routes';
 import {ContentCategoriesComponent} from './content-categories.component';
 
-import {DynamicMetadataFormModule, MetadataProfileModule} from 'app-shared/kmc-shared';
+import {DynamicMetadataFormModule} from 'app-shared/kmc-shared';
 
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
-import {PrimeTreeModule} from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
+import {
+  AreaBlockerModule,
+  InputHelperModule,
+  KalturaUIModule,
+  StickyModule,
+  TooltipModule
+} from '@kaltura-ng/kaltura-ui';
 import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
@@ -52,13 +60,18 @@ import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-p
 import {CategoryComponentsList} from './category/category-components-list';
 import {CategoriesComponentsList} from './categories/categories-components-list';
 import {CategoryCanDeactivate} from './category/category-can-deactivate.service';
-import {CategoryParentSelectorComponent} from './categories/category-parent-selector/category-parent-selector.component';
+import {DetailsBarModule} from '@kaltura-ng/kaltura-ui/details-bar';
+import {CategoriesUtilsService} from './categories-utils.service';
 import {NewCategoryComponent} from './categories/new-category/new-category.component';
 import {MoveCategoryComponent} from './categories/move-category/move-category.component';
-import {CategoriesRefineFiltersService} from './categories/categories-refine-filters/categories-refine-filters.service';
+import {CategoriesRefineFiltersService} from './categories/categories-refine-filters.service';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 
 @NgModule({
     imports: [
+        FiltersModule,
         AccordionModule,
         AreaBlockerModule,
         AutoCompleteModule,
@@ -67,6 +80,7 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         CheckboxModule,
         CommonModule,
         ConfirmDialogModule,
+        CategoriesModule,
         DataTableModule,
         DropdownModule,
         DynamicFormModule,
@@ -74,7 +88,6 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         InputTextareaModule,
         InputTextModule,
         KalturaCommonModule,
-        MetadataProfileModule,
         DynamicMetadataFormModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,
@@ -88,21 +101,24 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         ReactiveFormsModule,
         RouterModule.forChild(routing),
         SharedModule,
-        PrimeTreeModule,
         SpinnerModule,
         TagsModule,
         TieredMenuModule,
         TooltipModule,
         TreeModule,
-        ContentSharedModule,
-        StickyModule
+        DetailsBarModule,
+        StickyModule,
+        InputHelperModule,
+        InputSwitchModule,
+        TableModule,
+        KMCPermissionsModule,
+	    EntriesModule,
     ],
     declarations: [
         ContentCategoriesComponent,
         CategoryComponentsList,
         CategoriesComponentsList,
         CategoriesBulkActionsComponent,
-        CategoryParentSelectorComponent,
         MoveCategoryComponent,
         NewCategoryComponent
     ],
@@ -115,7 +131,7 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         CategoriesBulkChangeContentPrivacyService,
         CategoriesBulkChangeContributionPolicyService,
         CategoriesBulkChangeCategoryListingService,
-        CategoriesRefineFiltersService]
+        CategoriesUtilsService]
 })
 export class ContentCategoriesAppModule {
 }

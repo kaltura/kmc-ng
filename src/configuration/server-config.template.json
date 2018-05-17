@@ -1,0 +1,79 @@
+{
+  "kalturaServer": {
+    "uri" : "@kalturaServer.uri@",
+    "defaultPrivileges" : "@kalturaServer.defaultPrivileges@",
+    "deployUrl": "@kalturaServer.deployUrl@",
+    "previewUIConf": @kalturaServer.previewUIConf@,
+    "freeTrialExpiration": {
+      "enabled": @kalturaServer.freeTrialExpiration.enabled@,
+      "trialPeriodInDays": @kalturaServer.freeTrialExpiration.trialPeriodInDays@
+    },
+    "login": {
+        "limitAccess": {
+            "enabled": @kalturaServer.limitAccess.enabled@,
+            "verifyBetaServiceUrl": "@kalturaServer.limitAccess.verifyBetaServiceUrl@"
+        }
+    }
+  },
+  "cdnServers": {
+    "serverUri": "@cdnServers.serverUri@",
+    "securedServerUri": "@cdnServers.securedServerUri@"
+  },
+  "externalApps": {
+    "studio": {
+      "enabled": @externalApps.studio.enabled@,
+      "uri": "@externalApps.studio.uri@",
+      "html5_version":"@externalApps.studio.html5_version@",
+      "html5lib":"@externalApps.studio.html5lib@"
+    },
+    "studioV3": {
+      "enabled": @externalApps.studioV3.enabled@,
+      "uri": "@externalApps.studioV3.uri@",
+      "html5_version":"@externalApps.studioV3.html5_version@",
+      "html5lib":"@externalApps.studioV3.html5lib@"
+    },
+    "liveDashboard": {
+      "enabled": @externalApps.liveDashboard.enabled@,
+      "uri": "@externalApps.liveDashboard.uri@"
+    },
+    "liveAnalytics": {
+      "enabled": @externalApps.liveAnalytics.enabled@,
+      "uri": "@externalApps.liveAnalytics.uri@"
+    },
+    "kava": {
+      "enabled": @externalApps.kava.enabled@,
+      "uri": "@externalApps.kava.uri@"
+    },
+    "usageDashboard": {
+      "enabled": @externalApps.usageDashboard.enabled@,
+      "uri": "@externalApps.usageDashboard.uri@"
+    },
+    "editor": {
+      "enabled": @externalApps.editor.enabled@,
+      "uri": "@externalApps.editor.uri@"
+    }
+  },
+  "externalLinks": {
+    "previewAndEmbed": {
+      "embedTypes": "@externalLinks.previewAndEmbed.embedTypes@",
+      "deliveryProtocols": "@externalLinks.previewAndEmbed.deliveryProtocols@"
+    },
+    "kaltura": {
+      "userManual": "@externalLinks.kaltura.userManual@",
+      "support": "@externalLinks.kaltura.support@",
+      "signUp": "@externalLinks.kaltura.signUp@",
+      "contactUs": "@externalLinks.kaltura.contactUs@",
+      "upgradeAccount":"@externalLinks.kaltura.upgradeAccount@",
+      "contactSalesforce": "@externalLinks.kaltura.contactSalesforce@",
+      "dropFoldersManual": "@externalLinks.kaltura.dropFoldersManual@"
+    },
+    "uploads": {
+      "highSpeedUpload": "@externalLinks.uploads.highSpeedUpload@",
+      "needHighSpeedUpload": "@externalLinks.uploads.needHighSpeedUpload@",
+      "bulkUploadSamples": "@externalLinks.uploads.bulkUploadSamples@"
+    },
+    "live": {
+      "akamaiEdgeServerIpURL": "@externalLinks.live.akamaiEdgeServerIpURL@"
+    }
+  }
+}
