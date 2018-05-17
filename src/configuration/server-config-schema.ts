@@ -17,6 +17,7 @@ export const ServerConfigSchema = {
         kalturaServer: {
             properties: {
                 uri: {type: 'string'},
+                defaultPrivileges: {type: 'string'},
                 deployUrl: {type: 'string'},
                 previewUIConf: {type: 'number'},
                 freeTrialExpiration: {
