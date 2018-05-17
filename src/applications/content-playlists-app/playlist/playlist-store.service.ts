@@ -17,6 +17,9 @@ import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PlaylistCreationService } from 'app-shared/kmc-shared/events/playlist-creation';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
+import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views/main-views/content-playlists-main-view.service';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -71,6 +74,8 @@ export class PlaylistStore implements OnDestroy {
               private _browserService: BrowserService,
               private _playlistsStore: PlaylistsStore,
               private _playlistCreationService: PlaylistCreationService,
+              private _contentPlaylistView: ContentPlaylistViewService,
+              private _contentPlaylistsMainView: ContentPlaylistsMainViewService,
               private _pageExitVerificationService: PageExitVerificationService,
               @Host() private _widgetsManager: PlaylistWidgetsManager) {
     this._widgetsManager.playlistStore = this;
@@ -105,7 +110,7 @@ export class PlaylistStore implements OnDestroy {
           const newDirtyState = Object.keys(sectionsState)
             .reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
 
-          if (this._playlistIsDirty !== newDirtyState) {
+          if (newDirtyState && this._playlistIsDirty !== newDirtyState) {
             this._playlistIsDirty = newDirtyState;
 
             this._updatePageExitVerification();
@@ -146,22 +151,30 @@ export class PlaylistStore implements OnDestroy {
       .request(new PlaylistGetAction({ id }))
       .cancelOnDestroy(this)
       .subscribe(playlist => {
-          if (playlist.playlistType === KalturaPlaylistType.dynamic) {
-            if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
-              playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
-            }
-          }
+          if (this._contentPlaylistView.isAvailable({
+              playlist,
+              activatedRoute: this._playlistRoute,
+              section: ContentPlaylistViewSections.ResolveFromActivatedRoute
+          })) {
+              if (playlist.playlistType === KalturaPlaylistType.dynamic) {
+                  if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
+                      playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
+                  }
+              }
 
-          this._loadPlaylistSubscription = null;
-          this._playlist.next({ playlist });
-          const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(playlist, { isNewData: false });
-          if (playlistLoadedResult.errors.length) {
-            this._state.next({
-              action: ActionTypes.PlaylistLoadingFailed,
-              error: new Error('one of the widgets failed while handling data loaded event')
-            });
+              this._loadPlaylistSubscription = null;
+              this._playlist.next({ playlist });
+              const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(playlist, { isNewData: false });
+              if (playlistLoadedResult.errors.length) {
+                  this._state.next({
+                      action: ActionTypes.PlaylistLoadingFailed,
+                      error: new Error('one of the widgets failed while handling data loaded event')
+                  });
+              } else {
+                  this._state.next({ action: ActionTypes.PlaylistLoaded });
+              }
           } else {
-            this._state.next({ action: ActionTypes.PlaylistLoaded });
+              this._browserService.handleUnpermittedAction(true);
           }
         },
         error => {
@@ -205,17 +218,20 @@ export class PlaylistStore implements OnDestroy {
 
               if (newData) {
                 this._playlistId = currentPlaylistId;
+                this._playlistIsDirty = true;
 
-                this._playlist.next({
-                  playlist: new KalturaPlaylist({
-                    name: newData.name,
-                    description: newData.description,
-                    playlistContent: newData.playlistContent,
-                    playlistType: newData.type,
-                    creatorId: this._appAuth.appUser.id,
-                    totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
-                  })
-                });
+                  const playlist = new KalturaPlaylist({
+                      name: newData.name,
+                      description: newData.description,
+                      playlistContent: newData.playlistContent,
+                      playlistType: newData.type,
+                      creatorId: this._appAuth.appUser.id,
+                      totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
+                  });
+
+                  (<any>playlist).id = 'new';
+
+                this._playlist.next({ playlist });
 
                 setTimeout(() => {
                   const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(this.playlist, { isNewData: true });
@@ -229,7 +245,7 @@ export class PlaylistStore implements OnDestroy {
                   }
                 }, 0);
               } else {
-                this._router.navigate(['content/playlists']);
+                  this._contentPlaylistsMainView.open();
               }
             } else {
               // we must defer the loadPlaylist to the next event cycle loop to allow components
@@ -273,7 +289,7 @@ export class PlaylistStore implements OnDestroy {
                     } else {
                       if (id === 'new') {
                         this._playlistIsDirty = false;
-                        this._router.navigate(['playlist', res.result.id], { relativeTo: this._playlistRoute.parent });
+                          this._contentPlaylistView.open({ playlist: res.result, section: ContentPlaylistViewSections.Metadata });
                       } else {
                         this._loadPlaylist(this.playlistId);
                       }
@@ -319,25 +335,18 @@ export class PlaylistStore implements OnDestroy {
     }
   }
 
-  public openSection(sectionKey: string): void {
-    const navigatePath = this._sectionToRouteMapping[sectionKey];
-
-    if (navigatePath) {
-      this._router.navigate([navigatePath], { relativeTo: this._playlistRoute });
-    }
+  public openSection(sectionKey: ContentPlaylistViewSections): void {
+     this._contentPlaylistView.open({ section: sectionKey, playlist: this.playlist });
   }
 
-  public openPlaylist(playlistId: string) {
-    if (this.playlistId !== playlistId) {
+  public openPlaylist(playlist: KalturaPlaylist) {
+    if (this.playlistId !== playlist.id) {
       this.canLeaveWithoutSaving()
-        .cancelOnDestroy(this)
-        .subscribe(
-          response => {
-            if (response.allowed) {
-              this._router.navigate(['playlist', playlistId], { relativeTo: this._playlistRoute.parent });
-            }
-          }
-        );
+            .filter(({ allowed }) => allowed)
+            .cancelOnDestroy(this)
+            .subscribe(() => {
+                this._contentPlaylistView.open({ playlist, section: ContentPlaylistViewSections.Metadata });
+            });
     }
   }
 
@@ -372,7 +381,7 @@ export class PlaylistStore implements OnDestroy {
       .filter(({ allowed }) => allowed)
       .monitor('playlist store: return to playlists list')
       .subscribe(() => {
-        this._router.navigate(['content/playlists'])
+          this._contentPlaylistsMainView.open();
       });
   }
 }

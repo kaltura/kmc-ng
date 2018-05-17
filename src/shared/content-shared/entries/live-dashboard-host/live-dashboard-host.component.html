@@ -1,0 +1,5 @@
+<div class="kLiveDashboard">
+  <span *ngIf="!_liveDashboardUrl" class="kDevMsg">Couldn't load Live Dashboard</span>
+  <iframe *ngIf="_liveDashboardUrl" frameborder="0" [src]="_liveDashboardUrl | safe"></iframe>
+</div>
+
