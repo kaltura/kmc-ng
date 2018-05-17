@@ -31,7 +31,7 @@
                     (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)"
             >
               <ng-template let-node pTemplate="default">
-              <span class="kTreeNodeLabel">
+              <span class="kTreeNodeLabel" [kTooltip]="node.label" [delay]="1000">
                 {{node.label}}
               </span>
                 <div *ngIf="node.value==='scheduled'" (click)="_blockScheduleToggle($event)">
