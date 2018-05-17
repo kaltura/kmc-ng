@@ -45,8 +45,8 @@
     align-items: center;
     border-bottom: 1px solid $kGrayscale4;
     .kAddItemBtn {
+        flex: 0 0 auto;
       height: 34px;
-      width: 100px;
     }
 
     .kItemsNum {
