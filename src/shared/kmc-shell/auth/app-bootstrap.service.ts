@@ -1,12 +1,13 @@
-import { Injectable, InjectionToken, Inject, Optional, Type } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization, AppStorage } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from './app-authentication.service';
-import { modulesConfig } from 'config/modules';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { globalConfig } from 'config/global';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { serverConfig } from 'config/server';
 
 export enum BoostrappingStatus
 {
@@ -25,7 +26,7 @@ export class AppBootstrap implements CanActivate {
 
     constructor(private appLocalization: AppLocalization,
                 private auth: AppAuthentication,
-                private appStorage: AppStorage) {
+                private _browserService: BrowserService) {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -76,7 +77,9 @@ export class AppBootstrap implements CanActivate {
             this._initialized = true;
 
             // init localization, wait for localization to load before continuing
-            this.appLocalization.setFilesHash(globalConfig.client.appVersion);
+            const prefix = serverConfig.kalturaServer.deployUrl ? `${serverConfig.kalturaServer.deployUrl}i18n` : null;
+            this.appLocalization.setFilesHash(globalConfig.client.appVersion, prefix);
+
             const language = this.getCurrentLanguage();
             this.appLocalization.load(language, 'en').subscribe(
                 () => {
@@ -101,8 +104,8 @@ export class AppBootstrap implements CanActivate {
     private getCurrentLanguage(): string {
         let lang: string = null;
         // try getting last selected language from local storage
-        if (this.appStorage.getFromLocalStorage('kmc_lang') !== null) {
-            const userLanguage: string = this.appStorage.getFromLocalStorage('kmc_lang');
+        if (this._browserService.getFromLocalStorage('kmc_lang') !== null) {
+            const userLanguage: string = this._browserService.getFromLocalStorage('kmc_lang');
             if (kmcAppConfig.locales.find(locale => locale.id === userLanguage)) {
                 lang = userLanguage;
             }

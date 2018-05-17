@@ -20,12 +20,14 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 
 @Injectable()
 export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy {
   constructor(private _kalturaServerClient: KalturaClient,
+              private _appPermissions: KMCPermissionsService,
               private _metadataProfileService: MetadataProfileStore) {
   }
 
@@ -245,7 +247,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
 
           // handle default value for media types
           if (!filter.mediaTypeIn) {
-            filter.mediaTypeIn = '1,2,5,6,201';
+	          filter.mediaTypeIn = '1,2,5,6';
+	          if (this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM)) {
+		          filter.mediaTypeIn += ',201';
+	          }
           }
 
           // handle default value for statuses
@@ -291,9 +296,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
           new BaseEntryListAction({
             filter,
             pager: pagination,
-            responseProfile,
-            acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
-          })
+          }).setRequestOptions({
+                  responseProfile,
+                  acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
+              })
         )).map(response => ({ entries: response.objects, totalCount: response.totalCount })
       );
   }

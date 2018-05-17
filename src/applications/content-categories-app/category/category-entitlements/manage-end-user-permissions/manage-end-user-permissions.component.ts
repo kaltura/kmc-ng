@@ -16,6 +16,7 @@ import {
     ManageEndUserPermissionsRefineFiltersService,
     RefineList
 } from './manage-end-user-permissions-refine-filters.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface UserActionData {
   action: 'activate' | 'deactivate' | 'permissionLevel'| 'updateMethod' | 'delete',
@@ -33,7 +34,7 @@ export interface UserActionData {
       ManageEndUserPermissionsRefineFiltersService]
 })
 export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
-
+  public _kmcPermissions = KMCPermissions;
   public _selectedUsers: EndUserPermissionsUser[] = [];
   public _users: EndUserPermissionsUser[];
   public _usersCount: number;
@@ -56,6 +57,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     pageIndex: 0,
     pageSize: null,
   };
+  public _isTagsBarVisible = false;
 
   constructor(private _usersService: ManageEndUserPermissionsService,
               private _refineFiltersService: ManageEndUserPermissionsRefineFiltersService,

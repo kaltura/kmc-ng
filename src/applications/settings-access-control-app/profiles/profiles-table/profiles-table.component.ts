@@ -13,6 +13,8 @@ import {
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
+import { globalConfig } from 'config/global';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kAccessControlProfilesTable',
@@ -22,6 +24,7 @@ import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccess
 export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _deferredProfiles: KalturaAccessControl[];
 
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
   public _profiles: KalturaAccessControl[] = [];
   public _documentWidth = 2000;
   public _rowTrackBy: Function = (index: number, item: any) => item.id;
@@ -60,6 +63,7 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   constructor(private _appLocalization: AppLocalization,
+              private _appPermissions: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -87,14 +91,19 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   private _buildMenu(profile: KalturaAccessControl): void {
     this._items = [
       {
+        id: 'edit',
         label: this._appLocalization.get('applications.settings.accessControl.table.actions.edit'),
         command: () => this._onActionSelected('edit', profile)
       },
       {
+        id: 'delete',
         label: this._appLocalization.get('applications.settings.accessControl.table.actions.delete'),
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', profile)
       },
     ];
+
+    this._appPermissions.filterList(<{id: string}[]>this._items, { 'delete': KMCPermissions.ACCESS_CONTROL_DELETE });
   }
 
   private _onActionSelected(action: string, profile: KalturaAccessControl): void {

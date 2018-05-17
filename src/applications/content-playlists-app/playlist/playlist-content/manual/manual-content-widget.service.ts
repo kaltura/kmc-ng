@@ -12,9 +12,9 @@ import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry'
 import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
 import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBaseEntryFilter';
 import { PlaylistWidget } from '../../playlist-widget';
-import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
   selectionId?: string;
@@ -30,7 +30,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
 
 
   constructor(private _kalturaClient: KalturaClient) {
-    super(PlaylistWidgetKeys.Content);
+    super(ContentPlaylistViewSections.Content);
   }
 
   ngOnDestroy() {
@@ -103,8 +103,10 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
       if (this.data.playlistContent) {
         return this._kalturaClient.request(new BaseEntryListAction({
           filter: new KalturaBaseEntryFilter({ idIn: this.data.playlistContent }),
-          responseProfile: responseProfile,
+
           pager: new KalturaFilterPager({ pageSize: 500 })
+        }).setRequestOptions({
+            responseProfile
         }))
           .map(response => {
             return response.objects;
@@ -114,9 +116,10 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
       }
     } else {
       return this._kalturaClient.request(new PlaylistExecuteAction({
-        id: this.data.id,
-        acceptedTypes: [KalturaMediaEntry],
-        responseProfile: responseProfile
+        id: this.data.id
+      }).setRequestOptions({
+          acceptedTypes: [KalturaMediaEntry],
+          responseProfile
       }));
     }
   }

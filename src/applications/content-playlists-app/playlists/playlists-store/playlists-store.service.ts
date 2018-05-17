@@ -20,6 +20,8 @@ import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearc
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { globalConfig } from 'config/global';
 
 export enum SortDirection {
   Desc = -1,
@@ -54,9 +56,14 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
+              contentPlaylistsMainView: ContentPlaylistsMainViewService,
               _logger: KalturaLogger) {
-    super(_logger);
-    this._prepare();
+        super(_logger);
+        if (contentPlaylistsMainView.isAvailable()) {
+            this._prepare();
+        } else {
+            this._browserService.handleUnpermittedAction(true);
+        }
   }
 
   ngOnDestroy() {
@@ -153,7 +160,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       // update desired fields of entries
         responseProfile = new KalturaDetachedResponseProfile({
           type: KalturaResponseProfileType.includeFields,
-          fields: 'id,name,createdAt,playlistType'
+          fields: 'id,name,createdAt,playlistType,status'
         });
 
       // update the sort by args
@@ -178,7 +185,9 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
       // build the request
       return <any>this._kalturaServerClient.request(
-        new PlaylistListAction({ filter, pager, responseProfile })
+        new PlaylistListAction({ filter, pager}).setRequestOptions({
+            responseProfile
+        })
       );
     } catch (err) {
       return Observable.throw(err);
@@ -201,7 +210,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   }
 
   protected _createDefaultFiltersValue(): PlaylistsFilters {
-    const pageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey) || 50;
+    const pageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey) || globalConfig.client.views.tables.defaultPageSize;
     return {
       pageSize: pageSize,
       pageIndex: 0,

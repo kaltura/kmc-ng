@@ -14,7 +14,7 @@
                     [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
                     icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
       </div>
-      <a class="kClearAll" (click)="_clearCreatedComponents()">
+      <a class="kClearAll" (click)="_clearCreatedComponents()" [class.kDisabledLink]="!_createdAfter && !_createdBefore">
         {{'applications.content.filters.clearDates' | translate}}
       </a>
       <span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
@@ -30,7 +30,7 @@
                   (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
                   (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)">
             <ng-template let-node pTemplate="default">
-              <span class="kTreeNodeLabel">
+              <span class="kTreeNodeLabel" [kTooltip]="node.label" [delay]="1000">
                 {{node.label}}
               </span>
             </ng-template>

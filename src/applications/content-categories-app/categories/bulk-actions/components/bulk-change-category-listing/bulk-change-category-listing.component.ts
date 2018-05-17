@@ -41,7 +41,7 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
 
   // expose enum to the template
   public _appearInListType = AppearInListType;
-  public _appearInList = AppearInListType.NoRestriction;
+  public _appearInList = null;
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
   }
@@ -112,7 +112,7 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
         (data.objects || []).forEach((suggestedUser: KalturaUser) => {
           let isSelectable = true;
           suggestions.push({
-            name: suggestedUser.screenName + "(" + suggestedUser.id + ")",
+            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
             item: suggestedUser,
             isSelectable: isSelectable
           });

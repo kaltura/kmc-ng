@@ -13,6 +13,8 @@ import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { globalConfig } from 'config/global';
+import { KMCPermissionsService, KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kFeedsTable',
@@ -67,8 +69,10 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _emptyMessage = '';
 
   public _items: MenuItem[];
+  public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
     this._fillCopyToClipboardTooltips();
   }
@@ -123,14 +127,19 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _buildMenu(feed: KalturaBaseSyndicationFeed): void {
     this._items = [
       {
+        id: 'edit',
         label: this._appLocalization.get('applications.content.syndication.table.actions.edit'),
         command: () => this._onActionSelected('edit', feed)
       },
       {
+        id: 'delete',
         label: this._appLocalization.get('applications.content.syndication.table.actions.delete'),
+        styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', feed)
       },
     ];
+
+    this._permissionsService.filterList(<{ id: string }[]>this._items, { 'delete': KMCPermissions.SYNDICATION_DELETE });
   }
 
   private _fillCopyToClipboardTooltips(): void {

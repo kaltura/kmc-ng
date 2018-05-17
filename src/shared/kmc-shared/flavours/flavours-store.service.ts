@@ -57,6 +57,9 @@ export class FlavoursStore extends PartnerProfileStore implements OnDestroy {
     const favourParamsPager = new KalturaFilterPager();
     favourParamsPager.pageSize = 500;
 
-    return this._kalturaServerClient.request(new FlavorParamsListAction({pager: favourParamsPager, responseProfile}));
+    return this._kalturaServerClient.request(new FlavorParamsListAction({pager: favourParamsPager})
+        .setRequestOptions({
+            responseProfile
+        }));
   }
 }

@@ -21,7 +21,9 @@
     <p-column field="key"
               [header]="'applications.settings.metadata.table.fieldLabel' | translate">
       <ng-template let-col let-field="rowData" pTemplate="body">
-        <div class="kTitle" (click)="_editField(field)" [kTooltip]="'applications.settings.metadata.table.labelTT' | translate : {name: field['name']}">
+        <div class="kTitle kTableColumn"
+             [kTooltip]="'applications.settings.metadata.table.labelTT' | translate : {name: field['name']}"
+             (click)="_editField(field)">
           {{field[col.field]}}
         </div>
       </ng-template>
@@ -57,15 +59,17 @@
       </ng-template>
     </p-column>
 
-    <p-column>
+    <p-column *ngIf="(isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kNgIfPermitted)) || (!isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kNgIfPermitted))">
       <ng-template let-col let-field="rowData" let-i="rowIndex" pTemplate="body">
         <span class="kFieldsTableActions">
           <i class="kIconarrow_up kActionMoveDown"
+             *ngIf="_fields.length > 1"
              [kTooltip]="'applications.settings.metadata.table.moveDown' | translate"
              [class.kActionDisabled]="i + 1 === _fields?.length"
              (click)="i + 1 !== _fields?.length && _moveField(field, 'down')"></i>
 
           <i class="kIconarrow_up"
+             *ngIf="_fields.length > 1"
              [kTooltip]="'applications.settings.metadata.table.moveUp' | translate"
              [class.kActionDisabled]="i === 0"
              (click)="i !== 0 && _moveField(field, 'up')"></i>

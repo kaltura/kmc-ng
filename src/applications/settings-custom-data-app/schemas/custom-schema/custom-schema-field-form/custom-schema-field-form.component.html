@@ -55,8 +55,11 @@
 
     <div class="kRow">
       <span class="kLabel">{{'applications.settings.metadata.fieldForm.label' | translate}}</span>
+      <div class="kRequired" [class.kHasError]="_labelField.touched && _labelField.invalid">*</div>
       <div>
-        <input class="kControl" pInputText [formControl]="_labelField">
+        <input class="kControl" pInputText autofocus
+               [class.kHasError]="_labelField.touched && _labelField.invalid"
+               [formControl]="_labelField">
       </div>
     </div>
 
@@ -90,6 +93,7 @@
 
     <button type="button"
             class="kButtonBranded"
+            [disabled]="!_labelField.value || _saveDisabled"
             pButton [label]="_saveBtnLabel"
             (click)="_save()"></button>
   </div>

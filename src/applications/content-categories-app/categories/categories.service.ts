@@ -49,6 +49,8 @@ import {
   CategoriesModeType
 } from 'app-shared/content-shared/categories/categories-mode-type';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
+import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
+import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -120,10 +122,16 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                 private browserService: BrowserService,
                 private metadataProfileService: MetadataProfileStore,
                 private _appEvents: AppEventsService,
+                private _categoriesSearchService: CategoriesSearchService,
                 private _appLocalization: AppLocalization,
+                contentCategoriesMainViewService: ContentCategoriesMainViewService,
                 _logger: KalturaLogger) {
         super(_logger);
-        this._prepare();
+        if (contentCategoriesMainViewService.isAvailable()) {
+            this._prepare();
+        }else{
+            this.browserService.handleUnpermittedAction(true);
+        }
     }
 
     private _prepare(): void {
@@ -276,7 +284,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       // update desired fields of entries
       const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
-        fields: 'id, name, createdAt, directSubCategoriesCount, entriesCount, fullName, tags, parentId'
+        fields: 'id, name, createdAt, directSubCategoriesCount, entriesCount, fullName, tags, parentId, privacyContexts'
       });
 
       const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
@@ -432,8 +440,9 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       return this._kalturaClient.request(
         new CategoryListAction({
           filter,
-          pager: pagination,
-          responseProfile
+          pager: pagination
+        }).setRequestOptions({
+            responseProfile
         })
       );
     } catch (err) {
@@ -650,5 +659,15 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       }
 
       return moveCategoryData.categories.every(isValid);
+    }
+
+    public getCategoryById(id: number): Observable<CategoryData> {
+      const category = this._categoriesSearchService.getCachedCategory(id);
+
+      if (!category) {
+        return this._categoriesSearchService.getCategory(id);
+      }
+
+      return Observable.of(category);
     }
 }

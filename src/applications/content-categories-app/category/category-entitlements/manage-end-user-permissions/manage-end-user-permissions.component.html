@@ -16,7 +16,7 @@
     <div class="kBulkActionsContainer">
 
       <button class="kButtonBranded kAddItemBtn"
-              *ngIf="!_selectedUsers.length"
+              *ngIf="!_selectedUsers.length && _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kNgIfPermitted"
               pButton
               type="button"
               label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.addUsers' | translate}}"
@@ -37,17 +37,17 @@
                class="kSearchInput"
                [(ngModel)]="_query.freetext"
                (keyup.enter)="onFreetextChanged()"
-               placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+               placeholder="{{'applications.content.categoryDetails.entitlements.usersPermissions.searchUsers' | translate}}">
 
         <div #refineBtn class="kRefine">
           <i class="kIconfilter"></i>
-          <span>{{'applications.content.entries.refine' | translate}}</span>
+          <span>{{'applications.content.categoryDetails.entitlements.usersPermissions.refine' | translate}}</span>
           <i class="kIcondropdown_arrow_bottom dropdown"></i>
         </div>
 
       </div>
 
-      <div class="kBulkActions" [class.kHidden]="!_selectedUsers.length">
+      <div class="kBulkActions" [class.kHidden]="!_selectedUsers.length || _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kHiddenIfNotPermitted">
         <span class="kSelectedItems">
              • {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.selectedUsersCount' | translate: {'0':_selectedUsers.length} }}
         </span>
@@ -65,6 +65,7 @@
     <div class="kManageEndUserPermissionsFiltersTags">
       <kManageEndUserPermissionsFilterTags
               [refineFilters]="_refineFilters"
+              (onTagsBarVisible)="_isTagsBarVisible = $event"
       ></kManageEndUserPermissionsFilterTags>
     </div>
     <div class="kManageEndUserPermissionsTable">
@@ -75,6 +76,7 @@
       <kManageEndUserPermissionsTable
         [(selectedUsers)]="_selectedUsers"
         [users]="_users"
+        [isTagsBarVisible]="_isTagsBarVisible"
         (onActionSelected)="_onActionSelected($event)"
         [categoryInheritUserPermissions]="categoryInheritUserPermissions"
         (closeParentPopup)="parentPopupWidget?.close()">
@@ -91,7 +93,7 @@
 </k-area-blocker>
  
  
-<kPopupWidget #addUser [popupWidth]="790" [popupHeight]="447" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #addUser [popupWidth]="790" [popupHeight]="447" [modal]="true">
   <ng-template>
     <kAddUsers [parentPopupWidget]="addUser"
                [category]="category"

@@ -20,7 +20,7 @@ const listTypes: Array<keyof UsersFilters> = ['status', 'permissionLevels', 'upd
 
 })
 export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDestroy {
-
+  @Output() onTagsBarVisible = new EventEmitter<boolean>();
   @Output() onTagsChange = new EventEmitter<void>();
 
     @Input() set refineFilters(lists: RefineList[]) {
@@ -36,7 +36,7 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
     public _tags: TagItem[] = [];
     private _refineFiltersMap: Map<string, RefineList> = new Map<string, RefineList>();
     public _showTags = false;
-  
+
   constructor(private _manageEndUserPermissionsService: ManageEndUserPermissionsService, private _appLocalization: AppLocalization) {
   }
 
@@ -118,6 +118,9 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
       .cancelOnDestroy(this)
       .subscribe(({changes}) => {
         this._updateComponentState(changes);
+
+        const isTagsVisible = !!(this._tags && this._tags.length);
+        this.onTagsBarVisible.emit(isTagsVisible);
       });
   }
 

@@ -11,7 +11,9 @@
     </div>
   </div>
   <div class="kFooter">
-    <button type="button" class="kButtonBranded" pButton label="{{'app.common.apply' | translate}}"
+    <button type="button" class="kButtonBranded" pButton
+            label="{{'app.common.apply' | translate}}"
+            [disabled]="_selectedPolicy === null"
             (click)="_apply()"></button>
   </div>
 </div>

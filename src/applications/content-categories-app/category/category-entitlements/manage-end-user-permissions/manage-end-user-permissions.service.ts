@@ -237,7 +237,8 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
           const requests = new KalturaMultiRequest(
               new CategoryUserListAction({
                   filter,
-                  pager: pagination,
+                  pager: pagination
+              }).setRequestOptions({
                   responseProfile
               }),
               new CategoryGetAction({id: data.categoryId})

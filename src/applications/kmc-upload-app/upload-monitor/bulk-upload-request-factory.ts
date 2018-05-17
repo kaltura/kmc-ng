@@ -28,11 +28,12 @@ export class BulkUploadRequestFactory implements RequestFactory<BulkListAction, 
         bulkUploadFilter: new KalturaBulkUploadFilter({
           bulkUploadObjectTypeIn: bulkUploadObjectTypeIn.join(','),
           uploadedOnGreaterThanOrEqual: this.uploadedOn
-        }),
-        responseProfile: new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: 'id,status,uploadedOn'
         })
+      }).setRequestOptions({
+          responseProfile: new KalturaDetachedResponseProfile({
+              type: KalturaResponseProfileType.includeFields,
+              fields: 'id,status,uploadedOn'
+          })
       });
     }
   }

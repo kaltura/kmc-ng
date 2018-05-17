@@ -24,6 +24,7 @@
       width: 180px;
       flex: 0 0 auto;
       word-wrap: break-word;
+      display: flex;
 
       .kLabelText{
         width: 110px;
@@ -77,6 +78,11 @@
       .kActionLink{
         padding-left: 20px;
         font-size: 15px;
+      }
+
+      .kDisabled {
+        cursor: none;
+        color: $kGrayscale3;
       }
     }
   }

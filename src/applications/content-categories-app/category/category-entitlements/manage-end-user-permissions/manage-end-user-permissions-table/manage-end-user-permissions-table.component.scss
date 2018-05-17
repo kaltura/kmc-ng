@@ -25,8 +25,12 @@
     font-weight: 700;
   }
 
+  &.kTagsVisible /deep/ .ui-datatable-scrollable-body {
+    height: calc(100vh - 320px) !important;
+  }
+
   /deep/ .ui-datatable-scrollable-body {
-    max-height: 560px !important;
+    height: calc(100vh - 280px) !important;
     overflow: auto;
   }
 }

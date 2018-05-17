@@ -9,6 +9,11 @@ $app-styles-path: '../../../styles';
   border-bottom: 1px solid $kGrayscale4;
   padding: 30px 28px 28px 28px;
 
+  .kProfileIcon {
+    width: 28px;
+    background-repeat: no-repeat;
+  }
+
   .kDistributedProfileContent {
     display: flex;
     flex-grow: 1;
@@ -19,7 +24,6 @@ $app-styles-path: '../../../styles';
 
     .kTitle {
       margin-bottom: 16px;
-      cursor: pointer;
 
       .kDistributorPageLink {
         text-decoration: none;
@@ -29,6 +33,7 @@ $app-styles-path: '../../../styles';
         font-size: 15px;
         font-weight: bold;
         line-height: 18px;
+        cursor: pointer;
       }
 
       .kTitleIcon {
@@ -38,6 +43,7 @@ $app-styles-path: '../../../styles';
         position: relative;
         top: 4px;
         line-height: 12px;
+        cursor: pointer;
       }
     }
 
@@ -58,6 +64,10 @@ $app-styles-path: '../../../styles';
 
       .kMoreDetails, .kLastUpdate {
         white-space: nowrap;
+      }
+
+      .kAutoDistribution {
+        display: inline-flex;
       }
 
       .kDelimiter {
@@ -121,12 +131,12 @@ $app-styles-path: '../../../styles';
       height: 34px;
       width: 42px;
       font-size: 24px;
-      margin-right: 16px;
     }
 
     .kUpdateBtn {
       height: 34px;
       width: 100px;
+      margin-left: 16px;
     }
   }
 }

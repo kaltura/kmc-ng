@@ -9,6 +9,7 @@
             [rowTrackBy]="rowTrackBy"
             [sortField]="sortField"
             [sortOrder]="sortOrder"
+            [defaultSortOrder]="_defaultSortOrder"
             (sortFunction)="_onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedCategories"
             (selectionChange)="_onSelectionChange($event)"
@@ -49,7 +50,7 @@
           </td>
 
           <td>
-            <div [kTooltip]="category.fullName" class="kTitle" (click)="onActionSelected('edit',category)">
+            <div [kTooltip]="category.fullName" class="kTitle kTableColumn" (click)="onActionSelected('edit',category)">
               {{category.name}}</div>
           </td>
 

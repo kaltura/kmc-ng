@@ -4,7 +4,6 @@ import {Observable} from 'rxjs/Observable';
 import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
-import {CategoryWidgetKeys} from '../category-widget-keys';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
@@ -21,6 +20,8 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {CategoryService} from '../category.service';
 import { modulesConfig } from 'config/modules';
+import { globalConfig } from 'config/global';
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -33,12 +34,12 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
               private _categoriesUtilsService: CategoriesUtilsService,
               private _categoryService: CategoryService,
               private _appLocalization: AppLocalization) {
-    super(CategoryWidgetKeys.SubCategories);
+    super(ContentCategoryViewSections.SubCategories);
   }
 
   protected onActivate(firstTimeActivating: boolean) {
     if (this.data && !this.data.directSubCategoriesCount) {
-      this._categoryService.openSection(CategoryWidgetKeys.Metadata);
+      this._categoryService.openSection(ContentCategoryViewSections.Metadata);
       return;
     }
 
@@ -77,7 +78,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
 
   private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
-    const subcategoriesLimit: number = modulesConfig.contentShared.categories.subCategoriesLimit || 50;
+    const subcategoriesLimit: number = modulesConfig.contentShared.categories.subCategoriesLimit || globalConfig.client.views.tables.defaultPageSize;
     if (!parentCategory) {
       return Observable.throw(new Error('parentCategory to get subcategories for is not defined'));
     }
@@ -103,12 +104,13 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
       // build the request
       return <any>this._kalturaClient.request(
-        new CategoryListAction({
-          filter,
-          pager: pagination,
-          responseProfile
-        })
-      );
+            new CategoryListAction({
+                filter,
+                pager: pagination
+            }).setRequestOptions({
+                responseProfile
+            })
+        );
     } catch (err) {
       return Observable.throw(err);
     }

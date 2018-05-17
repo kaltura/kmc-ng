@@ -45,8 +45,8 @@
     align-items: center;
     border-bottom: 1px solid $kGrayscale4;
     .kAddItemBtn {
+        flex: 0 0 auto;
       height: 34px;
-      width: 100px;
     }
 
     .kItemsNum {
@@ -132,16 +132,18 @@
     overflow-y: auto;
     padding-bottom: 34px;
   }
+  kManageEndUserPermissionsTable{
+    width: 100%;
+  }
 
   .kTableFooter {
     flex: 0 0 auto;
-    bottom: 0px;
+    bottom: 0;
     height: 34px;
     background-color: white;
     border-top: 1px solid $kGrayscale6;
     position: fixed;
     box-sizing: border-box;
-    flex: 0 0 auto;
     padding: 0 14px 28px;
     display: block;
     width: 996px;
@@ -155,21 +157,20 @@
   }
 }
 
+
 :host /deep/ {
-  .ui-dropdown{
+  .ui-dropdown {
     height: 34px;
-    width: 140px;
     border: 1px solid $kGrayscale4;
 
-    .ui-dropdown-label{
+    .ui-dropdown-label {
       color: $kGrayscale1;
       font-size: 15px;
     }
   }
-  .kBulkActionsBtn {
-    font-size: 15px;
-  }
-
+}
+.kBulkActionsBtn {
+  font-size: 15px;
 }
 
 :host{

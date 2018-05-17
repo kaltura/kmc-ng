@@ -1,0 +1,25 @@
+@import "app-theme/_variables.scss";
+
+:host {
+  width: 100%;
+}
+
+.kLiveDashboard{
+  height: 100%;
+  width:100%;
+  iframe{
+    height: 100%;
+    margin: 0 auto;
+    max-width: 1280px;
+    min-width: 1035px;
+    display: block;
+    width: 100%;
+  }
+}
+.kDevMsg{
+  display: block;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 16px;
+  font-weight: 700;
+}
