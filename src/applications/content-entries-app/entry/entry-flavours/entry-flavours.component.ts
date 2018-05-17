@@ -15,6 +15,8 @@ import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { Observable } from 'rxjs/Observable';
+import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -42,8 +44,6 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
     public _loadingError = null;
 
 	public _documentWidth: number = 2000;
-
-	private _importPopupStateChangeSubscribe: ISubscription;
 
 	constructor(public _widgetService: EntryFlavoursWidget,
               private _uploadManagement: UploadManagement,
@@ -166,12 +166,23 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				this.drmPopup.open();
 				break;
             case 'link':
-                this.linkPopup.open();
+                this._linkFlavor();
                 break;
             default:
                 break;
 		}
 	}
+
+    private _linkFlavor(): void {
+        if (this._widgetService.storageProfile) {
+            this.linkPopup.open();
+        } else {
+            this._browserService.alert({
+                header: this._appLocalization.get('app.common.error'),
+                message: this._appLocalization.get('applications.content.entryDetails.flavours.link.noStorageProfile')
+            });
+        }
+    }
 
 	private _setUploadFilter(entry: KalturaMediaEntry): string{
 		let filter = "";

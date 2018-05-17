@@ -79,6 +79,11 @@
 	</kPopupWidget>
 
     <kPopupWidget #linkPopup [popupWidth]="791" [popupHeight]="460" [modal]="true">
-        <kFlavorLink [flavor]="_selectedFlavor" [parentPopupWidget]="importPopup"></kFlavorLink>
+        <ng-template>
+            <kFlavorLink [flavor]="_selectedFlavor"
+                         [storageProfile]="_widgetService.storageProfile"
+                         [conversionProfileAsset]="_widgetService.conversionProfileAsset"
+                         [parentPopupWidget]="linkPopup"></kFlavorLink>
+        </ng-template>
     </kPopupWidget>
 </k-area-blocker>

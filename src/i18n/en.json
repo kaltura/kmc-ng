@@ -1470,6 +1470,7 @@
                     },
                     "link": {
                         "noStorageProfile": "Remote Storage is not set for this Entry's Transcoding Profile",
+                        "requiredFlavorsMissing": "Some required Transcoding Flavors are missing. Continue?",
                         "updateVideo": "Update Video",
                         "remoteStorageName": "Remote Storage Name",
                         "id": "ID",
@@ -1478,7 +1479,7 @@
                         "cancel": "Cancel",
                         "link": "Link",
                         "filePathName": "File Path Name",
-                        "invalidUrl": "Please enter a valid URL",
+                        "required": "Please enter a URL",
                         "enterFlavorUrl": "Enter the Flavor URL"
                     },
                     "deleteConfirm": "Are you sure you want to delete this Asset: {{0}} ?",

@@ -5,23 +5,31 @@
     <div class="kContainer">
         <div class="kStorageProfileInfo">
             <div class="kStorageProfileInfoItem">
-                {{'applications.content.entryDetails.flavours.link.remoteStorageName' | translate}}
+                <span class="kStorageProfileInfoItemTitle">
+                    {{'applications.content.entryDetails.flavours.link.remoteStorageName' | translate}}
+                </span>
                 {{storageProfile?.name}}
                 <span class="kDelimiter"></span>
             </div>
             <div class="kStorageProfileInfoItem">
-                {{'applications.content.entryDetails.flavours.link.id' | translate}}
+                <span class="kStorageProfileInfoItemTitle">
+                    {{'applications.content.entryDetails.flavours.link.id' | translate}}
+                </span>
                 {{storageProfile?.id}}
                 <span class="kDelimiter"></span>
             </div>
             <div class="kStorageProfileInfoItem">
-                {{'applications.content.entryDetails.flavours.link.storageUrl' | translate}}
+                <span class="kStorageProfileInfoItemTitle">
+                    {{'applications.content.entryDetails.flavours.link.storageUrl' | translate}}
+                </span>
                 {{storageProfile?.storageUrl}}
                 <span class="kDelimiter"></span>
             </div>
             <br>
             <div class="kStorageProfileInfoItem">
-                {{'applications.content.entryDetails.flavours.link.storageBaseDirectory' | translate}}
+                <span class="kStorageProfileInfoItemTitle">
+                    {{'applications.content.entryDetails.flavours.link.storageBaseDirectory' | translate}}
+                </span>
                 {{storageProfile?.storageBaseDir}}
                 <span class="kDelimiter"></span>
             </div>
@@ -35,7 +43,7 @@
                    [formControl]="_filePathField"
                    [placeholder]="'applications.content.entryDetails.flavours.link.enterFlavorUrl' | translate"/>
             <div class="kInvalid" *ngIf="_filePathField.touched && _filePathField.invalid">
-                {{'applications.content.entryDetails.flavours.link.invalidUrl' | translate}}
+                {{'applications.content.entryDetails.flavours.link.required' | translate}}
             </div>
         </div>
     </div>

@@ -41,6 +41,18 @@ import { FlavorsDataRequestFactory } from './flavors-data-request-factory';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { EntryStore } from '../entry-store.service';
+import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
+import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
+import { ConversionProfileGetAction } from 'kaltura-ngx-client/api/types/ConversionProfileGetAction';
+import { StorageProfileListAction } from 'kaltura-ngx-client/api/types/StorageProfileListAction';
+import { KalturaStorageProfileFilter } from 'kaltura-ngx-client/api/types/KalturaStorageProfileFilter';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
+import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client/api/types/KalturaConversionProfileOrderBy';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
+import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
 
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
@@ -64,6 +76,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     public sourceAvailable = false;
     public showFlavorActions = true;
     public currentEntryId: string;
+    public storageProfile: KalturaStorageProfile;
+    public conversionProfileAsset: KalturaConversionProfileAssetParams;
 
     constructor(private _kalturaServerClient: KalturaClient,
                 private _appLocalization: AppLocalization,
@@ -85,6 +99,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         this.sourceAvailable = false;
         this.showFlavorActions = true;
         this.currentEntryId = null;
+        this.storageProfile = null;
+        this.conversionProfileAsset = null;
         this._stopPolling();
         this._flavors.next([]);
         this._replacementData.next({ status: null, tempEntryId: null, flavors: [] });
@@ -112,6 +128,69 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 super._hideLoader();
                 super._showActivationError();
                 return Observable.of({ failed: true, error });
+            });
+    }
+
+    private _getStorageProfile(): Observable<{ storageProfile: KalturaStorageProfile, conversionProfileAsset: KalturaConversionProfileAssetParams }> {
+        const conversionProfileAction = new ConversionProfileGetAction({ id: this.data.conversionProfileId })
+            .setRequestOptions(
+                new KalturaRequestOptions({
+                    responseProfile: new KalturaDetachedResponseProfile({
+                        type: KalturaResponseProfileType.includeFields,
+                        fields: 'storageProfileId'
+                    })
+                })
+            );
+        const storageProfileListAction = new StorageProfileListAction({
+            filter: new KalturaStorageProfileFilter({ idEqual: 0 }).setDependency(['idEqual', 0, 'storageProfileId'])
+        }).setRequestOptions(
+            new KalturaRequestOptions({
+                responseProfile: new KalturaDetachedResponseProfile({
+                    type: KalturaResponseProfileType.includeFields,
+                    fields: 'id,name,storageUrl,storageBaseDir'
+                })
+            })
+        );
+        const filter = new KalturaConversionProfileFilter({
+            orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
+            typeEqual: KalturaConversionProfileType.media,
+            idEqual: this.data.conversionProfileId
+        });
+
+        const conversionProfileAssetAction = new ConversionProfileAssetParamsListAction({
+            filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdFilter: filter }),
+            pager: new KalturaFilterPager({ pageSize: 1 })
+        }).setRequestOptions(
+            new KalturaRequestOptions({
+                responseProfile: new KalturaDetachedResponseProfile({
+                    type: KalturaResponseProfileType.includeFields,
+                    fields: 'readyBehavior,origin,assetParamsId,id'
+                })
+            })
+        );
+
+        return this._kalturaServerClient
+            .multiRequest(new KalturaMultiRequest(
+                conversionProfileAction,
+                storageProfileListAction,
+                conversionProfileAssetAction
+            ))
+            .map(responses => {
+                if (responses.hasErrors()) {
+                    const message = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
+                    throw new Error(message);
+                }
+
+                const storageProfiles = responses[1].result.objects;
+                const conversionProfileAssets = responses[2].result.objects;
+                const storageProfile = Array.isArray(storageProfiles) && storageProfiles.length ? storageProfiles[0] : null;
+                let conversionProfileAsset = Array.isArray(conversionProfileAssets) && conversionProfileAssets.length
+                    ? conversionProfileAssets[0]
+                    : null;
+                conversionProfileAsset = conversionProfileAsset && conversionProfileAsset.origin !== KalturaAssetParamsOrigin.convert
+                    ? conversionProfileAsset
+                    : null;
+                return { storageProfile, conversionProfileAsset };
             });
     }
 
@@ -224,6 +303,11 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .let(flavorsData$ => this._mapFlavorsData(flavorsData$.map(result => ({ result, error: null }))))
             .map((response) => {
                 this._handleFlavorsDataResponse(response);
+            })
+            .switchMap(() => this._getStorageProfile())
+            .map(({ storageProfile, conversionProfileAsset }) => {
+                this.storageProfile = storageProfile;
+                this.conversionProfileAsset = conversionProfileAsset;
                 return undefined;
             });
     }

@@ -58,7 +58,10 @@
             .kStorageProfileInfoItem {
                 display: inline-block;
                 padding: 5px 0;
-                font-weight: bold;
+
+                .kStorageProfileInfoItemTitle {
+                    font-weight: bold;
+                }
             }
 
             .kDelimiter {
