@@ -1,6 +1,7 @@
 {
   "kalturaServer": {
     "uri" : "@kalturaServer.uri@",
+    "defaultPrivileges" : "@kalturaServer.defaultPrivileges@",
     "deployUrl": "@kalturaServer.deployUrl@",
     "previewUIConf": @kalturaServer.previewUIConf@,
     "freeTrialExpiration": {
