@@ -64,6 +64,10 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     this.rulesTotalCount = 0;
     this.entriesTotalCount = 0;
 
+    if (this.isNewData) {
+      this._setDirty();
+    }
+
     const rules = this.data.filters.map(filter => {
       return new PlaylistExecuteFromFiltersAction({
         totalResults: filter.limit,
