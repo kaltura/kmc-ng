@@ -244,7 +244,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
 
         this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
             .cancelOnDestroy(this, this.widgetReset$)
-            .tag('show-blocker')
+            .tag('block-shell')
             .monitor('delete thumb')
             .subscribe(
                 () => {
