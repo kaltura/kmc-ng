@@ -7,14 +7,14 @@
         <button type="button"
                 class="kButtonBranded KButtonSave"
                 pButton
-                [disabled]="!_isDirty || (!_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kDisabledIfNotPermitted))"
+                [disabled]="!customSchemaForm.isValid || !_isDirty || (!_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kDisabledIfNotPermitted))"
                 [label]="'app.common.save' | translate"
                 (click)="_saveSchema()"></button>
       </div>
     </div>
     <div class="kContainer">
       <div class="kSchemaFormWrapper">
-        <kCustomSchemaForm [(schema)]="_schema"
+        <kCustomSchemaForm #customSchemaForm [(schema)]="_schema"
                            [serverValidationError]="serverValidationError"
                            (schemaChanges)="_setDirty()"></kCustomSchemaForm>
 
