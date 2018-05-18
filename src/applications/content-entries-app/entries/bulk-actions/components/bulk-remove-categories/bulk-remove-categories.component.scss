@@ -44,7 +44,8 @@
   .ui-chkbox-label {
     font-size: 15px;
     font-weight: 400;
-    overflow-x: hidden;
+    overflow: hidden;
     margin-left: 4px;
+      text-overflow: ellipsis;
   }
 }
