@@ -27,6 +27,10 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   private _isNew = true;
   private _systemNames: string[] = [];
 
+  private get _requiredFieldsIsDirty(): boolean {
+      return this._labelField.dirty || this._includeTimeField.dirty || this._listValuesFiled.dirty;
+  }
+
   public _saveDisabled = false;
   public _title: string;
   public _saveBtnLabel: string;
@@ -81,7 +85,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
         .subscribe(event => {
           const canPreventClose = event.context && event.context.allowClose;
 
-          if (canPreventClose && this._fieldForm.dirty) {
+          if (canPreventClose && this._requiredFieldsIsDirty) {
             event.context.allowClose = false;
             this._cancel();
           }
@@ -365,7 +369,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
   public _cancel(): void {
     this._logger.info(`handle 'cancel' updated field by the user`);
-    if (this._fieldForm.dirty) {
+    if (this._requiredFieldsIsDirty) {
       this._logger.info(`the form has unsaved changes, handle 'save' of unsaved changes`);
       this._browserService.confirm({
         header: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChanges'),
