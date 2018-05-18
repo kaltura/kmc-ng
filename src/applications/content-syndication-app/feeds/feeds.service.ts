@@ -353,7 +353,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         (feeds.length === 1 ? this._appLocalization.get('applications.content.syndication.deleteConfirmation.singleFeed',
           {0: feeds[0].name}) :
           this._appLocalization.get('applications.content.syndication.deleteConfirmation.upTo5Feed',
-            {0: feeds.map(feed => feed.name).join(', ')})) :
+            {0: feeds.map((feed, i) => `${i + 1}: ${feed.name}`).join('\n')})) :
         this._appLocalization.get('applications.content.syndication.deleteConfirmation.moreThan5');
 
       this._browserService.confirm({
