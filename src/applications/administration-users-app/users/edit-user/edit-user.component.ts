@@ -107,7 +107,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._userForm.get('firstName').disable();
           this._userForm.get('lastName').disable();
 
-          if (this.user.id === this._partnerInfo.adminUserId) {
+            const isUserAdmin = this.user.id === this._partnerInfo.adminUserId;
+            const isCurrentUser = this._usersStore.isCurrentUser(this.user);
+          if (isUserAdmin || isCurrentUser) {
             this._userForm.get('roleIds').disable();
           } else {
             this._userForm.get('roleIds').enable();
