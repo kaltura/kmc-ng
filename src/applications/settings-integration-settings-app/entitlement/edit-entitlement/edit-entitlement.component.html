@@ -6,9 +6,9 @@
       <div class="kContainer">
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.integrationSettings.entitlement.editEntitlement.categoryName' | translate}}</span>
-          <span class="kControl">
-          {{entitlement.name}}
-        </span>
+            <span class="kControl kCategoryName" [kTooltip]="entitlement.name" [maxWidth]="300">
+                {{entitlement.name}}
+            </span>
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.integrationSettings.entitlement.editEntitlement.privacyContextLabel' | translate}}</span>
