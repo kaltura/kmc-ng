@@ -306,3 +306,13 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
     font-size: 15px;
   }
 }
+
+// tune p-menu with [appendTo]="'body'" property since panel is appended at out of component's scope
+.ui-menuitem .ui-menuitem-link {
+    padding: 0 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+}
