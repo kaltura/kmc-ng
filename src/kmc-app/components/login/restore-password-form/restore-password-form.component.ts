@@ -67,9 +67,7 @@ export class RestorePasswordFormComponent {
     return invalid ? message : '';
   }
 
-  public _resetPassword(event: Event): void {
-    event.preventDefault();
-
+  public _resetPassword(): void {
     this._formSent = true;
 
     if (this._resetPasswordForm.valid) {
