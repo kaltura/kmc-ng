@@ -1,3 +1,13 @@
+<a name="4.5.1"></a>
+## [4.5.1](https://github.com/kaltura/kmc-ng/compare/v4.5.0...v4.5.1) (2018-05-21)
+
+
+### Bug Fixes
+
+* parse correctly custom metadata profiles created by the flash-based KMC and includes ampersand character ([21c7b3a](https://github.com/kaltura/kmc-ng/commit/21c7b3a))
+
+
+
 <a name="4.5.0"></a>
 # [4.5.0](https://github.com/kaltura/kmc-ng/compare/v4.4.1...v4.5.0) (2018-05-13)
 
