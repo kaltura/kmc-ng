@@ -48,11 +48,7 @@ hr {
     }
   }
     span {
-        display: inline-block;
-        overflow: hidden;
-        width: 100%;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        word-break: break-word;
     }
 }
 
