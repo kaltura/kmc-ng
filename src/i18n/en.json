@@ -2237,7 +2237,9 @@
                     "systemName": "System Name",
                     "applyTo": "Apply to",
                     "entries": "Entries",
-                    "categories": "Categories"
+                    "categories": "Categories",
+                    "schemaNameRequired": "Name is required",
+                    "schemaNameMaxLength": "Name must be less then {{0}} characters long"
                 },
                 "table": {
                     "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
