@@ -2489,7 +2489,7 @@
                     "invalidValue": "Invalid Value",
                     "validationMessage": {
                         "invalidDomainName": "Invalid Domain Name",
-                        "invalidIp": "Invalid IP",
+                        "invalidIp": "Invalid IP address",
                         "validationFailed": "Validation Failed",
                         "profileNameRequired": "Profile Name is required.",
                         "authorizedDomains": "No domains were added to the approved or restricted lists. The domain restriction will be: allow all domains.\n",
