@@ -566,7 +566,9 @@
                     "categoryMovedFailure": "An error occurred while trying to move the category to  the selected parent.",
                     "unableToMove": "Cannot perform the Move Category action since no categories were selected to move.",
                     "categoryAlreadyBelongsToParent": "Category is already a child of the selected parent.",
-                    "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together."
+                    "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together.",
+                    "creationError": "An error occurred while trying to add new category",
+                    "duplicatedName": "The category \"{{0}}\" already exists"
                 }
             },
             "entries": {
