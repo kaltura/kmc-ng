@@ -915,8 +915,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Confirm Delete",
-                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
-                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+                    "singleFeed": "Are you sure you want to delete the following feed? {{0}}",
+                    "upTo5Feed": "Are you sure you want to delete the following feeds?\n{{0}}",
                     "moreThan5": "Are you sure you want to delete the selected feeds?"
                 },
                 "errors": {
