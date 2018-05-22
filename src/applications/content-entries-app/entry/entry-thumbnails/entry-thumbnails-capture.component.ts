@@ -24,7 +24,10 @@ export class EntryThumbnailCapture implements AfterContentInit{
 		this.playerConfig = {
 			uiconfid: serverConfig.kalturaServer.previewUIConf,
 			pid: this._appAuthentication.appUser.partnerId,
-			entryid: this.entryId
+			entryid: this.entryId,
+            flashvars: {
+			    ks: this._appAuthentication.appUser.ks
+            }
 		};
 
 	}
