@@ -20,6 +20,14 @@
       padding-top: 30px;
     }
 
+      .kCategoryName {
+          display: inline-block;
+          width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+      }
+
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -44,7 +52,6 @@
       height: 18px;
     }
     .kControl {
-      height: 34px;
       color: $kGrayscale2;
       width: 258px;
       border-radius: 3px;

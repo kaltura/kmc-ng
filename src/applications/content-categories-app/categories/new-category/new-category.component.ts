@@ -143,8 +143,14 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
                     message = this._appLocalization.get('applications.content.addNewCategory.errors.cannotLinkEntries');
                     navigateToCategory = true;
                     break;
+                case 'duplicate_category':
+                    message = this._appLocalization.get(
+                        'applications.content.moveCategory.errors.duplicatedName',
+                        [categoryName]
+                    );
+                    break;
                 default:
-                    message = 'An error occurred while trying to add new category';
+                    message = error.message;
                     break;
             }
 

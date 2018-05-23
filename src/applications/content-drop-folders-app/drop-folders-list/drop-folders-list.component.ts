@@ -221,7 +221,12 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   public _onFreetextChanged(): void {
-    this._dropFoldersStore.filter({ freeText: this._query.freeText });
+      // prevent searching for empty strings
+      if (this._query.freeText.length > 0 && this._query.freeText.trim().length === 0){
+          this._query.freeText = '';
+      }else {
+          this._dropFoldersStore.filter({freeText: this._query.freeText});
+      }
   }
 
   public _onSortChanged(event): void {

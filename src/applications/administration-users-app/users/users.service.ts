@@ -145,8 +145,12 @@ export class UsersStore implements OnDestroy {
       );
   }
 
+  public isCurrentUser(user: KalturaUser): boolean {
+      return this._appAuthentication.appUser.id === user.id;
+  }
+
   public toggleUserStatus(user: KalturaUser): Observable<void> {
-    const isCurrentUser = this._appAuthentication.appUser.id === user.id;
+    const isCurrentUser = this.isCurrentUser(user);
     const isAdminUser = this._usersDataValue && this._usersDataValue.partnerInfo.adminUserId === user.id;
 
     if (isCurrentUser || isAdminUser) {
@@ -168,7 +172,7 @@ export class UsersStore implements OnDestroy {
   }
 
   public deleteUser(user: KalturaUser): Observable<void> {
-    const isCurrentUser = this._appAuthentication.appUser.id === user.id;
+    const isCurrentUser = this.isCurrentUser(user);
     const isAdminUser = this._usersDataValue && this._usersDataValue.partnerInfo.adminUserId === user.id;
 
     if (isCurrentUser || isAdminUser) {
