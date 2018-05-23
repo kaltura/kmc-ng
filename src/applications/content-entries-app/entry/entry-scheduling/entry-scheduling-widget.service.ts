@@ -149,7 +149,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
         .subscribe(
           () => {
             super.updateState({
-              isValid: this.schedulingForm.status === 'VALID',
+              isValid: this.schedulingForm.status !== 'INVALID',
               isDirty: this.schedulingForm.dirty
             });
           }

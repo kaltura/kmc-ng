@@ -128,7 +128,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(
         () => {
-          const isValid = this.entitlementsForm.status === 'VALID';
+          const isValid = this.entitlementsForm.status !== 'INVALID';
           const isDirty = this.entitlementsForm.dirty;
           if (this.isDirty !== isDirty || this.isValid !== isValid) {
             super.updateState({
