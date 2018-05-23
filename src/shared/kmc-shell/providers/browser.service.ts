@@ -26,6 +26,7 @@ export interface Confirmation {
 	rejectVisible?: boolean;
 	acceptEvent?: EventEmitter<any>;
 	rejectEvent?: EventEmitter<any>;
+	alignMessage?: 'left' | 'center' | 'byContent';
 }
 
 export interface GrowlMessage {
@@ -132,6 +133,10 @@ export class BrowserService implements IAppStorage {
     }
 
     private _fixConfirmation(confirmation: Confirmation): void {
+        if (!confirmation) {
+            return;
+        }
+
         if (confirmation.headerType) {
             switch (confirmation.headerType) {
                 case HeaderTypes.attention:
