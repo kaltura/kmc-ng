@@ -244,15 +244,12 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(entryId: string): void {
-    this._dropFoldersStore.isEntryExist(entryId)
-        .cancelOnDestroy(this)
-        .tag('block-shell')
-        .filter(Boolean)
-        .switchMap(() => this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata))
-        .subscribe(
-            () => {},
-            ({ message }) => this._browserService.alert({ header: this._appLocalization.get('app.common.attention'), message })
-        );
+      this._dropFoldersStore.isEntryExist(entryId)
+          .cancelOnDestroy(this)
+          .tag('block-shell')
+          .subscribe(() => {
+              this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
+          });
   }
 
   public _deleteDropFolderFiles(event): void {

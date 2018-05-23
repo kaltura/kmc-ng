@@ -270,7 +270,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             ));
     }
 
-    public openById(entryId: string, section: ContentEntryViewSections, reloadEntriesListOnNavigateOut?: boolean): Observable<boolean> {
+    public openById(entryId: string, section: ContentEntryViewSections, reloadEntriesListOnNavigateOut?: boolean): void {
         this._logger.info('handle open entry view by id request by the user, load entry data', { entryId });
         const baseEntryAction = new BaseEntryGetAction({ entryId })
             .setRequestOptions({
@@ -279,7 +279,10 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                     fields: 'id,mediaType'
                 })
             });
-        return this._kalturaClient.request(baseEntryAction)
+
+        this._kalturaClient
+            .request(baseEntryAction)
+            .tag('block-shell')
             .map(response => {
                 console.warn(response);
                 if (response instanceof KalturaMediaEntry) {
@@ -292,13 +295,16 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 this._logger.info(`handle successful request, proceed navigation`);
                 return this._open({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut });
             })
-            .catch(err => {
-                this._logger.info(`handle failed request, show alert, abort navigation`);
-                this._browserService.alert({
-                    header: this._appLocalization.get('app.common.error'),
-                    message: err.message
-                });
-                return Observable.of(false);
-            });
+
+            .subscribe(
+                () => {},
+                (error) => {
+                    this._logger.info(`handle failed request, show alert, abort navigation`);
+                    this._browserService.alert({
+                        header: this._appLocalization.get('app.common.error'),
+                        message: error.message
+                    });
+                }
+            );
     }
 }
