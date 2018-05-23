@@ -395,12 +395,7 @@ export class CategoryService implements OnDestroy {
                     if (category instanceof KalturaCategory) {
                         this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
                     } else {
-                        this._state.next({ action: ActionTypes.CategoryLoading });
-                        this._contentCategoryView.openById(category, ContentCategoryViewSections.Metadata)
-                            .cancelOnDestroy(this)
-                            .subscribe(() => {
-                                this._state.next({ action: ActionTypes.CategoryLoaded });
-                            });
+                        this._contentCategoryView.openById(category, ContentCategoryViewSections.Metadata);
                     }
                 });
         }

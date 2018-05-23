@@ -46,12 +46,7 @@ export class PrepareEntryComponent implements OnDestroy {
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
         .tag('block-shell')
       .subscribe((draftEntry: DraftEntry) => {
-            this._contentEntryViewService.openById(draftEntry.id, ContentEntryViewSections.Metadata, true)
-                .cancelOnDestroy(this)
-                .tag('block-shell')
-                .subscribe(() => {
-                    this.transcodingProfileSelectMenu.close();
-                });
+            this._contentEntryViewService.openById(draftEntry.id, ContentEntryViewSections.Metadata, true);
         },
         error => {
           this._browserService.alert({

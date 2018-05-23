@@ -28,7 +28,6 @@ export interface ContentCategoryViewArgs {
     ignoreWarningTag?: boolean;
 }
 
-
 @Injectable()
 export class ContentCategoryViewService extends KmcDetailsViewBaseService<ContentCategoryViewArgs> {
 
@@ -190,28 +189,33 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
         }
     }
 
-    public openById(categoryId: number, section: ContentCategoryViewSections): Observable<boolean> {
-        this._logger.info('handle open category view by id request by the user, load category data', { categoryId });
-        const categoryGetAction = new CategoryGetAction({ id: categoryId })
+    public openById(categoryId: number, section: ContentCategoryViewSections): void {
+        this._logger.info('handle open category view by id request by the user, load category data', {categoryId});
+        const categoryGetAction = new CategoryGetAction({id: categoryId})
             .setRequestOptions({
                 responseProfile: new KalturaDetachedResponseProfile({
                     type: KalturaResponseProfileType.includeFields,
                     fields: 'id,tags,privacyContexts,directSubCategoriesCount'
                 })
             });
-        return this._kalturaClient
+
+        this._kalturaClient
             .request(categoryGetAction)
+            .tag('block-shell')
             .switchMap(category => {
                 this._logger.info(`handle successful request, proceed navigation`);
-                return this._open({ category, section });
+                return this._open({category, section});
             })
-            .catch(err => {
-                this._logger.info(`handle failed request, show alert, abort navigation`);
-                this._browserService.alert({
-                    header: this._appLocalization.get('app.common.error'),
-                    message: err.message
-                });
-                return Observable.of(false);
-            });
+            .subscribe(
+                () => {
+                },
+                (error) => {
+                    this._logger.info(`handle failed request, show alert, abort navigation`);
+                    this._browserService.alert({
+                        header: this._appLocalization.get('app.common.error'),
+                        message: error.message
+                    });
+                }
+            );
     }
 }

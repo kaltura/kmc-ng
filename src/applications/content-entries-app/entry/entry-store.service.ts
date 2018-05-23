@@ -345,12 +345,7 @@ export class EntryStore implements  OnDestroy {
                     if (entry instanceof KalturaMediaEntry) {
                         this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
                     } else {
-                        this._state.next({ action: ActionTypes.EntryLoading });
-                        this._contentEntryViewService.openById(entry, ContentEntryViewSections.Metadata)
-                            .cancelOnDestroy(this)
-                            .subscribe(() => {
-                                this._state.next({ action: ActionTypes.EntryLoaded });
-                            });
+                        this._contentEntryViewService.openById(entry, ContentEntryViewSections.Metadata);
                     }
                 });
         }
