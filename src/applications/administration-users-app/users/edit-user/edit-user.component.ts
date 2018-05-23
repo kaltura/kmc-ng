@@ -177,7 +177,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this._invalidUserId = false;
 
     const { roleIds, id, email } = this._userForm.getRawValue();
-    this._usersStore.updateUser({ roleIds, email, id: id.trim() }, this.user.id)
+    this._usersStore.updateUser({ roleIds, email, id: (id || '').trim() }, this.user.id)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
