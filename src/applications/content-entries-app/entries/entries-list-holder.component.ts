@@ -107,6 +107,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   public _onActionSelected({ action, entry }) {
+      this._entriesList.clearSelection();
     switch (action) {
       case 'preview':
         this._appEvents.publish(new PreviewAndEmbedEvent(entry));
