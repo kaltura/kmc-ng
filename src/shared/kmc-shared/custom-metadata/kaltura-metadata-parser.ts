@@ -99,7 +99,7 @@ export class MetadataProfileParser {
 			if (kalturaMetadataProfile.xsd && kalturaMetadataProfile.xsd !== 'false' && kalturaMetadataProfile.xsd !== '<xml></xml>') {
 
 			    const escapedSchema = kalturaMetadataProfile.xsd.replace(/&(?![^ ]+;)/g, '&amp;');
-				const schemaContext: any = XmlParser.toJson(escapedSchema);
+				const schemaContext: any = XmlParser.toJson(escapedSchema, false);
 				const metadataElement = schemaContext.schema.element;
 
 				if (metadataElement.attr.name.value === 'metadata') {
