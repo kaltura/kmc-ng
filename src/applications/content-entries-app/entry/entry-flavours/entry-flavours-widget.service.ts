@@ -284,8 +284,11 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     this._flavors.next({items: flavors});
                 },
                 error => {
+                    const message = error.code === 'ORIGINAL_FLAVOR_ASSET_IS_MISSING'
+                      ? this._appLocalization.get('applications.content.entryDetails.flavours.missingOriginalFlavor')
+                      : this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure');
                     this._showBlockerMessage(new AreaBlockerMessage({
-                        message: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure'),
+                        message,
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {

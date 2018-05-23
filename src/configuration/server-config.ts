@@ -57,6 +57,7 @@ export interface ExternalApplications {
 export interface ServerConfig {
     kalturaServer: {
         uri: string,
+        defaultPrivileges?: string,
         deployUrl: string,
         previewUIConf: number,
         freeTrialExpiration: {

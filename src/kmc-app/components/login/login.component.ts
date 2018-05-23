@@ -55,10 +55,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private _makeLoginRequest(username: string, password: string): Observable<LoginResponse> {
-    return this._appAuthentication.login(username, password, {
-      privileges: kmcAppConfig.kalturaServer.privileges,
-      expiry: kmcAppConfig.kalturaServer.expiry
-    }).cancelOnDestroy(this);
+    return this._appAuthentication.login(username, password).cancelOnDestroy(this);
   }
 
   private _handleLoginResponse(success: boolean, error: LoginError, username: string): void {

@@ -60,18 +60,25 @@
                           [class.kInvalid]="_missingPlaylist"
                           [placeholder]="'applications.content.syndication.details.choosePlaylist' | translate"
                           formControlName="selectedPlaylist"
-                          filter="true"
+                          filter="true" [filterPlaceholder]="'applications.content.syndication.details.search' | translate"
                           [autoWidth]="false"
                           (onChange)="_onSelectPlaylist($event)">
-                <!--template for the selected item-->
-                <ng-template let-item pTemplate="selectedItem">
-                  <div class="kPlaylist">
-              <span class="kPlaylistIcon"
-                    [ngClass]="item.value | kToPlaylistIcon: _idToPlaylistMap"></span>
-                    <span class="kPlaylistLabel kElipsis">{{item.label}}</span>
-                  </div>
-                </ng-template>
-              </p-dropdown>
+                    <!--template for the selected item-->
+                    <ng-template let-item pTemplate="selectedItem">
+                        <div class="kPlaylist">
+                            <span class="kPlaylistIcon"
+                                [ngClass]="item.value | kToPlaylistIcon: _idToPlaylistMap"></span>
+                            <span class="kPlaylistLabel kElipsis">{{item.label}}</span>
+                        </div>
+                    </ng-template>
+                    <ng-template let-item pTemplate="item">
+                      <div class="kPlaylist">
+                            <span class="kPlaylistIcon"
+                                  [ngClass]="item.value | kToPlaylistIcon: _idToPlaylistMap"></span>
+                          <span class="kPlaylistLabel kElipsis">{{item.label}}</span>
+                      </div>
+                    </ng-template>
+                </p-dropdown>
                 <p class="kInvalid" *ngIf="_missingPlaylist">
                     {{'applications.content.syndication.details.missingPlaylist' | translate:[this.feed.playlistId]}}
                 </p>

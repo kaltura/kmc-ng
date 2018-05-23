@@ -99,7 +99,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
       const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
-        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, tags'
+        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, tags, partnerSortValue'
       });
 
       // build the request

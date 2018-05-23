@@ -98,7 +98,8 @@ export class MetadataProfileParser {
 		    // DEVELOPER NOTICE: due to bug in kaltura server the parse logic should ignore empty string and 'false' value
 			if (kalturaMetadataProfile.xsd && kalturaMetadataProfile.xsd !== 'false' && kalturaMetadataProfile.xsd !== '<xml></xml>') {
 
-				const schemaContext: any = XmlParser.toJson(kalturaMetadataProfile.xsd);
+			    const escapedSchema = kalturaMetadataProfile.xsd.replace(/&(?![^ ]+;)/g, '&amp;');
+				const schemaContext: any = XmlParser.toJson(escapedSchema);
 				const metadataElement = schemaContext.schema.element;
 
 				if (metadataElement.attr.name.value === 'metadata') {

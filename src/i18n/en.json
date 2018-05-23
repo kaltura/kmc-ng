@@ -566,7 +566,9 @@
                     "categoryMovedFailure": "An error occurred while trying to move the category to  the selected parent.",
                     "unableToMove": "Cannot perform the Move Category action since no categories were selected to move.",
                     "categoryAlreadyBelongsToParent": "Category is already a child of the selected parent.",
-                    "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together."
+                    "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together.",
+                    "creationError": "An error occurred while trying to add new category",
+                    "duplicatedName": "The category \"{{0}}\" already exists"
                 }
             },
             "entries": {
@@ -660,9 +662,10 @@
                     "contentType" : {
                         "content": "Content",
                         "allContent": "All Content",
-                        "fromPlaylist": "From playlist"
+                        "fromPlaylist": "From Playlist"
                     },
-                    "playerName": "Player({{0}})",
+                    "search": "Search",
+          "playerName": "Player({{0}})",
                     "entriesCountData": {
                         "count": "Entries count",
                         "numOfEntries": "{{0}} Entries",
@@ -912,8 +915,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Confirm Delete",
-                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
-                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+                    "singleFeed": "Are you sure you want to delete the following feed? {{0}}",
+                    "upTo5Feed": "Are you sure you want to delete the following feeds?\n{{0}}",
                     "moreThan5": "Are you sure you want to delete the selected feeds?"
                 },
                 "errors": {
@@ -1468,7 +1471,8 @@
                     "uploadSuccess": "Flavor asset was uploaded successfully.",
                     "deleteFailure": "Flavor asset deletion failed.",
                     "convertFailure": "Flavor conversion failed.",
-                    "uploadFailure": "Flavor upload failed.",
+                    "missingOriginalFlavor": "The original flavor asset is missing",
+          "uploadFailure": "Flavor upload failed.",
                     "downloadFailure": "Flavor download failed.",
                     "importFailure": "Flavor import failed."
                 },
@@ -2137,7 +2141,7 @@
                 "save": "Save",
                 "add": "Add",
                 "cancel": "Cancel",
-                "newRole": "newRole",
+                "newRole": "New Role",
                 "contactUs": "Contact us",
                 "contactUsText": " to learn more about adding any disabled items below to your account.",
                 "roleUpdated": "Role updated",
@@ -2235,7 +2239,9 @@
                     "systemName": "System Name",
                     "applyTo": "Apply to",
                     "entries": "Entries",
-                    "categories": "Categories"
+                    "categories": "Categories",
+                    "schemaNameRequired": "Name is required",
+                    "schemaNameMaxLength": "Name must be less then {{0}} characters long"
                 },
                 "table": {
                     "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
@@ -2485,7 +2491,7 @@
                     "invalidValue": "Invalid Value",
                     "validationMessage": {
                         "invalidDomainName": "Invalid Domain Name",
-                        "invalidIp": "Invalid IP",
+                        "invalidIp": "Invalid IP address",
                         "validationFailed": "Validation Failed",
                         "profileNameRequired": "Profile Name is required.",
                         "authorizedDomains": "No domains were added to the approved or restricted lists. The domain restriction will be: allow all domains.\n",

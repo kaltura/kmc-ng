@@ -54,7 +54,7 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
     }
 
     private _isAvailableByPermission(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);
+        return this._appPermissions.hasPermission(KMCPermissions.CUEPOINT_MANAGE);
     }
 
     private _isAvailableByData(args: AdvertisementsAppViewArgs): boolean {

@@ -21,7 +21,7 @@ export const kmcAppConfig: KmcAppConfig = {
   'storageNamespace': 'kmc-ng',
   'kalturaServer': {
       "expiry": 86400,
-      "privileges": "disableentitlement"
+      "privileges": "disableentitlement,appid:kmc"
   },
   'routing': {
     'errorRoute': '/error',

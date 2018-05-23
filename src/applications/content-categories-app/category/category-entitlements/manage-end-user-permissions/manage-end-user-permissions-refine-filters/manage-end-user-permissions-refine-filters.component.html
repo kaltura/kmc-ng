@@ -13,7 +13,7 @@
                   (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
                   (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)">
             <ng-template let-node pTemplate="default">
-              <span class="kTreeNodeLabel">
+              <span class="kTreeNodeLabel" [kTooltip]="node.label" [delay]="1000">
                 {{node.label}}
               </span>
             </ng-template>

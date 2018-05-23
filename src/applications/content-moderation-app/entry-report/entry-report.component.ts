@@ -225,16 +225,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(entryId): void {
-      this._isBusy = true;
-      const scopedSubscription: ISubscription = this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata)
-          //.cancelOnDestroy(this) // NOTICE: should not use here .cancelOnDestroy
-          .subscribe((success) => {
-              this._isBusy = false;
-              if (success) {
-                  this.parentPopupWidget.close();
-              }
-              scopedSubscription.unsubscribe(); // always unsubscribe to clear memory
-          });
+      this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
   }
 
   public _banCreator(): void {
