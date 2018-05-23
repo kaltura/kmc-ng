@@ -320,7 +320,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     const invalidLabelPrefix = /^[0-9`~:;!@#$%\^&*()\-_+=|',.?\/\\{}<>"\[\]]/;
     const invalidChars = /[<>'"&]/;
     const invalidListValuesOptions = /[`;!#*\+,?\\{}<>"\[\]]/;
-    const invalidListValuesOptionsPrefix = /^-/gm;
+    const invalidListValuesOptionsPrefix = /^\s*-/gm;
 
     const label = this._labelField.value.trim();
     const shortDescription = this._shortDescriptionField.value;
