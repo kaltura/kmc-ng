@@ -39,10 +39,10 @@ export class AppComponent implements OnInit {
         const htmlMessageContent = confirmationMessage.message.replace(/\r|\n/g, '<br/>');
         const formattedMessage = Object.assign({}, confirmationMessage, {message: htmlMessageContent});
 
-        if (confirmationMessage.alignMessage) {
-            this._confirmDialogAlignLeft = confirmationMessage.alignMessage === 'left';
-        } else {
+        if (confirmationMessage.alignMessage === 'byContent') {
             this._confirmDialogAlignLeft = confirmationMessage.message && /\r|\n/.test(confirmationMessage.message);
+        } else {
+            this._confirmDialogAlignLeft = confirmationMessage.alignMessage === 'left';
         }
 
       this._confirmationService.confirm(formattedMessage);

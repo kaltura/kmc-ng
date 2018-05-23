@@ -26,7 +26,7 @@ export interface Confirmation {
 	rejectVisible?: boolean;
 	acceptEvent?: EventEmitter<any>;
 	rejectEvent?: EventEmitter<any>;
-	alignMessage?: 'left' | 'center';
+	alignMessage?: 'left' | 'center' | 'byContent';
 }
 
 export interface GrowlMessage {
