@@ -12,8 +12,8 @@ import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface PartnerInfo {
-  adminLoginUsersQuota: number,
-  adminUserId: string
+  adminLoginUsersQuota: number;
+  adminUserId: string;
 }
 
 @Component({
@@ -126,6 +126,15 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
   }
+
+    private _markFormFieldsAsTouched(): void {
+        for (const control in this._userForm.controls) {
+            if (this._userForm.controls.hasOwnProperty(control)) {
+                this._userForm.get(control).markAsTouched();
+                this._userForm.get(control).updateValueAndValidity();
+            }
+        }
+    }
 
   private _createUser(): void {
       if (!this._userForm.valid) {
@@ -318,15 +327,17 @@ export class EditUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _saveUser(): void {
-      this._blockerMessage = null;
+    public _saveUser(): void {
+        this._blockerMessage = null;
 
-      if (this._userForm.valid) {
-      if (this._isNewUser) {
-        this._createUser();
-      } else {
-        this._updateUser();
-      }
+        if (this._userForm.valid) {
+            if (this._isNewUser) {
+                this._createUser();
+            } else {
+                this._updateUser();
+            }
+        } else {
+            this._markFormFieldsAsTouched();
+        }
     }
-  }
 }
