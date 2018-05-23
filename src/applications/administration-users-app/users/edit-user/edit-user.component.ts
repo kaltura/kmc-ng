@@ -187,7 +187,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     this._invalidUserId = false;
 
-    this._usersStore.updateUser(this._userForm.getRawValue(), this.user.id)
+    const { roleIds, id, email } = this._userForm.getRawValue();
+    this._usersStore.updateUser({ roleIds, email, id: (id || '').trim() }, this.user.id)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
@@ -236,7 +237,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   private _createOrAssociateUser(): void {
     const { id, email } = this._userForm.value;
-    const userId = id || email;
+    const userId = (id || email).trim();
     this._isBusy = true;
     this._usersStore.getUserById(userId)
       .cancelOnDestroy(this)
@@ -263,9 +264,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
                           this._usersStore.reload(true);
                           this.parentPopupWidget.close();
                       },
-                      error => {
+                      addUserError => {
                           this._blockerMessage = new AreaBlockerMessage({
-                              message: error.message,
+                              message: addUserError.message,
                               buttons: [{
                                   label: this._appLocalization.get('app.common.ok'),
                                   action: () => {
