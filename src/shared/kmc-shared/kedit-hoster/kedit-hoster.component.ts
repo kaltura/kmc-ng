@@ -121,20 +121,8 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
           if (postMessageData.messageType === 'kea-advertisements-saved') {
               this.exitDraftMode.emit();
           } else if (postMessageData.messageType === 'kea-go-to-media') {
-              this._contentEntryViewService
-                  .openById(postMessageData.data, ContentEntryViewSections.Metadata)
-                  .cancelOnDestroy(this)
-                  .subscribe(
-                      () => {
-                          this.closeEditor.emit();
-                      },
-                      error => {
-                          this._browserService.alert({
-                              header: this._appLocalization.get('app.common.error'),
-                              message: error.message
-                          });
-                      }
-                  );
+              this.closeEditor.emit();
+              this._contentEntryViewService.openById(postMessageData.data, ContentEntryViewSections.Metadata);
           }
 
           /* request for user ks.
