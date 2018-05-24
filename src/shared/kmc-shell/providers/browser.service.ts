@@ -225,7 +225,7 @@ export class BrowserService implements IAppStorage {
                 }
             }, 500);
         }else {
-            this._appEvents.publish(new OpenEmailEvent(email, force, title, message));
+            this._appEvents.publish(new OpenEmailEvent(email, title, message));
         }
     }
 

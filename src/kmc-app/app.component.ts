@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
               ) {
 
       appEvents.event(OpenEmailEvent)
-          .subscribe(({email, force, title, message}) => {
+          .subscribe(({email, title, message}) => {
               this._openEmailConfig = {email, title, message}
               this._emailDialog.open();
           });
