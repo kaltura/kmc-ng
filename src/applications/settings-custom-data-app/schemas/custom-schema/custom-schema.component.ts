@@ -8,6 +8,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { KalturaAPIException, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
@@ -27,12 +28,14 @@ export class CustomSchemaComponent implements OnInit {
 
   private _isFieldsOrderChanged = false;
 
+  public _isSavedDisabled = false;
   public _title;
   public _schema: SettingsMetadataProfile;
   public _selectedFields: MetadataItem[] = [];
   public _selectedField: MetadataItem;
   public _isDirty = false;
   public _profileFields: MetadataItem[];
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization,
               private _logger: KalturaLogger,
@@ -137,7 +140,7 @@ export class CustomSchemaComponent implements OnInit {
     if (this._validateSchema()) {
       this._schema.parsedProfile.items = this._profileFields;
 
-      if (this._isFieldsOrderChanged) {
+      if (!this._schema.isNew && this._isFieldsOrderChanged) {
         this._logger.info(`schema's fields order was changed, show confirmation`);
         this._browserService.confirm({
           header: this._appLocalization.get('applications.settings.metadata.fieldsOrderChangedTitle'),

@@ -9,7 +9,7 @@ import { KalturaDistributionValidationErrorMissingThumbnail } from 'kaltura-ngx-
 import { KalturaDistributionValidationErrorConditionNotMet } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorConditionNotMet';
 import { EntryDistributionWidget } from '../entry-distribution-widget.service';
 import { EntryStore } from '../../entry-store.service';
-import { EntryWidgetKeys } from '../../entry-widget-keys';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 @Component({
   selector: 'kEntryDistributedProfileErrorInfo',
@@ -25,7 +25,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
 
   public _errorInfo = '';
   public _goToLabel = '';
-  public _goToLink = '';
+  public _goToLink: ContentEntryViewSections = null;
 
   constructor(private _appLocalization: AppLocalization,
               private _widget: EntryDistributionWidget,
@@ -113,7 +113,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
     this._goToLabel = this._appLocalization.get(
       'applications.content.entryDetails.distribution.errorsInfo.goToMetadataTab'
     );
-    this._goToLink = EntryWidgetKeys.Metadata;
+    this._goToLink = ContentEntryViewSections.Metadata;
   }
 
   private _handleMissingMetadata(errors: KalturaDistributionValidationErrorMissingMetadata[]): void {
@@ -125,7 +125,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
     this._goToLabel = this._appLocalization.get(
       'applications.content.entryDetails.distribution.errorsInfo.goToMetadataTab'
     );
-    this._goToLink = EntryWidgetKeys.Metadata;
+    this._goToLink = ContentEntryViewSections.Metadata;
   }
 
   private _handleMissingFlavor(errors: KalturaDistributionValidationErrorMissingFlavor[]): void {
@@ -150,7 +150,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
         this._goToLabel = this._appLocalization.get(
           'applications.content.entryDetails.distribution.errorsInfo.goToFlavorsTab'
         );
-        this._goToLink = EntryWidgetKeys.Flavours;
+        this._goToLink = ContentEntryViewSections.Flavours;
       });
   }
 
@@ -163,7 +163,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
     this._goToLabel = this._appLocalization.get(
       'applications.content.entryDetails.distribution.errorsInfo.goToThumbnailsTab'
     );
-    this._goToLink = EntryWidgetKeys.Thumbnails;
+    this._goToLink = ContentEntryViewSections.Thumbnails;
   }
 
   private _handleAutoDistributionMetadataMissing(errors: KalturaDistributionValidationErrorConditionNotMet[]): void {
@@ -175,7 +175,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
     this._goToLabel = this._appLocalization.get(
       'applications.content.entryDetails.distribution.errorsInfo.goToMetadataTab'
     );
-    this._goToLink = EntryWidgetKeys.Metadata;
+    this._goToLink = ContentEntryViewSections.Metadata;
   }
 
   public _openSection(): void {

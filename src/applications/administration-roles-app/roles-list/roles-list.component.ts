@@ -6,6 +6,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kRolesList',
@@ -17,6 +18,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 export class RolesListComponent implements OnInit, OnDestroy {
   @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
+  public _kmcPermissions = KMCPermissions;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableIsBusy = false;
   public _tableBlockerMessage: AreaBlockerMessage = null;

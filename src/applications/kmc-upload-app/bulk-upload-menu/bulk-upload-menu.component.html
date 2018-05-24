@@ -6,6 +6,7 @@
     <p class="kBulkUploadMenuTypesTitle">{{ 'applications.content.bulkUpload.menu.selectType' | translate }}</p>
     <div class="kBulkUploadMenuTypes">
       <button pButton class="kButtonDefault"
+              *ngIf="_kmcPermissions.CONTENT_INGEST_BULK_UPLOAD | kNgIfPermitted"
               [label]="'applications.content.bulkUpload.menu.types.entries' | translate"
               (click)="_invokeFileSelection(_bulkUploadTypes.entries)"></button>
       <button pButton class="kButtonDefault"

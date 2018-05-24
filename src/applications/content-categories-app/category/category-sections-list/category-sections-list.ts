@@ -1,16 +1,18 @@
-import { CategoryWidgetKeys } from './../category-widget-keys';
+
+
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export const CategorySectionsList = [
     {
         label: 'applications.content.categoryDetails.sections.metadata',
-        key: CategoryWidgetKeys.Metadata
+        key: ContentCategoryViewSections.Metadata
     },
     {
         label: 'applications.content.categoryDetails.sections.entitlements',
-        key: CategoryWidgetKeys.Entitlements
+        key: ContentCategoryViewSections.Entitlements
     },
     {
         label: 'applications.content.categoryDetails.sections.subcategories',
-        key: CategoryWidgetKeys.SubCategories
+        key: ContentCategoryViewSections.SubCategories
     }
 ];

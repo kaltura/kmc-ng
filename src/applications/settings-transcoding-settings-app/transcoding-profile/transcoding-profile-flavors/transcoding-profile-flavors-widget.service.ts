@@ -6,7 +6,6 @@ import {
   ExtendedKalturaConversionProfileAssetParams,
   KalturaConversionProfileWithAsset
 } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
-import { TranscodingProfileWidgetKeys } from '../transcoding-profile-widget-keys';
 import { FlavoursStore } from 'app-shared/kmc-shared';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
@@ -14,6 +13,7 @@ import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorP
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsUpdateAction';
+import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -27,7 +27,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
               private _browserService: BrowserService,
               private _listDiffers: IterableDiffers,
               private _flavorsStore: FlavoursStore) {
-    super(TranscodingProfileWidgetKeys.Flavors);
+    super(SettingsTranscodingProfileViewSections.Flavors);
   }
 
   ngOnDestroy() {
@@ -126,7 +126,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
           const height = !flavor.height
             ? this._appLocalization.get('applications.settings.transcoding.flavors.auto')
             : flavor.height;
-          const dimensions = `${width}x${height}`;
+          const dimensions = `${width} x ${height}`;
           return Object.assign(flavor, { codec, bitrate, dimensions });
         });
 

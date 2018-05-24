@@ -16,12 +16,19 @@
                      placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
                      [minLength]="3"
                      [suggestionsProvider]="_usersProvider"
+                     (onUnselect)="_updateApplyButtonState()"
+                     (onSelect)="_updateApplyButtonState()"
                      (completeMethod)="_searchUsers($event)">
       </kAutoComplete>
 
     </div>
     <div class="kFooter">
-      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>
+      <button type="button"
+              class="kButtonBranded"
+              pButton
+              [label]="'applications.content.bulkActions.apply' | translate"
+              [disabled]="_disableApplyButton"
+              (click)="_apply()"></button>
     </div>
   </div>
 </k-area-blocker>

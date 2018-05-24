@@ -5,6 +5,7 @@ import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import {KalturaPartnerStatistics} from 'kaltura-ngx-client/api/types/KalturaPartnerStatistics';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { SettingsAccountInformationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { serverConfig } from 'config/server';
 
 
@@ -17,14 +18,17 @@ import { serverConfig } from 'config/server';
 export class AccountInfoComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _bandwidth = '';
+  public _bandwidthNA = false;
   public _storage = '';
+  public _storageNA = false;
   public _showTrialUserInfo: boolean;
   public _trialExpirationDateString = '';
 
   constructor(private _accountInformationService: SettingsAccountInformationService,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _settingsAccountInformationMainView: SettingsAccountInformationMainViewService) {
   }
 
   ngOnInit() {
@@ -38,7 +42,9 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       this._trialExpirationDateString =
         (new DatePipe()).transform(this._appAuthentication.appUser.createdAt.getTime() + trialPeriod, 'dateOnly'); // "01/15/1992"
     }
-    this.loadStatistics();
+    if (this._settingsAccountInformationMainView.isAvailable()) {
+        this.loadStatistics();
+    }
   }
 
   private loadStatistics() {
@@ -48,12 +54,16 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe((response: KalturaPartnerStatistics) => {
         this._isBusy = false;
-        this._bandwidth = response.bandwidth ? response.bandwidth.toFixed(2) : this._appLocalization.get('app.common.n_a');
-        this._storage = response.hosting ? response.hosting.toFixed(2) : this._appLocalization.get('app.common.n_a');
+        this._bandwidthNA = typeof response.bandwidth !== 'number';
+        this._storageNA = typeof response.hosting !== 'number';
+        this._bandwidth = !this._bandwidthNA ? response.bandwidth.toFixed(2) : this._appLocalization.get('app.common.n_a');
+        this._storage = !this._storageNA ? response.hosting.toFixed(2) : this._appLocalization.get('app.common.n_a');
         this._logger.info(`handle successful loading statistics data`, { bandwidth: this._bandwidth, storage: this._storage });
       }, error => {
         this._logger.warn(`handle failed loading statistics data`, { errorMessage: error.message });
         this._isBusy = false;
+          this._bandwidthNA = true;
+          this._storageNA = true;
         this._bandwidth = this._appLocalization.get('app.common.n_a');
         this._storage = this._appLocalization.get('app.common.n_a');
       });

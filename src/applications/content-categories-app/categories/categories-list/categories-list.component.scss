@@ -78,6 +78,7 @@
     display: block;
   }
   .kCategoriesTable {
+    width: 100%;
     border: none;
     position: relative;
     background-color: white;
@@ -95,7 +96,6 @@
     width: 260px;
   }
   .kBulkOperations {
-    width: 400px;
     display: flex;
     align-items: center;
   }

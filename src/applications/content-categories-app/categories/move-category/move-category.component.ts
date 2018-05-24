@@ -73,6 +73,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   public _apply(): void {
     if (this._selectedParentCategory === 'missing') {
       this._browserService.alert({
+        header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.moveCategory.noCategorySelected')
       });
       return;

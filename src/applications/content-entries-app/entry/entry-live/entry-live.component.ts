@@ -4,6 +4,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
 
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryLiveWidget } from './entry-live-widget.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+
 import { serverConfig } from "config/server";
 
 @Component({
@@ -13,10 +15,11 @@ import { serverConfig } from "config/server";
 })
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
-	@ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
+	@ViewChild('liveAnalytics') _liveAnalytics: PopupWidgetComponent;
 
+  public _kmcPermissions = KMCPermissions;
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
-	public enableLiveDashboard: boolean = false;
+	public enableLiveAnalytics: boolean = false;
 
 
 	constructor(public _widgetService: EntryLiveWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
@@ -31,7 +34,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnInit() {
 		this._widgetService.attachForm();
-		this.enableLiveDashboard = serverConfig.externalApps.liveDashboard.enabled;
+		this.enableLiveAnalytics = serverConfig.externalApps.liveAnalytics.enabled;
     }
 
     ngOnDestroy() {
@@ -63,9 +66,15 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 		);
 	}
 
-	public _openLiveReport(): void {
-		if (this.enableLiveDashboard){
-			this._liveDashboard.open();
+	public _openLiveAnalytics(): void {
+		if (this.enableLiveAnalytics){
+		    // TODO - load live analytics app
+			//this._liveAnalytics.open();
+            this._browserService.alert(
+                {
+                    message: "Not implemented for Beta",
+                }
+            );
 		}
 	}
 

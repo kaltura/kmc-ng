@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDes
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { PlaylistRule } from '../playlist-rule/playlist-rule.interface';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kPlaylistRulesTable',
@@ -14,6 +15,7 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
 
   @Input()
   set isNewPlaylist(value) {
+    this._isNewPlaylist = value;
     if (value) {
       this.assignEmptyMessage();
     }
@@ -42,8 +44,11 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
   public _emptyMessage: string;
   public _deferredLoading = true;
   public _items: MenuItem[];
+  public _isNewPlaylist: boolean;
+  public _kmcPermissions = KMCPermissions;
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -103,7 +108,9 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
   }
 
   public _viewRule(rule: PlaylistRule): void {
-    this.onActionSelected.emit({ action: 'view', rule: rule });
+    if (this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE)) {
+      this.onActionSelected.emit({ action: 'view', rule: rule });
+    }
   }
 
   public assignEmptyMessage(): void {

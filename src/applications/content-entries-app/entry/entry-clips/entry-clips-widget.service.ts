@@ -16,7 +16,6 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 
 import {EntryStore} from '../entry-store.service';
-import {EntryWidgetKeys} from '../entry-widget-keys';
 import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
@@ -25,6 +24,9 @@ import {serverConfig} from "config/server";
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { UpdateClipsEvent } from 'app-shared/kmc-shared/events/update-clips-event';
 
 export interface ClipsData
 {
@@ -56,8 +58,17 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
               private _kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _appEvents: AppEventsService,
               private _logger: KalturaLogger) {
-    super(EntryWidgetKeys.Clips);
+    super(ContentEntryViewSections.Clips);
+
+      this._appEvents.event(UpdateClipsEvent)
+          .cancelOnDestroy(this)
+          .subscribe(() => {
+              this.updateClips();
+              this._store.setRefreshEntriesListUponLeave();
+          });
+
   }
 
   /**
@@ -87,8 +98,8 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
     }
   }
 
-  public navigateToEntry(entryId) {
-    this._store.openEntry(entryId);
+  public navigateToEntry(entry: KalturaMediaEntry): void {
+    this._store.openEntry(entry);
   }
 
   private _updateClipProperties(clips: any[]): any[] {
@@ -196,10 +207,5 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
 
   ngOnDestroy() {
 
-  }
-
-  public onClipCreated(): void {
-    this.updateClips();
-    this._store.setRefreshEntriesListUponLeave();
   }
 }

@@ -47,6 +47,9 @@ hr {
       color: $kTertiary;
     }
   }
+    span {
+        word-break: break-word;
+    }
 }
 
 .kIcon {

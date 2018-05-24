@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage, KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import {UniversalLiveService} from './universal-live.service';
 import {UniversalLive} from "./universal-live.interface";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kUniversalLive',
@@ -13,6 +15,8 @@ import {UniversalLive} from "./universal-live.interface";
 export class UniversalLiveComponent implements OnInit, OnDestroy {
 
   public _form: FormGroup;
+  public _isBusy = false;
+  public _blockerMessage: AreaBlockerMessage = null;
 
   @Input()
   data: UniversalLive;
@@ -23,10 +27,9 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
   @Input()
   blockerState: { isBusy: boolean, message: AreaBlockerMessage };
 
-  @Output()
-  blockerStateChange = new EventEmitter<{ isBusy: boolean, message: AreaBlockerMessage }>();
-
   constructor(private _fb: FormBuilder,
+              private _logger: KalturaLogger,
+              private _appLocalization: AppLocalization,
               private universalLiveService: UniversalLiveService) {
   }
 
@@ -83,13 +86,9 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
-    this.blockerStateChange.emit({isBusy, message})
-  }
-
   private loadDefaultIp() {
-    this._updateAreaBlockerState(true, null);
-
+    this._isBusy = true;
+    this._blockerMessage = null;
     // set the retrieved default IP in both primary and secondary IP fields.
     this.universalLiveService
       .getDefaultIp()
@@ -98,10 +97,17 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
           this.data.primaryEncoderIp = ip;
           this.data.secondaryEncoderIp = ip;
           this._form.reset(this.data);
-          this._updateAreaBlockerState(false, null);
+          this._isBusy = false;
         },
         error => {
-          this._updateAreaBlockerState(false, error.message);
+          this._logger.info("Failed to retrieve Akalai server default encoder IPs.",{error: error.message});
+          this._isBusy = false;
+          this._blockerMessage = new AreaBlockerMessage({title: "Error", message: "Failed to load Akamai Edge Server IP URL.\nPlease update primary and secondary encoder IP manually.",  buttons: [{
+              label: this._appLocalization.get('app.common.dismiss'),
+              action: () => {
+                  this._blockerMessage = null;
+              }
+          }]});
         });
   }
 

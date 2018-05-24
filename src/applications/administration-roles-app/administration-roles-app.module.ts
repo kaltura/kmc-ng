@@ -80,6 +80,7 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     TooltipModule,
     TreeModule,
     StickyModule,
+    KMCPermissionsModule,
     TableModule,
     InputSwitchModule,
     KMCPermissionsModule

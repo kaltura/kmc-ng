@@ -2,9 +2,8 @@
   <div class="kUploadMonitorSectionHeading">
     <span class="kUploadMonitorSectionHeadingTitle">{{ title }}</span>
 
-    <a [routerLink]="detailsLink"
-       class="kUploadMonitorSectionHeadingDetails"
-       (click)="uploadMonitorPopup.close()">
+    <a class="kUploadMonitorSectionHeadingDetails"
+       (click)="_openDetails()">
       {{ 'applications.upload.uploadMonitor.viewDetails' | translate }}
     </a>
   </div>

@@ -1,17 +1,15 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 
-import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
-import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
-import { getBulkUploadType } from '../utils/get-bulk-upload-type';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
-import {
-    BulkLogRefineFiltersService,
-    RefineList
-} from '../bulk-log-store/bulk-log-refine-filters.service';
+import {BulkLogFilters, BulkLogStoreService} from '../bulk-log-store/bulk-log-store.service';
+import {KalturaBulkUpload} from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import {getBulkUploadType} from '../utils/get-bulk-upload-type';
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {BulkLogUploadingStartedEvent} from 'app-shared/kmc-shared/events';
+import {BulkLogRefineFiltersService, RefineList} from '../bulk-log-store/bulk-log-refine-filters.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
@@ -34,6 +32,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineList[];
 
+  public _kmcPermissions = KMCPermissions;
   public _query = {
     uploadedAfter: null,
     uploadedBefore: null,
@@ -271,9 +270,17 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
   private _downloadFile(url: string, bulkLogItem: KalturaBulkUpload, formatNameFn: (name: string | number, type: string) => string): void {
     const type = getBulkUploadType(bulkLogItem.bulkUploadType);
-    const fileName = bulkLogItem.fileName ? formatNameFn(bulkLogItem.fileName, type) : formatNameFn(bulkLogItem.id, type);
-
+    let fileName = bulkLogItem.fileName;
+    if (!fileName) {
+      fileName = formatNameFn(bulkLogItem.id, type);
+    } else if (!this._endsWith(fileName, `.${type}`)) {
+      fileName = formatNameFn(fileName, type);
+    }
     this._browserService.download(url, fileName, type);
+  }
+
+  private _endsWith(str: string, suffix: string): boolean {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
   }
 
   public _onPaginationChanged(state: any): void {

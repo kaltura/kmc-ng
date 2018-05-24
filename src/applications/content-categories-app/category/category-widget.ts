@@ -5,13 +5,14 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { CategoryWidgetsManager } from './category-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 
 export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, KalturaCategory, KalturaMultiRequest> {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 
-    constructor(private _widgetKey : string)
+    constructor(private _widgetKey: string)
     {
         super(_widgetKey);
     }
@@ -25,7 +26,7 @@ export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, 
         this.showSectionLoader = false;
     }
 
-    protected _removeBlockerMessage() : void{
+    protected _removeBlockerMessage() : void {
         this.sectionBlockerMessage = null;
     }
 

@@ -93,7 +93,7 @@
 
     <button type="button"
             class="kButtonBranded"
-            [disabled]="!_labelField.value"
+            [disabled]="!_labelField.value || _saveDisabled"
             pButton [label]="_saveBtnLabel"
             (click)="_save()"></button>
   </div>

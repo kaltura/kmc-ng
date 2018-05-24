@@ -17,11 +17,19 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';
+import {
+    EntriesManualExecutionModeToken,
+    EntriesStore
+} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 
 @Component({
     selector: 'kEntryMetadata',
     templateUrl: './entry-metadata.component.html',
-    styleUrls: ['./entry-metadata.component.scss']
+    styleUrls: ['./entry-metadata.component.scss'],
+    providers: [
+        EntriesStore,
+        { provide: EntriesManualExecutionModeToken, useValue: false}
+    ]
 })
 export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 

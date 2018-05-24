@@ -9,8 +9,7 @@ import { routing } from './content-playlists-app.routes';
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
   ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
-  RadioButtonModule,
-  SharedModule, TieredMenuModule
+  RadioButtonModule, InputTextareaModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
@@ -43,6 +42,7 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
       FormsModule,
       ReactiveFormsModule,
       InputTextModule,
+      InputTextareaModule,
       PopupWidgetModule,
       CalendarModule,
       MenuModule,

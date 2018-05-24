@@ -10,7 +10,6 @@ hr{
 	button{
 		font-weight: 400;
 		height: 34px;
-		width: 110px;
     /deep/
     .ui-button-icon-right.kIcondropdown_arrow_bottom{
       font-size: 10px;
@@ -36,7 +35,7 @@ hr{
 
 		.kRow {
 			display: flex;
-			padding-top: 16px;
+			padding-top: 22px;
 
 			.kFormLabelContainer{
 				width:190px;
@@ -121,6 +120,7 @@ hr{
 			margin-left: 14px;
 			&:not(.disabled) {
 				color: $kDandger;
+                cursor: pointer;
 			}
 		}
 		.kDeleteDate{
@@ -142,40 +142,41 @@ hr{
 			width: 100%;
 			padding: 8px;
 		}
+        .kButton{
+            height: 30px;
+            font-weight: 400;
+            color: $kGrayscale1;
+            background: white;
+            border: 1px solid $kGrayscale4;
+            cursor: pointer;
+            border-radius: 3px;
+            &:focus {
+                outline:0;
+            }
+            &:hover{
+                color: $kPrimary;
+            }
+            &:active:not(:disabled){
+                box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+            }
+            &:disabled{
+                color: $kGrayscale4;
+                background: transparent;
+                border: 1px solid $kGrayscale4;
+                cursor: default;
+            }
+        }
 		.kGroupButtons{
 			padding-bottom: 12px;
-			button{
-				height: 30px;
-				font-weight: 400;
-				color: $kGrayscale1;
-				background: white;
-				border: 1px solid $kGrayscale4;
-				cursor: pointer;
-				border-radius: 3px;
-				&:focus {
-					outline:0;
-				}
-				&:hover{
-					color: $kPrimary;
-				}
-				&:active:not(:disabled){
-					box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
-				}
-				&:disabled{
-					color: $kGrayscale4;
-					background: transparent;
-					border: 1px solid $kGrayscale4;
-					cursor: default;
-				}
-			}
 		}
 		.kDeleteGroup{
 			text-align: left;
-			padding-left: 172px;
+			padding-left: 208px;
 			padding-top: 8px;
 			padding-bottom: 4px;
 			a{
 				color: $kDandger;
+                cursor: pointer;
 			}
 		}
 

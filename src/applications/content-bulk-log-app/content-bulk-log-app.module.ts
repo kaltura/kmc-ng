@@ -33,6 +33,7 @@ import { BulkLogRefineFiltersComponent } from './bulk-log-refine-filters/bulk-lo
 import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
 import { BulkLogTagsComponent } from './bulk-log-tags/bulk-log-tags.component';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
     TreeModule,
     StickyModule,
       FiltersModule,
-    TableModule
+    TableModule,
+    KMCPermissionsModule
   ],
   declarations: [
     ContentBulkLogAppComponent,

@@ -13,8 +13,10 @@ import {UploadManagement} from '@kaltura-ng/kaltura-common/upload-management/upl
 import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {serverConfig} from "config/server";
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { EntriesListService } from './entries-list.service';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -53,7 +55,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       label: this._appLocalization.get('applications.content.table.liveDashboard'),
       commandName: 'liveDashboard',
       styleClass: '',
-      disabled: !serverConfig.externalApps.liveDashboard.enabled
+      disabled: !this._liveDashboardAppViewService.isAvailable()
     },
     {
       label: this._appLocalization.get('applications.content.table.delete'),
@@ -64,32 +66,40 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   constructor(private _router: Router,
               private _activatedRoute: ActivatedRoute,
+              private _entriesListService: EntriesListService,
               private _browserService: BrowserService,
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               private _uploadManagement: UploadManagement,
               private _permissionsService: KMCPermissionsService,
               public _entriesStore: EntriesStore,
-              private _contentEntriesAppService: ContentEntriesAppService) {
+              private _contentEntryViewService: ContentEntryViewService,
+              private _contentEntriesAppService: ContentEntriesAppService,
+              private _liveDashboardAppViewService: LiveDashboardAppViewService) {
   }
 
   ngOnInit() {
 
-    this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted)
-      .subscribe(() => {
-        this._entriesStore.reload();
-      });
+      if (this._entriesListService.isViewAvailable)
+      {
+          this._entriesStore.reload();
+      }
 
-    this._appEvents.event(UpdateEntriesListEvent)
-      .cancelOnDestroy(this)
-      .subscribe(() => this._entriesStore.reload());
+      this._uploadManagement.onTrackedFileChanged$
+          .cancelOnDestroy(this)
+          .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted)
+          .subscribe(() => {
+              this._entriesStore.reload();
+          });
 
-    const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
-    if (!hasEmbedPermission) {
-      this._rowActions[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
-    }
+      this._appEvents.event(UpdateEntriesListEvent)
+          .cancelOnDestroy(this)
+          .subscribe(() => this._entriesStore.reload());
+
+      const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
+      if (!hasEmbedPermission) {
+          this._rowActions[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
+      }
   }
 
   ngOnDestroy() {
@@ -97,12 +107,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   public _onActionSelected({ action, entry }) {
+      this._entriesList.clearSelection();
     switch (action) {
       case 'preview':
         this._appEvents.publish(new PreviewAndEmbedEvent(entry));
         break;
       case 'view':
-        this._viewEntry(entry.id);
+          this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
         break;
       case 'delete':
         this._browserService.confirm(
@@ -121,14 +132,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
       default:
         break;
-    }
-  }
-
-  private _viewEntry(entryId: string): void {
-    if (entryId) {
-      this._router.navigate(['/content/entries/entry', entryId]);
-    } else {
-      console.error('EntryId is not defined');
     }
   }
 

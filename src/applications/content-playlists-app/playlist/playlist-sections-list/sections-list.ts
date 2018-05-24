@@ -1,16 +1,16 @@
-import { PlaylistWidgetKeys } from '../playlist-widget-keys';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
 
 export const SectionsList = [
   {
     label: 'applications.content.playlistDetails.sections.metadata',
-    key: PlaylistWidgetKeys.Metadata
+    key: ContentPlaylistViewSections.Metadata
   },
   {
     label: 'applications.content.playlistDetails.sections.content',
-    key: PlaylistWidgetKeys.Content
+    key: ContentPlaylistViewSections.Content
   },
   {
     label: 'applications.content.playlistDetails.sections.content',
-    key: PlaylistWidgetKeys.ContentRuleBased
+    key: ContentPlaylistViewSections.ContentRuleBased
   }
 ];

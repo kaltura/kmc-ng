@@ -50,6 +50,7 @@ import {
 } from 'app-shared/content-shared/categories/categories-mode-type';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
+import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -123,9 +124,14 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                 private _appEvents: AppEventsService,
                 private _categoriesSearchService: CategoriesSearchService,
                 private _appLocalization: AppLocalization,
+                contentCategoriesMainViewService: ContentCategoriesMainViewService,
                 _logger: KalturaLogger) {
         super(_logger);
-        this._prepare();
+        if (contentCategoriesMainViewService.isAvailable()) {
+            this._prepare();
+        }else{
+            this.browserService.handleUnpermittedAction(true);
+        }
     }
 
     private _prepare(): void {
@@ -575,16 +581,21 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             .map(
                 data => {
                     if (data.hasErrors()) {
-                        let message = 'An error occurred while trying to add new category';
+                        const message = this._appLocalization.get('applications.content.moveCategory.errors.creationError');
                         let errorCode = '';
                         if (data[0].error) { // show error of CategoryAddAction
-                            errorCode = 'category_creation_failure';
+                            errorCode = data[0].error.code === 'DUPLICATE_CATEGORY'
+                                ? 'duplicate_category'
+                                : 'category_creation_failure';
                         } else if (multiRequest.requests.length > 1) {
                             errorCode = 'entries_link_issue';
                         }
                         const error = new Error(message);
                         (<any>error).code = errorCode;
-                        (<any>error).context = { categoryId: data[0].result.id };
+                        if (data[0].result) {
+                            (<any>error).context = { categoryId: data[0].result.id };
+                        }
+
                         throw error;
                     }
 

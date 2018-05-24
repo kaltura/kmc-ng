@@ -4,7 +4,7 @@ import { SettingsTranscodingSettingsComponent } from './settings-transcoding-set
 import { routing } from './settings-transcoding-settings-app.routes';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule, DataTableModule, DropdownModule, InputTextModule, PaginatorModule } from 'primeng/primeng';
+import { ButtonModule, DataTableModule, DropdownModule, InputTextModule, InputTextareaModule, PaginatorModule } from 'primeng/primeng';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { TranslateModule } from 'ng2-translate';
 import { TranscodingProfilesComponentsList } from './transcoding-profiles/components-list';
@@ -24,6 +24,7 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     ReactiveFormsModule,
     DropdownModule,
     InputTextModule,
+    InputTextareaModule,
     ButtonModule,
     AreaBlockerModule,
     TranslateModule,

@@ -8,6 +8,7 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kDropFoldersList',
@@ -37,6 +38,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
               private _refineFiltersService: DropFoldersRefineFiltersService,
               private _appLocalization: AppLocalization,
               private _router: Router,
+              private _contentEntryViewService: ContentEntryViewService,
               private _browserService: BrowserService) {
   }
 
@@ -78,7 +80,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                             }
                         }
                         ]
-                    })
+                    });
                 });
     }
 
@@ -101,7 +103,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                                 }
                             }
                             ]
-                        })
+                        });
                     } else {
                         this._tableBlockerMessage = null;
                     }
@@ -184,7 +186,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                   }
                 }
               ]
-            })
+            });
           }
         );
     };
@@ -219,7 +221,12 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   public _onFreetextChanged(): void {
-    this._dropFoldersStore.filter({ freeText: this._query.freeText });
+      // prevent searching for empty strings
+      if (this._query.freeText.length > 0 && this._query.freeText.trim().length === 0){
+          this._query.freeText = '';
+      }else {
+          this._dropFoldersStore.filter({freeText: this._query.freeText});
+      }
   }
 
   public _onSortChanged(event): void {
@@ -237,17 +244,12 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(entryId: string): void {
-    this._dropFoldersStore.isEntryExist(entryId)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
-      .subscribe(
-        exists => {
-          if (exists) {
-            this._router.navigate(['/content/entries/entry', entryId]);
-          }
-        },
-        ({ message }) => this._browserService.alert({ message })
-      );
+      this._dropFoldersStore.isEntryExist(entryId)
+          .cancelOnDestroy(this)
+          .tag('block-shell')
+          .subscribe(() => {
+              this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
+          });
   }
 
   public _deleteDropFolderFiles(event): void {

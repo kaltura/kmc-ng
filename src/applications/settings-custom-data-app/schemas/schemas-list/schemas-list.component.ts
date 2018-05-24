@@ -7,6 +7,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
@@ -22,8 +23,8 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   public _selectedSchema: SettingsMetadataProfile = null;
   public _tableIsBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _tableBlockerMessage: AreaBlockerMessage = null;
   public _serverValidationError = null;
+  public _kmcPermissions = KMCPermissions;
 
   public _query = {
     pageIndex: 0,
@@ -85,24 +86,20 @@ export class SchemasListComponent implements OnInit, OnDestroy {
           this._tableIsBusy = result.loading;
 
           if (result.errorMessage) {
-            this._tableBlockerMessage = new AreaBlockerMessage({
+            this._blockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || this._appLocalization.get('applications.settings.metadata.errorLoading'),
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
-                  this._tableBlockerMessage = null;
+                  this._blockerMessage = null;
                   this._schemasStore.reload();
                 }
               }
               ]
             });
           } else {
-            this._tableBlockerMessage = null;
+            this._blockerMessage = null;
           }
-        },
-        error => {
-          this._logger.warn('[kmcng] -> could not load schemas'); // navigate to error page
-          throw error;
         });
   }
 
@@ -242,6 +239,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
           this._logger.info(`handle failing delete by the server`, { errorMessage: error.message });
           this._serverValidationError = error;
           this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
             message: error.message,
             accept: () => {
               this._logger.info(`handle dismiss request by the user`);

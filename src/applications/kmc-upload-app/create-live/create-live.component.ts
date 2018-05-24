@@ -4,7 +4,6 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {Router} from '@angular/router';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
 import {ManualLive} from './manual-live/manual-live.interface';
@@ -14,6 +13,7 @@ import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceTyp
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export enum StreamTypes {
   kaltura,
@@ -28,6 +28,8 @@ export enum StreamTypes {
   providers: [CreateLiveService]
 })
 export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
+  private _showConfirmationOnClose = true;
+
   public _selectedStreamType: StreamTypes = StreamTypes.kaltura;
   public kalturaLiveStreamData: KalturaLive = {
     name: '',
@@ -53,10 +55,10 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     broadcastPassword: '',
     liveDvr: false
   };
-  public _availableStreamTypes: Array<{ value: StreamTypes, label: string }>;
+  public _availableStreamTypes: Array<{ id: string, value: StreamTypes, label: string }>;
   public _streamTypes = StreamTypes;
   public _blockerMessage: AreaBlockerMessage;
-  private _showConfirmationOnClose = true;
+  public _manualStreamOnly = false;
 
   @ViewChild('kalturaLiveStreamComponent') kalturaLiveStreamComponent;
   @ViewChild('manualLiveComponent') manualLiveComponent;
@@ -68,24 +70,40 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
               private _permissionsService: KMCPermissionsService,
-              private _router: Router) {
+              private _contentEntryViewService: ContentEntryViewService) {
   }
 
   ngOnInit() {
     this._availableStreamTypes = [
       {
+        id: 'kaltura',
         value: StreamTypes.kaltura,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.kaltura')
       },
       {
+        id: 'universal',
         value: StreamTypes.universal,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.universal')
       },
       {
+        id: 'manual',
         value: StreamTypes.manual,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')
       }
     ];
+
+    this._permissionsService.filterList(
+      this._availableStreamTypes,
+      {
+        'kaltura': KMCPermissions.FEATURE_KALTURA_LIVE_STREAM,
+        'universal': KMCPermissions.FEATURE_KMC_AKAMAI_UNIVERSAL_LIVE_STREAM_PROVISION
+      }
+    );
+
+    if (this._availableStreamTypes.length === 1) {
+      this._manualStreamOnly = true;
+      this._selectedStreamType = StreamTypes.manual;
+    }
   }
 
   ngAfterViewInit() {
@@ -178,10 +196,11 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
           header,
           message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.kalturaMessage'),
           accept: () => {
-            this._router.navigate(
-              ['/content/entries/entry', liveStream.id],
-              { queryParams: { reloadEntriesListOnNavigateOut: true } }
-            );
+              this._contentEntryViewService.open({
+                  entry: liveStream,
+                  section: ContentEntryViewSections.Metadata,
+                  reloadEntriesListOnNavigateOut: true
+              });
             this._showConfirmationOnClose = false;
             this.parentPopupWidget.close();
           },

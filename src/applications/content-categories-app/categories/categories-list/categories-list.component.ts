@@ -7,7 +7,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {CategoryCreationService} from 'app-shared/kmc-shared/events/category-creation';
+
 import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
 import {CategoriesRefineFiltersService, RefineGroup} from '../categories-refine-filters.service';
 import {
@@ -17,6 +17,9 @@ import {
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
+import { async } from 'rxjs/scheduler/async';
 
 @Component({
   selector: 'kCategoriesList',
@@ -63,8 +66,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _categoriesUtilsService: CategoriesUtilsService,
-                public _categoryCreationService: CategoryCreationService,
+                public _contentNewCategoryView: ContentNewCategoryViewService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+                private _contentCategoryView: ContentCategoryViewService,
                 private _appEvents: AppEventsService) {
     }
 
@@ -132,6 +136,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     private _registerToDataChanges(): void {
         this._categoriesService.categories.state$
+            .observeOn(async)
             .cancelOnDestroy(this)
             .subscribe(
                 result => {
@@ -171,7 +176,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 }
             });
 
-        const newCategoryData = this._categoryCreationService.popNewCategoryData();
+        const newCategoryData = this._contentNewCategoryView.popNewCategoryData();
         if (newCategoryData) {
             this._linkedEntries = newCategoryData.entries.map(entry => ({entryId: entry.id}));
             this.addNewCategory.open();
@@ -296,20 +301,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     _onActionSelected({action, category}: { action: string, category: KalturaCategory }) {
         switch (action) {
             case 'edit':
-                // show category edit warning if needed
-                if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
-                    this._browserService.confirm(
-                        {
-                            header: this._appLocalization.get('applications.content.categories.editCategory'),
-                            message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
-                            accept: () => {
-                                this.router.navigate(['/content/categories/category', category.id]);
-                            }
-                        }
-                    );
-                } else {
-                    this.router.navigate(['/content/categories/category', category.id]);
-                }
+                this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
                 break;
             case 'delete':
                 this.deleteCategory(category);
@@ -379,20 +371,25 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     onFreetextChanged(): void {
-        this._categoriesService.filter({freetext: this._query.freetext});
+        // prevent searching for empty strings
+        if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
+            this._query.freetext = '';
+        }else {
+            this._categoriesService.filter({freetext: this._query.freetext});
+        }
     }
 
     onTagsChange() {
         this.tags.updateLayout();
     }
 
-    onCategoryAdded({categoryId}: { categoryId: number }): void {
-        if (!categoryId) {
-            console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters')
+    onCategoryAdded(category: KalturaCategory): void {
+        if (!category) {
+            console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters');
         } else {
             this._categoriesService.reload();
             // use a flag so the categories will be refreshed upon clicking 'back' from the category page
-            this.router.navigate(['/content/categories/category', categoryId]);
+            this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
         }
     }
 }

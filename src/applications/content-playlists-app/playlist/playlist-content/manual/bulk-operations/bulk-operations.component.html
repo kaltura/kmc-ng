@@ -7,20 +7,25 @@
       <div class="kBulkActionsContainer">
         <div class="kBulkActions" *ngIf="selectedEntries.length; else addEntryWrap">
           <button pButton
+                  [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
                   class="kButtonDefault kMoveBtn kMoveBtnTop"
                   icon="kIcondropdown_arrow_top"
                   (click)="_moveEntries('up')"></button>
           <button pButton
+                  [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
+                  [class.kMoveBtnBottomDisabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
                   class="kButtonDefault kMoveBtn kMoveBtnBottom"
                   icon="kIcondropdown_arrow_bottom"
                   (click)="_moveEntries('down')"></button>
           <button pButton class="kButtonDanger kBulkDeleteBtn"
+                  [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
                   label="{{'applications.content.playlists.remove' | translate}}"
                   (click)="deleteEntries.emit(selectedEntries)"></button>
         </div>
         <ng-template #addEntryWrap>
           <button
             pButton
+            [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
             type="button"
             label="{{'applications.content.playlists.addEntry' | translate}}"
             class="kButtonBranded kAddEntryBtn"

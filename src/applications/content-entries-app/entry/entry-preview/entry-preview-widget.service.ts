@@ -1,38 +1,30 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {KalturaClient} from 'kaltura-ngx-client';
 import {AppAuthentication} from 'app-shared/kmc-shell';
 import {KalturaSourceType} from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import {PreviewMetadataChangedEvent} from '../../preview-metadata-changed-event';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {EntryWidget} from '../entry-widget';
-import {serverConfig} from 'config/server';
-import {EntryStore} from '../entry-store.service';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import {serverConfig, getKalturaServerUri} from 'config/server';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import { EntryStore } from '../entry-store.service';
+
 
 @Injectable()
-export class EntryPreviewWidget extends EntryWidget implements OnDestroy
-{
-    public _iframeSrc : string;
+export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
+    public _iframeSrc: string;
     private _urlHash: number = 0;
-  public clipAndTrimEnabled : boolean = false;
 
-    constructor( private appAuthentication: AppAuthentication,private _permissionsService: KMCPermissionsService,
-                kalturaServerClient: KalturaClient, appEvents: AppEventsService,
+    constructor(private appAuthentication: AppAuthentication,
                 private _store: EntryStore,
-                private _logger: KalturaLogger) {
+                private _permissionsService: KMCPermissionsService,
+                appEvents: AppEventsService) {
         super('entryPreview');
 
 
         appEvents.event(PreviewMetadataChangedEvent)
             .cancelOnDestroy(this)
-            .subscribe(({entryId}) =>
-            {
-                if (this.data && this.data.id === entryId)
-                {
+            .subscribe(({entryId}) => {
+                if (this.data && this.data.id === entryId) {
                     this._iframeSrc = this._createUrl();
                 }
             });
@@ -41,13 +33,12 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected onReset()
-    {
+    protected onReset() {
         // DEVELOPER NOTICE: don't reset _urlHash to support refresh after saving
     }
 
-    ngOnDestroy()
-    {}
+    ngOnDestroy() {
+    }
 
     private _createUrl(): string {
 
@@ -65,34 +56,27 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
             const UIConfID = serverConfig.kalturaServer.previewUIConf;
             const partnerID = this.appAuthentication.appUser.partnerId;
             const ks = this.appAuthentication.appUser.ks || "";
+            const serverUri = getKalturaServerUri();
 
-            let flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[ks]=${ks}`;
+            let flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[closedCaptions.hideWhenEmpty]=true&flashvars[ks]=${ks}`;
             if (isLive) {
                 flashVars += '&flashvars[disableEntryRedirect]=true';
             }
             const shouldDisableAlerts = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_KDP_ALERTS);
             if (shouldDisableAlerts) {
-              flashVars += '&flashvars[disableAlerts]=true';
+                flashVars += '&flashvars[disableAlerts]=true';
             }
 
             this._urlHash = this._urlHash + 1;
 
-            result = `${serverConfig.cdnServers.serverUri}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}&hash=${this._urlHash}`;
+            result = `${serverUri}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}&hash=${this._urlHash}`;
         }
 
         return result;
     }
+
     protected onActivate(firstTimeActivating: boolean) {
-	    this._iframeSrc = this._createUrl();
-
-        const entry: KalturaMediaEntry = this.data ? this.data as KalturaMediaEntry : null;
-        this.clipAndTrimEnabled = serverConfig.externalApps.clipAndTrim.enabled &&
-            entry && !this._store.isLiveMediaEntry(entry.mediaType) && entry.mediaType !== KalturaMediaType.image && entry.status === KalturaEntryStatus.ready;
-
-
-      if (!this.clipAndTrimEnabled) {
-        this._logger.warn('Clip and trim (kedit) is not enabled, please check configuration');
-      }
+        this._iframeSrc = this._createUrl();
     }
 
 

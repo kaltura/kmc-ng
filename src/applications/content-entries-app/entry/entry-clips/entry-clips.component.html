@@ -2,7 +2,9 @@
 	<div class="kClips">
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
     <div class="kButtons">
-      <button [disabled]="!_clipAndTrimEnabled" pButton class="kButtonDefault" (click)="_clipAndTrimEnabled && clipAndTrim.open()" icon="kIconmovies" label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
+        <div>
+            <button [disabled]="!_clipAndTrimEnabled" pButton class="kButtonDefault" (click)="_clipAndTrimEnabled && clipAndTrim.open()" icon="kIconmovies" label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
+        </div>
     </div>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService.entries$ | async)?.items"
@@ -13,15 +15,15 @@
                    (onSort)="_onSortChanged($event)">
 				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}" [style]="{'width':'120px','padding-left': '24px'}">
 					<ng-template let-col let-entry="rowData" pTemplate="body">
-						<a (click)="_widgetService.navigateToEntry(entry.id)">{{entry.id}}</a>
+						<a (click)="_widgetService.navigateToEntry(entry)">{{entry.id}}</a>
 					</ng-template>
 				</p-column>
 				<p-column field="name" header="{{'applications.content.entryDetails.clips.name' | translate}}" [sortable]="'custom'">
           <ng-template let-col let-entry="rowData" pTemplate="body">
-            <span class="kTableColumn" [kTooltip]="entry[col.field]" [maxWidth]="300">{{entry[col.field]}}</span>
+            <span class="kTableColumn" [kTooltip]="entry[col.field]">{{entry[col.field]}}</span>
           </ng-template>
 				</p-column>
-				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'50px'}">
+				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'120px'}">
 				</p-column>
 				<p-column field="createdAt" header="{{'applications.content.entryDetails.clips.created' | translate}}" [sortable]="'custom'" [style]="{'width':'110px'}">
 					<ng-template let-col let-entry="rowData" pTemplate="body">
@@ -48,6 +50,9 @@
 
 <kPopupWidget #clipAndTrim [fullScreen]="true">
   <ng-template>
-    <kClipAndTrim [entryId]="_widgetService.data.id" [parentPopupWidget]="clipAndTrim"></kClipAndTrim>
+      <kEntryEditor [entry]="_widgetService.data"
+                    [entryHasSource]="true"
+                    [tab]="'editor'"
+                    [parentPopupWidget]="clipAndTrim"></kEntryEditor>
   </ng-template>
 </kPopupWidget>

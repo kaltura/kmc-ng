@@ -17,6 +17,7 @@ import { TooltipModule } from '@kaltura-ng/kaltura-ui/tooltip/k-tooltip.module';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.module';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui/kaltura-primeng-ui.module';
 import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
     StickyModule,
     EntriesModule,
     DropdownModule,
-    InputSwitchModule
+    InputSwitchModule,
+    KMCPermissionsModule
   ],
   declarations: [
     SettingsCustomDataComponent,

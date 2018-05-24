@@ -44,7 +44,7 @@ export class PlaylistRuleParserService implements OnDestroy {
       // And assign metadataProfileId for each search condition
       const assignMetadataProfileId = (obj, metadataProfileId = null) => {
         if (obj && obj.items) {
-          return obj.items.map(subItem => assignMetadataProfileId(subItem, obj.metadataProfileId))
+          return obj.items.map(subItem => assignMetadataProfileId(subItem, obj.metadataProfileId));
         }
         return Object.assign(obj, { metadataProfileId });
       };
@@ -61,7 +61,7 @@ export class PlaylistRuleParserService implements OnDestroy {
       // if there's no matching items from metadataProfiles array or can't get localName return null for current item
       // [searchCondition, searchCondition, searchCondition] x MetadataProfile[] => [{value, listName}, null, ...]
       const createGroupedListItem = (metadata, item) => {
-        const localNameMatch = item.field.match(/\/\*\[local-name\(\)='([\w]*)'\]$/);
+        const localNameMatch = item.field && item.field.match(/\/\*\[local-name\(\)='([\w]*)'\]$/);
         const relevantMetadata = metadata.items.find(({ id }) => id === item.metadataProfileId);
         if (relevantMetadata && localNameMatch && localNameMatch[1]) {
           const localName = localNameMatch[1];
@@ -70,7 +70,7 @@ export class PlaylistRuleParserService implements OnDestroy {
             return {
               value: item.value,
               listName: relevantMetadataItem.id
-            }
+            };
           }
         }
 
@@ -167,8 +167,7 @@ export class PlaylistRuleParserService implements OnDestroy {
                 entriesCount,
                 originalFilter
             });
-        } else
-        {
+        } else {
           this._logger.error(`cannot build playlist rule. expected filter of type 'KalturaMediaEntryFilterForPlaylist'.`);
           throw new Error(`cannot build playlist rule. expected filter of type 'KalturaMediaEntryFilterForPlaylist'.`);
         }

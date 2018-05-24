@@ -34,14 +34,17 @@
       border-radius: 50%;
 
       &.kUploadMenuLiveStreamIcon {
+        cursor: pointer;
         background-color: $kDandger;
       }
 
       &.kUploadMenuBulkUploadIcon {
+        cursor: pointer;
         background-color: $kOrange;
       }
 
       &.kUploadMenuUploadIcon {
+        cursor: pointer;
         background-color: $kSecondary;
       }
     }
@@ -55,11 +58,17 @@
       }
 
       .kBulkUploadSamplesLink {
-        margin-top: 5px;
+        margin-top: 8px;
+        display: block;
         opacity: 0.6;
         font-size: 14px;
         font-weight: normal;
         text-decoration: underline;
+        &.kDisabled{
+            opacity: 0.2;
+            cursor: default;
+            pointer-events: none;
+        }
       }
     }
   }

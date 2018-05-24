@@ -6,7 +6,10 @@
 					<div class="kContent">
 						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 						<div class="kTitle">{{ _profileName }}</div>
-						<button pButton class="kButtonBranded kSaveBtn" [disabled]="!_profileStore.profileIsDirty" label="Save" (click)="_save()"></button>
+						<button pButton class="kButtonBranded kSaveBtn"
+                    [label]="'applications.settings.transcoding.profile.save' | translate"
+                    [disabled]="_isSaveDisabled"
+                    (click)="_save()"></button>
 						<button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
 						<button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
 					</div>

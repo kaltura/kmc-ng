@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kTranscodingProfileFalvorsTable',
@@ -8,6 +9,7 @@ import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorP
   styleUrls: ['./transcoding-profile-flavors-table.component.scss']
 })
 export class TranscodingProfileFlavorsTableComponent implements AfterViewInit, OnInit, OnDestroy {
+  @Input() isNewProfile: boolean;
   @Input() selectedFlavors: KalturaFlavorParams[] = [];
 
   @Input()
@@ -30,7 +32,12 @@ export class TranscodingProfileFlavorsTableComponent implements AfterViewInit, O
   public _emptyMessage: string;
   public _deferredLoading = true;
 
+  public get _isEditAllowed(): boolean {
+    return this.isNewProfile || this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE);
+  }
+
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -63,7 +70,7 @@ export class TranscodingProfileFlavorsTableComponent implements AfterViewInit, O
 
   public _editFlavor(flavor: KalturaFlavorParams): void {
     const isSelected = this.selectedFlavors.indexOf(flavor) !== -1;
-    if (isSelected) {
+    if (isSelected && this._isEditAllowed) {
       this.editFlavor.emit(flavor);
     }
   }

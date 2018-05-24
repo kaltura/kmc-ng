@@ -226,7 +226,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
       if (currentCategoryIndex > 0) {
         const prevCategory = categories[currentCategoryIndex - 1];
-        this._categoryStore.openCategory(prevCategory.id);
+        this._categoryStore.openCategory(prevCategory);
       }
     }
   }
@@ -239,7 +239,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
       if (currentCategoryIndex >= 0 && (currentCategoryIndex < categories.length - 1)) {
         const nextEntry = categories[currentCategoryIndex + 1];
-        this._categoryStore.openCategory(nextEntry.id);
+        this._categoryStore.openCategory(nextEntry);
       }
     }
   }

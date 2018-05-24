@@ -16,7 +16,6 @@
         <ng-template let-col let-rule="rowData" pTemplate="body">
           <span class="kTitle kTableColumn"
                 [kTooltip]="rule[col.field]"
-                [maxWidth]="300"
                 (click)="_viewRule(rule)">{{rule[col.field]}}</span>
         </ng-template>
       </p-column>
@@ -27,7 +26,7 @@
       </p-column>
 
       <p-column field="limit"
-                [style]="{'width': '70px'}"
+                [style]="{'width': '100px'}"
                 [header]="'applications.content.table.limit' | translate">
       </p-column>
 
@@ -47,7 +46,7 @@
         </ng-template>
       </p-column>
 
-      <p-column header="" [style]="{'width': '70px'}">
+      <p-column header="" [style]="{'width': '70px'}" *ngIf="_isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)">
         <ng-template let-col let-rule="rowData" pTemplate="body" let-i="rowIndex">
           <div class="kPlaylistRulesTableActions">
             <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, i, rule)"></button>

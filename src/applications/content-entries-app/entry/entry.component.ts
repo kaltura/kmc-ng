@@ -57,7 +57,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _currentEntryId: string;
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
-	public _entryHasChanges: boolean;
+	public _entryHasChanges : boolean;
 	public _kmcPermissions = KMCPermissions;
 
 	public get _isSaveDisabled(): boolean {
@@ -70,8 +70,10 @@ export class EntryComponent implements OnInit, OnDestroy {
       KMCPermissions.CONTENT_MANAGE_THUMBNAIL,
       KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL,
       KMCPermissions.CONTENT_MODERATE_METADATA,
-      KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA
+      KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
+      KMCPermissions.LIVE_STREAM_UPDATE,
     ]);
+
 		return !this._entryStore.entryIsDirty || !editAccessControlAllowed;
 	}
 

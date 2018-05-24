@@ -24,6 +24,8 @@ import { CategoriesStatusMonitorService } from 'app-shared/content-shared/catego
 import { CategoryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
 import { CategoryListAction } from 'kaltura-ngx-client/api/types/CategoryListAction';
 import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
+import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -45,7 +47,6 @@ declare interface StatusArgs {
 export class CategoryService implements OnDestroy {
 
     private _loadCategorySubscription: ISubscription;
-    private _sectionToRouteMapping: { [key: number]: string } = {};
     private _state = new BehaviorSubject<StatusArgs>({action: ActionTypes.CategoryLoading, error: null});
 
     private _saveCategoryInvoked = false;
@@ -82,6 +83,8 @@ export class CategoryService implements OnDestroy {
                 private _appEvents: AppEventsService,
                 private _pageExitVerificationService: PageExitVerificationService,
                 appEvents: AppEventsService,
+                private _contentCategoryView: ContentCategoryViewService,
+                private _contentCategoriesMainViewService: ContentCategoriesMainViewService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
         this._widgetsManager.categoryStore = this;
@@ -138,14 +141,6 @@ export class CategoryService implements OnDestroy {
         if (!this._categoryRoute || !this._categoryRoute.snapshot.data.categoryRoute) {
             throw new Error('this service can be injected from component that is associated to the category route');
         }
-
-        this._categoryRoute.snapshot.routeConfig.children.forEach(childRoute => {
-            const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
-
-            if (routeSectionType !== null) {
-                this._sectionToRouteMapping[routeSectionType] = childRoute.path;
-            }
-        });
     }
 
 
@@ -336,21 +331,25 @@ export class CategoryService implements OnDestroy {
       .request(new CategoryGetAction({id}))
 			.cancelOnDestroy(this)
 			.subscribe(category => {
-			this._loadCategorySubscription = null;
+                if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  })) {
+                    this._loadCategorySubscription = null;
 
-				this._category.next(category);
+                    this._category.next(category);
 
-				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
+                    const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
 
-				if (dataLoadedResult.errors.length) {
-					this._state.next({
-						action: ActionTypes.CategoryLoadingFailed,
-						error: new Error(`one of the widgets failed while handling data loaded event`)
-					});
-				} else {
-					this._state.next({ action: ActionTypes.CategoryLoaded });
-				}
-			},
+                    if (dataLoadedResult.errors.length) {
+                        this._state.next({
+                            action: ActionTypes.CategoryLoadingFailed,
+                            error: new Error(`one of the widgets failed while handling data loaded event`)
+                        });
+                    } else {
+                        this._state.next({ action: ActionTypes.CategoryLoaded });
+                    }
+                } else {
+                    this._browserService.handleUnpermittedAction(true);
+                }
+            },
 			error => {
 				this._loadCategorySubscription = null;this._state.next({ action: ActionTypes.CategoryLoadingFailed, error });
 }
@@ -358,26 +357,9 @@ export class CategoryService implements OnDestroy {
 
 	}
 
-	public openSection(sectionKey: string): void {
-		const navigatePath = this._sectionToRouteMapping[sectionKey];
-
-		if (navigatePath) {
-			this._router.navigate([navigatePath], { relativeTo: this._categoryRoute });
-		}
+	public openSection(section: ContentCategoryViewSections): void {
+		this._contentCategoryView.open({ section, category: this.category, ignoreWarningTag: true });
 	}
-
-	public openCategory(categoryId: number) {
-		if ( this.categoryId!== categoryId) {
-		this.canLeaveWithoutSaving()
-			.cancelOnDestroy(this)
-			.subscribe(
-			response => {
-				if (response.allowed) {
-					this._router.navigate(['category', categoryId], { relativeTo: this._categoryRoute.parent });
-				}
-			}
-			);
-	}}
 
 	public canLeaveWithoutSaving(): Observable<{ allowed: boolean }> {
 		return Observable.create(observer => {
@@ -403,6 +385,22 @@ export class CategoryService implements OnDestroy {
 		}).monitor('category store: check if can leave section without saving');
 	}
 
+    public openCategory(category: KalturaCategory | number) {
+        const categoryId = category instanceof KalturaCategory ? category.id : category;
+        if (this.categoryId !== categoryId) {
+            this.canLeaveWithoutSaving()
+                .filter(({ allowed }) => allowed)
+                .cancelOnDestroy(this)
+                .subscribe(() => {
+                    if (category instanceof KalturaCategory) {
+                        this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
+                    } else {
+                        this._contentCategoryView.openById(category, ContentCategoryViewSections.Metadata);
+                    }
+                });
+        }
+    }
+
 	public returnToCategories(force = false) {
 
     	if (force)
@@ -410,7 +408,8 @@ export class CategoryService implements OnDestroy {
 		    this._categoryIsDirty = false;
 		    this._updatePageExitVerification();
 	    }
-		this._router.navigate(['content/categories']);
+
+        this._contentCategoriesMainViewService.open();
 	}
 }
 

@@ -24,6 +24,7 @@ import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMeta
 import { MetadataProfileUpdateAction } from 'kaltura-ngx-client/api/types/MetadataProfileUpdateAction';
 import { MetadataProfileAddAction } from 'kaltura-ngx-client/api/types/MetadataProfileAddAction';
 import { getKalturaServerUri } from 'config/server';
+import { SettingsMetadataMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export interface SchemasFilters {
   pageSize: number;
@@ -52,9 +53,14 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
               private _appLocalization: AppLocalization,
               private _appAuth: AppAuthentication,
               private _browserService: BrowserService,
+              settingsMetadataMainView: SettingsMetadataMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('SchemasStore'));
-    this._prepare();
+    if (settingsMetadataMainView.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy() {
@@ -111,7 +117,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
             object.parsedProfile = parsedProfile.profile;
 
             if (!object.profileDisabled) {
-              object.defaultLabel = object.parsedProfile.items.map(({ label }) => label).join(',');
+              object.defaultLabel = object.parsedProfile.items.map(({ key }) => key).join(', ');
               const ks = this._appAuth.appUser.ks;
               const id = object.id;
               object.downloadUrl = getKalturaServerUri(`/api_v3/index.php/service/metadata_metadataprofile/action/serve/ks/${ks}/id/${id}`);

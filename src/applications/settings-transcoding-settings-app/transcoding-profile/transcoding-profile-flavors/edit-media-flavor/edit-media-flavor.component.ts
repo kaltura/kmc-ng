@@ -154,6 +154,11 @@ export class EditMediaFlavorComponent implements OnInit {
       forceNoneComplied: assetParams.forceNoneComplied,
       deletePolicy: assetParams.deletePolicy
     }, { emitEvent: false });
+
+    if (!this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
+        this._editFlavorForm.get('systemName').disable({onlySelf: true});
+        this._originField.disable({onlySelf: true});
+    }
   }
 
   private _getFlavorAssetParams(): ExtendedKalturaConversionProfileAssetParams {

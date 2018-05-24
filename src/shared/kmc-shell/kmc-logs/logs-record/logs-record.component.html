@@ -1,0 +1,53 @@
+<div *ngIf="mode === 'link'">
+    <p *ngIf="!_isRecording" class="kHelpLink" (click)="_toggleRecord()">
+        Start record logs
+    </p>
+    <p *ngIf="_isRecording" class="kHelpLink" (click)="_toggleRecord()">
+        Stop record logs
+    </p>
+</div>
+<div *ngIf="mode === 'button'">
+    <div class="kToggleRecord"
+         [ngClass]="{'kStartRecord': !_isRecording, 'kStopRecord': _isRecording}"
+         (click)="_toggleRecord()"></div>
+</div>
+
+<kPopupWidget #recordPopup [popupWidth]="500" [popupHeight]="_isRecording ? 250 : 450"
+              [modal]="true" [closeBtn]="false"
+              [closeBtnInside]="true" [closeOnClickOutside]="false">
+    <ng-template>
+        <div class="kLogsRecordPopup">
+            <div class="kHeader">Record your activity</div>
+            <div class="kContainer" *ngIf="!_isRecording">
+                <p>If you have found an issue in the app you can help the support to fix it as soon as possible.</p>
+                <p>To do so, you can record your actions during reproducing an issue and then send your activity to the
+                    support.</p>
+                <p>Once you finish click the stop record button (red square icon or Help > Stop logs record buttons) and
+                    click download logs button.</p>
+                <p>Do not forget to stop record anyway to prevent memory consuming by your browser during work with the
+                    app.</p>
+                <div class="kRow">
+                    <span class="kLabel">Current log level</span>
+                    <p-dropdown [options]="_logLevelOptions"
+                                [style]="{'width':'140px'}"
+                                [autoWidth]="false"
+                                [(ngModel)]="_logLevel"></p-dropdown>
+                </div>
+            </div>
+
+            <div class="kContainer" *ngIf="_isRecording">
+                <p>Logs record is stopped.</p>
+                <p>Download the logs file and send it to support</p>
+            </div>
+
+            <div class="kFooter">
+                <button *ngIf="!_isRecording" type="button" pButton class="kButtonBranded" label="Start record"
+                        (click)="_startRecord()"></button>
+                <button *ngIf="_isRecording" type="button" pButton class="kButtonBranded"
+                        label="Download logs" (click)="_downloadLogs()"></button>
+                <button type="button" pButton class="kButtonDefault" label="Cancel"
+                        (click)="_cancel()"></button>
+            </div>
+        </div>
+    </ng-template>
+</kPopupWidget>

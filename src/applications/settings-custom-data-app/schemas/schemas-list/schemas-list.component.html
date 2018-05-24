@@ -7,7 +7,7 @@
             <button
               pButton
               type="button"
-              *ngIf="!_selectedSchemas.length"
+              [disabled]="_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kDisabledIfNotPermitted"
               [label]="'applications.settings.metadata.addCustomSchema' | translate"
               class="kButtonBranded kAddSchemaBtn"
               (click)="_addNewSchema()"></button>
@@ -22,7 +22,9 @@
               • {{ 'applications.settings.metadata.selected' | translate : [_selectedSchemas.length] }}
             </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
-                    [kTooltip]="'applications.settings.metadata.deleteProfiles' | translate"(click)="_deleteSchemas(_selectedSchemas)"></button>
+                    [kTooltip]="'applications.settings.metadata.deleteProfiles' | translate"
+                    [disabled]="_kmcPermissions.CUSTOM_DATA_PROFILE_DELETE | kDisabledIfNotPermitted"
+                    (click)="_deleteSchemas(_selectedSchemas)"></button>
             <a class="kBulkCancel" (click)="_clearSelection()">
               {{'applications.settings.metadata.cancel' | translate}}
             </a>
@@ -31,7 +33,6 @@
       </div>
     </kSticky>
     <k-area-blocker [showLoader]="_tableIsBusy"
-                    [message]="_tableBlockerMessage"
                     [bodyScroll]="true">
       <kSchemasTable
         class="kSchemasTable"
