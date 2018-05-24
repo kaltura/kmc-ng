@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { LoginScreens } from '../login.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kKMCLoginForm',
@@ -42,6 +43,7 @@ export class LoginFormComponent {
   }
 
   constructor(private _fb: FormBuilder,
+              private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
     this.buildForm();
   }
@@ -90,6 +92,6 @@ export class LoginFormComponent {
   }
 
   public _contactSupport(): void {
-      this._browserService.openEmail(serverConfig.externalLinks.kaltura.support);
+      this._browserService.openEmail(serverConfig.externalLinks.kaltura.support, false, this._appLocalization.get('app.openMail.supportMailTitle'), this._appLocalization.get('app.openMail.supportMailMsg'));
   }
 }

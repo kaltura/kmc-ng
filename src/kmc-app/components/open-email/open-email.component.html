@@ -1,0 +1,20 @@
+<div class="kOpenEmailWin" #changeAccount>
+
+  <div class="kHeader">
+    <span class="kTitle">{{emailConfig.title}}</span>
+  </div>
+
+  <div class="kContainer">
+    <div>{{emailConfig.message}}</div>
+      <div class="emailLink">
+          <a (click)="openEmail()">{{emailConfig.email}}</a>
+          <kCopyToClipboard class="kIcon" [text]="emailConfig.email" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+      </div>
+  </div>
+
+  <div class="kFooter">
+    <button type="button" class="kButtonBranded" (click)="close()" pButton label="{{'app.common.close'| translate}}"></button>
+  </div>
+
+</div>
+

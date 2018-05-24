@@ -9,5 +9,11 @@
     </p-footer>
 </p-confirmDialog>
 
+<kPopupWidget #openEmailPopup [modal]="true" [popupWidth]="500" [popupHeight]="320">
+    <ng-template>
+       <kOpenEmail [parentPopupWidget]="openEmailPopup" [emailConfig]="_openEmailConfig"></kOpenEmail>
+    </ng-template>
+</kPopupWidget>
+
 <p-growl [(value)]="_growlMessages" [immutable]="true"></p-growl>
 <kPreviewEmbed></kPreviewEmbed>

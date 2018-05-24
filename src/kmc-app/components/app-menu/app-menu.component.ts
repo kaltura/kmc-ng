@@ -1,17 +1,16 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 import { AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
 
-import * as R from 'ramda';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppEventsService } from 'app-shared/kmc-shared';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -44,10 +43,8 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     constructor(public _kmcLogs: KmcLoggerConfigurator,
                 private userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
-                private _logger: KalturaLogger,
                 private router: Router,
-                private _route: ActivatedRoute,
-                private _appEvents: AppEventsService,
+                private _appLocalization: AppLocalization,
                 private _browserService: BrowserService) {
 
         router.events
@@ -105,7 +102,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     openSupport() {
-        this._browserService.openEmail(serverConfig.externalLinks.kaltura.support);
+        this._browserService.openEmail(serverConfig.externalLinks.kaltura.support, false, this._appLocalization.get('app.openMail.supportMailTitle'), this._appLocalization.get('app.openMail.supportMailMsg'));
         this._helpmenu.close();
     }
 

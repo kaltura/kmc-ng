@@ -6,8 +6,8 @@ import {Observable} from 'rxjs/Observable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { OpenEmailEvent } from 'app-shared/kmc-shell';
+import { AppEventsService } from 'app-shared/kmc-shared/app-events/app-events.service';
+import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 
 export enum HeaderTypes {
     error = 1,
@@ -216,7 +216,7 @@ export class BrowserService implements IAppStorage {
 
     public openEmail(email: string, force: boolean = false, title: string = "", message: string = ""): void {
         if (force){
-            const windowRef = window.open(email, '_blank');
+            const windowRef = window.open('mailto:' + email, '_blank');
             windowRef.focus();
 
             setTimeout(function () {
@@ -225,7 +225,7 @@ export class BrowserService implements IAppStorage {
                 }
             }, 500);
         }else {
-            this._appEvents.publish(new OpenEmailEvent(email, title, message));
+            this._appEvents.publish(new OpenEmailEvent(email, force, title, message));
         }
     }
 

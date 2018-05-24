@@ -4,6 +4,9 @@ import { BrowserService, GrowlMessage } from 'app-shared/kmc-shell/providers/bro
 import {AppLocalization, OperationTagManagerService} from '@kaltura-ng/kaltura-common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
+import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 /*
  * App Component
@@ -19,10 +22,12 @@ export class AppComponent implements OnInit {
 
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
   @ViewChild('alert') private _alertDialog: ConfirmDialog;
+  @ViewChild('openEmailPopup') private _emailDialog: PopupWidgetComponent;
 
   public _isBusy: boolean = false;
   public _growlMessages: GrowlMessage[] = [];
   public _confirmDialogAlignLeft = false;
+  public _openEmailConfig = {email: "", title: "", message:""};
 
   constructor(private _confirmationService: ConfirmationService,
               private _browserService : BrowserService,
@@ -30,8 +35,15 @@ export class AppComponent implements OnInit {
               private router: Router,
               private _route: ActivatedRoute,
               private _loggerConfigurator: KmcLoggerConfigurator,
-              private _oprationsTagManager: OperationTagManagerService
+              private _oprationsTagManager: OperationTagManagerService,
+              appEvents: AppEventsService
               ) {
+
+      appEvents.event(OpenEmailEvent)
+          .subscribe(({email, force, title, message}) => {
+              this._openEmailConfig = {email, title, message}
+              this._emailDialog.open();
+          });
   }
 
   ngOnInit() {

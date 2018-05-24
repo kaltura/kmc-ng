@@ -86,8 +86,8 @@
             "redirect3": "here"
         },
         "openMail":{
-            "supportMailTtile": "Contact Kaltura Support",
-            "supportMailMsg": ""
+            "supportMailTitle": "Contact Kaltura Support",
+            "supportMailMsg": "To contact Kaltura support, please send an email to the following address:"
         },
         "login": {
             "login": {

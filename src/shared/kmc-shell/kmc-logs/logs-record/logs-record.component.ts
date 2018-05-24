@@ -5,6 +5,7 @@ import { serverConfig } from 'config/server';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { globalConfig } from 'config/global';
 import * as moment from 'moment';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
     selector: 'k-logs-record',
@@ -55,6 +56,7 @@ export class LogsRecordComponent {
 
     constructor(private _logger: KalturaLogger,
                 private _appAuth: AppAuthentication,
+                private _appLocalization: AppLocalization,
                 private _browserService: BrowserService) {
     }
 
@@ -93,7 +95,7 @@ export class LogsRecordComponent {
     }
 
     public _sendMailToSupport(): void {
-        this._browserService.openEmail(this._supportTeamLink);
+        this._browserService.openEmail(this._supportTeamLink, false, this._appLocalization.get('app.openMail.supportMailTitle'), this._appLocalization.get('app.openMail.supportMailMsg'));
     }
 
     public _startRecord(): void {
