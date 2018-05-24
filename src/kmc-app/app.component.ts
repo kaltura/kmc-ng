@@ -7,6 +7,7 @@ import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-
 import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { EmailConfig } from './components/open-email/open-email.component';
 
 /*
  * App Component
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit {
   public _isBusy: boolean = false;
   public _growlMessages: GrowlMessage[] = [];
   public _confirmDialogAlignLeft = false;
-  public _openEmailConfig = {email: "", title: "", message:""};
+  public _openEmailConfig: EmailConfig = {email: "", title: "", message:""};
 
   constructor(private _confirmationService: ConfirmationService,
               private _browserService : BrowserService,

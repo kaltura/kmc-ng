@@ -3,6 +3,11 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
+export interface EmailConfig {
+    email: string;
+    title: string;
+    message: string;
+}
 
 @Component({
   selector: 'kOpenEmail',
@@ -12,7 +17,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 export class OpenEmailComponent implements OnInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Input() emailConfig: any;
+  @Input() emailConfig: EmailConfig;
 
   public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
 
