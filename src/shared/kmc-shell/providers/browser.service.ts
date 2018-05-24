@@ -6,6 +6,8 @@ import {Observable} from 'rxjs/Observable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { OpenEmailEvent } from 'app-shared/kmc-shell';
 
 export enum HeaderTypes {
     error = 1,
@@ -84,6 +86,7 @@ export class BrowserService implements IAppStorage {
                 private sessionStorage: SessionStorageService,
                 private _router: Router,
                 private _logger: KalturaLogger,
+                private _appEvents: AppEventsService,
                 private _appLocalization: AppLocalization) {
         this._recordInitialQueryParams();
         this._recordRoutingActions();
@@ -211,15 +214,19 @@ export class BrowserService implements IAppStorage {
         window.open(baseUrl, target);
     }
 
-    public openEmail(email: string): void {
-        const windowRef = window.open(email, '_blank');
-        windowRef.focus();
+    public openEmail(email: string, force: boolean = false, title: string = "", message: string = ""): void {
+        if (force){
+            const windowRef = window.open(email, '_blank');
+            windowRef.focus();
 
-        setTimeout(function () {
-            if (!windowRef.document.hasFocus()) {
-                windowRef.close();
-            }
-        }, 500);
+            setTimeout(function () {
+                if (!windowRef.document.hasFocus()) {
+                    windowRef.close();
+                }
+            }, 500);
+        }else {
+            this._appEvents.publish(new OpenEmailEvent(email, title, message));
+        }
     }
 
     public isSafari(): boolean {

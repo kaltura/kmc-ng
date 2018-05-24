@@ -30,8 +30,7 @@ export class LoginFormComponent {
   _rememberMeField: AbstractControl;
 
     public get _supportAddress(): string {
-        const supportAddress = serverConfig.externalLinks.kaltura.support;
-        return supportAddress.replace('mailto:', '');
+        return serverConfig.externalLinks.kaltura.support;
     }
 
   public get _loginValidationMessage(): string {

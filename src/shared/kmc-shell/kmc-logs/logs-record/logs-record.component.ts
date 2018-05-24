@@ -36,7 +36,7 @@ export class LogsRecordComponent {
 
     private _appLogLevel: LogLevels = globalConfig.client.production ? 'Error' : 'All';
     private get _supportTeamLink(): string {
-        return serverConfig.externalLinks.kaltura.support.replace(':mailto', '');
+        return serverConfig.externalLinks.kaltura.support;
     }
 
     public _isRecording = false;

@@ -85,6 +85,10 @@
             "redirect2": "If you are not redirected in few seconds, click ",
             "redirect3": "here"
         },
+        "openMail":{
+            "supportMailTtile": "Contact Kaltura Support",
+            "supportMailMsg": ""
+        },
         "login": {
             "login": {
                 "title": "Login",
