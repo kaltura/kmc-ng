@@ -4,8 +4,8 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { BrowserService } from 'app-shared/kmc-shell';
 import { EntryDetailsWidget } from './entry-details-widget.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface EntryDetailsKalturaMediaEntry extends KalturaMediaEntry {
   recordedEntryId?: string
@@ -14,7 +14,8 @@ export interface EntryDetailsKalturaMediaEntry extends KalturaMediaEntry {
 @Component({
 	selector: 'kEntryDetails',
 	templateUrl: './entry-details.component.html',
-	styleUrls: ['./entry-details.component.scss']
+	styleUrls: ['./entry-details.component.scss'],
+    providers: [KalturaLogger.createLogger('EntryDetails')]
 })
 export class EntryDetails implements OnInit, OnDestroy {
 
@@ -34,7 +35,7 @@ export class EntryDetails implements OnInit, OnDestroy {
 
 
 	constructor(public _widgetService: EntryDetailsWidget,
-				private browserService: BrowserService,
+				private _logger: KalturaLogger,
 
 				public _entryStore: EntryStore) {
 	}
@@ -61,15 +62,8 @@ export class EntryDetails implements OnInit, OnDestroy {
 		);
 	}
 
-	openPreviewAndEmbed() {
-		alert("Open Preview & Embed Window");
-	}
-
-	openLandingPage(landingPage: string) {
-		this.browserService.openLink(landingPage);
-	}
-
     navigateToEntry(entryId: string): void {
+	    this._logger.info(`handle navigate to entry action by user`, { entryId });
         this._entryStore.openEntry(entryId);
     }
 

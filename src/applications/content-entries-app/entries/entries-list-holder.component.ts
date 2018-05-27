@@ -17,10 +17,12 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { EntriesListService } from './entries-list.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kEntriesListHolder',
-  templateUrl: './entries-list-holder.component.html'
+  templateUrl: './entries-list-holder.component.html',
+    providers: [KalturaLogger.createLogger('EntriesListHolderComponent')]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
@@ -75,7 +77,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               public _entriesStore: EntriesStore,
               private _contentEntryViewService: ContentEntryViewService,
               private _contentEntriesAppService: ContentEntriesAppService,
-              private _liveDashboardAppViewService: LiveDashboardAppViewService) {
+              private _liveDashboardAppViewService: LiveDashboardAppViewService,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -110,22 +113,32 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       this._entriesList.clearSelection();
     switch (action) {
       case 'preview':
+          this._logger.info(`handle preview and ember action by user, publish 'PreviewAndEmbedEvent' event`, { entryId: entry.id });
         this._appEvents.publish(new PreviewAndEmbedEvent(entry));
         break;
       case 'view':
+          this._logger.info(`handle view entry action by user`, { entryId: entry.id });
           this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
         break;
       case 'delete':
+          this._logger.info(`handle delete entry action by user, show confirmation`, { entryId: entry.id });
         this._browserService.confirm(
             {
               header: this._appLocalization.get('applications.content.entries.deleteEntry'),
               message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entry.id }),
-              accept: () => this._deleteEntry(entry.id)
+              accept: () => {
+                  this._logger.info(`user confirmed, proceed action`);
+                  this._deleteEntry(entry.id);
+              },
+                reject: () => {
+                    this._logger.info(`user didn't confirm, abort action`);
+                }
             }
         );
         break;
       case 'liveDashboard':
         if (entry && entry.id) {
+            this._logger.info(`handle open live dashboard action by user`, { entryId: entry.id });
           this._entryId = entry.id;
           this._liveDashboard.open();
         }
@@ -136,8 +149,9 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   private _deleteEntry(entryId: string): void {
+      this._logger.info(`handle delete entry request by user`, { entryId });
     if (!entryId) {
-      console.error('EntryId is not defined');
+      this._logger.warn('entryId is not defined');
       return;
     }
 
@@ -146,19 +160,27 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
+            this._logger.info(`handle successful delete entry request`);
           this._entriesStore.reload();
         },
         error => {
+            this._logger.warn(`handle failed delete entry request, show confirmation`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
-                action: () => this._deleteEntry(entryId)
+                action: () => {
+                    this._logger.info(`user confirmed, retry action`);
+                    this._deleteEntry(entryId);
+                }
               },
               {
                 label: this._appLocalization.get('app.common.cancel'),
-                action: () => this._blockerMessage = null
+                action: () => {
+                    this._logger.info(`user didn't confirm, abort action`);
+                    this._blockerMessage = null;
+                }
               }
             ]
           });

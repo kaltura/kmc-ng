@@ -39,6 +39,7 @@ import {BulkRemoveEditorsService} from './services/bulk-remove-editors.service';
 import {BulkRemovePublishersService} from './services/bulk-remove-publishers.service';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kBulkActions',
@@ -58,6 +59,7 @@ import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/det
         BulkRemoveCategoriesService,
         BulkDeleteService,
         BulkDownloadService,
+        KalturaLogger.createLogger('BulkActionsComponent')
     ]
 })
 export class BulkActionsComponent implements OnInit, OnDestroy {
@@ -96,6 +98,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkDownloadService: BulkDownloadService,
     private _bulkDeleteService: BulkDeleteService,
     private _appEvents: AppEventsService,
+              private _logger: KalturaLogger,
               public _contentNewCategoryView: ContentNewCategoryViewService,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
               private _permissionsService: KMCPermissionsService) {
@@ -117,6 +120,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private _onAddToNewPlaylist(): void {
+      this._logger.info(`handle add to new playlist request by user`, { entries: this.selectedEntries });
     const creationEvent = new CreateNewPlaylistEvent({
       type: KalturaPlaylistType.staticList,
       name: this._appLocalization.get('applications.content.bulkActions.newPlaylist'),
@@ -129,14 +133,17 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       creationEvent.data.playlistContent = this.selectedEntries.map(({ id }) => id).join(',');
       this._appEvents.publish(creationEvent);
     } else {
+        this._logger.info(`there're entries with invalid statuses`, { entries: invalidEntries });
       this._handlePlaylistCreationErrors(invalidEntries, creationEvent);
     }
   }
 
   private _handlePlaylistCreationErrors(invalidEntries: KalturaMediaEntry[], creationEvent: CreateNewPlaylistEvent): void {
+      this._logger.info(`handle playlist creation invalid entries request`);
     const canCreate = this.selectedEntries.length !== invalidEntries.length;
 
     if (canCreate) {
+        this._logger.info(`unselect invalid actions, show confirmation`);
       const invalidEntriesNames = invalidEntries.length < 11 ? invalidEntries.map(entry => `${entry.name}`).join('\n') : '';
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
@@ -144,13 +151,18 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           0: invalidEntriesNames
         }),
         accept: () => {
+            this._logger.info(`user confirmed, proceed request without invalid actions`, { entries: this.selectedEntries });
           creationEvent.data.playlistContent = this.selectedEntries
             .filter(({ status }) => this._allowedStatusesForPlaylist.indexOf(status.toString()) !== -1) // include only valid
             .map(({ id }) => id).join(',');
           this._appEvents.publish(creationEvent);
-        }
+        },
+          reject: () => {
+            this._logger.info(`user didn't confirm, abort action`);
+          }
       });
     } else {
+        this._logger.info(`all of the selected entries are invalid, abort action`);
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
         message: this._appLocalization.get('applications.content.bulkActions.createPlaylistErrorMsg'),
@@ -159,6 +171,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
+      this._logger.info(`handle openBulkActionWindow action by user`, { action, popupWidth, popupHeight });
     if (this._categoriesLocked && (action === 'addToNewCategory' || action === 'addToCategories')) {
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.categories.categoriesLockTitle'),
@@ -187,21 +200,25 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // set scheduling changes
   onSchedulingChanged(schedulingParams: SchedulingParams): void {
+      this._logger.info(`handle update scheduling request by user`, { schedulingParams });
     this.executeService(this._bulkSchedulingService, schedulingParams);
   }
 
   // set access control changes
   onAccessControlChanged(profile: KalturaAccessControl): void {
+      this._logger.info(`handle update access control request by user`, { profile });
     this.executeService(this._bulkAccessControlService, profile);
   }
 
   // add tags changed
   onAddTagsChanged(tags: string[]): void {
+      this._logger.info(`handle add tags request by user`, { tags });
     this.executeService(this._bulkAddTagsService, tags);
   }
 
   // remove tags changed
   onRemoveTagsChanged(tags: string[]): void {
+      this._logger.info(`handle remove tags request by user`, { tags });
     this.executeService(this._bulkRemoveTagsService, tags);
   }
 
@@ -227,17 +244,22 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // add to categories changed
   onAddToCategoriesChanged(categories: CategoryData[]): void {
+      this._logger.info(`handle add to categories request by user`, { categories });
     this.executeService(this._bulkAddCategoriesService, (categories || []));
   }
 
   // remove categories changed
   onRemoveCategoriesChanged(categories: number[]): void {
+      this._logger.info(`handle remove categories request by user`, { categoriesIds: categories });
     this.executeService(this._bulkRemoveCategoriesService, categories);
   }
 
   // owner changed
   onOwnerChanged(owner: KalturaUser): void {
-    this.executeService(this._bulkChangeOwnerService, owner);
+      if (owner) {
+          this._logger.info(`handle owner changed request by user`, {owner: owner.id });
+          this.executeService(this._bulkChangeOwnerService, owner);
+      }
   }
   // download changed
   onDownloadChanged(flavorId: number): void {
@@ -254,6 +276,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteEntries(): void {
+      this._logger.info(`handle delete entries action by user, show confirmation`);
     const entriesToDelete = this.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}` ),
       entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
       message: string = this.selectedEntries.length > 1 ?
@@ -264,16 +287,21 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
         header: this._appLocalization.get('applications.content.bulkActions.deleteEntries'),
         message: message,
         accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
           setTimeout(() => {
             this.executeService(this._bulkDeleteService, {}, true, false); // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
           }, 0);
-        }
+        },
+          reject: () => {
+              this._logger.info(`user didn't confirm, abort action`);
+          }
       }
     );
   }
 
   // bulk download initial check
   private downloadEntries(): void {
+      this._logger.info(`handle download entries action by user`);
     // check for single image selection - immediate download
     if (this.selectedEntries.length === 1 && this.selectedEntries[0].mediaType === KalturaMediaType.image) {
       this._browserService.openLink(this.selectedEntries[0].downloadUrl + '/file_name/name');

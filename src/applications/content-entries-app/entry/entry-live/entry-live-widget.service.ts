@@ -25,6 +25,7 @@ import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetActio
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface bitrate {
 	enabled: boolean,
@@ -65,8 +66,11 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
-                private _liveDasboardAppViewService: LiveDashboardAppViewService) {
+                private _liveDasboardAppViewService: LiveDashboardAppViewService,
+                private _logger: KalturaLogger) {
 		super(ContentEntryViewSections.Live);
+
+        this._logger = _logger.subLogger('EntryLiveWidget');
 	}
 
 	protected onReset() {
@@ -182,6 +186,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	}
 
 	public _exportXML() {
+	    this._logger.info(`handle export xml action by user`);
 		const entry = this.data as KalturaLiveStreamEntry;
 		const xml: string = LiveXMLExporter.exportXML(entry, this._liveType, this._bitrates);
 		this._browserService.download(xml, "export_" + entry.id + ".xml", "text/xml");
@@ -274,6 +279,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	}
 
 	public regenerateStreamToken(): void {
+	    this._logger.info(`handle regenerate stream token action by user`, { entryId: this.data.id });
 		this.sectionBlockerMessage = null;
 
 		const multiRequest = new KalturaMultiRequest(
@@ -289,6 +295,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			.subscribe(
 				response => {
 					if (response.hasErrors()) {
+					    this._logger.warn(`handle failed action`);
 						this._showBlockerMessage(new AreaBlockerMessage(
 							{
 								message: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure'),
@@ -309,6 +316,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 							}
 						), false);
 					}else {
+					    this._logger.info(`handle successful action`);
 						let entry: KalturaLiveStreamEntry = this.data as KalturaLiveStreamEntry;
 						entry.primaryBroadcastingUrl = response[1].result.primaryBroadcastingUrl;
 						entry.primaryRtspBroadcastingUrl =  response[1].result.primaryRtspBroadcastingUrl;

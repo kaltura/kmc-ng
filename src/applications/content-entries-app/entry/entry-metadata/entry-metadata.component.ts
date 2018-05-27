@@ -21,6 +21,7 @@ import {
     EntriesManualExecutionModeToken,
     EntriesStore
 } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
     selector: 'kEntryMetadata',
@@ -28,7 +29,8 @@ import {
     styleUrls: ['./entry-metadata.component.scss'],
     providers: [
         EntriesStore,
-        { provide: EntriesManualExecutionModeToken, useValue: false}
+        { provide: EntriesManualExecutionModeToken, useValue: false},
+        KalturaLogger.createLogger('EntryMetadata')
     ]
 })
 export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
@@ -67,6 +69,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
                 private _browserService: BrowserService,
                 private _permissionsService: KMCPermissionsService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+                private _logger: KalturaLogger,
                 @Inject(DOCUMENT) private document: any) {
         this._categoriesTooltipPipe  = new CategoryTooltipPipe(this._appLocalization);
     }
@@ -95,6 +98,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     }
 
     _searchTags(event) : void {
+        this._logger.info(`handle search tags action by user`, { query: event.query });
         this._tagsProvider.next({ suggestions : [], isLoading : true});
 
         if (this._searchTagsSubscription)
@@ -105,6 +109,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         }
 
         this._searchTagsSubscription = this._widgetService.searchTags(event.query).subscribe(data => {
+                this._logger.info(`handle successful search tags action by user`);
                 const suggestions = [];
                 const entryTags = this._widgetService.metadataForm.value.tags || [];
 
@@ -117,11 +122,13 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
                 this._tagsProvider.next({suggestions: suggestions, isLoading: false});
             },
             (err) => {
+                this._logger.info(`handle failed search tags action by user`, { errorMessage: err.message });
                 this._tagsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
             });
     }
 
     _searchCategories(event) : void {
+        this._logger.info(`handle search categories action by user`, { query: event.query });
         this._categoriesProvider.next({ suggestions : [], isLoading : true});
 
         if (this._searchCategoriesSubscription)
@@ -132,6 +139,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         }
 
         this._searchCategoriesSubscription = this._widgetService.searchCategories(event.query).subscribe(data => {
+            this._logger.info(`handle successful search categories action`);
                 const suggestions = [];
                 const entryCategories = this._widgetService.metadataForm.value.categories || [];
 
@@ -149,6 +157,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
                 this._categoriesProvider.next({suggestions: suggestions, isLoading: false});
             },
             (err) => {
+                this._logger.warn(`handle failed search categories action`, { errorMessage: err.message });
                 this._categoriesProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
             });
     }
@@ -215,6 +224,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     }
 
     private _jumpTo(element : HTMLElement){
+        this._logger.info(`handle jump to action by user`);
         let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
          document : this.document,
             scrollTarget : element,
@@ -224,7 +234,9 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     }
 
     openCategoriesBrowser(){
+        this._logger.info(`handle open categories browser action by user`);
         if (this._categoriesLocked){
+            this._logger.info(`categories are locked for user, abort action, show alert`);
             this._browserService.alert({
                 header: this._appLocalization.get('applications.content.categories.categoriesLockTitle'),
                 message: this._appLocalization.get('applications.content.categories.categoriesLockMsg')

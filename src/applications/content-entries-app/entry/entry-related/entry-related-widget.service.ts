@@ -31,6 +31,7 @@ import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client/api/types
 import { getKalturaServerUri } from 'config/server';
 import { globalConfig } from 'config/global';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface RelatedFile extends KalturaAttachmentAsset {
   uploading?: boolean,
@@ -61,8 +62,11 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               private _appAuthentication: AppAuthentication,
               private _objectDiffers: KeyValueDiffers,
               private _listDiffers: IterableDiffers,
+              private _logger: KalturaLogger,
               private _uploadManagement: UploadManagement) {
     super(ContentEntryViewSections.Related);
+
+      this._logger = _logger.subLogger('EntryRelatedWidget');
   }
 
 
@@ -302,25 +306,25 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
   }
 
 	private _openFile(fileId: string, operation: string): void {
+        this._logger.info(`handle open file action`, { fileId });
         let url = getKalturaServerUri("/api_v3/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId);
 		this._browserService.openLink(url);
 	}
 
-	public downloadFile(file: RelatedFile): void{
+	public downloadFile(file: RelatedFile): void {
+        this._logger.info(`handle download file action`, { fileId: file.id });
 		this._openFile(file.id, 'download');
-	}
-
-	public previewFile(file : RelatedFile): void{
-		this._openFile(file.id, 'url');
 	}
 
 
   public _onFileSelected(selectedFiles: FileList) {
+        this._logger.info(`handle file selected action`, { files: selectedFiles });
     if (selectedFiles && selectedFiles.length) {
       const files = Array.from(selectedFiles);
       const invalidFiles = files.filter(file => !this._validateFileSize(file));
 
       if (invalidFiles.length) {
+          this._logger.info(`some files are exceeded file size limits, abort action, show alert`, { files: invalidFiles });
         return this._browserService.alert({
           header: this._appLocalization.get('app.common.attention'),
           message: `
@@ -342,13 +346,18 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
         return newFile;
       });
+    } else {
+        this._logger.info(`no files were selected, abort action`);
     }
   }
 
   public _cancelUpload(file: RelatedFile): void {
+        this._logger.info(`handle cancel upload action by user`, { file });
     if (!file.id) {
+        this._logger.info(`file is still uploading, abort upload`);
       this._uploadManagement.cancelUpload(file.uploadFileId, true);
     } else {
+        this._logger.info(`file was uploaded, remove file`);
       this._removeFile(file);
     }
   }

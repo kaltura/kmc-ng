@@ -22,6 +22,7 @@ import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entr
 import {EntryDistributionWidget} from './entry-distribution/entry-distribution-widget.service';
 import {EntryAdvertisementsWidget} from './entry-advertisements/entry-advertisements-widget.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
 	selector: 'kEntry',
@@ -44,7 +45,8 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 		EntryDetailsWidget,
 		EntryPreviewWidget,
 		EntryDistributionWidget,
-		EntryAdvertisementsWidget
+		EntryAdvertisementsWidget,
+        KalturaLogger.createLogger('EntryComponent')
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {
@@ -96,7 +98,8 @@ export class EntryComponent implements OnInit, OnDestroy {
 	            private _permissionsService: KMCPermissionsService,
 	            private _entriesStore: EntriesStore,
 	            private _appLocalization: AppLocalization,
-	            public _entryStore: EntryStore) {
+	            public _entryStore: EntryStore,
+                private _logger: KalturaLogger) {
 		entryWidgetsManager.registerWidgets([
 			widget1, widget2, widget3, widget4, widget5, widget6, widget7,
 			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
@@ -241,14 +244,17 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
 	public _backToList() {
+	    this._logger.info(`handle back to entries action by user`);
 		this._entryStore.returnToEntries();
 	}
 
 	public _save() {
+	    this._logger.info(`handle save entry action by user`);
 		this._entryStore.saveEntry();
 	}
 
 	public _navigateToPrevious(): void {
+        this._logger.info(`handle navigate to previous entry action by user`);
 		const entries = this._entriesStore.entries.data();
 
 		if (entries && this._currentEntryId) {
@@ -256,12 +262,14 @@ export class EntryComponent implements OnInit, OnDestroy {
 			const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
 			if (currentEntryIndex > 0) {
 				const prevEntry = entries[currentEntryIndex - 1];
+                this._logger.debug(`previous entry id`, { entryId: prevEntry.id });
 				this._entryStore.openEntry(prevEntry.id);
 			}
 		}
 	}
 
 	public _navigateToNext(): void {
+	    this._logger.info(`handle navigate to next entry action by user`);
 		const entries = this._entriesStore.entries.data();
 
 		if (entries && this._currentEntryId) {
@@ -269,6 +277,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 			const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
 			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length - 1)) {
 				const nextEntry = entries[currentEntryIndex + 1];
+				this._logger.debug(`next entry id`, { entryId: nextEntry.id });
 				this._entryStore.openEntry(nextEntry.id);
 			}
 		}

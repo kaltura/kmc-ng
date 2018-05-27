@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -9,12 +8,14 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 import { EntryThumbnailsWidget, ThumbnailRow } from './entry-thumbnails-widget.service';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 @Component({
     selector: 'kEntryThumbnails',
     templateUrl: './entry-thumbnails.component.html',
-    styleUrls: ['./entry-thumbnails.component.scss']
+    styleUrls: ['./entry-thumbnails.component.scss'],
+    providers: [KalturaLogger.createLogger('EntryThumbnails')]
 })
 export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
@@ -34,7 +35,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
   }
 
 	constructor(public _widgetService: EntryThumbnailsWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService,
-                private _appAuthentication: AppAuthentication) {
+                private _logger: KalturaLogger) {
     }
 
     ngOnInit() {
@@ -59,20 +60,27 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	private actionSelected(action: string): void{
 		switch (action){
 			case "delete":
+                this._logger.info(`handle delete action by user, show confirmation`, { thumbId: this.currentThumb.id });
 				this._browserService.confirm(
 					{
 						header: this._appLocalization.get('applications.content.entryDetails.thumbnails.deleteConfirmHeader'),
 						message: this._appLocalization.get('applications.content.entryDetails.thumbnails.deleteConfirm'),
 						accept: () => {
+						    this._logger.info(`user confirmed, proceed action`);
 							this._widgetService.deleteThumbnail(this.currentThumb.id);
-						}
+						},
+                        reject: () => {
+                            this._logger.info(`user didn't confirm, abort action`);
+                        }
 					}
 				);
 				break;
 			case "download":
+                this._logger.info(`handle download action by user`, { url: this.currentThumb.url });
 				this._downloadFile();
 				break;
 			case "preview":
+			    this._logger.info(`handle preview action by user`, { url: this.currentThumb.url });
 				this._browserService.openLink(this.currentThumb.url);
 				break;
 		}

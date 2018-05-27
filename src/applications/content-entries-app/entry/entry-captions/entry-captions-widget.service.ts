@@ -33,6 +33,7 @@ import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { EntryWidget } from '../entry-widget';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface CaptionRow {
     uploading: boolean;
@@ -67,8 +68,12 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     private _entryId: string = '';
 
     constructor(private _objectDiffers: KeyValueDiffers, private _listDiffers: IterableDiffers,
-                private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _uploadManagement: UploadManagement) {
+                private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
+                private _uploadManagement: UploadManagement,
+                private _logger: KalturaLogger) {
         super(ContentEntryViewSections.Captions);
+
+        this._logger = _logger.subLogger('EntryCaptionsWidget');
     }
 
   private _syncBusyState(): void {
@@ -188,6 +193,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
   }
 
     public _setAsDefault(caption: KalturaCaptionAsset): void {
+        this._logger.info(`handle set as default action by user`, { caption });
         const captionId = caption.id;
         let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array withour a reference to the original array
         captions.forEach((caption) => {
@@ -210,6 +216,9 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
                 type = "WEBVTT";
                 break;
         }
+
+        this._logger.debug(`_getCaptionType`, { captionFormat, status });
+
         return type;
     }
 
@@ -234,6 +243,9 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
           status = this._appLocalization.get('applications.content.entryDetails.captions.ready');
         }
       }
+
+      this._logger.debug(`_getCaptionStatus`, { caption, status });
+
       return status;
     }
 
@@ -261,6 +273,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
   }
 
     public upload(captionFile: File): void {
+        this._logger.info(`handle upload caption request`, { caption: captionFile });
         this.currentCaption.id = this._idGenerator.generateUnique(this._captions.getValue().items.map(({ id }) => id));
         this.currentCaption.uploading = true;
         this.updateState({ isBusy: true });
@@ -277,6 +290,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     }
 
     public removeCaption(captionId?: string): void {
+        this._logger.info(`handle remove caption request`, { captionId });
         // update the list by filtering the assets array.
         this._captions.next({
             items: this._captions.getValue().items.filter((item: CaptionRow) => {
@@ -298,6 +312,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
                 let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array without a reference to the original array
                 captions.pop(); // remove last caption
                 this._captions.next({items: captions});
+
+                this._logger.info(`handle remove empty captions action`, { captions });
             }
         }
     }
