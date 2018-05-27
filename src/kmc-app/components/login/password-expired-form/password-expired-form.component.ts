@@ -95,6 +95,10 @@ export class PasswordExpiredFormComponent {
     }
   }
     public _contactSupport(): void {
-        this._browserService.openEmail(serverConfig.externalLinks.kaltura.support, false, this._appLocalization.get('app.openMail.supportMailTitle'), this._appLocalization.get('app.openMail.supportMailMsg'));
+        this._browserService.openEmail({
+            email: serverConfig.externalLinks.kaltura.support,
+            title: this._appLocalization.get('app.openMail.supportMailTitle'),
+            message: this._appLocalization.get('app.openMail.supportMailMsg')
+        });
     }
 }

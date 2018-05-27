@@ -95,7 +95,11 @@ export class LogsRecordComponent {
     }
 
     public _sendMailToSupport(): void {
-        this._browserService.openEmail(this._supportTeamLink, false, this._appLocalization.get('app.openMail.supportMailTitle'), this._appLocalization.get('app.openMail.supportMailMsg'));
+        this._browserService.openEmail({
+            email: this._supportTeamLink,
+            title: this._appLocalization.get('app.openMail.supportMailTitle'),
+            message: this._appLocalization.get('app.openMail.supportMailMsg')
+        });
     }
 
     public _startRecord(): void {

@@ -8,6 +8,7 @@ import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angula
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events/app-events.service';
 import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
+import { EmailConfig } from '../../../kmc-app/components/open-email/open-email.component';
 
 export enum HeaderTypes {
     error = 1,
@@ -214,9 +215,9 @@ export class BrowserService implements IAppStorage {
         window.open(baseUrl, target);
     }
 
-    public openEmail(email: string, force: boolean = false, title: string = "", message: string = ""): void {
+    public openEmail(emailConfig: EmailConfig, force = false): void {
         if (force){
-            const windowRef = window.open('mailto:' + email, '_blank');
+            const windowRef = window.open('mailto:' + emailConfig.email, '_blank');
             windowRef.focus();
 
             setTimeout(function () {
@@ -225,7 +226,7 @@ export class BrowserService implements IAppStorage {
                 }
             }, 500);
         }else {
-            this._appEvents.publish(new OpenEmailEvent(email, title, message));
+            this._appEvents.publish(new OpenEmailEvent(emailConfig.email, emailConfig.title, emailConfig.message));
         }
     }
 

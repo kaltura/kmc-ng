@@ -35,7 +35,7 @@ export class OpenEmailComponent implements OnInit {
   }
 
   openEmail():void{
-      this._browserService.openEmail(this.emailConfig.email, true);
+      this._browserService.openEmail(this.emailConfig, true);
   }
 
   close(): void{
