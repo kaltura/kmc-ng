@@ -6,9 +6,9 @@
       <i [class.disabled]="_previewDisabled" class="kIconShare"></i>
       <a [class.disabled]="_previewDisabled">{{_actionLabel}}</a>
     </div>
-    <div class="kLink" (click)="_clipAndTrimEnabled && clipAndTrim.open()">
+    <div class="kLink kAlightRight" (click)="_clipAndTrimEnabled && clipAndTrim.open()">
       <i [class.disabled]="!_clipAndTrimEnabled" class="kIconmovies"></i>
-      <a [class.disabled]="!_clipAndTrimEnabled">{{'applications.content.entryDetails.clips.clipTrim' | translate}}</a>
+      <a [class.disabled]="!_clipAndTrimEnabled">{{'applications.content.entryDetails.preview.clipAndTrim' | translate}}</a>
     </div>
   </div>
 </div>
@@ -16,6 +16,9 @@
 
 <kPopupWidget #clipAndTrim [fullScreen]="true">
   <ng-template>
-    <kClipAndTrim [entry]="_widgetService.data" [parentPopupWidget]="clipAndTrim"></kClipAndTrim>
+      <kEntryEditor [entry]="_widgetService.data"
+                    [entryHasSource]="true"
+                    [tab]="'editor'"
+                    [parentPopupWidget]="clipAndTrim"></kEntryEditor>
   </ng-template>
 </kPopupWidget>

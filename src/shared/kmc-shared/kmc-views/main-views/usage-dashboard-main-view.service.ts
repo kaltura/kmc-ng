@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router } from '@angular/router';
 import {serverConfig} from 'config/server';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 @Injectable()
 export class UsageDashboardMainViewService extends KmcMainViewBaseService {

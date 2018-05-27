@@ -1,108 +1,110 @@
-<form [formGroup]="_form" novalidate class="kContent">
-  <section class="kFormContainer">
-    <div class="kFormSection">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <form [formGroup]="_form" novalidate class="kContent">
+      <section class="kFormContainer">
+        <div class="kFormSection">
 
-      <!--name-->
-      <div class="kRow">
-        <span class="kLabel">{{'applications.upload.prepareLive.universalStreamType.name' | translate}}</span>
-        <div class="kRequired" [ngClass]="{'kHasError':!_form.controls['name'].valid &&
-                   _form.controls['name'].touched}">*
-        </div>
-        <div>
-          <input class="kControl" formControlName="name" pInputText
-                 [ngClass]="{'kHasError':!_form.controls['name'].valid &&
-                   _form.controls['name'].touched}">
-          <div *ngIf="_form.controls['name'].touched">
-            <div *ngIf="_form.controls['name'].hasError('required')"
-                 class="error">
-              {{'applications.upload.prepareLive.universalStreamType.errors.required' | translate}}
+          <!--name-->
+          <div class="kRow">
+            <span class="kLabel">{{'applications.upload.prepareLive.universalStreamType.name' | translate}}</span>
+            <div class="kRequired" [ngClass]="{'kHasError':!_form.controls['name'].valid &&
+                       _form.controls['name'].touched}">*
+            </div>
+            <div>
+              <input class="kControl" formControlName="name" pInputText
+                     [ngClass]="{'kHasError':!_form.controls['name'].valid &&
+                       _form.controls['name'].touched}">
+              <div *ngIf="_form.controls['name'].touched">
+                <div *ngIf="_form.controls['name'].hasError('required')"
+                     class="error">
+                  {{'applications.upload.prepareLive.universalStreamType.errors.required' | translate}}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!--description-->
-      <div class="kRow">
-        <span class="kLabel">{{'applications.upload.prepareLive.universalStreamType.description' | translate}}</span>
-        <div class="kRequired"></div>
-        <div>
-          <input class="kControl" formControlName="description" pInputText
-                 [ngClass]="{'kHasError':!_form.controls['description'].valid &&
-                   _form.controls['description'].touched}">
-        </div>
-      </div>
-
-      <!--primary encoder IP-->
-      <div class="kRow">
-        <span
-          class="kLabel">{{'applications.upload.prepareLive.universalStreamType.primaryEncoderIp' | translate}}</span>
-        <div class="kRequired" [ngClass]="{'kHasError':!_form.controls['primaryEncoderIp'].valid &&
-                   _form.controls['primaryEncoderIp'].touched}">*
-        </div>
-        <div>
-          <input class="kControl" formControlName="primaryEncoderIp" pInputText
-                 [ngClass]="{'kHasError':!_form.controls['primaryEncoderIp'].valid &&
-                   _form.controls['primaryEncoderIp'].touched}">
-          <div *ngIf="_form.controls['primaryEncoderIp'].touched">
-            <div *ngIf="_form.controls['primaryEncoderIp'].hasError('required')"
-                 class="error">
-              {{'applications.upload.prepareLive.universalStreamType.errors.required' | translate}}
-            </div>
-            <div *ngIf="_form.controls['primaryEncoderIp'].hasError('ip')"
-                 class="error">
-              {{'applications.upload.prepareLive.universalStreamType.errors.invalidIp' | translate}}
+          <!--description-->
+          <div class="kRow">
+            <span class="kLabel">{{'applications.upload.prepareLive.universalStreamType.description' | translate}}</span>
+            <div class="kRequired"></div>
+            <div>
+              <input class="kControl" formControlName="description" pInputText
+                     [ngClass]="{'kHasError':!_form.controls['description'].valid &&
+                       _form.controls['description'].touched}">
             </div>
           </div>
-        </div>
-      </div>
 
-      <!--secondary encoder IP-->
-      <div class="kRow">
-        <span
-          class="kLabel">{{'applications.upload.prepareLive.universalStreamType.secondaryEncoderIp' | translate}}</span>
-        <div class="kRequired" [ngClass]="{'kHasError':!_form.controls['secondaryEncoderIp'].valid &&
-                   _form.controls['secondaryEncoderIp'].touched}">*
-        </div>
-        <div>
-          <input class="kControl" formControlName="secondaryEncoderIp" pInputText
-                 [ngClass]="{'kHasError':!_form.controls['secondaryEncoderIp'].valid &&
-                   _form.controls['secondaryEncoderIp'].touched}">
-          <div *ngIf="_form.controls['secondaryEncoderIp'].touched">
-            <div *ngIf="_form.controls['secondaryEncoderIp'].hasError('required')"
-                 class="error">
-              {{'applications.upload.prepareLive.universalStreamType.errors.required' | translate}}
+          <!--primary encoder IP-->
+          <div class="kRow">
+            <span
+              class="kLabel">{{'applications.upload.prepareLive.universalStreamType.primaryEncoderIp' | translate}}</span>
+            <div class="kRequired" [ngClass]="{'kHasError':!_form.controls['primaryEncoderIp'].valid &&
+                       _form.controls['primaryEncoderIp'].touched}">*
             </div>
-            <div *ngIf="_form.controls['secondaryEncoderIp'].hasError('ip')"
-                 class="error">
-              {{'applications.upload.prepareLive.universalStreamType.errors.invalidIp' | translate}}
+            <div>
+              <input class="kControl" formControlName="primaryEncoderIp" pInputText
+                     [ngClass]="{'kHasError':!_form.controls['primaryEncoderIp'].valid &&
+                       _form.controls['primaryEncoderIp'].touched}">
+              <div *ngIf="_form.controls['primaryEncoderIp'].touched">
+                <div *ngIf="_form.controls['primaryEncoderIp'].hasError('required')"
+                     class="error">
+                  {{'applications.upload.prepareLive.universalStreamType.errors.required' | translate}}
+                </div>
+                <div *ngIf="_form.controls['primaryEncoderIp'].hasError('ip')"
+                     class="error">
+                  {{'applications.upload.prepareLive.universalStreamType.errors.invalidIp' | translate}}
+                </div>
+              </div>
             </div>
           </div>
-          <div class="kFieldMessage">{{'applications.upload.prepareLive.universalStreamType.secondaryEncoderIp_message' | translate}}</div>
-        </div>
-      </div>
 
-      <!--broadcast password-->
-      <div class="kRow">
-        <span class="kLabel">{{'applications.upload.prepareLive.universalStreamType.broadcastPassword' | translate}}</span>
-        <div class="kRequired"></div>
-        <div>
-          <input class="kControl" formControlName="broadcastPassword" pInputText
-                 [ngClass]="{'kHasError':!_form.controls['broadcastPassword'].valid &&
-                   _form.controls['broadcastPassword'].touched}">
-        </div>
-      </div>
+          <!--secondary encoder IP-->
+          <div class="kRow">
+            <span
+              class="kLabel">{{'applications.upload.prepareLive.universalStreamType.secondaryEncoderIp' | translate}}</span>
+            <div class="kRequired" [ngClass]="{'kHasError':!_form.controls['secondaryEncoderIp'].valid &&
+                       _form.controls['secondaryEncoderIp'].touched}">*
+            </div>
+            <div>
+              <input class="kControl" formControlName="secondaryEncoderIp" pInputText
+                     [ngClass]="{'kHasError':!_form.controls['secondaryEncoderIp'].valid &&
+                       _form.controls['secondaryEncoderIp'].touched}">
+              <div *ngIf="_form.controls['secondaryEncoderIp'].touched">
+                <div *ngIf="_form.controls['secondaryEncoderIp'].hasError('required')"
+                     class="error">
+                  {{'applications.upload.prepareLive.universalStreamType.errors.required' | translate}}
+                </div>
+                <div *ngIf="_form.controls['secondaryEncoderIp'].hasError('ip')"
+                     class="error">
+                  {{'applications.upload.prepareLive.universalStreamType.errors.invalidIp' | translate}}
+                </div>
+              </div>
+              <div class="kFieldMessage">{{'applications.upload.prepareLive.universalStreamType.secondaryEncoderIp_message' | translate}}</div>
+            </div>
+          </div>
 
-      <!--live DVR-->
-      <div class="kRow">
-        <span class="kLabel">{{'applications.upload.prepareLive.universalStreamType.liveDvr' | translate}}</span>
-        <div class="kRequired"></div>
-        <div>
-          <p-inputSwitch class="kControl kInputSwitch" formControlName="liveDvr"></p-inputSwitch>
-          <span>{{_form.controls['liveDvr'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
-          <div class="kFieldMessage">{{'applications.upload.prepareLive.universalStreamType.liveDVR_message' | translate}}</div>
-        </div>
-      </div>
+          <!--broadcast password-->
+          <div class="kRow">
+            <span class="kLabel">{{'applications.upload.prepareLive.universalStreamType.broadcastPassword' | translate}}</span>
+            <div class="kRequired"></div>
+            <div>
+              <input class="kControl" formControlName="broadcastPassword" pInputText
+                     [ngClass]="{'kHasError':!_form.controls['broadcastPassword'].valid &&
+                       _form.controls['broadcastPassword'].touched}">
+            </div>
+          </div>
 
-    </div>
-  </section>
-</form>
+          <!--live DVR-->
+          <div class="kRow">
+            <span class="kLabel">{{'applications.upload.prepareLive.universalStreamType.liveDvr' | translate}}</span>
+            <div class="kRequired"></div>
+            <div>
+              <p-inputSwitch class="kControl kInputSwitch" formControlName="liveDvr"></p-inputSwitch>
+              <span>{{_form.controls['liveDvr'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+              <div class="kFieldMessage">{{'applications.upload.prepareLive.universalStreamType.liveDVR_message' | translate}}</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </form>
+</k-area-blocker>

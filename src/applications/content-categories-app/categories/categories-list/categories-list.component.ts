@@ -392,7 +392,12 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     onFreetextChanged(): void {
-        this._categoriesService.filter({freetext: this._query.freetext});
+        // prevent searching for empty strings
+        if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
+            this._query.freetext = '';
+        }else {
+            this._categoriesService.filter({freetext: this._query.freetext});
+        }
     }
 
     onTagsChange() {

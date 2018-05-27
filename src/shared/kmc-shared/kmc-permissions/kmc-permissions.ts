@@ -1,7 +1,10 @@
 /**
  * A list of permission tokens as provided by the server and supported in the KMC.
  *
- * DEVELOPER NOTICE: All the tokens must be UPPER_CASED and use underline (_) instead of dot ('.')
+ * DEVELOPER NOTICE:
+ * - All the tokens must be UPPER_CASED and use underline (_) instead of dot ('.')
+ * - if the original name doesn't match the naming standards, add the mapping manually in file 'kmc-permissions-rules' property 'customPermissionKeyToNameMapping'
+ *
  */
 export enum KMCPermissions {
     'ACCESS_CONTROL_ADD' = 1000,
@@ -50,12 +53,12 @@ export enum KMCPermissions {
     'CONTENT_MODERATE_APPROVE_REJECT' = 1043,
     'CONTENT_MODERATE_CUSTOM_DATA' = 1044,
     'CONTENT_MODERATE_METADATA' = 1045,
-    'CUEPOINT_MANAGE' = 1046, // ORIGINAL VALUE cuePoint.MANAGE
+    'CUEPOINT_MANAGE' = 1046,
     'CUSTOM_DATA_PROFILE_ADD' = 1047,
     'CUSTOM_DATA_PROFILE_DELETE' = 1048,
     'CUSTOM_DATA_PROFILE_UPDATE' = 1049,
-    'DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE' = 1050, // ORIGINAL VALUE dropFolder.CONTENT_INGEST_DROP_FOLDER_DELETE
-    'DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_MATCH' = 1051, // ORIGINAL VALUE dropFolder.CONTENT_INGEST_DROP_FOLDER_MATCH
+    'DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE' = 1050,
+    'DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_MATCH' = 1051,
     'INTEGRATION_UPDATE_SETTINGS' = 1052,
     'LIVE_STREAM_ADD' = 1053,
     'LIVE_STREAM_UPDATE' = 1054,
@@ -82,7 +85,7 @@ export enum KMCPermissions {
     'CONTENT_MANAGE_DISTRIBUTION_BASE' = 1075,
     'CONTENT_MODERATE_BASE' = 1076,
     'CUSTOM_DATA_PROFILE_BASE' = 1077,
-    'DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_BASE' = 1078, // ORIGINAL VALUE dropFolder.CONTENT_INGEST_DROP_FOLDER_BASE
+    'DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_BASE' = 1078,
     'INTEGRATION_BASE' = 1079,
     'PLAYLIST_BASE' = 1080,
     'STUDIO_BASE' = 1081,

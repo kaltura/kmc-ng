@@ -15,6 +15,7 @@ import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
 export interface ClipAndTrimAppViewArgs {
     entry: KalturaMediaEntry;
+    hasSource: boolean;
 }
 
 @Injectable()
@@ -34,15 +35,15 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
             `handle isAvailable action for advertisements app`,
             {
                 advertisementsConfig: {
-                    enabled: serverConfig.externalApps.advertisements.enabled,
-                    uri: serverConfig.externalApps.advertisements.uri
+                    enabled: serverConfig.externalApps.editor.enabled,
+                    uri: serverConfig.externalApps.editor.uri
                 }
             }
         );
 
-        const availableByConfiguration = serverConfig.externalApps.clipAndTrim.enabled;
+        const availableByConfiguration = serverConfig.externalApps.editor.enabled;
         const availableByPermissions = this._isAvailableByPermission();
-        const availableByData = this._isAvailableByData(args.entry);
+        const availableByData = this._isAvailableByData(args);
         const result = availableByConfiguration && availableByData && availableByPermissions;
         this._logger.info(`check if view is available`, {
             result,
@@ -60,7 +61,8 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
         ]);
     }
 
-    private _isAvailableByData(entry: KalturaMediaEntry): boolean {
+    private _isAvailableByData(args: ClipAndTrimAppViewArgs): boolean {
+        const { entry, hasSource} = args;
         const entryReady = entry.status === KalturaEntryStatus.ready;
         const isEntryReplacing = entry.replacementStatus !== KalturaEntryReplacementStatus.none;
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
@@ -69,12 +71,13 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
             entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
             entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
             entry.mediaType === KalturaMediaType.liveStreamQuicktime;
-        const result = entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
+        const result = hasSource && entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
 
         this._logger.trace(`conditions used to check availability status by data`, () => (
             {
                 result,
                 entryReady,
+                hasSource,
                 isLiveEntry,
                 isEntryReplacing,
                 isExternalMedia,

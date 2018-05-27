@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EqualFieldsValidator } from 'app-shared/kmc-shell/validators/equalFields.validator';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { serverConfig } from 'config/server';
 
 @Component({
   selector: 'kKMCPasswordExpiredForm',
@@ -20,6 +22,11 @@ export class PasswordExpiredFormComponent {
   public _oldPasswordField: AbstractControl;
   public _newPasswordField: AbstractControl;
   public _repeatPasswordField: AbstractControl;
+
+    public get _supportAddress(): string {
+        const supportAddress = serverConfig.externalLinks.kaltura.support;
+        return supportAddress.replace('mailto:', '');
+    }
 
   public get _sendBtnText(): string {
     return this.inProgress ? 'app.login.wait' : 'app.login.send';
@@ -41,7 +48,8 @@ export class PasswordExpiredFormComponent {
     return this._passwordStructureInvalid ? 'app.login.error.invalidStructure' : '';
   }
 
-  constructor(private _fb: FormBuilder) {
+  constructor(private _fb: FormBuilder,
+              private _browserService: BrowserService) {
     this._buildForm();
   }
 
@@ -85,4 +93,7 @@ export class PasswordExpiredFormComponent {
       });
     }
   }
+    public _contactSupport(): void {
+        this._browserService.openEmail(serverConfig.externalLinks.kaltura.support);
+    }
 }

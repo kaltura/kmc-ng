@@ -15,9 +15,10 @@ import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceTyp
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { Observer } from 'rxjs/Observer';
-import { serverConfig } from 'config/server';
+import { serverConfig, getKalturaServerUri } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ISubscription } from 'rxjs/Subscription';
 
 export interface Tabs {
   name: string;
@@ -43,6 +44,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   private _isRecordedLive = false;
   private _userId = '';
 
+  public serverUri = getKalturaServerUri();
   public _areaBlockerMessage: AreaBlockerMessage = null;
   public _tabs: Tabs[] = [];
   public _flags: KalturaModerationFlag[] = null;
@@ -54,6 +56,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   public EntryReportSections = EntryReportSections;
   public _playerConfig : any = {};
   public _isBusy = false;
+  public _isEntryLinkAvailable = false;
 
   constructor(public _moderationStore: ModerationStore,
               private _appLocalization: AppLocalization,
@@ -149,6 +152,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
           this._areaBlockerMessage = null;
           if (response.entry && response.flag) {
             this._entry = response.entry;
+            this._isEntryLinkAvailable = this._contentEntryViewService.isAvailable({entry: this._entry, section: ContentEntryViewSections.Metadata});
             this._flags = response.flag.objects;
             const moderationCount = this._entry.moderationCount;
             this._flagsAmount = moderationCount === 1
@@ -221,13 +225,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(entryId): void {
-      this._isBusy = true;
-      this._contentEntryViewService.openById(entryId)
-          .cancelOnDestroy(this)
-          .subscribe(() => {
-              this._isBusy = false;
-              // no needed to close the popup. if navigating it will be closed anyway and if not we want it to stay open
-          });
+      this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
   }
 
   public _banCreator(): void {

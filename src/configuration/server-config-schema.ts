@@ -17,6 +17,7 @@ export const ServerConfigSchema = {
         kalturaServer: {
             properties: {
                 uri: {type: 'string'},
+                defaultPrivileges: {type: 'string'},
                 deployUrl: {type: 'string'},
                 previewUIConf: {type: 'number'},
                 freeTrialExpiration: {
@@ -34,7 +35,7 @@ export const ServerConfigSchema = {
                                 enabled: {type: 'boolean'},
                                 verifyBetaServiceUrl: { type: 'string' },
                             },
-                            required: ['enabled', 'verifyBetaServiceUrl'],
+                            required: ['enabled'],
                             additionalProperties: false
                         }
                     },
@@ -43,7 +44,7 @@ export const ServerConfigSchema = {
                 },
 
             },
-            required: ['uri', 'previewUIConf', 'deployUrl', 'freeTrialExpiration', 'login'],
+            required: ['uri', 'previewUIConf', 'deployUrl', 'freeTrialExpiration'],
             additionalProperties: false
         },
         cdnServers: {
@@ -64,7 +65,7 @@ export const ServerConfigSchema = {
                         html5lib: {type: 'string'},
                         showStudioV3: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'html5_version', 'html5lib'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 studioV3: {
@@ -75,26 +76,23 @@ export const ServerConfigSchema = {
                         html5lib: {type: 'string'},
                         showHTMLStudio: {type: 'boolean'}
                     },
-                    required: ['enabled', 'uri', 'html5_version', 'html5lib'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 usageDashboard: {
                     properties: {
                         enabled: {type: 'boolean'},
-                        uri: {type: 'string'},
-                        uiConfId: {type: 'number'},
-                        map_urls: { type: 'array', items: { type: 'string' } },
-                        map_zoom_levels: {type: 'string'}
+                        uri: {type: 'string'}
                     },
-                    required: ['enabled', 'uri', 'uiConfId', 'map_urls', 'map_zoom_levels'],
-                    additionalProperties: false
+                    required: ['enabled'],
+                    additionalProperties: true // TODO set this to false once the server updates the runtime configuration generator for this app
                 },
                 liveDashboard: {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled', 'uri'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 liveAnalytics: {
@@ -103,23 +101,15 @@ export const ServerConfigSchema = {
                         uri: {type: 'string'},
                         uiConfId: {type: 'number'}
                     },
-                    required: ['enabled', 'uri'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
-                clipAndTrim: {
+                editor: {
                     properties: {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled', 'uri'],
-                    additionalProperties: false
-                },
-                advertisements: {
-                    properties: {
-                        enabled: {type: 'boolean'},
-                        uri: {type: 'string'}
-                    },
-                    required: ['enabled', 'uri'],
+                    required: ['enabled'],
                     additionalProperties: false
                 },
                 kava: {
@@ -127,11 +117,11 @@ export const ServerConfigSchema = {
                         enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled', 'uri'],
+                    required: ['enabled'],
                     additionalProperties: false
                 }
             },
-            required: ['studio', 'usageDashboard', 'liveDashboard', 'kava'],
+            required: ['studio', 'studioV3', 'liveAnalytics', 'usageDashboard', 'liveDashboard', 'kava', 'editor'],
             additionalProperties: false
         },
         externalLinks: {
@@ -141,7 +131,7 @@ export const ServerConfigSchema = {
                         embedTypes: {type: 'string'},
                         deliveryProtocols: {type: 'string'}
                     },
-                    required: ['embedTypes', 'deliveryProtocols'],
+                    required: [],
                     additionalProperties: false
                 },
                 kaltura: {
@@ -153,16 +143,17 @@ export const ServerConfigSchema = {
                         signUp: {type: 'string'},
                         contactUs: {type: 'string'},
                         upgradeAccount: {type: 'string'},
-                        contactSalesforce: {type: 'string'}
+                        contactSalesforce: {type: 'string'},
+                        dropFoldersManual: {type: 'string'}
                     },
-                    required: ['userManual', 'support', 'signUp', 'contactUs', 'upgradeAccount', 'contactSalesforce'],
+                    required: [],
                     additionalProperties: false
                 },
                 entitlements: {
                     properties: {
                         manage: {type: 'string'}
                     },
-                    required: ['manage'],
+                    required: [],
                     additionalProperties: false
                 },
                 uploads: {
@@ -171,18 +162,18 @@ export const ServerConfigSchema = {
                         needHighSpeedUpload: {type: 'string'},
                         bulkUploadSamples: {type: 'string'}
                     },
-                    required: ['highSpeedUpload', 'needHighSpeedUpload', 'bulkUploadSamples'],
+                    required: [],
                     additionalProperties: false
                 },
                 live: {
                     properties: {
                         akamaiEdgeServerIpURL: {type: 'string'}
                     },
-                    required: ['akamaiEdgeServerIpURL'],
+                    required: [],
                     additionalProperties: false
                 }
             },
-            required: ['previewAndEmbed', 'kaltura', 'uploads', 'live'],
+            required: [],
             additionalProperties: false
         }
     },

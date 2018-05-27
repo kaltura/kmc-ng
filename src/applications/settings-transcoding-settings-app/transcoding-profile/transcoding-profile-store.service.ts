@@ -66,7 +66,7 @@ export class TranscodingProfileStore implements OnDestroy {
   }
 
   public get profileId(): string {
-    return this._profileId;
+    return String(this._profileId);
   }
 
   public readonly profile = {
@@ -339,7 +339,11 @@ export class TranscodingProfileStore implements OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-            if (this._settingsTranscodingProfileViewService.isAvailable({ profile: response, activatedRoute: this._profileRoute })) {
+            if (this._settingsTranscodingProfileViewService.isAvailable({
+                profile: response,
+                activatedRoute: this._profileRoute,
+                section: SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute
+            })) {
                 this._profile.data.next(response);
                 this._profileId = String(response.id);
                 this._setProfilesStoreServiceByType(response.type);

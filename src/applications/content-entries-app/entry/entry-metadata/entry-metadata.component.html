@@ -1,7 +1,7 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage"
                 [bodyScroll]="true">
   <div class="jumpTo" *ngIf="_jumpToMenu.length > 2">
-    <p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+    <p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'" kMenuCloseOnScroll [style]="{width: '220px'}"></p-menu>
     <button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right"
             label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}"
             (click)="menu.toggle($event)"></button>
@@ -81,7 +81,7 @@
             <textarea formControlName="offlineMessage" class="threeRows" pInputTextarea></textarea>
           </div>
         </div>
-        <div class="kRow kValign">
+        <div class="kRow kValign" *ngIf="_kmcPermissions.CONTENT_INGEST_REFERENCE_MODIFY | kNgIfPermitted">
           <span class="kLabel">{{'applications.content.entryDetails.metadata.refId' | translate}}</span>
           <div class="kControl">
             <input formControlName="referenceId" type="text" pInputText/>

@@ -8,7 +8,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissions> {
     private _logger: KalturaLogger;
     private _restrictionsApplied = false;
-
+    private _customPermissionNameToKeyMapping: { [name: string]: number} = {};
     get restrictionsApplied(): boolean {
         return this._restrictionsApplied;
     }
@@ -16,6 +16,25 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
     constructor(logger: KalturaLogger) {
         super();
         this._logger = logger.subLogger('KMCPermissionsService');
+
+        Object.keys(KMCPermissionsRules.customPermissionKeyToNameMapping).forEach((key) => {
+            const customName = KMCPermissionsRules.customPermissionKeyToNameMapping[key] as any; // bypass typescript issue with implicit type checking
+            this._customPermissionNameToKeyMapping[customName] = (<any>key);
+        });
+    }
+
+    public getPermissionKeyByName(name: string): KMCPermissions {
+        const customPermissionKey = this._customPermissionNameToKeyMapping[name];
+        return customPermissionKey ? customPermissionKey : KMCPermissions[name];
+    }
+
+    public getPermissionNameByKey(key: KMCPermissions): string {
+        const customPermissionName = KMCPermissionsRules.customPermissionKeyToNameMapping[key];
+        return customPermissionName ? customPermissionName : KMCPermissions[key];
+    }
+
+    public getLinkedPermissionByKey(key: KMCPermissions): KMCPermissions {
+        return KMCPermissionsRules.linkedPermissionMapping[key];
     }
 
     load(rawRolePermissionList: string[], rawPartnerPermissionList: string[]): void {
@@ -27,7 +46,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
             rawRolePermissionList,
             rawPartnerPermissionList
         }));
-        
+
         const rolePermissionList: Set<KMCPermissions> = new Set();
         const partnerPermissionList: Set<KMCPermissions> = new Set();
         const filteredRolePermissionList: Set<KMCPermissions> = new Set<KMCPermissions>();
@@ -39,8 +58,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
 
         // convert partner permission server value into app value
         rawPartnerPermissionList.forEach(rawPermission => {
-            const formattedPermission = rawPermission.replace('.', '_').toUpperCase();
-            const permissionValue = KMCPermissions[formattedPermission];
+            const permissionValue = this.getPermissionKeyByName(rawPermission);
 
             if (typeof permissionValue === 'undefined') {
                 // ignoring partner permission since it is not in use by this app
@@ -59,8 +77,7 @@ export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissi
 
         // convert role permission server value into app value
         rawRolePermissionList.forEach(rawPermission => {
-            const formattedPermission: string = rawPermission.replace('.', '_').toUpperCase();
-            const permissionValue = KMCPermissions[formattedPermission];
+            const permissionValue = this.getPermissionKeyByName(rawPermission)
 
             if (typeof permissionValue === 'undefined') {
                 // ignoring role permission since it is not in use by this app

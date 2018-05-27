@@ -6,21 +6,25 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 
 @Component({
-  selector: 'kAdvertisements',
-  templateUrl: './advertisements.component.html',
-  styleUrls: ['./advertisements.component.scss']
+  selector: 'kEntryEditor',
+  templateUrl: './entry-editor.component.html',
+  styleUrls: ['./entry-editor.component.scss']
 })
-export class AdvertisementsComponent implements OnInit, OnDestroy {
+export class EntryEditorComponent implements OnInit, OnDestroy {
+
+    @Input()
+    tab: string = null;
 
   @Input()
   entry: KalturaMediaEntry = null;
+
+    @Input() entryHasSource = false;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
 
   public _confirmClose = false;
 
-  constructor(private _logger: KalturaLogger,
-              private _browserService: BrowserService,
+  constructor(private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
   }
 
@@ -34,8 +38,8 @@ export class AdvertisementsComponent implements OnInit, OnDestroy {
     if (this._confirmClose) {
       this._browserService.confirm(
         {
-          header: this._appLocalization.get('applications.content.entryDetails.advertisements.cancelEdit'),
-          message: this._appLocalization.get('applications.content.entryDetails.advertisements.discard'),
+          header: this._appLocalization.get('applications.content.entryDetails.entryEditor.cancelEdit'),
+          message: this._appLocalization.get('applications.content.entryDetails.entryEditor.discard'),
           accept: () => {
             this._confirmClose = false;
             if (this.parentPopupWidget) {

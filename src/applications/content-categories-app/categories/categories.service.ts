@@ -587,16 +587,21 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
             .map(
                 data => {
                     if (data.hasErrors()) {
-                        let message = 'An error occurred while trying to add new category';
+                        const message = this._appLocalization.get('applications.content.moveCategory.errors.creationError');
                         let errorCode = '';
                         if (data[0].error) { // show error of CategoryAddAction
-                            errorCode = 'category_creation_failure';
+                            errorCode = data[0].error.code === 'DUPLICATE_CATEGORY'
+                                ? 'duplicate_category'
+                                : 'category_creation_failure';
                         } else if (multiRequest.requests.length > 1) {
                             errorCode = 'entries_link_issue';
                         }
                         const error = new Error(message);
                         (<any>error).code = errorCode;
-                        (<any>error).context = { categoryId: data[0].result.id };
+                        if (data[0].result) {
+                            (<any>error).context = { categoryId: data[0].result.id };
+                        }
+
                         throw error;
                     }
 

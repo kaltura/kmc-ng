@@ -117,7 +117,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
             object.parsedProfile = parsedProfile.profile;
 
             if (!object.profileDisabled) {
-              object.defaultLabel = object.parsedProfile.items.map(({ label }) => label).join(',');
+              object.defaultLabel = object.parsedProfile.items.map(({ key }) => key).join(', ');
               const ks = this._appAuth.appUser.ks;
               const id = object.id;
               object.downloadUrl = getKalturaServerUri(`/api_v3/index.php/service/metadata_metadataprofile/action/serve/ks/${ks}/id/${id}`);

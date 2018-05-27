@@ -12,8 +12,8 @@ import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface PartnerInfo {
-  adminLoginUsersQuota: number,
-  adminUserId: string
+  adminLoginUsersQuota: number;
+  adminUserId: string;
 }
 
 @Component({
@@ -88,7 +88,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
             firstName: '',
             lastName: '',
             id: '',
-            roleIds: null
+            roleIds: this._rolesList && this._rolesList.length ? this._rolesList[0].value : null
           });
           this._userForm.get('email').enable();
           this._userForm.get('firstName').enable();
@@ -107,7 +107,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._userForm.get('firstName').disable();
           this._userForm.get('lastName').disable();
 
-          if (this.user.id === this._partnerInfo.adminUserId) {
+            const isUserAdmin = this.user.id === this._partnerInfo.adminUserId;
+            const isCurrentUser = this._usersStore.isCurrentUser(this.user);
+          if (isUserAdmin || isCurrentUser) {
             this._userForm.get('roleIds').disable();
           } else {
             this._userForm.get('roleIds').enable();
@@ -125,7 +127,20 @@ export class EditUserComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  private _isUserAlreadyExists(): void {
+    private _markFormFieldsAsTouched(): void {
+        for (const control in this._userForm.controls) {
+            if (this._userForm.controls.hasOwnProperty(control)) {
+                this._userForm.get(control).markAsTouched();
+                this._userForm.get(control).updateValueAndValidity();
+            }
+        }
+    }
+
+  private _createUser(): void {
+      if (!this._userForm.valid) {
+          return;
+      }
+
     const { email } = this._userForm.value;
     this._isBusy = true;
     this._usersStore.isUserAlreadyExists(email)
@@ -141,16 +156,16 @@ export class EditUserComponent implements OnInit, OnDestroy {
                         message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: email})
                     });
                     break;
-                case IsUserExistsStatuses.otherSystemUser:
-                    this._isUserAssociated();
-                    break;
-                case IsUserExistsStatuses.unknownUser:
+                case IsUserExistsStatuses.otherKMCUser:
                     this._browserService.confirm({
                             header: this._appLocalization.get('applications.administration.users.alreadyExist'),
                             message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
-                            accept: () => this._isUserAssociated()
+                            accept: () => this._createOrAssociateUser()
                         }
                     );
+                    break;
+                case IsUserExistsStatuses.unknownUser:
+                    this._createOrAssociateUser();
                     break;
             }
         }else {
@@ -172,7 +187,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     this._invalidUserId = false;
 
-    this._usersStore.updateUser(this._userForm, this.user.id)
+    const { roleIds, id, email } = this._userForm.getRawValue();
+    this._usersStore.updateUser({ roleIds, email, id: (id || '').trim() }, this.user.id)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
@@ -219,11 +235,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _isUserAssociated(): void {
+  private _createOrAssociateUser(): void {
     const { id, email } = this._userForm.value;
-    const userId = id || email;
+    const userId = (id || email).trim();
     this._isBusy = true;
-    this._usersStore.isUserAssociated(userId)
+    this._usersStore.getUserById(userId)
       .cancelOnDestroy(this)
       .subscribe(
         user => {
@@ -231,50 +247,55 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._browserService.confirm({
             header: this._appLocalization.get('applications.administration.users.userAssociatedCaption'),
             message: this._appLocalization.get('applications.administration.users.userAssociated', { 0: userId }),
-            accept: () => this._updateUserPermissions(user)
+            accept: () => {
+                this._blockerMessage = null;
+                this._associateUserToAccount(user);
+            }
           });
         },
         error => {
           this._isBusy = false;
           if (error.code === 'INVALID_USER_ID') {
-            this._addNewUser();
+              this._usersStore.addUser(this._userForm.value)
+                  .cancelOnDestroy(this)
+                  .tag('block-shell')
+                  .subscribe(
+                      () => {
+                          this._usersStore.reload(true);
+                          this.parentPopupWidget.close();
+                      },
+                      addUserError => {
+                          this._blockerMessage = new AreaBlockerMessage({
+                              message: addUserError.message,
+                              buttons: [{
+                                  label: this._appLocalization.get('app.common.ok'),
+                                  action: () => {
+                                      this._blockerMessage = null;
+                                  }
+                              }]
+                          });
+                      }
+                  );
+          } else {
+              this._blockerMessage = new AreaBlockerMessage(
+                  {
+                      message: error.message,
+                      buttons: [{
+                          label: this._appLocalization.get('app.common.ok'),
+                          action: () => {
+                              this._blockerMessage = null;
+                          }
+                      }]
+                  }
+              );
           }
         }
       );
   }
 
-  private _updateUserPermissions(user: KalturaUser): void {
-    this._blockerMessage = null;
-    this._usersStore.updateUserPermissions(user, this._userForm)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
-      .subscribe(
-        () => {
-          this._usersStore.reload(true);
-          this.parentPopupWidget.close();
-        },
-        error => {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: error.message,
-            buttons: [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-              }
-            }]
-          });
-        }
-      );
-  }
-
-  private _addNewUser(): void {
-    this._blockerMessage = null;
-
-    if (!this._userForm.valid) {
-      return;
-    }
-
-    this._usersStore.addUser(this._userForm)
+  private _associateUserToAccount(user: KalturaUser): void {
+      const { roleIds } = this._userForm.value;
+    this._usersStore.associateUserToAccount(user, roleIds)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
@@ -307,13 +328,17 @@ export class EditUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _saveUser(): void {
-    if (this._userForm.valid) {
-      if (this._isNewUser) {
-        this._isUserAlreadyExists();
-      } else {
-        this._updateUser();
-      }
+    public _saveUser(): void {
+        this._blockerMessage = null;
+
+        if (this._userForm.valid) {
+            if (this._isNewUser) {
+                this._createUser();
+            } else {
+                this._updateUser();
+            }
+        } else {
+            this._markFormFieldsAsTouched();
+        }
     }
-  }
 }

@@ -27,12 +27,13 @@ export enum ContentEntryViewSections {
     Clips = 'Clips',
     Advertisements = 'Advertisements',
     Users = 'Users',
-    Distribution = 'Distribution'
+    Distribution = 'Distribution',
+    ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
 }
 
 export interface ContentEntryViewArgs {
     entry: KalturaMediaEntry;
-    section?: ContentEntryViewSections;
+    section: ContentEntryViewSections;
     activatedRoute?: ActivatedRoute;
     reloadEntriesListOnNavigateOut?: boolean;
 }
@@ -52,7 +53,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     }
 
     isAvailable(args: ContentEntryViewArgs): boolean {
-        const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute);
+        const section = args.section === ContentEntryViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
         this._logger.info(`handle isAvailable action by user`, { categoryId: args.entry.id, section });
         return this._isSectionEnabled(section, args.entry);
     }
@@ -65,51 +66,57 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     }
 
     private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute): ContentEntryViewSections {
-        const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
         let result = null;
 
-        switch (sectionToken) {
-            case 'metadata':
-                result = ContentEntryViewSections.Metadata;
-                break;
-            case 'thumbnails':
-                result = ContentEntryViewSections.Thumbnails;
-                break;
-            case 'accesscontrol':
-                result = ContentEntryViewSections.AccessControl;
-                break;
-            case 'scheduling':
-                result = ContentEntryViewSections.Scheduling;
-                break;
-            case 'flavours':
-                result = ContentEntryViewSections.Flavours;
-                break;
-            case 'captions':
-                result = ContentEntryViewSections.Captions;
-                break;
-            case 'live':
-                result = ContentEntryViewSections.Live;
-                break;
-            case 'related':
-                result = ContentEntryViewSections.Related;
-                break;
-            case 'clips':
-                result = ContentEntryViewSections.Clips;
-                break;
-            case 'advertisements':
-                result = ContentEntryViewSections.Advertisements;
-                break;
-            case 'users':
-                result = ContentEntryViewSections.Users;
-                break;
-            case 'distribution':
-                result = ContentEntryViewSections.Distribution;
-                break;
-            default:
-                break;
-        }
+        if (activatedRoute) {
+            try {
+                const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
 
-        this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+                switch (sectionToken) {
+                    case 'metadata':
+                        result = ContentEntryViewSections.Metadata;
+                        break;
+                    case 'thumbnails':
+                        result = ContentEntryViewSections.Thumbnails;
+                        break;
+                    case 'accesscontrol':
+                        result = ContentEntryViewSections.AccessControl;
+                        break;
+                    case 'scheduling':
+                        result = ContentEntryViewSections.Scheduling;
+                        break;
+                    case 'flavours':
+                        result = ContentEntryViewSections.Flavours;
+                        break;
+                    case 'captions':
+                        result = ContentEntryViewSections.Captions;
+                        break;
+                    case 'live':
+                        result = ContentEntryViewSections.Live;
+                        break;
+                    case 'related':
+                        result = ContentEntryViewSections.Related;
+                        break;
+                    case 'clips':
+                        result = ContentEntryViewSections.Clips;
+                        break;
+                    case 'advertisements':
+                        result = ContentEntryViewSections.Advertisements;
+                        break;
+                    case 'users':
+                        result = ContentEntryViewSections.Users;
+                        break;
+                    case 'distribution':
+                        result = ContentEntryViewSections.Distribution;
+                        break;
+                    default:
+                        break;
+                }
+                this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+            } catch (e) {
+                this._logger.error(`failed to resolve section from activated route`);
+            }
+        }
 
         return result;
     }
@@ -232,14 +239,17 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             case ContentEntryViewSections.Distribution:
                 result = this._appPermissions.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_BASE);
                 break;
-            case ContentEntryViewSections.Metadata:
-                result = this._appPermissions.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION);
-                break;
             case ContentEntryViewSections.Thumbnails:
             case ContentEntryViewSections.Flavours:
             case ContentEntryViewSections.Clips:
             case ContentEntryViewSections.AccessControl:
             case ContentEntryViewSections.Scheduling:
+                result = true;
+                break;
+            case ContentEntryViewSections.Metadata:
+                // metadata section is always available to the user.
+                // if you need to change this you will need to resolve at runtime
+                // the default section to open
                 result = true;
                 break;
             default:
@@ -260,7 +270,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             ));
     }
 
-    public openById(entryId: string, reloadEntriesListOnNavigateOut?: boolean): Observable<boolean> {
+    public openById(entryId: string, section: ContentEntryViewSections, reloadEntriesListOnNavigateOut?: boolean): void {
         this._logger.info('handle open entry view by id request by the user, load entry data', { entryId });
         const baseEntryAction = new BaseEntryGetAction({ entryId })
             .setRequestOptions({
@@ -269,7 +279,10 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                     fields: 'id,mediaType'
                 })
             });
-        return this._kalturaClient.request(baseEntryAction)
+
+        this._kalturaClient
+            .request(baseEntryAction)
+            .tag('block-shell')
             .map(response => {
                 console.warn(response);
                 if (response instanceof KalturaMediaEntry) {
@@ -282,13 +295,16 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 this._logger.info(`handle successful request, proceed navigation`);
                 return this._open({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut });
             })
-            .catch(err => {
-                this._logger.info(`handle failed request, show alert, abort navigation`);
-                this._browserService.alert({
-                    header: this._appLocalization.get('app.common.error'),
-                    message: err.message
-                });
-                return Observable.of(false);
-            });
+
+            .subscribe(
+                () => {},
+                (error) => {
+                    this._logger.info(`handle failed request, show alert, abort navigation`);
+                    this._browserService.alert({
+                        header: this._appLocalization.get('app.common.error'),
+                        message: error.message
+                    });
+                }
+            );
     }
 }

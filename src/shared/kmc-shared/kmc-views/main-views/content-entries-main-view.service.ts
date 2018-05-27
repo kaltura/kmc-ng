@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 @Injectable()
 export class ContentEntriesMainViewService extends KmcMainViewBaseService {
@@ -30,8 +30,7 @@ export class ContentEntriesMainViewService extends KmcMainViewBaseService {
             KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
             KMCPermissions.CONTENT_MANAGE_EMBED_CODE,
             KMCPermissions.CONTENT_MANAGE_DELETE,
-            KMCPermissions.CONTENT_MANAGE_RECONVERT,
-            KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
+            KMCPermissions.CONTENT_MANAGE_RECONVERT
         ]);
     }
 

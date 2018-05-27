@@ -13,10 +13,11 @@ import {
   MetadataProfileTypes
 } from 'app-shared/kmc-shared';
 
-import {DefaultFiltersList} from './default-filters-list';
+import {EntitlementsFiltersList} from './default-filters-list';
 
 import * as R from 'ramda';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface RefineGroupListItem {
   value: string,
@@ -42,33 +43,39 @@ export class CategoriesRefineFiltersService {
 
   private _getRefineFilters$: Observable<RefineGroup[]>;
 
-  constructor(private kalturaServerClient: KalturaClient,
+  constructor(private _kalturaServerClient: KalturaClient,
               private _permissionsService: KMCPermissionsService,
-              private _metadataProfileStore: MetadataProfileStore) {
+              private _metadataProfileStore: MetadataProfileStore,
+              private _logger: KalturaLogger) {
+      this._logger = _logger.subLogger('CategoriesRefineFiltersService');
   }
 
   public getFilters(): Observable<RefineGroup[]> {
-
+    this._logger.debug(`handle get categories refine filters request`);
     if (!this._getRefineFilters$) {
       // execute the request
-      this._getRefineFilters$ = this._metadataProfileStore.get({
-        type: MetadataProfileTypes.Category,
-        ignoredCreateMode: MetadataProfileCreateModes.App
-      })
+      this._getRefineFilters$ = this._getMetadataFilters()
         .map(
           (response) => {
+              this._logger.trace(`handle successful get categories refine filters request, mapping response`);
+
             const result = [];
             if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_ENTITLEMENT)) {
-              result.push(this._buildDefaultFiltersGroup());
+              result.push(this._buildEntitlementsFiltersGroup());
+            } else {
+                this._logger.debug(`user doesn't have entitlement feature, ignore entitlements filters group`);
             }
 
-            const metadataData = this._buildMetadataFiltersGroups(response.items);
-            result.push(...metadataData.groups);
+            if (response) {
+                // response will be 'null' if user doesn't have permissions for metadata
+                const metadataData = this._buildMetadataFiltersGroups(response.items);
+                result.push(...metadataData.groups);
+            }
 
             return result;
           })
         .catch(err => {
-          console.log(`log: [warn] [categories-refine-filters] failed to create refine filters: ${err}`);
+          this._logger.warn(`failed to create refine filters`, { errorMessage: err.message });
           this._getRefineFilters$ = null;
           return Observable.throw(err);
         })
@@ -77,6 +84,18 @@ export class CategoriesRefineFiltersService {
     }
 
     return this._getRefineFilters$;
+  }
+
+  private _getMetadataFilters(): Observable<{ items: MetadataProfile[] }> {
+      if (this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
+          return this._metadataProfileStore.get({
+              type: MetadataProfileTypes.Category,
+              ignoredCreateMode: MetadataProfileCreateModes.App
+          });
+      }
+
+      this._logger.debug(`user doesn't have metadata feature, ignore metadata filters group`);
+      return Observable.of(null);
   }
 
   private _buildMetadataFiltersGroups(metadataProfiles: MetadataProfile[]): { metadataProfiles: number[], groups: RefineGroup[] } {
@@ -109,8 +128,7 @@ export class CategoriesRefineFiltersService {
             group.items.push({
               value: item.value,
               label: item.text
-            })
-
+            });
           });
         });
       }
@@ -119,11 +137,11 @@ export class CategoriesRefineFiltersService {
     return result;
   }
 
-  private _buildDefaultFiltersGroup(): RefineGroup {
+  private _buildEntitlementsFiltersGroup(): RefineGroup {
     const result: RefineGroup = {label: '', lists: []};
 
     // build constant filters
-    DefaultFiltersList.forEach((defaultFilterList) => {
+    EntitlementsFiltersList.forEach((defaultFilterList) => {
       const newRefineFilter = new RefineGroupList(
         defaultFilterList.name,
         defaultFilterList.label

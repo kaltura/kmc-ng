@@ -21,6 +21,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { globalConfig } from 'config/global';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
 import { AdminRolesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { PermissionTreeNodes, PermissionTreeNode } from './permission-tree-nodes';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export enum SortDirection {
   Desc = -1,
@@ -36,7 +38,9 @@ const localStoragePageSizeKey = 'roles.list.pageSize';
 
 @Injectable()
 export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements OnDestroy {
-  private _roles = {
+    static permissionsTree: PermissionTreeNode[] = null;
+
+    private _roles = {
     data: new BehaviorSubject<{ items: KalturaUserRole[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
@@ -48,6 +52,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
   constructor(private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _kmcPermissionsService: KMCPermissionsService,
               adminRolesMainViewService: AdminRolesMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('RolesStoreService'));
@@ -56,6 +61,26 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     }else{
         this._browserService.handleUnpermittedAction(true);
     }
+
+  }
+
+  public getPermissionsTree(): PermissionTreeNode[] {
+      const extendRoleTreeNode = (treeNode: PermissionTreeNode) => {
+          Object.assign(treeNode, {
+              name: this._kmcPermissionsService.getPermissionNameByKey(treeNode.value)
+          });
+
+          if (treeNode.items) {
+              treeNode.items.forEach(item => extendRoleTreeNode(item));
+          }
+
+          return treeNode;
+      };
+
+      if (RolesStoreService.permissionsTree === null) {
+          RolesStoreService.permissionsTree = PermissionTreeNodes.map(treeNode => extendRoleTreeNode(treeNode));
+      }
+      return RolesStoreService.permissionsTree;
   }
 
   ngOnDestroy() {

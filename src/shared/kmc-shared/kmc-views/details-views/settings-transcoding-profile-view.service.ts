@@ -16,12 +16,13 @@ export interface KalturaConversionProfileWithAsset extends KalturaConversionProf
 
 export enum SettingsTranscodingProfileViewSections {
     Metadata = 'Metadata',
-    Flavors = 'Flavors'
+    Flavors = 'Flavors',
+    ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
 }
 
 export interface SettingsTranscodingProfileViewArgs {
     profile: KalturaConversionProfileWithAsset;
-    section?: SettingsTranscodingProfileViewSections;
+    section: SettingsTranscodingProfileViewSections;
     activatedRoute?: ActivatedRoute;
 }
 
@@ -38,27 +39,33 @@ export class SettingsTranscodingProfileViewService extends KmcDetailsViewBaseSer
     }
 
     isAvailable(args: SettingsTranscodingProfileViewArgs): boolean {
-        const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute);
+        const section = args.section === SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
         this._logger.info(`handle isAvailable action by user`, { profileId: args.profile.id, section });
         return this._isSectionEnabled(section, args.profile);
     }
 
     private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute): SettingsTranscodingProfileViewSections {
-        const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
         let result = null;
 
-        switch (sectionToken) {
-            case 'flavors':
-                result = SettingsTranscodingProfileViewSections.Flavors;
-                break;
-            case 'metadata':
-                result = SettingsTranscodingProfileViewSections.Metadata;
-                break;
-            default:
-                break;
-        }
+        if (activatedRoute) {
+            try {
+                const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+                switch (sectionToken) {
+                    case 'flavors':
+                        result = SettingsTranscodingProfileViewSections.Flavors;
+                        break;
+                    case 'metadata':
+                        result = SettingsTranscodingProfileViewSections.Metadata;
+                        break;
+                    default:
+                        break;
+                }
 
-        this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+                this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+            } catch (e) {
+                this._logger.error(`failed to resolve section from activated route`);
+            }
+        }
 
         return result;
     }

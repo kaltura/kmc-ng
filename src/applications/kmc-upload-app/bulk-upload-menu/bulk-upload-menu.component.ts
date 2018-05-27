@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AppAuthentication, AppNavigator } from 'app-shared/kmc-shell';
+import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KalturaAPIException } from 'kaltura-ngx-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-upload';
@@ -40,7 +40,6 @@ export class BulkUploadMenuComponent {
   constructor(private _bulkUploadService: BulkUploadService,
               private _appLocalization: AppLocalization,
               private _userAuthentication: AppAuthentication,
-              private _appNavigator: AppNavigator,
               private _router: Router,
               private _contentBulkViewService: ContentBulkUploadsMainViewService,
               private _appEvents: AppEventsService) {

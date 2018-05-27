@@ -338,6 +338,11 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   }
 
   onFreetextChanged(): void {
-    this._usersService.filter({freetext: this._query.freetext});
+      // prevent searching for empty strings
+      if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
+          this._query.freetext = '';
+      }else {
+          this._usersService.filter({freetext: this._query.freetext});
+      }
   }
 }

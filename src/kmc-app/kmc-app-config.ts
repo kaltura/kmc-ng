@@ -8,6 +8,7 @@ export interface KmcAppConfig {
   routing: {
     errorRoute: string;
     loginRoute: string;
+    defaultRoute: string;
   },
   locales: {
     id: string;
@@ -20,11 +21,12 @@ export const kmcAppConfig: KmcAppConfig = {
   'storageNamespace': 'kmc-ng',
   'kalturaServer': {
       "expiry": 86400,
-      "privileges": "disableentitlement"
+      "privileges": "disableentitlement,appid:kmc"
   },
   'routing': {
     'errorRoute': '/error',
     'loginRoute': '/login',
+    'defaultRoute': '/',
   },
   'locales': [
     {

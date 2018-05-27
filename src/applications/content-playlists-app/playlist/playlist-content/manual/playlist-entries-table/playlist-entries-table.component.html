@@ -24,7 +24,9 @@
       </p-column>
       <p-column field="name" header="{{'applications.content.table.name' | translate}}" sortable="custom">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span class="kTitle kTableColumn" [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted" [kTooltip]="entry[col.field]" [maxWidth]="300"
+          <span class="kTitle kTableColumn"
+                [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
+                [kTooltip]="entry[col.field]"
                 (click)="_goToEntry(entry)">{{entry[col.field]}}</span>
         </ng-template>
       </p-column>

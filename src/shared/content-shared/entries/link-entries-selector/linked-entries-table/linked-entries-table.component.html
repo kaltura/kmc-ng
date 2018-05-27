@@ -38,7 +38,7 @@
         </td>
 
         <td style="width: 100%">
-          <span [kTooltip]="entry.name" [maxWidth]="300" class="kTableColumn">{{entry.name}}</span>
+          <span [kTooltip]="entry.name" class="kTableColumn">{{entry.name}}</span>
         </td>
         <td style="width: 100px" [hidden]="_documentWidth < 1320">{{entry.id}}</td>
         <td *ngIf="!disabled" style="width: 50px">

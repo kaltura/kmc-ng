@@ -240,8 +240,12 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   public _onFreetextChanged(): void {
-    const freeText = this._query.freetext.trim();
-    this._playlistsStore.filter({ freeText });
+      // prevent searching for empty strings
+      if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
+          this._query.freetext = '';
+      }else {
+          this._playlistsStore.filter({freeText: this._query.freetext});
+      }
   }
 
   public _onSortChanged(event): void {

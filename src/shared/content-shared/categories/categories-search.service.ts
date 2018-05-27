@@ -197,7 +197,8 @@ export class CategoriesSearchService implements OnDestroy {
             privacy: category.privacy,
             privacyContext: category.privacyContext,
             privacyContexts: category.privacyContexts,
-            contributionPolicy: category.contributionPolicy
+            contributionPolicy: category.contributionPolicy,
+            partnerSortValue: category.partnerSortValue
         };
 
         this._categoriesMap.set(newCategoryData.id, newCategoryData);

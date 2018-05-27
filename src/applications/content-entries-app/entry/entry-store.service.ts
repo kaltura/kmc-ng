@@ -21,6 +21,7 @@ import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-veri
 import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
 
 export enum ActionTypes
 {
@@ -55,7 +56,11 @@ export class EntryStore implements  OnDestroy {
 		return this._entryIsDirty;
 	}
 
-
+    private _hasSource = new BehaviorSubject<boolean>(false);
+    public  readonly hasSource = {
+        value$: this._hasSource.asObservable(),
+        value: () => this._hasSource.getValue()
+    };
 
 	private _refreshEntriesListUponLeave = false;
 	private _entry : BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
@@ -267,12 +272,17 @@ export class EntryStore implements  OnDestroy {
 		this._loadEntrySubscription = this._getEntry(entryId)
             .cancelOnDestroy(this)
             .subscribe(
-				response => {
-                    if (this._contentEntryViewService.isAvailable({ entry: response, activatedRoute: this._entryRoute })) {
-                        this._entry.next(response);
-                        this._entryId = response.id;
+                ({ entry, hasSource }) => {
+                    this._hasSource.next(hasSource);
+                    if (this._contentEntryViewService.isAvailable({
+                        entry,
+                        activatedRoute: this._entryRoute,
+                        section: ContentEntryViewSections.ResolveFromActivatedRoute
+                    })) {
+                        this._entry.next(entry);
+                        this._entryId = entry.id;
 
-                        const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
+                        const dataLoadedResult = this._widgetsManager.notifyDataLoaded(entry, { isNewData: false });
 
                         if (dataLoadedResult.errors.length) {
                             this._state.next({
@@ -297,26 +307,33 @@ export class EntryStore implements  OnDestroy {
         this._contentEntryViewService.open({ section: sectionKey, entry: this.entry });
     }
 
-	private _getEntry(entryId:string) : Observable<KalturaMediaEntry>
-	{
-		if (entryId)
-		{
-			return this._kalturaServerClient.request(
-                new BaseEntryGetAction({entryId})
-			).map(response =>
-			{
-				if (response instanceof KalturaMediaEntry)
-				{
-					return response;
-				}else {
-					throw new Error(`invalid type provided, expected KalturaMediaEntry, got ${typeof response}`);
-				}
-			});
-		}else
-		{
-			return Observable.throw(new Error('missing entryId'));
-		}
-	}
+    private _getEntry(entryId: string): Observable<{ entry: KalturaMediaEntry, hasSource: boolean }> {
+        if (entryId) {
+            return this._kalturaServerClient.multiRequest(
+                new KalturaMultiRequest(
+                    new BaseEntryGetAction({ entryId }),
+                    new FlavorAssetGetFlavorAssetsWithParamsAction({ entryId })
+                )
+            ).map(responses => {
+                if (responses.hasErrors()) {
+                    const errorMessage = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
+                    throw new Error(errorMessage);
+                }
+
+                const [baseEntryResponse, flavorsResponse] = responses;
+                const entry = baseEntryResponse.result;
+                const flavors = flavorsResponse.result;
+                if (entry instanceof KalturaMediaEntry) {
+                    const hasSource = !!flavors.filter(({ flavorAsset }) => flavorAsset && flavorAsset.isOriginal).length;
+                    return { entry, hasSource };
+                } else {
+                    throw new Error(`invalid type provided, expected KalturaMediaEntry, got ${typeof entry}`);
+                }
+            });
+        } else {
+            return Observable.throw(new Error('missing entryId'));
+        }
+    }
 
     public openEntry(entry: KalturaMediaEntry | string): void {
         const entryId = entry instanceof KalturaMediaEntry ? entry.id : entry;
@@ -328,12 +345,7 @@ export class EntryStore implements  OnDestroy {
                     if (entry instanceof KalturaMediaEntry) {
                         this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
                     } else {
-                        this._state.next({ action: ActionTypes.EntryLoading });
-                        this._contentEntryViewService.openById(entry)
-                            .cancelOnDestroy(this)
-                            .subscribe(() => {
-                                this._state.next({ action: ActionTypes.EntryLoaded });
-                            });
+                        this._contentEntryViewService.openById(entry, ContentEntryViewSections.Metadata);
                     }
                 });
         }
@@ -374,5 +386,9 @@ export class EntryStore implements  OnDestroy {
 
 	public setRefreshEntriesListUponLeave() {
 	  this._refreshEntriesListUponLeave = true;
+  }
+
+  public updateHasSourceStatus(value: boolean) : void {
+	    this._hasSource.next(value);
   }
 }

@@ -340,7 +340,7 @@ export class CategoryService implements OnDestroy {
 			.cancelOnDestroy(this)
 			.subscribe(category => {
 			    this._logger.info(`handle successful loading of category data`);
-                if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute })) {
+                if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  })) {
                     this._loadCategorySubscription = null;
 
                     this._category.next(category);
@@ -407,14 +407,9 @@ export class CategoryService implements OnDestroy {
                 .cancelOnDestroy(this)
                 .subscribe(() => {
                     if (category instanceof KalturaCategory) {
-                        this._contentCategoryView.open({ category });
+                        this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
                     } else {
-                        this._state.next({ action: ActionTypes.CategoryLoading });
-                        this._contentCategoryView.openById(category)
-                            .cancelOnDestroy(this)
-                            .subscribe(() => {
-                                this._state.next({ action: ActionTypes.CategoryLoaded });
-                            });
+                        this._contentCategoryView.openById(category, ContentCategoryViewSections.Metadata);
                     }
                 });
         }

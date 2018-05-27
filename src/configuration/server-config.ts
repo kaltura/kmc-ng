@@ -19,61 +19,55 @@ import { globalConfig } from 'config/global';
 export interface ExternalApplications {
     studio: {
         enabled: boolean,
-        uri: string,
-        html5_version: string,
-        html5lib: string,
-        showFlashStudio: boolean
+        uri?: string,
+        html5_version?: string,
+        html5lib?: string,
+        showFlashStudio?: boolean
     };
     studioV3: {
         enabled: boolean,
-        uri: string,
-        html5_version: string,
-        html5lib: string,
-        showFlashStudio: boolean
+        uri?: string,
+        html5_version?: string,
+        html5lib?: string,
+        showFlashStudio?: boolean
     };
     liveDashboard: {
         enabled: boolean,
-        uri: string,
+        uri?: string,
     };
     kava: {
         enabled: boolean,
-        uri: string
+        uri?: string
     };
     usageDashboard: {
         enabled: boolean,
-        uri: string,
-        uiConfId: number,
-        map_urls: string[],
-        map_zoom_levels: string,
+        uri?: string,
     };
     liveAnalytics: {
         enabled: boolean,
-        uiConfId: number,
-        uri: string
+        uiConfId?: number,
+        uri?: string
     };
-    clipAndTrim: {
+    editor: {
         enabled: boolean,
-        uri: string
-    };
-    advertisements: {
-        enabled: boolean,
-        uri: string
+        uri?: string
     };
 }
 
 export interface ServerConfig {
     kalturaServer: {
         uri: string,
+        defaultPrivileges?: string,
         deployUrl: string,
         previewUIConf: number,
         freeTrialExpiration: {
             enabled: boolean,
             trialPeriodInDays: number
         },
-        login: {
-            limitAccess: {
+        login?: {
+            limitAccess?: {
                 enabled: boolean,
-                verifyBetaServiceUrl: string
+                verifyBetaServiceUrl?: string
             }
         };
     };
@@ -83,30 +77,31 @@ export interface ServerConfig {
     };
     externalApps: ExternalApplications;
     externalLinks: {
-        previewAndEmbed: {
-            embedTypes: string,
-            deliveryProtocols: string
+        previewAndEmbed?: {
+            embedTypes?: string,
+            deliveryProtocols?: string
         },
-        entitlements: {
-            manage: string
+        entitlements?: {
+            manage?: string
         },
-        kaltura: {
-            userManual: string,
-            kmcOverview: string,
-            mediaManagement: string,
-            support: string,
-            signUp: string,
-            contactUs: string,
-            upgradeAccount: string,
-            contactSalesforce: string,
+        kaltura?: {
+            userManual?: string,
+            kmcOverview?: string,
+            mediaManagement?: string,
+            support?: string,
+            signUp?: string,
+            contactUs?: string,
+            upgradeAccount?: string,
+            contactSalesforce?: string,
+            dropFoldersManual?: string
         },
-        uploads: {
-            highSpeedUpload: string,
-            needHighSpeedUpload: string,
-            bulkUploadSamples: string
+        uploads?: {
+            highSpeedUpload?: string,
+            needHighSpeedUpload?: string,
+            bulkUploadSamples?: string
         },
-        live: {
-            akamaiEdgeServerIpURL: string
+        live?: {
+            akamaiEdgeServerIpURL?: string
         }
     };
 }
@@ -114,7 +109,7 @@ export interface ServerConfig {
 
 
 export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalApplications> = {
-    advertisements: (configuration) => {
+    editor: (configuration) => {
         {
             let result = false;
 
@@ -194,13 +189,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
 
         if (configuration.enabled) {
             result = !!configuration.uri &&
-                !configuration.uri.match(/\s/g) && // not contains white spaces
-                typeof (configuration.uiConfId) !== 'undefined' &&
-                configuration.uiConfId !== null &&
-                configuration.map_urls &&
-                configuration.map_urls.length &&
-                configuration.map_urls.indexOf('') === -1 && // no empty url
-                !!configuration.map_zoom_levels;
+                !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
                 configuration.uri = buildKalturaServerUri(configuration.uri);
@@ -216,20 +205,6 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g) && // not contains white spaces
                 !!configuration.uiConfId;
-
-            if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
-            }
-        }
-
-        return result;
-    },
-    clipAndTrim: (configuration) => {
-        let result = false;
-
-        if (configuration.enabled) {
-            result = !!configuration.uri &&
-                !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
                 configuration.uri = buildKalturaServerUri(configuration.uri);

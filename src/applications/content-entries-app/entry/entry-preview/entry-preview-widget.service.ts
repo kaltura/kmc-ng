@@ -4,8 +4,9 @@ import {KalturaSourceType} from 'kaltura-ngx-client/api/types/KalturaSourceType'
 import {PreviewMetadataChangedEvent} from '../../preview-metadata-changed-event';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {EntryWidget} from '../entry-widget';
-import {serverConfig} from 'config/server';
+import {serverConfig, getKalturaServerUri} from 'config/server';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import { EntryStore } from '../entry-store.service';
 
 
 @Injectable()
@@ -14,6 +15,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
     private _urlHash: number = 0;
 
     constructor(private appAuthentication: AppAuthentication,
+                private _store: EntryStore,
                 private _permissionsService: KMCPermissionsService,
                 appEvents: AppEventsService) {
         super('entryPreview');
@@ -54,8 +56,9 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
             const UIConfID = serverConfig.kalturaServer.previewUIConf;
             const partnerID = this.appAuthentication.appUser.partnerId;
             const ks = this.appAuthentication.appUser.ks || "";
+            const serverUri = getKalturaServerUri();
 
-            let flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[ks]=${ks}`;
+            let flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[closedCaptions.hideWhenEmpty]=true&flashvars[ks]=${ks}`;
             if (isLive) {
                 flashVars += '&flashvars[disableEntryRedirect]=true';
             }
@@ -66,7 +69,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
 
             this._urlHash = this._urlHash + 1;
 
-            result = `${serverConfig.cdnServers.serverUri}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}&hash=${this._urlHash}`;
+            result = `${serverUri}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}&hash=${this._urlHash}`;
         }
 
         return result;

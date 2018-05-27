@@ -1,6 +1,7 @@
 {
   "kalturaServer": {
     "uri" : "@kalturaServer.uri@",
+    "defaultPrivileges" : "@kalturaServer.defaultPrivileges@",
     "deployUrl": "@kalturaServer.deployUrl@",
     "previewUIConf": @kalturaServer.previewUIConf@,
     "freeTrialExpiration": {
@@ -45,20 +46,11 @@
     },
     "usageDashboard": {
       "enabled": @externalApps.usageDashboard.enabled@,
-      "uri": "@externalApps.usageDashboard.uri@",
-      "uiConfId": @externalApps.usageDashboard.uiConfId@,
-      "map_urls": [
-        @externalApps.usageDashboard.map_urls@
-      ],
-      "map_zoom_levels": "@externalApps.usageDashboard.map_zoom_levels@"
+      "uri": "@externalApps.usageDashboard.uri@"
     },
-    "clipAndTrim": {
-      "enabled": @externalApps.clipAndTrim.enabled@,
-      "uri": "@externalApps.clipAndTrim.uri@"
-    },
-    "advertisements": {
-      "enabled": @externalApps.advertisements.enabled@,
-      "uri": "@externalApps.advertisements.uri@"
+    "editor": {
+      "enabled": @externalApps.editor.enabled@,
+      "uri": "@externalApps.editor.uri@"
     }
   },
   "externalLinks": {
@@ -72,7 +64,8 @@
       "signUp": "@externalLinks.kaltura.signUp@",
       "contactUs": "@externalLinks.kaltura.contactUs@",
       "upgradeAccount":"@externalLinks.kaltura.upgradeAccount@",
-      "contactSalesforce": "@externalLinks.kaltura.contactSalesforce@"
+      "contactSalesforce": "@externalLinks.kaltura.contactSalesforce@",
+      "dropFoldersManual": "@externalLinks.kaltura.dropFoldersManual@"
     },
     "uploads": {
       "highSpeedUpload": "@externalLinks.uploads.highSpeedUpload@",

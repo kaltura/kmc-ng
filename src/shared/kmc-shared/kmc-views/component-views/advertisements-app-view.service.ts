@@ -15,6 +15,7 @@ import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
 export interface AdvertisementsAppViewArgs {
     entry: KalturaMediaEntry;
+    hasSource: boolean;
 }
 
 @Injectable()
@@ -34,15 +35,15 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
             `handle isAvailable action for advertisements app`,
             {
                 advertisementsConfig: {
-                    enabled: serverConfig.externalApps.advertisements.enabled,
-                    uri: serverConfig.externalApps.advertisements.uri
+                    enabled: serverConfig.externalApps.editor.enabled,
+                    uri: serverConfig.externalApps.editor.uri
                 }
             }
         );
 
-        const availableByConfiguration = serverConfig.externalApps.advertisements.enabled;
+        const availableByConfiguration = serverConfig.externalApps.editor.enabled;
         const availableByPermissions = this._isAvailableByPermission();
-        const availableByData = this._isAvailableByData(args.entry);
+        const availableByData = this._isAvailableByData(args);
         const result = availableByConfiguration && availableByData && availableByPermissions;
         this._logger.info(`check if view is available`, {
             result,
@@ -53,10 +54,11 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
     }
 
     private _isAvailableByPermission(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);
+        return this._appPermissions.hasPermission(KMCPermissions.CUEPOINT_MANAGE);
     }
 
-    private _isAvailableByData(entry: KalturaMediaEntry): boolean {
+    private _isAvailableByData(args: AdvertisementsAppViewArgs): boolean {
+        const { entry, hasSource} = args;
         const entryReady = entry.status === KalturaEntryStatus.ready;
         const isEntryReplacing = entry.replacementStatus !== KalturaEntryReplacementStatus.none;
         const isLiveEntry = entry.mediaType === KalturaMediaType.liveStreamFlash ||
@@ -66,11 +68,12 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
         const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1 && !isExternalMedia;
 
-        const result = entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
+        const result = hasSource && entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
 
         this._logger.debug(`conditions used to check availability status by data`, () => (
             {
                 result,
+                hasSource,
                 entryReady,
                 isLiveEntry,
                 isEntryReplacing,

@@ -13,12 +13,13 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 export enum ContentPlaylistViewSections {
     Metadata = 'Metadata',
     Content = 'Content',
-    ContentRuleBased = 'ContentRuleBased'
+    ContentRuleBased = 'ContentRuleBased',
+    ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
 }
 
 export interface ContentPlaylistViewArgs {
     playlist: KalturaPlaylist;
-    section?: ContentPlaylistViewSections;
+    section: ContentPlaylistViewSections;
     activatedRoute?: ActivatedRoute;
 }
 
@@ -35,28 +36,35 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
     }
 
     isAvailable(args: ContentPlaylistViewArgs): boolean {
-        const section = args.section ? args.section : this._getSectionFromActivatedRoute(args.activatedRoute, args.playlist);
+        const section = args.section === ContentPlaylistViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute, args.playlist) : args.section;
         this._logger.info(`handle isAvailable action by user`, { playlistId: args.playlist.id, section });
         return this._isSectionEnabled(section, args.playlist);
     }
 
     private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute, playlist: KalturaPlaylist): ContentPlaylistViewSections {
-        const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
         let result = null;
-        switch (sectionToken) {
-            case 'content':
-                result = playlist.playlistType === KalturaPlaylistType.staticList
-                    ? ContentPlaylistViewSections.Content
-                    : ContentPlaylistViewSections.ContentRuleBased;
-                break;
-            case 'metadata':
-                result = ContentPlaylistViewSections.Metadata;
-                break;
-            default:
-                break;
-        }
 
-        this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+        if (activatedRoute) {
+            try {
+                const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
+                switch (sectionToken) {
+                    case 'content':
+                        result = playlist.playlistType === KalturaPlaylistType.staticList
+                            ? ContentPlaylistViewSections.Content
+                            : ContentPlaylistViewSections.ContentRuleBased;
+                        break;
+                    case 'metadata':
+                        result = ContentPlaylistViewSections.Metadata;
+                        break;
+                    default:
+                        break;
+                }
+
+                this._logger.debug(`sectionToken mapped to section`, { section: result, sectionToken });
+            } catch (e) {
+                this._logger.error(`failed to resolve section from activated route`);
+            }
+        }
 
         return result;
     }
@@ -90,6 +98,9 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
                 result = playlist.playlistType === KalturaPlaylistType.dynamic;
                 break;
             case ContentPlaylistViewSections.Metadata:
+                // metadata section is always available to the user.
+                // if you need to change this you will need to resolve at runtime
+                // the default section to open
                 result = true;
                 break;
             default:

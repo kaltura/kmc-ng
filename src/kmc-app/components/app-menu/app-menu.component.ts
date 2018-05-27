@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
-import { AppAuthentication, AppUser, AppNavigator } from 'app-shared/kmc-shell';
+import { AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
 
@@ -30,6 +30,10 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _showChangelog = false;
     public _helpMenuOpened = false;
     public _powerUser = false;
+    public _userManualLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.userManual;
+    public _kmcOverviewLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.kmcOverview;
+    public _mediaManagementLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.mediaManagement;
+    public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.support;
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -54,7 +58,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 }
             });
         this._userContext = userAuthentication.appUser;
-        this.menuConfig = this._kmcMainViews.createMenu();
+        this.menuConfig = this._kmcMainViews.getMenu();
         this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'left';
         });
@@ -105,9 +109,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
         this._helpmenu.close();
     }
 
-    navigate(path):void{
-        this.router.navigate([path]);
-    }
 
     ngOnDestroy() {
     }

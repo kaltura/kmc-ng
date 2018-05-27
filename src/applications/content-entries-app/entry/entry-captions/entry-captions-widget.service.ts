@@ -95,6 +95,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         ({ relevantCaption, uploadedFile }) => {
           switch (uploadedFile.status) {
             case TrackedFileStatuses.prepared:
+              relevantCaption.uploading = true;
               relevantCaption.serverUploadToken = (<NewEntryCaptionFile>uploadedFile.data).serverUploadToken;
               this._syncBusyState();
               break;
@@ -111,7 +112,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               this._syncBusyState();
               break;
             case TrackedFileStatuses.uploading:
-              relevantCaption.progress = (uploadedFile.progress * 100).toFixed(0);
+              const progress = Number((uploadedFile.progress * 100).toFixed(0));
+              relevantCaption.progress = progress > 100 ? 100 : progress;
               relevantCaption.uploading = true;
               relevantCaption.uploadFailure = false;
               break;
@@ -213,7 +215,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     public _getCaptionStatus(caption: CaptionRow): string {
       let status = '';
-      if (typeof caption.status !== undefined) {
+      if (caption.status !== null) {
         switch (caption.status) {
           case KalturaCaptionAssetStatus.error:
             status = this._appLocalization.get('applications.content.entryDetails.captions.error');
@@ -248,7 +250,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       label: 'English',
       isDefault: 0,
       fileExt: '',
-      status: KalturaCaptionAssetStatus.queued
+      status: null
     };
 
     // create a copy of the captions array without a reference to the original array
