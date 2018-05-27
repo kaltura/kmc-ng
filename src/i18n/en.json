@@ -2361,7 +2361,7 @@
                         "title": "Add Entitlement",
                         "explanation": "Select the root category integrated with your application and label it below.",
                         "addPrivacyContextLabel": "Add Privacy Context Label",
-                        "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+                        "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the selected category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
                         "apply": "Apply",
                         "errors": {
                             "requiredPrivacyContextLabel": "You must enter a Privacy Context Label."
