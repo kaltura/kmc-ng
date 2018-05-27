@@ -18,10 +18,10 @@
     display: block;
     margin-bottom: 12px;
   }
-  .kTag{
+  .kPublisher{
     margin-bottom: 12px;
   }
-  .kTags{
+  .kPublishers{
     padding: 12px;
     height: 330px;
     overflow-y: auto;
@@ -45,6 +45,16 @@
   border-top: 1px solid $kGrayscale4;
   align-items: center;
   justify-content: center;
+}
+
+:host /deep/ p-checkbox {
+  display: flex;
+  .ui-chkbox-label {
+    font-size: 15px;
+    font-weight: 400;
+    overflow-x: hidden;
+    margin-left: 4px;
+  }
 }
 
 :host /deep/ .ui-autocomplete {
