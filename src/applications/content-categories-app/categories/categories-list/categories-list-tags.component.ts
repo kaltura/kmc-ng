@@ -54,7 +54,7 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
   }
 
   removeTag(tag: any) {
-      this._logger.info(`handle remove tag action by user`, { tag });
+      this._logger.info(`handle remove tag action by user`, { type: tag.type, value: tag.value });
 
       if (tag.dataFetchSubscription)
       {

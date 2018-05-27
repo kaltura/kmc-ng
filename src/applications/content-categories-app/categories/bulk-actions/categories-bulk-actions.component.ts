@@ -169,9 +169,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // owner changed
   onOwnerChanged(owners: KalturaUser[]): void {
-      this._logger.info(`handle owner changed action`, { owners });
+
     const executeAction = () => {
       if (this._selectedCateogoriesWithPrivacyContext.length && owners && owners.length) {
+          this._logger.info(`handle owner changed action`, () => ({ owners: owners.map(owner => owner.id) }));
         this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeOwnerService, owners[0]);
       }
     };
@@ -320,8 +321,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private _moveCategories(): void {
-      this._logger.info(`handle move categories action`, { categories: this.selectedCategories });
+
     if (this.selectedCategories.length > 0) {
+      this._logger.info(`handle move categories action`, () => ({ categories: this.selectedCategories.map(category => category.id) }));
+
       const movingOnlySiblings: boolean = this.selectedCategories.every((category) => {
         return category.parentId === this.selectedCategories[0].parentId;
       });

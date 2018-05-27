@@ -405,7 +405,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     onCategoryAdded(category: KalturaCategory): void {
-        this._logger.info(`handle category added event`, { category });
+        this._logger.info(`handle category added event`);
         if (!category) {
             this._logger.info('no category provided, abort action');
         } else {

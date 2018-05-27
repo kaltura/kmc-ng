@@ -128,13 +128,16 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   public _addUsers() {
-      this._logger.info(`handle add users action`, {
-          users: this._users,
-          categoryId: this.category.id,
-          permissionLevel: this._selectedPermissionLevel,
-          updateMethod: this._selectedUpdateMethod
-      });
+
     if (this._users) {
+
+        this._logger.info(`handle add users action`, () =>({
+            users: this._users.map(user => user.id || user.email),
+            categoryId: this.category.id,
+            permissionLevel: this._selectedPermissionLevel,
+            updateMethod: this._selectedUpdateMethod
+        }));
+
       this._addUsersService
         .addUsers(
           {

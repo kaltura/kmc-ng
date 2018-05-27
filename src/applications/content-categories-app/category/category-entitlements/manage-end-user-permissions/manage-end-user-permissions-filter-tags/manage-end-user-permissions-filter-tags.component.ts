@@ -45,7 +45,7 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
   }
 
   removeTag(tag: any) {
-      this._logger.info(`handle remove tag action by user`, { tag });
+      this._logger.info(`handle remove tag action by user`, { type: tag.type, value: tag.value });
     if (listTypes.indexOf(tag.type) > -1) {
       // remove tag of type list from filters
       const previousData = this._manageEndUserPermissionsService.cloneFilter(tag.type, []);
