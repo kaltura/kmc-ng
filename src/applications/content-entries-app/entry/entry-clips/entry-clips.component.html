@@ -20,10 +20,10 @@
 				</p-column>
 				<p-column field="name" header="{{'applications.content.entryDetails.clips.name' | translate}}" [sortable]="'custom'">
           <ng-template let-col let-entry="rowData" pTemplate="body">
-            <span class="kTableColumn" [kTooltip]="entry[col.field]" [maxWidth]="300">{{entry[col.field]}}</span>
+            <span class="kTableColumn" [kTooltip]="entry[col.field]">{{entry[col.field]}}</span>
           </ng-template>
 				</p-column>
-				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'50px'}">
+				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'120px'}">
 				</p-column>
 				<p-column field="createdAt" header="{{'applications.content.entryDetails.clips.created' | translate}}" [sortable]="'custom'" [style]="{'width':'110px'}">
 					<ng-template let-col let-entry="rowData" pTemplate="body">
@@ -50,6 +50,9 @@
 
 <kPopupWidget #clipAndTrim [fullScreen]="true">
   <ng-template>
-    <kClipAndTrim [entry]="_widgetService.data" [parentPopupWidget]="clipAndTrim"></kClipAndTrim>
+      <kEntryEditor [entry]="_widgetService.data"
+                    [entryHasSource]="true"
+                    [tab]="'editor'"
+                    [parentPopupWidget]="clipAndTrim"></kEntryEditor>
   </ng-template>
 </kPopupWidget>

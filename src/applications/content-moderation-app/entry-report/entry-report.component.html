@@ -25,7 +25,7 @@
 
     <div class="kContainer">
       <div class="kFrame">
-        <k-player #player [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [flashvars]="_playerConfig.flashvars" [width]="340" [height]="190" [lazy]="true"></k-player>
+        <k-player #player [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [flashvars]="_playerConfig.flashvars" [width]="340" [height]="190" [lazy]="true"></k-player>
       </div>
 
       <div class="appSubMenu">
@@ -57,7 +57,8 @@
           </div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.moderationDetails.entryId' | translate}}</span>
-            <a (click)="_navigateToEntry(_entry.rootEntryId)">{{_entry.id}}</a>
+            <a *ngIf="_isEntryLinkAvailable" (click)="_navigateToEntry(_entry.id)">{{_entry.id}}</a>
+            <span *ngIf="!_isEntryLinkAvailable">{{_entry.id}}</span>
           </div>
           <div class="kRow" *ngIf="_hasDuration">
             <span class="kLabels">{{'applications.content.moderationDetails.duration' | translate}}</span>
@@ -73,7 +74,8 @@
           </div>
           <div class="kRow" *ngIf="_isClip">
             <span class="kLabels">{{'applications.content.moderationDetails.clippedFrom' | translate}}</span>
-            <a (click)="_navigateToEntry(_entry.rootEntryId)">{{_entry.rootEntryId}}</a>
+            <a *ngIf="_isEntryLinkAvailable" (click)="_navigateToEntry(_entry.rootEntryId)">{{_entry.rootEntryId}}</a>
+            <span *ngIf="!_isEntryLinkAvailable">{{_entry.rootEntryId}}</span>
           </div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.moderationDetails.creator' | translate}}</span>

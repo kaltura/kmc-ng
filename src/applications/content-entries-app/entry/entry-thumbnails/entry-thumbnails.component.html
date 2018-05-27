@@ -37,13 +37,6 @@
                   field="distributors"
                   header="{{'applications.content.entryDetails.thumbnails.distributors' | translate}}">
 				</p-column>
-        <p-column field="tags"
-                  [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)"
-                  header="{{'applications.content.entryDetails.thumbnails.tags' | translate}}">
-          <ng-template let-col let-thumb="rowData" pTemplate="body">
-            <span>{{thumb.tags | tags}}</span>
-          </ng-template>
-        </p-column>
 				<p-column *ngIf="_kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted"
                   field="isDefault" header="{{'applications.content.entryDetails.thumbnails.defaultTitle' | translate}}">
 					<ng-template let-col let-thumb="rowData" pTemplate="body">

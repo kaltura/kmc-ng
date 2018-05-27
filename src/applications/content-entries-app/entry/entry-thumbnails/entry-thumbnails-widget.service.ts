@@ -42,7 +42,6 @@ export interface ThumbnailRow {
   status: KalturaThumbAssetStatus;
   uploadStatus: boolean;
   fileExt: string;
-  tags: string;
 }
 
 @Injectable()
@@ -125,8 +124,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                     distributors: "",
                     url: "",
                     uploadStatus: false,
-                    fileExt: thumbnail.fileExt,
-                    tags: thumbnail.tags
+                    fileExt: thumbnail.fileExt
                 };
                 thumb.isDefault = thumbnail.tags.indexOf("default_thumb") > -1;
                 thumb.url = serverConfig.cdnServers.serverUri + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
@@ -159,8 +157,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                         distributors: profile.name,
                         url: '',
                         uploadStatus: false,
-                        fileExt: '',
-                        tags: ''
+                        fileExt: ''
                     };
                     thumbs.push(missingThumb);
                 }
@@ -257,7 +254,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
 
         this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
             .cancelOnDestroy(this, this.widgetReset$)
-            .tag('show-blocker')
+            .tag('block-shell')
             .monitor('delete thumb')
             .subscribe(
                 () => {

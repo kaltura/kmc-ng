@@ -6,10 +6,14 @@ import {UpdateClipsEvent} from 'app-shared/kmc-shared/events/update-clips-event'
 import {AppEventsService} from 'app-shared/kmc-shared/app-events';
 import {
     AdvertisementsAppViewService,
-    ClipAndTrimAppViewService
+    ClipAndTrimAppViewService, QuizAppViewService
 } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
+import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 
 @Component({
@@ -24,19 +28,25 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() entry: KalturaMediaEntry = null;
   @Input() tab: 'quiz' | 'editor' | 'advertisements' = null;
+    @Input() entryHasSource = false;
 
   @Output() enteredDraftMode = new EventEmitter<void>();
   @Output() exitDraftMode = new EventEmitter<void>();
+    @Output() closeEditor = new EventEmitter<void>();
 
 
   public keditUrl: string;
   public _windowEventListener = null;
   public _keditConfig: any = null;
 
-  constructor(private appAuthentication: AppAuthentication,
+  constructor(private _appAuthentication: AppAuthentication,
+              private _contentEntryViewService: ContentEntryViewService,
               private _advertisementsAppViewService: AdvertisementsAppViewService,
               private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
+              private _quizAppViewService: QuizAppViewService,
               private _permissionService: KMCPermissionsService,
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization,
               private _logger: KalturaLogger,
               private _appEvents: AppEventsService,
               ) {
@@ -68,7 +78,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 		  */
           if (postMessageData.messageType === 'kea-get-display-name') {
               // send the user's display name based on the user ID
-              const displayName = this.appAuthentication.appUser.fullName;
+              const displayName = this._appAuthentication.appUser.fullName;
               e.source.postMessage({
                   'messageType': 'kea-display-name',
                   'data': displayName
@@ -111,7 +121,21 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
           if (postMessageData.messageType === 'kea-advertisements-saved') {
               this.exitDraftMode.emit();
           } else if (postMessageData.messageType === 'kea-go-to-media') {
-              console.log('I will now go to media: ' + postMessageData.data);
+              this.closeEditor.emit();
+              this._contentEntryViewService.openById(postMessageData.data, ContentEntryViewSections.Metadata);
+          }
+
+          /* request for user ks.
+		  * message.data = {userKS}
+		  * should return a message {messageType:kea-ks, data: ks}
+		  */
+          if (postMessageData.messageType === 'kea-get-ks') {
+              // send the user's display name based on the user ID
+              const ks = this._appAuthentication.appUser.ks;
+              e.source.postMessage({
+                  'messageType': 'kea-ks',
+                  'data': ks
+              }, e.origin);
           }
       };
   }
@@ -145,13 +169,22 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
           const serviceUrl = getKalturaServerUri();
           const tabs = {};
-          const clipAndTrimAvailable = this._clipAndTrimAppViewService.isAvailable({entry: this.entry});
-          const advertismentsAvailable = this._advertisementsAppViewService.isAvailable({entry: this.entry});
+          const clipAndTrimAvailable = this._clipAndTrimAppViewService.isAvailable({
+              entry: this.entry,
+              hasSource: this.entryHasSource
+          });
+          const advertismentsAvailable = this._advertisementsAppViewService.isAvailable({
+              entry: this.entry,
+              hasSource: this.entryHasSource
+          });
+          const quizAvailable = this._quizAppViewService.isAvailable({
+              entry: this.entry,
+              hasSource: this.entryHasSource
+          });
 
           if (clipAndTrimAvailable) {
               this._logger.debug('clip&trim views are available, add configuration for tabs: edit, quiz');
               Object.assign(tabs, {
-                  'quiz': {name: 'quiz', permissions: ['quiz'], userPermissions: ['quiz']},
                   'edit': {name: 'edit', permissions: ['clip', 'trim'], userPermissions: ['clip', 'trim']}
               });
           }
@@ -166,20 +199,36 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               };
           }
 
+          if (quizAvailable) {
+              this._logger.debug('quiz view is available, add configuration for tabs: quiz');
+              tabs['quiz'] = {
+                  name: 'quiz',
+                  permissions: ['quiz'],
+                  userPermissions: ['quiz']
+              };
+          }
+
+
           let requestedTabIsNotAvailable = false;
           let keditUrl = null;
           switch (this.tab) {
               case 'quiz':
+                  if (quizAvailable) {
+                      keditUrl = serverConfig.externalApps.editor.uri;
+                  } else {
+                      requestedTabIsNotAvailable = true;
+                  }
+                  break;
               case 'editor':
                   if (clipAndTrimAvailable) {
-                      keditUrl = serverConfig.externalApps.clipAndTrim.uri;
+                      keditUrl = serverConfig.externalApps.editor.uri;
                   } else {
                       requestedTabIsNotAvailable = true;
                   }
                   break;
               case 'advertisements':
                   if (advertismentsAvailable) {
-                      keditUrl = serverConfig.externalApps.advertisements.uri;
+                      keditUrl = serverConfig.externalApps.editor.uri;
                   } else {
                       requestedTabIsNotAvailable = true;
                   }
@@ -200,10 +249,10 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
                       'service_url': serviceUrl,
 
                       /* the partner ID to use */
-                      'partner_id': this.appAuthentication.appUser.partnerId,
+                      'partner_id': this._appAuthentication.appUser.partnerId,
 
                       /* Kaltura session key to use */
-                      'ks': this.appAuthentication.appUser.ks,
+                      'ks': this._appAuthentication.appUser.ks,
 
                       /* language - used by priority:
 					  * 1. Custom locale (locale_url)

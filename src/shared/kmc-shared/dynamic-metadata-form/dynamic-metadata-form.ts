@@ -47,7 +47,7 @@ export class DynamicMetadataForm
                 let formValue = {};
 
                 if (this._metadataProfile && serverMetadata && serverMetadata.xml) {
-                    const rawValue = XmlParser.toJson(serverMetadata.xml);
+                    const rawValue = XmlParser.toJson(serverMetadata.xml, false);
                     formValue = this._toFormValue(rawValue['metadata'], this._metadataProfile.items);
                 }
 

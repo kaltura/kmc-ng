@@ -1,22 +1,32 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
 import {AppLocalization, IAppStorage} from '@kaltura-ng/kaltura-common';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {Router, ActivatedRoute} from "@angular/router";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
+import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
+
+export enum HeaderTypes {
+    error = 1,
+    attention = 2,
+    cancel = 3,
+    retry = 4
+}
 
 export interface Confirmation {
 	message: string;
 	key?: string;
 	icon?: string;
 	header?: string;
+	headerType?: HeaderTypes,
 	accept?: Function;
 	reject?: Function;
 	acceptVisible?: boolean;
 	rejectVisible?: boolean;
 	acceptEvent?: EventEmitter<any>;
 	rejectEvent?: EventEmitter<any>;
+	alignMessage?: 'left' | 'center' | 'byContent';
 }
 
 export interface GrowlMessage {
@@ -38,6 +48,12 @@ export class BrowserService implements IAppStorage {
     private _growlMessage = new Subject<GrowlMessage>();
     private _sessionStartedAt: Date = new Date();
     public growlMessage$ = this._growlMessage.asObservable();
+    private _currentUrl: string;
+    private _previousUrl: string;
+
+    public get previousUrl(): string {
+        return this._previousUrl;
+    }
 
     private _onConfirmationFn: OnShowConfirmationFn = (confirmation: Confirmation) => {
         // this is the default confirmation dialog provided by the browser.
@@ -67,10 +83,21 @@ export class BrowserService implements IAppStorage {
     constructor(private localStorage: LocalStorageService,
                 private sessionStorage: SessionStorageService,
                 private _router: Router,
+                private _logger: KalturaLogger,
                 private _appLocalization: AppLocalization) {
         this._recordInitialQueryParams();
+        this._recordRoutingActions();
     }
 
+    private _recordRoutingActions(): void {
+        this._currentUrl = this._router.url;
+        this._router.events
+            .filter(event => event instanceof NavigationEnd)
+            .subscribe((event: NavigationEnd) => {
+                this._previousUrl = this._currentUrl;
+                this._currentUrl = event.url;
+            });
+    }
     private _downloadContent(url: string): void {
         return Observable.create(observer => {
             const xhr = new XMLHttpRequest();
@@ -105,13 +132,44 @@ export class BrowserService implements IAppStorage {
         }
     }
 
+    private _fixConfirmation(confirmation: Confirmation): void {
+        if (!confirmation) {
+            return;
+        }
+
+        if (confirmation.headerType) {
+            switch (confirmation.headerType) {
+                case HeaderTypes.attention:
+                    confirmation.header = this._appLocalization.get('app.common.attention');
+                    break;
+                case HeaderTypes.error:
+                    confirmation.header = this._appLocalization.get('app.common.error');
+                    break;
+                case HeaderTypes.retry:
+                    confirmation.header = this._appLocalization.get('app.common.retry');
+                    break;
+                case HeaderTypes.cancel:
+                    confirmation.header = this._appLocalization.get('app.common.cancel');
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (!(confirmation.header || '').trim()) {
+            confirmation.header = this._appLocalization.get('app.common.attention');
+        }
+    }
+
     public confirm(confirmation: Confirmation) {
         confirmation.key = "confirm";
+        this._fixConfirmation(confirmation);
         this._onConfirmationFn(confirmation);
     }
 
     public alert(confirmation: Confirmation) {
         confirmation.key = "alert";
+        this._fixConfirmation(confirmation);
         this._onConfirmationFn(confirmation);
     }
 
@@ -308,7 +366,7 @@ export class BrowserService implements IAppStorage {
                     header: this._appLocalization.get('app.UnpermittedActionReasons.header'),
                     message: this._appLocalization.get('app.UnpermittedActionReasons.messageNav'),
                     accept: () => {
-                        this._router.navigate([ '/default']);
+                        this.navigateToDefault();
                     }
                 }
             );
@@ -322,6 +380,29 @@ export class BrowserService implements IAppStorage {
                 }
             );
         }
+    }
+
+    public navigateToLogin(): void {
+        this._logger.info(`navigate to login view`);
+        this._router.navigateByUrl(kmcAppConfig.routing.loginRoute, { replaceUrl: true });
+    }
+
+    public navigateToDefault(removeCurrentFromBrowserHistory: boolean = true): void {
+        let extras: NavigationExtras = null;
+        if (removeCurrentFromBrowserHistory) {
+            extras = { replaceUrl: true };
+        }
+        this._logger.info(`navigate to default view`, {removeCurrentFromBrowserHistory});
+        this._router.navigate([kmcAppConfig.routing.defaultRoute], extras);
+    }
+
+    public navigateToError(): void {
+        this._logger.info(`navigate to error view`);
+        this._router.navigateByUrl(kmcAppConfig.routing.errorRoute, { replaceUrl: true });
+    }
+
+    public navigate(path: string): void {
+        this._router.navigateByUrl(path);
     }
 }
 

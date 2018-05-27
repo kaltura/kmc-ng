@@ -10,7 +10,7 @@
 			<p-dataTable [value]="(_widgetService._relatedFiles$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_relatedTableRowStyle" >
 				<p-column styleClass="kFileName" field="filename" header="{{'applications.content.entryDetails.related.name' | translate}}" [style]="{'padding-left': '24px'}">
           <ng-template let-col let-file="rowData" pTemplate="body">
-            <span class="kTableColumn" [kTooltip]="file[col.field]" [maxWidth]="300">{{file[col.field]}}</span>
+            <span class="kTableColumn" [kTooltip]="file[col.field]">{{file[col.field]}}</span>
           </ng-template>
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}" [style]="{'width':'140px', 'overflow':'visible'}">

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router } from '@angular/router';
 import {serverConfig} from 'config/server';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 @Injectable()
 export class UsageDashboardMainViewService extends KmcMainViewBaseService {
@@ -21,10 +21,9 @@ export class UsageDashboardMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return serverConfig.externalApps.usageDashboard.enabled && this._appPermissions.hasAnyPermissions([
-            KMCPermissions.FEATURE_ENABLE_USAGE_DASHBOARD,
-            KMCPermissions.ANALYTICS_BASE
-        ]);
+        return serverConfig.externalApps.usageDashboard.enabled &&
+            this._appPermissions.hasPermission(KMCPermissions.FEATURE_ENABLE_USAGE_DASHBOARD) &&
+            this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE);
     }
 
     getRoutePath(): string {

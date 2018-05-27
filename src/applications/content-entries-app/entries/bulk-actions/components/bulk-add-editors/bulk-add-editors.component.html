@@ -1,0 +1,25 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kContent kOverrideFAIcons">
+    <span class="kTitle">{{'applications.content.bulkActions.addEditors' | translate}}</span>
+    <div class="kEditors">
+      <span class="kLabel">{{'applications.content.bulkActions.addEditorsLabel' | translate}}</span>
+      <kAutoComplete [(ngModel)]="users"
+                     suggestionItemField="item"
+                     suggestionSelectableField="isSelectable"
+                     suggestionLabelField="name"
+                     field="screenName"
+                     [tooltipResolver]="'__tooltip'"
+                     [classField]="'__class'"
+                     [multiple]="true"
+                     [limitToSuggestions]="false"
+                     [minLength]="3"
+                     [suggestionsProvider]="_usersProvider"
+                     [onItemAdding]="_convertUserInputToValidValue"
+                     (completeMethod)="_searchUsers($event)">
+      </kAutoComplete>
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>
+    </div>
+  </div>
+</k-area-blocker>

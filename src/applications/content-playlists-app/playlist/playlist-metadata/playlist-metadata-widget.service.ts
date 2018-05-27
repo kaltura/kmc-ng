@@ -42,7 +42,7 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
         .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
-            isValid: this.metadataForm.status === 'VALID',
+            isValid: this.metadataForm.status !== 'INVALID',
             isDirty: this.metadataForm.dirty
           });
         }
@@ -78,10 +78,6 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
   }
 
   protected onActivate(firstTimeActivating: boolean): void {
-    if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
-      this.updateState({ isDirty: true });
-    }
-
     this.metadataForm.reset({
       name: this.data.name,
       description: this.data.description,

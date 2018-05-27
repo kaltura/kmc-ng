@@ -93,7 +93,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
               private browserService: BrowserService,
               private _appLocalization: AppLocalization,
               _logger: KalturaLogger) {
-    super(_logger);
+    super(_logger.subLogger('ManageEndUserPermissionsService'));
     this._prepare();
   }
 
@@ -134,7 +134,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
 
   public reload(): void {
+      this._logger.info(`handle reload action by user`);
     if (this._users.state.getValue().loading) {
+        this._logger.info(`another load request is in progress, skip duplicating request`);
       return;
     }
 
@@ -153,9 +155,12 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
       this._users.state.next({loading: true, errorMessage: null});
 
+    this._logger.info(`handle loading category data`);
+
       this._querySubscription = this.buildQueryRequest()
       .cancelOnDestroy(this)
       .subscribe(response => {
+              this._logger.info(`handle successful loading category data`);
           this._querySubscription = null;
 
           this._users.state.next({loading: false, errorMessage: null});
@@ -169,6 +174,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
         error => {
           this._querySubscription = null;
           const errorMessage = (error && error.message) ? error.message : typeof error === 'string' ? error : 'invalid error';
+            this._logger.warn(`handle failed loading category data`, { errorMessage });
           this._users.state.next({loading: false, errorMessage});
         });
   }
@@ -353,7 +359,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
   }
 
   public deleteUsers(categoryId: number, usersIds: string[]): Observable<void> {
+      this._logger.info(`handle delete users request`, { categoryId, usersIds });
     if (!usersIds || !usersIds.length) {
+        this._logger.info(`no users were provided abort action`);
       return Observable.throw('Unable to delete users');
     }
 
@@ -375,7 +383,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
   }
 
   public setPermissionLevel(categoryId: number, usersId: string[], permissionLevel: KalturaCategoryUserPermissionLevel): Observable<void> {
+      this._logger.info(`handle set permission level action`, { categoryId, usersId, permissionLevel });
     if (!usersId || !usersId.length || typeof permissionLevel === 'undefined') {
+        this._logger.info(`no users or permissionLevel were provided abort action`);
       return Observable.throw('Unable to set permission level for users');
     }
 
@@ -405,7 +415,9 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
   }
 
   public setUpdateMethod(categoryId: number, usersIds: string[], updateMethod: KalturaUpdateMethodType): Observable<void> {
+      this._logger.info(`handle set update method action`, { categoryId, usersIds, updateMethod });
     if (!usersIds || !usersIds.length || typeof updateMethod === 'undefined') {
+        this._logger.info(`no users or updateMethod were provided abort action`);
       return Observable.throw('Unable to set update method for users');
     }
 

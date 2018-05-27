@@ -96,6 +96,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
   }
 
   private _prepare(): void {
+      this._logger.trace(`handle prepare service action`);
     if (!this._isReady) {
       this._registerToFilterStoreDataChanges();
       this._isReady = true;
@@ -117,7 +118,9 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
   }
 
   public reload(): void {
+      this._logger.info(`handle reload request by user`);
     if (this._feeds.state.getValue().loading) {
+        this._logger.debug(`loading in progress, skip duplicating request`);
       return;
     }
 
@@ -137,9 +140,13 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
     this._feeds.state.next({loading: true, errorMessage: null});
 
+    this._logger.debug(`handle loading of feeds data`);
+
     this._querySubscription = this.buildQueryRequest()
       .cancelOnDestroy(this)
       .subscribe((response: Feeds) => {
+              this._logger.trace(`handle successful loading of feeds data`);
+
           this._querySubscription = null;
 
           this._feeds.state.next({loading: false, errorMessage: null});
@@ -152,6 +159,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         error => {
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+            this._logger.warn(`notify failure during loading of feeds data`, { errorMessage });
           this._feeds.state.next({loading: false, errorMessage});
         });
   }
@@ -202,7 +210,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
           if (feed instanceof KalturaBaseSyndicationFeed) {
             if (feed instanceof KalturaGenericSyndicationFeed && !(feed instanceof KalturaGenericXsltSyndicationFeed)) {
               this._logger.warn(
-                `feed with id '${feed.id}' was removed from list since it's a generic syndication feed with XSLT type which is not generic.`);
+                `feed was removed from list since it's a generic syndication feed with XSLT type which is not generic.`, { id: feed.id });
               return undefined; // stop processing this iteration if it's a generic syndication feed with XSLT type which is not generic
             } else {
               feedsArray.push(feed);
@@ -211,7 +219,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         });
         return {items: feedsArray, totalCount: response.totalCount};
       })
-        .filter(Boolean)
+        .filter(Boolean);
     } catch (err) {
       return Observable.throw(err);
     }
@@ -227,7 +235,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     )
       .map((response: KalturaPlaylistListResponse) => {
         return response.objects;
-      });
+      }).monitor('FeedsService: get playlists');
 
   }
 
@@ -245,7 +253,9 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         requests.push(new SyndicationFeedDeleteAction({id}));
       });
 
-      this._transmit(requests, true).subscribe(
+      this._transmit(requests, true)
+          .monitor('FeedsService: delete feeds')
+          .subscribe(
         result => {
           observer.next({});
           observer.complete();
@@ -330,16 +340,20 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
   }
 
   public confirmDelete(feeds: KalturaBaseSyndicationFeed[]): Observable<{ confirmed: boolean, error?: Error }> {
+
     if (!feeds || !feeds.length) {
       return Observable.throw(new Error(this._appLocalization.get('applications.content.syndication.errors.deleteAttemptFailed')))
     }
 
     return Observable.create(observer => {
+
+        this._logger.info(`confirm delete action`, { feeds: feeds.map(feed => feed.id) });
+
       const message: string = feeds.length < 5 ?
         (feeds.length === 1 ? this._appLocalization.get('applications.content.syndication.deleteConfirmation.singleFeed',
           {0: feeds[0].name}) :
           this._appLocalization.get('applications.content.syndication.deleteConfirmation.upTo5Feed',
-            {0: feeds.map(feed => feed.name).join(', ')})) :
+            {0: feeds.map((feed, i) => `${i + 1}: ${feed.name}`).join('\n')})) :
         this._appLocalization.get('applications.content.syndication.deleteConfirmation.moreThan5');
 
       this._browserService.confirm({
@@ -355,7 +369,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         }
       );
       return () => {
-      }
+      };
     });
   }
 
@@ -366,13 +380,13 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
     return this._kalturaClient.request(
       new SyndicationFeedGetEntryCountAction({feedId})
-    );
+    ).monitor('FeedsService: getFeedEntryCount');
   }
 
   public update(id: string, syndicationFeed: KalturaBaseSyndicationFeed): Observable<void> {
     return this._kalturaClient.request(
       new SyndicationFeedUpdateAction({id, syndicationFeed})
-    )
+    ).monitor('FeedsService: update')
       .map(() => undefined);
   }
 
@@ -382,6 +396,6 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     }
     return this._kalturaClient.request(
       new SyndicationFeedAddAction({syndicationFeed})
-    );
+    ).monitor('FeedsService: create');
   }
 }

@@ -3,22 +3,31 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {Observable} from 'rxjs/Observable';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Injectable()
 export class CategoriesUtilsService {
 
   constructor(private _appLocalization: AppLocalization,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
+      this._logger = _logger.subLogger('CategoriesUtilsService');
   }
 
   public confirmDelete(categoryToDelete: KalturaCategory, categories?: KalturaCategory[]): Observable<{ confirmed: boolean, error?: Error, categoryIndex?: number }> {
+      this._logger.info(
+          `handle confirm delete action, show confirmation`,
+          { categoryId: categoryToDelete ? categoryToDelete.id : null }
+      );
     if (!categoryToDelete) {
-      return Observable.throw(new Error('Invalid category parameter'))
+        this._logger.warn(`no category provided, abort action, throw error`);
+      return Observable.throw(new Error('Invalid category parameter'));
     }
 
     return Observable.create(observer => {
       const selectedIndex = categories && categories.indexOf(categoryToDelete);
       if (categories && selectedIndex === -1) {
+          this._logger.warn(`provided category is not found, abort action, throw error`);
         observer.error(new Error('category could not be found in given list'));
       } else {
         const hasSubcategories: boolean = categoryToDelete.directSubCategoriesCount > 0;
@@ -38,9 +47,11 @@ export class CategoriesUtilsService {
             header: this._appLocalization.get('applications.content.categories.deleteCategory'),
             message: message,
             accept: () => {
+                this._logger.info(`user confirmed, proceed action`);
               observer.next({failed: false, confirmed: true, categoryIndex: selectedIndex});
               observer.complete();
             }, reject: () => {
+                  this._logger.info(`user didn't confirm, abort action`);
             observer.next({failed: false, confirmed: false});
             observer.complete();
           }
@@ -54,8 +65,10 @@ export class CategoriesUtilsService {
 
   // bulk delete
   public confirmDeleteMultiple(categoriesToDelete: KalturaCategory[], categories?: KalturaCategory[]): Observable<{ confirmed: boolean, error?: Error }> {
+      this._logger.info(`handle confirm delete multiple action, show confirmation`, { categoriesToDelete });
     return Observable.create(observer => {
       if (!categoriesToDelete || !categoriesToDelete.length || (categories && !categoriesToDelete.every(c => categories.indexOf(c) > -1))) {
+          this._logger.warn(`no categories provided, abort action, throw error`);
         observer.error(new Error('At least one of the categories to delete could not be found in given list'));
       } else {
         let message = '';
@@ -78,9 +91,11 @@ export class CategoriesUtilsService {
             header: this._appLocalization.get('applications.content.categories.deleteCategories'),
             message: message,
             accept: () => {
+                this._logger.info(`user confirmed, proceed action`);
               observer.next({confirmed: true});
 
             }, reject: () => {
+                  this._logger.info(`user didn't confirm, abort action`);
             observer.next({confirmed: false});
           }
           }

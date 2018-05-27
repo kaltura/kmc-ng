@@ -20,7 +20,6 @@
         <div class="kTitle kTableColumn"
              [class.kProfileDisabled]="schema?.profileDisabled"
              [kTooltip]="schema?.profileDisabled ? ('applications.settings.metadata.table.disabledLabel' | translate) : schema[col.field]"
-             [maxWidth]="300"
              (click)="_onActionSelected('edit', schema)">
           {{schema[col.field]}} <span *ngIf="schema?.profileDisabled">*</span>
         </div>

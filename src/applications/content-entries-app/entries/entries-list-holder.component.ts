@@ -110,6 +110,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   public _onActionSelected({ action, entry }) {
+      this._entriesList.clearSelection();
     switch (action) {
       case 'preview':
           this._logger.info(`handle preview and ember action by user, publish 'PreviewAndEmbedEvent' event`, { entryId: entry.id });

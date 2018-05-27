@@ -1,11 +1,13 @@
-<div class="kAdvertisementsContainer">
+<div class="kEditorContainer">
   <div class="kHeader">
     <i class="kIconclose_small kClose" (click)="_close()"></i>
-    <span class="kTitle">{{'applications.content.entryDetails.advertisements.title' | translate}}</span>
+    <span class="kTitle">{{'applications.content.entryDetails.entryEditor.title' | translate}}</span>
   </div>
   <div class="kKeditHoster">
-    <kKeditHoster [tab]="'advertisements'"
+    <kKeditHoster [tab]="tab"
                   [entry]="entry"
+                  [entryHasSource]="entryHasSource"
+                  (closeEditor)="_confirmClose = false; _close()"
                   (enteredDraftMode)="_confirmClose = true"
                   (exitDraftMode)="_confirmClose = false"
     ></kKeditHoster>

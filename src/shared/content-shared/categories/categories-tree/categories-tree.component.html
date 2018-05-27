@@ -13,7 +13,7 @@
             (onNodeExpand)="_onNodeExpand($event)">
       <ng-template let-node pTemplate="default">
         <div class="kTreeNodeLabelWrapper">
-          <span class="kTreeNodeLabel">{{node.label}}</span>
+          <span class="kTreeNodeLabel" [kTooltip]="node.label" [delay]="1000">{{node.label}}</span>
           <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
         </div>
         <div *ngIf="node.expanded && node.childrenStatus === 1"
@@ -34,7 +34,7 @@
       <ng-template let-node pTemplate="default">
         <div class="kTreeNodeLabelWrapper" (click)="_onNodeSelect(node)">
           <p-radioButton [value]="node" [ngModel]="_selectedTreeNode"></p-radioButton>
-          <span class="kTreeNodeLabel kTreeNodeLabelSingle">{{node.label}}</span>
+          <span class="kTreeNodeLabel kTreeNodeLabelSingle" [kTooltip]="node.label" [delay]="1000">{{node.label}}</span>
           <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
         </div>
         <div *ngIf="node.expanded && node.childrenStatus === 1"

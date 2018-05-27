@@ -47,7 +47,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
             .subscribe(
 				() => {
 					super.updateState({
-						isValid: this.usersForm.status === 'VALID',
+						isValid: this.usersForm.status !== 'INVALID',
 						isDirty: this.usersForm.dirty
 					});
 				}
@@ -95,7 +95,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 	    this._creator = "";
 	    this._owner = null;
 	    this.usersForm.reset({
-		    owners: null,
+		    owners: [],
 		    editors: [],
 		    publishers: []
 	    });

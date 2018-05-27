@@ -27,6 +27,8 @@ export class EntitlementComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _currentEditEntitlement: KalturaCategory = null;
   public _kmcPermissions = KMCPermissions;
+  public _manageHelpLinkExists = !!serverConfig.externalLinks.entitlements && !!serverConfig.externalLinks.entitlements.manage;
+
   @ViewChild('editEntitlementPopup') editEntitlementPopup: PopupWidgetComponent;
   @ViewChild('addNewEntitlement') addEntitlementPopup: PopupWidgetComponent;
 

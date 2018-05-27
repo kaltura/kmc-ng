@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
@@ -87,6 +87,8 @@ import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger/kaltura-logger.m
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
+import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -99,7 +101,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
 
 @NgModule({
   imports: <any>[
-    AuthModule,
+    AuthModule.forRoot(),
     FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -165,7 +167,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ChangeAccountComponent,
     ChangelogComponent,
     ChangelogContentComponent,
-    LoginByKSComponent
+    LoginByKSComponent,
+      NotFoundPageComponent
   ],
   bootstrap: <any>[
     AppComponent

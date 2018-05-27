@@ -30,6 +30,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { EntryStore } from '../entry-store.service';
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
@@ -45,7 +46,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
                 private _appAuthentication: AppAuthentication, private _browserService: BrowserService,
                 private _uploadManagement: UploadManagement, private _appEvents: AppEventsService,
-                private _logger: KalturaLogger) {
+                private _entryStore: EntryStore,
+                private _logger: KalturaLogger
+    ) {
         super(ContentEntryViewSections.Flavours);
 
         this._logger = _logger.subLogger('EntryFlavoursWidget');
@@ -219,6 +222,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         .subscribe(
                             response => {
                                 this._logger.info(`handle successful delete flavor action`);
+                                if (flavor.isSource) {
+                                    this._entryStore.updateHasSourceStatus(false);
+                                }
                                 this._refresh();
                                 this._browserService.scrollToTop();
                             },
@@ -296,9 +302,12 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     this._flavors.next({items: flavors});
                 },
                 error => {
-                    this._logger.warn(`handle failed convert request, show alert`, { errorMessage: error.message });
+                    const message = error.code === 'ORIGINAL_FLAVOR_ASSET_IS_MISSING'
+                      ? this._appLocalization.get('applications.content.entryDetails.flavours.missingOriginalFlavor')
+                      : this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure');
+                    this._logger.warn(`handle failed convert request, show alert`, { errorMessage: message });
                     this._showBlockerMessage(new AreaBlockerMessage({
-                        message: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure'),
+                        message,
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {

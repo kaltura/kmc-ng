@@ -35,6 +35,7 @@ import {
     KavaAppViewService,
     LiveDashboardAppViewService
 } from './component-views';
+import { QuizAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @NgModule({
     imports: <any[]>[],
@@ -77,6 +78,7 @@ export class KmcViewsModule {
                 KavaAppViewService,
                 ClipAndTrimAppViewService,
                 AdvertisementsAppViewService,
+                QuizAppViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };

@@ -8,12 +8,16 @@ import {KalturaGoogleSyndicationFeedAdultValues} from 'kaltura-ngx-client/api/ty
 import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
 import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kGoogleDestinationForm',
   templateUrl: './google-destination-form.component.html',
   styleUrls: ['./google-destination-form.component.scss'],
-  providers: [{provide: DestinationComponentBase, useExisting: GoogleDestinationFormComponent}]
+  providers: [
+      {provide: DestinationComponentBase, useExisting: GoogleDestinationFormComponent},
+      KalturaLogger.createLogger('GoogleDestinationFormComponent')
+  ]
 })
 export class GoogleDestinationFormComponent extends DestinationComponentBase implements OnInit, OnDestroy {
   @Input() mode: FeedFormMode;
@@ -35,6 +39,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
   public _availablePlayers: Array<{ value: number, label: string }> = [];
 
   constructor(private _fb: FormBuilder,
+              private _logger: KalturaLogger,
               private _permissionsService: KMCPermissionsService,
               private _appAuthentication: AppAuthentication) {
     super();
@@ -45,13 +50,14 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
   ngOnInit() {
     this._fillAvailableContentFlavors();
     this._fillAvailablePlayers();
-    this._restartFormData();
+    this._resetFormData();
 
     if (this.mode === 'edit' && !this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+        this._logger.debug(`user doesn't have SYNDICATION_UPDATE permission, disable form for editing`);
       this._form.disable({ emitEvent: false });
     } else {
       this.onFormStateChanged.emit({
-        isValid: this._form.status === 'VALID',
+        isValid: this._form.status !== 'INVALID',
         isDirty: this._form.dirty
       });
 
@@ -60,7 +66,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
         .subscribe(
           () => {
             this.onFormStateChanged.emit({
-              isValid: this._form.status === 'VALID',
+              isValid: this._form.status !== 'INVALID',
               isDirty: this._form.dirty
             });
           }
@@ -72,7 +78,9 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
   }
 
   public getData(): KalturaGoogleVideoSyndicationFeed {
+      this._logger.info(`handle get feed data action`);
     if (!this._form.valid) {
+        this._logger.info(`form is not valid, abort action`);
       this.markFormFieldsAsTouched();
       return null;
     }
@@ -94,11 +102,13 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
       KalturaGoogleSyndicationFeedAdultValues.yes :
       KalturaGoogleSyndicationFeedAdultValues.no;
 
+
     return data;
   }
 
   // Create empty structured form on loading
   private _createForm(): void {
+      this._logger.debug(`create form`);
     this._form = this._fb.group({
       contentFlavor: [null],
       addToDefaultTranscodingProfile: [true],
@@ -109,7 +119,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
     });
   }
 
-  private _restartFormData(): void {
+  private _resetFormData(): void {
     this._form.reset({
       contentFlavor: this.feed ? this.feed.flavorParamId : this.contentFlavors && this.contentFlavors.length && this.contentFlavors[0].id,
       addToDefaultTranscodingProfile: this.feed ? this.feed.addToDefaultConversionProfile : true,
@@ -120,6 +130,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
         this.feed.adultContent === KalturaGoogleSyndicationFeedAdultValues.yes :
         this._appAuthentication.appUser.partnerInfo.adultContent
     });
+
   }
 
   private _fillAvailableContentFlavors() {
@@ -141,10 +152,12 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
   }
 
   public _clearPlayer(): void {
+      this._logger.info(`handle clear player action by user`);
     this._form.patchValue({selectedPlayer: null});
   }
 
   private markFormFieldsAsTouched() {
+      this._logger.debug(`mark form fields as touched`);
     for (const control in this._form.controls) {
       this._form.get(control).markAsTouched();
       this._form.get(control).updateValueAndValidity();

@@ -1,0 +1,20 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kContent kOverrideFAIcons">
+    <span class="kTitle">{{'applications.content.bulkActions.removeEditors' | translate}}</span>
+    <div class="kEditors">
+      <span class="kLabel">{{'applications.content.bulkActions.removeEditorsLabel' | translate}}</span>
+      <span  *ngIf="!users || !users.length" class="kNoItems">{{'applications.content.bulkActions.noEditorsToRemove' | translate}}</span>
+      <kAutoComplete  *ngIf="users && users.length" [ngModel]="users"
+                     [tooltipResolver]="'__tooltip'"
+                     [classField]="'__class'"
+                     [multiple]="true"
+                     [limitToSuggestions]="false"
+                     readonly="true"
+                     (onUnselect)="_removeUser($event)">
+      </kAutoComplete>
+    </div>
+    <div class="kFooter">
+      <button type="button" [disabled]="usersToRemove.length === 0" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>
+    </div>
+  </div>
+</k-area-blocker>

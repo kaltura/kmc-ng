@@ -3,6 +3,7 @@ import {Component, Input, EventEmitter, OnDestroy, OnInit, Output} from '@angula
 import { RefineList } from '../manage-end-user-permissions-refine-filters.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {ManageEndUserPermissionsService, UsersFilters} from '../manage-end-user-permissions.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface TagItem {
   type: string,
@@ -16,7 +17,8 @@ const listTypes: Array<keyof UsersFilters> = ['status', 'permissionLevels', 'upd
 @Component({
   selector: 'kManageEndUserPermissionsFilterTags',
   templateUrl: './manage-end-user-permissions-filter-tags.component.html',
-  styleUrls: ['./manage-end-user-permissions-filter-tags.component.scss']
+  styleUrls: ['./manage-end-user-permissions-filter-tags.component.scss'],
+    providers: [KalturaLogger.createLogger('ManageEndUserPermissionsFilterTagsComponent')]
 
 })
 export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDestroy {
@@ -37,10 +39,13 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
     private _refineFiltersMap: Map<string, RefineList> = new Map<string, RefineList>();
     public _showTags = false;
 
-  constructor(private _manageEndUserPermissionsService: ManageEndUserPermissionsService, private _appLocalization: AppLocalization) {
+  constructor(private _manageEndUserPermissionsService: ManageEndUserPermissionsService,
+              private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger) {
   }
 
   removeTag(tag: any) {
+      this._logger.info(`handle remove tag action by user`, { type: tag.type, value: tag.value });
     if (listTypes.indexOf(tag.type) > -1) {
       // remove tag of type list from filters
       const previousData = this._manageEndUserPermissionsService.cloneFilter(tag.type, []);
@@ -65,6 +70,7 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
   }
 
   removeAllTags() {
+      this._logger.info(`handle remove all tags action by user`);
     this._manageEndUserPermissionsService.resetFilters();
   }
 
