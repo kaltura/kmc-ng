@@ -7,6 +7,7 @@ import { EntryLiveWidget } from './entry-live-widget.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 import { serverConfig } from "config/server";
+import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
     selector: 'kEntryLive',
@@ -22,7 +23,12 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 	public enableLiveAnalytics: boolean = false;
 
 
-	constructor(public _widgetService: EntryLiveWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(
+	    public _widgetService: EntryLiveWidget,
+        private _appLocalization: AppLocalization,
+        private _browserService: BrowserService,
+        private _liveAnalyticsView: LiveAnalyticsMainViewService
+    ) {
 		this._copyToClipboardTooltips = {
 			success: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.success'),
 			failure: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.failure'),
@@ -34,7 +40,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnInit() {
 		this._widgetService.attachForm();
-		this.enableLiveAnalytics = serverConfig.externalApps.liveAnalytics.enabled;
+		this.enableLiveAnalytics = this._liveAnalyticsView.isAvailable();
     }
 
     ngOnDestroy() {

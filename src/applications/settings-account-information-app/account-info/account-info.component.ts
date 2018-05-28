@@ -34,7 +34,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._logger.info(`initiate accont information view`);
     this._showTrialUserInfo = this._appAuthentication.appUser.partnerInfo.partnerPackage === PartnerPackageTypes.PartnerPackageFree
-        && serverConfig.kalturaServer.freeTrialExpiration.enabled
+        && serverConfig.kalturaServer.freeTrialExpiration
         && !!this._appAuthentication.appUser.createdAt;
     if (this._showTrialUserInfo) {
       const trialPeriod: number = serverConfig.kalturaServer.freeTrialExpiration.trialPeriodInDays;

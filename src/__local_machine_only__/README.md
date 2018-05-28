@@ -24,36 +24,29 @@ Follow these instructions to test external apps integration:
 
 ```
 "studio": {
-    "enabled": true,
     "uri": "/__local_machine_only__/studio_v2_2_1/index.html",
     "html5_version":"v2.57.2",
     "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
 },
 "studioV3": {
-    "enabled": true,
     "uri": "/__local_machine_only__/studio_v3_1_1/index.html",
     "html5_version":"v2.67",
     "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.67/mwEmbedLoader.php"
 },
 "liveDashboard": {
-    "enabled": true,
     "uri": "/__local_machine_only__/live-dashboard_v1_4_1/index.html"
 },
 "kava": {
-    "enabled": false,
     "uri": ""
 },
 "liveAnalytics": {
-    "enabled": true,
     "uri": "/__local_machine_only__/live-analytics-vFuture/index.html",
     "uiConfId": 36060752
 },
 "usageDashboard": {
-    "enabled": true,
     "uri": "/__local_machine_only__/usage-dashboard-v1_0_0/index.html"
 },
 "editor": {
-    "enabled": true,
     "uri": "/__local_machine_only__/kea2-2.23.0/index.html"
 }
 ```

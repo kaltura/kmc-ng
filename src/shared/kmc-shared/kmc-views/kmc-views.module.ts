@@ -19,7 +19,8 @@ import {
     SettingsMetadataMainViewService,
     SettingsMyUserSettingsMainViewService,
     SettingsTranscodingMainViewService,
-    StudioMainViewService,
+    StudioHtmlMainViewService,
+    StudioV3MainViewService,
     UsageDashboardMainViewService
 } from './main-views';
 import {
@@ -58,7 +59,8 @@ export class KmcViewsModule {
                 ContentBulkUploadsMainViewService,
                 ContentDropFoldersMainViewService,
                 ContentCategoryViewService,
-                StudioMainViewService,
+                StudioHtmlMainViewService,
+                StudioV3MainViewService,
                 UsageDashboardMainViewService,
                 LiveAnalyticsMainViewService,
                 AdminUsersMainViewService,

@@ -8,7 +8,8 @@ import { ContentCategoriesMainViewService,
     ContentUploadsMainViewService,
     ContentBulkUploadsMainViewService,
     ContentDropFoldersMainViewService,
-    StudioMainViewService,
+    StudioV3MainViewService,
+    StudioHtmlMainViewService,
     UsageDashboardMainViewService,
     LiveAnalyticsMainViewService,
     AdminUsersMainViewService,
@@ -52,7 +53,8 @@ export class KmcMainViewsService {
         private _contentUploadsMain: ContentUploadsMainViewService,
         private _contentBulkUploadsMain: ContentBulkUploadsMainViewService,
         private _contentDropFoldersMain: ContentDropFoldersMainViewService,
-        private _studioMain: StudioMainViewService,
+        private _studioV3Main: StudioHtmlMainViewService,
+        private _studioHtmlMain: StudioV3MainViewService,
         private _usageDashboardMain: UsageDashboardMainViewService,
         private _liveAnalyticsMain: LiveAnalyticsMainViewService,
         private _adminUsersMain: AdminUsersMainViewService,
@@ -151,10 +153,10 @@ export class KmcMainViewsService {
                 ]
             },
             {
-                isAvailable: this._studioMain.isAvailable(),
-                isActiveView:  (path) => this._studioMain.isActiveView(path),
+                isAvailable: this._studioHtmlMain.isAvailable() || this._studioV3Main.isAvailable(),
+                isActiveView:  (path) => this._studioHtmlMain.isActiveView(path),
                 open: () => {
-                    this._studioMain.open();
+                    this._studioHtmlMain.open();
                 },
                 position: 'left',
                 titleToken: 'Studio'

@@ -31,25 +31,19 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
     }
 
     isAvailable(args: AdvertisementsAppViewArgs): boolean {
-        this._logger.info(
-            `handle isAvailable action for advertisements app`,
-            {
-                advertisementsConfig: {
-                    enabled: serverConfig.externalApps.editor.enabled,
-                    uri: serverConfig.externalApps.editor.uri
-                }
-            }
-        );
-
-        const availableByConfiguration = serverConfig.externalApps.editor.enabled;
+        const availableByConfiguration = !!serverConfig.externalApps.editor;
         const availableByPermissions = this._isAvailableByPermission();
         const availableByData = this._isAvailableByData(args);
         const result = availableByConfiguration && availableByData && availableByPermissions;
-        this._logger.info(`check if view is available`, {
-            result,
-            validByPermissions: availableByPermissions,
-            validByData: availableByData,
-        });
+        this._logger.info(
+            `handle isAvailable action`,
+            {
+                availableByConfiguration,
+                availableByPermissions,
+                availableByData,
+                result
+            }
+        );
         return result;
     }
 
