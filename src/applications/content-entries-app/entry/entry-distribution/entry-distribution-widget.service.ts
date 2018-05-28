@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { EntryWidget } from '../entry-widget';
 import { Observable } from 'rxjs/Observable';
 import { DistributionProfileListAction } from 'kaltura-ngx-client/api/types/DistributionProfileListAction';

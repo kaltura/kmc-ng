@@ -18,7 +18,8 @@ import {KalturaSessionRestriction} from 'kaltura-ngx-client/api/types/KalturaSes
 import {KalturaPreviewRestriction} from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
 import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import {AccessControlProfileStore, FlavoursStore} from 'app-shared/kmc-shared';
-import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';

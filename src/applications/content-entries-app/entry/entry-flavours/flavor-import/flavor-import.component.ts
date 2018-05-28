@@ -1,6 +1,6 @@
 import { Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaValidators } from '@kaltura-ng/kaltura-ui/validators';
 import { Flavor } from '../flavor';

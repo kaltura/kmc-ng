@@ -5,7 +5,7 @@ import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaAssetParamsDeletePolicy } from 'kaltura-ngx-client/api/types/KalturaAssetParamsDeletePolicy';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {
   ExtendedKalturaConversionProfileAssetParams,
   KalturaConversionProfileWithAsset

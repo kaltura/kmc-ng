@@ -11,7 +11,8 @@ import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry'
 import {KalturaClipAttributes} from 'kaltura-ngx-client/api/types/KalturaClipAttributes';
 import {KalturaOperationAttributes} from 'kaltura-ngx-client/api/types/KalturaOperationAttributes';
 import {BaseEntryListAction} from 'kaltura-ngx-client/api/types/BaseEntryListAction';
-import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 

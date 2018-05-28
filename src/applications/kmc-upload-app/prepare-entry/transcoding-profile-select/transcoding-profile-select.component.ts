@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {TranscodingProfilesService} from './transcoding-profiles.service';
 import {BrowserService} from 'app-shared/kmc-shell';

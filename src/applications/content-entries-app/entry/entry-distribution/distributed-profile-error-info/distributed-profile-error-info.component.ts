@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { KalturaDistributionValidationError } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationError';
 import { KalturaDistributionValidationErrorInvalidData } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorInvalidData';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaDistributionValidationErrorType } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorType';
 import { KalturaDistributionValidationErrorMissingMetadata } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorMissingMetadata';
 import { KalturaDistributionValidationErrorMissingFlavor } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorMissingFlavor';

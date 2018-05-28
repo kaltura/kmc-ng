@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SettingsMyUserSettingsService } from './settings-my-user-settings.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';

@@ -13,7 +13,7 @@ import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntr
 import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 
 @Component({

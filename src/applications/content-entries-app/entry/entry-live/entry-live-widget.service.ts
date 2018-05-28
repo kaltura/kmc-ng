@@ -10,7 +10,7 @@ import {KalturaLiveStreamEntry} from 'kaltura-ngx-client/api/types/KalturaLiveSt
 import {KalturaDVRStatus} from 'kaltura-ngx-client/api/types/KalturaDVRStatus';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import {LiveStreamRegenerateStreamTokenAction} from 'kaltura-ngx-client/api/types/LiveStreamRegenerateStreamTokenAction';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
 import {LiveXMLExporter} from './live-xml-exporter';
 import {AVAIL_BITRATES} from './bitrates';

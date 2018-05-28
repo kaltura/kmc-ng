@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaModerationFlagType } from 'kaltura-ngx-client/api/types/KalturaModerationFlagType';
 
 @Pipe({ name: 'kFlagType' })

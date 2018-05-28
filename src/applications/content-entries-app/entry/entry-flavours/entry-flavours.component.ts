@@ -1,6 +1,7 @@
 import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';

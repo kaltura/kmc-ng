@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
