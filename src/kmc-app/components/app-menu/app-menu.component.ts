@@ -10,7 +10,7 @@ import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Component({
     selector: 'kKMCAppMenu',

@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { DataTable, Menu, MenuItem } from 'primeng/primeng';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 export interface EmailConfig {
     email: string;

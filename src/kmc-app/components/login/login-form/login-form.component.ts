@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { LoginScreens } from '../login.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Component({
   selector: 'kKMCLoginForm',

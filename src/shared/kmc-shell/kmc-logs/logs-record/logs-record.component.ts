@@ -5,7 +5,7 @@ import { serverConfig } from 'config/server';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { globalConfig } from 'config/global';
 import * as moment from 'moment';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Component({
     selector: 'k-logs-record',
