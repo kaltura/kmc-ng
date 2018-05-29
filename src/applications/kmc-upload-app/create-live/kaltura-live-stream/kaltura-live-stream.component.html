@@ -51,7 +51,7 @@
         <div class="kRequired"></div>
         <div>
           <p-inputSwitch class="kControl kInputSwitch" formControlName="liveDVR"></p-inputSwitch>
-          <span>{{_form.controls['liveDVR'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+          <span>{{_form.controls['liveDVR'].value ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
           <div class="kFieldMessage">{{'applications.upload.prepareLive.kalturaStreamType.liveDVR_message' | translate}}</div>
 
         </div>
@@ -62,7 +62,7 @@
         <div class="kRequired"></div>
         <div>
           <p-inputSwitch class="kControl kInputSwitch" formControlName="enableRecording" (onChange)="_toggleRecordingSelectedOption($event.checked)"></p-inputSwitch>
-          <span>{{_form.controls['enableRecording'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+          <span>{{_form.controls['enableRecording'].value ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
           <p-dropdown class="kControl kEnableRecordingOptions" formControlName="enableRecordingSelectedOption"
                       [options]="_enableRecordingOptions" [autoWidth]="false"></p-dropdown>
         </div>
@@ -73,7 +73,7 @@
             <div class="kRequired"></div>
             <div>
                 <p-inputSwitch class="kControl kInputSwitch" formControlName="previewMode"></p-inputSwitch>
-                <span>{{_form.controls['previewMode'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                <span>{{_form.controls['previewMode'].value ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
             </div>
         </div>
 
