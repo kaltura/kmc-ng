@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {EntriesListComponent} from 'app-shared/content-shared/entries/entries-list/entries-list.component';
 import {BrowserService, NewEntryUploadFile} from 'app-shared/kmc-shell';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';

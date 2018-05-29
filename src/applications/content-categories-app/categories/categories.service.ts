@@ -31,7 +31,8 @@ import {
 } from 'app-shared/kmc-shared';
 import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import {KalturaMetadataSearchItem} from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
 import {KalturaSearchCondition} from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
 import {CategoryMoveAction} from 'kaltura-ngx-client/api/types/CategoryMoveAction';

@@ -27,7 +27,7 @@ import {
   TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -44,7 +44,7 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     CommonModule,
     AreaBlockerModule,
     DataTableModule,
-    KalturaCommonModule,
+    LocalizationModule,
     KalturaUIModule,
     TooltipModule,
     PaginatorModule,

@@ -12,7 +12,7 @@ import { EntriesRefineFiltersService,
     RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
 
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 
 @Component({

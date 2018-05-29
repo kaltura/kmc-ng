@@ -7,7 +7,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 
 @Component({
   selector: 'kPrepareEntry',

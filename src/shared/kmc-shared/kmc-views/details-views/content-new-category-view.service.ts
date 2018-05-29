@@ -3,7 +3,7 @@ import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Router } from '@angular/router';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';

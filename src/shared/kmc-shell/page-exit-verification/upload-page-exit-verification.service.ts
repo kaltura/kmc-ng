@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell/new-entry-upload';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';

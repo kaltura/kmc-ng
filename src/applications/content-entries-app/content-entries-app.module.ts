@@ -32,7 +32,7 @@ import {ContentEntriesComponent} from './content-entries.component';
 
 import {DynamicMetadataFormModule} from 'app-shared/kmc-shared';
 
-import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -69,7 +69,7 @@ import { EntriesListService } from './entries/entries-list.service';
     FormsModule,
     InputTextareaModule,
     InputTextModule,
-    KalturaCommonModule,
+    LocalizationModule,
     DynamicMetadataFormModule,
     KalturaPrimeNgUIModule,
     KalturaUIModule,

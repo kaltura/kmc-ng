@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {ISubscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';

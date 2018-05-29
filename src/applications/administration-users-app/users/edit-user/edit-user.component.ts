@@ -3,7 +3,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UsersStore } from '../users.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { IsUserExistsStatuses } from '../user-exists-statuses';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';

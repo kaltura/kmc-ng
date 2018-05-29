@@ -15,7 +15,7 @@ import { KalturaMetadataProfileCreateMode } from 'kaltura-ngx-client/api/types/K
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
 import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
 import { MetadataProfileParser } from 'app-shared/kmc-shared';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { MetadataProfileDeleteAction } from 'kaltura-ngx-client/api/types/MetadataProfileDeleteAction';
 import { SettingsMetadataProfile } from './settings-metadata-profile.interface';
