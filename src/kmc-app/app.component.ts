@@ -19,10 +19,11 @@ import { async } from 'rxjs/scheduler/async';
 export class AppComponent implements OnInit {
 
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
-  @ViewChild('cd') private _alertDialog: ConfirmDialog;
+  @ViewChild('alert') private _alertDialog: ConfirmDialog;
 
   public _isBusy: boolean = false;
   public _growlMessages: GrowlMessage[] = [];
+  public _confirmDialogAlignLeft = false;
 
   constructor(private _confirmationService: ConfirmationService,
               private _browserService : BrowserService,
@@ -35,15 +36,21 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._browserService.registerOnShowConfirmation((message) =>
-    {
-      let htmlMessageContent = message.message.replace(/\n/g,'<br/>');
-      const newMessage = Object.assign({}, message, { message : htmlMessageContent });
-      this._confirmationService.confirm(newMessage);
+    this._browserService.registerOnShowConfirmation((confirmationMessage) => {
+        const htmlMessageContent = confirmationMessage.message.replace(/\r|\n/g, '<br/>');
+        const formattedMessage = Object.assign({}, confirmationMessage, {message: htmlMessageContent});
+
+        if (confirmationMessage.alignMessage === 'byContent') {
+            this._confirmDialogAlignLeft = confirmationMessage.message && /\r|\n/.test(confirmationMessage.message);
+        } else {
+            this._confirmDialogAlignLeft = confirmationMessage.alignMessage === 'left';
+        }
+
+      this._confirmationService.confirm(formattedMessage);
       // fix for PrimeNG no being able to calculate the correct content height
-      const dialog: ConfirmDialog = (message.key && message.key === 'confirm') ? this._confirmDialog : this._alertDialog;
-      setTimeout(()=>{
-        dialog.center();
+      setTimeout(() => {
+          const dialog: ConfirmDialog = (confirmationMessage.key && confirmationMessage.key === 'confirm') ? this._confirmDialog : this._alertDialog;
+          dialog.center();
       },0);
     });
 

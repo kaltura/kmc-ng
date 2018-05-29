@@ -240,7 +240,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       "name": this.media.name,
       "description": this.media.description,
       "thumbnailUrl": this.media.thumbnailUrl,
-      "duration": this.media.duration
+      "duration": this.media.duration,
+      "uploadDate": this.media.createdAt.toISOString()
     }
   }
 

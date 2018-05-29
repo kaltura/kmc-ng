@@ -17,6 +17,7 @@ import {
     RefineList
 } from './manage-end-user-permissions-refine-filters.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface UserActionData {
   action: 'activate' | 'deactivate' | 'permissionLevel'| 'updateMethod' | 'delete',
@@ -30,8 +31,11 @@ export interface UserActionData {
   selector: 'kManageEndUsers',
   templateUrl: './manage-end-user-permissions.component.html',
   styleUrls: ['./manage-end-user-permissions.component.scss'],
-  providers: [ManageEndUserPermissionsService,
-      ManageEndUserPermissionsRefineFiltersService]
+  providers: [
+      ManageEndUserPermissionsService,
+      ManageEndUserPermissionsRefineFiltersService,
+      KalturaLogger.createLogger('ManageEndUserPermissionsComponent')
+  ]
 })
 export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
@@ -62,7 +66,8 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   constructor(private _usersService: ManageEndUserPermissionsService,
               private _refineFiltersService: ManageEndUserPermissionsRefineFiltersService,
               private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -225,12 +230,14 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   _onActionSelected(userActionData: UserActionData) {
 
     const showInvalidActionError = () => {
+        this._logger.info(`handle invalid action error, show alert`);
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization
           .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.invalidAction'),
         buttons: [{
           label: this._appLocalization.get('app.common.close'),
           action: () => {
+              this._logger.info(`user dismissed alert`);
             this._blockerMessage = null;
           }
         }
@@ -264,13 +271,16 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
         this._executeAction(this._usersService.setUpdateMethod(this.category.id, usersIds, payload.method));
         break;
       case 'delete':
+          this._logger.info(`handle delete users action by user`, { categoryId: this.category.id, usersIds });
         if (usersIds.find(id => id === this.category.owner)) {
+            this._logger.info(`category owner found in usersIds, abort action, show alert`, { usersIds, categoryOwnerId: this.category.owner });
           this._blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization
               .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.deleteOwner'),
             buttons: [{
               label: this._appLocalization.get('app.common.close'),
               action: () => {
+                  this._logger.info(`user dismissed alert`);
                 this._blockerMessage = null;
               }
             }
@@ -300,14 +310,17 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         res => {
+            this._logger.info(`handle successful action`);
           this._reload();
         }, error => {
+              this._logger.info(`handle failed action, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization
               .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.actionFailed'),
             buttons: [{
               label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
               action: () => {
+                  this._logger.info(`user dismissed alert`);
                 this._blockerMessage = null;
                 this._usersService.reload();
               }
@@ -320,10 +333,16 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
 
   public _onUsersAdded() {
+      this._logger.info(`handle on users added action`);
     this._reload();
   }
 
   onFreetextChanged(): void {
-    this._usersService.filter({freetext: this._query.freetext});
+      // prevent searching for empty strings
+      if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
+          this._query.freetext = '';
+      }else {
+          this._usersService.filter({freetext: this._query.freetext});
+      }
   }
 }

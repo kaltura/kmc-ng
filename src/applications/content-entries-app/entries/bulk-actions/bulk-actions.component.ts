@@ -3,28 +3,40 @@ import {MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import {
+  CategoriesStatus,
+  CategoriesStatusMonitorService
+} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 import {
- BulkAccessControlService,  BulkAddCategoriesService, BulkAddTagsService, BulkChangeOwnerService,  BulkDeleteService, BulkDownloadService ,
+  BulkAccessControlService,
+  BulkAddCategoriesService,
+  BulkAddTagsService,
+  BulkChangeOwnerService,
+  BulkDeleteService,
+  BulkDownloadService,
   BulkRemoveCategoriesService,
   BulkRemoveTagsService,
   BulkSchedulingService,
   SchedulingParams
-} from './services'
+} from './services';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import {BulkActionBaseService} from './services/bulk-action-base.service';
-import { subApplicationsConfig } from 'config/sub-applications';
+import {subApplicationsConfig} from 'config/sub-applications';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import {CreateNewPlaylistEvent} from 'app-shared/kmc-shared/events/playlist-creation';
+import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import {CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {BulkAddPublishersService} from './services/bulk-add-publishers.service';
+import {BulkAddEditorsService} from './services/bulk-add-editors.service';
+import {BulkRemoveEditorsService} from './services/bulk-remove-editors.service';
+import {BulkRemovePublishersService} from './services/bulk-remove-publishers.service';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
@@ -35,6 +47,10 @@ import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/det
     providers: [
         BulkSchedulingService,
         BulkAccessControlService,
+        BulkAddPublishersService,
+        BulkRemovePublishersService,
+        BulkAddEditorsService,
+        BulkRemoveEditorsService,
         BulkAddTagsService,
         BulkRemoveTagsService,
         BulkAddCategoriesService,
@@ -69,6 +85,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkSchedulingService: BulkSchedulingService,
     private _bulkAccessControlService: BulkAccessControlService,
     private _bulkAddTagsService: BulkAddTagsService,
+    private _bulkAddEditorsService: BulkAddEditorsService,
+    private _bulkRemoveEditorsService: BulkRemoveEditorsService,
+    private _bulkAddPublishersService: BulkAddPublishersService,
+    private _bulkRemovePublishersService: BulkRemovePublishersService,
     private _bulkRemoveTagsService: BulkRemoveTagsService,
     private _bulkAddCategoriesService: BulkAddCategoriesService,
     private _bulkChangeOwnerService: BulkChangeOwnerService,
@@ -139,12 +159,12 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
-    if (this._categoriesLocked && (action === "addToNewCategory" || action === "addToCategories")){
+    if (this._categoriesLocked && (action === 'addToNewCategory' || action === 'addToCategories')) {
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.categories.categoriesLockTitle'),
         message: this._appLocalization.get('applications.content.categories.categoriesLockMsg')
       });
-    }else {
+    } else {
       this._bulkAction = action;
       this._bulkWindowWidth = popupWidth;
       this._bulkWindowHeight = popupHeight;
@@ -183,6 +203,26 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // remove tags changed
   onRemoveTagsChanged(tags: string[]): void {
     this.executeService(this._bulkRemoveTagsService, tags);
+  }
+
+  // add editors changed
+  onAddEditorsChanged(editors: KalturaUser[]): void {
+    this.executeService(this._bulkAddEditorsService, editors.map(editor => editor.id));
+  }
+
+  // remove editors changed
+  onRemoveEditorsChanged(editors: string[]): void {
+    this.executeService(this._bulkRemoveEditorsService, editors);
+  }
+
+  // add publishers changed
+  onAddPublishersChanged(publishers: KalturaUser[]): void {
+    this.executeService(this._bulkAddPublishersService, publishers.map(publisher => publisher.id));
+  }
+
+  // remove publishers changed
+  onRemovePublishersChanged(publishers: string[]): void {
+    this.executeService(this._bulkRemovePublishersService, publishers);
   }
 
   // add to categories changed
@@ -238,7 +278,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     if (this.selectedEntries.length === 1 && this.selectedEntries[0].mediaType === KalturaMediaType.image) {
       this._browserService.openLink(this.selectedEntries[0].downloadUrl + '/file_name/name');
     } else {
-      this.openBulkActionWindow('download', 570, 500)
+      this.openBulkActionWindow('download', 570, 500);
     }
   }
 
@@ -258,6 +298,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           const message = error.type === 'bulkDelete' || error.type === 'bulkDownload'
             ? error.message
             : this._appLocalization.get('applications.content.bulkActions.error');
+            this.onBulkChange.emit({ reload: reloadEntries });
           this._browserService.alert({ message });
         }
       );
@@ -279,12 +320,12 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private _addSelectedEntriesToNewCategory() {
-    if (this._categoriesLocked){
+    if (this._categoriesLocked) {
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.categories.categoriesLockTitle'),
         message: this._appLocalization.get('applications.content.categories.categoriesLockMsg')
       });
-    }else {
+    } else {
       if (this.selectedEntries.length > 0) {
           this._contentNewCategoryView.open({entries: this.selectedEntries});
       }
@@ -292,19 +333,55 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   getBulkActionItems(): MenuItem[] {
-      let result: MenuItem[] = [
+      const result: MenuItem[] = [
           {
               label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => {
-              this.downloadEntries()
+              this.downloadEntries();
           },
               disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD)
           },
           {
               disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS),
               label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => {
-              this.openBulkActionWindow('changeOwner', 500, 280)
+              this.openBulkActionWindow('changeOwner', 500, 280);
           }
           },
+        {
+          label: this._appLocalization.get('applications.content.bulkActions.addRemovePublishers'),
+          disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS),
+          items: [
+            {
+              label: this._appLocalization.get('applications.content.bulkActions.addPublishers'),
+              command: (event) => {
+                this.openBulkActionWindow('addPublishers', 500, 500);
+              }
+            },
+            {
+              label: this._appLocalization.get('applications.content.bulkActions.removePublishers'),
+              command: (event) => {
+                this.openBulkActionWindow('removePublishers', 500, 500);
+              }
+            }
+          ]
+        },
+        {
+          label: this._appLocalization.get('applications.content.bulkActions.addRemoveEditors'),
+          disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS),
+          items: [
+            {
+              label: this._appLocalization.get('applications.content.bulkActions.addEditors'),
+              command: (event) => {
+                this.openBulkActionWindow('addEditors', 500, 500);
+              }
+            },
+            {
+              label: this._appLocalization.get('applications.content.bulkActions.removeEditors'),
+              command: (event) => {
+                this.openBulkActionWindow('removeEditors', 500, 500);
+              }
+            }
+          ]
+        },
           {
               label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
               {
@@ -316,7 +393,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               {
                   label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'),
                   command: (event) => {
-                      this.performBulkAction('addToNewPlaylist')
+                      this.performBulkAction('addToNewPlaylist');
                   },
                 disabled: !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_ADD)
               }]
@@ -326,13 +403,13 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               {
                   label: this._appLocalization.get('applications.content.bulkActions.addToCategories'),
                   command: (event) => {
-                      this.openBulkActionWindow('addToCategories', 560, 586)
+                      this.openBulkActionWindow('addToCategories', 560, 586);
                   }
               },
               {
                   label: this._appLocalization.get('applications.content.bulkActions.removeFromCategories'),
                   command: (event) => {
-                      this.openBulkActionWindow('removeFromCategories', 500, 500)
+                      this.openBulkActionWindow('removeFromCategories', 500, 500);
                   }
               }]
           },
@@ -344,12 +421,12 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
               {
                   label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => {
-                  this.openBulkActionWindow('addTags', 500, 500)
+                  this.openBulkActionWindow('addTags', 500, 500);
               }
               },
               {
                   label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => {
-                  this.openBulkActionWindow('removeTags', 500, 500)
+                  this.openBulkActionWindow('removeTags', 500, 500);
               }
               }]
           },
@@ -357,14 +434,14 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               id: 'setAccessControl',
               label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'),
               command: (event) => {
-                  this.openBulkActionWindow('setAccessControl', 500, 550)
+                  this.openBulkActionWindow('setAccessControl', 500, 550);
               },
               disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL)
           },
           {
               disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_SCHEDULE),
               label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => {
-              this.openBulkActionWindow('setScheduling', 500, 500)
+              this.openBulkActionWindow('setScheduling', 500, 500);
           }
           }
       ];

@@ -34,6 +34,7 @@ import { KmcServerPolls } from '../../kmc-shared/server-polls';
 import { HttpClient } from '@angular/common/http';
 import { buildKalturaServerUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
+import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 const ksSessionStorageKey = 'auth.login.ks';
 
 export interface UpdatePasswordPayload {
@@ -150,13 +151,14 @@ export class AppAuthentication {
         }
     }
 
-    login(loginId: string, password: string, optional: { privileges?, expiry? } = {
-        privileges: '',
-        expiry: 86400
-    }): Observable<LoginResponse> {
+    login(loginId: string, password: string): Observable<LoginResponse> {
 
-        const expiry = (optional ? optional.expiry : null) || 86400;
-        const privileges = optional ? optional.privileges : '';
+        const expiry = kmcAppConfig.kalturaServer.expiry;
+        let privileges = kmcAppConfig.kalturaServer.privileges || '';
+
+        if (serverConfig.kalturaServer.defaultPrivileges) {
+            privileges += `${privileges ? ',' : ''}${serverConfig.kalturaServer.defaultPrivileges}`;
+        }
 
         this._automaticLoginErrorReason = null;
         this._browserService.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage

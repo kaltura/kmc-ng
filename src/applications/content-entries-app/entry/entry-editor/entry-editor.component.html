@@ -7,6 +7,7 @@
     <kKeditHoster [tab]="tab"
                   [entry]="entry"
                   [entryHasSource]="entryHasSource"
+                  (closeEditor)="_confirmClose = false; _close()"
                   (enteredDraftMode)="_confirmClose = true"
                   (exitDraftMode)="_confirmClose = false"
     ></kKeditHoster>

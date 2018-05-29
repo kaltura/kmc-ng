@@ -170,7 +170,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
         .subscribe(
           () => {
             this.onFormStateChanged.emit({
-              isValid: this._form.status === 'VALID',
+              isValid: this._form.status !== 'INVALID',
               isDirty: this._form.dirty
             });
           }

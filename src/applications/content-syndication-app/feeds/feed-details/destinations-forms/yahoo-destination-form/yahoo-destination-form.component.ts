@@ -62,7 +62,7 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
       this._form.disable({ emitEvent: false });
     } else {
       this.onFormStateChanged.emit({
-        isValid: this._form.status === 'VALID',
+        isValid: this._form.status !== 'INVALID',
         isDirty: this._form.dirty
       });
 
@@ -71,7 +71,7 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
         .subscribe(
           () => {
             this.onFormStateChanged.emit({
-              isValid: this._form.status === 'VALID',
+              isValid: this._form.status !== 'INVALID',
               isDirty: this._form.dirty
             });
           }

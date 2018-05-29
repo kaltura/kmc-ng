@@ -25,11 +25,13 @@ import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/Kaltur
 import {CategoriesUtilsService} from "../../categories-utils.service";
 import {CategoriesStatusMonitorService} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kCategoriesBulkActions',
   templateUrl: './categories-bulk-actions.component.html',
-  styleUrls: ['./categories-bulk-actions.component.scss']
+  styleUrls: ['./categories-bulk-actions.component.scss'],
+    providers: [KalturaLogger.createLogger('CategoriesBulkActionsComponent')]
 })
 export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   private _selectedCateogoriesWithPrivacyContext: KalturaCategory[] = [];
@@ -56,7 +58,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
               private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
               private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService,
               private _categoriesUtilsService: CategoriesUtilsService,
-              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -116,13 +119,16 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
+      this._logger.info(`handle open bulk action window`, { action, popupWidth, popupHeight });
 
     if (this._categoriesUtilsService.hasEditWarnings(this.selectedCategories)) {
+        this._logger.info(`category has edit warning tag, show confirmation`);
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.categories.editCategory'),
           message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
           accept: () => {
+              this._logger.info(`user confirmed, proceed action`);
             // use timeout to allow data binding of popup dimensions to update before opening the popup
             setTimeout(() => {
               this._bulkAction = action;
@@ -131,7 +137,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
               this.bulkActionsPopup.popupHeight = popupHeight;
               this.bulkActionsPopup.open();
             }, 0);
-          }
+          },
+            reject: () => {
+                this._logger.info(`user didn't confirm, abort action`);
+            }
         }
       );
     } else {
@@ -148,28 +157,36 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // add tags changed
   onAddTagsChanged(tags: string[]): void {
+      this._logger.info(`handle add tags action`, { tags });
     this.executeService(this.selectedCategories, this._bulkAddTagsService, tags);
   }
 
   // remove tags changed
   onRemoveTagsChanged(tags: string[]): void {
+      this._logger.info(`handle remove tags action`, { tags });
     this.executeService(this.selectedCategories, this._bulkRemoveTagsService, tags);
   }
 
   // owner changed
   onOwnerChanged(owners: KalturaUser[]): void {
+
     const executeAction = () => {
       if (this._selectedCateogoriesWithPrivacyContext.length && owners && owners.length) {
+          this._logger.info(`handle owner changed action`, () => ({ owners: owners.map(owner => owner.id) }));
         this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeOwnerService, owners[0]);
       }
     };
 
     const { hadNoPrivacyContext } = this._filterPrivacyContext();
     if (hadNoPrivacyContext) {
+        this._logger.info(`categories without privacy context detected, show alert`);
       this._browserService.alert({
           header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
-        accept: () => executeAction()
+        accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
+            executeAction();
+        }
       });
     } else {
       executeAction();
@@ -178,6 +195,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // change content privacy
   onChangeContentPrivacyChanged(privacyMode: PrivacyMode): void {
+      this._logger.info(`handle change content privacy action`, { privacyMode });
     let privacyType: KalturaPrivacyType;
     switch (true) {
       case privacyMode === PrivacyMode.NoRestriction:
@@ -201,10 +219,14 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
     const { hadNoPrivacyContext } = this._filterPrivacyContext();
     if (hadNoPrivacyContext) {
+        this._logger.info(`categories without privacy context detected, show alert`);
       this._browserService.alert({
           header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
-        accept: () => executeAction()
+        accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
+            executeAction();
+        }
       });
     } else {
       executeAction();
@@ -213,6 +235,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // change category listing
   onChangeCategoryListingChanged(appearInList: AppearInListType): void {
+      this._logger.info(`handle change category listing action`, { appearInList });
     let appearInListType: KalturaAppearInListType;
     if (appearInList === AppearInListType.NoRestriction) {
       appearInListType = KalturaAppearInListType.partnerOnly;
@@ -228,10 +251,14 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
     const { hadNoPrivacyContext } = this._filterPrivacyContext();
     if (hadNoPrivacyContext) {
+        this._logger.info(`categories without privacy context detected, show alert`);
       this._browserService.alert({
           header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
-        accept: () => executeAction()
+        accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
+            executeAction();
+        }
       });
     } else {
       executeAction();
@@ -240,6 +267,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // change contribution policy
   onChangeContributionPolicyChanged(policyType: KalturaContributionPolicyType): void {
+      this._logger.info(`handle change contribution policy action`, { policyType });
     const executeAction = () => {
       if (this._selectedCateogoriesWithPrivacyContext.length) {
         this.executeService(this._selectedCateogoriesWithPrivacyContext, this._bulkChangeContributionPolicyService, policyType);
@@ -248,10 +276,14 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
     const { hadNoPrivacyContext } = this._filterPrivacyContext();
     if (hadNoPrivacyContext) {
+        this._logger.info(`categories without privacy context detected, show alert`);
       this._browserService.alert({
           header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.categories.bActions.noPrivacyContext'),
-        accept: () => executeAction()
+        accept: () => {
+            this._logger.info(`user confirmed, proceed action`);
+            executeAction();
+        }
       });
     } else {
       executeAction();
@@ -260,11 +292,13 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteCategories(): void {
+      this._logger.info(`handle delete categories action`);
 
     this._categoriesUtilsService.confirmDeleteMultiple(this.selectedCategories)
       .cancelOnDestroy(this)
       .subscribe(result => {
         if (result.confirmed) {
+            this._logger.info(`handle delete categories request`);
           setTimeout(() => {
             this.executeService(
               this.selectedCategories,
@@ -278,6 +312,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           }, 0);
         }
       }, error => {
+          this._logger.warn(`handle failed delete categories action`, { errorMessage: error.message });
         this._browserService.alert({
             header: this._appLocalization.get('app.common.attention'),
           message: this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.categoriesCouldNotBeDeleted')
@@ -286,12 +321,16 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private _moveCategories(): void {
+
     if (this.selectedCategories.length > 0) {
+      this._logger.info(`handle move categories action`, () => ({ categories: this.selectedCategories.map(category => category.id) }));
+
       const movingOnlySiblings: boolean = this.selectedCategories.every((category) => {
         return category.parentId === this.selectedCategories[0].parentId;
       });
 
       if (!movingOnlySiblings) {
+          this._logger.info(`parent categories detected, abort action`);
         this._browserService.alert({
             header: this._appLocalization.get('app.common.attention'),
           message: this._appLocalization.get('applications.content.moveCategory.errors.onlySiblingsMoveAllowed')
@@ -300,7 +339,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         this.openBulkActionWindow('moveCategories', 586, 580);
       }
     } else {
-      console.log('[CategoriesBulkActionsComponent._moveCategories] this.selectedCategories.length must be greater than 0');
+      this._logger.info('no categories were selected, abort action');
     }
   }
 

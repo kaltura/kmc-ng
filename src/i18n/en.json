@@ -483,7 +483,8 @@
                     "addTagsLabel": "Enter tags to be appended to all selected categories.",
                     "removeTags": "Remove Tags",
                     "removeTagsLabel": "Select the tags you want to remove from the selected categories.",
-                    "moveCategories": "Move Categories",
+                    "noTagsToRemove": "No tags to remove",
+          "moveCategories": "Move Categories",
                     "changeContentPrivacy": "Change Content Privacy",
                     "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories.",
                     "changeCategoryListing": "Change Category Listing",
@@ -569,7 +570,9 @@
                     "categoryMovedFailure": "An error occurred while trying to move the category to  the selected parent.",
                     "unableToMove": "Cannot perform the Move Category action since no categories were selected to move.",
                     "categoryAlreadyBelongsToParent": "Category is already a child of the selected parent.",
-                    "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together."
+                    "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together.",
+                    "creationError": "An error occurred while trying to add new category",
+                    "duplicatedName": "The category \"{{0}}\" already exists"
                 }
             },
             "entries": {
@@ -916,8 +919,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Confirm Delete",
-                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
-                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+                    "singleFeed": "Are you sure you want to delete the following feed? {{0}}",
+                    "upTo5Feed": "Are you sure you want to delete the following feeds?\n{{0}}",
                     "moreThan5": "Are you sure you want to delete the selected feeds?"
                 },
                 "errors": {
@@ -1213,11 +1216,25 @@
             "bulkActions": {
                 "setScheduling": "Set Scheduling",
                 "setAccessControl": "Set Access Control",
+                "addRemovePublishers": "Add / Remove Co-Publishers",
+                "addPublishers": "Add Co-Publishers",
+                "addPublishersLabel": "Enter Co-Publishers to be appended to all selected entries",
+                "removePublishers": "Remove Co-Publishers",
+                "removePublishersLabel": "Co-Publishers removed from this list will be removed from all selected entries",
+                "noPublishersToRemove": "No Co-Publishers to remove",
+                "userTooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier",
+                "addRemoveEditors": "Add / Remove Co-Editors",
+                "addEditors": "Add Co-Editors",
+                "addEditorsLabel": "Enter Co-Editors to be appended to all selected entries",
+                "removeEditors": "Remove Co-Editors",
+                "removeEditorsLabel": "Co-Editors removed from this list will be removed from all selected entries",
+                "noEditorsToRemove": "No Co-Editors to remove",
                 "addRemoveTags": "Add / Remove Tags",
                 "addTags": "Add Tags",
                 "addTagsLabel": "Enter tags to be appended to all selected entries.",
                 "removeTags": "Remove Tags",
                 "removeTagsLabel": "Select the tags you want to remove from the selected entries.",
+                "noTagsToRemove": "No tags to remove",
                 "addRemoveCategories": "Add / Remove Categories",
                 "addToCategories": "Add To Categories",
                 "removeFromCategories": "Remove From Categories",
@@ -1237,7 +1254,7 @@
                 "downloadNote": "Downloading other types of entries is not supported and will be ignored.",
                 "downloadMsg": "Your download request is being processed. A download link will be sent to {{0}} after processing has completed.",
                 "delete": "Delete",
-                "apply": "Apply to all selected entries.",
+                "apply": "Apply to all selected entries",
                 "error": "An error occurred during Entries' update.",
                 "errorPlaylists": "An error occurred during Playlists' update.",
                 "cannotDeletePlaylists": "One or more playlists could not be deleted.",
@@ -1487,7 +1504,8 @@
                     "uploadSuccess": "Flavor asset was uploaded successfully.",
                     "deleteFailure": "Flavor asset deletion failed.",
                     "convertFailure": "Flavor conversion failed.",
-                    "uploadFailure": "Flavor upload failed.",
+                    "missingOriginalFlavor": "The original flavor asset is missing",
+          "uploadFailure": "Flavor upload failed.",
                     "downloadFailure": "Flavor download failed.",
                     "importFailure": "Flavor import failed.",
                     "replaceVideo": {
@@ -2216,7 +2234,7 @@
                 "save": "Save",
                 "add": "Add",
                 "cancel": "Cancel",
-                "newRole": "newRole",
+                "newRole": "New Role",
                 "contactUs": "Contact us",
                 "contactUsText": " to learn more about adding any disabled items below to your account.",
                 "roleUpdated": "Role updated",
@@ -2314,7 +2332,9 @@
                     "systemName": "System Name",
                     "applyTo": "Apply to",
                     "entries": "Entries",
-                    "categories": "Categories"
+                    "categories": "Categories",
+                    "schemaNameRequired": "Name is required",
+                    "schemaNameMaxLength": "Name must be less then {{0}} characters long"
                 },
                 "table": {
                     "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
@@ -2419,7 +2439,7 @@
                         "title": "Add Entitlement",
                         "explanation": "Select the root category integrated with your application and label it below.",
                         "addPrivacyContextLabel": "Add Privacy Context Label",
-                        "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+                        "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the selected category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
                         "apply": "Apply",
                         "errors": {
                             "requiredPrivacyContextLabel": "You must enter a Privacy Context Label."
@@ -2564,7 +2584,7 @@
                     "invalidValue": "Invalid Value",
                     "validationMessage": {
                         "invalidDomainName": "Invalid Domain Name",
-                        "invalidIp": "Invalid IP",
+                        "invalidIp": "Invalid IP address",
                         "validationFailed": "Validation Failed",
                         "profileNameRequired": "Profile Name is required.",
                         "authorizedDomains": "No domains were added to the approved or restricted lists. The domain restriction will be: allow all domains.\n",

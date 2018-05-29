@@ -11,12 +11,16 @@ import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheri
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {AddUsersService} from './add-users.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kAddUsers',
   templateUrl: './add-users.component.html',
   styleUrls: ['./add-users.component.scss'],
-  providers: [AddUsersService]
+  providers: [
+      AddUsersService,
+      KalturaLogger.createLogger('AddUsersComponent')
+  ]
 })
 export class AddUsersComponent implements OnInit, OnDestroy {
 
@@ -44,7 +48,8 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   private _parentPopupStateChangesSubscription: ISubscription;
 
   constructor( private _appLocalization: AppLocalization,
-               private _addUsersService: AddUsersService) {
+               private _addUsersService: AddUsersService,
+               private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -77,6 +82,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   public _searchUsers(event): void {
+      this._logger.info(`handle search users action by user`, {query: event.query });
     this._usersProvider.next({suggestions: [], isLoading: true});
 
     if (this._searchUsersSubscription) {
@@ -89,6 +95,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         data => {
+            this._logger.info(`handle successful search users action by user`);
           const suggestions = [];
           (data.objects || []).forEach((suggestedUser: KalturaUser) => {
             suggestions.push({
@@ -100,6 +107,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
           this._usersProvider.next({suggestions: suggestions, isLoading: false});
         },
         err => {
+            this._logger.info(`handle failed search users action by user`, { errorMessage: err.message });
           this._usersProvider.next({suggestions: [], isLoading: false, errorMessage: <any>(err.message || err)});
         }
       );
@@ -120,7 +128,16 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   public _addUsers() {
+
     if (this._users) {
+
+        this._logger.info(`handle add users action`, () =>({
+            users: this._users.map(user => user.id || user.email),
+            categoryId: this.category.id,
+            permissionLevel: this._selectedPermissionLevel,
+            updateMethod: this._selectedUpdateMethod
+        }));
+
       this._addUsersService
         .addUsers(
           {
@@ -133,12 +150,14 @@ export class AddUsersComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(
           result => {
+              this._logger.info(`handle successful add users action`);
             this.usersAdded.emit();
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
           },
           error => {
+              this._logger.warn(`handle failed add users action, show alert`);
             this._blockerMessage = new AreaBlockerMessage({
               title: this._appLocalization
                 .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.error'),
@@ -146,6 +165,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
               buttons: [{
                 label: this._appLocalization.get('app.common.ok'),
                 action: () => {
+                    this._logger.info(`user dismissed alert`);
                   this._blockerMessage = null;
                   this.usersAdded.emit();
                   if (this.parentPopupWidget) {
@@ -157,12 +177,14 @@ export class AddUsersComponent implements OnInit, OnDestroy {
           }
         );
     } else {
+        this._logger.info(`no users were defined, abort action, show alert`);
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization
           .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.missingUsers'),
         buttons: [{
           label: this._appLocalization.get('app.common.ok'),
           action: () => {
+              this._logger.info(`user dismissed alert`);
             this._blockerMessage = null;
           }
         }
@@ -173,6 +195,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
 
 
   public _copyUsersFromParent() {
+      this._logger.info(`handle copy users from parent action by user, show confirmation`, { categoryId: this.category.id });
     const _executeCopyUsers = () => {
       this._addUsersService
         .copyUsersFromParent({categoryId: this.category.id})
@@ -180,12 +203,14 @@ export class AddUsersComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(
           result => {
+              this._logger.info(`handle successful copy users from parent action by user`);
             this.usersAdded.emit();
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
           },
           error => {
+              this._logger.warn(`handle failed copy users from parent action by user, show alert`, { errorMessage: error.message });
             this._blockerMessage = new AreaBlockerMessage({
               title: this._appLocalization
                 .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.error'),
@@ -193,6 +218,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
               buttons: [{
                 label: this._appLocalization.get('app.common.ok'),
                 action: () => {
+                    this._logger.info(`user dismissed alert`);
                   this._blockerMessage = null;
                   this.usersAdded.emit();
                   if (this.parentPopupWidget) {
@@ -214,11 +240,13 @@ export class AddUsersComponent implements OnInit, OnDestroy {
         {
           label: this._appLocalization.get('app.common.yes'),
           action: () => {
+              this._logger.info(`user confrimed, proceed action`);
             _executeCopyUsers();
           }
         }, {
           label: this._appLocalization.get('app.common.no'),
           action: () => {
+              this._logger.info(`user didn't confrim, abort action`);
             this._blockerMessage = null;
           }
         }]
@@ -258,6 +286,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   public _clearUsers() {
+      this._logger.info(`handle clear users action by user`);
     this._users = null;
   }
 }

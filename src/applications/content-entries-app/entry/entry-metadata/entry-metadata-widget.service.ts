@@ -117,7 +117,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     let isDirty = false;
 
                     formGroups.forEach(formGroup => {
-                        isValid = isValid && formGroup.status === 'VALID';
+                        isValid = isValid && formGroup.status !== 'INVALID';
                         isDirty = isDirty || formGroup.dirty;
 
                     });

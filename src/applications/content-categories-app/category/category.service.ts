@@ -26,6 +26,7 @@ import { CategoryListAction } from 'kaltura-ngx-client/api/types/CategoryListAct
 import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
 import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -85,7 +86,10 @@ export class CategoryService implements OnDestroy {
                 appEvents: AppEventsService,
                 private _contentCategoryView: ContentCategoryViewService,
                 private _contentCategoriesMainViewService: ContentCategoriesMainViewService,
-                private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+                private _logger: KalturaLogger) {
+
+        this._logger = _logger.subLogger('CategoryService');
 
         this._widgetsManager.categoryStore = this;
 
@@ -308,6 +312,7 @@ export class CategoryService implements OnDestroy {
 
 	public reloadCategory(): void {
 		if (this.categoryId) {
+		    this._logger.info(`handle reload category action by user`, { categoryId: this.categoryId });
 			this._loadCategory(this.categoryId);
 		}
 	}
@@ -325,12 +330,16 @@ export class CategoryService implements OnDestroy {
 		this._state.next({ action: ActionTypes.CategoryLoading });
 		this._widgetsManager.notifyDataLoading(id);
 
+		this._logger.info(`handle load category request`, { id });
+
 		if (!id) {
+		    this._logger.info(`no id was provided abort loading`);
       return this._state.next({action: ActionTypes.CategoryLoadingFailed, error: new Error('Missing categoryId')});
     }this._loadCategorySubscription = this._kalturaServerClient
       .request(new CategoryGetAction({id}))
 			.cancelOnDestroy(this)
 			.subscribe(category => {
+			    this._logger.info(`handle successful loading of category data`);
                 if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  })) {
                     this._loadCategorySubscription = null;
 
@@ -351,6 +360,7 @@ export class CategoryService implements OnDestroy {
                 }
             },
 			error => {
+                this._logger.warn(`handle failed loading of category data`, { errorMessage: error.message });
 				this._loadCategorySubscription = null;this._state.next({ action: ActionTypes.CategoryLoadingFailed, error });
 }
 			);
@@ -358,6 +368,7 @@ export class CategoryService implements OnDestroy {
 	}
 
 	public openSection(section: ContentCategoryViewSections): void {
+        this._logger.info(`handle open section action by user`, { section, categoryId: this.categoryId });
 		this._contentCategoryView.open({ section, category: this.category, ignoreWarningTag: true });
 	}
 
@@ -387,6 +398,9 @@ export class CategoryService implements OnDestroy {
 
     public openCategory(category: KalturaCategory | number) {
         const categoryId = category instanceof KalturaCategory ? category.id : category;
+
+        this._logger.info(`handle open category action`, { categoryId });
+
         if (this.categoryId !== categoryId) {
             this.canLeaveWithoutSaving()
                 .filter(({ allowed }) => allowed)
@@ -395,18 +409,14 @@ export class CategoryService implements OnDestroy {
                     if (category instanceof KalturaCategory) {
                         this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
                     } else {
-                        this._state.next({ action: ActionTypes.CategoryLoading });
-                        this._contentCategoryView.openById(category, ContentCategoryViewSections.Metadata)
-                            .cancelOnDestroy(this)
-                            .subscribe(() => {
-                                this._state.next({ action: ActionTypes.CategoryLoaded });
-                            });
+                        this._contentCategoryView.openById(category, ContentCategoryViewSections.Metadata);
                     }
                 });
         }
     }
 
 	public returnToCategories(force = false) {
+        this._logger.info(`handle return to categories list`, { updatePageExitVerification: force });
 
     	if (force)
 	    {
