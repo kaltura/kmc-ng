@@ -43,6 +43,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
   public _invalidUserId = false;
+  public _saveBtnShown = false;
 
   constructor(public _usersStore: UsersStore,
               private _formBuilder: FormBuilder,
@@ -83,6 +84,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
         this._isNewUser = !relevantUser;
 
         if (this._isNewUser) {
+            this._saveBtnShown = this._permissionsService.hasPermission(KMCPermissions.ADMIN_USER_ADD);
           this._userForm.reset({
             email: '',
             firstName: '',
@@ -96,6 +98,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._userForm.get('roleIds').enable();
           this._setRoleDescription();
         } else {
+            this._saveBtnShown = this._permissionsService.hasPermission(KMCPermissions.ADMIN_USER_UPDATE);
           this._userForm.reset({
             email: this.user.email,
             firstName: this.user.firstName,
