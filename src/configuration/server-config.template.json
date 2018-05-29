@@ -1,10 +1,18 @@
 {
   "kalturaServer": {
     "uri" : "@kalturaServer.uri@",
+    "defaultPrivileges" : "@kalturaServer.defaultPrivileges@",
+    "deployUrl": "@kalturaServer.deployUrl@",
     "previewUIConf": @kalturaServer.previewUIConf@,
     "freeTrialExpiration": {
       "enabled": @kalturaServer.freeTrialExpiration.enabled@,
       "trialPeriodInDays": @kalturaServer.freeTrialExpiration.trialPeriodInDays@
+    },
+    "login": {
+        "limitAccess": {
+            "enabled": @kalturaServer.limitAccess.enabled@,
+            "verifyBetaServiceUrl": "@kalturaServer.limitAccess.verifyBetaServiceUrl@"
+        }
     }
   },
   "cdnServers": {
@@ -15,53 +23,34 @@
     "studio": {
       "enabled": @externalApps.studio.enabled@,
       "uri": "@externalApps.studio.uri@",
-      "version": "@externalApps.studio.vesrion@",
       "html5_version":"@externalApps.studio.html5_version@",
       "html5lib":"@externalApps.studio.html5lib@"
     },
     "studioV3": {
       "enabled": @externalApps.studioV3.enabled@,
       "uri": "@externalApps.studioV3.uri@",
-      "version": "@externalApps.studioV3.vesrion@",
       "html5_version":"@externalApps.studioV3.html5_version@",
       "html5lib":"@externalApps.studioV3.html5lib@"
     },
     "liveDashboard": {
       "enabled": @externalApps.liveDashboard.enabled@,
-      "uri": "@externalApps.liveDashboard.uri@",
-      "version": "@externalApps.liveDashboard.version@"
+      "uri": "@externalApps.liveDashboard.uri@"
     },
     "liveAnalytics": {
       "enabled": @externalApps.liveAnalytics.enabled@,
-      "uri": "@externalApps.liveAnalytics.uri@",
-      "version": "@externalApps.liveAnalytics.version@"
+      "uri": "@externalApps.liveAnalytics.uri@"
     },
     "kava": {
       "enabled": @externalApps.kava.enabled@,
-      "version": "@externalApps.kava.version@",
       "uri": "@externalApps.kava.uri@"
     },
     "usageDashboard": {
       "enabled": @externalApps.usageDashboard.enabled@,
-      "uri": "@externalApps.usageDashboard.uri@",
-      "version": "@externalApps.usageDashboard.version@",
-      "uiConfId": @externalApps.usageDashboard.uiConfId@,
-      "map_urls": [
-        @externalApps.usageDashboard.map_urls@
-      ],
-      "map_zoom_levels": "@externalApps.usageDashboard.map_zoom_levels@"
+      "uri": "@externalApps.usageDashboard.uri@"
     },
-    "clipAndTrim": {
-      "enabled": @externalApps.clipAndTrim.enabled@,
-      "uiConfId": "@externalApps.clipAndTrim.uiConfId@",
-      "uri": "@externalApps.clipAndTrim.uri@",
-      "version": "@externalApps.clipAndTrim.version@"
-    },
-    "advertisements": {
-      "enabled": @externalApps.advertisements.enabled@,
-      "uri": "@externalApps.advertisements.uri@",
-      "uiConfId": "@externalApps.advertisements.uiConfId@",
-      "version": "@externalApps.advertisements.version@"
+    "editor": {
+      "enabled": @externalApps.editor.enabled@,
+      "uri": "@externalApps.editor.uri@"
     }
   },
   "externalLinks": {
@@ -75,10 +64,12 @@
       "signUp": "@externalLinks.kaltura.signUp@",
       "contactUs": "@externalLinks.kaltura.contactUs@",
       "upgradeAccount":"@externalLinks.kaltura.upgradeAccount@",
-      "contactSalesforce": "@externalLinks.kaltura.contactSalesforce@"
+      "contactSalesforce": "@externalLinks.kaltura.contactSalesforce@",
+      "dropFoldersManual": "@externalLinks.kaltura.dropFoldersManual@"
     },
     "uploads": {
       "highSpeedUpload": "@externalLinks.uploads.highSpeedUpload@",
+      "needHighSpeedUpload": "@externalLinks.uploads.needHighSpeedUpload@",
       "bulkUploadSamples": "@externalLinks.uploads.bulkUploadSamples@"
     },
     "live": {

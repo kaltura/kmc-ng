@@ -19,7 +19,7 @@ import {
   TreeModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
@@ -33,13 +33,14 @@ import { BulkLogRefineFiltersComponent } from './bulk-log-refine-filters/bulk-lo
 import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
 import { BulkLogTagsComponent } from './bulk-log-tags/bulk-log-tags.component';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
     CommonModule,
     AreaBlockerModule,
     DataTableModule,
-    KalturaCommonModule,
+    LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
     TooltipModule,
@@ -60,7 +61,8 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
     TreeModule,
     StickyModule,
       FiltersModule,
-    TableModule
+    TableModule,
+    KMCPermissionsModule
   ],
   declarations: [
     ContentBulkLogAppComponent,

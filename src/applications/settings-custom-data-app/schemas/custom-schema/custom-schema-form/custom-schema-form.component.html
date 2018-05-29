@@ -1,18 +1,31 @@
 <form class="kCustomSchemaForm" [formGroup]="_schemaForm" novalidate>
   <div class="kRow">
-    <span class="kLabel">{{'applications.settings.metadata.form.customSchemaTitle' | translate}}</span>
-    <div class="kRequired">*</div>
+    <div class="kLabel">
+        {{'applications.settings.metadata.form.customSchemaTitle' | translate}}
+        <div class="kRequired" [class.kControlInvalid]="_nameField.touched && _nameField.invalid">*</div>
+    </div>
+
     <div>
       <input class="kControl" pInputText
              [class.kControlInvalid]="_nameField.touched && _nameField.invalid"
-             [formControl]="_nameField">
+             [formControl]="_nameField"
+             (blur)="_nameField.setValue((_nameField.value || '').trim())">
+        <div class="kErrorMessage" *ngIf="_nameField.touched && _nameField.invalid">
+          <span *ngIf="_nameField.hasError('required')">
+                {{'applications.settings.metadata.form.schemaNameRequired' | translate}}
+            </span>
+            <span *ngIf="_nameField.hasError('maxlength')">
+                {{'applications.settings.metadata.form.schemaNameMaxLength' | translate:[_nameMaxLength]}}
+            </span>
+        </div>
     </div>
   </div>
 
   <div class="kRow">
     <span class="kLabel">{{'applications.settings.metadata.form.description' | translate}}</span>
     <div>
-      <textarea class="kControl KTextArea" pInputText [formControl]="_descriptionField"></textarea>
+      <textarea class="kControl KTextArea"
+                pInputText [formControl]="_descriptionField"></textarea>
     </div>
   </div>
 

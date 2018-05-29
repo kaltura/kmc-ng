@@ -5,7 +5,7 @@ import {CategorySectionsListWidget} from './category-sections-list/category-sect
 import {CategoriesService} from '../categories/categories.service';
 import {CategoryWidgetsManager} from './category-widgets-manager';
 import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {Observable} from 'rxjs/Observable';
 import {CategoryEntitlementsWidget} from './category-entitlements/category-entitlements-widget.service';
 import {CategorySubcategoriesWidget} from './category-subcategories/category-subcategories-widget.service';
@@ -15,6 +15,8 @@ import {
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 @Component({
@@ -28,7 +30,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
     CategoryDetailsWidget,
     CategoryMetadataWidget,
       CategoryEntitlementsWidget,
-    CategorySubcategoriesWidget
+    CategorySubcategoriesWidget,
+      KalturaLogger.createLogger('CategoryComponent')
   ]
 })
 export class CategoryComponent implements OnInit, OnDestroy {
@@ -39,6 +42,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   public _currentCategoryId: number;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
+  public _kmcPermissions = KMCPermissions;
 
   constructor(categoryWidgetsManager: CategoryWidgetsManager,
               widget1: CategorySectionsListWidget,
@@ -50,7 +54,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               private _categoriesStore: CategoriesService,
               private _appLocalization: AppLocalization,
-              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+              private _logger: KalturaLogger) {
 
     categoryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5]);
 
@@ -212,11 +217,13 @@ export class CategoryComponent implements OnInit, OnDestroy {
   }
 
   public _save() {
+      this._logger.info(`handle save action by user`);
     this._categoryStore.saveCategory();
   }
 
 
   public _navigateToPrevious(): void {
+      this._logger.info(`handle navigate to previous category action by user`);
     const categories = this._categoriesStore.categories.data();
 
     if (categories && this._currentCategoryId) {
@@ -224,21 +231,32 @@ export class CategoryComponent implements OnInit, OnDestroy {
       const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
       if (currentCategoryIndex > 0) {
         const prevCategory = categories[currentCategoryIndex - 1];
-        this._categoryStore.openCategory(prevCategory.id);
+          this._logger.info(`navigate to the previous category`, { prevCategoryId: prevCategory.id });
+        this._categoryStore.openCategory(prevCategory);
+      } else {
+          this._logger.info(`first category reached, abort action`);
       }
+    } else {
+        this._logger.info(`no categories list or category id was provided, abort action`);
     }
   }
 
   public _navigateToNext(): void {
+      this._logger.info(`handle navigate to next category action by user`);
     const categories = this._categoriesStore.categories.data();
 
     if (categories && this._currentCategoryId) {
       const currentCategory = categories.find(entry => entry.id === this._currentCategoryId);
       const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
       if (currentCategoryIndex >= 0 && (currentCategoryIndex < categories.length - 1)) {
-        const nextEntry = categories[currentCategoryIndex + 1];
-        this._categoryStore.openCategory(nextEntry.id);
+        const nextCategory = categories[currentCategoryIndex + 1];
+        this._logger.info(`navigate to the next category`, { nextCategoryId: nextCategory.id });
+        this._categoryStore.openCategory(nextCategory);
+      } else {
+          this._logger.info(`last category reached, abort action`);
       }
+    } else {
+        this._logger.info(`no categories list or category id was provided, abort action`);
     }
   }
 

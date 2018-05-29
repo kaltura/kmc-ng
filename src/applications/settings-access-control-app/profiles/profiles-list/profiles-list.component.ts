@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AccessControlProfilesFilters, AccessControlProfilesStore } from '../profiles-store/profiles-store.service';
@@ -9,11 +9,13 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { AccessControlProfileUpdatedEvent } from 'app-shared/kmc-shared/events/access-control-profile-updated.event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kAccessControlProfilesList',
   templateUrl: './profiles-list.component.html',
-  styleUrls: ['./profiles-list.component.scss']
+  styleUrls: ['./profiles-list.component.scss'],
+  providers: [KalturaLogger.createLogger('ProfilesListComponent')]
 })
 export class ProfilesListComponent implements OnInit, OnDestroy {
   @ViewChild('editProfile') _editProfilePopup: PopupWidgetComponent;
@@ -32,10 +34,12 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _appEvents: AppEventsService,
+              private _logger: KalturaLogger,
               public _store: AccessControlProfilesStore) {
   }
 
   ngOnInit() {
+    this._logger.info(`initiate access control list view`);
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
     this._registerToDataChanges();
@@ -72,15 +76,13 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
           } else {
             this._tableBlockerMessage = null;
           }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load playlists'); // navigate to error page
-          throw error;
-        });
+        }
+      );
   }
 
 
   private _updateAccessControlProfiles(): void {
+    this._logger.info(`publish 'AccessControlProfileUpdatedEvent' event`);
     this._appEvents.publish(new AccessControlProfileUpdatedEvent());
   }
 
@@ -108,11 +110,13 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   private _executeDeleteProfiles(profiles: KalturaAccessControl[]): void {
     this._blockerMessage = null;
 
+    this._logger.info(`handle delete request by the user`);
     this._store.deleteProfiles(profiles)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         () => {
+          this._logger.info(`handle success 'delete' by the server`);
           this._updateAccessControlProfiles();
           this._store.reload();
           this._clearSelection();
@@ -120,9 +124,11 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
         (err) => {
           const error = err.error ? err.error : err;
           const message = error.message || this._appLocalization.get('applications.settings.accessControl.errors.delete');
+          this._logger.info(`handle failing 'delete' by the server, show alert`, { errorMessage: message });
           const buttons = [{
             label: this._appLocalization.get('app.common.ok'),
             action: () => {
+              this._logger.info(`user discarded alert`);
               this._blockerMessage = null;
               this._store.reload();
               this._clearSelection();
@@ -143,11 +149,6 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _reload(): void {
-    this._clearSelection();
-    this._store.reload();
-  }
-
   public _onActionSelected(event: { action: string, profile: KalturaAccessControl }): void {
     switch (event.action) {
       case 'delete':
@@ -162,6 +163,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   }
 
   public _clearSelection(): void {
+    this._logger.info(`clear selected profiles`);
     this._selectedProfiles = [];
   }
 
@@ -173,6 +175,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   }
 
   public _deleteProfiles(profiles = this._selectedProfiles): void {
+    this._logger.info(`handle 'delete' profiles action by the user, show confirmation`);
     if (Array.isArray(profiles) && profiles.length) {
       const header = this._appLocalization.get('applications.settings.accessControl.deleteProfile.header');
       const profilesNames = profiles.map(({ name }) => name).join('\n');
@@ -180,26 +183,40 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
         ? this._appLocalization.get('applications.settings.accessControl.deleteProfile.message')
         : this._appLocalization.get('applications.settings.accessControl.deleteProfile.messageWithNames', [profilesNames]);
 
-      this._browserService.confirm({ header, message, accept: () => this._executeDeleteProfiles(profiles) });
+      this._browserService.confirm({
+        header,
+        message,
+        accept: () => this._executeDeleteProfiles(profiles),
+        reject: () => this._logger.info(`user didn't confirm, abort action`)
+      });
+    } else {
+      this._logger.info(`no profiles were selected, stop deletion`);
     }
   }
 
   public _editProfile(profile = null): void {
+    this._logger.info(
+      `handle '${profile ? 'edit' : 'add'}' profile action by the user`,
+      profile ? { id: profile.id, name: profile.name } : null
+    );
     this._selectedProfile = profile;
 
     this._editProfilePopup.open();
   }
 
   public _saveProfile(profile: KalturaAccessControl): void {
+    this._logger.info(`handle 'save' updated profile action by the user`, { id: profile.id, name: profile.name });
     this._store.saveProfile(profile)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         () => {
+          this._logger.info(`handle success 'save' by the server`);
           this._updateAccessControlProfiles();
           this._store.reload();
         },
         (error) => {
+          this._logger.warn(`handle failing 'save' by the server, show alert`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization.get(
               'applications.settings.accessControl.errors.profileWasNotUpdated',
@@ -208,6 +225,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
+                this._logger.info(`user discarded alert`);
                 this._blockerMessage = null;
                 this._store.reload();
                 this._clearSelection();

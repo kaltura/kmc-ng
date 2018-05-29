@@ -5,7 +5,7 @@
             <div class="kHeader">
                 <div>
                     <i class="kIconclose_small kClose" (click)="close()"></i>
-                    <span class="kTitle">{{'applications.embed.previewShare' | translate}}</span>
+                    <span class="kTitle">{{_title}}</span>
                 </div>
                 <div class="kSelectPlayer">
                     <span>{{'applications.embed.selectPlayer' | translate}}</span>
@@ -22,13 +22,15 @@
                 <div class="kPreviewParams" [style.maxWidth]="_showEmbedParams ? '450px' : '0px'">
                     <div class="kParamsContainer">
                         <span class="kTitle">{{media?.name}}</span>
-                        <div class="kSection kAlignTop">
-                            <span class="kCol">{{'applications.embed.embedCode' | translate}}</span>
-                            <textarea readonly #code pInputTextarea >{{_generatedCode}}</textarea>
-                        </div>
-                        <div class="kSection kRow">
-                            <button pButton type="button" class="kButtonBranded kCopyCode" (click)="copyEmbedCode(code)" label="{{'applications.embed.copy' | translate}}"></button>
-                        </div>
+                        <ng-container *ngIf="_showEmberCode">
+                          <div class="kSection kAlignTop">
+                              <span class="kCol">{{'applications.embed.embedCode' | translate}}</span>
+                              <textarea readonly #code pInputTextarea >{{_generatedCode}}</textarea>
+                          </div>
+                          <div class="kSection kRow">
+                              <button pButton type="button" class="kButtonBranded kCopyCode" (click)="copyEmbedCode(code)" label="{{'applications.embed.copy' | translate}}"></button>
+                          </div>
+                        </ng-container>
                         <div class="kSection kAlignTop kRow">
                             <span class="kCol">{{'applications.embed.view' | translate}}</span>
                             <a href="{{_shortLink}}" target="_blank">{{_shortLink}}</a>
@@ -86,12 +88,13 @@
         </div>
         <div class="kTooltipContent">
             <span>{{'applications.embed.helpTip1' | translate }}</span>
-            <a (click)="openLink('embedTypes')"> {{'applications.embed.helpTip2' | translate }}</a>
-            <span> {{'applications.embed.helpTip3' | translate }}</span>
+            <a [hidden]="!_embedTypesHelpExists" (click)="openLink('embedTypes')"> {{'applications.embed.helpTip2' | translate }}</a>
+            <span [hidden]="!_embedTypesHelpExists"> {{'applications.embed.helpTip3' | translate }}</span>
         </div>
         <div class="kTooltipContent">
             <span>{{'applications.embed.helpTip4' | translate }}</span>
-            <a (click)="openLink('deliveryProtocols')"> {{'applications.embed.helpTip5' | translate }}</a>
+            <span [hidden]="!_deliveryProtocolsHelpExists">{{'applications.embed.helpTip5' | translate }}</span>
+            <a [hidden]="!_deliveryProtocolsHelpExists" (click)="openLink('deliveryProtocols')"> {{'applications.embed.helpTip6' | translate }}</a>
         </div>
 
     </div>

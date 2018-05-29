@@ -55,3 +55,16 @@
     margin-left: 10px !important;
   }
 }
+
+:host /deep/ {
+    .kDisabled {
+        .ui-chkbox {
+            cursor: default;
+        }
+
+        .ui-chkbox-box {
+            pointer-events: none;
+            opacity: 0.3;
+        }
+    }
+}

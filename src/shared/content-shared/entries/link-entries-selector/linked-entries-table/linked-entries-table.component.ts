@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, HostListener } from '@angular/core';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'k-linked-entries-table',
@@ -8,6 +9,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
   styleUrls: ['./linked-entries-table.component.scss']
 })
 export class LinkedEntriesTableComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  public _kmcPermissions = KMCPermissions;
   @Input() disabled: boolean;
   @Input() allowMultiple: boolean;
   @Input() selectedEntries: KalturaMediaEntry[] = [];

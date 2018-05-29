@@ -22,7 +22,7 @@ export class SettingsAccountInformationService {
 
   public canContactSalesForceInformation(): boolean {
     try {
-      return !!serverConfig.externalLinks.kaltura.contactSalesforce;
+      return !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.contactSalesforce;
     } catch (ex) {
       return false;
     }

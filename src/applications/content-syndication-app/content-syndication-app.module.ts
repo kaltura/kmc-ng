@@ -16,7 +16,7 @@ import {
   TieredMenuModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
-import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -33,6 +33,7 @@ import {DestinationIconPipe} from './pipes/destination-icon.pipe';
 import {FeedDetailsComponentsList} from './feeds/feed-details/feed-details-components-list';
 import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { InputHelperModule } from '@kaltura-ng/kaltura-ui/input-helper/input-helper.module';
 
 @NgModule({
   imports: [
@@ -45,7 +46,7 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     DropdownModule,
     InputTextModule,
     RadioButtonModule,
-    KalturaCommonModule,
+    LocalizationModule,
     KalturaPrimeNgUIModule,
     KalturaUIModule,
     KMCShellModule,
@@ -62,7 +63,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     FormsModule,
     CopyToClipboardModule,
     TableModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+    InputHelperModule
   ],
   declarations: [
     DestinationIconPipe,

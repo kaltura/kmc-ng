@@ -1,16 +1,20 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { SectionsList } from './sections-list';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
+import {
+    SettingsTranscodingProfileViewSections,
+    SettingsTranscodingProfileViewService
+} from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export interface SectionWidgetItem {
   label: string;
   isValid: boolean;
   attached: boolean;
-  key: string;
+  key: SettingsTranscodingProfileViewSections;
 }
 
 @Injectable()
@@ -18,7 +22,8 @@ export class TranscodingProfileSectionsListWidget extends TranscodingProfileWidg
   private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
   public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
-  constructor(private _appLocalization: AppLocalization) {
+  constructor(private _appLocalization: AppLocalization,
+              private _settingsTranscodingProfileViewService: SettingsTranscodingProfileViewService) {
     super('sectionsList');
   }
 
@@ -43,10 +48,6 @@ export class TranscodingProfileSectionsListWidget extends TranscodingProfileWidg
           });
         }
       );
-  }
-
-  private _isSectionEnabled(sectionKey: string, profile: KalturaConversionProfileWithAsset): boolean {
-    return true;
   }
 
   protected onDataLoading(dataId: any): void {
@@ -85,7 +86,7 @@ export class TranscodingProfileSectionsListWidget extends TranscodingProfileWidg
         const sectionFormWidgetState = formWidgetsState ? formWidgetsState[section.key] : null;
         const isSectionActive = sectionFormWidgetState && sectionFormWidgetState.isActive;
 
-        if (this._isSectionEnabled(section.key, profile)) {
+        if (this._settingsTranscodingProfileViewService.isAvailable({ section: section.key, profile })) {
           sections.push({
             label: this._appLocalization.get(section.label),
             active: isSectionActive,

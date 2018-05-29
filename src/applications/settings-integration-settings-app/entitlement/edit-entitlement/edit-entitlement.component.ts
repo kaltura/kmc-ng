@@ -2,10 +2,11 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {KalturaCategory} from "kaltura-ngx-client/api/types/KalturaCategory";
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import {BrowserService} from "app-shared/kmc-shell";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import {EditEntitlementService} from "./edit-entitlement.service";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 function privacyContextLabelValidator(): ValidatorFn {
@@ -17,14 +18,17 @@ function privacyContextLabelValidator(): ValidatorFn {
       }
     }
     return null;
-  }
+  };
 }
 
 @Component({
   selector: 'kEditEntitlement',
   templateUrl: './edit-entitlement.component.html',
   styleUrls: ['./edit-entitlement.component.scss'],
-  providers: [EditEntitlementService]
+  providers: [
+    EditEntitlementService,
+    KalturaLogger.createLogger('EditEntitlementComponent')
+  ]
 })
 export class EditEntitlementComponent implements OnInit, OnDestroy {
 
@@ -39,6 +43,7 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
   constructor(private _editEntitlementService: EditEntitlementService,
               private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
+              private _logger: KalturaLogger,
               private _browserService: BrowserService) {
   }
 
@@ -51,6 +56,7 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
   }
 
   private markFormFieldsAsTouched() {
+    this._logger.debug(`mark form fields as touched and update value & validity`);
     for (const control in this.editEntitlementForm.controls) {
       this.editEntitlementForm.get(control).markAsTouched();
       this.editEntitlementForm.get(control).updateValueAndValidity();
@@ -58,7 +64,9 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
   }
 
   public _apply() {
+    this._logger.info(`handle edit updated entitlement action by user, show confirmation`);
     if (!this.editEntitlementForm.valid) {
+      this._logger.info(`form data is not valid, abort action`);
       this.markFormFieldsAsTouched();
       return;
     }
@@ -70,13 +78,18 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
           .get('applications.settings.integrationSettings.entitlement.editEntitlement.confirmation',
             {0: this.entitlement.name}),
         accept: () => {
+          this._logger.info(`user confirmed, proceed action`);
           this._updateEntitlementPrivacyContext();
+        },
+        reject: () => {
+          this._logger.info(`user didn't confirm, abort action`);
         }
       }
     );
   }
 
   private _updateEntitlementPrivacyContext() {
+    this._logger.info(`handle update request by user`);
     this._updateAreaBlockerState(true, null);
     this._editEntitlementService.updateEntitlementPrivacyContext(this.entitlement.id,
       this.editEntitlementForm.controls['privacyContextLabel'].value)
@@ -84,6 +97,7 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         result => {
+          this._logger.info(`handle successful update request by user`);
           this._updateAreaBlockerState(false, null);
           this.onEntitlementUpdated.emit();
           if (this.ownerPopup) {
@@ -91,17 +105,20 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
           }
         },
         error => {
+          this._logger.warn(`handle failed update request by user, show confirmation`, { errorMessage: error.message });
           const blockerMessage = new AreaBlockerMessage({
             message: error.message || `Error occurred while trying to edit entitlement \'${this.entitlement.name}\'`,
             buttons: [
               {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                  this._logger.info(`user confirmed, retry action`);
                   this._updateEntitlementPrivacyContext();
                 }
               }, {
                 label: this._appLocalization.get('app.common.cancel'),
                 action: () => {
+                  this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
                   this._blockerMessage = null;
                 }
               }
@@ -113,6 +130,7 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
   }
 
   private _updateAreaBlockerState(isBusy: boolean, areaBlocker: AreaBlockerMessage): void {
+    this._logger.info(`update areablocker state`, { isBusy, message: areaBlocker ? areaBlocker.message : null });
     this._isBusy = isBusy;
     this._blockerMessage = areaBlocker;
   }

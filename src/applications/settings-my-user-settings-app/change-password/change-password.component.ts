@@ -5,11 +5,13 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {UserUpdateLoginDataActionArgs} from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kChangePassword',
   templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.scss']
+  styleUrls: ['./change-password.component.scss'],
+  providers: [KalturaLogger.createLogger('ChangePasswordComponent')]
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
@@ -20,7 +22,8 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 
   public _changePasswordForm: FormGroup;
 
-  constructor(private _fb: FormBuilder) {
+  constructor(private _fb: FormBuilder,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -44,6 +47,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   }
 
   public _updateLoginData(): void {
+    this._logger.info(`handle send update password action by user`);
     if (this._changePasswordForm.valid) {
       const formData = this._changePasswordForm.value;
       this.updateLoginData.emit({
@@ -51,6 +55,8 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         password: formData.currentPassword,
         newPassword: formData.newPassword,
       });
+    } else {
+      this._logger.info(`change password form is not valid, abort action`, { errors: this._changePasswordForm.errors });
     }
   }
 }

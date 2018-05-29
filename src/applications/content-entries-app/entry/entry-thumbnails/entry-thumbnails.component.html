@@ -33,7 +33,9 @@
 						<span>{{thumb[col.field] | kFileSize}}</span>
 					</ng-template>
 				</p-column>
-				<p-column field="distributors" header="{{'applications.content.entryDetails.thumbnails.distributors' | translate}}">
+				<p-column *ngIf="_kmcPermissions.CONTENTDISTRIBUTION_PLUGIN_PERMISSION | kNgIfPermitted"
+                  field="distributors"
+                  header="{{'applications.content.entryDetails.thumbnails.distributors' | translate}}">
 				</p-column>
 				<p-column *ngIf="_kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted"
                   field="isDefault" header="{{'applications.content.entryDetails.thumbnails.defaultTitle' | translate}}">

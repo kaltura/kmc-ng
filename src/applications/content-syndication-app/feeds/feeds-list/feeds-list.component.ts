@@ -1,19 +1,23 @@
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {FeedsFilters, FeedsService, SortDirection} from '../feeds.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
 import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kFeedsList',
   templateUrl: './feeds-list.component.html',
   styleUrls: ['./feeds-list.component.scss'],
-  providers : [FeedsService]
+  providers : [
+      FeedsService,
+      KalturaLogger.createLogger('FeedsListComponent')
+  ]
 })
 
 export class FeedsListComponent implements OnInit, OnDestroy {
@@ -40,7 +44,8 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   constructor(public _feedsService: FeedsService,
               private router: Router,
               private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -49,7 +54,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
     this._feedsService.feeds.data$
       .cancelOnDestroy(this)
       .subscribe(response => {
-        this._feedsTotalCount = response.totalCount
+        this._feedsTotalCount = response.totalCount;
       });
 
     this._prepare();
@@ -57,11 +62,13 @@ export class FeedsListComponent implements OnInit, OnDestroy {
 
 
   public _reload() {
+      this._logger.info(`handle reload action by user`);
     this._clearSelection();
     this._feedsService.reload();
   }
 
   public _clearSelection() {
+      this._logger.info(`handle clear selection action by user`);
     this._selectedFeeds = [];
   }
 
@@ -86,6 +93,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   public _onActionSelected({action, feed}: { action: string, feed: KalturaBaseSyndicationFeed }) {
     switch (action) {
       case 'edit':
+          this._logger.info(`handle edit feed action by user`, { feedId: feed.id, type: feed.type });
         this._currentEditFeed = feed;
         this.feedDetailsPopup.open();
         break;
@@ -98,14 +106,18 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   }
 
   private _deleteFeed(feed: KalturaBaseSyndicationFeed): void {
+      this._logger.info(`handle delete feed action by user`, { feedId: feed.id, type: feed.type });
     const executeDelete = () => {
       this._blockerMessage = null;
       this._feedsService.deleteFeeds([feed.id])
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(
-          result => {}, // reload is handled by service
+          result => {
+              this._logger.info(`handle successful action`);
+          }, // reload is handled by service
           error => {
+              this._logger.warn(`handle failed action, show confirmation`, { errorMessage: error.message });
             this._blockerMessage = new AreaBlockerMessage({
               title: this._appLocalization.get('applications.content.syndication.errors.deleteError.header'),
               message: this._appLocalization.get('applications.content.syndication.errors.deleteError.message'),
@@ -113,12 +125,14 @@ export class FeedsListComponent implements OnInit, OnDestroy {
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
+                      this._logger.info(`user confirmed, retry action`);
                     this._blockerMessage = null;
                     executeDelete();
                   }
                 }, {
                   label: this._appLocalization.get('app.common.cancel'),
                   action: () => {
+                      this._logger.info(`user didn't confirm, abort action`);
                     this._blockerMessage = null;
                   }
                 }
@@ -150,6 +164,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   }
 
   public _deleteSelectedFeeds(): void {
+      this._logger.info(`handle delete selected feeds action by user`);
     const executeDelete = () => {
       this._blockerMessage = null;
       this._feedsService.deleteFeeds(this._selectedFeeds.map(feed => feed.id))
@@ -157,9 +172,11 @@ export class FeedsListComponent implements OnInit, OnDestroy {
         .tag('block-shell')
         .subscribe(
           result => {
+              this._logger.info(`handle successful action`);
             this._clearSelection();
           }, // reload is handled by service
           error => {
+              this._logger.warn(`handle failed action, show confirmation`, { errorMessage: error.message });
             this._blockerMessage = new AreaBlockerMessage({
               title: this._appLocalization.get('applications.content.syndication.errors.deleteErrorMultiple.header'),
               message: this._appLocalization.get('applications.content.syndication.errors.deleteErrorMultiple.message'),
@@ -167,12 +184,14 @@ export class FeedsListComponent implements OnInit, OnDestroy {
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
+                      this._logger.info(`user confirmed, retry action`);
                     this._blockerMessage = null;
                     executeDelete();
                   }
                 }, {
                   label: this._appLocalization.get('app.common.cancel'),
                   action: () => {
+                      this._logger.info(`user didn't confirm, abort action`);
                     this._blockerMessage = null;
                   }
                 }
@@ -211,12 +230,15 @@ export class FeedsListComponent implements OnInit, OnDestroy {
     this._isBusy = true;
     this._blockerMessage = null;
 
+    this._logger.info(`prepare component, load playlists data`);
+
     // The add/edit floater needs the playlists, therefore we will load
     // first the list of playlists and afterwards the feed list
     // (while blocking the list to prevent the user from adding/editing feed without playlists provided)
     this._feedsService.getPlaylists()
       .cancelOnDestroy(this)
       .subscribe(response => {
+          this._logger.info(`handle successful data loading`);
           this._playlists = response;
           this._feedsService.reload();
           this._registerToDataChanges();
@@ -224,6 +246,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
           this._isReady = true;
         },
         error => {
+          this._logger.info(`handle failed data loading, show alert`, { errorMessage: error.message });
           this._isBusy = false;
           this._blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization.get('applications.content.syndication.errors.loadFailed'),
@@ -231,16 +254,18 @@ export class FeedsListComponent implements OnInit, OnDestroy {
               {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                    this._logger.info(`user selected retry, retry action`);
                   this._blockerMessage = null;
                   this._prepare();
                 }
               }
             ]
           });
-        })
+        });
   }
 
   private _registerToDataChanges(): void {
+      this._logger.info(`register to data changes`);
     this._feedsService.feeds.state$
       .cancelOnDestroy(this)
       .subscribe(
@@ -248,25 +273,24 @@ export class FeedsListComponent implements OnInit, OnDestroy {
 
           this._tableIsBusy = result.loading;
 
+          this._logger.info(`handle data changes event`, { result });
           if (result.errorMessage) {
+              this._logger.info(`handle failed loading data, show alert`, { errorMessage: result.errorMessage });
             this._tableBlockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || 'Error loading feeds',
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                    this._logger.info(`user selected retry, retry loading data`);
                   this._tableBlockerMessage = null;
                   this._feedsService.reload();
                 }
               }
               ]
-            })
+            });
           } else {
             this._tableBlockerMessage = null;
           }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load feeds'); // navigate to error page
-          throw error;
         });
   }
 
@@ -313,6 +337,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   }
 
   public _addNewFeed() {
+      this._logger.info(`handle add new feed action by user`);
     this._currentEditFeed = null;
     this.feedDetailsPopup.open();
   }

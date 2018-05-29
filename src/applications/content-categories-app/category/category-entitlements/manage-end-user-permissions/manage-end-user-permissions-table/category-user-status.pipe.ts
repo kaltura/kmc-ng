@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {KalturaCategoryUserStatus} from "kaltura-ngx-client/api/types/KalturaCategoryUserStatus";
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 
 @Pipe({ name: 'kCategoryUserStatus' })
 export class CategoryUserStatusPipe implements PipeTransform {

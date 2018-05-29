@@ -4,7 +4,6 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {SelectItem} from 'primeng/primeng';
 
 import {KalturaMultiRequest} from 'kaltura-ngx-client';
-import {EntryWidgetKeys} from '../entry-widget-keys';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import {KalturaSiteRestriction} from 'kaltura-ngx-client/api/types/KalturaSiteRestriction';
@@ -19,11 +18,13 @@ import {KalturaSessionRestriction} from 'kaltura-ngx-client/api/types/KalturaSes
 import {KalturaPreviewRestriction} from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
 import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import {AccessControlProfileStore, FlavoursStore} from 'app-shared/kmc-shared';
-import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
 import {EntryWidget} from '../entry-widget';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 
 @Injectable()
@@ -54,7 +55,7 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
   constructor(private _accessControlProfileStore: AccessControlProfileStore,
               private _appLocalization: AppLocalization,
               private _flavoursStore: FlavoursStore) {
-    super(EntryWidgetKeys.AccessControl);
+    super(ContentEntryViewSections.AccessControl);
   }
 
   /**

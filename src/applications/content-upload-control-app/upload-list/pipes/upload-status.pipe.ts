@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppLocalization, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Pipe({ name: 'kUploadStatus' })
 export class UploadStatusPipe implements PipeTransform {

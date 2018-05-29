@@ -74,6 +74,7 @@
 
     <div class="kFooter">
       <button type="button" class="kButtonBranded"
+              *ngIf="_saveBtnShown"
               [disabled]="!_userForm.dirty" pButton
               [label]="'applications.administration.users.save' | translate"
               (click)="_saveUser()"></button>

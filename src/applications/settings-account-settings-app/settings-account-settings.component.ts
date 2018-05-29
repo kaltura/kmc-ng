@@ -2,11 +2,16 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
 import {SettingsAccountSettingsService} from './settings-account-settings.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { SettingsAccountSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
+import { Observable } from 'rxjs/Observable';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 function phoneValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: boolean} | null => {
@@ -17,7 +22,7 @@ function phoneValidator(): ValidatorFn {
       }
     }
     return null;
-  }
+  };
 }
 
 
@@ -25,11 +30,14 @@ function phoneValidator(): ValidatorFn {
   selector: 'kmc-settings-account-settings',
   templateUrl: './settings-account-settings.component.html',
   styleUrls: ['./settings-account-settings.component.scss'],
-  providers: [SettingsAccountSettingsService],
+  providers: [
+    SettingsAccountSettingsService,
+    KalturaLogger.createLogger('SettingsAccountSettingsComponent')
+  ],
 })
 export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
-
-
+    private _pageExitVerificationToken: string;
+  public _kmcPermissions = KMCPermissions;
   public accountSettingsForm: FormGroup;
   public nameOfAccountOwnerOptions: SelectItem[] = [];
   public describeYourselfOptions: SelectItem[] = [];
@@ -40,46 +48,84 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
+              private _pageExitVerificationService: PageExitVerificationService,
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger,
+              private _settingsAccountSettingsMainView: SettingsAccountSettingsMainViewService,
               private _fb: FormBuilder) {
   }
 
   ngOnInit() {
+    this._logger.info(`initiate account settings view`);
     this._createForm();
     this._fillDescribeYourselfOptions();
-    this._loadPartnerAccountSettings();
+    if (this._settingsAccountSettingsMainView.isAvailable()) {
+        this._loadPartnerAccountSettings();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
+
+      this.accountSettingsForm
+          .statusChanges
+          .cancelOnDestroy(this)
+          .subscribe(() => this._updatePageExitVerification());
   }
 
   ngOnDestroy(): void {
   }
 
   onSubmit(): void {
+    this._logger.info(`handle update account information action by user`);
     if (this.accountSettingsForm.valid) {
       this._updatePartnerAccountSettings();
     } else {
+      this._logger.info(`form data is not valid, abort action`);
       this.markFormFieldsAsTouched();
     }
   }
 
   private markFormFieldsAsTouched() {
+    this._logger.debug(`mark form fields as touched and update form value & validity`);
     for (let inner in this.accountSettingsForm.controls) {
       this.accountSettingsForm.get(inner).markAsTouched();
       this.accountSettingsForm.get(inner).updateValueAndValidity();
     }
   }
 
+    private _markFormFieldsAsUntouched() {
+        this._logger.debug(`mark form fields as untouched and update form value & validity`);
+        for (let inner in this.accountSettingsForm.controls) {
+            this.accountSettingsForm.get(inner).markAsUntouched();
+            this.accountSettingsForm.get(inner).updateValueAndValidity();
+        }
+    }
+
+    private _updatePageExitVerification(): void {
+        if (this.accountSettingsForm.dirty) {
+            this._pageExitVerificationToken = this._pageExitVerificationService.add();
+        } else {
+            if (this._pageExitVerificationToken) {
+                this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+            }
+            this._pageExitVerificationToken = null;
+        }
+    }
+
 // Update Partner Account Settings
   private _updatePartnerAccountSettings() {
-    if (!this.accountSettingsForm.valid) {
-      return;
-    }
+    this._logger.info(`handle update partner account settings request`);
     this._accountSettingsService
       .updatePartnerData(this.accountSettingsForm.value)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(updatedPartner => {
+          this._logger.info(`handle successful update partner account settings request`);
           this._fillForm(updatedPartner);
+              this._markFormFieldsAsUntouched();
         },
         error => {
+          this._logger.info(`handle failed update partner account settings request`, { errorMessage: error.message });
           const blockerMessage = new AreaBlockerMessage(
             {
               message: this._appLocalization.get('applications.settings.accountSettings.errors.updateFailed'),
@@ -93,11 +139,13 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
               ]
             }
           );
+            this._updateAreaBlockerState(false, blockerMessage);
         });
   }
 
   // Get Partner Account Settings data and fill the form
   private _loadPartnerAccountSettings() {
+    this._logger.info(`handle load partner account settings request`);
     this._updateAreaBlockerState(true, null);
 
     this._accountSettingsService
@@ -109,8 +157,13 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
           this.partnerAdminEmail = response.partnerData.adminEmail;
           this._fillForm(response.partnerData);
           this._updateAreaBlockerState(false, null);
+          this._logger.info(`handle successful load partner account settings request`, {
+            partnerId: this.partnerId,
+            partnerAdminEmail: this.partnerAdminEmail
+          });
         },
         error => {
+          this._logger.warn(`handle failed load partner account settings request`, { errorMessage: error.message });
           const blockerMessage = new AreaBlockerMessage(
             {
               message: this._appLocalization.get('applications.settings.accountSettings.errors.loadFailed'),
@@ -130,18 +183,16 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
+    this._logger.info(`update areablocker state`, { isBusy, message: message ? message.message : null });
     this._isBusy = isBusy;
     this._blockerMessage = message;
   }
 
-  private _fillAccountOwnersOptions(accountOwners: string[]): void {
-    accountOwners.forEach((ownerName) => {
-      this.nameOfAccountOwnerOptions.push({label: ownerName, value: ownerName});
-    });
+  private _fillAccountOwnersOptions(accountOwners: {name: string, id: string}[]): void {
+      this.nameOfAccountOwnerOptions = accountOwners.map(({ name, id }) => ({ label: name, value: id }));
   }
 
   private _fillDescribeYourselfOptions(): void {
-
     this._appLocalization.get('applications.settings.accountSettings.describeYourselfOptions')
       .split(',')
       .map(option => option.trim())
@@ -174,5 +225,34 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
         this.describeYourselfOptions[this.describeYourselfOptions.length - 1].label,
       referenceId: partner.referenceId
     });
-  }
+
+    if (!this._permissionsService.hasPermission(KMCPermissions.ACCOUNT_UPDATE_SETTINGS)) {
+      this.accountSettingsForm.disable({ emitEvent: false });
+    }
+   }
+
+    public canLeaveWithoutSaving(): Observable<boolean> {
+        return Observable.create(observer => {
+            if (this.accountSettingsForm.dirty) {
+                this._browserService.confirm(
+                    {
+                        header: this._appLocalization.get('applications.settings.accountSettings.cancelEdit'),
+                        message: this._appLocalization.get('applications.settings.accountSettings.discard'),
+                        accept: () => {
+                            this._markFormFieldsAsUntouched();
+                            observer.next(true);
+                            observer.complete();
+                        },
+                        reject: () => {
+                            observer.next(false);
+                            observer.complete();
+                        }
+                    }
+                );
+            } else {
+                observer.next(true);
+                observer.complete();
+            }
+        });
+    }
 }

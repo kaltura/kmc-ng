@@ -12,7 +12,7 @@ import { EntriesRefineFiltersService,
     RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
 
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 
 @Component({
@@ -163,7 +163,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                         this._tableBlockerMessage = new AreaBlockerMessage({
                             message: result.errorMessage || 'Error loading entries',
                             buttons: [{
-                                label: 'Retry',
+                                label: this._appLocalization.get('app.common.retry'),
                                 action: () => {
                                     this._tableBlockerMessage = null;
                                     this._entriesStore.reload();
@@ -263,7 +263,12 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   onFreetextChanged(): void {
-    this._entriesStore.filter({ freetext: this._query.freetext });
+      // prevent searching for empty strings
+      if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
+          this._query.freetext = '';
+      }else {
+          this._entriesStore.filter({freetext: this._query.freetext});
+      }
   }
 
   onSortChanged(event) {

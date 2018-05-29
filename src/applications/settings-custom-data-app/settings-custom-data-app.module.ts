@@ -12,18 +12,19 @@ import {
   RadioButtonModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module.ts';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.module';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import { TooltipModule } from '@kaltura-ng/kaltura-ui/tooltip/k-tooltip.module';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.module';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui/kaltura-primeng-ui.module';
 import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
     CommonModule,
     AreaBlockerModule,
     DataTableModule,
-    KalturaCommonModule,
+    LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
     TooltipModule,
@@ -43,7 +44,8 @@ import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
     StickyModule,
     EntriesModule,
     DropdownModule,
-    InputSwitchModule
+    InputSwitchModule,
+    KMCPermissionsModule
   ],
   declarations: [
     SettingsCustomDataComponent,

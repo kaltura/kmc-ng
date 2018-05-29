@@ -1,8 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { EntryWidget } from '../entry-widget';
 import { Observable } from 'rxjs/Observable';
 import { DistributionProfileListAction } from 'kaltura-ngx-client/api/types/DistributionProfileListAction';
@@ -37,6 +36,7 @@ import { EntryDistributionUpdateAction } from 'kaltura-ngx-client/api/types/Entr
 import { EntryDistributionSubmitUpdateAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitUpdateAction';
 import { EntryDistributionRetrySubmitAction } from 'kaltura-ngx-client/api/types/EntryDistributionRetrySubmitAction';
 import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -70,7 +70,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _kalturaClient: KalturaClient,
               private _browserService: BrowserService) {
-    super(EntryWidgetKeys.Distribution);
+    super(ContentEntryViewSections.Distribution);
   }
 
   ngOnDestroy() {

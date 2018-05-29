@@ -3,8 +3,9 @@ import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {EntitlementService} from '../entitlement.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 function privacyContextLabelValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -15,13 +16,14 @@ function privacyContextLabelValidator(): ValidatorFn {
       }
     }
     return null;
-  }
+  };
 }
 
 @Component({
   selector: 'kNewEntitlement',
   templateUrl: './new-entitlement.component.html',
-  styleUrls: ['./new-entitlement.component.scss']
+  styleUrls: ['./new-entitlement.component.scss'],
+  providers: [KalturaLogger.createLogger('NewEntitlementComponent')]
 })
 export class NewEntitlementComponent implements OnInit, OnDestroy {
 
@@ -34,6 +36,8 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
+              private _logger: KalturaLogger,
+              private _browserService: BrowserService,
               private _entitlementService: EntitlementService) {
     this.addEntitlementForm = this._fb.group({
       privacyContextLabel: ['', [Validators.required, privacyContextLabelValidator()]]
@@ -47,16 +51,23 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  public _onCategorySelected(event: number) {
-    this._selectedCategory = event;
+  public _onCategorySelected(categoryId: number): void {
+    this._logger.info(`handle category selected action by user`, { categoryId });
+    this._selectedCategory = categoryId;
   }
 
   public _apply(): void {
+    this._logger.info(`handle add entitlement action by user`);
     this._blockerMessage = null;
     const privacyContextLabel = this.addEntitlementForm.controls['privacyContextLabel'].value;
     if (privacyContextLabel && privacyContextLabel.length) {
-      this._addEntitlment(this._selectedCategory, privacyContextLabel);
+        this._browserService.confirm({
+            header: this._appLocalization.get('applications.settings.integrationSettings.entitlement.addEntitlement.title'),
+            message: this._appLocalization.get('applications.settings.integrationSettings.entitlement.addEntitlement.confirmation'),
+            accept: () => this._addEntitlement(this._selectedCategory, privacyContextLabel)
+        });
     } else {
+      this._logger.info(`privacyContextLabel is empty, abort action, show alert`);
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization
           .get('applications.settings.integrationSettings.entitlement.addEntitlement.errors.requiredPrivacyContextLabel'),
@@ -64,6 +75,7 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
           {
             label: this._appLocalization.get('app.common.cancel'),
             action: () => {
+              this._logger.info(`user canceled, dismiss alert`);
               this._blockerMessage = null;
             }
           }
@@ -72,7 +84,8 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _addEntitlment(categoryId: number, privacyContext: string): void {
+  private _addEntitlement(categoryId: number, privacyContext: string): void {
+    this._logger.info(`handle add entitlement request by user`);
       this._entitlementService
           .addEntitlement({
               id: categoryId,
@@ -81,12 +94,14 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
           .cancelOnDestroy(this)
           .tag('block-shell')
           .subscribe(() => {
+              this._logger.info(`handle successful add entitlement request`);
                   this.onApply.emit();
                   if (this.parentPopupWidget) {
                       this.parentPopupWidget.close();
                   }
               },
               error => {
+                this._logger.warn(`handle failed add entitlement request, show alert`, { errorMessage: error.message });
                   this._blockerMessage = new AreaBlockerMessage(
                       {
                           message: error.message,
@@ -94,6 +109,7 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
                               {
                                   label: this._appLocalization.get('app.common.ok'),
                                   action: () => {
+                                    this._logger.info(`user dismissed alert`);
                                       this._blockerMessage = null;
                                   }
                               }
@@ -103,6 +119,7 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
   }
 
   public _cancel(): void {
+    this._logger.info(`handle cancel action by user`);
     if (this.parentPopupWidget) {
       this.parentPopupWidget.close();
     }

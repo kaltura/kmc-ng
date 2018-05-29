@@ -5,9 +5,10 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { Observer } from 'rxjs/Observer';
 import { serverConfig } from 'config/server';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -23,6 +24,7 @@ export interface PartnerInfo {
 export class UsersListComponent implements OnInit, OnDestroy {
   @ViewChild('editUserPopup') editUserPopup: PopupWidgetComponent;
 
+  public _kmcPermissions = KMCPermissions;
   public _usersAmount: string;
   public _usersTotalCount: number;
   public _usersInfo = '';

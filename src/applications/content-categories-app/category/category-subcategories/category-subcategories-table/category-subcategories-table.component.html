@@ -18,7 +18,7 @@
       <p-column styleClass="nameColumn"
                 field="name" [header]="'applications.content.table.name' | translate">
         <ng-template let-col let-subcategory="rowData" pTemplate="body">
-          <div class="kTitle kTableColumn" [kTooltip]="subcategory[col.field]" [maxWidth]="300">
+          <div class="kTitle kTableColumn" [kTooltip]="subcategory[col.field]">
             {{subcategory[col.field]}}
           </div>
         </ng-template>
@@ -35,7 +35,8 @@
           <span>{{subcategory[col.field]}}</span>
         </ng-template>
       </p-column>
-      <p-column styleClass="actionsColumn" header="">
+      <p-column styleClass="actionsColumn" header=""
+              *ngIf="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kNgIfPermitted">
         <ng-template let-subcategory="rowData" let-i="rowIndex" pTemplate="body">
           <div class="kTableActions">
             <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, i, subcategory)"></button>

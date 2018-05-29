@@ -1,15 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AppEventsService } from 'shared/kmc-shared/app-events';
-import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { ViewCategoryEntriesEvent } from './view-category-entries.event';
+import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Injectable()
 export class ViewCategoryEntriesService implements OnDestroy {
   private _viewSubscription: ISubscription;
   private _categoryId: number;
 
-  constructor(private _appEvents: AppEventsService, private _router: Router) {
+  constructor(private _appEvents: AppEventsService,
+              private _contentEntriesMainViewService: ContentEntriesMainViewService) {
   }
 
   ngOnDestroy() {
@@ -24,10 +25,7 @@ export class ViewCategoryEntriesService implements OnDestroy {
       this._viewSubscription = this._appEvents.event(ViewCategoryEntriesEvent)
         .subscribe(({ id }) => {
           this._categoryId = id;
-          this._router.navigate(['/content/entries/list'])
-            .catch(() => {
-              this._categoryId = null;
-            });
+            this._contentEntriesMainViewService.open();
         });
     } else {
       console.warn('Service was already initialized!');

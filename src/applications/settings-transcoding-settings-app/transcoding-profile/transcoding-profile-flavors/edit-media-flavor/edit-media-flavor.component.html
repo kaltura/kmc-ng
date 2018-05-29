@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <div class="kRow">
+      <div class="kRow" *ngIf="_kmcPermissions.WIDEVINE_PLUGIN_PERMISSION | kNgIfPermitted">
         <span class="kLabel">
           {{'applications.settings.transcoding.editFlavor.intermediateFlavorHandling' | translate}}
         </span>

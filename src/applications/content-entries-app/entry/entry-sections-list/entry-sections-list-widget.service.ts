@@ -1,22 +1,21 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from "@kaltura-ng/kaltura-common";
-import { SectionsList } from './sections-list';
-import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {Injectable, OnDestroy} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import {SectionsList} from './sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {EntryWidget} from '../entry-widget';
+import {
+    ContentEntryViewSections,
+    ContentEntryViewService
+} from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
-import { EntryWidget } from '../entry-widget';
-
-export interface SectionWidgetItem
-{
-    label : string,
-    isValid : boolean,
-    attached: boolean,
-    key : string
+export interface SectionWidgetItem {
+    label: string;
+    isValid: boolean;
+    attached: boolean;
+    key: ContentEntryViewSections;
 }
 
 @Injectable()
@@ -25,7 +24,8 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
     private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
     public sections$ : Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
-    constructor(private _appLocalization: AppLocalization)
+    constructor(private _appLocalization: AppLocalization,
+                private _contentEntryViewService: ContentEntryViewService)
     {
         super('sectionsList');
     }
@@ -90,7 +90,7 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
                 const sectionFormWidgetState =  formWidgetsState ? formWidgetsState[section.key] : null;
                 const isSectionActive = sectionFormWidgetState && sectionFormWidgetState.isActive;
 
-                if (this._isSectionEnabled(section.key, entry)) {
+                if (this._contentEntryViewService.isAvailable({ section: section.key, entry })) {
                     sections.push(
                         {
                             label: this._appLocalization.get(section.label),
@@ -106,33 +106,7 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
         this._sections.next(sections);
     }
 
-    private _isSectionEnabled(sectionKey : string, entry : KalturaMediaEntry) : boolean {
-        const mediaType = this.data.mediaType;
-        const externalMedia = this.data instanceof KalturaExternalMediaEntry;
-        switch (sectionKey) {
-            case EntryWidgetKeys.Thumbnails:
-                return mediaType !== KalturaMediaType.image;
-            case EntryWidgetKeys.Flavours:
-            case EntryWidgetKeys.Captions:
-                return mediaType !== KalturaMediaType.image && !this._isLive(entry) && !externalMedia;
-            case EntryWidgetKeys.Advertisements:
-                return mediaType !== KalturaMediaType.image && !this._isLive(entry);
-            case EntryWidgetKeys.Live:
-                return this._isLive(entry);
-            case EntryWidgetKeys.Clips:
-	            return mediaType !== KalturaMediaType.image && !externalMedia;
-            default:
-                return true;
-        }
-    }
-
-    private _isLive( entry : KalturaMediaEntry): boolean {
-        const mediaType = entry.mediaType;
-        return mediaType === KalturaMediaType.liveStreamFlash || mediaType === KalturaMediaType.liveStreamWindowsMedia || mediaType === KalturaMediaType.liveStreamRealMedia || mediaType === KalturaMediaType.liveStreamQuicktime;
-    }
-
-    ngOnDestroy()
-    {
+    ngOnDestroy() {
 
     }
 }

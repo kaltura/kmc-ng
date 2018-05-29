@@ -3,6 +3,7 @@
 .kUserSettings {
   margin-left: 12px;
   padding-top: 3px;
+  padding-bottom: 8px;
 }
 
 ul {
@@ -46,6 +47,9 @@ hr {
       color: $kTertiary;
     }
   }
+    span {
+        word-break: break-word;
+    }
 }
 
 .kIcon {

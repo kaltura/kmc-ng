@@ -72,7 +72,7 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
                     	sub = null;
                         const parser = new MetadataProfileParser();
                         const parsedProfiles = [];
-                        let parseFirstError : Error = null;
+                        let parseFirstError: Error = null;
 
                         response.objects.forEach(kalturaProfile =>
                         {
@@ -80,7 +80,8 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
                             if (parsedProfile.error)
                             {
                                 parseFirstError = parsedProfile.error;
-                            }else
+                            }
+                            else if (parsedProfile.profile)
                             {
                                 parsedProfiles.push(parsedProfile.profile);
                             }

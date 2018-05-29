@@ -5,7 +5,7 @@ import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaAssetParamsDeletePolicy } from 'kaltura-ngx-client/api/types/KalturaAssetParamsDeletePolicy';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {
   ExtendedKalturaConversionProfileAssetParams,
   KalturaConversionProfileWithAsset
@@ -13,11 +13,14 @@ import {
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kEditMediaFlavor',
   templateUrl: './edit-media-flavor.component.html',
-  styleUrls: ['./edit-media-flavor.component.scss']
+  styleUrls: ['./edit-media-flavor.component.scss'],
+  providers: [KalturaLogger.createLogger('EditMediaFlavorComponent')]
 })
 export class EditMediaFlavorComponent implements OnInit {
   @Input() profile: KalturaConversionProfileWithAsset;
@@ -28,6 +31,7 @@ export class EditMediaFlavorComponent implements OnInit {
 
   private _assetParams: ExtendedKalturaConversionProfileAssetParams;
 
+  public _kmcPermissions = KMCPermissions;
   public _availabilityOptions = [
     {
       value: KalturaFlavorReadyBehaviorType.inheritFlavorParams,
@@ -86,6 +90,8 @@ export class EditMediaFlavorComponent implements OnInit {
   public _deletePolicyField: AbstractControl;
 
   constructor(private _fb: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
+              private _logger: KalturaLogger,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -99,6 +105,7 @@ export class EditMediaFlavorComponent implements OnInit {
   }
 
   private _prepare(): void {
+    this._logger.info(`enter edit media flavor mode`);
     const assetParams = this._getFlavorAssetParams();
 
     // default values:
@@ -147,6 +154,11 @@ export class EditMediaFlavorComponent implements OnInit {
       forceNoneComplied: assetParams.forceNoneComplied,
       deletePolicy: assetParams.deletePolicy
     }, { emitEvent: false });
+
+    if (!this._permissionsService.hasPermission(KMCPermissions.FEATURE_MULTI_FLAVOR_INGESTION)) {
+        this._editFlavorForm.get('systemName').disable({onlySelf: true});
+        this._originField.disable({onlySelf: true});
+    }
   }
 
   private _getFlavorAssetParams(): ExtendedKalturaConversionProfileAssetParams {
@@ -188,6 +200,7 @@ export class EditMediaFlavorComponent implements OnInit {
   }
 
   public _saveFlavor(): void {
+    this._logger.info(`handle save flavor action by user`);
     const assetParams = this._assetParams;
     const formData = this._editFlavorForm.getRawValue();
 
@@ -195,8 +208,11 @@ export class EditMediaFlavorComponent implements OnInit {
     assetParams.origin = formData.origin;
     assetParams.systemName = formData.systemName;
     assetParams.forceNoneComplied = formData.forceNoneComplied;
-    assetParams.deletePolicy = formData.deletePolicy;
     assetParams.updated = this._editFlavorForm.dirty;
+
+    if (this._permissionsService.hasPermission(KMCPermissions.WIDEVINE_PLUGIN_PERMISSION)) {
+      assetParams.deletePolicy = formData.deletePolicy;
+    }
 
     this.saveFlavor.emit(assetParams);
     this.parentPopupWidget.close();

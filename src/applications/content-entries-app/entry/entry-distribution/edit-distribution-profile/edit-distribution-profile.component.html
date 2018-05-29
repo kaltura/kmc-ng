@@ -60,7 +60,7 @@
             </span>
           </div>
 
-          <div class="kRow" *ngIf="_requestXmlLink || _responseXmlLink">
+          <div class="kRow" *ngIf="(_requestXmlLink || _responseXmlLink) && (_kmcPermissions.CONTENTDISTRIBUTION_PLUGIN_PERMISSION | kNgIfPermitted)">
             <span class="kLabel">{{'applications.content.entryDetails.distribution.form.logs' | translate}}</span>
             <span class="kReadonlyData kDistributionLink">
             <a *ngIf="_requestXmlLink" [href]="_requestXmlLink" target="_blank">
@@ -109,6 +109,7 @@
         <div>
           <button pButton class="kButtonDanger"
                   icon="kIcontrash"
+                  [disabled]="_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_REMOVE | kDisabledIfNotPermitted"
                   [label]="'applications.content.entryDetails.distribution.form.delete' | translate"
                   (click)="_deleteProfile(_profile)"></button>
         </div>

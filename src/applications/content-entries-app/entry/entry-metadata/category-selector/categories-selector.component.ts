@@ -4,7 +4,7 @@ import {
   CategoriesStatus,
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { Subject } from 'rxjs/Subject';
 import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -215,7 +215,21 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
       if (categoryData) {
         this._selectedCategories.push(categoryData);
       } else {
-        // TODO sakal
+        this._categoriesSearchService.getCategory(node)
+          .subscribe(
+            loadedCategoryData => {
+              this._selectedCategories.push(loadedCategoryData);
+            },
+            error => {
+              this._browserService.alert({
+                header: this._appLocalization.get('app.common.error'),
+                message: error.message || this._appLocalization.get('applications.content.categories.bActions.failedToLoadCategoryData', [node]),
+                accept: () => {
+                  this._confirmClose = false;
+                  this.parentPopupWidget.close();
+                }
+              });
+            });
       }
     }
   }

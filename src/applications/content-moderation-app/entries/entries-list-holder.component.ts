@@ -1,6 +1,6 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {
     EntriesListComponent
 } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
@@ -15,22 +15,21 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ModerationsListService } from './moderations-list.service';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
   templateUrl: './entries-list-holder.component.html',
   providers: [BulkService]
 })
-export class EntriesListHolderComponent implements OnDestroy {
+export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
   @ViewChild('moderationDetails') private _moderationDetails: PopupWidgetComponent;
 
-	public _kmcPermissions = KMCPermissions;
-  private _shouldConfirmEntryApproval = false; // TODO [kmcng] need to get such permissions from somewhere
-  private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
+  public _kmcPermissions = KMCPermissions;
   public _defaultFilters: Partial<EntriesFilters> = {
     'moderationStatuses': ['1', '5'],
-      'sortDirection': SortDirection.Asc
+      'sortDirection': SortDirection.Desc
   };
 
   public _blockerMessage: AreaBlockerMessage = null;
@@ -73,11 +72,20 @@ export class EntriesListHolderComponent implements OnDestroy {
   constructor(private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _entriesStore: EntriesStore,
+              private _moderationsListService: ModerationsListService,
               private _permissionsService: KMCPermissionsService,
               private _bulkService: BulkService) {
+
+      if (this._moderationsListService.isViewAvailable) {
+          this._entriesStore.reload();
+      }
     if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MODERATE_APPROVE_REJECT)) {
       this._rowActions = [];
     }
+  }
+
+  ngOnInit() {
+
   }
 
   ngOnDestroy() {
@@ -90,7 +98,7 @@ export class EntriesListHolderComponent implements OnDestroy {
   }
 
   private _approveEntry(entryId: string, entryName: string): void {
-    if (!this._shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.approveMedia'),
         message: this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: entryName }),
@@ -105,10 +113,10 @@ export class EntriesListHolderComponent implements OnDestroy {
     const entriesToApprove = this._entriesList.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`);
     const entries = this._entriesList.selectedEntries.length <= 10 ? entriesToApprove.join(',').replace(/,/gi, '\n') : '';
     const message = this._entriesList.selectedEntries.length > 1 ?
-      (this._entriesList.selectedEntries.length <=10 ? this._appLocalization.get('applications.content.moderation.sureToApproveMultiple', { 0: entries }) :
+      (this._entriesList.selectedEntries.length <= 10 ? this._appLocalization.get('applications.content.moderation.sureToApproveMultiple', { 0: entries }) :
           this._appLocalization.get('applications.content.moderation.sureToApproveSelected')) :
       this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: entries });
-    if (!this._shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.approveMedia'),
         message: message,
@@ -149,7 +157,7 @@ export class EntriesListHolderComponent implements OnDestroy {
       (this._entriesList.selectedEntries.length <= 10 ? this._appLocalization.get('applications.content.moderation.sureToRejectMultiple', { 0: entries }) :
             this._appLocalization.get('applications.content.moderation.sureToRejectSelected')) :
       this._appLocalization.get('applications.content.moderation.sureToReject', { 0: entries });
-    if (!this._shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
         message: message,
@@ -161,7 +169,7 @@ export class EntriesListHolderComponent implements OnDestroy {
   }
 
   private _rejectEntry(entryId: string, entryName: string): void {
-    if (!this._shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
+    if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
       this._browserService.confirm({
         header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
         message: this._appLocalization.get('applications.content.moderation.sureToReject', { 0: entryName }),

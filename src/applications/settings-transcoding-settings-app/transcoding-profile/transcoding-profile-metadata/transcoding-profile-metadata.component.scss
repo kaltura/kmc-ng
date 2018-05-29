@@ -22,10 +22,10 @@
 
     .kRow {
       display: flex;
-      padding-top: 16px;
+      padding-top: 22px;
 
       .kLabel {
-        width: 160px;
+        width: 196px;
         flex: 0 0 auto;
         word-wrap: break-word;
         padding-right: 12px;
@@ -37,6 +37,7 @@
 
       input {
         width: 100%;
+        max-width: 500px;
         height: 34px;
 
         &.kHasError {
@@ -46,12 +47,19 @@
 
       textarea {
         width: 100%;
+        max-width: 500px;
         height: 76px;
         padding: 4px;
       }
 
+        kmultiselect{
+            max-width: 500px;
+            display: block;
+        }
+
       .kControl, k-prime-control {
         width: 100%;
+          max-width: 500px;
       }
     }
   }
@@ -70,13 +78,6 @@
   /* PrimeNG overrides */
   /*********************/
 
-  textarea.threeRows {
-    background: #FFFFFF;
-    border-radius: 3px;
-    border: 1px solid $kGrayscale4;
-    resize: none;
-    box-sizing: border-box;
-  }
 }
 
 :host /deep/ .kMetadataDetails {

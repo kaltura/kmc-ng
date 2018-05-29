@@ -6,21 +6,21 @@
         <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>
       </div>
     </li>
-    <li class="kMenuItemLabel"><span class="kIcon kIconhouse"></span>
+    <li class="kMenuItemLabel"><span (dblclick)="egg()" class="kIcon kIconhouse"></span>
       <div class="kMenuItem">
         <span>{{_userContext.partnerInfo.name}}</span>
         <a (click)="changeAccountPopup.open();parentPopup.close()">{{'app.userSettings.changeAccount' | translate}}</a>
       </div>
     </li>
   </ul>
-  <hr>
+  <!--hr>
   <div class="kMenuItemLabel">
     <span>{{'app.languageMenu.selectLang' | translate}}</span>
   </div>
 
   <ul class="kLanguages kOverrideFAIcons">
     <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" (onChange)="onLangSelected($event)"></p-dropdown>
-  </ul>
+  </ul-->
 </div>
 <kPopupWidget #changeAccountPopup [popupWidth]="500" [popupHeight]="370" [modal]="true">
   <ng-template>

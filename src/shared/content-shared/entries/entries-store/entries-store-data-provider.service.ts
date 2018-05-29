@@ -1,31 +1,32 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection } from './entries-store.service';
-import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
-import { Observable } from 'rxjs/Observable';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
-import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
-import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
-import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
-import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
-import { KalturaLiveStreamAdminEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamAdminEntry';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
-import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
-
+import {Injectable, OnDestroy} from '@angular/core';
+import {EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection} from './entries-store.service';
+import {KalturaBaseEntry} from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
+import {Observable} from 'rxjs/Observable';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import {KalturaMetadataSearchItem} from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
+import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
+import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
+import {KalturaSearchCondition} from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
+import {KalturaContentDistributionSearchItem} from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
+import {KalturaLiveStreamEntry} from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
+import {KalturaExternalMediaEntry} from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {BaseEntryListAction} from 'kaltura-ngx-client/api/types/BaseEntryListAction';
+import {KalturaMediaEntryFilter} from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
+import {KalturaLiveStreamAdminEntry} from 'kaltura-ngx-client/api/types/KalturaLiveStreamAdminEntry';
+import {KalturaUtils} from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {CategoriesModes} from 'app-shared/content-shared/categories/categories-mode-type';
+import {MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes} from 'app-shared/kmc-shared';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Injectable()
 export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy {
   constructor(private _kalturaServerClient: KalturaClient,
+              private _appPermissions: KMCPermissionsService,
               private _metadataProfileService: MetadataProfileStore) {
   }
 
@@ -245,7 +246,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
 
           // handle default value for media types
           if (!filter.mediaTypeIn) {
-            filter.mediaTypeIn = '1,2,5,6,201';
+	          filter.mediaTypeIn = '1,2,5,6';
+	          if (this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM)) {
+		          filter.mediaTypeIn += ',201';
+	          }
           }
 
           // handle default value for statuses
@@ -270,7 +274,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
   public executeQuery(data: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {
     const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
       type: KalturaResponseProfileType.includeFields,
-      fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,moderationCount,tags,categoriesIds,downloadUrl,sourceType'
+      fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,moderationCount,tags,categoriesIds,downloadUrl,sourceType,entitledUsersPublish,entitledUsersEdit'
     });
     let pagination: KalturaFilterPager = null;
 

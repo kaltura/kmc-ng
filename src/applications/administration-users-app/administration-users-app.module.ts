@@ -9,15 +9,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { ButtonModule, DataTableModule, DropdownModule, MenuModule, PaginatorModule } from 'primeng/primeng';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
     CommonModule,
     AreaBlockerModule,
     DataTableModule,
-    KalturaCommonModule,
+    LocalizationModule,
     PaginatorModule,
     MenuModule,
     ButtonModule,
@@ -30,7 +31,8 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
     TooltipModule,
     StickyModule,
     RouterModule.forChild(routing),
-    TooltipModule
+    TooltipModule,
+    KMCPermissionsModule
   ],
   declarations: [
     AdministrationUsersComponent,

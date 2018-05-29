@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KalturaSiteRestrictionType } from 'kaltura-ngx-client/api/types/KalturaSiteRestrictionType';
@@ -17,6 +17,8 @@ import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
 import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
 import { globalConfig } from 'config/global';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface AccessControlAutocompleteItem {
   value: string;
@@ -27,7 +29,8 @@ export interface AccessControlAutocompleteItem {
 @Component({
   selector: 'kAccessControlProfilesEditProfile',
   templateUrl: './edit-profile.component.html',
-  styleUrls: ['./edit-profile.component.scss']
+  styleUrls: ['./edit-profile.component.scss'],
+  providers: [KalturaLogger.createLogger('EditProfileComponent')]
 })
 export class EditProfileComponent implements OnInit, OnDestroy {
   @Input() parentPopup: PopupWidgetComponent;
@@ -41,6 +44,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   public _ipsFormatError = false;
   public _domainsFormatError = false;
+  public _kmcPermissions = KMCPermissions;
 
   public get _saveBtnDisabled(): boolean {
     return this._domainsFormatError || this._ipsFormatError || this._nameField.invalid;
@@ -49,7 +53,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   public _countryCodes: { value: string }[] = globalConfig.client.countriesList.map(code => {
     return {
       value: code, label: this._appLocalization.get(`countries.${code}`)
-    }
+    };
   });
 
   public _profileForm: FormGroup;
@@ -79,6 +83,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _fb: FormBuilder,
+              private _permissionsService: KMCPermissionsService,
+              private _logger: KalturaLogger,
               public _store: AccessControlProfilesStore) {
     this._convertDomainsUserInputToValidValue = this._convertDomainsUserInputToValidValue.bind(this);
     this._convertIpsUserInputToValidValue = this._convertIpsUserInputToValidValue.bind(this);
@@ -95,11 +101,17 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   private _prepare(): void {
     if (this.profile) {
+      this._logger.info(`enter edit profile mode`, { id: this.profile.id, name: this.profile.name });
       this._profile = this.profile;
       this._setInitialValue(this._profile);
       this._headerTitle = this._appLocalization.get('applications.settings.accessControl.editAccessControlProfile');
     } else {
+      this._logger.info(`enter new profile mode`);
       this._headerTitle = this._appLocalization.get('applications.settings.accessControl.addAccessControlProfile');
+    }
+
+    if (!this._permissionsService.hasPermission(KMCPermissions.ACCESS_CONTROL_UPDATE)) {
+      this._profileForm.disable({ emitEvent: false });
     }
   }
 
@@ -107,45 +119,53 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     let domainsType = null;
     let allowedDomains = [];
     let restrictedDomains = [];
-    if (profile.view.domain) {
+    if (profile.view.domain && profile.view.domain.details && profile.view.domain.details.length) {
       const domain = profile.view.domain;
-      const isAuthorized = domain.isAuthorized;
-      domainsType = isAuthorized ? KalturaSiteRestrictionType.allowSiteList : KalturaSiteRestrictionType.restrictSiteList;
-      allowedDomains = isAuthorized ? domain.details.map(value => ({ value, __tooltip: value })) : [];
-      restrictedDomains = !isAuthorized ? domain.details.map(value => ({ value, __tooltip: value })) : [];
+      if (domain.isAuthorized !== null) {
+          const isAuthorized = domain.isAuthorized;
+          domainsType = isAuthorized ? KalturaSiteRestrictionType.allowSiteList : KalturaSiteRestrictionType.restrictSiteList;
+          allowedDomains = isAuthorized ? domain.details.map(value => ({value, __tooltip: value})) : [];
+          restrictedDomains = !isAuthorized ? domain.details.map(value => ({value, __tooltip: value})) : [];
+      }
     }
 
     let countriesType = null;
     let allowedCountries = [];
     let restrictedCountries = [];
-    if (profile.view.countries) {
+    if (profile.view.countries && profile.view.countries.details && profile.view.countries.details.length) {
       const countries = profile.view.countries;
-      const isAuthorized = countries.isAuthorized;
-      countriesType = isAuthorized ? KalturaCountryRestrictionType.allowCountryList : KalturaCountryRestrictionType.restrictCountryList;
-      allowedCountries = isAuthorized ? countries.details : [];
-      restrictedCountries = !isAuthorized ? countries.details : [];
+        if (countries.isAuthorized !== null) {
+            const isAuthorized = countries.isAuthorized;
+            countriesType = isAuthorized ? KalturaCountryRestrictionType.allowCountryList : KalturaCountryRestrictionType.restrictCountryList;
+            allowedCountries = isAuthorized ? countries.details : [];
+            restrictedCountries = !isAuthorized ? countries.details : [];
+        }
     }
 
     let ipsType = null;
     let allowedIps = [];
     let restrictedIps = [];
-    if (profile.view.ips) {
+    if (profile.view.ips && profile.view.ips.details && profile.view.ips.details.length) {
       const ips = profile.view.ips;
-      const isAuthorized = ips.isAuthorized;
-      ipsType = isAuthorized ? KalturaIpAddressRestrictionType.allowList : KalturaIpAddressRestrictionType.restrictList;
-      allowedIps = isAuthorized ? ips.details.map(value => ({ value, __tooltip: value })) : [];
-      restrictedIps = !isAuthorized ? ips.details.map(value => ({ value, __tooltip: value })) : [];
+        if (ips.isAuthorized !== null) {
+            const isAuthorized = ips.isAuthorized;
+            ipsType = isAuthorized ? KalturaIpAddressRestrictionType.allowList : KalturaIpAddressRestrictionType.restrictList;
+            allowedIps = isAuthorized ? ips.details.map(value => ({value, __tooltip: value})) : [];
+            restrictedIps = !isAuthorized ? ips.details.map(value => ({value, __tooltip: value})) : [];
+        }
     }
 
     let flavorsType = null;
     let allowedFlavors = [];
     let restrictedFlavors = [];
-    if (profile.view.flavors) {
+    if (profile.view.flavors && profile.view.flavors.details && profile.view.flavors.details.length) {
       const flavors = profile.view.flavors;
-      const isAuthorized = flavors.isAuthorized;
-      flavorsType = isAuthorized ? KalturaLimitFlavorsRestrictionType.allowList : KalturaLimitFlavorsRestrictionType.restrictList;
-      allowedFlavors = isAuthorized ? flavors.details.map(item => item.id) : [];
-      restrictedFlavors = !isAuthorized ? flavors.details.map(item => item.id) : [];
+        if (flavors.isAuthorized !== null) {
+            const isAuthorized = flavors.isAuthorized;
+            flavorsType = isAuthorized ? KalturaLimitFlavorsRestrictionType.allowList : KalturaLimitFlavorsRestrictionType.restrictList;
+            allowedFlavors = isAuthorized ? flavors.details.map(item => item.id) : [];
+            restrictedFlavors = !isAuthorized ? flavors.details.map(item => item.id) : [];
+        }
     }
 
     let secureVideo = false;
@@ -177,6 +197,10 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       allowPreview,
       preview
     });
+
+    if (profile.isDefault) {
+      this._nameField.disable({ onlySelf: true });
+    }
   }
 
   private _buildForm(): void {
@@ -385,20 +409,13 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     return message;
   }
 
-  private _getAutocompleteList(allowed: AccessControlAutocompleteItem[], restricted: AccessControlAutocompleteItem[]): string {
-    const allowedList = Array.isArray(allowed) ? allowed.map(({ value }) => value).join(',') : '';
-    const restrictedList = Array.isArray(restricted) ? restricted.map(({ value }) => value).join(',') : '';
-
-    return allowedList || restrictedList;
+  private _getAutocompleteList(items: AccessControlAutocompleteItem[]): string {
+      return Array.isArray(items) ? items.map(({value}) => value).join(',') : '';
   }
 
-  private _getList(allowed: string[], restricted: string[]): string {
-    const allowedList = Array.isArray(allowed) ? allowed.join(',') : '';
-    const restrictedList = Array.isArray(restricted) ? restricted.join(',') : '';
-
-    return allowedList || restrictedList;
+  private _getList(items: string[]): string {
+      return Array.isArray(items) ? items.join(',') : '';
   }
-
   private _proceedSave(): void {
     const formValue = this._profileForm.getRawValue();
     const accessControlProfile = this._profile || new KalturaAccessControl();
@@ -409,7 +426,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     const { domainsType, allowedDomains, restrictedDomains } = formValue;
     if (domainsType !== null) {
-      const siteList = this._getAutocompleteList(allowedDomains, restrictedDomains);
+      const items = domainsType === KalturaSiteRestrictionType.allowSiteList ? allowedDomains : restrictedDomains;
+      const siteList = this._getAutocompleteList(items);
       if (siteList) {
         accessControlProfile.restrictions.push(new KalturaSiteRestriction({
           siteList,
@@ -420,7 +438,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     const { countriesType, allowedCountries, restrictedCountries } = formValue;
     if (countriesType !== null) {
-      const countryList = this._getList(allowedCountries, restrictedCountries);
+      const items = countriesType === KalturaCountryRestrictionType.allowCountryList ? allowedCountries : restrictedCountries;
+      const countryList = this._getList(items);
       if (countryList) {
         accessControlProfile.restrictions.push(new KalturaCountryRestriction({
           countryList,
@@ -431,7 +450,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     const { ipsType, allowedIps, restrictedIps } = formValue;
     if (ipsType !== null) {
-      const ipAddressList = this._getAutocompleteList(allowedIps, restrictedIps);
+      const items = ipsType === KalturaIpAddressRestrictionType.allowList ? allowedIps : restrictedIps;
+      const ipAddressList = this._getAutocompleteList(items);
       if (ipAddressList) {
         accessControlProfile.restrictions.push(new KalturaIpAddressRestriction({
           ipAddressList,
@@ -442,7 +462,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     const { flavorsType, allowedFlavors, restrictedFlavors } = formValue;
     if (flavorsType !== null) {
-      const flavorParamsIds = this._getList(allowedFlavors, restrictedFlavors);
+      const items = flavorsType === KalturaLimitFlavorsRestrictionType.allowList ?  allowedFlavors : restrictedFlavors;
+      const flavorParamsIds = this._getList(items);
       if (flavorParamsIds) {
         accessControlProfile.restrictions.push(new KalturaLimitFlavorsRestriction({
           flavorParamsIds,
@@ -461,6 +482,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         }));
       }
     }
+
+    this._logger.info(`emit 'onSave' action`);
 
     this.parentPopup.close();
     this.onSave.emit(accessControlProfile);
@@ -498,19 +521,24 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   }
 
   public _save(): void {
+    this._logger.info(`handle 'save' action by the user`);
     if (!this._nameField.value.trim()) {
       this._browserService.alert({
         header: this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.validationFailed'),
         message: this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.profileNameRequired'),
       });
+      this._logger.info(`profile name is empty, stop saving`);
       return;
     }
 
     const confirmationMessage = this._getConfirmationMessage();
     if (confirmationMessage) {
+      this._logger.info(`confirm saving`, { confirmationMessage });
       this._browserService.confirm({
+        header: this._appLocalization.get('applications.settings.accessControl.editForm.note'),
         message: confirmationMessage,
-        accept: () => this._proceedSave()
+        accept: () => this._proceedSave(),
+        reject: () => this._logger.info(`action aborted by the user`)
       });
     } else {
       this._proceedSave();

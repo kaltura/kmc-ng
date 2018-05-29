@@ -12,7 +12,7 @@ import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng
 import {
   CategoriesTreeComponent
 } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 
 export type SelectedCategory = number | 'missing' | null;

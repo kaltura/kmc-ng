@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
@@ -12,10 +12,10 @@ import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { LocalizationModule } from '@kaltura-ng/mc-shared/localization';
 
 import {
     AppBootstrap,
-    APP_AUTH_EVENTS,
     AuthModule,
     BrowserService,
     KMCShellModule,
@@ -23,7 +23,7 @@ import {
 } from 'app-shared/kmc-shell';
 import {
   AppStorage,
-  KalturaCommonModule,
+    KalturaCommonModule,
   OperationTagModule,
   UploadManagement
 } from '@kaltura-ng/kaltura-common';
@@ -74,16 +74,22 @@ import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { PlaylistCreationModule } from 'app-shared/kmc-shared/events/playlist-creation';
-import {CategoryCreationModule} from 'app-shared/kmc-shared/events/category-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 import { ViewCategoryEntriesModule } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.module';
 import { AccessControlProfileModule } from 'app-shared/kmc-shared/access-control/access-control-profile.module';
 import {PlayersStore} from "app-shared/kmc-shared/players";
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
-import { KMCAuthenticationEvents } from './kmc-authentication-events';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
+import { APP_STORAGE_TOKEN } from '@kaltura-ng/kaltura-common/app-storage.service';
+import { KmcLogsModule } from 'app-shared/kmc-shell/kmc-logs/kmc-logs.module';
+import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger/kaltura-logger.module';
+import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
+import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
+import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
+import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -96,7 +102,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
 
 @NgModule({
   imports: <any>[
-    AuthModule,
+    AuthModule.forRoot(),
     FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -134,17 +140,22 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     StickyModule.forRoot(),
     OperationTagModule.forRoot(),
     PlaylistCreationModule.forRoot(),
-    CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot(),
     CategoriesStatusModule.forRoot(),
     ViewCategoryEntriesModule.forRoot(),
     AccessControlProfileModule.forRoot(),
-      KMCPermissionsModule.forRoot(),
+    KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
-    KalturaClientModule.forRoot(kalturaClientOptionsFactory)
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      KmcLogsModule.forRoot(),
+      KalturaLoggerModule.forRoot(),
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      KmcViewsModule.forRoot(),
+      LocalizationModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
+      AppDefaultViewComponent,
     DashboardComponent,
     AppMenuComponent,
     AppMenuContentComponent,
@@ -157,7 +168,9 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     InvalidLoginHashFormComponent,
     ChangeAccountComponent,
     ChangelogComponent,
-    ChangelogContentComponent
+    ChangelogContentComponent,
+    LoginByKSComponent,
+      NotFoundPageComponent
   ],
   bootstrap: <any>[
     AppComponent
@@ -170,9 +183,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
           provide: KalturaLoggerName, useValue: 'kmc'
       },
       {
-          provide: APP_AUTH_EVENTS, useClass: KMCAuthenticationEvents
-      },
-    { provide: AppStorage, useExisting: BrowserService },
+           provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
     ConfirmationService
   ]
 })
@@ -182,7 +193,7 @@ export class AppModule {
                 uploadManagement: UploadManagement) {
 
         if (globalConfig.client.production) {
-            kalturaLogger.setOptions({level: 'Warn'});
+            kalturaLogger.setOptions({level: 'Error'});
         } else {
             kalturaLogger.setOptions({level: 'All'});
         }

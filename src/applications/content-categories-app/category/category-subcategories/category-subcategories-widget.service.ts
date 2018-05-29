@@ -1,10 +1,10 @@
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
-import {CategoryWidgetKeys} from '../category-widget-keys';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
@@ -22,6 +22,7 @@ import {CategoriesUtilsService} from '../../categories-utils.service';
 import {CategoryService} from '../category.service';
 import { modulesConfig } from 'config/modules';
 import { globalConfig } from 'config/global';
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -34,12 +35,12 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
               private _categoriesUtilsService: CategoriesUtilsService,
               private _categoryService: CategoryService,
               private _appLocalization: AppLocalization) {
-    super(CategoryWidgetKeys.SubCategories);
+    super(ContentCategoryViewSections.SubCategories);
   }
 
   protected onActivate(firstTimeActivating: boolean) {
     if (this.data && !this.data.directSubCategoriesCount) {
-      this._categoryService.openSection(CategoryWidgetKeys.Metadata);
+      this._categoryService.openSection(ContentCategoryViewSections.Metadata);
       return;
     }
 
@@ -99,7 +100,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
       const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
-        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, tags'
+        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, tags, partnerSortValue'
       });
 
       // build the request

@@ -18,5 +18,9 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 42px !important;
+    .kSingleTableMode {
+      height: auto !important;
+    }
   }
 }
+

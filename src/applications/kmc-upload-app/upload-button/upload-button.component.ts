@@ -2,6 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {PrepareEntryComponent} from '../prepare-entry/prepare-entry.component';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kUploadButton',
@@ -15,7 +16,16 @@ export class UploadButtonComponent {
   @ViewChild('prepareEntry') prepareEntryComponent: PrepareEntryComponent;
   @ViewChild('bulkuploadmenu') bulkUploadMenu: PopupWidgetComponent;
 
-  constructor() {
+  disabled = true;
+
+  constructor(private _appPermissions: KMCPermissionsService) {
+      this.disabled = !this._appPermissions.hasAnyPermissions([
+          KMCPermissions.CONTENT_INGEST_UPLOAD,
+          KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
+          KMCPermissions.CONTENT_INGEST_ORPHAN_VIDEO,
+          KMCPermissions.CONTENT_INGEST_ORPHAN_AUDIO,
+          KMCPermissions.LIVE_STREAM_ADD
+      ]);
   }
 
   _onMenuItemSelected(item: string): void {

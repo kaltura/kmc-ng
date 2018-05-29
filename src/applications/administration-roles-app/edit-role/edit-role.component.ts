@@ -3,13 +3,14 @@ import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observer } from 'rxjs/Observer';
 import { PermissionsTableComponent, RolePermissionFormValue } from '../permissions-table/permissions-table.component';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { RolesStoreService } from '../roles-store/roles-store.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kEditRole',
@@ -50,7 +51,9 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
               private _listDiffers: IterableDiffers,
               private _rolesService: RolesStoreService,
               private _permissionsService: KMCPermissionsService,
-              private _appLocalization: AppLocalization) {
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization,
+              private _kmcPermissionsService: KMCPermissionsService) {
     this._buildForm();
   }
 
@@ -79,16 +82,36 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
       this._logger.info(`enter edit role mode for existing role`,{ id: this.role.id, name: this.role.name });
       this._title = this._appLocalization.get('applications.administration.role.titleEdit');
       this._actionBtnLabel = this._appLocalization.get('applications.administration.role.save');
-      this._permissions = (this.role.permissionNames || '').split(',');
+      this._permissions = this._addMissingRolePermissions((this.role.permissionNames || '').split(','));
       this._editRoleForm.setValue({
         name: this.role.name,
         description: this.role.description
       }, { emitEvent: false });
-    }
 
-    if (!this._permissionsService.hasPermission(KMCPermissions.ADMIN_ROLE_UPDATE)) {
-      this._editRoleForm.disable({ emitEvent: false });
+        if (!this._permissionsService.hasPermission(KMCPermissions.ADMIN_ROLE_UPDATE)) {
+            this._editRoleForm.disable({ emitEvent: false });
+        }
     }
+  }
+
+  private _addMissingRolePermissions(permissions: string[]): string[] {
+      const result = [...permissions];
+      const uniquePermissions = new Set(permissions || []);
+
+      permissions.forEach(permission => {
+          const permissionKey = this._kmcPermissionsService.getPermissionKeyByName(permission);
+          const linkedPermissionKey = this._kmcPermissionsService.getLinkedPermissionByKey(permissionKey);
+          const linkedPermission = this._kmcPermissionsService.getPermissionNameByKey(linkedPermissionKey);
+          if (linkedPermission && result.indexOf(linkedPermission) === -1) {
+              result.push(linkedPermission);
+              this._logger.debug('add missing linked permission', () => ({
+                  linkedPermission,
+                      permission
+              }));
+          }
+      });
+
+      return result;
   }
 
   private _buildForm(): void {
@@ -101,14 +124,23 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
     this._descriptionField = this._editRoleForm.controls['description'];
   }
 
-  private _markFormFieldsAsTouched() {
-    this._editRoleForm.markAsTouched();
-    this._editRoleForm.updateValueAndValidity();
-  }
+    private _markFormFieldsAsTouched() {
+        for (const controlName in this._editRoleForm.controls) {
+            if (this._editRoleForm.controls.hasOwnProperty(controlName)) {
+                this._editRoleForm.get(controlName).markAsTouched();
+                this._editRoleForm.get(controlName).updateValueAndValidity();
+            }
+        }
+        this._editRoleForm.updateValueAndValidity();
+    }
 
-  private _getObserver(retryFn: () => void): Observer<void> {
+
+    private _getObserver(retryFn: () => void, successFn: () => void = null): Observer<void> {
     return <Observer<void>>{
       next: () => {
+        if (typeof successFn === 'function') {
+          successFn();
+        }
         this._logger.info(`handle successful update by the server`);
         this.parentPopupWidget.close();
         this._rolesService.reload();
@@ -193,11 +225,17 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
     const { name, description } = this._editRoleForm.value;
     const editedRole = new KalturaUserRole({ name, description, permissionNames });
     const retryFn = () => this._updateRole();
+    const successFn = () => {
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.administration.role.roleUpdated'),
+        message: this._appLocalization.get('applications.administration.role.roleUpdatedMessage')
+      });
+    };
 
     this._rolesService.updateRole(this.role.id, editedRole)
       .cancelOnDestroy(this)
       .tag('block-shell')
-      .subscribe(this._getObserver(retryFn));
+      .subscribe(this._getObserver(retryFn, successFn));
   }
 
   public _addRole(): void {

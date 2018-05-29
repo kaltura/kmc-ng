@@ -10,14 +10,11 @@ import {KalturaLiveStreamEntry} from 'kaltura-ngx-client/api/types/KalturaLiveSt
 import {KalturaDVRStatus} from 'kaltura-ngx-client/api/types/KalturaDVRStatus';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import {LiveStreamRegenerateStreamTokenAction} from 'kaltura-ngx-client/api/types/LiveStreamRegenerateStreamTokenAction';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
-
-import {EntryWidgetKeys} from '../entry-widget-keys';
 import {LiveXMLExporter} from './live-xml-exporter';
 import {AVAIL_BITRATES} from './bitrates';
 import {EntryWidget} from '../entry-widget';
-import {serverConfig} from 'config/server';
 import {ConversionProfileListAction} from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
 import {KalturaConversionProfileFilter} from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
 import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
@@ -25,6 +22,9 @@ import {KalturaConversionProfileType} from 'kaltura-ngx-client/api/types/Kaltura
 import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 export interface bitrate {
 	enabled: boolean,
@@ -60,8 +60,13 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		{label: this._appLocalization.get('applications.content.entryDetails.live.enabled'), value: false}
 	];
 
-	constructor(private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
-		super(EntryWidgetKeys.Live);
+	constructor(private _kalturaServerClient: KalturaClient,
+              private _appAuthentication: AppAuthentication,
+              private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
+              private _browserService: BrowserService,
+                private _liveDasboardAppViewService: LiveDashboardAppViewService) {
+		super(ContentEntryViewSections.Live);
 	}
 
 	protected onReset() {
@@ -107,55 +112,62 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	protected onActivate(firstTimeActivating : boolean) {
 		// set live type and load data accordingly
 		switch (this.data.sourceType.toString()) {
-			case KalturaSourceType.liveStream.toString():
+      case KalturaSourceType.liveStream.toString():
 				this._liveType = "kaltura";
-				this._liveDashboardEnabled = serverConfig.externalApps.liveDashboard.enabled;
+        this._liveDashboardEnabled = this._liveDasboardAppViewService.isAvailable()
+          && this._permissionsService.hasPermission(KMCPermissions.ANALYTICS_BASE);
 				this._setRecordStatus();
 				this._setDVRStatus();
 				super._showLoader();
 				this._conversionProfiles.next({items: []});
 
-				return this._kalturaServerClient.request(new ConversionProfileListAction({
-						filter: new KalturaConversionProfileFilter({
-							typeEqual: KalturaConversionProfileType.liveStream
-						}),
-						pager: new KalturaFilterPager({
-							pageIndex: 1,
-							pageSize: 500
-						})
-					}))
-					.cancelOnDestroy(this, this.widgetReset$)
-					.monitor('get conversion profiles')
+        if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KALTURA_LIVE_STREAM)) {
+          return this._kalturaServerClient.request(new ConversionProfileListAction({
+            filter: new KalturaConversionProfileFilter({
+              typeEqual: KalturaConversionProfileType.liveStream
+            }),
+            pager: new KalturaFilterPager({
+              pageIndex: 1,
+              pageSize: 500
+            })
+          }))
+            .cancelOnDestroy(this, this.widgetReset$)
+            .monitor('get conversion profiles')
 
-					.catch((error, caught) =>
-					{
-						super._hideLoader();
-						super._showActivationError();
-						this._conversionProfiles.next({items: []});
-						return Observable.throw(error);
-					})
-					.do(response => {
-						if (response.objects && response.objects.length) {
-							// set the default profile first in the array
-							response.objects.sort(function (a, b) {
-								if (a.isDefault > b.isDefault)
-									return -1;
-								if (a.isDefault < b.isDefault)
-									return 1;
-								return 0;
-							});
-							// create drop down options array
-							let conversionProfiles = [];
-							response.objects.forEach(profile => {
-								conversionProfiles.push({label: profile.name, value: profile.id});
-								if (this.data.conversionProfileId === profile.id) {
-									this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
-								}
-							});
-							this._conversionProfiles.next({items: conversionProfiles});
-							super._hideLoader();
-						}
-					});
+            .catch((error, caught) => {
+              super._hideLoader();
+              super._showActivationError();
+              this._conversionProfiles.next({ items: [] });
+              return Observable.throw(error);
+            })
+            .do(response => {
+              if (response.objects && response.objects.length) {
+                // set the default profile first in the array
+                response.objects.sort((a, b) => {
+                  if (a.isDefault > b.isDefault) {
+                    return -1;
+                  }
+                  if (a.isDefault < b.isDefault) {
+                    return 1;
+                  }
+                  return 0;
+                });
+                // create drop down options array
+                const conversionProfiles = [];
+                response.objects.forEach(profile => {
+                  conversionProfiles.push({ label: profile.name, value: profile.id });
+                  if (this.data.conversionProfileId === profile.id) {
+                    this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
+                  }
+                });
+                this._conversionProfiles.next({ items: conversionProfiles });
+                super._hideLoader();
+              }
+            });
+        } else {
+          super._hideLoader();
+          break;
+        }
 			case KalturaSourceType.akamaiUniversalLive.toString():
 				this._liveType = "universal";
 				this._showDVRWindow = true;
@@ -305,16 +317,6 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 					}
 				}
 			);
-	}
-
-	public _openLiveReport(): void {
-		//const base_url = window.location.protocol + '//' + serverConfig.externalApps.liveAnalytics.uri;
-		//const url = base_url + '/apps/liveanalytics/' + serverConfig.externalApps.liveAnalytics.version + '/index.html#/entry/' + this.data.id + '/nonav/';
-		//this._browserService.openLink(url);
-		this._browserService.alert({
-			header: "Note",
-			message: "Live Analytics Currently Not Supported"
-		});
 	}
 
 	ngOnDestroy()

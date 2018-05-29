@@ -4,13 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { async } from 'rxjs/scheduler/async';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
-import { TranscodingProfileWidgetKeys } from '../transcoding-profile-widget-keys';
 import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Injectable()
 export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -27,8 +28,9 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
   constructor(private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization,
               private _kalturaClient: KalturaClient,
+              private _permissionsService: KMCPermissionsService,
               private _storageProfilesStore: StorageProfilesStore) {
-    super(TranscodingProfileWidgetKeys.Metadata);
+    super(SettingsTranscodingProfileViewSections.Metadata);
     this._buildForm();
   }
 
@@ -68,7 +70,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
       .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
-            isValid: this.metadataForm.status === 'VALID',
+            isValid: this.metadataForm.status !== 'INVALID',
             isDirty: this.metadataForm.dirty
           });
         }
@@ -125,7 +127,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> | void {
     const prepare = () => {
-      if (firstTimeActivating) {
+      if (firstTimeActivating && (this.isNewData || this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE))) {
         this._monitorFormChanges();
       }
 
@@ -135,10 +137,17 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
         defaultEntryId: this.data.defaultEntryId,
         storageProfileId: this.data.storageProfileId || null
       });
+
+      if (!this.isNewData && !this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE)) {
+
+        this.metadataForm.disable();
+        this.metadataForm.markAsUntouched();
+      }
     };
     super._showLoader();
 
-    this.hideStorageProfileIdField = this.data.type && this.data.type === KalturaConversionProfileType.liveStream;
+    const hasStorageProfilesPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_REMOTE_STORAGE_INGEST);
+    this.hideStorageProfileIdField = (this.data.type && this.data.type === KalturaConversionProfileType.liveStream) || !hasStorageProfilesPermission;
     if (!this.hideStorageProfileIdField) {
       return this._loadRemoteStorageProfiles()
         .cancelOnDestroy(this)

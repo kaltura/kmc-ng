@@ -5,15 +5,19 @@
             <div class="kIconkaltura_logo kLogo"></div>
             <div class="k-beta-logo kBeta"></div>
 
-            <div *ngFor="let item of menuConfig">
-                <a *ngIf="item.titleToken.length" [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
+            <div *ngFor="let item of leftMenuConfig">
+                <a *ngIf="item.titleToken.length && !item.icon" [class.activeLink]="item === selectedMenuItem" (click)="item.open()">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
             </div>
 
             <div class="kMenu-right">
+                <k-logs-record mode="button"
+                               *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
+                               [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"></k-logs-record>
                 <kUploadButton></kUploadButton>
                 <kUploadMonitor [appmenu]="appmenu"></kUploadMonitor>
-                <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem?.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
-                <i class="kIcongear" (click)="navigate('/settings')" [class.open]="selectedMenuItem?.routePath==='settings'" [kTooltip]="'app.menu.Settings' | translate" [placement]="'bottom'"></i>
+
+                <i *ngFor="let item of rightMenuConfig" (click)="item.open()" [ngClass]="item.icon" [class.open]="item === selectedMenuItem" [kTooltip]="'app.menu.'+item.titleToken | translate" [placement]="'bottom'"></i>
+
                 <i #help class="kIconhelp" [class.has-notification]="_showChangelog" [class.open]="_helpMenuOpened"></i>
                 <div #username class="kUserName">
                     <span>{{_userContext.fullName}}</span>
@@ -38,7 +42,6 @@
 
 <kPopupWidget #usersettings
               [popupWidth]="240"
-              [popupHeight]="232"
               [closeBtn]="false"
               [targetRef]="username"
               [targetOffset]="{'x': 0, 'y': 30}"
@@ -51,21 +54,26 @@
 
 <kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">
     <div class="kHelpMenu">
-        <p class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.kmcOverview' | translate}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.mediaManagement' | translate}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.productTour' | translate}}</p>
+        <p [hidden]="!_kmcOverviewLinkExists && !_mediaManagementLinkExists" class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
+        <p [hidden]="!_kmcOverviewLinkExists" class="kHelpLink" (click)="openHelpLink('kmcOverview')">{{'app.helpMenu.kmcOverview' | translate}}</p>
+        <p [hidden]="!_mediaManagementLinkExists" class="kHelpLink" (click)="openHelpLink('mediaManagement')">{{'app.helpMenu.mediaManagement' | translate}}</p>
+        <p class="kDisabled">{{'app.helpMenu.productTour' | translate}}</p>
         <hr>
-        <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.userManual' | translate}}</p>
-        <p class="kHelpLink">{{'app.helpMenu.contact' | translate}}</p>
+        <p [hidden]="!_userManualLinkExists && !_supportLinkExists" class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
+        <p [hidden]="!_userManualLinkExists" class="kDisabled">{{'app.helpMenu.userManual' | translate}}</p>
+        <p [hidden]="!_supportLinkExists" class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
+        <k-logs-record mode="link"
+                       [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"
+                       [class.kHelpLinkHidden]="!(_kmcLogs.logsRecordMode | async).enabled"></k-logs-record>
         <hr>
         <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
-        <div class="kContexualHelp">
+        <k-power-user-console [class.kHelpLinkHidden]="!_powerUser"></k-power-user-console>
+
+        <!--div class="kContexualHelp">
             <hr>
             <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
             <p class="kHelpLink">Contextual link 1</p>
             <p class="kHelpLink">Contextual link 2</p>
-        </div>
+        </div-->
     </div>
 </kPopupWidget>

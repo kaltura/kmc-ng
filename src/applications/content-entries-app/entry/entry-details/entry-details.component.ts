@@ -69,10 +69,9 @@ export class EntryDetails implements OnInit, OnDestroy {
 		this.browserService.openLink(landingPage);
 	}
 
-	navigateToEntry(entryId) {
-		this._entryStore.openEntry(entryId);
-	}
-
+    navigateToEntry(entryId: string): void {
+        this._entryStore.openEntry(entryId);
+    }
 
 	ngOnDestroy() {
         this._widgetService.detachForm();

@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
@@ -13,6 +13,7 @@ import { KalturaAPIException, KalturaClient } from 'kaltura-ngx-client';
 import { CreateNewTranscodingProfileEvent } from 'app-shared/kmc-shared/events/transcoding-profile-creation';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface NewTranscodingProfileFormData {
   name: string;
@@ -43,6 +44,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
   constructor(private _formBuilder: FormBuilder,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _storageProfilesStore: StorageProfilesStore,
               private _kalturaClient: KalturaClient,
               private _appEvents: AppEventsService) {
@@ -68,7 +70,8 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
-    this._hideIngestFromRemoteStorage = this.profileType && this.profileType === KalturaConversionProfileType.liveStream;
+    const hasStorageProfilesPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_REMOTE_STORAGE_INGEST);
+    this._hideIngestFromRemoteStorage = (this.profileType && this.profileType === KalturaConversionProfileType.liveStream) || !hasStorageProfilesPermission;
     if (!this._hideIngestFromRemoteStorage) {
       this._dataLoading = true;
       this._loadRemoteStorageProfiles()
@@ -168,13 +171,17 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
                 this._proceedSave(this._mapFormDataToProfile(formData));
               } else {
                 this._browserService.alert({
+                  header: this._appLocalization.get('applications.settings.transcoding.profile.errors.error'),
                   message: this._appLocalization.get('applications.settings.transcoding.entryNotFound', [entryId])
                 });
               }
             },
             error => {
               this._dataLoading = false;
-              this._browserService.alert({ message: error.message });
+              this._browserService.alert({
+                header: this._appLocalization.get('applications.settings.transcoding.profile.errors.error'),
+                message: error.message
+              });
             }
           );
       } else {

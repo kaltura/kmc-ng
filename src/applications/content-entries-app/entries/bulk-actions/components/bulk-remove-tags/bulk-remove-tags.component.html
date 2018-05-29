@@ -1,11 +1,17 @@
-<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+<k-area-blocker [showLoader]="_loading">
   <div class="kContent kOverrideFAIcons">
     <span class="kTitle">{{'applications.content.bulkActions.removeTags' | translate}}</span>
     <div class="kTags">
       <span class="kLabel">{{'applications.content.bulkActions.removeTagsLabel' | translate}}</span>
-      <div *ngFor="let tag of tags; let index = index" class="kTag">
-        <p-checkbox label="{{tag.label}}" [(ngModel)]="tag.selected"  binary="true" (onChange)="updateSelectedTags()"></p-checkbox>
-      </div>
+      <span  *ngIf="!tags || !tags.length" class="kNoItems">{{'applications.content.bulkActions.noTagsToRemove' | translate}}</span>
+      <kAutoComplete *ngIf="tags && tags.length" [ngModel]="tags"
+                     [tooltipResolver]="'__tooltip'"
+                     [classField]="'__class'"
+                     [multiple]="true"
+                     [limitToSuggestions]="false"
+                     readonly="true"
+                     (onUnselect)="_removeTag($event)">
+      </kAutoComplete>
     </div>
     <div class="kFooter">
       <button type="button" [disabled]="tagsToRemove.length === 0" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>

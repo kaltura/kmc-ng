@@ -21,6 +21,7 @@ import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaS
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters';
+import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 const localStoragePageSizeKey = 'bulklog.list.pageSize';
 
@@ -54,9 +55,14 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
+              contentBulkUploadsMainView: ContentBulkUploadsMainViewService,
               _logger: KalturaLogger) {
-    super(_logger);
-    this._prepare();
+    super(_logger.subLogger('BulkLogStoreService'));
+    if (contentBulkUploadsMainView.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy() {
@@ -71,6 +77,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       // only after the line where we set isReady to true
 
     if (!this._isReady) {
+      this._logger.info(`initiate service`);
       this._isReady = true;
 
       const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
@@ -114,11 +121,13 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       this._browserService.setInLocalStorage(localStoragePageSizeKey, pageSize);
     }
 
+    this._logger.info(`handle loading of bulk-log data`);
     this._bulkLog.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+          this._logger.info(`handle successful loading of bulk-log data`);
           this._querySubscription = null;
 
           this._bulkLog.state.next({ loading: false, errorMessage: null });
@@ -129,6 +138,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
           });
         },
         error => {
+          this._logger.warn(`handle failed loading of bulk-log data, show alert`, { errorMessage: error.message });
           this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
           this._bulkLog.state.next({ loading: false, errorMessage });
@@ -221,7 +231,9 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   }
 
   public reload(): void {
+    this._logger.info(`reload bulk-log list data`);
     if (this._bulkLog.state.getValue().loading) {
+      this._logger.info(`reloading in progress, skip duplicating request`);
       return;
     }
 
@@ -233,11 +245,14 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   }
 
   public deleteBulkLog(id: number): Observable<KalturaBulkUpload> {
-    return this._kalturaServerClient.request(new BulkUploadAbortAction({ id }));
+    return this._kalturaServerClient
+      .request(new BulkUploadAbortAction({ id }))
+      .monitor('BulkLogStoreService::deleteBulkLog');
   }
 
   public deleteBulkLogs(files: Array<KalturaBulkUpload>): Observable<KalturaMultiResponse> {
-    return this._kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })));
+    return this._kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })))
+      .monitor('BulkLogStoreService::deleteBulkLogs');
   }
 }
 

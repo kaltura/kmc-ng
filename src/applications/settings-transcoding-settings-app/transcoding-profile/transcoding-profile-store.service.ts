@@ -1,6 +1,6 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -26,6 +26,11 @@ import { ConversionProfileUpdateAction } from 'kaltura-ngx-client/api/types/Conv
 import { MediaTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/media-transcoding-profiles-store.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/live-transcoding-profiles-store.service';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import {
+    SettingsTranscodingProfileViewSections,
+    SettingsTranscodingProfileViewService
+} from 'app-shared/kmc-shared/kmc-views/details-views';
+import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views/main-views/settings-transcoding-main-view.service';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -47,7 +52,6 @@ export interface StatusArgs {
 export class TranscodingProfileStore implements OnDestroy {
   private _profilesStore: BaseTranscodingProfilesStore;
   private _loadProfileSubscription: ISubscription;
-  private _sectionToRouteMapping: { [key: number]: string } = {};
   private _pageExitVerificationToken: string;
   private _saveProfileInvoked = false;
   private _profile = {
@@ -62,7 +66,7 @@ export class TranscodingProfileStore implements OnDestroy {
   }
 
   public get profileId(): string {
-    return this._profileId;
+    return String(this._profileId);
   }
 
   public readonly profile = {
@@ -81,13 +85,12 @@ export class TranscodingProfileStore implements OnDestroy {
               private _profileCreationService: TranscodingProfileCreationService,
               private _mediaTranscodingProfilesStore: MediaTranscodingProfilesStore,
               private _liveTranscodingProfilesStore: LiveTranscodingProfilesStore,
+              private _settingsTranscodingProfileViewService: SettingsTranscodingProfileViewService,
+              private _settingsTranscodingMainViewService: SettingsTranscodingMainViewService,
               private _logger: KalturaLogger) {
 
 
     this._widgetsManager.profileStore = this;
-
-    this._mapSections();
-
     this._onSectionsStateChanges();
     this._onRouterEvents();
   }
@@ -141,20 +144,6 @@ export class TranscodingProfileStore implements OnDestroy {
     }
   }
 
-  private _mapSections(): void {
-    if (!this._profileRoute || !this._profileRoute.snapshot.data.profileRoute) {
-      throw new Error('this service can be injected from component that is associated to the transcoding profile route');
-    }
-
-    this._profileRoute.snapshot.routeConfig.children.forEach(childRoute => {
-      const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
-
-      if (routeSectionType !== null) {
-        this._sectionToRouteMapping[routeSectionType] = childRoute.path;
-      }
-    });
-  }
-
   private _setProfilesStoreServiceByType(serviceType: KalturaConversionProfileType): void {
     if (serviceType === KalturaConversionProfileType.media) {
       this._profilesStore = this._mediaTranscodingProfilesStore;
@@ -179,6 +168,8 @@ export class TranscodingProfileStore implements OnDestroy {
                 if (newData) {
                   this._profileId = currentProfileId;
                   this._setProfilesStoreServiceByType(newData.profile.type);
+                    const newProfile = newData.profile;
+                    (<any>newProfile).id = 'new';
                   this._profile.data.next(newData.profile);
 
                   setTimeout(() => {
@@ -193,7 +184,7 @@ export class TranscodingProfileStore implements OnDestroy {
                     }
                   }, 0);
                 } else {
-                  this._router.navigate(['settings/transcoding']);
+                    this._settingsTranscodingMainViewService.open();
                 }
               } else {
 
@@ -272,7 +263,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
                     if (isNew) {
                       this._profileIsDirty = false;
-                      this._router.navigate(['profile', profileResponse.result.id], { relativeTo: this._profileRoute.parent });
+                        this._settingsTranscodingProfileViewService.open({ profile: profileResponse.result, section: SettingsTranscodingProfileViewSections.Metadata });
                     } else {
                       this._loadProfile(profileResponse.result.id);
                     }
@@ -348,19 +339,27 @@ export class TranscodingProfileStore implements OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this._profile.data.next(response);
-          this._profileId = String(response.id);
-          this._setProfilesStoreServiceByType(response.type);
+            if (this._settingsTranscodingProfileViewService.isAvailable({
+                profile: response,
+                activatedRoute: this._profileRoute,
+                section: SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute
+            })) {
+                this._profile.data.next(response);
+                this._profileId = String(response.id);
+                this._setProfilesStoreServiceByType(response.type);
 
-          const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
-          if (dataLoadedResult.errors.length) {
-            this._profile.state.next({
-              action: ActionTypes.ProfileLoadingFailed,
-              error: new Error(`one of the widgets failed while handling data loaded event`)
-            });
-          } else {
-            this._profile.state.next({ action: ActionTypes.ProfileLoaded });
-          }
+                const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
+                if (dataLoadedResult.errors.length) {
+                    this._profile.state.next({
+                        action: ActionTypes.ProfileLoadingFailed,
+                        error: new Error(`one of the widgets failed while handling data loaded event`)
+                    });
+                } else {
+                    this._profile.state.next({ action: ActionTypes.ProfileLoaded });
+                }
+            } else {
+                this._browserService.handleUnpermittedAction(true);
+            }
         },
         error => {
           this._profile.state.next({ action: ActionTypes.ProfileLoadingFailed, error });
@@ -369,12 +368,8 @@ export class TranscodingProfileStore implements OnDestroy {
       );
   }
 
-  public openSection(sectionKey: string): void {
-    const navigatePath = this._sectionToRouteMapping[sectionKey];
-
-    if (navigatePath) {
-      this._router.navigate([navigatePath], { relativeTo: this._profileRoute });
-    }
+  public openSection(sectionKey: SettingsTranscodingProfileViewSections): void {
+     this._settingsTranscodingProfileViewService.open({ section: sectionKey, profile: this.profile.data() });
   }
 
   private _getProfile(profileId: string): Observable<KalturaConversionProfileWithAsset> {
@@ -411,16 +406,13 @@ export class TranscodingProfileStore implements OnDestroy {
     }
   }
 
-  public openProfile(profileId: string): void {
+  public openProfile(profile: KalturaConversionProfileWithAsset): void {
     this.canLeave()
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          if (response.allowed) {
-            this._router.navigate(['profile', profileId, 'metadata'], { relativeTo: this._profileRoute.parent });
-          }
-        }
-      );
+        .filter(({ allowed }) => allowed)
+        .cancelOnDestroy(this)
+        .subscribe(() => {
+            this._settingsTranscodingProfileViewService.open({ profile, section: SettingsTranscodingProfileViewSections.Metadata });
+        });
   }
 
   public canLeave(): Observable<{ allowed: boolean }> {
@@ -449,6 +441,6 @@ export class TranscodingProfileStore implements OnDestroy {
   }
 
   public returnToProfiles(): void {
-    this._router.navigate(['settings/transcoding']);
+      this._settingsTranscodingMainViewService.open();
   }
 }

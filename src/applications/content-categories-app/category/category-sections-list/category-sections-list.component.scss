@@ -18,10 +18,10 @@
       font-weight: 700;
       padding-left: 24px;
       &:hover{
-        color: $kGrayscale1;
+        color: $kTertiary;
       }
       &.active{
-        color: $kGrayscale1;
+        color: $kTertiary;
         cursor: default;
       }
     }

@@ -7,14 +7,14 @@
         <button type="button"
                 class="kButtonBranded KButtonSave"
                 pButton
-                [disabled]="!_isDirty"
+                [disabled]="!customSchemaForm.isValid || !_isDirty || (!_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kDisabledIfNotPermitted))"
                 [label]="'app.common.save' | translate"
                 (click)="_saveSchema()"></button>
       </div>
     </div>
     <div class="kContainer">
       <div class="kSchemaFormWrapper">
-        <kCustomSchemaForm [(schema)]="_schema"
+        <kCustomSchemaForm #customSchemaForm [(schema)]="_schema"
                            [serverValidationError]="serverValidationError"
                            (schemaChanges)="_setDirty()"></kCustomSchemaForm>
 
@@ -22,15 +22,19 @@
           <div *ngIf="_selectedFields.length" class="kBulkControls">
             <button pButton
                     class="kButtonDefault kMoveBtn kMoveBtnTop"
+                    [disabled]="!_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kDisabledIfNotPermitted)"
                     icon="kIcondropdown_arrow_top"
                     (click)="_bulkMove('up')"></button>
 
             <button pButton
+                    [disabled]="!_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kDisabledIfNotPermitted)"
+                    [class.kMoveBtnBottomDisabled]="!_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kDisabledIfNotPermitted)"
                     class="kButtonDefault kMoveBtn kMoveBtnBottom"
                     icon="kIcondropdown_arrow_bottom"
                     (click)="_bulkMove('down')"></button>
 
             <button pButton class="kButtonDanger kBulkDeleteBtn"
+                    [disabled]="!_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kDisabledIfNotPermitted)"
                     icon="kIcontrash"
                     (click)="_bulkRemove()"></button>
 
@@ -49,6 +53,7 @@
             <button
               pButton
               class="kButtonDefault"
+              [disabled]="(!_schema?.isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kDisabledIfNotPermitted))"
               type="button"
               icon="kIconplus"
               iconPos="left"
@@ -61,7 +66,7 @@
               class="kButtonDefault"
               icon="kIconupload"
               iconPos="left"
-              [disabled]="_schema?.isNew || !_schema?.downloadUrl"
+              [disabled]="_schema?.isNew || !_schema?.downloadUrl || (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kDisabledIfNotPermitted)"
               [label]="'applications.settings.metadata.downloadSchema' | translate"
               (click)="_downloadSchema()"></button>
           </div>
@@ -69,6 +74,7 @@
       </div>
       <div class="kSchemaTableWrapper">
         <kCustomSchemaFieldsTable [fields]="_profileFields"
+                                  [isNew]="_schema?.isNew"
                                   (onActionSelected)="_actionSelected($event)"
                                   [(selectedFields)]="_selectedFields"></kCustomSchemaFieldsTable>
       </div>

@@ -6,7 +6,7 @@
 
     <div class="kContainer">
         <div class="kPlayerTarget">
-            <k-player #player [pid]="playerConfig.pid" [uiconfid]="playerConfig.uiconfid" [entryid]="playerConfig.entryid" [width]="340" [height]="190" (kalturaPlayerReady)="onPlayerReady($event)"></k-player>
+            <k-player #player [flashvars]="playerConfig.flashvars" [cdnUrl]="serverUri" [pid]="playerConfig.pid" [uiconfid]="playerConfig.uiconfid" [entryid]="playerConfig.entryid" [width]="340" [height]="190" (kalturaPlayerReady)="onPlayerReady($event)"></k-player>
         </div>
         <div class="kLabel">{{'applications.content.entryDetails.thumbnails.capture.label' | translate}}</div>
     </div>

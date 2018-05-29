@@ -41,7 +41,7 @@
               <p-sortIcon [field]="'status'"></p-sortIcon>
             </th>
 
-            <th style="width: 80px"></th>
+            <th style="width: 80px" *ngIf="_kmcPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE | kNgIfPermitted"></th>
           </tr>
         </ng-template>
 
@@ -53,7 +53,7 @@
             </td>
 
             <td class="kFileNameColumn">
-              <span class="kTitle kTableColumn" [kTooltip]="folder.fileName" [maxWidth]="300">{{folder.fileName}}</span>
+              <span class="kTitle kTableColumn" [kTooltip]="folder.fileName">{{folder.fileName}}</span>
             </td>
 
             <td>
@@ -81,7 +81,7 @@
               </div>
             </td>
 
-            <td style="overflow: visible; width: 80px">
+            <td style="overflow: visible; width: 80px" *ngIf="_kmcPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE | kNgIfPermitted">
               <div class="kDropFoldersTableActions">
                 <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, folder)"></button>
               </div>

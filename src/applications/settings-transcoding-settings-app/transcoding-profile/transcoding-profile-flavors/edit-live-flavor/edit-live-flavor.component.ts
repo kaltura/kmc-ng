@@ -8,11 +8,13 @@ import {
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kEditLiveFlavor',
   templateUrl: './edit-live-flavor.component.html',
-  styleUrls: ['./edit-live-flavor.component.scss']
+  styleUrls: ['./edit-live-flavor.component.scss'],
+  providers: [KalturaLogger.createLogger('EditLiveFlavorComponent')]
 })
 export class EditLiveFlavorComponent implements OnInit {
   @Input() profile: KalturaConversionProfileWithAsset;
@@ -28,7 +30,8 @@ export class EditLiveFlavorComponent implements OnInit {
   public _flavorNameField: AbstractControl;
   public _systemNameField: AbstractControl;
 
-  constructor(private _fb: FormBuilder) {
+  constructor(private _fb: FormBuilder,
+              private _logger: KalturaLogger) {
     this._buildForm();
   }
 
@@ -41,6 +44,7 @@ export class EditLiveFlavorComponent implements OnInit {
   }
 
   private _prepare(): void {
+    this._logger.info(`enter edit live flavor mode`);
     const assetParams = this._getFlavorAssetParams();
 
     if (!assetParams.systemName) {
@@ -88,6 +92,7 @@ export class EditLiveFlavorComponent implements OnInit {
   }
 
   public _saveFlavor(): void {
+    this._logger.info(`handle save flavor action by user`);
     const assetParams = this._assetParams;
     const formData = this._editFlavorForm.value;
 

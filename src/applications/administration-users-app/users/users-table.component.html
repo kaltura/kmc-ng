@@ -11,18 +11,18 @@
       <p-column field="fullName" styleClass="kTableFullName"
                 header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTableColumn kFullName" [kTooltip]="user[col.field]" [maxWidth]="300">{{user[col.field]}}</span>
+          <span class="kTableColumn kFullName" [kTooltip]="user[col.field]">{{user[col.field]}}</span>
           <i *ngIf="(user | accountOwner)" class="kIconuser kIconOwner" [kTooltip]="user | accountOwner"></i>
         </ng-template>
       </p-column>
       <p-column field="id" header="{{'applications.content.table.userId' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTableColumn" [kTooltip]="user[col.field]" [maxWidth]="300">{{user[col.field]}}</span>
+          <span class="kTableColumn" [kTooltip]="user[col.field]">{{user[col.field]}}</span>
         </ng-template>
       </p-column>
       <p-column field="email" header="{{'applications.content.table.emailAddress' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTableColumn" [kTooltip]="user[col.field]" [maxWidth]="300">{{user[col.field]}}</span>
+          <span class="kTableColumn" [kTooltip]="user[col.field]">{{user[col.field]}}</span>
         </ng-template>
       </p-column>
       <p-column field="roleIds" header="{{'applications.content.table.role' | translate}}" [sortable]="false">
@@ -39,7 +39,7 @@
       <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}"
                 [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span>{{user[col.field] | kDate}}</span>
+          <span>{{(user[col.field] * 1000)| kDate}}</span>
         </ng-template>
       </p-column>
       <p-column header="" styleClass="kTableActions">

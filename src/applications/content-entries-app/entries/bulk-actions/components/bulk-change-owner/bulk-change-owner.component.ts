@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -27,7 +27,8 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 	public _sectionBlockerMessage: AreaBlockerMessage;
 
 	public _usersProvider = new Subject<SuggestionsProviderData>();
-	public _owner: KalturaUser = null;
+	public _owner: KalturaUser[] = [];
+  public _disableApplyButton = true;
 
 	private _searchUsersSubscription: ISubscription;
 	private _parentPopupStateChangeSubscribe: ISubscription;
@@ -122,7 +123,7 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 
 	public _convertUserInputToValidValue(value: string): any {
 		let result = null;
-		let tt = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
+		let tt = this._appLocalization.get('applications.content.entryDetails.users.tooltip', [value]);
 
 		if (value) {
 			result =
@@ -136,10 +137,23 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 		return result;
 	}
 
-	public _apply() {
-		this.ownerChanged.emit(this._owner);
-		this._confirmClose = false;
-		this.parentPopupWidget.close();
-	}
+  public _apply() {
+    const [owner] = this._owner;
+    const hasScreenName = owner && (owner.screenName || '').trim() !== '';
+    if (hasScreenName) {
+      this.ownerChanged.emit(owner);
+      this._confirmClose = false;
+      this.parentPopupWidget.close();
+    } else {
+      this._browserService.alert({
+        message: this._appLocalization.get('applications.content.entryDetails.users.noScreenName')
+      });
+    }
+  }
+
+  public _updateApplyButtonState(): void {
+    const [owner] = this._owner;
+    this._disableApplyButton = !owner || (owner.screenName || '').trim() === '';
+  }
 }
 

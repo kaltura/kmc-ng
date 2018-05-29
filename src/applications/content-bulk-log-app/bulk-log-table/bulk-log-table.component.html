@@ -33,7 +33,7 @@
           <th>
             {{'applications.content.bulkUpload.table.status' | translate}}
           </th>
-          <th style="width: 80px"></th>
+          <th style="width: 80px" *ngIf="_actionsAllowed"></th>
         </tr>
       </ng-template>
 
@@ -73,7 +73,7 @@
             <span class="kBulkLogTableStatusMessage">{{ bulkLogItem.status | kBulkLogTableStatus }}</span>
           </td>
 
-          <td style="overflow: visible; width: 80px">
+          <td style="overflow: visible; width: 80px" *ngIf="_actionsAllowed">
             <div class="kBulkLogTableActions">
               <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, bulkLogItem)"></button>
             </div>

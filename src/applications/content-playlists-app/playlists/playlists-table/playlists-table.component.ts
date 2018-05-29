@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDes
 import { Menu, MenuItem } from 'primeng/primeng';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
@@ -96,11 +96,23 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
         command: () => this.onActionSelected('delete', playlist)
       }
     ];
+
     if (playlist.status !== KalturaEntryStatus.ready) {
       this._items.shift();
+    }else
+    {
+      const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
+      if (!hasEmbedPermission) {
+        this._items[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
+      }
     }
 
-    this._permissionsService.filterList(<{id: string}[]>this._items, { 'delete': KMCPermissions.PLAYLIST_DELETE });
+    this._permissionsService.filterList(
+      <{id: string}[]>this._items,
+      {
+        'delete': KMCPermissions.PLAYLIST_DELETE
+      }
+    );
   }
 
 

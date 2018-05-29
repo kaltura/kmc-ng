@@ -17,7 +17,7 @@
                 <th style="width:44px; padding-left: 14px" *ngIf="showBulkSelect">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th [ngStyle]="_columnsMetadata.thumbnailUrl.style" *ngIf="_columnsMetadata.thumbnailUrl">
+                <th [ngStyle]="_columnsMetadata.thumbnailUrl.style" *ngIf="_columnsMetadata.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
                     {{'applications.content.table.thumbnail' | translate}}
                 </th>
                 <th [ngStyle]="_columnsMetadata.name.style" *ngIf="_columnsMetadata.name" [kpSortableColumn]="_columnsMetadata.name.sortable ? 'name' : null">
@@ -65,7 +65,7 @@
                     <p-tableCheckbox [value]="entry"></p-tableCheckbox>
                 </td>
 
-                <td *ngIf="_columnsMetadata.thumbnailUrl" [ngStyle]="_columnsMetadata.thumbnailUrl.style">
+                <td *ngIf="_columnsMetadata.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)" [ngStyle]="_columnsMetadata.thumbnailUrl.style">
                     <div class="kThumbnailHolder"
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
@@ -74,7 +74,7 @@
                 </td>
 
                 <td *ngIf="_columnsMetadata.name" [ngStyle]="_columnsMetadata.name.style">
-                    <span class="kTitle kTableColumn" [kTooltip]="entry.name" [maxWidth]="300"
+                    <span class="kTitle kTableColumn" [kTooltip]="entry.name"
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
                         {{entry.name}}
@@ -83,7 +83,7 @@
 
                 <td *ngIf="_columnsMetadata.id" [ngStyle]="_columnsMetadata.id.style">{{entry.id}}</td>
 
-                <td *ngIf="_columnsMetadata.mediaType" [ngStyle]="_columnsMetadata.mediaType.style">
+                <td *ngIf="_columnsMetadata.mediaType" class="kMediaTypeIcon" [ngStyle]="_columnsMetadata.mediaType.style">
                     <div [kTooltip]="entry.mediaType | entryType: true"
                          [class]="entry.mediaType | entryType: false"></div>
                 </td>

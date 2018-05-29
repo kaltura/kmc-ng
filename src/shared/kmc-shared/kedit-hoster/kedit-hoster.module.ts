@@ -12,7 +12,8 @@ import {KeditHosterComponent} from 'app-shared/kmc-shared/kedit-hoster/kedit-hos
       KeditHosterComponent
   ],
   exports: <any[]>[KeditHosterComponent],
-  providers: <any[]>[]
+  providers: <any[]>[
+  ]
 })
-export class KeditHosterModule {
+export class KEditHosterModule {
 }

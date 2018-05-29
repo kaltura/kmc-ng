@@ -4,17 +4,21 @@ import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kRolesList',
   templateUrl: './roles-list.component.html',
-  styleUrls: ['./roles-list.component.scss']
+  styleUrls: ['./roles-list.component.scss'],
+  providers: [KalturaLogger.createLogger('RolesListComponent')]
 })
 
 export class RolesListComponent implements OnInit, OnDestroy {
   @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
+  public _kmcPermissions = KMCPermissions;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableIsBusy = false;
   public _tableBlockerMessage: AreaBlockerMessage = null;
@@ -26,11 +30,13 @@ export class RolesListComponent implements OnInit, OnDestroy {
   };
 
   constructor(public _rolesStore: RolesStoreService,
+              private _logger: KalturaLogger,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
+    this._logger.info(`initiate roles list view`);
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
     this._registerToDataChanges();
@@ -81,6 +87,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                  this._logger.info(`user selected retry, retry action`);
                   this._tableBlockerMessage = null;
                   this._rolesStore.reload();
                 }
@@ -89,40 +96,46 @@ export class RolesListComponent implements OnInit, OnDestroy {
           } else {
             this._tableBlockerMessage = null;
           }
-        },
-        error => {
-          console.warn('[kmcng] -> could not load roles'); // navigate to error page
-          throw error;
         });
   }
 
   private _editRole(role: KalturaUserRole): void {
+    this._logger.info(`handle edit role action by user`, { id: role.id, name: role.name });
     this._currentEditRole = role;
     this.editPopup.open();
   }
 
   private _deleteRole(role: KalturaUserRole): void {
+    this._logger.info(`handle delete role request by user`);
     this._blockerMessage = null;
     this._rolesStore.deleteRole(role)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         () => {
+          this._logger.info(`handle successful delete role request by user`);
           this._blockerMessage = null;
           this._rolesStore.reload();
         },
         error => {
+          this._logger.warn(`handle failed delete role request by user, show confirmation`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),
-                  action: () => this._deleteRole(role)
+                  action: () => {
+                    this._logger.info(`user confirmed, retry action`);
+                    this._deleteRole(role);
+                  }
                 },
                 {
                   label: this._appLocalization.get('app.common.cancel'),
-                  action: () => this._blockerMessage = null
+                  action: () => {
+                    this._logger.info(`user didn't confirm, abort action, dismiss alert`);
+                    this._blockerMessage = null;
+                  }
                 }
               ]
             }
@@ -132,28 +145,37 @@ export class RolesListComponent implements OnInit, OnDestroy {
   }
 
   private _duplicateRole(role: KalturaUserRole): void {
+    this._logger.info(`handle duplicate role request by user`, { id: role.id, name: role.name });
     this._blockerMessage = null;
     this._rolesStore.duplicateRole(role)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         (duplicatedRole) => {
+          this._logger.info(`handle successful duplicate role request by user`);
           this._rolesStore.reload();
           this._blockerMessage = null;
           this._editRole(duplicatedRole);
         },
         error => {
+          this._logger.warn(`handle failed duplicate role request by user, show confirmation`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),
-                  action: () => this._duplicateRole(role)
+                  action: () => {
+                    this._logger.info(`user confirmed, retry action`);
+                    this._duplicateRole(role);
+                  }
                 },
                 {
                   label: this._appLocalization.get('app.common.cancel'),
-                  action: () => this._blockerMessage = null
+                  action: () => {
+                    this._logger.info(`user didn't confirm, abort action, retry action`);
+                    this._blockerMessage = null;
+                  }
                 }
               ]
             }
@@ -184,12 +206,17 @@ export class RolesListComponent implements OnInit, OnDestroy {
         this._duplicateRole(role);
         break;
       case 'delete':
+        this._logger.info(`handle delete role action by user, show confirmation`, { id: role.id, name: role.name });
         this._browserService.confirm(
           {
             header: this._appLocalization.get('applications.administration.roles.confirmDeleteHeader'),
             message: this._appLocalization.get('applications.administration.roles.confirmDeleteBody', { 0: role.name }),
             accept: () => {
+              this._logger.info(`user confirmed, proceed action`);
               this._deleteRole(role);
+            },
+            reject: () => {
+              this._logger.info(`user didn't confirmed, abort action`);
             }
           }
         );
@@ -200,6 +227,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
   }
 
   public _addRole(): void {
+    this._logger.info(`handle add role action by user`);
     this._currentEditRole = null;
     this.editPopup.open();
   }

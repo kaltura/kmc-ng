@@ -4,22 +4,30 @@
 
    <div class="kRow">
      <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.partnerId'| translate}}</div>
-     <div class="kControl" [kTooltip]="_accountInfo?.partnerId">{{_accountInfo?.partnerId}}</div>
+     <div class="kControl">
+       <span class="kTableColumn" [kTooltip]="_accountInfo?.partnerId">{{_accountInfo?.partnerId}}</span>
+     </div>
    </div>
 
    <div class="kRow">
      <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.subPartnerId'| translate}}</div>
-     <div class="kControl" [kTooltip]="_accountInfo?.subPartnerId">{{_accountInfo?.subPartnerId}}</div>
+     <div class="kControl">
+       <span class="kTableColumn" [kTooltip]="_accountInfo?.subPartnerId">{{_accountInfo?.subPartnerId}}</span>
+     </div>
    </div>
 
    <div class="kRow">
      <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.adminSecret'| translate}}</div>
-     <div class="kControl" [kTooltip]="_accountInfo?.adminSecret">{{_accountInfo?.adminSecret}}</div>
+     <div class="kControl">
+       <span class="kTableColumn" [kTooltip]="_accountInfo?.adminSecret">{{_accountInfo?.adminSecret}}</span>
+     </div>
    </div>
 
    <div class="kRow">
      <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.userSecret'| translate}}</div>
-     <div class="kControl" [kTooltip]="_accountInfo?.userSecret">{{_accountInfo?.userSecret}}</div>
+     <div class="kControl">
+       <span class="kTableColumn" [kTooltip]="_accountInfo?.userSecret">{{_accountInfo?.userSecret}}</span>
+     </div>
    </div>
  </div>
 </k-area-blocker>

@@ -29,7 +29,7 @@
         {{'applications.content.entryDetails.distribution.lastUpdate' | translate:[(_profile?.updatedAt | kDate:'dateOnly')]}}
         <span class="kDelimiter"></span>
       </span>
-      <span *ngIf="_profile?.autoDistribution">
+      <span class="kAutoDistribution" *ngIf="_profile?.autoDistribution">
         {{'applications.content.entryDetails.distribution.auto' | translate}}
         <span class="kDelimiter"></span>
       </span>
@@ -44,10 +44,12 @@
 
   <div class="kControls">
     <button *ngIf="!_deleteButtonHidden" pButton
+            [disabled]="_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_REMOVE | kDisabledIfNotPermitted"
             icon="kIcontrash" class="kButtonDanger kDeleteBtn"
             (click)="_deleteDistribution(_profile)"></button>
-    <button *ngIf="!_actionButtonHidden" pButton class="kButtonDefault kUpdateBtn"
-            [disabled]="_actionButtonDisabled"
+    <button *ngIf="!_actionButtonHidden"
+            pButton class="kButtonDefault kUpdateBtn"
+            [disabled]="_actionButtonDisabled || (_kmcPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND | kDisabledIfNotPermitted)"
             [label]="_actionButtonLabel"
             (click)="_performAction(_profile)"></button>
   </div>

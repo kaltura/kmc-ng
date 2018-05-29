@@ -1,17 +1,13 @@
 import { Component } from '@angular/core';
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BulkLogRefineFiltersService } from './bulk-log-store/bulk-log-refine-filters.service';
 
 @Component({
   selector: 'kBulkLog',
   template: '<router-outlet></router-outlet>',
   providers: [
-
-      BulkLogRefineFiltersService,
-    KalturaLogger,
-    {
-      provide: KalturaLoggerName, useValue: 'bulk-log-store.service'
-    }
+    BulkLogRefineFiltersService,
+    KalturaLogger.createLogger('ContentBulkLogApp')
   ]
 })
 export class ContentBulkLogAppComponent {

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { Flavor } from '../../entry-flavours/flavor';
 import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
 import { EntryDistributionWidget, ExtendedKalturaEntryDistribution } from '../entry-distribution-widget.service';
@@ -15,6 +15,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -51,6 +52,7 @@ export class EditDistributionProfileComponent implements OnInit {
   public _missingThumbnailError = '';
   public _requestXmlLink = '';
   public _responseXmlLink = '';
+  public _kmcPermissions = KMCPermissions;
 
   public _distributionForm: FormGroup;
   public _updatesField: AbstractControl;
@@ -61,12 +63,25 @@ export class EditDistributionProfileComponent implements OnInit {
               private _widget: EntryDistributionWidget,
               private _fb: FormBuilder,
               private _appAuthentication: AppAuthentication,
+              private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService) {
     this._buildForm();
   }
 
   public get _actionDisabled(): boolean {
-    return !!(this._createdFilterError || this._missingFlavorError || this._missingThumbnailError);
+    let updateDisabled = false;
+    let updateForAutoDistributionDisabled = false;
+    if (!this._forDistribution) {
+      const autoUpdates = this.undistributedProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic;
+
+      updateForAutoDistributionDisabled = autoUpdates
+        && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND);
+
+      updateDisabled = !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE);
+    }
+
+    return !!(this._createdFilterError || this._missingFlavorError || this._missingThumbnailError
+      || updateDisabled || updateForAutoDistributionDisabled);
   }
 
   public get _addButtonLabel(): string {
@@ -157,6 +172,10 @@ export class EditDistributionProfileComponent implements OnInit {
     if (this._forDistribution) {
       this._startDateField.disable({ onlySelf: true });
       this._endDateField.disable({ onlySelf: true });
+
+      if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND)) {
+        this._updatesField.disable({ onlySelf: true });
+      }
     } else {
       this._distributionName = this._widget.getProviderName(this.undistributedProfile.providerType);
 
@@ -174,6 +193,14 @@ export class EditDistributionProfileComponent implements OnInit {
         this._updatesField.enable({ onlySelf: true });
       } else {
         this._updatesField.disable({ onlySelf: true });
+      }
+
+      const hasAutoSubmit = this.undistributedProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic;
+      const noSendPermissions = !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_SEND);
+      const noWherePermissions = !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DISTRIBUTION_WHERE);
+      if (noWherePermissions || (hasAutoSubmit && noSendPermissions)) {
+        this._startDateField.disable({ onlySelf: true });
+        this._endDateField.disable({ onlySelf: true });
       }
 
       const updates = this.undistributedProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic;

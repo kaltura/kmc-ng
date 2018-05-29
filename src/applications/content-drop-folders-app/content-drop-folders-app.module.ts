@@ -18,7 +18,7 @@ import {
   TreeModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
@@ -29,13 +29,14 @@ import { ContentDropFoldersComponent } from './content-drop-folders.component';
 import { DropFoldersComponentsList } from './drop-folders-components-list';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
+import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({
   imports: [
     CommonModule,
     AreaBlockerModule,
     DataTableModule,
-    KalturaCommonModule,
+    LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
     TooltipModule,
@@ -58,7 +59,8 @@ import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
       EntriesModule,
     RouterModule.forChild(routing),
     FiltersModule,
-    TableModule
+    TableModule,
+    KMCPermissionsModule
   ],
   declarations: [
     ContentDropFoldersComponent,

@@ -20,14 +20,14 @@
               field="name"
               [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.userNameId' | translate">
       <ng-template let-col let-user="rowData" pTemplate="body">
-        <div class="kTitle kTableColumn" [kTooltip]="user[col.field]" [maxWidth]="300">
+        <div class="kTitle kTableColumn" [kTooltip]="user[col.field]">
           {{user[col.field]}}
         </div>
       </ng-template>
     </p-column>
 
     <!--Permission Level-->
-    <p-column styleClass="permissionLevelColumn"
+    <p-column styleClass="permissionLevelColumn" [style]="{'overflow':'visible'}"
               [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.permissionLevel' | translate"
               field="permissionLevel">
       <ng-template let-col let-user="rowData" pTemplate="body">
@@ -35,12 +35,12 @@
                     [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions || _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kDisabledIfNotPermitted"
                     [(ngModel)]="user[col.field]"
                     (onChange)="_onActionSelected({action: 'permissionLevel', users: user, payload: { level: user.permissionLevel}})"
-                    appendTo="body"></p-dropdown>
+                    ></p-dropdown>
       </ng-template>
     </p-column>
 
     <!--Update Method-->
-    <p-column styleClass="updateMethodColumn"
+    <p-column styleClass="updateMethodColumn" [style]="{'overflow':'visible'}"
               [header]="'applications.content.categoryDetails.entitlements.usersPermissions.table.updateMethod' | translate"
               field="updateMethod">
       <ng-template let-col let-user="rowData" let-i="rowIndex" pTemplate="body">
@@ -48,7 +48,7 @@
                     [disabled]="user['status'] !== _kalturaCategoryUserStatus.active || categoryInheritUserPermissions || _kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kDisabledIfNotPermitted"
                     [(ngModel)]="user[col.field]"
                     (onChange)="_onActionSelected({action: 'updateMethod', users: user, payload: { method: user.updateMethod} })"
-                    appendTo="body"></p-dropdown>
+                    ></p-dropdown>
       </ng-template>
     </p-column>
 

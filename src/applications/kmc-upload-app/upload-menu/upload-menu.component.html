@@ -1,34 +1,46 @@
 <div class="kUploadMenu">
-  <div class="kUploadMenuListItem">
-    <i class="kIconUpload kUploadMenuUploadIcon"></i>
+  <div class="kUploadMenuListItem" *ngIf="_kmcPermissions.CONTENT_INGEST_UPLOAD | kNgIfPermitted">
+    <i class="kIconUpload kUploadMenuUploadIcon" (click)="onItemSelected.emit('uploadFromDesktop')"></i>
     <span>
       <a (click)="onItemSelected.emit('uploadFromDesktop')">{{ 'applications.upload.uploadMenu.uploadFromDesktop' | translate }}</a><br>
-      <a class="kBulkUploadSamplesLink" (click)="onHighSpeedLinkClicked()">{{ 'applications.upload.uploadMenu.highSpeed' | translate }}</a>
+      <a *ngIf="_showHighSpeedLink"
+         [class.kDisabled]="!_enableHighSpeedLink"
+         class="kBulkUploadSamplesLink"
+         (click)="_enableHighSpeedLink && onHighSpeedLinkClicked()">{{ 'applications.upload.uploadMenu.highSpeed' | translate }}</a>
+
+      <a *ngIf="_showNeedHighSpeedLink"
+         [class.kDisabled]="!_enableNeedHighSpeedLink"
+         class="kBulkUploadSamplesLink"
+         (click)="_enableNeedHighSpeedLink && onNeedHighSpeedLinkClicked()">{{ 'applications.upload.uploadMenu.needHighSpeed' | translate }}</a>
     </span>
   </div>
 
   <div class="kUploadMenuListItem">
-    <i class="kIconbulk kUploadMenuBulkUploadIcon"></i>
+    <i class="kIconbulk kUploadMenuBulkUploadIcon" (click)="onItemSelected.emit('bulkUpload')"></i>
     <span>
       <a (click)="onItemSelected.emit('bulkUpload')">{{ 'applications.upload.uploadMenu.bulkUpload.title' | translate }}</a><br>
-      <a class="kBulkUploadSamplesLink" (click)="onDownloadSamplesClicked()">
+      <a class="kBulkUploadSamplesLink" [class.kDisabled]="!_enableBulkUploadSamples" (click)="_enableBulkUploadSamples && onDownloadSamplesClicked()">
         {{ 'applications.upload.uploadMenu.bulkUpload.samplesLink' | translate }}
       </a>
     </span>
 
   </div>
 
-  <div class="kUploadMenuListItem last">
-    <i class="kIconlive kUploadMenuLiveStreamIcon"></i>
+  <div class="kUploadMenuListItem last" *ngIf="_kmcPermissions.LIVE_STREAM_ADD | kNgIfPermitted">
+    <i class="kIconlive kUploadMenuLiveStreamIcon" (click)="onItemSelected.emit('createLive')"></i>
     <span>
       <a (click)="onItemSelected.emit('createLive')">{{ 'applications.upload.uploadMenu.liveStream' | translate }}</a>
     </span>
   </div>
 
-  <div class="kPrepareEntryList">
+  <div class="kPrepareEntryList" *ngIf="[_kmcPermissions.CONTENT_INGEST_ORPHAN_VIDEO, _kmcPermissions.CONTENT_INGEST_ORPHAN_AUDIO] | kNgIfPermitted">
     <p class="kPrepareEntryListTitle">{{ 'applications.upload.uploadMenu.entryList.title' | translate }}</p>
-    <p class="kPrepareEntryListItem"><a (click)="onItemSelected.emit('prepareVideoEntry')">{{ 'applications.upload.uploadMenu.entryList.video' | translate }}</a></p>
-    <p class="kPrepareEntryListItem"><a (click)="onItemSelected.emit('prepareAudioEntry')">{{ 'applications.upload.uploadMenu.entryList.audio' | translate }}</a></p>
+    <p class="kPrepareEntryListItem" *ngIf="_kmcPermissions.CONTENT_INGEST_ORPHAN_VIDEO | kNgIfPermitted">
+      <a (click)="onItemSelected.emit('prepareVideoEntry')">{{ 'applications.upload.uploadMenu.entryList.video' | translate }}</a>
+    </p>
+    <p class="kPrepareEntryListItem" *ngIf="_kmcPermissions.CONTENT_INGEST_ORPHAN_AUDIO | kNgIfPermitted">
+      <a (click)="onItemSelected.emit('prepareAudioEntry')">{{ 'applications.upload.uploadMenu.entryList.audio' | translate }}</a>
+    </p>
   </div>
 </div>
 

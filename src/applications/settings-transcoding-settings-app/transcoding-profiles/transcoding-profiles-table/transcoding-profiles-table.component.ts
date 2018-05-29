@@ -1,7 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'k-transcoding-profiles-table',
@@ -35,6 +36,7 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
   constructor(private _appLocalization: AppLocalization,
+              private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -62,6 +64,7 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
     if (profile.isDefault) {
       this._items = [
         {
+          id: 'edit',
           label: this._appLocalization.get('applications.settings.transcoding.edit'),
           command: () => this._onActionSelected('edit', profile)
         }
@@ -69,20 +72,25 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
     } else {
       this._items = [
         {
+          id: 'setAsDefault',
           label: this._appLocalization.get('applications.settings.transcoding.setAsDefault'),
           command: () => this._onActionSelected('setAsDefault', profile)
         },
         {
+          id: 'edit',
           label: this._appLocalization.get('applications.settings.transcoding.edit'),
           command: () => this._onActionSelected('edit', profile)
         },
         {
+          id: 'delete',
           label: this._appLocalization.get('applications.settings.transcoding.delete'),
           styleClass: 'kDanger',
           command: () => this._onActionSelected('delete', profile)
         }
       ];
     }
+
+    this._permissionsService.filterList(<{ id: string }[]>this._items, { 'delete': KMCPermissions.TRANSCODING_DELETE });
   }
 
   public _openActionsMenu(event: any, profile: KalturaConversionProfileWithAsset): void {

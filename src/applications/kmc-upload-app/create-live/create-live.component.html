@@ -8,8 +8,13 @@
 
     <div class="kRow">
       <span class="kLabel">{{'applications.upload.prepareLive.streamTypeLabel' | translate}}</span>
-      <div class="kRequired"></div>
-      <p-dropdown [options]="_availableStreamTypes" [(ngModel)]="_selectedStreamType" [autoWidth]="false"></p-dropdown>
+      <ng-container *ngIf="!_manualStreamOnly">
+        <div class="kRequired"></div>
+        <p-dropdown [options]="_availableStreamTypes" [(ngModel)]="_selectedStreamType" [autoWidth]="false"></p-dropdown>
+      </ng-container>
+      <ng-container *ngIf="_manualStreamOnly">
+        <span class="kManualType">{{'applications.upload.prepareLive.streamTypes.manual' | translate}}</span>
+      </ng-container>
     </div>
 
     <div [ngSwitch]="_selectedStreamType">

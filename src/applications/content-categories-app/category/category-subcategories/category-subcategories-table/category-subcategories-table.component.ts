@@ -12,8 +12,9 @@ import {
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Menu, MenuItem} from 'primeng/primeng';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { globalConfig } from 'config/global';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kCategorySubcategoriesTable',
@@ -28,6 +29,8 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
   public deferredLoading = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+  public _kmcPermissions = KMCPermissions;
+
 
   @Input() selectedSubcategories: KalturaCategory[] = [];
   @Output() selectedSubcategoriesChange = new EventEmitter<KalturaCategory[]>();

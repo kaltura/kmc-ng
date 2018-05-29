@@ -4,7 +4,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoriesService} from '../categories.service';
 
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 import {
   CategoriesStatus,
@@ -12,17 +12,20 @@ import {
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { SelectedCategory } from 'app-shared/content-shared/categories/category-selector/category-selector.component';
+import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kNewCategory',
   templateUrl: './new-category.component.html',
-  styleUrls: ['./new-category.component.scss']
+  styleUrls: ['./new-category.component.scss'],
+    providers: [KalturaLogger.createLogger('NewCategoryComponent')]
 })
 export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() linkedEntries: {entryId: string}[] = [];
-  @Output() onApply = new EventEmitter<{ categoryId: number }>();
+  @Output() onApply = new EventEmitter<KalturaCategory>();
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedParentCategory: SelectedCategory = 'missing';
@@ -35,6 +38,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
               private _fb: FormBuilder,
               private _categoriesService: CategoriesService,
               private _browserService: BrowserService,
+              private _logger: KalturaLogger,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
     this.newCategoryForm = this._fb.group({
@@ -81,16 +85,20 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public _onCategorySelected(event: number) {
+      this._logger.info(`handle parent category selected action by user`, { categoryId: event });
       this.newCategoryForm.markAsDirty();
     this._selectedParentCategory = event;
   }
 
   public _apply(): void {
+      this._logger.info(`handle add new category action by user`);
     this._blockerMessage = null;
     if (this._selectedParentCategory !== 'missing') {
       this._createNewCategory();
     } else {
+        this._logger.info(`no parent category was explicitly selected, abort action, show alert`);
       this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.addNewCategory.errors.noParent')
       });
     }
@@ -98,13 +106,17 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _createNewCategory() {
     const categoryName = this.newCategoryForm.controls['name'].value;
+
+      this._logger.info(`handle create new category request`, { categoryName });
     if (!categoryName || !categoryName.length) {
+        this._logger.info(`category name was not provided, show alert, abort action`);
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.addNewCategory.errors.requiredName'),
         buttons: [
           {
             label: this._appLocalization.get('app.common.cancel'),
             action: () => {
+                this._logger.info(`user dismissed alert`);
               this._blockerMessage = null;
             }
           }
@@ -120,13 +132,15 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(({category}) => {
+            this._logger.info(`handle successful create category request`);
           this._showConfirmationOnClose = false;
-            this.onApply.emit({categoryId: category.id});
+            this.onApply.emit(category);
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
           },
           error => {
+              this._logger.info(`handle failed create category request, show alert`, { errorMessage: error.message });
             let message = '';
             let navigateToCategory = false;
             switch (error.code)
@@ -141,8 +155,14 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
                     message = this._appLocalization.get('applications.content.addNewCategory.errors.cannotLinkEntries');
                     navigateToCategory = true;
                     break;
+                case 'duplicate_category':
+                    message = this._appLocalization.get(
+                        'applications.content.moveCategory.errors.duplicatedName',
+                        [categoryName]
+                    );
+                    break;
                 default:
-                    message = 'An error occurred while trying to add new category';
+                    message = error.message;
                     break;
             }
 
@@ -153,11 +173,14 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
                   {
                     label: this._appLocalization.get('app.common.ok'),
                     action: () => {
+                        this._logger.info(`user dismissed alert`);
                       this._blockerMessage = null;
                         if (navigateToCategory) {
                             this._showConfirmationOnClose = false;
                             if (error.context && error.context.categoryId) {
-                                this.onApply.emit({categoryId: error.context.categoryId});
+                                const category = new KalturaCategory();
+                                (<any>category).id = error.context.categoryId;
+                                this.onApply.emit(category);
                             }
                             if (this.parentPopupWidget) {
                                 this.parentPopupWidget.close();
@@ -172,8 +195,11 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public _cancel(): void {
+      this._logger.info(`handle cancel action by user`);
     if (this.parentPopupWidget) {
       this.parentPopupWidget.close();
+    } else {
+        this._logger.info(`no parentPopupWidget was provided, do nothing`);
     }
   }
 }

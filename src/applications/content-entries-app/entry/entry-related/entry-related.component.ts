@@ -5,8 +5,9 @@ import {KalturaAttachmentType} from 'kaltura-ngx-client/api/types/KalturaAttachm
 import {KalturaAttachmentAsset} from 'kaltura-ngx-client/api/types/KalturaAttachmentAsset';
 import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {Menu, MenuItem, SelectItem} from 'primeng/primeng';
+import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
 @Component({
@@ -15,6 +16,7 @@ import {Menu, MenuItem, SelectItem} from 'primeng/primeng';
     styleUrls: ['./entry-related.component.scss']
 })
 export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
+  public _kmcPermissions = KMCPermissions;
 
     public _loading = false;
     public _loadingError = null;
