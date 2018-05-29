@@ -219,8 +219,6 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnDestroy() {
 	    this.actionsMenu.hide();
-	    this._importPopupStateChangeSubscribe.unsubscribe();
-
 		this._widgetService.detachForm();
 
 	}
@@ -228,7 +226,8 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
     ngAfterViewInit() {
 	    if (this.importPopup) {
-		    this._importPopupStateChangeSubscribe = this.importPopup.state$
+		    this.importPopup.state$
+                .cancelOnDestroy(this)
 			    .subscribe(event => {
 				    if (event.state === PopupWidgetStates.Close) {
 					    if (event.context && event.context.flavorUrl){
