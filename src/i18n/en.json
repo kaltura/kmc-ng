@@ -327,7 +327,7 @@
                         "perSession": "Create new entries for every broadcast session",
                         "appended": "Append recorded content to a single entry"
                     },
-                    "previewMode": "Preview Mode",
+                    "previewMode": "Enable Preview Mode",
                     "errors": {
                         "required": "This field is required."
                     }
@@ -1540,7 +1540,7 @@
                     "dvrStatus": "DVR Status:",
                     "dvrWindow": "DVR Window:",
                     "activeRec": "Active Recording:",
-                    "autoStart": "Auto-start:",
+                    "previewMode": "Preview Mode:",
                     "rtsp": "RTSP Broadcasting URLs",
                     "enabled": "Enabled",
                     "disabled": "Disabled",

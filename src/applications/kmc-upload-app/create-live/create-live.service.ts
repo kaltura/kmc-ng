@@ -12,6 +12,7 @@ import {KalturaPlaybackProtocol} from 'kaltura-ngx-client/api/types/KalturaPlayb
 import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
 import {ManualLive} from './manual-live/manual-live.interface';
 import {UniversalLive} from './universal-live/universal-live.interface';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 
 @Injectable()
 export class CreateLiveService {
@@ -31,7 +32,8 @@ export class CreateLiveService {
       recordStatus: data.enableRecording ? data.enableRecordingSelectedOption : KalturaRecordStatus.disabled,
       conversionProfileId: data.transcodingProfile,
       dvrStatus: data.liveDVR ? KalturaDVRStatus.enabled : KalturaDVRStatus.disabled,
-      dvrWindow: data.liveDVR ? 120 : null
+      dvrWindow: data.liveDVR ? 120 : null,
+        explicitLive: data.previewMode ? KalturaNullableBoolean.falseValue : KalturaNullableBoolean.trueValue
     });
 
     return this._kalturaServerClient

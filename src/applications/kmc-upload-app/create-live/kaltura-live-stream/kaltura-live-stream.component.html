@@ -68,12 +68,14 @@
         </div>
       </div>
 
-      <div class="kRow">
-        <span class="kPreviewMode">
-          <p-checkbox
-            label="{{'applications.upload.prepareLive.kalturaStreamType.previewMode' | translate}}"
-            formControlName="previewMode" binary="true"></p-checkbox></span>
-      </div>
+        <div class="kRow">
+            <span class="kLabel kInputSwitchLabel">{{'applications.upload.prepareLive.kalturaStreamType.previewMode' | translate}}</span>
+            <div class="kRequired"></div>
+            <div>
+                <p-inputSwitch class="kControl kInputSwitch" formControlName="previewMode"></p-inputSwitch>
+                <span>{{_form.controls['previewMode'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+            </div>
+        </div>
 
     </div>
   </section>
