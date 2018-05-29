@@ -4,7 +4,7 @@ import {AppAuthentication, PartnerPackageTypes} from 'app-shared/kmc-shell';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import {KalturaPartnerStatistics} from 'kaltura-ngx-client/api/types/KalturaPartnerStatistics';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { SettingsAccountInformationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { serverConfig } from 'config/server';
 

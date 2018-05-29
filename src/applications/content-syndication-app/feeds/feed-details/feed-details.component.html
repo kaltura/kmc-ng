@@ -105,8 +105,7 @@
         <div class="kRow kDestination"
              [class.kInputValidationError]="_form.get('destination').touched && _form.get('destination').invalid">
           <span class="kLabel">{{'applications.content.syndication.details.destination' | translate}}</span>
-          <div class="kAsterix"
-               [ngClass]="{'kHasError':!_form.get('destination').valid && _form.get('destination').touched}">
+          <div class="kAsterix">
             *
           </div>
           <div class="kControlContainer">
@@ -115,13 +114,8 @@
               class="kControl"
               [options]="_availableDestinations"
               formControlName="destination"
-              [autoWidth]="false"
-              [ngClass]="{'kHasError':!_form.get('destination').valid && _form.get('destination').touched}">
+              [autoWidth]="false">
             </p-dropdown>
-            <div *ngIf="_form.get('destination').touched && _form.get('destination').hasError('required')"
-                 class="error">
-              {{'applications.content.syndication.details.errors.chooseDestination' | translate}}
-            </div>
           </div>
         </div>
 

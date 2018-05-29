@@ -23,7 +23,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete/auto-complete.module';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui/kaltura-primeng-ui.module';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common/kaltura-common.module';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import { TimeSpinnerModule } from '@kaltura-ng/kaltura-primeng-ui/time-spinner/time-spinner.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
@@ -32,7 +32,7 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     CommonModule,
     AreaBlockerModule,
     DataTableModule,
-    KalturaCommonModule,
+    LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
     TooltipModule,

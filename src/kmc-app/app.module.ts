@@ -12,6 +12,7 @@ import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { LocalizationModule } from '@kaltura-ng/mc-shared/localization';
 
 import {
     AppBootstrap,
@@ -22,7 +23,7 @@ import {
 } from 'app-shared/kmc-shell';
 import {
   AppStorage,
-  KalturaCommonModule,
+    KalturaCommonModule,
   OperationTagModule,
   UploadManagement
 } from '@kaltura-ng/kaltura-common';
@@ -152,6 +153,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       KalturaLoggerModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcViewsModule.forRoot(),
+      LocalizationModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,

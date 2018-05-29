@@ -4,7 +4,7 @@ import { kmcAppConfig } from '../../kmc-app-config';
 import { AppAuthentication,  AutomaticLoginErrorReasons,BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
 import { serverConfig } from 'config/server';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 export enum LoginScreens {
   Login,

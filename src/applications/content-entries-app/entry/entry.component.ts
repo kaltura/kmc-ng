@@ -16,7 +16,7 @@ import {EntrySchedulingWidget} from './entry-scheduling/entry-scheduling-widget.
 import {EntryUsersWidget} from './entry-users/entry-users-widget.service';
 import {EntryWidgetsManager} from './entry-widgets-manager';
 import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {Observable} from 'rxjs/Observable';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import {EntryDistributionWidget} from './entry-distribution/entry-distribution-widget.service';

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
@@ -29,7 +29,7 @@ export class UploadMenuComponent {
       this._enableNeedHighSpeedLink = !!serverConfig.externalLinks.uploads && !!serverConfig.externalLinks.uploads.needHighSpeedUpload;
       this._enableBulkUploadSamples = !!serverConfig.externalLinks.uploads && !!serverConfig.externalLinks.uploads.bulkUploadSamples;
   }
-    
+
   onHighSpeedLinkClicked() {
     this._browserService.openLink(serverConfig.externalLinks.uploads.highSpeedUpload);
   }

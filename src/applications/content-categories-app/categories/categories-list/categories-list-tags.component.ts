@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
 import {CategoriesFilters, CategoriesService} from '../categories.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {RefineGroup, RefineGroupList} from '../categories-refine-filters.service';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import {ISubscription} from 'rxjs/Subscription';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 export interface TagItem {
   type: string,
@@ -20,7 +21,8 @@ const refineListsTypes: Array<keyof CategoriesFilters> = ['privacyTypes', 'categ
 @Component({
   selector: 'kCategoriesListTags',
   templateUrl: './categories-list-tags.component.html',
-  styleUrls: ['./categories-list-tags.component.scss']
+  styleUrls: ['./categories-list-tags.component.scss'],
+    providers: [KalturaLogger.createLogger('CategoriesListTagsComponent')]
 
 })
 export class CategoriesListTagsComponent implements OnInit, OnDestroy {
@@ -45,10 +47,14 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
     public _showTags = false;
 
 
-  constructor(private _categoriesService: CategoriesService, private _appLocalization: AppLocalization, private _categoriesSearch: CategoriesSearchService) {
+  constructor(private _categoriesService: CategoriesService,
+              private _appLocalization: AppLocalization,
+              private _categoriesSearch: CategoriesSearchService,
+              private _logger: KalturaLogger) {
   }
 
   removeTag(tag: any) {
+      this._logger.info(`handle remove tag action by user`, { type: tag.type, value: tag.value });
 
       if (tag.dataFetchSubscription)
       {
@@ -97,6 +103,7 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
   }
 
   removeAllTags() {
+      this._logger.info(`handle remove all tags action by user`);
     this._categoriesService.resetFilters();
   }
 
