@@ -1,7 +1,13 @@
 <div class="kReplacementStatus">
     <div class="kMetadata">
-        <i class="kStatusIcon" [ngClass]="replacementData?.status | kFlavorReplacementStatus:'icon'"></i>
-        {{replacementData?.status | kFlavorReplacementStatus:'label'}}
+        <ng-template [ngIf]="_replacementUploadFailed" [ngIfElse]="uploadFine">
+            <i class="kStatusIcon kIconerror"></i>
+            {{'applications.content.entryDetails.flavours.replaceVideo.replacementStatus.replacementFailed' | translate }}
+        </ng-template>
+        <ng-template #uploadFine>
+            <i class="kStatusIcon" [ngClass]="replacementData?.status | kFlavorReplacementStatus:'icon'"></i>
+            {{replacementData?.status | kFlavorReplacementStatus:'label'}}
+        </ng-template>
         <span class="kDelimiter"></span>
         {{'applications.content.entryDetails.flavours.replaceVideo.tempEntryId' | translate:[replacementData?.tempEntryId]}}
         <a class="kCancelReplacement" (click)="_cancelReplacement()">
