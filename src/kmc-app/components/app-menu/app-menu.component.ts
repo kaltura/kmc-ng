@@ -10,7 +10,6 @@ import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -44,7 +43,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 private userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
                 private router: Router,
-                private _appLocalization: AppLocalization,
                 private _browserService: BrowserService) {
 
         router.events
@@ -102,11 +100,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     openSupport() {
-        this._browserService.openEmail({
-            email: serverConfig.externalLinks.kaltura.support,
-            title: this._appLocalization.get('app.openMail.supportMailTitle'),
-            message: this._appLocalization.get('app.openMail.supportMailMsg')
-        });
+        this._browserService.openSupport();
         this._helpmenu.close();
     }
 

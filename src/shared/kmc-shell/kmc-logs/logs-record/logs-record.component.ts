@@ -1,11 +1,9 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { KalturaLogger, LogLevels } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { serverConfig } from 'config/server';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { globalConfig } from 'config/global';
 import * as moment from 'moment';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Component({
     selector: 'k-logs-record',
@@ -36,9 +34,6 @@ export class LogsRecordComponent {
     @ViewChild('recordPopup') _recordPopup: PopupWidgetComponent;
 
     private _appLogLevel: LogLevels = globalConfig.client.production ? 'Error' : 'All';
-    private get _supportTeamLink(): string {
-        return serverConfig.externalLinks.kaltura.support;
-    }
 
     public _isRecording = false;
     public _logLevel: LogLevels;
@@ -56,7 +51,6 @@ export class LogsRecordComponent {
 
     constructor(private _logger: KalturaLogger,
                 private _appAuth: AppAuthentication,
-                private _appLocalization: AppLocalization,
                 private _browserService: BrowserService) {
     }
 
@@ -95,11 +89,7 @@ export class LogsRecordComponent {
     }
 
     public _sendMailToSupport(): void {
-        this._browserService.openEmail({
-            email: this._supportTeamLink,
-            title: this._appLocalization.get('app.openMail.supportMailTitle'),
-            message: this._appLocalization.get('app.openMail.supportMailMsg')
-        });
+        this._browserService.openSupport();
     }
 
     public _startRecord(): void {

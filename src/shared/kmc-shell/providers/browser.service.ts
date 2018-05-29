@@ -10,6 +10,7 @@ import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events/app-events.service';
 import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { EmailConfig } from '../../../kmc-app/components/open-email/open-email.component';
+import { serverConfig } from 'config/server';
 
 export enum HeaderTypes {
     error = 1,
@@ -216,8 +217,8 @@ export class BrowserService implements IAppStorage {
         window.open(baseUrl, target);
     }
 
-    public openEmail(emailConfig: EmailConfig, force = false): void {
-        if (force){
+    public openEmail(emailConfig: EmailConfig, useMailTo = false): void {
+        if (useMailTo){
             const windowRef = window.open('mailto:' + emailConfig.email, '_blank');
             windowRef.focus();
 
@@ -229,6 +230,20 @@ export class BrowserService implements IAppStorage {
         }else {
             this._appEvents.publish(new OpenEmailEvent(emailConfig.email, emailConfig.title, emailConfig.message));
         }
+    }
+
+    public openSupport(): void{
+        let emailAddress = null;
+        let msg = this._appLocalization.get('app.openMail.supportMailMsg');
+        if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support){
+            emailAddress = serverConfig.externalLinks.kaltura.support;
+            msg = this._appLocalization.get('app.openMail.supportMailMsgNoMail');
+        }
+        this.openEmail({
+            email: emailAddress,
+            title: this._appLocalization.get('app.openMail.supportMailTitle'),
+            message: msg
+        });
     }
 
     public isSafari(): boolean {

@@ -3,7 +3,6 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { EqualFieldsValidator } from 'app-shared/kmc-shell/validators/equalFields.validator';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Component({
   selector: 'kKMCPasswordExpiredForm',
@@ -25,7 +24,11 @@ export class PasswordExpiredFormComponent {
   public _repeatPasswordField: AbstractControl;
 
     public get _supportAddress(): string {
-        return serverConfig.externalLinks.kaltura.support;
+        let res = null;
+        if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support){
+            res = serverConfig.externalLinks.kaltura.support;
+        }
+        return res;
     }
 
   public get _sendBtnText(): string {
@@ -49,8 +52,7 @@ export class PasswordExpiredFormComponent {
   }
 
   constructor(private _fb: FormBuilder,
-              private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _browserService: BrowserService) {
     this._buildForm();
   }
 
@@ -95,10 +97,6 @@ export class PasswordExpiredFormComponent {
     }
   }
     public _contactSupport(): void {
-        this._browserService.openEmail({
-            email: serverConfig.externalLinks.kaltura.support,
-            title: this._appLocalization.get('app.openMail.supportMailTitle'),
-            message: this._appLocalization.get('app.openMail.supportMailMsg')
-        });
+        this._browserService.openSupport();
     }
 }

@@ -75,9 +75,11 @@ export class AppBootstrap implements CanActivate {
 
 
             // TODO [kmcng] remove mail to temporary - can delete this code once backend removes the "mailto" in @CONTACT_US@ variable
-            let supportEmail = serverConfig.externalLinks.kaltura.support;
-            if (supportEmail.indexOf("mailto:") === 0){
-                serverConfig.externalLinks.kaltura.support = supportEmail.substr(7, supportEmail.length-1);
+            if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support) {
+                let supportEmail = serverConfig.externalLinks.kaltura.support;
+                if (supportEmail.indexOf("mailto:") === 0) {
+                    serverConfig.externalLinks.kaltura.support = supportEmail.substr(7, supportEmail.length - 1);
+                }
             }
 
             this._initialized = true;

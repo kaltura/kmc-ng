@@ -36,14 +36,9 @@ export class AppComponent implements OnInit {
               private router: Router,
               private _loggerConfigurator: KmcLoggerConfigurator,
               private _oprationsTagManager: OperationTagManagerService,
-              appEvents: AppEventsService
+              private _appEvents: AppEventsService
               ) {
 
-      appEvents.event(OpenEmailEvent)
-          .subscribe(({email, title, message}) => {
-              this._openEmailConfig = {email, title, message}
-              this._emailDialog.open();
-          });
   }
 
   ngOnInit() {
@@ -85,6 +80,13 @@ export class AppComponent implements OnInit {
         this._growlMessages = [ ...this._growlMessages, message ];
       }
     );
+
+      // handle open Email event
+      this._appEvents.event(OpenEmailEvent)
+          .subscribe(({email, title, message}) => {
+              this._openEmailConfig = {email, title, message}
+              this._emailDialog.open();
+          });
 
       this._loggerConfigurator.init();
   }
