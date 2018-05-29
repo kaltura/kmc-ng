@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
 
 @Injectable()

@@ -20,7 +20,7 @@ import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdat
 import {CategoryUserActivateAction} from 'kaltura-ngx-client/api/types/CategoryUserActivateAction';
 import {CategoryUserDeactivateAction} from 'kaltura-ngx-client/api/types/CategoryUserDeactivateAction';
 import {CategoryUserUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUserUpdateAction';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {
   BooleanTypeAdapter,
   FiltersStoreBase,

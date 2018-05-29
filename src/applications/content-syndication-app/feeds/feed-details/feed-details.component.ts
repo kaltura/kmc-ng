@@ -9,7 +9,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {KalturaSyndicationFeedType} from 'kaltura-ngx-client/api/types/KalturaSyndicationFeedType';
 import {FlavoursStore} from 'app-shared/kmc-shared';
 import {Observable} from 'rxjs/Observable';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client/api/types/KalturaSyndicationFeedEntryCount';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PlayersStore} from 'app-shared/kmc-shared/players/players-store.service';

@@ -14,7 +14,7 @@ import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client/api/types/KalturaUser
 import { UserRoleDeleteAction } from 'kaltura-ngx-client/api/types/UserRoleDeleteAction';
 import { UserRoleUpdateAction } from 'kaltura-ngx-client/api/types/UserRoleUpdateAction';
 import { UserRoleCloneAction } from 'kaltura-ngx-client/api/types/UserRoleCloneAction';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { UserRoleAddAction } from 'kaltura-ngx-client/api/types/UserRoleAddAction';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';

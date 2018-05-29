@@ -12,7 +12,7 @@ import {
   RadioButtonModule, InputTextareaModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
@@ -32,7 +32,7 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
       CommonModule,
       AreaBlockerModule,
       DataTableModule,
-      KalturaCommonModule,
+      LocalizationModule,
       KalturaUIModule,
       PaginatorModule,
       TooltipModule,

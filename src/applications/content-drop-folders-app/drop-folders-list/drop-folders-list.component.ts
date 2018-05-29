@@ -6,7 +6,7 @@ import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropF
 import { BrowserService } from 'app-shared/kmc-shell';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
