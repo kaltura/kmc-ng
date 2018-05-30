@@ -308,7 +308,7 @@
                 }
             },
             "prepareLive": {
-                "createLiveStreamTitle": "Create Live Stream Entry.",
+                "createLiveStreamTitle": "Create Live Stream Entry",
                 "streamTypeLabel": "Stream Type",
                 "streamTypes": {
                     "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
