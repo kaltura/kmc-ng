@@ -30,7 +30,8 @@
             "enabled": false,
             "uri": "",
             "html5_version":"",
-            "html5lib":""
+            "html5lib":"",
+            "playerVersionsMap": ""
         },
         "liveDashboard": {
             "enabled": false,

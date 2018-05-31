@@ -29,7 +29,8 @@ export interface ExternalApplications {
         uri?: string,
         html5_version?: string,
         html5lib?: string,
-        showFlashStudio?: boolean
+        showFlashStudio?: boolean,
+        playerVersionsMap? : string
     };
     liveDashboard: {
         enabled: boolean,
