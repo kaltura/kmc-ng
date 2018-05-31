@@ -37,6 +37,7 @@ import { EntryDistributionSubmitUpdateAction } from 'kaltura-ngx-client/api/type
 import { EntryDistributionRetrySubmitAction } from 'kaltura-ngx-client/api/types/EntryDistributionRetrySubmitAction';
 import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -69,8 +70,9 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _kalturaClient: KalturaClient,
-              private _browserService: BrowserService) {
-    super(ContentEntryViewSections.Distribution);
+              private _browserService: BrowserService,
+              logger: KalturaLogger) {
+    super(ContentEntryViewSections.Distribution, logger);
   }
 
   ngOnDestroy() {

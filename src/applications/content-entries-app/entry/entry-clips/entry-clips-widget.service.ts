@@ -21,10 +21,7 @@ import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import {EntryWidget} from '../entry-widget';
-import {serverConfig} from "config/server";
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { UpdateClipsEvent } from 'app-shared/kmc-shared/events/update-clips-event';
@@ -60,8 +57,8 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
               private browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _appEvents: AppEventsService,
-              private _logger: KalturaLogger) {
-    super(ContentEntryViewSections.Clips);
+              logger: KalturaLogger) {
+    super(ContentEntryViewSections.Clips, logger);
 
       this._appEvents.event(UpdateClipsEvent)
           .cancelOnDestroy(this)
@@ -156,7 +153,6 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
         })
       }))
         .cancelOnDestroy(this, this.widgetReset$)
-        .monitor('get entry clips')
         .subscribe(
           response => {
             super._hideLoader();

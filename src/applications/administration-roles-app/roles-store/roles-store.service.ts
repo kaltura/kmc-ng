@@ -227,7 +227,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     return this._kalturaClient.request(new UserRoleDeleteAction({
       userRoleId: role.id
     }))
-      .monitor('RolesStoreService::deleteRole')
       .map(() => {
         return undefined;
       })
@@ -253,7 +252,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     );
 
     return this._kalturaClient.multiRequest(multiRequest)
-      .monitor('RolesStoreService::duplicateRole')
       .map(
         data => {
           if (data.hasErrors()) {
@@ -278,7 +276,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
       userRoleId: id,
       userRole: role
     }))
-      .monitor('RolesStoreService::updateRole')
       .map(() => {
         return;
       });
@@ -292,7 +289,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     role.tags = 'kmc';
 
     return this._kalturaClient.request(new UserRoleAddAction({ userRole: role }))
-      .monitor('RolesStoreService::addRole')
       .map(() => {
         return;
       });

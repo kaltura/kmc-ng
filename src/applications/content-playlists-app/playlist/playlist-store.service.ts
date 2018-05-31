@@ -274,7 +274,6 @@ export class PlaylistStore implements OnDestroy {
 
       this._widgetsManager.notifyDataSaving(newPlaylist, request, this.playlist)
         .cancelOnDestroy(this)
-        .monitor('playlist store: prepare playlist for save')
         .tag('block-shell')
         .switchMap((response: { ready: boolean, reason?: OnDataSavingReasons, errors?: Error[] }) => {
             if (response.ready) {
@@ -282,7 +281,6 @@ export class PlaylistStore implements OnDestroy {
 
               return this._kalturaServerClient.multiRequest(request)
                 .tag('block-shell')
-                .monitor('playlist store: save playlist')
                 .map(([res]) => {
                     if (res.error) {
                       this._state.next({ action: ActionTypes.PlaylistSavingFailed });
@@ -372,14 +370,13 @@ export class PlaylistStore implements OnDestroy {
         observer.next({ allowed: true });
         observer.complete();
       }
-    }).monitor('playlist store: check if can leave section without saving');
+    });
   }
 
   public returnToPlaylists(): void {
     this.canLeaveWithoutSaving()
       .cancelOnDestroy(this)
       .filter(({ allowed }) => allowed)
-      .monitor('playlist store: return to playlists list')
       .subscribe(() => {
           this._contentPlaylistsMainView.open();
       });
