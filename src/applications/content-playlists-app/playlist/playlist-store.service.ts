@@ -365,7 +365,7 @@ export class PlaylistStore implements OnDestroy {
               observer.complete();
             }
           }
-        )
+        );
       } else {
         observer.next({ allowed: true });
         observer.complete();

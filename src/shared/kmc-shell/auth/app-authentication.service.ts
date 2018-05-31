@@ -293,7 +293,6 @@ export class AppAuthentication {
             createdAt: user.createdAt,
             partnerInfo: {
                 partnerId: user.partnerId,
-                uss: partner.publisherEnvironmentType,
                 name: partner.name,
                 partnerPackage: partner.partnerPackage,
                 landingPage: partner.landingPage,
