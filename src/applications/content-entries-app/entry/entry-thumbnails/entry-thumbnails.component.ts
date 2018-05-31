@@ -51,7 +51,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	openActionsMenu(event: any, thumb: ThumbnailRow): void{
 		if (this.actionsMenu){
 			this.currentThumb = thumb; // save the selected caption for usage in the actions menu
-			this._actions[1].disabled = this.currentThumb.isDefault; // disable delete for default thumbnail
+			this._actions[2].disabled = this.currentThumb.isDefault; // disable delete for default thumbnail
 			this.actionsMenu.toggle(event);
 		}
 	}
