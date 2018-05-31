@@ -1,3 +1,82 @@
+<a name="4.6.0"></a>
+# [4.6.0](https://github.com/kaltura/kmc-ng/compare/v4.5.1...v4.6.0) (2018-05-30)
+
+
+### Bug Fixes
+
+* **administration:** fix admin user permissions ([97d8af4](https://github.com/kaltura/kmc-ng/commit/97d8af4))
+* **administration/users:** prevent delete and block actions on current user and on account administrator ([c572e35](https://github.com/kaltura/kmc-ng/commit/c572e35))
+* **administration/users:** prevent saving user with publisher id filled with spaces only ([#650](https://github.com/kaltura/kmc-ng/issues/650)) KMCNG-1686 ([c5329dd](https://github.com/kaltura/kmc-ng/commit/c5329dd))
+* **administration/users:** prevent user from changing hiw own role ([#654](https://github.com/kaltura/kmc-ng/issues/654)) KMCNG-1415 ([4479894](https://github.com/kaltura/kmc-ng/commit/4479894))
+* disable upload button if missing upload information  ([#658](https://github.com/kaltura/kmc-ng/issues/658)) KMCNG-1681 ([f4cb378](https://github.com/kaltura/kmc-ng/commit/f4cb378))
+* **administration/users:** show mandatory invalid fields when trying to create new user with partial information ([#651](https://github.com/kaltura/kmc-ng/issues/651)) KMCNG-1666 ([12aa5f0](https://github.com/kaltura/kmc-ng/commit/12aa5f0))
+* **content/categories:** fix table layout for IE11 ([9375272](https://github.com/kaltura/kmc-ng/commit/9375272))
+* **content/category:** end user drop-down layout fixes ([a5ecc49](https://github.com/kaltura/kmc-ng/commit/a5ecc49))
+* **content/category:** fix width of "Jump To" menu to fit up to 31 characters menu items ([eaecb77](https://github.com/kaltura/kmc-ng/commit/eaecb77))
+* **content/category:** propagate category partnerSortValue value from service ([96779c5](https://github.com/kaltura/kmc-ng/commit/96779c5))
+* **content/entries:** block shell when deleting entry thumb ([404477e](https://github.com/kaltura/kmc-ng/commit/404477e))
+* **content/entries:** Bulk actions- remove redundant scroll bars ([b16de70](https://github.com/kaltura/kmc-ng/commit/b16de70))
+* **content/entries:** clear bulk selections in list when executing a single row action ([#649](https://github.com/kaltura/kmc-ng/issues/649)) KMCNG-1702 ([e4c54c1](https://github.com/kaltura/kmc-ng/commit/e4c54c1))
+* **content/entries:** Fix refine filter scheduling calendar ([9f22dc8](https://github.com/kaltura/kmc-ng/commit/9f22dc8))
+* **content/entries:** refresh list when failed to execute bulk action ([5c464f9](https://github.com/kaltura/kmc-ng/commit/5c464f9))
+* **content/entry:** fix width of "Jump To" menu to fit up to 31 characters menu items ([a6b5d13](https://github.com/kaltura/kmc-ng/commit/a6b5d13))
+* **content/entry:** pass SEO uploadDate for share & Embed ([a001e13](https://github.com/kaltura/kmc-ng/commit/a001e13))
+* **content/entry:** prevent users from typing invalid dates ([366bb20](https://github.com/kaltura/kmc-ng/commit/366bb20))
+* **content/entry:** send admin ks to thumbnail grabber player ([bc6fd38](https://github.com/kaltura/kmc-ng/commit/bc6fd38))
+* **content/entry:** updated permissions from advertisements section ([2b80618](https://github.com/kaltura/kmc-ng/commit/2b80618))
+* **content/playlists:** show detail page exit verification for new playlist ([#639](https://github.com/kaltura/kmc-ng/issues/639)) KMCNG-1536 ([be36efa](https://github.com/kaltura/kmc-ng/commit/be36efa))
+* **content/syndication:** remove error message for missing destination selection ([9a31384](https://github.com/kaltura/kmc-ng/commit/9a31384))
+* **content>Bulk Upload Log:** remove a redundant file extension when downloading the original CSV/XML  ([#550](https://github.com/kaltura/kmc-ng/issues/550)) KMCNG-1555 ([56938b8](https://github.com/kaltura/kmc-ng/commit/56938b8))
+* **content>entries:** in entry details > captions section fix incorrect status field while uploading a caption ([#569](https://github.com/kaltura/kmc-ng/issues/569)) KMCNG-948, KMCNG-1147 ([3bbf4e9](https://github.com/kaltura/kmc-ng/commit/3bbf4e9))
+* **settings/access control:** update ip validation tooltip ([#661](https://github.com/kaltura/kmc-ng/issues/661)) KMCNG-1660 ([71ee411](https://github.com/kaltura/kmc-ng/commit/71ee411))
+* **settings/account settings:** save changes of account owner  ([#621](https://github.com/kaltura/kmc-ng/issues/621)) KMCNG-1590 ([7766fa9](https://github.com/kaltura/kmc-ng/commit/7766fa9))
+* **settings/custom data:** handle form validations of required fields ([#664](https://github.com/kaltura/kmc-ng/issues/664)) KMCNG-1466,KMCNG-1467, KMCNG-1527 ([fa36c5d](https://github.com/kaltura/kmc-ng/commit/fa36c5d))
+* **settings/custom data:** prevent text-list items that start with hyphen ([#652](https://github.com/kaltura/kmc-ng/issues/652)) KMCNG-1533 ([1ab6ad3](https://github.com/kaltura/kmc-ng/commit/1ab6ad3))
+* **settings/integration-settings:** fix category name style ([64fe2a5](https://github.com/kaltura/kmc-ng/commit/64fe2a5))
+* Add Custom Schema - GUI fixes ([98af464](https://github.com/kaltura/kmc-ng/commit/98af464))
+* **settings/transcoding:** allow prev/next navigation after profile was saved ([#640](https://github.com/kaltura/kmc-ng/issues/640)) ([33efce9](https://github.com/kaltura/kmc-ng/commit/33efce9))
+* **settings>transcoding profile:** handle profiles with long description ([#571](https://github.com/kaltura/kmc-ng/issues/571)) KMCNG-1625 ([6b71cab](https://github.com/kaltura/kmc-ng/commit/6b71cab))
+* **syndication:** add playlist type icon for playlist options menu, update feed delete confirmation message ([9467d33](https://github.com/kaltura/kmc-ng/commit/9467d33))
+* add Custom Schema button is available while an error message indicates no connection to the server ([#565](https://github.com/kaltura/kmc-ng/issues/565)) KMCNG-1457 ([d677130](https://github.com/kaltura/kmc-ng/commit/d677130))
+* allow custom data schema with values 'False', 'True' in text-list-selector SUP-14470 ([8d889fc](https://github.com/kaltura/kmc-ng/commit/8d889fc))
+* allow entry ID link to entry details in moderation report according to permissions ([e6861ea](https://github.com/kaltura/kmc-ng/commit/e6861ea))
+* disable "Clear Dates" link in filters when no dates are selected ([338f2e4](https://github.com/kaltura/kmc-ng/commit/338f2e4))
+* fix entry selector layout when multiple filters applied ([76266b2](https://github.com/kaltura/kmc-ng/commit/76266b2))
+* fix user name style and word breaking logic ([57e3ad9](https://github.com/kaltura/kmc-ng/commit/57e3ad9))
+* lables in syndication > yahoo feed ([#547](https://github.com/kaltura/kmc-ng/issues/547)) KMCNG-1576 ([2beb1df](https://github.com/kaltura/kmc-ng/commit/2beb1df))
+* prevent searching for empty strings in entries, playlists, categories, drop folders, category user entitlements ([0ba6eae](https://github.com/kaltura/kmc-ng/commit/0ba6eae))
+* require value in bulk action change owner ([#436](https://github.com/kaltura/kmc-ng/issues/436)) KMCNG-797, KMCNG-823, KMCNG-1406 ([e8a5236](https://github.com/kaltura/kmc-ng/commit/e8a5236))
+* treat disabled (angular) forms as valid across all relevant views ([#648](https://github.com/kaltura/kmc-ng/issues/648)) KMCNG-1734 ([6865c32](https://github.com/kaltura/kmc-ng/commit/6865c32))
+* typo fix in delete category warning message ([90974b9](https://github.com/kaltura/kmc-ng/commit/90974b9))
+* typo in new role name placeholder ([#655](https://github.com/kaltura/kmc-ng/issues/655)) KMCNG-1753 ([1625609](https://github.com/kaltura/kmc-ng/commit/1625609))
+* when loading accounts for "change account" option - fetch all accounts from the server and not just the first 30 accounts ([dfb86a5](https://github.com/kaltura/kmc-ng/commit/dfb86a5))
+* wording of error message when trying to create new category (no parent) with same name ([#660](https://github.com/kaltura/kmc-ng/issues/660)) KMCNG-1671 ([2c3a471](https://github.com/kaltura/kmc-ng/commit/2c3a471))
+
+
+### Features
+
+* **administration/roles:** show a disclaimer to the user after he modify a role ([#583](https://github.com/kaltura/kmc-ng/issues/583)) KMCNG-1738 ([f5ddb42](https://github.com/kaltura/kmc-ng/commit/f5ddb42))
+* add confirmation messages aligning (left/ center) compatibility ([#460](https://github.com/kaltura/kmc-ng/issues/460)) ([382bc3f](https://github.com/kaltura/kmc-ng/commit/382bc3f))
+* enforce secured protocol when deployed to production ([#610](https://github.com/kaltura/kmc-ng/issues/610)) ([ef42eec](https://github.com/kaltura/kmc-ng/commit/ef42eec))
+* navigate user to default page if trying to deep link into error page ([#643](https://github.com/kaltura/kmc-ng/issues/643)) ([ba334b7](https://github.com/kaltura/kmc-ng/commit/ba334b7))
+* show filters for refine filter items and categories filter items  ([#458](https://github.com/kaltura/kmc-ng/issues/458)) KMCNG-1192 ([9eca73c](https://github.com/kaltura/kmc-ng/commit/9eca73c))
+* **content/entries:** add bulk add/remove publishers & editors action and update bulk tags action layout  ([#507](https://github.com/kaltura/kmc-ng/issues/507)) KMCNG-1761 KMCNG-1764 ([c5af869](https://github.com/kaltura/kmc-ng/commit/c5af869))
+* **content/syndication:** add feed of type ITunes ([#480](https://github.com/kaltura/kmc-ng/issues/480)) KMCNG-1121 ([86a76ee](https://github.com/kaltura/kmc-ng/commit/86a76ee))
+* **content>entries:**  show relevant error when trying to convert a flavor while Source is missing ([#435](https://github.com/kaltura/kmc-ng/issues/435)) KMCNG-638 ([14e93cf](https://github.com/kaltura/kmc-ng/commit/14e93cf))
+* **settings>account info:** failing to extract bandwidth consumption and storage use should show n/a ([#592](https://github.com/kaltura/kmc-ng/issues/592)) KMCNG-1749 ([436a2fa](https://github.com/kaltura/kmc-ng/commit/436a2fa))
+
+
+
+<a name="4.5.1"></a>
+## [4.5.1](https://github.com/kaltura/kmc-ng/compare/v4.5.0...v4.5.1) (2018-05-21)
+
+
+### Bug Fixes
+
+* parse correctly custom metadata profiles created by the flash-based KMC and includes ampersand character ([21c7b3a](https://github.com/kaltura/kmc-ng/commit/21c7b3a))
+
+
+
 <a name="4.5.0"></a>
 # [4.5.0](https://github.com/kaltura/kmc-ng/compare/v4.4.1...v4.5.0) (2018-05-13)
 

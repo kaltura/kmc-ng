@@ -8,7 +8,7 @@ import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatu
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
 
-import {AppLocalization} from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import {KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger/kaltura-logger.service';

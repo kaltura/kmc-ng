@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { CaptionAssetListAction } from 'kaltura-ngx-client/api/types/CaptionAssetListAction';

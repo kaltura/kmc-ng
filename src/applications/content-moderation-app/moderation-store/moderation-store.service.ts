@@ -7,7 +7,7 @@ import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAct
 import { MediaListFlagsAction } from 'kaltura-ngx-client/api/types/MediaListFlagsAction';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { UserNotifyBanAction } from 'kaltura-ngx-client/api/types/UserNotifyBanAction';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Injectable()
 export class ModerationStore implements OnDestroy {

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { MetadataItem, MetadataItemTypes } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -26,6 +26,10 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   private _field: MetadataItem;
   private _isNew = true;
   private _systemNames: string[] = [];
+
+  private get _requiredFieldsIsDirty(): boolean {
+      return this._labelField.dirty || this._includeTimeField.dirty || this._listValuesFiled.dirty;
+  }
 
   public _saveDisabled = false;
   public _title: string;
@@ -81,7 +85,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
         .subscribe(event => {
           const canPreventClose = event.context && event.context.allowClose;
 
-          if (canPreventClose && this._fieldForm.dirty) {
+          if (canPreventClose && this._requiredFieldsIsDirty) {
             event.context.allowClose = false;
             this._cancel();
           }
@@ -320,7 +324,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     const invalidLabelPrefix = /^[0-9`~:;!@#$%\^&*()\-_+=|',.?\/\\{}<>"\[\]]/;
     const invalidChars = /[<>'"&]/;
     const invalidListValuesOptions = /[`;!#*\+,?\\{}<>"\[\]]/;
-    const invalidListValuesOptionsPrefix = /^-/;
+    const invalidListValuesOptionsPrefix = /^\s*-/gm;
 
     const label = this._labelField.value.trim();
     const shortDescription = this._shortDescriptionField.value;
@@ -365,7 +369,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
   public _cancel(): void {
     this._logger.info(`handle 'cancel' updated field by the user`);
-    if (this._fieldForm.dirty) {
+    if (this._requiredFieldsIsDirty) {
       this._logger.info(`the form has unsaved changes, handle 'save' of unsaved changes`);
       this._browserService.confirm({
         header: this._appLocalization.get('applications.settings.metadata.fieldForm.saveChanges'),

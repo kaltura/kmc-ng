@@ -57,7 +57,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
       this._form.disable({ emitEvent: false });
     } else {
       this.onFormStateChanged.emit({
-        isValid: this._form.status === 'VALID',
+        isValid: this._form.status !== 'INVALID',
         isDirty: this._form.dirty
       });
 
@@ -66,7 +66,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
         .subscribe(
           () => {
             this.onFormStateChanged.emit({
-              isValid: this._form.status === 'VALID',
+              isValid: this._form.status !== 'INVALID',
               isDirty: this._form.dirty
             });
           }

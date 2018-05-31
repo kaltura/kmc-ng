@@ -1,7 +1,8 @@
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
@@ -99,7 +100,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
       const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
-        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, tags'
+        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, tags, partnerSortValue'
       });
 
       // build the request

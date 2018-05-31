@@ -14,6 +14,13 @@
     display: flex;
     padding-top: 20px;
 
+      .kErrorMessage {
+          color: $kDandger;
+          font-size: 14px;
+          margin-top: 5px;
+          margin-bottom: -15px;
+      }
+
     .kSelectApplyTo {
       display: flex;
       justify-content: center;
@@ -28,20 +35,26 @@
 
     .kLabel {
       width: 237px;
-      -webkit-box-flex: 0;
-      -ms-flex: 0 0 auto;
       flex: 0 0 auto;
       height: 18px;
       color: $kGrayscale1;
       font-size: 15px;
       line-height: 18px;
+        position: relative;
     }
 
     .kRequired {
       width: 20px;
       font-size: 24px;
       color: $kGrayscale3;
-      margin-left: -28px;
+      margin-left: -24px;
+        position: absolute;
+        top: 5px;
+        right: 0;
+
+        &.kControlInvalid {
+            color: $kDandger;
+        }
     }
     .kRequired, .kLabel {
       padding: 8px 4px 8px 0px;

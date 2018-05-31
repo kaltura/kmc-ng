@@ -24,7 +24,8 @@ import { AttachmentAssetUpdateAction } from 'kaltura-ngx-client/api/types/Attach
 import { AttachmentAssetAddAction } from 'kaltura-ngx-client/api/types/AttachmentAssetAddAction';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
 import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client/api/types/KalturaAttachmentAssetListResponse';

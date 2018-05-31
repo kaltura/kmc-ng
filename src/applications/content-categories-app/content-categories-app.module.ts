@@ -44,7 +44,8 @@ import {ContentCategoriesComponent} from './content-categories.component';
 
 import {DynamicMetadataFormModule} from 'app-shared/kmc-shared';
 
-import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
+
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {
   AreaBlockerModule,
@@ -87,7 +88,7 @@ import { EntriesModule } from 'app-shared/content-shared/entries/entries.module'
         FormsModule,
         InputTextareaModule,
         InputTextModule,
-        KalturaCommonModule,
+        LocalizationModule,
         DynamicMetadataFormModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,

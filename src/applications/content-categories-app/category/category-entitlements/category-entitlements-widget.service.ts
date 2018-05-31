@@ -2,7 +2,7 @@ import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {CategoryService} from '../category.service';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
@@ -128,7 +128,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(
         () => {
-          const isValid = this.entitlementsForm.status === 'VALID';
+          const isValid = this.entitlementsForm.status !== 'INVALID';
           const isDirty = this.entitlementsForm.dirty;
           if (this.isDirty !== isDirty || this.isValid !== isValid) {
             super.updateState({

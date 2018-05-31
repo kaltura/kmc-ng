@@ -31,9 +31,11 @@
                     (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)"
             >
               <ng-template let-node pTemplate="default">
-              <span class="kTreeNodeLabel" [kTooltip]="node.label" [delay]="1000">
-                {{node.label}}
-              </span>
+                  <div class="kTreeNodeLabelWrapper">
+                      <span class="kTreeNodeLabel" [kTooltip]="node.label" [delay]="1000">
+                          {{node.label}}
+                      </span>
+                  </div>
                 <div *ngIf="node.value==='scheduled'" (click)="_blockScheduleToggle($event)">
                   <div class="kDateRange">
                     <p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true"

@@ -15,7 +15,7 @@ import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client/api/types
 import { ThumbAssetDeleteAction } from 'kaltura-ngx-client/api/types/ThumbAssetDeleteAction';
 import { ThumbAssetAddFromImageAction } from 'kaltura-ngx-client/api/types/ThumbAssetAddFromImageAction';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';

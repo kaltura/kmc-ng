@@ -5,7 +5,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client/api/types/PlaylistGetAction';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { PlaylistUpdateAction } from 'kaltura-ngx-client/api/types/PlaylistUpdateAction';
 import { Observable } from 'rxjs/Observable';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';

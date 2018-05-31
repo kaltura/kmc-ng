@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissionsService, KMCPermissions } from '../../kmc-permissions';
 import { Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
@@ -54,7 +54,7 @@ export class QuizAppViewService extends KmcComponentViewBaseService<QuizAppViewA
     }
 
     private _isAvailableByPermission(): boolean {
-        return false; /*this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);*/
+        return false;
     }
 
     private _isAvailableByData(args: QuizAppViewArgs): boolean {

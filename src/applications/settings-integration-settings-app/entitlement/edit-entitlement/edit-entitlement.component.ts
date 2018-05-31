@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {KalturaCategory} from "kaltura-ngx-client/api/types/KalturaCategory";
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import {BrowserService} from "app-shared/kmc-shell";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import {EditEntitlementService} from "./edit-entitlement.service";

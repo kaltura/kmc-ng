@@ -28,7 +28,7 @@ import {PlaylistListAction} from 'kaltura-ngx-client/api/types/PlaylistListActio
 import {KalturaPlaylistOrderBy} from 'kaltura-ngx-client/api/types/KalturaPlaylistOrderBy';
 import {KalturaPlaylistListResponse} from 'kaltura-ngx-client/api/types/KalturaPlaylistListResponse';
 import {SyndicationFeedDeleteAction} from 'kaltura-ngx-client/api/types/SyndicationFeedDeleteAction';
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import {KalturaSyndicationFeedEntryCount} from "kaltura-ngx-client/api/types/KalturaSyndicationFeedEntryCount";
 import {SyndicationFeedGetEntryCountAction} from "kaltura-ngx-client/api/types/SyndicationFeedGetEntryCountAction";
 import {SyndicationFeedAddAction} from "kaltura-ngx-client/api/types/SyndicationFeedAddAction";
@@ -353,7 +353,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         (feeds.length === 1 ? this._appLocalization.get('applications.content.syndication.deleteConfirmation.singleFeed',
           {0: feeds[0].name}) :
           this._appLocalization.get('applications.content.syndication.deleteConfirmation.upTo5Feed',
-            {0: feeds.map(feed => feed.name).join(', ')})) :
+            {0: feeds.map((feed, i) => `${i + 1}: ${feed.name}`).join('\n')})) :
         this._appLocalization.get('applications.content.syndication.deleteConfirmation.moreThan5');
 
       this._browserService.confirm({

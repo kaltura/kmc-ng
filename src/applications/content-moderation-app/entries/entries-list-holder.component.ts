@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {
     EntriesListComponent
 } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
@@ -29,7 +29,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
   public _defaultFilters: Partial<EntriesFilters> = {
     'moderationStatuses': ['1', '5'],
-      'sortDirection': SortDirection.Asc
+      'sortDirection': SortDirection.Desc
   };
 
   public _blockerMessage: AreaBlockerMessage = null;

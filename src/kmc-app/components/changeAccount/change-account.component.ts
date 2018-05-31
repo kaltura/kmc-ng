@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, AfterViewInit, OnDestroy, ViewChild} from '@angular/core';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import {ISubscription} from 'rxjs/Subscription';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaClient} from 'kaltura-ngx-client';

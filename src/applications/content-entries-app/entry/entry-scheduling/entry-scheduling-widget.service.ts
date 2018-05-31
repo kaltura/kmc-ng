@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/f
 import { Observable } from 'rxjs/Observable';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryWidget } from '../entry-widget';
 import { async } from 'rxjs/scheduler/async';
@@ -149,7 +149,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
         .subscribe(
           () => {
             super.updateState({
-              isValid: this.schedulingForm.status === 'VALID',
+              isValid: this.schedulingForm.status !== 'INVALID',
               isDirty: this.schedulingForm.dirty
             });
           }

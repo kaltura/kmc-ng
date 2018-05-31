@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage, KalturaPlayerComponent } from '@kaltura-ng/kaltura-ui';
 import { ModerationStore } from '../moderation-store/moderation-store.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { Router } from '@angular/router';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { BulkService } from '../bulk-service/bulk.service';
@@ -225,16 +225,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(entryId): void {
-      this._isBusy = true;
-      const scopedSubscription: ISubscription = this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata)
-          //.cancelOnDestroy(this) // NOTICE: should not use here .cancelOnDestroy
-          .subscribe((success) => {
-              this._isBusy = false;
-              if (success) {
-                  this.parentPopupWidget.close();
-              }
-              scopedSubscription.unsubscribe(); // always unsubscribe to clear memory
-          });
+      this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
   }
 
   public _banCreator(): void {
