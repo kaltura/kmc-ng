@@ -14,7 +14,7 @@ import {
   TreeModule
 } from 'primeng/primeng';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import {AutoCompleteModule, KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 
@@ -37,7 +37,7 @@ import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/catego
     FormsModule,
     ReactiveFormsModule,
     TreeModule,
-    KalturaCommonModule,
+    LocalizationModule,
     KalturaPrimeNgUIModule,
     KalturaUIModule,
     ButtonModule,

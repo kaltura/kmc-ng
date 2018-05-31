@@ -7,7 +7,7 @@ import { AppAuthentication } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
-
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class EntryDetailsWidget extends EntryWidget
@@ -16,10 +16,11 @@ export class EntryDetailsWidget extends EntryWidget
 
     constructor(
                 kalturaServerClient: KalturaClient,
-                private appAuthentication: AppAuthentication)
+                private appAuthentication: AppAuthentication,
+                logger: KalturaLogger)
 
     {
-        super('entryDetails');
+        super('entryDetails', logger);
     }
 
 

@@ -15,8 +15,8 @@ import { KalturaUrlResource } from 'kaltura-ngx-client/api/types/KalturaUrlResou
 import { Subject } from 'rxjs/Subject';
 import { MediaCancelReplaceAction } from 'kaltura-ngx-client/api/types/MediaCancelReplaceAction';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaRemoteStorageResource } from 'kaltura-ngx-client/api/types/KalturaRemoteStorageResource';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 
 export interface KmcNewReplaceEntryLink {
     url: string;

@@ -3,7 +3,7 @@ import { DestinationComponentBase, FeedFormMode } from '../../feed-details.compo
 import { KalturaITunesSyndicationFeed } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeed';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KalturaValidators } from '@kaltura-ng/kaltura-ui/validators/validators';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { KalturaITunesSyndicationFeedAdultValues } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeedAdultValues';
 import { AppAuthentication } from 'app-shared/kmc-shell';

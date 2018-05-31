@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
-import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
@@ -32,6 +32,7 @@ import { StorageProfileListAction } from 'kaltura-ngx-client/api/types/StoragePr
 import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { Observer } from 'rxjs/Observer';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];

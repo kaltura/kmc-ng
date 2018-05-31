@@ -5,7 +5,8 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaCaptionAsset } from 'kaltura-ngx-client/api/types/KalturaCaptionAsset';
 import { KalturaCaptionType } from 'kaltura-ngx-client/api/types/KalturaCaptionType';
-import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';

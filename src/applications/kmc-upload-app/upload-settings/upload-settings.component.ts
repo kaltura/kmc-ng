@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
-import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';

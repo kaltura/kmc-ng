@@ -10,10 +10,11 @@ import { FlavoursStore } from 'app-shared/kmc-shared';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsUpdateAction';
 import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -24,10 +25,10 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
 
   constructor(private _kalturaClient: KalturaClient,
               private _appLocalization: AppLocalization,
-              private _browserService: BrowserService,
+              logger: KalturaLogger,
               private _listDiffers: IterableDiffers,
               private _flavorsStore: FlavoursStore) {
-    super(SettingsTranscodingProfileViewSections.Flavors);
+    super(SettingsTranscodingProfileViewSections.Flavors, logger);
   }
 
   ngOnDestroy() {

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategorySubcategoriesWidget} from './category-subcategories-widget.service';
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 
 
 @Component({

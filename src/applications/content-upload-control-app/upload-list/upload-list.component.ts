@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
-import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';

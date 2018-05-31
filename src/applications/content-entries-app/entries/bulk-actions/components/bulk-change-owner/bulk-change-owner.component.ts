@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -97,7 +97,6 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 			)
 		)
 			.cancelOnDestroy(this)
-			.monitor('search owners')
 			.subscribe(
 				data => {
 					const suggestions = [];

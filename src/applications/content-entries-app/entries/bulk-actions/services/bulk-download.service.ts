@@ -5,7 +5,7 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { BulkActionBaseService } from './bulk-action-base.service';
 import { XInternalXAddBulkDownloadAction } from './XInternalXAddBulkDownloadAction';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 export class BulkDownloadError extends Error {
   type = 'bulkDownload';

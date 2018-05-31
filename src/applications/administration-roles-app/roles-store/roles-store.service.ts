@@ -14,7 +14,7 @@ import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client/api/types/KalturaUser
 import { UserRoleDeleteAction } from 'kaltura-ngx-client/api/types/UserRoleDeleteAction';
 import { UserRoleUpdateAction } from 'kaltura-ngx-client/api/types/UserRoleUpdateAction';
 import { UserRoleCloneAction } from 'kaltura-ngx-client/api/types/UserRoleCloneAction';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { UserRoleAddAction } from 'kaltura-ngx-client/api/types/UserRoleAddAction';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
@@ -227,7 +227,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     return this._kalturaClient.request(new UserRoleDeleteAction({
       userRoleId: role.id
     }))
-      .monitor('RolesStoreService::deleteRole')
       .map(() => {
         return undefined;
       })
@@ -253,7 +252,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     );
 
     return this._kalturaClient.multiRequest(multiRequest)
-      .monitor('RolesStoreService::duplicateRole')
       .map(
         data => {
           if (data.hasErrors()) {
@@ -278,7 +276,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
       userRoleId: id,
       userRole: role
     }))
-      .monitor('RolesStoreService::updateRole')
       .map(() => {
         return;
       });
@@ -292,7 +289,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     role.tags = 'kmc';
 
     return this._kalturaClient.request(new UserRoleAddAction({ userRole: role }))
-      .monitor('RolesStoreService::addRole')
       .map(() => {
         return;
       });

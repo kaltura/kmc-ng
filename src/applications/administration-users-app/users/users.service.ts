@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { IsUserExistsStatuses } from './user-exists-statuses';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
@@ -57,7 +57,7 @@ export class UsersStore implements OnDestroy {
     return this._users.data.value;
   }
 
-  public query$ = this._querySource.monitor('queryData update');
+  public query$ = this._querySource;
   public readonly users = { data$: this._users.data.asObservable(), state$: this._users.state.asObservable() };
 
   constructor(private _kalturaServerClient: KalturaClient,

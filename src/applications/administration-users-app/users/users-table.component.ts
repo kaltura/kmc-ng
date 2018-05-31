@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { UsersStore } from './users.service';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';

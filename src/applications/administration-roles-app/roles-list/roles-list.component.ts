@@ -4,7 +4,7 @@ import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 

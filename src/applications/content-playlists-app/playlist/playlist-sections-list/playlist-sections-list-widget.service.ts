@@ -1,14 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { PlaylistWidget } from '../playlist-widget';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { SectionsList } from './sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
-
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 export interface SectionWidgetItem {
   label: string;
   isValid: boolean;
@@ -22,8 +22,10 @@ export class PlaylistSectionsListWidget extends PlaylistWidget implements OnDest
   public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
   constructor(private _appLocalization: AppLocalization,
-              private _contentPlaylistView: ContentPlaylistViewService) {
-    super('sectionsList');
+              private _contentPlaylistView: ContentPlaylistViewService,
+              logger: KalturaLogger
+              ) {
+    super('sectionsList', logger);
   }
 
   ngOnDestroy() {

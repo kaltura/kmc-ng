@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequestOptions } from 'kaltura-ngx-client';
 import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
@@ -31,12 +31,10 @@ import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-even
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { MediaCancelReplaceAction } from 'kaltura-ngx-client/api/types/MediaCancelReplaceAction';
 import { MediaApproveReplaceAction } from 'kaltura-ngx-client/api/types/MediaApproveReplaceAction';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client/api/types/KalturaEntryReplacementStatus';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { FlavorsDataRequestFactory } from './flavors-data-request-factory';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
@@ -53,6 +51,8 @@ import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPa
 import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client/api/types/KalturaConversionProfileOrderBy';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
@@ -86,10 +86,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 private _uploadManagement: UploadManagement,
                 private _appEvents: AppEventsService,
                 private _kmcServerPolls: KmcServerPolls,
-                private _logger: KalturaLogger,
-                private _entryStore: EntryStore) {
-        super(ContentEntryViewSections.Flavours);
-        this._logger = _logger.subLogger('EntryFlavoursWidget');
+                private _entryStore: EntryStore,
+                logger: KalturaLogger) {
+        super(ContentEntryViewSections.Flavours, logger);
     }
 
     /**
@@ -435,7 +434,6 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     }))
                         .cancelOnDestroy(this, this.widgetReset$)
                         .tag('block-shell')
-                        .monitor('delete flavor: ' + flavor.id)
                         .subscribe(
                             response => {
                                 if (flavor.isSource) {
@@ -464,7 +462,6 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             id: id
         }))
             .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('get flavor asset URL')
             .subscribe(
                 dowmloadUrl => {
                     this._browserService.openLink(dowmloadUrl);
@@ -497,7 +494,6 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         this._kalturaServerClient.request(request)
             .cancelOnDestroy(this, this.widgetReset$)
             .tag('block-shell')
-            .monitor('convert flavor')
             .subscribe(
                 () => {
                     const flavors = Array.from(this._flavors.getValue());
@@ -591,7 +587,6 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             contentResource: resource
         }))
             .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('set flavor resource')
             .tag('block-shell')
             .catch(error => {
                 this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
@@ -624,7 +619,6 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             flavorAsset: flavorAsset
         }))
             .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('add new flavor')
             .tag('block-shell')
             .catch(error => {
                 this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');

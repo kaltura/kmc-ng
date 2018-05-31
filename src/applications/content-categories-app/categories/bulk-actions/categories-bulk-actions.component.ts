@@ -9,7 +9,7 @@ import {
 } from './services';
 import {CategoriesBulkActionBaseService} from './services/categories-bulk-action-base.service';
 import {MenuItem} from 'primeng/primeng';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';

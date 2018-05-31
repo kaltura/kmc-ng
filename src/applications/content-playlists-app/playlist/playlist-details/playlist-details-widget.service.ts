@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { PlaylistWidget } from '../playlist-widget';
-
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 @Injectable()
 export class PlaylistDetailsWidget extends PlaylistWidget {
-  constructor() {
-    super('playlistDetails');
+  constructor(logger: KalturaLogger) {
+    super('playlistDetails', logger);
   }
 
   /**

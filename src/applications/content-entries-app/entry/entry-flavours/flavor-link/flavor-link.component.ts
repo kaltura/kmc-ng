@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { Flavor } from '../flavor';
 import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
@@ -16,6 +15,7 @@ import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAd
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/KalturaFlavorReadyBehaviorType';
 import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 
 @Component({
     selector: 'kFlavorLink',

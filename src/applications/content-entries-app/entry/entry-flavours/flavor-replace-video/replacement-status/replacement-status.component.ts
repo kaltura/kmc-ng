@@ -2,12 +2,12 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { EntryFlavoursWidget, ReplacementData } from '../../entry-flavours-widget.service';
 import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client/api/types/KalturaEntryReplacementStatus';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { NewReplaceVideoUploadService } from 'app-shared/kmc-shell/new-replace-video-upload';
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management/upload-management.service';
 import { NewReplaceVideoUploadFile } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload-file';
 import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 
 export enum FlavorsTabs {
     current = 'current',
@@ -31,7 +31,10 @@ export class ReplacementStatusComponent implements OnInit, OnDestroy {
     public _currentTab = FlavorsTabs.current;
 
     public get _replacementUploadFailed() {
-        return Object.values(this._failedUploadingFiles).some(Boolean);
+        return Object
+            .keys(this._failedUploadingFiles)
+            .map(key => this._failedUploadingFiles[key])
+            .some(Boolean);
     }
 
     public get _approveBtnDisabled(): boolean {
