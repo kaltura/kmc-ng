@@ -1,23 +1,17 @@
-<button #replaceVideo pButton class="kFlavorReplaceButton kButtonDefault"
-        icon="kIcondropdown_arrow_bottom" iconPos="right"
-        [label]="_actionBtnTitle"></button>
+<button *ngIf="_uploadEnabled"
+        pButton class="kFlavorReplaceButton kButtonDefault"
+        [label]="'applications.content.entryDetails.flavours.replaceVideo.uploadFromDesktop' | translate"
+        (click)="_openReplacementMenu('upload')"></button>
 
-<kPopupWidget #replaceVideoPopup
-              [popupWidth]="240"
-              [closeBtn]="false"
-              [targetRef]="replaceVideo"
-              [targetOffset]="{'x': 0, 'y': 40}"
-              [placement]="{'x':'right', 'y': 'bottom'}">
-    <div class="kReplaceVideoPopup">
-        <p [hidden]="!_uploadEnabled"
-           (click)="_openReplacementMenu('upload')">{{_uploadFileLabel}}</p>
-        <p [hidden]="!_importEnabled"
-           (click)="_openReplacementMenu('import')">{{_importFileLabel}}</p>
-        <p [hidden]="!_linkEnabled"
-           (click)="_openReplacementMenu('link')">{{'applications.content.entryDetails.flavours.replaceVideo.linkRemoteStorage' | translate}}</p>
-    </div>
-</kPopupWidget>
+<button *ngIf="_importEnabled"
+        pButton class="kFlavorReplaceButton kButtonDefault"
+        [label]="'applications.content.entryDetails.flavours.replaceVideo.importFromUrl' | translate"
+        (click)="_openReplacementMenu('import')"></button>
 
+<button *ngIf="_linkEnabled"
+        pButton class="kFlavorReplaceButton kButtonDefault"
+        [label]="'applications.content.entryDetails.flavours.replaceVideo.linkRemoteStorage' | translate"
+        (click)="_openReplacementMenu('link')"></button>
 
 <kPopupWidget #uploadMenu [popupWidth]="791" [popupHeight]="607"
               [closeBtn]="true" [modal]="true" [preventPageScroll]="true">

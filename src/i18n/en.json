@@ -1510,8 +1510,6 @@
                     "importFailure": "Flavor import failed.",
                     "replaceVideo": {
                         "noFlavors": "No Flavors",
-                        "replaceVideo": "Replace Video",
-                        "replaceAudio": "Replace Audio",
                         "addVideo": "Add Video",
                         "addAudio": "Add Audio",
                         "uploadFile": "Upload file",
@@ -1520,6 +1518,8 @@
                         "importFiles": "Import files",
                         "updateVideo": "Update Video",
                         "updateAudio": "Update Audio",
+                        "uploadFromDesktop": "Upload from Desktop",
+                        "importFromUrl": "Import from URL",
                         "linkRemoteStorage": "Link to Remote Storage",
                         "matchFromDropFolder": "Match from Drop Folder",
                         "transcodingProfile": "Transcoding profile",

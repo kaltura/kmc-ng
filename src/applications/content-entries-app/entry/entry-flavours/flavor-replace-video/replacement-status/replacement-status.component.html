@@ -10,21 +10,22 @@
         </ng-template>
         <span class="kDelimiter"></span>
         {{'applications.content.entryDetails.flavours.replaceVideo.tempEntryId' | translate:[replacementData?.tempEntryId]}}
-        <a class="kCancelReplacement" (click)="_cancelReplacement()">
-            {{'applications.content.entryDetails.flavours.replaceVideo.cancelReplacement' | translate}}
-        </a>
-    </div>
-    <div class="kApprove">
-        <button pButton
-                class="kApproveReplacementBtn kButtonDefault"
-                icon="kIconcheck-medium"
-                [disabled]="_approveBtnDisabled"
-                [label]="_approveBtnLabel"
-                (click)="_approveReplacement()"></button>
         <kInputHelper class="kHelp" icon="kIconlife_donut" trigger="click"
                       [title]="'applications.content.entryDetails.flavours.replaceVideo.autoReplacement' | translate">
             <span>{{'applications.content.entryDetails.flavours.replaceVideo.approveReplacementTooltip' | translate}}</span>
         </kInputHelper>
+    </div>
+    <div class="kApprove">
+        <button pButton
+                class="kApproveReplacementBtn kButtonBranded"
+                icon="kIconcheck-medium"
+                [disabled]="_approveBtnDisabled"
+                [label]="_approveBtnLabel"
+                (click)="_approveReplacement()"></button>
+
+        <a class="kCancelReplacement" (click)="_cancelReplacement()">
+            {{'applications.content.entryDetails.flavours.replaceVideo.cancelReplacement' | translate}}
+        </a>
     </div>
     <div class="kFlavorsTabs">
         <a [class.kSelected]="_currentTab === _flavorsTabs.current"

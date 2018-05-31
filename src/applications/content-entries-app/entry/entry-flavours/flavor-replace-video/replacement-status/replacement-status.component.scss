@@ -38,10 +38,6 @@
                 color: $kDandger;
             }
         }
-
-        .kCancelReplacement {
-            margin-left: 10px;
-        }
     }
 
     .kApprove {
@@ -55,16 +51,22 @@
                 font-size: 1.3em;
             }
         }
+
+        .kCancelReplacement {
+            margin-left: 24px;
+        }
     }
 
     .kFlavorsTabs {
         a {
             margin-right: 40px;
+            font-weight: bold;
+            text-decoration: none;
         }
         .kSelected {
-            text-decoration: none;
+            cursor: default;
             font-weight: bold;
-            color: $kGrayscale1;
+            color: $kGrayscale3;
         }
     }
 }
