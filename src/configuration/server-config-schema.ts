@@ -74,7 +74,8 @@ export const ServerConfigSchema = {
                         uri: {type: 'string'},
                         html5_version: {type: 'string'},
                         html5lib: {type: 'string'},
-                        showHTMLStudio: {type: 'boolean'}
+                        showHTMLStudio: {type: 'boolean'},
+                        playerVersionsMap: {type: 'string'}
                     },
                     required: ['enabled'],
                     additionalProperties: false

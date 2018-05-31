@@ -34,6 +34,7 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
         'vars': {
           'ks': this.appAuthentication.appUser.ks,
           'api_url': getKalturaServerUri(),
+          'host': serverConfig.kalturaServer.uri,
           'studio':{
             'config': {
               'name': 'Video Studio V2',
@@ -54,7 +55,9 @@ export class StudioComponent implements OnInit, AfterViewInit, OnDestroy {
             'publisherEnvType': this.appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
             'html5_version': serverConfig.externalApps.studioV3.html5_version,
             'showFlashStudio': false,
-            'showHTMLStudio': this._permissionsService.hasPermission(KMCPermissions.FEATURE_SHOW_HTML_STUDIO)
+            'showHTMLStudio': this._permissionsService.hasPermission(KMCPermissions.FEATURE_SHOW_HTML_STUDIO),
+            'playerVersionsMap': serverConfig.externalApps.studioV3.playerVersionsMap
+
           }
         },
         'functions':{
