@@ -3,13 +3,15 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+
 
 export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, KalturaPlaylist, KalturaMultiRequest> {
   public sectionBlockerMessage: AreaBlockerMessage;
   public showSectionLoader: boolean;
 
-  constructor(private _widgetKey: string) {
-    super(_widgetKey);
+  constructor(private _widgetKey: string, logger: KalturaLogger) {
+    super(_widgetKey, logger);
   }
 
   protected _showLoader() {

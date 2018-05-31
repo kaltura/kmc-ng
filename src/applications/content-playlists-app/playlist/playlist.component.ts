@@ -64,7 +64,6 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
     this._playlistStore.state$
       .cancelOnDestroy(this)
-      .monitor('playlist state')
       .subscribe(
         status => {
           this._showLoader = false;
