@@ -1,4 +1,4 @@
-import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 
@@ -6,7 +6,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { EntryLiveWidget } from './entry-live-widget.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
-import { serverConfig } from "config/server";
+import { serverConfig } from 'config/server';
 
 @Component({
     selector: 'kEntryLive',
@@ -66,18 +66,10 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 		);
 	}
 
-	public _openLiveAnalytics(): void {
-		if (this.enableLiveAnalytics){
-		    // TODO - load live analytics app
-			//this._liveAnalytics.open();
-            this._browserService.alert(
-                {
-                    message: "Not implemented for Beta",
-                }
-            );
-		}
-	}
-
-
+    public _openLiveAnalytics(): void {
+        if (this.enableLiveAnalytics) {
+            this._liveAnalytics.open();
+        }
+    }
 }
 
