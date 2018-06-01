@@ -82,6 +82,12 @@
   display: table;
 }
 
+:host /deep/ p-table {
+    .ui-table .ui-table-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
+}
+
 :host /deep/ .kButtonAddToBucket .ui-button-text {
   padding: 0;
 }
