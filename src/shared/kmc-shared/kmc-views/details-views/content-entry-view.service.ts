@@ -36,6 +36,7 @@ export interface ContentEntryViewArgs {
     section: ContentEntryViewSections;
     activatedRoute?: ActivatedRoute;
     reloadEntriesListOnNavigateOut?: boolean;
+    draftEntry?: boolean;
 }
 
 
@@ -265,12 +266,19 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     protected _open(args: ContentEntryViewArgs): Observable<boolean> {
         const sectionToken = this._getSectionRouteToken(args.section);
         this._logger.info('handle open entry view request by the user', { entryId: args.entry.id, sectionToken });
-        return Observable.fromPromise(this._router.navigateByUrl(`/content/entries/entry/${args.entry.id}/${sectionToken}`,
-                { queryParams: { reloadEntriesListOnNavigateOut: args.reloadEntriesListOnNavigateOut } }
-            ));
+        const url = this._router.createUrlTree(
+            ['content', 'entries', 'entry', args.entry.id, sectionToken],
+            {
+                queryParams: {
+                    reloadEntriesListOnNavigateOut: args.reloadEntriesListOnNavigateOut,
+                    draftEntry: args.draftEntry
+                }
+            }
+        );
+        return Observable.fromPromise(this._router.navigateByUrl(url));
     }
 
-    public openById(entryId: string, section: ContentEntryViewSections, reloadEntriesListOnNavigateOut?: boolean): void {
+    public openById(entryId: string, section: ContentEntryViewSections, reloadEntriesListOnNavigateOut?: boolean, draftEntry?: boolean): void {
         this._logger.info('handle open entry view by id request by the user, load entry data', { entryId });
         const baseEntryAction = new BaseEntryGetAction({ entryId })
             .setRequestOptions({
@@ -293,7 +301,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             })
             .switchMap(entry => {
                 this._logger.info(`handle successful request, proceed navigation`);
-                return this._open({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut });
+                return this._open({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut, draftEntry });
             })
 
             .subscribe(
