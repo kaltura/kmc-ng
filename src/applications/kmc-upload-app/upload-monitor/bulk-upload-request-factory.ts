@@ -32,7 +32,7 @@ export class BulkUploadRequestFactory implements RequestFactory<BulkListAction, 
       }).setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
               type: KalturaResponseProfileType.includeFields,
-              fields: 'id,status,uploadedOn'
+              fields: 'id,status,uploadedOn,bulkUploadObjectType'
           })
       });
     }

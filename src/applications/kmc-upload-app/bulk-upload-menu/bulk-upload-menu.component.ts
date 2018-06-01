@@ -55,7 +55,7 @@ export class BulkUploadMenuComponent {
   private _handleUploadSuccess(response: KalturaBulkUpload): void {
     this._selectedFiles = null;
     this.uploadSucceed.open();
-    this._appEvents.publish(new BulkLogUploadingStartedEvent(response.id, response.status, response.uploadedOn));
+    this._appEvents.publish(new BulkLogUploadingStartedEvent(response.id, response.status, response.uploadedOn, response.bulkUploadObjectType));
   }
 
   private _handleUploadError(error: KalturaAPIException): void {
