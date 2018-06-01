@@ -1520,7 +1520,12 @@
                     "uploadError": "Upload Error",
                     "remove": "Remove",
                     "noLabel": "Since no label was provided, the caption language will be used in the Player Captions menu",
-                    "pending": "Pending"
+                    "pending": "Pending",
+                    "formats": {
+                        "srt": "SRT",
+                        "dfxp": "DFXP",
+                        "vtt": "VTT"
+                    }
                 },
                 "live": {
                     "live": "Live Stream",
