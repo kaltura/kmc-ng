@@ -42,6 +42,7 @@ export class StudioV3Component implements OnInit, AfterViewInit, OnDestroy {
         'vars': {
           'ks': this.appAuthentication.appUser.ks,
           'api_url': getKalturaServerUri(),
+          'host': serverConfig.kalturaServer.uri,
           'studioV3':{
             'config': {
               'name': 'Video Studio V3',
@@ -52,7 +53,8 @@ export class StudioV3Component implements OnInit, AfterViewInit, OnDestroy {
             'publisherEnvType': this.appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
             'html5_version': serverConfig.externalApps.studioV3.html5_version,
             'showFlashStudio': false,
-            'showHTMLStudio': false
+            'showHTMLStudio': false,
+            'playerVersionsMap': serverConfig.externalApps.studioV3.playerVersionsMap
           }
         },
         'functions': {

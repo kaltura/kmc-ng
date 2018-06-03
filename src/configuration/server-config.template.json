@@ -24,7 +24,8 @@
     "studioV3": {
       "uri": "@externalApps.studioV3.uri@",
       "html5_version":"@externalApps.studioV3.html5_version@",
-      "html5lib":"@externalApps.studioV3.html5lib@"
+      "html5lib":"@externalApps.studioV3.html5lib@",
+      "playerVersionsMap":"@externalApps.studioV3.playerVersionsMap@"
     },
     "liveDashboard": {
       "uri": "@externalApps.liveDashboard.uri@"

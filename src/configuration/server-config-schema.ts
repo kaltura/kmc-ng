@@ -61,9 +61,10 @@ export const ServerConfigSchema = {
                     properties: {
                         uri: {type: 'string'},
                         html5_version: {type: 'string'},
-                        html5lib: {type: 'string'}
+                        html5lib: {type: 'string'},
+                        playerVersionsMap: {type: 'string'}
                     },
-                    required: ['uri', 'html5_version', 'html5lib'],
+                    required: ['uri', 'html5_version', 'html5lib', 'playerVersionsMap'],
                     additionalProperties: true
                 },
                 usageDashboard: {
