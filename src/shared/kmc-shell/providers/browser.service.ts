@@ -1,6 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
-import {AppLocalization, IAppStorage} from '@kaltura-ng/kaltura-common';
+import {IAppStorage} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -26,6 +27,7 @@ export interface Confirmation {
 	rejectVisible?: boolean;
 	acceptEvent?: EventEmitter<any>;
 	rejectEvent?: EventEmitter<any>;
+	alignMessage?: 'left' | 'center' | 'byContent';
 }
 
 export interface GrowlMessage {
@@ -121,9 +123,11 @@ export class BrowserService implements IAppStorage {
     private _recordInitialQueryParams(): void {
         try {
             const search = location.search.substring(1);
-            this._initialQueryParams = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
-                return key === '' ? value : decodeURIComponent(value)
-            });
+            if (search) {
+                this._initialQueryParams = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
+                    return key === '' ? value : decodeURIComponent(value)
+                });
+            }
         } catch (e) {
             console.warn('failed to extract initial query params, ignoring any existing parameters. error ' + (e ? e.message : ''));
         }
@@ -136,6 +140,10 @@ export class BrowserService implements IAppStorage {
     }
 
     private _fixConfirmation(confirmation: Confirmation): void {
+        if (!confirmation) {
+            return;
+        }
+
         if (confirmation.headerType) {
             switch (confirmation.headerType) {
                 case HeaderTypes.attention:

@@ -7,7 +7,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 
 @Component({
   selector: 'kPrepareEntry',
@@ -46,12 +46,7 @@ export class PrepareEntryComponent implements OnDestroy {
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
         .tag('block-shell')
       .subscribe((draftEntry: DraftEntry) => {
-            this._contentEntryViewService.openById(draftEntry.id, ContentEntryViewSections.Metadata, true)
-                .cancelOnDestroy(this)
-                .tag('block-shell')
-                .subscribe(() => {
-                    this.transcodingProfileSelectMenu.close();
-                });
+            this._contentEntryViewService.openById(draftEntry.id, ContentEntryViewSections.Metadata, true);
         },
         error => {
           this._browserService.alert({

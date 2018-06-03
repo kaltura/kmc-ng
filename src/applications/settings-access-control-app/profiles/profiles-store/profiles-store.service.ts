@@ -17,7 +17,7 @@ import { KalturaCountryRestriction } from 'kaltura-ngx-client/api/types/KalturaC
 import { KalturaIpAddressRestriction } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestriction';
 import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
 import { KalturaSiteRestrictionType } from 'kaltura-ngx-client/api/types/KalturaSiteRestrictionType';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/KalturaCountryRestrictionType';
 import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
@@ -394,7 +394,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     const saveAction = profile.id
       ? new AccessControlUpdateAction({ id: profile.id, accessControl: profile })
       : new AccessControlAddAction({ accessControl: profile });
-      
+
     profile.allowEmptyArray('restrictions');
 
     return this._kalturaServerClient.request(saveAction)

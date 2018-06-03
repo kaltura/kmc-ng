@@ -16,7 +16,7 @@ import {
   TieredMenuModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
-import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -46,7 +46,7 @@ import { InputHelperModule } from '@kaltura-ng/kaltura-ui/input-helper/input-hel
     DropdownModule,
     InputTextModule,
     RadioButtonModule,
-    KalturaCommonModule,
+    LocalizationModule,
     KalturaPrimeNgUIModule,
     KalturaUIModule,
     KMCShellModule,

@@ -3,12 +3,13 @@ import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/f
 import { Observable } from 'rxjs/Observable';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryWidget } from '../entry-widget';
 import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -42,9 +43,10 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
     constructor(
 				private _appLocalization: AppLocalization,
 				private _permissionsService: KMCPermissionsService,
-				private _fb: FormBuilder)
+				private _fb: FormBuilder,
+                logger: KalturaLogger)
     {
-        super(ContentEntryViewSections.Scheduling);
+        super(ContentEntryViewSections.Scheduling, logger);
 	    this.createForm();
     }
 
@@ -149,7 +151,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
         .subscribe(
           () => {
             super.updateState({
-              isValid: this.schedulingForm.status === 'VALID',
+              isValid: this.schedulingForm.status !== 'INVALID',
               isDirty: this.schedulingForm.dirty
             });
           }

@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {KalturaSyndicationFeedType} from 'kaltura-ngx-client/api/types/KalturaSyndicationFeedType';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Pipe({name: 'kDestinationLabel'})
 export class DestinationLabelPipe implements PipeTransform {

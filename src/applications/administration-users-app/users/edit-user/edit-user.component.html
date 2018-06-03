@@ -74,7 +74,7 @@
 
     <div class="kFooter">
       <button type="button" class="kButtonBranded"
-              *ngIf="_kmcPermissions.ADMIN_USER_UPDATE | kNgIfPermitted"
+              *ngIf="_saveBtnShown"
               [disabled]="!_userForm.dirty" pButton
               [label]="'applications.administration.users.save' | translate"
               (click)="_saveUser()"></button>

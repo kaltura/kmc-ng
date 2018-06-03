@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {KalturaUiConf} from 'kaltura-ngx-client/api/types/KalturaUiConf';
 import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
@@ -62,7 +62,7 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
       this._form.disable({ emitEvent: false });
     } else {
       this.onFormStateChanged.emit({
-        isValid: this._form.status === 'VALID',
+        isValid: this._form.status !== 'INVALID',
         isDirty: this._form.dirty
       });
 
@@ -71,7 +71,7 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
         .subscribe(
           () => {
             this.onFormStateChanged.emit({
-              isValid: this._form.status === 'VALID',
+              isValid: this._form.status !== 'INVALID',
               isDirty: this._form.dirty
             });
           }

@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { SectionsList } from './sections-list';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
@@ -9,6 +9,7 @@ import {
     SettingsTranscodingProfileViewSections,
     SettingsTranscodingProfileViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface SectionWidgetItem {
   label: string;
@@ -23,8 +24,9 @@ export class TranscodingProfileSectionsListWidget extends TranscodingProfileWidg
   public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
   constructor(private _appLocalization: AppLocalization,
-              private _settingsTranscodingProfileViewService: SettingsTranscodingProfileViewService) {
-    super('sectionsList');
+              private _settingsTranscodingProfileViewService: SettingsTranscodingProfileViewService,
+              logger: KalturaLogger) {
+    super('sectionsList', logger);
   }
 
   ngOnDestroy() {

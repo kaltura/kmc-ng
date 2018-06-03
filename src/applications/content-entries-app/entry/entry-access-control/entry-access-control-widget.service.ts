@@ -18,13 +18,14 @@ import {KalturaSessionRestriction} from 'kaltura-ngx-client/api/types/KalturaSes
 import {KalturaPreviewRestriction} from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
 import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
 import {AccessControlProfileStore, FlavoursStore} from 'app-shared/kmc-shared';
-import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
 import {EntryWidget} from '../entry-widget';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
-
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
@@ -53,8 +54,9 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
 
   constructor(private _accessControlProfileStore: AccessControlProfileStore,
               private _appLocalization: AppLocalization,
-              private _flavoursStore: FlavoursStore) {
-    super(ContentEntryViewSections.AccessControl);
+              private _flavoursStore: FlavoursStore,
+              logger: KalturaLogger) {
+    super(ContentEntryViewSections.AccessControl, logger);
   }
 
   /**
@@ -68,8 +70,8 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
       super._showLoader();
       this._accessControlProfiles.next({items: []});
 
-      const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this).monitor('load access control profiles');
-      const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this).monitor('load flavours');
+      const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this);
+      const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this);
 
       return Observable.forkJoin(getAPProfiles$, getFlavours$)
         .cancelOnDestroy(this)

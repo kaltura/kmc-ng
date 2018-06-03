@@ -23,7 +23,8 @@ import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types
 import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
 import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
 import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { AppLocalization, KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { AccessControlProfileStore, FlavoursStore } from 'app-shared/kmc-shared';
 
 import 'rxjs/add/observable/forkJoin';
@@ -171,8 +172,8 @@ export class BulkAAccessControl implements OnInit, OnDestroy, AfterViewInit {
 		this._loading = true;
 		this._accessControlProfiles.next({items: []});
 
-		const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this).monitor('load access control profiles');
-		const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this).monitor('load flavours');
+		const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this);
+		const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this);
 
 		return Observable.forkJoin(getAPProfiles$, getFlavours$).cancelOnDestroy(this);
 	}

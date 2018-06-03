@@ -27,7 +27,7 @@ import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/st
 import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
 import { DropFolderFileDeleteAction } from 'kaltura-ngx-client/api/types/DropFolderFileDeleteAction';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { serverConfig } from 'config/server';
 import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 

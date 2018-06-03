@@ -7,7 +7,7 @@ import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
@@ -240,8 +240,12 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   public _onFreetextChanged(): void {
-    const freeText = this._query.freetext.trim();
-    this._playlistsStore.filter({ freeText });
+      // prevent searching for empty strings
+      if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
+          this._query.freetext = '';
+      }else {
+          this._playlistsStore.filter({freeText: this._query.freetext});
+      }
   }
 
   public _onSortChanged(event): void {

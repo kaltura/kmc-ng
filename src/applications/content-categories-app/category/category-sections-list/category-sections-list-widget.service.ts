@@ -2,11 +2,12 @@ import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {CategorySectionsList} from './category-sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
 import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface SectionWidgetItem {
   label: string;
@@ -21,9 +22,10 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
   public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
   constructor(private _appLocalization: AppLocalization,
-              private _contentCategoryView: ContentCategoryViewService
+              private _contentCategoryView: ContentCategoryViewService,
+              logger: KalturaLogger
               ) {
-    super('categorySectionsList');
+    super('categorySectionsList', logger);
   }
 
   protected onDataLoading(dataId: any): void {

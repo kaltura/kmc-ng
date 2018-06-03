@@ -12,15 +12,16 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
-
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 @Injectable()
 export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy {
   public metadataForm: FormGroup;
 
   constructor(private _formBuilder: FormBuilder,
               private _permissionsService: KMCPermissionsService,
-              private _kalturaServerClient: KalturaClient) {
-    super(ContentPlaylistViewSections.Metadata);
+              private _kalturaServerClient: KalturaClient,
+              logger: KalturaLogger) {
+    super(ContentPlaylistViewSections.Metadata, logger);
     this._buildForm();
   }
 
@@ -42,7 +43,7 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
         .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
-            isValid: this.metadataForm.status === 'VALID',
+            isValid: this.metadataForm.status !== 'INVALID',
             isDirty: this.metadataForm.dirty
           });
         }
@@ -113,7 +114,6 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
           )
         )
           .cancelOnDestroy(this)
-          .monitor('search tags')
           .subscribe(
             result => {
               const tags = result.objects.map(item => item.tag);

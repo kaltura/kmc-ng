@@ -48,7 +48,6 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     public isLiveEntry : boolean;
     public metadataForm : FormGroup;
     public customDataForms : DynamicMetadataForm[] = [];
-    private _logger: KalturaLogger;
 
     constructor(private _kalturaServerClient: KalturaClient,
                 private _categoriesSearchService : CategoriesSearchService,
@@ -59,10 +58,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 logger: KalturaLogger,
                 private _metadataProfileStore : MetadataProfileStore)
     {
-        super(ContentEntryViewSections.Metadata);
-        this._logger = logger.subLogger('EntryMetadataWidget');
-
-
+        super(ContentEntryViewSections.Metadata, logger);
         this._buildForm();
     }
 
@@ -117,7 +113,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     let isDirty = false;
 
                     formGroups.forEach(formGroup => {
-                        isValid = isValid && formGroup.status === 'VALID';
+                        isValid = isValid && formGroup.status !== 'INVALID';
                         isDirty = isDirty || formGroup.dirty;
 
                     });
@@ -251,7 +247,6 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             }
         ))
             .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('get entry custom metadata')
             .do(response => {
                 this._entryMetadata = response.objects;
             })
@@ -287,7 +282,6 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     return Observable.of({items: []});
                 }
             })
-            .monitor('get entry categories')
             .cancelOnDestroy(this, this.widgetReset$)
             .do(
                 categories =>
@@ -308,7 +302,6 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             ignoredCreateMode: MetadataProfileCreateModes.App
         })
             .cancelOnDestroy(this)
-            .monitor('load metadata profiles')
             .do(response => {
 
                 this.customDataForms = [];
@@ -422,7 +415,6 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     )
                 )
                     .cancelOnDestroy(this, this.widgetReset$)
-                    .monitor('search tags')
                     .subscribe(
                     result =>
                     {
@@ -451,7 +443,6 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
                 const requestSubscription = this._categoriesSearchService.getSuggestions(text)
                     .cancelOnDestroy(this, this.widgetReset$)
-                    .monitor('search categories')
                     .subscribe(
                         result =>
                         {

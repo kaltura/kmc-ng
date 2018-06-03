@@ -74,6 +74,10 @@
     .kTable {
       .kFileNameInput {
         width: 380px;
+
+          &.kHasError {
+              border-color: $kDandger;
+          }
       }
 
       .kFileNameCell {

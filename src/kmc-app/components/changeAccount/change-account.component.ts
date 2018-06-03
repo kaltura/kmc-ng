@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, AfterViewInit, OnDestroy, ViewChild} from '@angular/core';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import {ISubscription} from 'rxjs/Subscription';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaClient} from 'kaltura-ngx-client';
@@ -10,6 +10,7 @@ import {KalturaPartnerFilter} from 'kaltura-ngx-client/api/types/KalturaPartnerF
 import {KalturaPartnerStatus} from 'kaltura-ngx-client/api/types/KalturaPartnerStatus';
 import {Observable} from 'rxjs/Observable';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 
 @Component({
   selector: 'kChangeAccount',
@@ -94,12 +95,14 @@ export class ChangeAccountComponent implements OnInit {
   }
 
   private getAvailablePartners(): Observable<{ 'id': number, 'name': string }[]> {
+    const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500});
     const filter = new KalturaPartnerFilter({
       statusEqual: KalturaPartnerStatus.active
     });
 
     return this._kalturaServerClient.request(new PartnerListPartnersForUserAction({
-      partnerFilter: filter
+      partnerFilter: filter,
+        pager: pager
     }))
       .map(data => {
         return data.objects.map(partner => ({'id': partner.id, 'name': partner.name}))

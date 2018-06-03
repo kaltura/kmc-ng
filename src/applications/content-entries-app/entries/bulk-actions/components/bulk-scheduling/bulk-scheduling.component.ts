@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/f
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -138,7 +138,7 @@ export class BulkScheduling implements OnInit, OnDestroy, AfterViewInit {
       .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(
         () => {
-          this._enableSave = this.schedulingForm.status === 'VALID';
+          this._enableSave = this.schedulingForm.status !== 'INVALID';
         }
       );
   }
@@ -159,7 +159,7 @@ export class BulkScheduling implements OnInit, OnDestroy, AfterViewInit {
 
   public _apply(){
     this.setValidators(true);
-    if (this.schedulingForm.status === 'VALID') {
+    if (this.schedulingForm.status !== 'INVALID') {
       const startDate = this.schedulingForm.get('startDate').value;
       const endDate = this.schedulingForm.get('endDate').value;
       const scheduling = this.schedulingForm.get('scheduling').value;

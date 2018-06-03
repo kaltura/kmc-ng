@@ -12,6 +12,8 @@ import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { LocalizationModule } from '@kaltura-ng/mc-shared/localization';
+import { KalturaLoggerInjectionToken } from '@kaltura-ng/kaltura-common';
 
 import {
     AppBootstrap,
@@ -22,7 +24,7 @@ import {
 } from 'app-shared/kmc-shell';
 import {
   AppStorage,
-  KalturaCommonModule,
+    KalturaCommonModule,
   OperationTagModule,
   UploadManagement
 } from '@kaltura-ng/kaltura-common';
@@ -149,9 +151,10 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     TranscodingProfileCreationModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcLogsModule.forRoot(),
-      KalturaLoggerModule.forRoot(),
+      KalturaLoggerModule.forRoot('kmc'),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcViewsModule.forRoot(),
+      LocalizationModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -180,13 +183,10 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
   exports: [],
   providers: <any>[
       ...partnerProviders,
-      KalturaLogger,
-      {
-          provide: KalturaLoggerName, useValue: 'kmc'
-      },
       {
            provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
-    ConfirmationService
+    ConfirmationService,
+      { provide: KalturaLoggerInjectionToken, useClass: KalturaLogger }
   ]
 })
 export class AppModule {
