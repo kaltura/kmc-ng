@@ -8,14 +8,14 @@ import { serverConfig } from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 @Injectable()
-export class StudioHtmlMainViewService extends KmcMainViewBaseService {
+export class StudioV2MainViewService extends KmcMainViewBaseService {
 
 
     constructor(logger: KalturaLogger,
                 browserService: BrowserService,
                 router: Router,
                 private _appPermissions: KMCPermissionsService) {
-        super(logger.subLogger('StudioHtmlMainViewService'), browserService, router);
+        super(logger.subLogger('StudioV2MainViewService'), browserService, router);
     }
 
     isAvailable(): boolean {
@@ -25,23 +25,17 @@ export class StudioHtmlMainViewService extends KmcMainViewBaseService {
             KMCPermissions.STUDIO_UPDATE_UICONF,
             KMCPermissions.STUDIO_DELETE_UICONF,
         ]);
-        const studioHtmlIsAvailable = !!serverConfig.externalApps.studio;
+        const studioHtmlIsAvailable = !!serverConfig.externalApps.studioV2;
         const studioHtmlIsPermitted = this._appPermissions.hasPermission(KMCPermissions.FEATURE_SHOW_HTML_STUDIO);
-        const studioV3IsAvailable = !!serverConfig.externalApps.studioV3;
-        const studioV3IsPermitted = this._appPermissions.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION);
 
         this._logger.info(`handle isAvailable action by user`,
-            { isViewPermitted, studioHtmlIsAvailable, studioHtmlIsPermitted, studioV3IsAvailable, studioV3IsPermitted });
+            { isViewPermitted, studioHtmlIsAvailable, studioHtmlIsPermitted });
 
-        return isViewPermitted &&
-            (
-                (studioHtmlIsAvailable && studioHtmlIsPermitted) ||
-                (studioV3IsAvailable && studioV3IsPermitted)
-            );
+        return isViewPermitted && studioHtmlIsAvailable && studioHtmlIsPermitted;
     }
 
     getRoutePath(): string {
-        return 'studio';
+        return 'studio/v2';
     }
 }
 

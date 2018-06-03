@@ -91,9 +91,6 @@ export function initializeConfiguration<TExternalApplications>(externalAppsAdapt
                 }
 
                 Object.assign(serverConfig, response);
-
-                serverConfig.kalturaServer.uri = 'www.kaltura.com';
-                console.error(`OVERRIDING SERVER URI TO ${serverConfig.kalturaServer.uri} - THIS APP SHOULD BE USED FOR QA ONLY`);
             } else {
                 throw Error(validationResult.error || 'Invalid server configuration');
             }

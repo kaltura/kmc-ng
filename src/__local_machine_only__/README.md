@@ -23,7 +23,7 @@ Follow these instructions to test external apps integration:
 2. update file `server-config.json`, copy the following into `externalApps` element. Make sure you don't commit it into the git repository.
 
 ```
-"studio": {
+"studioV2": {
     "uri": "/__local_machine_only__/studio_v2_2_1/index.html",
     "html5_version":"v2.57.2",
     "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"

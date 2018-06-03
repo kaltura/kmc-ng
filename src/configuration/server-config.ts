@@ -17,7 +17,7 @@ import { globalConfig } from 'config/global';
  *************************************/
 
 export interface ExternalApplications {
-    studio?: {
+    studioV2?: {
         uri: string,
         html5_version: string,
         html5lib: string,
@@ -112,7 +112,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
             return result;
         }
     },
-    studio: (configuration) => {
+    studioV2: (configuration) => {
         let result = false;
         if (configuration) {
             result =  !!configuration.uri &&

@@ -48,7 +48,7 @@ export const ServerConfigSchema = {
         },
         externalApps: {
             properties: {
-                studio: {
+                studioV2: {
                     properties: {
                         uri: {type: 'string'},
                         html5_version: {type: 'string'},

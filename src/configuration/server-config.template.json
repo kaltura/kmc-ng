@@ -16,10 +16,10 @@
     "securedServerUri": "@cdnServers.securedServerUri@"
   },
   "externalApps": {
-    "studio": {
-      "uri": "@externalApps.studio.uri@",
-      "html5_version":"@externalApps.studio.html5_version@",
-      "html5lib":"@externalApps.studio.html5lib@"
+    "studioV2": {
+      "uri": "@externalApps.studioV2.uri@",
+      "html5_version":"@externalApps.studioV2.html5_version@",
+      "html5lib":"@externalApps.studioV2.html5lib@"
     },
     "studioV3": {
       "uri": "@externalApps.studioV3.uri@",

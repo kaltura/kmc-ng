@@ -9,7 +9,7 @@ import { ContentCategoriesMainViewService,
     ContentBulkUploadsMainViewService,
     ContentDropFoldersMainViewService,
     StudioV3MainViewService,
-    StudioHtmlMainViewService,
+    StudioV2MainViewService,
     UsageDashboardMainViewService,
     LiveAnalyticsMainViewService,
     AdminUsersMainViewService,
@@ -53,8 +53,8 @@ export class KmcMainViewsService {
         private _contentUploadsMain: ContentUploadsMainViewService,
         private _contentBulkUploadsMain: ContentBulkUploadsMainViewService,
         private _contentDropFoldersMain: ContentDropFoldersMainViewService,
-        private _studioV3Main: StudioHtmlMainViewService,
-        private _studioHtmlMain: StudioV3MainViewService,
+        private _studioV2Main: StudioV2MainViewService,
+        private _studioV3Main: StudioV3MainViewService,
         private _usageDashboardMain: UsageDashboardMainViewService,
         private _liveAnalyticsMain: LiveAnalyticsMainViewService,
         private _adminUsersMain: AdminUsersMainViewService,
@@ -153,13 +153,28 @@ export class KmcMainViewsService {
                 ]
             },
             {
-                isAvailable: this._studioHtmlMain.isAvailable() || this._studioV3Main.isAvailable(),
-                isActiveView:  (path) => this._studioHtmlMain.isActiveView(path),
-                open: () => {
-                    this._studioHtmlMain.open();
-                },
+                titleToken: 'Studio',
+                isAvailable: true,
+                isActiveView: (activePath: string) => (activePath.indexOf(`/studio`) !== -1),
                 position: 'left',
-                titleToken: 'Studio'
+                children: [
+                    {
+                        isAvailable: this._studioV2Main.isAvailable(),
+                        isActiveView:  (path) => this._studioV2Main.isActiveView(path),
+                        open: () => {
+                            this._studioV2Main.open();
+                        },
+                        titleToken: 'StudioV2'
+                    },
+                    {
+                        isAvailable: this._studioV3Main.isAvailable(),
+                        isActiveView:  (path) => this._studioV3Main.isActiveView(path),
+                        open: () => {
+                            this._studioV3Main.open();
+                        },
+                        titleToken: 'StudioV3'
+                    },
+                ]
             },
             {
                 isAvailable: this._usageDashboardMain.isAvailable(),
