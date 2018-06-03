@@ -4,7 +4,7 @@ import {AreaBlockerMessage, KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import {UniversalLiveService} from './universal-live.service';
 import {UniversalLive} from "./universal-live.interface";
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Component({
   selector: 'kUniversalLive',

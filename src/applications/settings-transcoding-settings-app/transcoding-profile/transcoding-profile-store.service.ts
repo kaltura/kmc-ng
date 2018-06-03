@@ -1,6 +1,6 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -235,7 +235,6 @@ export class TranscodingProfileStore implements OnDestroy {
     this._widgetsManager.notifyDataSaving(newProfile, request, this.profile.data())
       .cancelOnDestroy(this)
       .tag('block-shell')
-      .monitor('transcoding-profile store: prepare profile for save')
       .flatMap(prepareResponse => {
         if (prepareResponse.ready) {
           return this._checkFlavors(newProfile)
@@ -245,7 +244,6 @@ export class TranscodingProfileStore implements OnDestroy {
               }
 
               return this._kalturaServerClient.multiRequest(request)
-                .monitor('transcoding-profile store: save profile')
                 .tag('block-shell')
                 .map(multiResponse => {
                   if (multiResponse.hasErrors()) {
@@ -437,7 +435,7 @@ export class TranscodingProfileStore implements OnDestroy {
         observer.next({ allowed: true });
         observer.complete();
       }
-    }).monitor('transcoding-profile store: check if can leave section without saving');
+    });
   }
 
   public returnToProfiles(): void {

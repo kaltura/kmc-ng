@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { KalturaPrivacyType } from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
 import { KalturaAppearInListType } from 'kaltura-ngx-client/api/types/KalturaAppearInListType';

@@ -246,13 +246,11 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
   public deleteBulkLog(id: number): Observable<KalturaBulkUpload> {
     return this._kalturaServerClient
-      .request(new BulkUploadAbortAction({ id }))
-      .monitor('BulkLogStoreService::deleteBulkLog');
+      .request(new BulkUploadAbortAction({ id }));
   }
 
   public deleteBulkLogs(files: Array<KalturaBulkUpload>): Observable<KalturaMultiResponse> {
-    return this._kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })))
-      .monitor('BulkLogStoreService::deleteBulkLogs');
+    return this._kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })));
   }
 }
 

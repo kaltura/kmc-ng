@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
 import {CategoriesFilters, CategoriesService} from '../categories.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {RefineGroup, RefineGroupList} from '../categories-refine-filters.service';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import {ISubscription} from 'rxjs/Subscription';

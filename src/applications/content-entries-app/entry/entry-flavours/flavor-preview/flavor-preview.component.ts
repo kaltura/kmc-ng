@@ -37,7 +37,6 @@ export class FlavorPreview implements AfterViewInit, OnDestroy {
 							id: this.currentFlavor.id
 						}))
 							.cancelOnDestroy(this)
-							.monitor('get flavor url')
 							.subscribe(
 								url => {
 									this._previewSource = url;},

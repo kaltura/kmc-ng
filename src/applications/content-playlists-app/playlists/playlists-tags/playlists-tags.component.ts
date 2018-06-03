@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {PlaylistsFilters, PlaylistsStore} from '../playlists-store/playlists-store.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
 
 export interface TagItem {

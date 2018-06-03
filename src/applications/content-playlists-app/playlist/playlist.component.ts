@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { Observable } from 'rxjs/Observable';
 import { ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
@@ -64,7 +64,6 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
     this._playlistStore.state$
       .cancelOnDestroy(this)
-      .monitor('playlist state')
       .subscribe(
         status => {
           this._showLoader = false;

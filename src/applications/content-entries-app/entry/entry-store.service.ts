@@ -1,6 +1,6 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -188,14 +188,12 @@ export class EntryStore implements  OnDestroy {
 		this._widgetsManager.notifyDataSaving(newEntry, request, this.entry)
             .cancelOnDestroy(this)
             .tag('block-shell')
-			.monitor('entry store: prepare entry for save')
             .flatMap(
 				(response) => {
 					if (response.ready) {
 						this._refreshEntriesListUponLeave = true;
 
 						return this._kalturaServerClient.multiRequest(request)
-                            .monitor('entry store: save entry')
                             .tag('block-shell')
                             .map(
 								response => {
@@ -376,7 +374,7 @@ export class EntryStore implements  OnDestroy {
 				observer.next({allowed: true});
 				observer.complete();
 			}
-		}).monitor('entry store: check if can leave section without saving');
+		});
 	}
 
     public returnToEntries(): void {

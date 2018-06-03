@@ -8,7 +8,7 @@ import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPa
 import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter';
 import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -99,7 +99,6 @@ export class CategoriesBulkAddTags implements OnInit, OnDestroy, AfterViewInit {
       )
     )
       .cancelOnDestroy(this)
-      .monitor('search tags')
       .subscribe(
         result =>
         {

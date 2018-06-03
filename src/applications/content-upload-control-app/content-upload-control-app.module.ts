@@ -18,7 +18,7 @@ import {
   SharedModule,
   ProgressBarModule,
 } from 'primeng/primeng';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {
   KalturaUIModule,
@@ -40,7 +40,7 @@ import { UploadStatusPipe } from './upload-list/pipes/upload-status.pipe';
     CommonModule,
     AreaBlockerModule,
     DataTableModule,
-    KalturaCommonModule,
+    LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
     TooltipModule,

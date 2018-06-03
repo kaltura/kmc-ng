@@ -7,11 +7,12 @@ import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
 import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -29,8 +30,9 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
               private _appLocalization: AppLocalization,
               private _kalturaClient: KalturaClient,
               private _permissionsService: KMCPermissionsService,
-              private _storageProfilesStore: StorageProfilesStore) {
-    super(SettingsTranscodingProfileViewSections.Metadata);
+              private _storageProfilesStore: StorageProfilesStore,
+              logger: KalturaLogger) {
+    super(SettingsTranscodingProfileViewSections.Metadata, logger);
     this._buildForm();
   }
 

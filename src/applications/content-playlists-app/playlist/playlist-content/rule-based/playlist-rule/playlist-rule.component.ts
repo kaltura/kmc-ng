@@ -6,7 +6,7 @@ import {
 } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistRuleParserService } from './playlist-rule-parser.service';
 import { BrowserService } from 'app-shared/kmc-shell';

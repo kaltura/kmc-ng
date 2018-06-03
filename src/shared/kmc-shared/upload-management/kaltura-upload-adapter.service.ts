@@ -50,7 +50,6 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                 uploadToken: new KalturaUploadToken()
             })
         )
-            .monitor('get upload token')
             .map(
                 (response) => {
                     return response.id;
@@ -180,6 +179,6 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                 observer.error(new Error('missing upload token and content'));
             }
 
-        }).monitor(`upload with token ${id}`);
+        });
     }
 }

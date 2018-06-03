@@ -8,7 +8,7 @@ import {Observable} from 'rxjs/Observable';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {CategoryUserAddAction} from 'kaltura-ngx-client/api/types/CategoryUserAddAction';
 import {KalturaCategoryUser} from 'kaltura-ngx-client/api/types/KalturaCategoryUser';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {CategoryUserCopyFromCategoryAction} from "kaltura-ngx-client/api/types/CategoryUserCopyFromCategoryAction";
 import 'rxjs/add/operator/delay';
 

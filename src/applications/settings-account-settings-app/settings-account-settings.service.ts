@@ -43,8 +43,7 @@ export class SettingsAccountSettingsService {
     });
     return this._kalturaServerClient.request(new PartnerUpdateAction({
       partner
-    }))
-      .monitor('update partner info');
+    }));
   }
 
 
@@ -72,7 +71,6 @@ export class SettingsAccountSettingsService {
     );
 
     return this._kalturaServerClient.multiRequest(multiRequest)
-      .monitor('get account owners')
       .map(
         data => {
           if (data.hasErrors()) {

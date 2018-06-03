@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import {SectionsList} from './sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
@@ -10,6 +10,7 @@ import {
     ContentEntryViewSections,
     ContentEntryViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface SectionWidgetItem {
     label: string;
@@ -25,9 +26,10 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
     public sections$ : Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
     constructor(private _appLocalization: AppLocalization,
-                private _contentEntryViewService: ContentEntryViewService)
+                private _contentEntryViewService: ContentEntryViewService,
+                logger: KalturaLogger)
     {
-        super('sectionsList');
+        super('sectionsList', logger);
     }
 
     protected onDataLoading(dataId : any) : void {

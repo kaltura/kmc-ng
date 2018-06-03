@@ -10,7 +10,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';

@@ -1,7 +1,7 @@
 import {CategoriesService} from './../categories/categories.service';
 import {Host, Injectable, OnDestroy} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {ISubscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
@@ -226,7 +226,6 @@ export class CategoryService implements OnDestroy {
 
 		this._widgetsManager.notifyDataSaving(newCategory, request, this.category)
 			.cancelOnDestroy(this)
-			.monitor('category store: prepare category for save')
       .tag('block-shell')
 			.flatMap(
 			(response) => {
@@ -239,7 +238,6 @@ export class CategoryService implements OnDestroy {
             .switchMap(proceedSaveRequest => {
               if (proceedSaveRequest) {
                 return this._kalturaServerClient.multiRequest(request)
-                  .monitor('category store: save category')
                   .tag('block-shell')
                   .map(
                     categorySavedResponse => {
@@ -393,7 +391,7 @@ export class CategoryService implements OnDestroy {
 				observer.next({ allowed: true });
 				observer.complete();
 			}
-		}).monitor('category store: check if can leave section without saving');
+		});
 	}
 
     public openCategory(category: KalturaCategory | number) {
