@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { NavigationCancel, RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
 
 @Component({
@@ -7,46 +7,34 @@ import { NavigationCancel, RouteConfigLoadEnd, RouteConfigLoadStart, Router } fr
     styleUrls: ['./progress-bar.component.scss']
 })
 export class ProgressBarComponent implements OnDestroy {
-    private _step3Timeout: number;
+    private _timeout: any;
+    @ViewChild('bar') _bar: ElementRef;
 
-    public _step1 = false;
-    public _step2 = false;
-    public _step3 = false;
-    public _visible = false;
-
-    constructor(router: Router) {
-        let step2Timeout: number;
-
+    constructor(router: Router, renderer: Renderer2) {
         router.events
             .cancelOnDestroy(this)
             .subscribe(event => {
                 if (event instanceof RouteConfigLoadStart) {
-                    this._visible = true;
-                    this._step1 = true;
-                    this._step3 = false;
-
-                    step2Timeout = setTimeout(() => {
-                        this._step1 = false;
-                        this._step2 = true;
-                        this._step3 = false;
-                    }, 2e3); // 2 sec
+                    console.log('>>> 1');
+                    renderer.addClass(this._bar.nativeElement, 'kProgressStep1');
                 }
 
                 if ((event instanceof RouteConfigLoadEnd || event instanceof NavigationCancel)) {
-                    clearTimeout(step2Timeout);
-                    this._step1 = false;
-                    this._step2 = false;
-                    this._step3 = true;
+                    console.log('>>> 2');
 
-                    this._step3Timeout = setTimeout(() => {
-                        this._visible = false;
-                    }, 100);
+                    renderer.removeClass(this._bar.nativeElement, 'kProgressStep1');
+                    renderer.addClass(this._bar.nativeElement, 'kProgressStep2');
+
+                    this._timeout = setTimeout(() => {
+                        console.log('>>> 3');
+                        renderer.removeClass(this._bar.nativeElement, 'kProgressStep2');
+                    }, 1000);
                 }
             });
     }
 
     ngOnDestroy() {
-        clearTimeout(this._step3Timeout);
+        clearTimeout(this._timeout);
     }
 }
 
