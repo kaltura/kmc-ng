@@ -2,13 +2,14 @@ import { AreaBlockerMessage, AreaBlockerMessageButton, WidgetBase } from '@kaltu
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { KalturaConversionProfileWithAsset } from '../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export abstract class TranscodingProfileWidget extends WidgetBase<TranscodingProfileWidgetsManager, KalturaConversionProfileWithAsset, KalturaMultiRequest> {
   public sectionBlockerMessage: AreaBlockerMessage;
   public showSectionLoader: boolean;
 
-  constructor(private _widgetKey: string) {
-    super(_widgetKey);
+  constructor(private _widgetKey: string, logger: KalturaLogger) {
+    super(_widgetKey, logger);
   }
 
   protected _showLoader() {

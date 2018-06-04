@@ -23,6 +23,7 @@ import {CategoryService} from '../category.service';
 import { modulesConfig } from 'config/modules';
 import { globalConfig } from 'config/global';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -34,8 +35,9 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
               private _browserService: BrowserService,
               private _categoriesUtilsService: CategoriesUtilsService,
               private _categoryService: CategoryService,
-              private _appLocalization: AppLocalization) {
-    super(ContentCategoryViewSections.SubCategories);
+              private _appLocalization: AppLocalization,
+              logger: KalturaLogger) {
+    super(ContentCategoryViewSections.SubCategories, logger);
   }
 
   protected onActivate(firstTimeActivating: boolean) {
@@ -67,7 +69,6 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   private _loadSubcategories(): Observable<void> {
     return this._getSubcategories(this.data)
       .cancelOnDestroy(this, this.widgetReset$)
-      .monitor('load Sub-Categories')
       .map(
         response => {
           this._subcategories.next(response.objects || []);

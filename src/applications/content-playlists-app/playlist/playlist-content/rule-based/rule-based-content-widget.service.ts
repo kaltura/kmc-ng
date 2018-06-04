@@ -13,7 +13,7 @@ import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/Kaltur
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
-
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 @Injectable()
 export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy {
   private _selectionIdGenerator = new FriendlyHashId();
@@ -23,8 +23,8 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   public entriesDuration = 0;
   public entriesTotalCount = 0;
 
-  constructor(private _kalturaClient: KalturaClient, private _appLocalization: AppLocalization) {
-    super(ContentPlaylistViewSections.ContentRuleBased);
+  constructor(private _kalturaClient: KalturaClient, private _appLocalization: AppLocalization, logger: KalturaLogger) {
+    super(ContentPlaylistViewSections.ContentRuleBased, logger);
   }
 
   ngOnDestroy() {

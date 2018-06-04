@@ -124,9 +124,11 @@ export class BrowserService implements IAppStorage {
     private _recordInitialQueryParams(): void {
         try {
             const search = location.search.substring(1);
-            this._initialQueryParams = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
-                return key === '' ? value : decodeURIComponent(value)
-            });
+            if (search) {
+                this._initialQueryParams = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
+                    return key === '' ? value : decodeURIComponent(value)
+                });
+            }
         } catch (e) {
             console.warn('failed to extract initial query params, ignoring any existing parameters. error ' + (e ? e.message : ''));
         }

@@ -21,7 +21,7 @@ export class CategoriesBulkRemoveTags implements OnInit, OnDestroy, AfterViewIni
   public _loading = false;
 
   public tags: any[] = [];
-  private tagsToRemove: string[] = [];
+  public tagsToRemove: string[] = [];
 
   private _parentPopupStateChangeSubscribe : ISubscription;
   private _confirmClose: boolean = true;

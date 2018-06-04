@@ -105,7 +105,6 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
       )
     )
       .cancelOnDestroy(this)
-      .monitor('search owners')
       .subscribe(
       data => {
         const suggestions = [];

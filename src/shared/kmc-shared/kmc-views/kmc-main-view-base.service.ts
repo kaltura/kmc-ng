@@ -55,14 +55,14 @@ export abstract class KmcMainViewBaseService {
                         observer.next({opened: openState});
                         observer.complete();
                     }, error => {
-                        this._logger.info('handle open view operation failure', { errorMessage: error ? error.message : '' });
+                        this._logger.error('handle open view operation failure', { errorMessage: error ? error.message : '' });
                         this._browserService.handleUnpermittedAction(false);
                         observer.next({opened: false});
                         observer.complete();
                     }
                 );
             } else {
-                this._logger.info('ignore open view operation request, view is not available');
+                this._logger.warn('ignore open view operation request, view is not available');
                 this._browserService.handleUnpermittedAction(false);
                 observer.next({opened: false});
                 observer.complete();

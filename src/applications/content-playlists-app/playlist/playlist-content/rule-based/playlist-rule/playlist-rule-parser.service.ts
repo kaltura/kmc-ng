@@ -28,8 +28,7 @@ export class PlaylistRuleParserService implements OnDestroy {
         type: MetadataProfileTypes.Entry,
         ignoredCreateMode: MetadataProfileCreateModes.App
       })
-      .cancelOnDestroy(this)
-      .monitor('playlist-rule-parser: get metadata profiles');
+      .cancelOnDestroy(this);
   }
 
   private _mapCustomMetadata(advancedSearch: KalturaSearchOperator): Observable<GroupedListType<string>> {

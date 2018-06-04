@@ -13,6 +13,7 @@ import {CategoriesModule} from 'app-shared/content-shared/categories/categories.
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { LocalizationModule } from '@kaltura-ng/mc-shared/localization';
+import { KalturaLoggerInjectionToken } from '@kaltura-ng/kaltura-common';
 
 import {
     AppBootstrap,
@@ -95,6 +96,7 @@ import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
+
     return  {
         endpointUrl: getKalturaServerUri(),
         clientTag: 'kmcng'
@@ -150,7 +152,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     TranscodingProfileCreationModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcLogsModule.forRoot(),
-      KalturaLoggerModule.forRoot(),
+      KalturaLoggerModule.forRoot('kmc'),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcViewsModule.forRoot(),
       LocalizationModule.forRoot()
@@ -181,13 +183,10 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
   exports: [],
   providers: <any>[
       ...partnerProviders,
-      KalturaLogger,
-      {
-          provide: KalturaLoggerName, useValue: 'kmc'
-      },
       {
            provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
-    ConfirmationService
+    ConfirmationService,
+      { provide: KalturaLoggerInjectionToken, useClass: KalturaLogger }
   ]
 })
 export class AppModule {

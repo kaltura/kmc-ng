@@ -97,7 +97,6 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 			)
 		)
 			.cancelOnDestroy(this)
-			.monitor('search owners')
 			.subscribe(
 				data => {
 					const suggestions = [];

@@ -118,7 +118,6 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
       )
     )
       .cancelOnDestroy(this)
-      .monitor('search owners')
       .subscribe(
         data => {
             this._logger.info(`handle successful search users action`);

@@ -23,12 +23,12 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
                     }
 
                 }, error => {
-                    this._logger.info('open view operation failed', { errorMessage: error ? error.message : '' });
+                    this._logger.error('open view operation failed', { errorMessage: error ? error.message : '' });
                     this._browserService.handleUnpermittedAction(false);
                 }
             );
         } else {
-            this._logger.info('ignore open view operation request, view is not available');
+            this._logger.warn('ignore open view operation request, view is not available');
             this._browserService.handleUnpermittedAction(false);
         }
     }

@@ -15,6 +15,8 @@
             "Usage Dashboard": "Usage Dashboard",
             "Administration": "Administration",
             "Settings": "Settings",
+            "StudioV2": "Universal Studio",
+            "StudioV3": "TV Platform Studio",
             "Users": "Users",
             "Account Settings": "Account Settings",
             "Integration Settings": "Integration Settings",
@@ -313,7 +315,7 @@
                 }
             },
             "prepareLive": {
-                "createLiveStreamTitle": "Create Live Stream Entry.",
+                "createLiveStreamTitle": "Create Live Stream Entry",
                 "streamTypeLabel": "Stream Type",
                 "streamTypes": {
                     "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
@@ -2143,6 +2145,7 @@
                 "accountSpecificDetails": "Account Specific Details",
                 "required": "This field is required.",
                 "emailFormat": "This Email format is not valid",
+                "publisherIdFormat": "This Publisher Id format is not valid",
                 "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
                 "alreadyExist": "User already exists",
                 "alreadyExistError": "Login Email {{0}} is already listed in the system as an authorized user in your account.",

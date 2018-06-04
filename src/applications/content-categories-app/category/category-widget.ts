@@ -6,15 +6,16 @@ import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltur
 import { CategoryWidgetsManager } from './category-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 
 export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, KalturaCategory, KalturaMultiRequest> {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 
-    constructor(private _widgetKey: string)
+    constructor(private _widgetKey: string, logger: KalturaLogger)
     {
-        super(_widgetKey);
+        super(_widgetKey, logger);
     }
 
     protected _showLoader() {
