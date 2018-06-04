@@ -121,7 +121,7 @@
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
           <ng-template let-country pTemplate="item">
             <span class="kCountryList">
-              <img class="kCountryListFlag" [src]="country.value | kCountryFromCode:'icon'" onError="this.onerror=null;this.style.display='none'">
+                <i class="kFlag" [ngClass]="country.value | kCountryFromCode:'icon'"></i>
               {{country.label}}
               </span>
           </ng-template>
@@ -145,7 +145,7 @@
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
           <ng-template let-country pTemplate="item">
             <span class="kCountryList">
-              <img class="kCountryListFlag" [src]="country.value | kCountryFromCode:'icon'" onError="this.onerror=null;this.style.display='none'">
+                <i class="kFlag" [ngClass]="country.value | kCountryFromCode:'icon'"></i>
               {{country.value | kCountryFromCode:'label'}}
               </span>
           </ng-template>
