@@ -20,10 +20,12 @@
         animation-fill-mode: forwards;
 
         &.kProgressStep1 {
+            width: 70%;
             animation: progressStep1 8s ease-in-out;
         }
 
         &.kProgressStep2 {
+            width: 100%;
             animation: progressStep2 1s ease-in-out;
         }
     }
