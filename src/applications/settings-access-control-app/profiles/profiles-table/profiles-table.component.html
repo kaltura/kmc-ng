@@ -123,7 +123,7 @@
             <td class="kCountryList">
               <div *ngFor="let country of profile.view.countries.details"
                    [kTooltip]="country | kCountryFromCode:'label'">
-                <img class="kCountryListFlag" [src]="country | kCountryFromCode:'icon'" [alt]="country">
+                  <i class="kCountryListFlag" [ngClass]="country | kCountryFromCode:'icon'"></i>
                 {{country | kCountryFromCode:'label'}}
               </div>
             </td>
