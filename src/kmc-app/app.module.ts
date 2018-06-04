@@ -91,6 +91,8 @@ import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
+
 import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
@@ -175,7 +177,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ChangelogComponent,
     ChangelogContentComponent,
     LoginByKSComponent,
-      NotFoundPageComponent
+      NotFoundPageComponent,
+      ProgressBarComponent
   ],
   bootstrap: <any>[
     AppComponent
