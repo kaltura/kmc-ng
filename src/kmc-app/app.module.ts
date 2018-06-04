@@ -95,6 +95,7 @@ import { NotFoundPageComponent } from './components/not-found-page/not-found-pag
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
+
     return  {
         endpointUrl: getKalturaServerUri(),
         clientTag: 'kmcng'
