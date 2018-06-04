@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { CaptionAssetListAction } from 'kaltura-ngx-client/api/types/CaptionAssetListAction';
@@ -29,12 +29,11 @@ import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client/api/types/KalturaC
 import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { CaptionAssetServeAction } from 'kaltura-ngx-client/api/types/CaptionAssetServeAction';
-
-
-import { EntryWidgetKeys } from '../entry-widget-keys';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { EntryWidget } from '../entry-widget';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface CaptionRow {
     uploading: boolean;
@@ -69,8 +68,9 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     private _entryId: string = '';
 
     constructor(private _objectDiffers: KeyValueDiffers, private _listDiffers: IterableDiffers,
-                private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _uploadManagement: UploadManagement) {
-        super(EntryWidgetKeys.Captions);
+                private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _uploadManagement: UploadManagement,
+                logger: KalturaLogger) {
+        super(ContentEntryViewSections.Captions, logger);
     }
 
   private _syncBusyState(): void {
@@ -97,6 +97,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         ({ relevantCaption, uploadedFile }) => {
           switch (uploadedFile.status) {
             case TrackedFileStatuses.prepared:
+              relevantCaption.uploading = true;
               relevantCaption.serverUploadToken = (<NewEntryCaptionFile>uploadedFile.data).serverUploadToken;
               this._syncBusyState();
               break;
@@ -113,7 +114,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               this._syncBusyState();
               break;
             case TrackedFileStatuses.uploading:
-              relevantCaption.progress = (uploadedFile.progress * 100).toFixed(0);
+              const progress = Number((uploadedFile.progress * 100).toFixed(0));
+              relevantCaption.progress = progress > 100 ? 100 : progress;
               relevantCaption.uploading = true;
               relevantCaption.uploadFailure = false;
               break;
@@ -146,7 +148,6 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
     }))
       .cancelOnDestroy(this, this.widgetReset$)
-      .monitor('get captions')
       .do(response => {
         // Restore previous upload state
         this._updateCaptionsResponse(response);
@@ -215,7 +216,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     public _getCaptionStatus(caption: CaptionRow): string {
       let status = '';
-      if (typeof caption.status !== undefined) {
+      if (caption.status !== null) {
         switch (caption.status) {
           case KalturaCaptionAssetStatus.error:
             status = this._appLocalization.get('applications.content.entryDetails.captions.error');
@@ -250,7 +251,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       label: 'English',
       isDefault: 0,
       fileExt: '',
-      status: KalturaCaptionAssetStatus.queued
+      status: null
     };
 
     // create a copy of the captions array without a reference to the original array

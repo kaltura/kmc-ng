@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
-
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthCanActivate } from './auth-can-activate.service';
-import { AppNavigator } from './app-navigator.service';
 import { AppAuthentication } from './app-authentication.service';
 import { AppBootstrap } from './app-bootstrap.service';
+import { InvalidKsInterceptorService } from './invalid-ks-interceptor.service';
 
 @NgModule({
     imports: <any>[
@@ -13,13 +13,25 @@ import { AppBootstrap } from './app-bootstrap.service';
     ],
     providers: <any>[
         AuthCanActivate,
-        AppNavigator,
         AppBootstrap,
         AppAuthentication,
     ]
 })
 export class AuthModule {
-    constructor(){
+    constructor() {
+    }
+
+    static forRoot(): ModuleWithProviders {
+        return {
+            ngModule: AuthModule,
+            providers: <any[]>[
+                {
+                    provide: HTTP_INTERCEPTORS,
+                    useClass: InvalidKsInterceptorService,
+                    multi: true
+                }
+            ]
+        };
     }
 }
 

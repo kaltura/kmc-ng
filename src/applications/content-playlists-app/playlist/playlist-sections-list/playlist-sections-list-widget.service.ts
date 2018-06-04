@@ -1,19 +1,19 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { PlaylistWidget } from '../playlist-widget';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { SectionsList } from './sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import { PlaylistWidgetKeys } from '../playlist-widget-keys';
-
+import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 export interface SectionWidgetItem {
-  label: string,
-  isValid: boolean,
-  attached: boolean,
-  key: string
+  label: string;
+  isValid: boolean;
+  attached: boolean;
+  key: ContentPlaylistViewSections;
 }
 
 @Injectable()
@@ -21,8 +21,11 @@ export class PlaylistSectionsListWidget extends PlaylistWidget implements OnDest
   private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
   public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
-  constructor(private _appLocalization: AppLocalization) {
-    super('sectionsList');
+  constructor(private _appLocalization: AppLocalization,
+              private _contentPlaylistView: ContentPlaylistViewService,
+              logger: KalturaLogger
+              ) {
+    super('sectionsList', logger);
   }
 
   ngOnDestroy() {
@@ -83,7 +86,7 @@ export class PlaylistSectionsListWidget extends PlaylistWidget implements OnDest
         const sectionFormWidgetState = formWidgetsState ? formWidgetsState[section.key] : null;
         const isSectionActive = sectionFormWidgetState && sectionFormWidgetState.isActive;
 
-        if (this._isSectionEnabled(section.key, playlist)) {
+        if (this._contentPlaylistView.isAvailable({ section: section.key, playlist })) {
           sections.push(
             {
               label: this._appLocalization.get(section.label),
@@ -97,18 +100,5 @@ export class PlaylistSectionsListWidget extends PlaylistWidget implements OnDest
     }
 
     this._sections.next(sections);
-  }
-
-  private _isSectionEnabled(sectionKey: string, playlist: KalturaPlaylist): boolean {
-    switch (sectionKey) {
-      case PlaylistWidgetKeys.Content:
-        return playlist.playlistType === KalturaPlaylistType.staticList;
-      case PlaylistWidgetKeys.ContentRuleBased:
-        return playlist.playlistType === KalturaPlaylistType.dynamic;
-      case PlaylistWidgetKeys.Metadata:
-        return true;
-      default:
-        return false;
-    }
   }
 }

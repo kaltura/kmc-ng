@@ -1,6 +1,7 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {KalturaOperaSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaOperaSyndicationFeed';
-import {DestinationComponentBase} from '../../feed-details.component';
+import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kOperaDestinationForm',
@@ -9,19 +10,22 @@ import {DestinationComponentBase} from '../../feed-details.component';
   providers: [{provide: DestinationComponentBase, useExisting: OperaDestinationFormComponent}]
 })
 export class OperaDestinationFormComponent extends DestinationComponentBase implements OnInit, OnDestroy {
+  @Input() mode: FeedFormMode;
 
   @Output()
   onFormStateChanged = new EventEmitter<{ isValid: boolean, isDirty: boolean }>();
 
-  constructor() {
+  constructor(private _permissionsService: KMCPermissionsService) {
     super();
   }
 
   ngOnInit() {
-    this.onFormStateChanged.emit({
-      isValid: true,
-      isDirty: false
-    });
+    if (this.mode !== 'edit' || this._permissionsService.hasPermission(KMCPermissions.SYNDICATION_UPDATE)) {
+      this.onFormStateChanged.emit({
+        isValid: true,
+        isDirty: false
+      });
+    }
   }
 
   ngOnDestroy() {

@@ -1,0 +1,14 @@
+@import 'app-theme/_variables.scss';
+
+.kContainer{
+    width: 100%;
+    height: calc(100vh - 100px);
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .kNote{
+        color: $kGrayscale3;
+    }
+}

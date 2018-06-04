@@ -2,7 +2,7 @@
   <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
     <div class="kButtons">
-      <button pButton [disabled]="!_widgetService._liveDashboardEnabled" class="kButtonDefault" (click)="liveDashboard.open()" label="{{'applications.content.entryDetails.live.liveDashboard' | translate}}"></button>
+      <button pButton icon="kIconstatistic" [disabled]="!_widgetService._liveDashboardEnabled" class="kButtonDefault" (click)="liveDashboard.open()" label="{{'applications.content.entryDetails.live.liveDashboard' | translate}}"></button>
     </div>
     <div class="kLiveDetails">
 
@@ -35,7 +35,7 @@
             <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"
                     [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
                     label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
-            <a *ngIf="_widgetService._liveType === 'kaltura'" class="kReportLink" [class.kDisabled]="!enableLiveDashboard" (click)="_openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
+            <a *ngIf="_widgetService._liveType === 'kaltura' && enableLiveAnalytics" class="kReportLink" [class.kDisabled]="!enableLiveAnalytics" (click)="_openLiveAnalytics()">{{'applications.content.entryDetails.live.report' | translate}}</a>
           </div>
         </div>
 
@@ -220,9 +220,14 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #liveDashboard [fullScreen]="true">
-  <ng-template>
-    <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
-  </ng-template>
+<kPopupWidget #liveAnalytics [fullScreen]="true">
+  <!--ng-template>
+    <kAnalyticsLive></kAnalyticsLive>
+  </ng-template-->
 </kPopupWidget>
 
+<kPopupWidget #liveDashboard [fullScreen]="true">
+    <ng-template>
+        <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
+    </ng-template>
+</kPopupWidget>

@@ -10,7 +10,7 @@ import { CategoryEntryListAction } from 'kaltura-ngx-client/api/types/CategoryEn
 import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 
 @Injectable()
 export class BulkAddCategoriesService extends BulkActionBaseService<CategoryData[]> {
@@ -65,7 +65,7 @@ export class BulkAddCategoriesService extends BulkActionBaseService<CategoryData
                             [entryName, categoryName]
                         )
                     ).join('\n');
-                    this._browserService.alert({ message });
+                    this._browserService.alert({ header: this._appLocalization.get('app.common.attention'), message });
                 }
             };
 

@@ -15,6 +15,8 @@
             "Usage Dashboard": "Usage Dashboard",
             "Administration": "Administration",
             "Settings": "Settings",
+            "StudioV2": "Universal Studio",
+            "StudioV3": "TV Platform Studio",
             "Users": "Users",
             "Account Settings": "Account Settings",
             "Integration Settings": "Integration Settings",
@@ -76,7 +78,19 @@
             "apply": "Apply",
             "done": "Done",
             "save": "Save",
-            "connectionError": "Error connecting to server"
+            "error": "Error",
+            "connectionError": "Error connecting to server",
+            "invalidKs": "User session has expired. Please re-login."
+        },
+        "redirect":{
+            "redirect1": "Redirecting to default view...",
+            "redirect2": "If you are not redirected in few seconds, click ",
+            "redirect3": "here"
+        },
+        "openMail":{
+            "supportMailTitle": "Contact Kaltura Support",
+            "supportMailMsg": "Please send an email to the following email address:",
+            "supportMailMsgNoMail": "Please send an email to the Kaltura support team."
         },
         "login": {
             "login": {
@@ -124,15 +138,22 @@
             "error": {
                 "email": "Incorrect Email format",
                 "badCredentials": "The username or password you entered is incorrect.",
-                "retriesExceeded": "Your account has been locked and will not be available for 24 hours. Contact Kaltura Support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
+                "retriesExceeded": {
+                    "yourAccountHasBeenLocked":"Your account has been locked and will not be available for 24 hours. Contact Kaltura Support at ",
+                    "toUnblockYourAccount": " to unblock your account."
+                },
                 "userNotFound": "The username or password you entered is incorrect.",
                 "invalidStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules:\n- Must be of length between 8 and 14.\n- Must not contain your name.\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}.\n- Must not contain the following characters: < or >",
                 "alreadyUsed": "Invalid Password. <br> This password has been used in the past. Please select a new password.",
-                "loginBlocked": "Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura Support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
+                "loginBlocked": {
+                    "loginDenied":"Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura Support at ",
+                    "toUnblockYourAccount": " to unblock your account."
+                },
                 "newPasswordHashKeyInvalid": "This link is not valid.",
                 "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
                 "wrongOldPassword": "Old password is incorret.",
-                "invalidField": "Value in field {{value}} is not valid."
+                "invalidField": "Value in field {{value}} is not valid.",
+                "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon."
             },
             "send": "Send",
             "wait": "Wait…",
@@ -147,9 +168,9 @@
             "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost."
         },
         "UnpermittedActionReasons": {
-            "InvalidConfiguration": {
-                "message": "This view cannot be loaded. If the problem persists - please contact Kaltura Support.\nClick OK to navigate to the entries view."
-            }
+            "header": "View Disabled",
+            "message": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.",
+            "messageNav": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.\nClick OK to navigate to the main view."
         }
     },
     "applications": {
@@ -176,8 +197,9 @@
             "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
             "helpTip2": "Read more",
             "helpTip3": "about the different embed code types.",
-            "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. Learn more about enforcing",
-            "helpTip5": "specific delivery protocols.",
+            "helpTip4": "Logic for defining the delivery method is automated by the Kaltura Player to ensure the best user experience. ",
+            "helpTip5": "Learn more about enforcing ",
+            "helpTip6": "specific delivery protocols.",
             "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
             "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
         },
@@ -220,7 +242,8 @@
             },
             "uploadMenu": {
                 "uploadFromDesktop": "Upload from Desktop",
-                "highSpeed": "Need High-speed Upload?",
+                "needHighSpeed": "Need High-speed Upload?",
+                "highSpeed": "High-Speed Upload",
                 "bulkUpload": {
                     "title": "Bulk Upload",
                     "samplesLink": "Download CSV/XML Samples"
@@ -273,7 +296,7 @@
                 "syncing": "{{0}} Syncing",
                 "queued": "{{0}} Queued",
                 "completed": "{{0}} Completed",
-                "error": "{{0}} Qrror",
+                "error": "{{0}} Error(s)",
                 "upToDate": "Up to Date",
                 "loading": "Loading...",
                 "errors": {
@@ -292,7 +315,7 @@
                 }
             },
             "prepareLive": {
-                "createLiveStreamTitle": "Create Live Stream Entry.",
+                "createLiveStreamTitle": "Create Live Stream Entry",
                 "streamTypeLabel": "Stream Type",
                 "streamTypes": {
                     "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
@@ -436,7 +459,7 @@
                 },
                 "errors": {
                     "retry": "Retry",
-                    "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>",
+                    "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"{{0}}\" target=\"_blank\">contact us</a>.\n<a href=\"{{1}}\" target=\"_blank\">Learn more about drop folders</a>",
                     "errorDropFoldersFiles": "An error occurred during the drop folder files update.",
                     "errorLoad": "Failed to load drop folder."
                 }
@@ -464,7 +487,8 @@
                     "addTagsLabel": "Enter tags to be appended to all selected categories.",
                     "removeTags": "Remove Tags",
                     "removeTagsLabel": "Select the tags you want to remove from the selected categories.",
-                    "moveCategories": "Move Categories",
+                    "noTagsToRemove": "No tags to remove",
+          "moveCategories": "Move Categories",
                     "changeContentPrivacy": "Change Content Privacy",
                     "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories.",
                     "changeCategoryListing": "Change Category Listing",
@@ -478,7 +502,8 @@
                     "error": "Categories update failed.",
                     "cancelEdit": "Cancel Edit.",
                     "discard": "Discard all changes?",
-                    "noPrivacyContext": "Some of the selected categories do not  have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page  Settings tab."
+                    "noPrivacyContext": "Some of the selected categories do not  have entitlement settings and therefore will not be updated by this action.\n\nTo add entitlements to categories, go to the Integration Settings page  Settings tab.",
+                    "failedToLoadCategoryData": "Could not load category data. Category ID: {{0}}"
                 },
                 "deleteCategories": "Delete Categories",
                 "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
@@ -494,7 +519,7 @@
                 "private": "Private",
                 "selectedCategory": "Selected: {{0}}",
                 "deleteAction" : {
-                    "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
+                    "deleteWarningSubcategoriesConfirmation": "This category was created by another application and deleting it will effect this application or site.\nThis category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
                     "deleteWarningConfirmation": "This category was created by another application and deleting it will effect this application or site.\nAre you sure you want to delete this category?",
                     "deleteSubcategoriesConfirmation": "This category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
                     "deleteConfirmation": "Are you sure you want to delete this category?"
@@ -531,6 +556,7 @@
                 "name": "Name",
                 "categoryMovedSuccessfully": "Category moved successfully.",
                 "errors": {
+                    "failedToLoadParentCategoryData": "Could not load parent category data",
                     "cannotLinkEntries": "The Category was created, but some of the entries failed to link. Please review the created category.",
                     "createFailed": "An error occurred while trying to add the new category",
                     "requiredName": "You must enter a name.",
@@ -548,7 +574,9 @@
                     "categoryMovedFailure": "An error occurred while trying to move the category to  the selected parent.",
                     "unableToMove": "Cannot perform the Move Category action since no categories were selected to move.",
                     "categoryAlreadyBelongsToParent": "Category is already a child of the selected parent.",
-                    "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together."
+                    "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together.",
+                    "creationError": "An error occurred while trying to add new category",
+                    "duplicatedName": "The category \"{{0}}\" already exists"
                 }
             },
             "entries": {
@@ -569,7 +597,7 @@
                 "ruleName": "Rule Name",
                 "ruleNamePlaceholder": "Rule Name",
                 "resultsLimit": "Results Limit ({{0}})",
-                "orderBy": "Order by",
+                "orderBy": "Order by: {{0}}",
                 "totalDuration": "Total duration {{0}}",
                 "resultsLimitRange": "1 - 200 Entries",
                 "noEntries": "No entries"
@@ -630,6 +658,8 @@
                     }
                 },
                 "details": {
+                    "choosePlaylist": "Choose Playlist",
+                    "missingPlaylist": "Feed playlist ({{0}}) could not be found. Please select another playlist.",
                     "header": {
                         "newFeed": "New Feed",
                         "cancel": "Cancel",
@@ -640,15 +670,16 @@
                     "contentType" : {
                         "content": "Content",
                         "allContent": "All Content",
-                        "fromPlaylist": "From playlist"
+                        "fromPlaylist": "From Playlist"
                     },
-                    "playerName": "Player({{0}})",
+                    "search": "Search",
+          "playerName": "Player({{0}})",
                     "entriesCountData": {
                         "count": "Entries count",
                         "numOfEntries": "{{0}} Entries",
                         "warning": "{{0}} Entries are not included in this feed.",
                         "moreInfo": "More Info.",
-                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
+                        "warningMoreInfo": "<b>Note:</b> {{0}} entries will not be included in the feed, since they are not transcoded in the required {{1}} flavor.<br>You can transcode any entry to {{1}}  by going to the Manage section of the KMC.  Open the specific entry that you would like to transcode, go to the Flavors tab, and select the \"Convert\" option.",
                         "flavorId": "(flavor ID) {{0}}"
                     },
                     "destination": "Destination",
@@ -656,12 +687,134 @@
                         "promptText": "Choose Destination",
                         "google": "Google",
                         "yahoo": "Yahoo",
-                        "itunes": "ITunes",
+                        "itunes": "iTunes",
                         "roku": "Roku Direct Publisher",
                         "opera": "Opera Snap TV",
                         "flexibleFormat": "Flexible Format"
                     },
                     "destinationsForms": {
+                        "itunes": {
+                            "title": "iTunes Parameters",
+                            "contentFlavor": {
+                                "label": "Content Flavor",
+                                "checkbox": "Add to default transcoding profile"
+                            },
+                            "landingPage": {
+                                "label": "Landing page",
+                                "explanation": "Enter the URL template that you would like to appear in the iTunes Store Podcast for each video in this feed. The system will append the specific entry id for each entry. For example:\"http://mysite.com?videoid=\""
+                            },
+                            "feedAuthor": "Feed Author",
+                            "website": "Website",
+                            "description": "Feed Description",
+                            "categories": {
+                                "label": "Category",
+                                "promptText": "Choose Category",
+                                "itemsSelected":"{0} Selected Categories",
+                                "availableCategories": {
+                                    "Arts": "Arts",
+                                    "Arts/Design": "Arts/Design",
+                                    "Arts/Fashion &amp; Beauty": "Arts/Fashion & Beauty",
+                                    "Arts/Food": "Arts/Food",
+                                    "Arts/Literature": "Arts/Literature",
+                                    "Arts/Performing Arts": "Arts/Performing Arts",
+                                    "Arts/Visual Arts": "Arts/Visual Arts",
+                                    "Business": "Business",
+                                    "Business/Business News": "Business/Business News",
+                                    "Business/Careers": "Business/Careers",
+                                    "Business/Investing": "Business/Investing",
+                                    "Business/Management &amp; Marketing": "Business/Management & Marketing",
+                                    "Business/Shopping": "Business/Shopping",
+                                    "Comedy": "Comedy",
+                                    "Education": "Education",
+                                    "Education/Education Technology": "Education/Education Technology",
+                                    "Education/Higher Education": "Education/Higher Education",
+                                    "Education/K-12": "Education/K-12",
+                                    "Education/Language Courses": "Education/Language Courses",
+                                    "Education/Training": "Education/Training",
+                                    "Games &amp; Hobbies": "Games & Hobbies",
+                                    "Games &amp; Hobbies/Automotive": "Games & Hobbies/Automotive",
+                                    "Games &amp; Hobbies/Aviation": "Games & Hobbies/Aviation",
+                                    "Games &amp; Hobbies/Hobbies": "Games & Hobbies/Hobbies",
+                                    "Games &amp; Hobbies/Other Games": "Games & Hobbies/Other Games",
+                                    "Games &amp; Hobbies/Video Games": "Games & Hobbies/Video Games",
+                                    "Government &amp; Organizations": "Government & Organizations",
+                                    "Government &amp; Organizations/Local": "Government & Organizations/Local",
+                                    "Government &amp; Organizations/National": "Government & Organizations/National",
+                                    "Government &amp; Organizations/Non-Profit": "Government & Organizations/Non-Profit",
+                                    "Government &amp; Organizations/Regional": "Government & Organizations/Regional",
+                                    "Health": "Health",
+                                    "Health/Alternative Health": "Health/Alternative Health",
+                                    "Health/Fitness &amp; Nutrition": "Health/Fitness & Nutrition",
+                                    "Health/Self-Help": "Health/Self-Help",
+                                    "Health/Sexuality": "Health/Sexuality",
+                                    "Kids &amp; Family": "Kids & Family",
+                                    "Music": "Music",
+                                    "News &amp; Politics": "News & Politics",
+                                    "Religion &amp; Spirituality": "Religion & Spirituality",
+                                    "Religion &amp; Spirituality/Buddhism": "Religion & Spirituality/Buddhism",
+                                    "Religion &amp; Spirituality/Christianity": "Religion & Spirituality/Christianity",
+                                    "Religion &amp; Spirituality/Hinduism": "Religion & Spirituality/Hinduism",
+                                    "Religion &amp; Spirituality/Islam": "Religion & Spirituality/Islam",
+                                    "Religion &amp; Spirituality/Judaism": "Religion & Spirituality/Judaism",
+                                    "Religion &amp; Spirituality/Other": "Religion & Spirituality/Other",
+                                    "Religion &amp; Spirituality/Spirituality": "Religion & Spirituality/Spirituality",
+                                    "Science &amp; Medicine": "Science & Medicine",
+                                    "Science &amp; Medicine/Medicine": "Science & Medicine/Medicine",
+                                    "Science &amp; Medicine/Natural Sciences": "Science & Medicine/Natural Sciences",
+                                    "Science &amp; Medicine/Social Sciences": "Science & Medicine/Social Sciences",
+                                    "Society &amp; Culture": "Society & Culture",
+                                    "Society &amp; Culture/History": "Society & Culture/History",
+                                    "Society &amp; Culture/Personal Journals": "Society & Culture/Personal Journals",
+                                    "Society &amp; Culture/Philosophy": "Society & Culture/Philosophy",
+                                    "Society &amp; Culture/Places &amp; Travel": "Society & Culture/Places & Travel",
+                                    "Sports &amp; Recreation": "Sports & Recreation",
+                                    "Sports &amp; Recreation/Amateur": "Sports & Recreation/Amateur",
+                                    "Sports &amp; Recreation/College &amp; High School": "Sports & Recreation/College & High School",
+                                    "Sports &amp; Recreation/Outdoor": "Sports & Recreation/Outdoor",
+                                    "Sports &amp; Recreation/Professional": "Sports & Recreation/Professional",
+                                    "Technology": "Technology",
+                                    "Technology/Gadgets": "Technology/Gadgets",
+                                    "Technology/Tech News": "Technology/Tech News",
+                                    "Technology/Podcasting": "Technology/Podcasting",
+                                    "Technology/Software How-To": "Technology/Software How-To",
+                                    "TV &amp; Film": "TV & Film"
+                                }
+                            },
+                            "adultContent": {
+                                "label": "Adult Content",
+                                "hint": "If you populate this tag with 'Yes', an 'explicit' parental advisory graphic will appear next to your podcast artwork on the iTunes Store and in the Name column in iTunes. If the value is 'Clean', the parental advisory type is considered Clean, meaning that no explicit language or adult content is included anywhere in the episodes and a clean graphic will appear. If the explicit tag is present and has any other value(e.g 'No') you see no indicator - blank is the default advisory type.",
+                                "options": {
+                                    "yes": "Yes",
+                                    "no": "No",
+                                    "clean": "Clean"
+                                }
+                            },
+                            "errors": {
+                                "invalidLandingPage": "Landing Page URL is not valid",
+                                "requiredLandingPage": "Landing Page is required",
+                                "invalidWebsite": "Website URL is not valid",
+                                "requiredCategories": "Categories are required",
+                                "requiredFeedOwnerName": "Feed owner name is required",
+                                "requiredFeedOwnerEmail": "Feed owner email is required",
+                                "invalidFeedOwnerEmail": "Owner email is not valid"
+                            },
+                            "feedImageUrl": {
+                                "label": "Feed Image URL",
+                                "hint": "Image dimensions should be 600x600"
+                            },
+                            "feedOwnerName": {
+                                "label": "Feed Owner Name",
+                                "hint": "This name be used for iTunes Store to contact you if necessary, this will not be presented in the iTunes Store"
+                            },
+                            "feedOwnerEmail": {
+                                "label": "Feed Owner Email",
+                                "hint": "This email be used for iTunes Store to contact you if necessary, this will not be presented in the iTunes Store"
+                            },
+                            "language": {
+                                "label": "Language",
+                                "hint": "The language of the video/audio in this feed"
+                            }
+                        },
                         "google": {
                             "title": "Google Parameters",
                             "contentFlavor": {
@@ -712,7 +865,7 @@
                                 "label": "Feed Description"
                             },
                             "category": {
-                                "label": "Category",
+                                "label": "Categories",
                                 "promptText": "Choose Category",
                                 "itemsSelected":"{0} Selected Categories",
                                 "availableCategories": {
@@ -770,8 +923,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Confirm Delete",
-                    "singleFeed": "Are you sure you want to delete the following feed: {{0}}?",
-                    "upTo5Feed": "Are you sure you want to delete the following feeds: {{0}}?",
+                    "singleFeed": "Are you sure you want to delete the following feed? {{0}}",
+                    "upTo5Feed": "Are you sure you want to delete the following feeds?\n{{0}}",
                     "moreThan5": "Are you sure you want to delete the selected feeds?"
                 },
                 "errors": {
@@ -1067,11 +1220,25 @@
             "bulkActions": {
                 "setScheduling": "Set Scheduling",
                 "setAccessControl": "Set Access Control",
+                "addRemovePublishers": "Add / Remove Co-Publishers",
+                "addPublishers": "Add Co-Publishers",
+                "addPublishersLabel": "Enter Co-Publishers to be appended to all selected entries",
+                "removePublishers": "Remove Co-Publishers",
+                "removePublishersLabel": "Co-Publishers removed from this list will be removed from all selected entries",
+                "noPublishersToRemove": "No Co-Publishers to remove",
+                "userTooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier",
+                "addRemoveEditors": "Add / Remove Co-Editors",
+                "addEditors": "Add Co-Editors",
+                "addEditorsLabel": "Enter Co-Editors to be appended to all selected entries",
+                "removeEditors": "Remove Co-Editors",
+                "removeEditorsLabel": "Co-Editors removed from this list will be removed from all selected entries",
+                "noEditorsToRemove": "No Co-Editors to remove",
                 "addRemoveTags": "Add / Remove Tags",
                 "addTags": "Add Tags",
                 "addTagsLabel": "Enter tags to be appended to all selected entries.",
                 "removeTags": "Remove Tags",
                 "removeTagsLabel": "Select the tags you want to remove from the selected entries.",
+                "noTagsToRemove": "No tags to remove",
                 "addRemoveCategories": "Add / Remove Categories",
                 "addToCategories": "Add To Categories",
                 "removeFromCategories": "Remove From Categories",
@@ -1091,7 +1258,7 @@
                 "downloadNote": "Downloading other types of entries is not supported and will be ignored.",
                 "downloadMsg": "Your download request is being processed. A download link will be sent to {{0}} after processing has completed.",
                 "delete": "Delete",
-                "apply": "Apply to all selected entries.",
+                "apply": "Apply to all selected entries",
                 "error": "An error occurred during Entries' update.",
                 "errorPlaylists": "An error occurred during Playlists' update.",
                 "cannotDeletePlaylists": "One or more playlists could not be deleted.",
@@ -1123,6 +1290,11 @@
                 "downloadFailed": "The Download request failed."
             },
             "entryDetails": {
+                "entryEditor": {
+                    "title": "Editor",
+                    "cancelEdit": "Cancel Edit",
+                    "discard": "Discard all changes?"
+                },
                 "save": "Save",
                 "sections": {
                     "metadata": "Metadata",
@@ -1139,6 +1311,7 @@
                     "advertisements": "Advertisements"
                 },
                 "preview": {
+                    "clipAndTrim": "Editor",
                     "pande": "Share & Embed",
                     "previewInPlayer": "Preview in Player",
                     "details": "Details",
@@ -1185,11 +1358,12 @@
                     "nameRequired": "You must enter an Entry Name",
                     "customDataError": "\"{{0}}\" Custom Data Error",
                     "missingEntriesWarning": "The following entries were not found: {{0}}",
-                    "replaceLinkedEntry": "Selecting a new entry will replace the current entry. Continue?"
+                    "replaceLinkedEntry": "Selecting a new entry will replace the current entry. Continue?",
+                    "maxCategoriesLinked": "Entry can be linked with a maximum of {{0}} categories"
                 },
                 "thumbnails": {
                     "tags": "Tags",
-          "thumbnails": "Thumbnails",
+                    "thumbnails": "Thumbnails",
                     "upload": "Upload",
                     "capture": {
                         "choose": "Choose Frame",
@@ -1319,7 +1493,8 @@
                     "uploadSuccess": "Flavor asset was uploaded successfully.",
                     "deleteFailure": "Flavor asset deletion failed.",
                     "convertFailure": "Flavor conversion failed.",
-                    "uploadFailure": "Flavor upload failed.",
+                    "missingOriginalFlavor": "The original flavor asset is missing",
+          "uploadFailure": "Flavor upload failed.",
                     "downloadFailure": "Flavor download failed.",
                     "importFailure": "Flavor import failed."
                 },
@@ -1356,7 +1531,7 @@
                 },
                 "live": {
                     "live": "Live Stream",
-                    "liveDashboard": "Live Dashabord",
+                    "liveDashboard": "Live Dashboard",
                     "urls": "Broadcasting URLs",
                     "primary": "Primary URL:",
                     "backup": "Backup URL:",
@@ -1452,7 +1627,9 @@
                     "save": "Save",
                     "co-editors": "Co-Editors",
                     "co-publishers": "Co-Publishers",
-                    "tooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
+                    "tooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
+                    "noScreenName": "Cannot apply user, screen name is empty"
+
                 },
                 "distribution": {
                     "cancel": "Cancel",
@@ -1968,6 +2145,7 @@
                 "accountSpecificDetails": "Account Specific Details",
                 "required": "This field is required.",
                 "emailFormat": "This Email format is not valid",
+                "publisherIdFormat": "This Publisher Id format is not valid",
                 "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
                 "alreadyExist": "User already exists",
                 "alreadyExistError": "Login Email {{0}} is already listed in the system as an authorized user in your account.",
@@ -1986,10 +2164,12 @@
                 "save": "Save",
                 "add": "Add",
                 "cancel": "Cancel",
-                "newRole": "newRole",
+                "newRole": "New Role",
                 "contactUs": "Contact us",
                 "contactUsText": " to learn more about adding any disabled items below to your account.",
-                "errors": {
+                "roleUpdated": "Role updated",
+        "roleUpdatedMessage": "Changes will take effect immediately.\nBrowser page refresh should be recommended to the existing users associated with this role",
+        "errors": {
                     "required": "This field is required.",
                     "validationError": "The form contains some invalid information. Please review the sections marked as invalid."
                 },
@@ -2022,6 +2202,8 @@
                 "referenceId": "Account Reference ID",
                 "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
                 "apply": "Apply",
+                "cancelEdit": "Cancel Edit",
+                "discard": "Discard all changes?",
                 "errors": {
                     "requiredName": "You must enter name of publisher/company",
                     "requiredUserId": "You must enter name of account owner",
@@ -2050,8 +2232,9 @@
                 "accountInfo": {
                     "header": "We are excited that you’re looking for more info on upgrading your account!",
                     "trial": "Your free trial expires on {{0}}",
-                    "bandwidth": "Monthly bandwidth consumption so far: {{0}} GB",
-                    "storage": "Current monthly storage usage so far: {{0}} GB",
+                    "gb": " GB",
+          "bandwidth": "Monthly bandwidth consumption so far: {{0}}",
+                    "storage": "Current monthly storage usage so far: {{0}}",
                     "contactUs": "Contact us to learn more about different packages and added- value services."
                 }
             },
@@ -2079,7 +2262,9 @@
                     "systemName": "System Name",
                     "applyTo": "Apply to",
                     "entries": "Entries",
-                    "categories": "Categories"
+                    "categories": "Categories",
+                    "schemaNameRequired": "Name is required",
+                    "schemaNameMaxLength": "Name must be less then {{0}} characters long"
                 },
                 "table": {
                     "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
@@ -2184,7 +2369,7 @@
                         "title": "Add Entitlement",
                         "explanation": "Select the root category integrated with your application and label it below.",
                         "addPrivacyContextLabel": "Add Privacy Context Label",
-                        "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+                        "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the selected category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
                         "apply": "Apply",
                         "errors": {
                             "requiredPrivacyContextLabel": "You must enter a Privacy Context Label."
@@ -2329,7 +2514,7 @@
                     "invalidValue": "Invalid Value",
                     "validationMessage": {
                         "invalidDomainName": "Invalid Domain Name",
-                        "invalidIp": "Invalid IP",
+                        "invalidIp": "Invalid IP address",
                         "validationFailed": "Validation Failed",
                         "profileNameRequired": "Profile Name is required.",
                         "authorizedDomains": "No domains were added to the approved or restricted lists. The domain restriction will be: allow all domains.\n",
@@ -2384,6 +2569,7 @@
                     "flavors": "Flavors"
                 },
                 "profile": {
+                    "save": "Save",
                     "metadata": "Metadata",
                     "backToProfiles": "Back To Profiles",
                     "flavor": "Flavor",
@@ -2483,6 +2669,10 @@
                     "systemNamePlaceholder": "Enter System Name"
                 }
             }
+        },
+        "analytics": {
+            "comingSoon": "Coming soon! Analytics for all media types.",
+            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please login to the legacy KMC to view and create analytics and reports. Analytics for all media should be available soon"
         }
     },
     "entriesShared": {

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { Observable } from 'rxjs/Observable';
 import { ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
@@ -39,11 +39,11 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
 
-  public get _disableSaveBtn(): boolean {
-    const hasUpdatePermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE);
-    const isNewPlaylist = this._playlistWidgetsManager.isNewData;
-    return !this._playlistStore.playlistIsDirty || (!isNewPlaylist && !hasUpdatePermission);
-  }
+    public get _enableSaveBtn(): boolean {
+        const hasUpdatePermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE);
+        const isNewPlaylist = this._playlistWidgetsManager.isNewData;
+        return  isNewPlaylist || (this._playlistStore.playlistIsDirty && !isNewPlaylist && hasUpdatePermission);
+    }
 
   constructor(private _browserService: BrowserService,
               public _playlistStore: PlaylistStore,
@@ -64,7 +64,6 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
     this._playlistStore.state$
       .cancelOnDestroy(this)
-      .monitor('playlist state')
       .subscribe(
         status => {
           this._showLoader = false;
@@ -217,7 +216,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
         newPlaylist = playlists[currentPlaylistIndex - 1];
       }
       if (newPlaylist) {
-        this._playlistStore.openPlaylist(newPlaylist.id);
+        this._playlistStore.openPlaylist(newPlaylist);
       }
     }
   }

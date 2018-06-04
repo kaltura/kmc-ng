@@ -14,12 +14,15 @@ import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client/api/types/KalturaUser
 import { UserRoleDeleteAction } from 'kaltura-ngx-client/api/types/UserRoleDeleteAction';
 import { UserRoleUpdateAction } from 'kaltura-ngx-client/api/types/UserRoleUpdateAction';
 import { UserRoleCloneAction } from 'kaltura-ngx-client/api/types/UserRoleCloneAction';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { UserRoleAddAction } from 'kaltura-ngx-client/api/types/UserRoleAddAction';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { globalConfig } from 'config/global';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { AdminRolesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { PermissionTreeNodes, PermissionTreeNode } from './permission-tree-nodes';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export enum SortDirection {
   Desc = -1,
@@ -35,7 +38,9 @@ const localStoragePageSizeKey = 'roles.list.pageSize';
 
 @Injectable()
 export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements OnDestroy {
-  private _roles = {
+    static permissionsTree: PermissionTreeNode[] = null;
+
+    private _roles = {
     data: new BehaviorSubject<{ items: KalturaUserRole[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
@@ -47,9 +52,35 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
   constructor(private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _kmcPermissionsService: KMCPermissionsService,
+              adminRolesMainViewService: AdminRolesMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('RolesStoreService'));
-    this._prepare();
+    if (adminRolesMainViewService.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
+
+  }
+
+  public getPermissionsTree(): PermissionTreeNode[] {
+      const extendRoleTreeNode = (treeNode: PermissionTreeNode) => {
+          Object.assign(treeNode, {
+              name: this._kmcPermissionsService.getPermissionNameByKey(treeNode.value)
+          });
+
+          if (treeNode.items) {
+              treeNode.items.forEach(item => extendRoleTreeNode(item));
+          }
+
+          return treeNode;
+      };
+
+      if (RolesStoreService.permissionsTree === null) {
+          RolesStoreService.permissionsTree = PermissionTreeNodes.map(treeNode => extendRoleTreeNode(treeNode));
+      }
+      return RolesStoreService.permissionsTree;
   }
 
   ngOnDestroy() {
@@ -196,7 +227,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     return this._kalturaClient.request(new UserRoleDeleteAction({
       userRoleId: role.id
     }))
-      .monitor('RolesStoreService::deleteRole')
       .map(() => {
         return undefined;
       })
@@ -222,7 +252,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     );
 
     return this._kalturaClient.multiRequest(multiRequest)
-      .monitor('RolesStoreService::duplicateRole')
       .map(
         data => {
           if (data.hasErrors()) {
@@ -247,7 +276,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
       userRoleId: id,
       userRole: role
     }))
-      .monitor('RolesStoreService::updateRole')
       .map(() => {
         return;
       });
@@ -261,7 +289,6 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     role.tags = 'kmc';
 
     return this._kalturaClient.request(new UserRoleAddAction({ userRole: role }))
-      .monitor('RolesStoreService::addRole')
       .map(() => {
         return;
       });

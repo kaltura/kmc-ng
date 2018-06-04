@@ -23,17 +23,16 @@ import { AttachmentAssetDeleteAction } from 'kaltura-ngx-client/api/types/Attach
 import { AttachmentAssetUpdateAction } from 'kaltura-ngx-client/api/types/AttachmentAssetUpdateAction';
 import { AttachmentAssetAddAction } from 'kaltura-ngx-client/api/types/AttachmentAssetAddAction';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-
-
-import { EntryWidgetKeys } from '../entry-widget-keys';
-
-import '@kaltura-ng/kaltura-common/rxjs/add/operators'
-import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
 import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client/api/types/KalturaAttachmentAssetListResponse';
 import { getKalturaServerUri } from 'config/server';
 import { globalConfig } from 'config/global';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface RelatedFile extends KalturaAttachmentAsset {
   uploading?: boolean,
@@ -64,8 +63,9 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               private _appAuthentication: AppAuthentication,
               private _objectDiffers: KeyValueDiffers,
               private _listDiffers: IterableDiffers,
-              private _uploadManagement: UploadManagement) {
-    super(EntryWidgetKeys.Related);
+              private _uploadManagement: UploadManagement,
+              logger: KalturaLogger) {
+    super(ContentEntryViewSections.Related, logger);
   }
 
 
@@ -148,7 +148,6 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
       filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
     }))
       .cancelOnDestroy(this, this.widgetReset$)
-      .monitor('get entry related files')
       .do(response => {
         // Set file type and restore previous upload state
         this._updateAssetsResponse(response);

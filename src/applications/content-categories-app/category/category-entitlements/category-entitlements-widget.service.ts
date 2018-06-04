@@ -1,9 +1,8 @@
 import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {CategoryWidgetKeys} from './../category-widget-keys';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {CategoryService} from '../category.service';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
@@ -13,7 +12,8 @@ import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullab
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
 
@@ -26,8 +26,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
               private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
-              private _categoryService: CategoryService) {
-    super(CategoryWidgetKeys.Entitlements);
+              private _categoryService: CategoryService,
+              logger: KalturaLogger) {
+    super(ContentCategoryViewSections.Entitlements, logger);
 
     this._buildForm();
   }
@@ -53,7 +54,6 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     super._showLoader();
 
     return this._fetchAdditionalData()
-      .monitor('get category parent category')
       .cancelOnDestroy(this, this.widgetReset$)
       .map(({owner, parentCategory}) => {
         super._hideLoader();
@@ -128,7 +128,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(
         () => {
-          const isValid = this.entitlementsForm.status === 'VALID';
+          const isValid = this.entitlementsForm.status !== 'INVALID';
           const isDirty = this.entitlementsForm.dirty;
           if (this.isDirty !== isDirty || this.isValid !== isValid) {
             super.updateState({
@@ -216,9 +216,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   ngOnDestroy() {
   }
 
-  public openCategory(category: KalturaCategory) {
+  public openCategory(category: KalturaCategory): void {
     if (category && category.id) {
-      this._categoryService.openCategory(category.id);
+      this._categoryService.openCategory(category);
     }
   }
 }

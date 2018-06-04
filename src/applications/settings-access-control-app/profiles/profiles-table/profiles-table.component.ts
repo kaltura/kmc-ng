@@ -11,7 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';

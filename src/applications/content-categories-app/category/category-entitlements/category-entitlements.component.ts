@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {CategoryEntitlementsWidget} from './category-entitlements-widget.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
@@ -9,11 +9,13 @@ import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyTyp
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from 'app-shared/kmc-shell';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kCategoryEntitlements',
   templateUrl: './category-entitlements.component.html',
   styleUrls: ['./category-entitlements.component.scss'],
+    providers: [KalturaLogger.createLogger('CategoryEntitlementsComponent')]
 })
 export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -25,7 +27,8 @@ export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnD
   constructor(public _widgetService: CategoryEntitlementsWidget,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -104,6 +107,7 @@ export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnD
   }
 
   public _toggleInherit({originalEvent, checked}: { originalEvent: Event, checked: boolean }) {
+      this._logger.info(`handle toggle inherit action by user`, { checked });
     const affectedControls =
       [this._widgetService.entitlementsForm.get('defaultPermissionLevel'),
        this._widgetService.entitlementsForm.get('owner')];
@@ -121,16 +125,20 @@ export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnD
 
 
   public mananageUsersPermissions() {
+      this._logger.info(`handle open manage users permission popup action by user`);
     if (this._widgetService.entitlementsForm.get('inheritUsersPermissions').value === this._widgetService.inheritUsersPermissionsOriginalValue) {
       this.manageUsersPopup.open();
     } else {
+        this._logger.info(`user cannot manage users permissions, show alert, abort action`);
       this._browserService.alert(
         {
           header: this._appLocalization
             .get('applications.content.categoryDetails.entitlements.manageUsersPermissionsEditMessage.title'),
           message: this._appLocalization
             .get('applications.content.categoryDetails.entitlements.manageUsersPermissionsEditMessage.description'),
-          accept: () => {}
+          accept: () => {
+              this._logger.info(`user dismissed alert`);
+          }
         });
     }
   }

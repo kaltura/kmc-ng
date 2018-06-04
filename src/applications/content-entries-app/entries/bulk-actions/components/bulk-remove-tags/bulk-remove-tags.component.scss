@@ -29,6 +29,12 @@
     padding-right: 12px;
     overflow-x: hidden;
   }
+
+  .kNoItems {
+    text-align: center;
+    width: 100%;
+    display: block;
+  }
 }
 .kFooter{
   position: absolute;
@@ -41,13 +47,6 @@
   justify-content: center;
 }
 
-:host /deep/ p-checkbox {
-  display: flex;
-  .ui-chkbox-label {
-    font-size: 15px;
-    font-weight: 400;
-    overflow-x: hidden;
-    margin-left: 4px;
-  }
+:host /deep/ .ui-autocomplete {
+  width: 100%;
 }
-

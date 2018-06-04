@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesService } from '../categories.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {
@@ -13,11 +13,13 @@ import { SelectedCategory } from 'app-shared/content-shared/categories/category-
 import { Observable } from 'rxjs/Observable';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kMoveCategory',
   templateUrl: './move-category.component.html',
-  styleUrls: ['./move-category.component.scss']
+  styleUrls: ['./move-category.component.scss'],
+    providers: [KalturaLogger.createLogger('MoveCategoryComponent')]
 })
 export class MoveCategoryComponent implements OnInit, OnDestroy {
 
@@ -33,7 +35,8 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
-              private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+              private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+              private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
@@ -71,13 +74,17 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   }
 
   public _apply(): void {
+      this._logger.info(`handle move category action by user`);
     if (this._selectedParentCategory === 'missing') {
+        this._logger.info(`parent category is missing, show alert, abort action`);
       this._browserService.alert({
+        header: this._appLocalization.get('app.common.attention'),
         message: this._appLocalization.get('applications.content.moveCategory.noCategorySelected')
       });
       return;
     }
 
+    this._logger.info(`validate categories to move`);
     Observable.from(this.selectedCategories)
       .switchMap(category => this._validateCategoryMove(category))
       .toArray()
@@ -85,10 +92,12 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
         validatedCategories => {
           const allValid = validatedCategories.every(Boolean);
           if (allValid) {
+              this._logger.info(`handle successful validation, show alert`);
             this._browserService.confirm({
               header: this._appLocalization.get('applications.content.categories.moveCategory'),
               message: this._appLocalization.get('applications.content.moveCategory.treeUpdateNotification'),
               accept: () => {
+                  this._logger.info(`user confirmed, proceed action`);
                 this._blockerMessage = null;
                 this._moveCategory();
               }
@@ -96,10 +105,12 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
           }
         },
         error => {
+            this._logger.info(`handle failed validation, show alert`, { errorMessage: error.message });
           this._browserService.confirm({
             header: this._appLocalization.get('app.common.error'),
             message: error.message || this._appLocalization.get('applications.content.moveCategory.errors.failedToLoadParentCategoryData'),
             accept: () => {
+                this._logger.info(`user dismissed alert`);
               this._blockerMessage = null;
             }
           });
@@ -129,11 +140,13 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   }
 
   private _moveCategory() {
+      this._logger.info(`handle move category request, load category parent data`);
     this._getCategoryParentData()
       .switchMap(categoryParent => this._categoriesService.moveCategory({ categories: this.selectedCategories, categoryParent }))
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(() => {
+              this._logger.info(`handle successful move category request`);
           this.onMovedCategories.emit();
           this._appEvents.publish(new CategoriesGraphUpdatedEvent());
           this._categoriesStatusMonitorService.updateCategoriesStatus();
@@ -143,18 +156,21 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
           }
         },
         error => {
+            this._logger.warn(`handle failed move category request, show confirmation`, { errorMessage: error.message });
           this._blockerMessage = new AreaBlockerMessage(
             {
               message: this._appLocalization.get('applications.content.moveCategory.errors.categoryMovedFailure'),
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
+                    this._logger.info(`user confirmed, retry request`);
                   this._moveCategory();
                 }
               },
                 {
                   label: this._appLocalization.get('app.common.cancel'),
                   action: () => {
+                      this._logger.info(`user didn't confirm, abort request`);
                     this._blockerMessage = null;
                   }
                 }
@@ -214,6 +230,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
 
 
   public _cancel(): void {
+      this._logger.info(`handle cancel action by user`);
     if (this.parentPopupWidget) {
       this.parentPopupWidget.close();
     }

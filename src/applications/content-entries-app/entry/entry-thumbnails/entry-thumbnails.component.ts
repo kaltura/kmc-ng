@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -51,7 +51,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	openActionsMenu(event: any, thumb: ThumbnailRow): void{
 		if (this.actionsMenu){
 			this.currentThumb = thumb; // save the selected caption for usage in the actions menu
-			this._actions[1].disabled = this.currentThumb.isDefault; // disable delete for default thumbnail
+			this._actions[2].disabled = this.currentThumb.isDefault; // disable delete for default thumbnail
 			this.actionsMenu.toggle(event);
 		}
 	}

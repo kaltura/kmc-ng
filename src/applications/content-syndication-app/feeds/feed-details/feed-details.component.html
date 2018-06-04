@@ -13,7 +13,7 @@
 
     <button pButton class="kSaveBtn kButtonBranded"
             (click)="_save()"
-            [disabled]="!_form.valid || !_currentDestinationFormState.isValid || (!_form.dirty && !_currentDestinationFormState.isDirty)"
+            [disabled]="_saveBtnDisabled"
             label="{{'applications.content.syndication.details.header.save' | translate}}">
     </button>
   </div>
@@ -42,7 +42,7 @@
           <span class="kLabel">{{'applications.content.syndication.details.contentType.content' | translate}}</span>
           <div class="kControlContainer">
             <span class="kControl">
-              <p-radioButton class="kContentTypeAll" name="contentType" (click)="_clearPlaylist()"
+              <p-radioButton class="kContentTypeAll" name="contentType" (click)="_setAllContent()"
                              [value]="'allContent'"
                              formControlName="contentType"
                              label="{{'applications.content.syndication.details.contentType.allContent' | translate}}">
@@ -50,22 +50,38 @@
               <p-radioButton class="kContentTypePlaylist" name="contentType"
                              [value]="'playlist'"
                              formControlName="contentType"
-                             label="{{'applications.content.syndication.details.contentType.fromPlaylist' | translate}}">
+                             label="{{'applications.content.syndication.details.contentType.fromPlaylist' | translate}}"
+                             (click)="_setPlaylist()">
               </p-radioButton>
             </span>
             <!--Select Playlist-->
             <div class="kSelectPlaylist" *ngIf="_form.get('contentType').value === 'playlist'">
-              <p-dropdown [options]="_availablePlaylists" formControlName="selectedPlaylist" filter="true"
-                          [autoWidth]="false">
-                <!--template for the selected item-->
-                <ng-template let-item pTemplate="selectedItem">
-                  <div class="kPlaylist">
-              <span class="kPlaylistIcon"
-                    [ngClass]="{'kIconPlaylist_RuleBased': item.value.playlistType === _kalturaPlaylistType.dynamic || item.value.playlistType === _kalturaPlaylistType.external, 'kIconPlaylist_Manual': item.value.playlistType === _kalturaPlaylistType.staticList}"></span>
-                    <span class="kPlaylistLabel kElipsis">{{item.label}}</span>
-                  </div>
-                </ng-template>
-              </p-dropdown>
+              <p-dropdown [options]="_availablePlaylists"
+                          [class.kInvalid]="_missingPlaylist"
+                          [placeholder]="'applications.content.syndication.details.choosePlaylist' | translate"
+                          formControlName="selectedPlaylist"
+                          filter="true" [filterPlaceholder]="'applications.content.syndication.details.search' | translate"
+                          [autoWidth]="false"
+                          (onChange)="_onSelectPlaylist($event)">
+                    <!--template for the selected item-->
+                    <ng-template let-item pTemplate="selectedItem">
+                        <div class="kPlaylist">
+                            <span class="kPlaylistIcon"
+                                [ngClass]="item.value | kToPlaylistIcon: _idToPlaylistMap"></span>
+                            <span class="kPlaylistLabel kElipsis">{{item.label}}</span>
+                        </div>
+                    </ng-template>
+                    <ng-template let-item pTemplate="item">
+                      <div class="kPlaylist">
+                            <span class="kPlaylistIcon"
+                                  [ngClass]="item.value | kToPlaylistIcon: _idToPlaylistMap"></span>
+                          <span class="kPlaylistLabel kElipsis">{{item.label}}</span>
+                      </div>
+                    </ng-template>
+                </p-dropdown>
+                <p class="kInvalid" *ngIf="_missingPlaylist">
+                    {{'applications.content.syndication.details.missingPlaylist' | translate:[this.feed.playlistId]}}
+                </p>
             </div>
           </div>
         </div>
@@ -89,8 +105,7 @@
         <div class="kRow kDestination"
              [class.kInputValidationError]="_form.get('destination').touched && _form.get('destination').invalid">
           <span class="kLabel">{{'applications.content.syndication.details.destination' | translate}}</span>
-          <div class="kAsterix"
-               [ngClass]="{'kHasError':!_form.get('destination').valid && _form.get('destination').touched}">
+          <div class="kAsterix">
             *
           </div>
           <div class="kControlContainer">
@@ -99,13 +114,8 @@
               class="kControl"
               [options]="_availableDestinations"
               formControlName="destination"
-              [autoWidth]="false"
-              [ngClass]="{'kHasError':!_form.get('destination').valid && _form.get('destination').touched}">
+              [autoWidth]="false">
             </p-dropdown>
-            <div *ngIf="_form.get('destination').touched && _form.get('destination').hasError('required')"
-                 class="error">
-              {{'applications.content.syndication.details.errors.chooseDestination' | translate}}
-            </div>
           </div>
         </div>
 
@@ -116,26 +126,39 @@
             <kGoogleDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.googleVideo" [feed]="feed"
               [contentFlavors]="_flavors" [players]="_players"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kGoogleDestinationForm>
             <!--Yahoo-->
             <kYahooDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.yahoo" [feed]="feed"
               [contentFlavors]="_flavors" [players]="_players"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kYahooDestinationForm>
+            <!--iTunes-->
+            <kItunesDestinationForm
+              *ngSwitchCase="_kalturaSyndicationFeedType.itunes"
+              [feed]="feed"
+              [mode]="_mode"
+              [contentFlavors]="_flavors"
+              (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
+            </kItunesDestinationForm>
             <!--Roku-->
             <kRokuDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.rokuDirectPublisher"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kRokuDestinationForm>
             <!--Opera-->
             <kOperaDestinationForm
               *ngSwitchCase="_kalturaSyndicationFeedType.operaTvSnap"
+              [mode]="_mode"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kOperaDestinationForm>
             <!--Flexible Format (xsl code)-->
             <kFlexibleFormatDestinationForm
+              [mode]="_mode"
               *ngSwitchCase="_kalturaSyndicationFeedType.kalturaXslt" [feed]="feed"
               (onFormStateChanged)="_updateCurrentDestinationFormState($event)">
             </kFlexibleFormatDestinationForm>

@@ -17,7 +17,7 @@ import { KalturaCountryRestriction } from 'kaltura-ngx-client/api/types/KalturaC
 import { KalturaIpAddressRestriction } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestriction';
 import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
 import { KalturaSiteRestrictionType } from 'kaltura-ngx-client/api/types/KalturaSiteRestrictionType';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/KalturaCountryRestrictionType';
 import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
@@ -28,6 +28,7 @@ import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorP
 import { AccessControlUpdateAction } from 'kaltura-ngx-client/api/types/AccessControlUpdateAction';
 import { AccessControlAddAction } from 'kaltura-ngx-client/api/types/AccessControlAddAction';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { SettingsAccessControlMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { FlavoursStore } from 'app-shared/kmc-shared';
 
 
@@ -41,7 +42,7 @@ export interface AccessControlProfilesFilters {
 }
 
 export interface AccessControlProfileRestriction<T> {
-  isAuthorized: boolean;
+  isAuthorized: boolean | null;
   details: T;
   label: string;
 }
@@ -79,9 +80,14 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _flavorsStore: FlavoursStore,
+              settingsAccessControlMainView: SettingsAccessControlMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('AccessControlProfilesStore'));
-    this._prepare();
+    if (settingsAccessControlMainView.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy() {
@@ -201,22 +207,22 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
       view: {
         hasAdditionalInfo: false,
         domain: {
-          isAuthorized: true,
+          isAuthorized: null,
           details: [],
           label: null
         },
         countries: {
-          isAuthorized: true,
+          isAuthorized: null,
           details: [],
           label: null
         },
         ips: {
-          isAuthorized: true,
+          isAuthorized: null,
           details: [],
           label: null
         },
         flavors: {
-          isAuthorized: true,
+          isAuthorized: null,
           details: [],
           label: null
         },
@@ -388,6 +394,8 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     const saveAction = profile.id
       ? new AccessControlUpdateAction({ id: profile.id, accessControl: profile })
       : new AccessControlAddAction({ accessControl: profile });
+
+    profile.allowEmptyArray('restrictions');
 
     return this._kalturaServerClient.request(saveAction)
       .map(() => {

@@ -1,5 +1,5 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -7,6 +7,7 @@ import { EntryLiveWidget } from './entry-live-widget.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 import { serverConfig } from "config/server";
+import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
     selector: 'kEntryLive',
@@ -15,14 +16,19 @@ import { serverConfig } from "config/server";
 })
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
-	@ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
+	@ViewChild('liveAnalytics') _liveAnalytics: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
-	public enableLiveDashboard: boolean = false;
+	public enableLiveAnalytics: boolean = false;
 
 
-	constructor(public _widgetService: EntryLiveWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(
+	    public _widgetService: EntryLiveWidget,
+        private _appLocalization: AppLocalization,
+        private _browserService: BrowserService,
+        private _liveAnalyticsView: LiveAnalyticsMainViewService
+    ) {
 		this._copyToClipboardTooltips = {
 			success: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.success'),
 			failure: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.failure'),
@@ -34,7 +40,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnInit() {
 		this._widgetService.attachForm();
-		this.enableLiveDashboard = serverConfig.externalApps.liveDashboard.enabled;
+		this.enableLiveAnalytics = this._liveAnalyticsView.isAvailable();
     }
 
     ngOnDestroy() {
@@ -66,9 +72,15 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 		);
 	}
 
-	public _openLiveReport(): void {
-		if (this.enableLiveDashboard){
-			this._liveDashboard.open();
+	public _openLiveAnalytics(): void {
+		if (this.enableLiveAnalytics){
+		    // TODO - load live analytics app
+			//this._liveAnalytics.open();
+            this._browserService.alert(
+                {
+                    message: "Not implemented for Beta",
+                }
+            );
 		}
 	}
 

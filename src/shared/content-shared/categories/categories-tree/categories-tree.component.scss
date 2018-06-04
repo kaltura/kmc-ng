@@ -17,7 +17,7 @@
         line-height: 43px;
         text-overflow: ellipsis;
         margin-left: 5px;
-        width: calc(100% - 80px);
+        max-width: calc(100% - 80px);
         display: inline-block;
         overflow: hidden;
       }

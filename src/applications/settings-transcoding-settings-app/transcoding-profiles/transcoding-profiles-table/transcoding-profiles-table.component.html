@@ -15,7 +15,6 @@
         <div class="kTranscodingProfileNameWrapper">
           <div class="kTranscodingProfileName kTableColumn"
                [kTooltip]="profile[col.field]"
-               [maxWidth]="300"
                (click)="_onActionSelected('edit',profile)">
             {{profile[col.field]}}
           </div>
@@ -26,7 +25,13 @@
       </ng-template>
     </p-column>
     <p-column field="description"
-              [header]="'applications.settings.transcoding.table.description' | translate"></p-column>
+              [header]="'applications.settings.transcoding.table.description' | translate">
+      <ng-template let-col let-profile="rowData" pTemplate="body">
+        <span class="kTableColumn" [kTooltip]="profile[col.field]" [maxWidth]="300">
+          {{profile[col.field]}}
+        </span>
+      </ng-template>
+    </p-column>
     <p-column field="id" [style]="{'width':'90px'}"
               [header]="'applications.settings.transcoding.table.id' | translate"></p-column>
     <p-column field="flavors" [style]="{'width':'110px'}"

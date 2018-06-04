@@ -22,7 +22,7 @@
 
     .kRow {
       display: flex;
-      padding-top: 16px;
+      padding-top: 22px;
 
       .kLabel {
         width: 196px;
@@ -63,33 +63,12 @@
     padding-bottom: 21px;
   }
 
-
-
-  /*********************/
-  /* PrimeNG overrides */
-  /*********************/
-
-  textarea.threeRows {
-    background: $kGrayscale6;
-    border-radius: 3px;
-    border: 1px solid white;
-    resize: none;
-    box-sizing: border-box;
-
-    &:hover {
-      border-color: #d9d9d9;
-    }
-
-    &:focus {
-      border-color: #d9d9d9;
-      background: white;
-    }
-  }
 }
 
 :host /deep/ {
   .kControl, k-prime-control {
     width:100%;
+    max-width: 500px;
     .kHasError {
       border: 1px solid $kDandger;
       background: initial;

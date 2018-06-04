@@ -2,12 +2,18 @@
     <router-outlet></router-outlet>
 </k-area-blocker>
 <!--router-outlet></router-outlet-->
-<p-confirmDialog #confirm header="Confirmation" [key]="'confirm'" [closeOnEscape]="false" width="440" [responsive]="true"></p-confirmDialog>
-<p-confirmDialog #cd header="Alert" [key]="'alert'" [closeOnEscape]="true" width="440"  [responsive]="true">
+<p-confirmDialog #confirm header="Confirmation" [key]="'confirm'" [closeOnEscape]="false" width="440" [responsive]="true" [class.kAlignToLeft]="_confirmDialogAlignLeft"></p-confirmDialog>
+<p-confirmDialog #alert header="Alert" [key]="'alert'" [closeOnEscape]="true" width="440"  [responsive]="true" [class.kAlignToLeft]="_confirmDialogAlignLeft">
     <p-footer>
-        <button type="button" pButton icon="fa-check" label="OK" (click)="cd.accept()"></button>
+        <button type="button" pButton icon="fa-check" label="OK" (click)="alert.accept()"></button>
     </p-footer>
 </p-confirmDialog>
+
+<kPopupWidget #openEmailPopup [modal]="true" [popupWidth]="500" [popupHeight]="320">
+    <ng-template>
+       <kOpenEmail [parentPopupWidget]="openEmailPopup" [emailConfig]="_openEmailConfig"></kOpenEmail>
+    </ng-template>
+</kPopupWidget>
 
 <p-growl [(value)]="_growlMessages" [immutable]="true"></p-growl>
 <kPreviewEmbed></kPreviewEmbed>

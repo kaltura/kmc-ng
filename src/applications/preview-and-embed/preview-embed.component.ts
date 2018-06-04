@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
@@ -44,6 +44,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _showEmbedParams = true;
   public _showAdvanced = false;
   public _title: string;
+  public _embedTypesHelpExists = !!serverConfig.externalLinks.previewAndEmbed && !!serverConfig.externalLinks.previewAndEmbed.embedTypes;
+  public _deliveryProtocolsHelpExists = !!serverConfig.externalLinks.previewAndEmbed && !!serverConfig.externalLinks.previewAndEmbed.deliveryProtocols;
 
   public _previewForm: FormGroup;
 
@@ -238,7 +240,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       "name": this.media.name,
       "description": this.media.description,
       "thumbnailUrl": this.media.thumbnailUrl,
-      "duration": this.media.duration
+      "duration": this.media.duration,
+      "uploadDate": this.media.createdAt.toISOString()
     }
   }
 

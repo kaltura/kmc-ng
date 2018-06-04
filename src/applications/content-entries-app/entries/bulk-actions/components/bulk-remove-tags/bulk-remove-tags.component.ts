@@ -1,12 +1,9 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
-
-import { KalturaClient } from 'kaltura-ngx-client';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ISubscription} from 'rxjs/Subscription';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 
 @Component({
   selector: 'kBulkRemoveTags',
@@ -20,7 +17,6 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
   @Output() removeTagsChanged = new EventEmitter<string[]>();
 
   public _loading = false;
-  public _sectionBlockerMessage: AreaBlockerMessage;
 
   public tags: any[] = [];
   public tagsToRemove: string[] = [];
@@ -28,16 +24,16 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
   private _parentPopupStateChangeSubscribe : ISubscription;
   private _confirmClose: boolean = true;
 
-  constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService) {
   }
 
   ngOnInit() {
-    let tags = [];
+    const tags = [];
     // create unique tags array from all selected entries tags
     this.selectedEntries.forEach(entry => {
       if (entry.tags && entry.tags.length){
-        const entryTags = entry.tags.split(",").map(tag => {
-          return tag.trim()
+        const entryTags = entry.tags.split(',').map(tag => {
+          return tag.trim();
         });
         entryTags.forEach(tag => {
           if (tags.indexOf(tag) === -1){
@@ -46,9 +42,8 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
         });
       }
     });
-    tags.sort().forEach(tag => {
-      this.tags.push({label: tag, selected: false});
-    });
+
+    this.tags = tags.sort();
   }
 
   ngAfterViewInit(){
@@ -83,13 +78,8 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
     this._parentPopupStateChangeSubscribe.unsubscribe();
   }
 
-  updateSelectedTags(){
-    this.tagsToRemove = [];
-    this.tags.forEach(tag=>{
-      if (tag.selected){
-        this.tagsToRemove.push(tag.label);
-      }
-    });
+  public _removeTag(user: string) {
+    this.tagsToRemove.push(user);
   }
 
   public _apply(){

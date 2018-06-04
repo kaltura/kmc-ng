@@ -2,12 +2,12 @@ import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {CategoriesFilters, CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {CategoryCreationService} from 'app-shared/kmc-shared/events/category-creation';
+
 import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
 import {CategoriesRefineFiltersService, RefineGroup} from '../categories-refine-filters.service';
 import {
@@ -17,12 +17,19 @@ import {
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
+import { async } from 'rxjs/scheduler/async';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({
   selector: 'kCategoriesList',
   templateUrl: './categories-list.component.html',
   styleUrls: ['./categories-list.component.scss'],
-    providers: [CategoriesRefineFiltersService]
+    providers: [
+        CategoriesRefineFiltersService,
+        KalturaLogger.createLogger('CategoriesListComponent')
+    ]
 })
 
 export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -63,9 +70,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _categoriesUtilsService: CategoriesUtilsService,
-                public _categoryCreationService: CategoryCreationService,
+                public _contentNewCategoryView: ContentNewCategoryViewService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
-                private _appEvents: AppEventsService) {
+                private _contentCategoryView: ContentCategoryViewService,
+                private _appEvents: AppEventsService,
+                private _logger: KalturaLogger) {
     }
 
     ngOnInit() {
@@ -132,6 +141,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     private _registerToDataChanges(): void {
         this._categoriesService.categories.state$
+            .observeOn(async)
             .cancelOnDestroy(this)
             .subscribe(
                 result => {
@@ -171,7 +181,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 }
             });
 
-        const newCategoryData = this._categoryCreationService.popNewCategoryData();
+        const newCategoryData = this._contentNewCategoryView.popNewCategoryData();
         if (newCategoryData) {
             this._linkedEntries = newCategoryData.entries.map(entry => ({entryId: entry.id}));
             this.addNewCategory.open();
@@ -267,11 +277,13 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     public _reload() {
+        this._logger.info(`handle reload action by user`);
         this._clearSelection();
         this._categoriesService.reload();
     }
 
     _clearSelection() {
+        this._logger.info(`handle clear selection action by user`);
         this._selectedCategories = [];
     }
 
@@ -296,34 +308,28 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     _onActionSelected({action, category}: { action: string, category: KalturaCategory }) {
         switch (action) {
             case 'edit':
-                // show category edit warning if needed
-                if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
-                    this._browserService.confirm(
-                        {
-                            header: this._appLocalization.get('applications.content.categories.editCategory'),
-                            message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
-                            accept: () => {
-                                this.router.navigate(['/content/categories/category', category.id]);
-                            }
-                        }
-                    );
-                } else {
-                    this.router.navigate(['/content/categories/category', category.id]);
-                }
+                this._logger.info(`handle edit action by user`, { categoryId: category.id });
+                this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
                 break;
             case 'delete':
                 this.deleteCategory(category);
                 break;
             case 'moveCategory':
+                this._logger.info(`handle move category action by user`, { categoryId: category.id });
                 // show category edit warning if needed
                 if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
+                    this._logger.info(`category has '__EditWarning' tag, show confirmation`);
                     this._browserService.confirm(
                         {
                             header: this._appLocalization.get('applications.content.categories.editCategory'),
                             message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
                             accept: () => {
+                                this._logger.info(`user confirmed, proceed action`);
                                 this._selectedCategoryToMove = category;
                                 this.moveCategoryPopup.open();
+                            },
+                            reject: () => {
+                                this._logger.info(`user didn't confirm, abort action`);
                             }
                         }
                     );
@@ -333,6 +339,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 }
                 break;
             case 'viewEntries':
+                this._logger.info(`handle view entries action by user`, { categoryId: category.id });
+                this._logger.debug(`publish 'ViewCategoryEntriesEvent' event`);
               this._appEvents.publish(new ViewCategoryEntriesEvent(category.id));
               break;
             default:
@@ -341,20 +349,24 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     private deleteCategory(category: KalturaCategory): void {
+        this._logger.info(`handle delete category action by user`);
         this._categoriesUtilsService.confirmDelete(category)
             .cancelOnDestroy(this)
             .subscribe(result => {
                     if (result.confirmed) {
+                        this._logger.info(`handle delete category request`);
                         this._blockerMessage = null;
                         this._categoriesService.deleteCategory(category.id)
                             .cancelOnDestroy(this)
                             .tag('block-shell')
                             .subscribe(
                                 () => {
+                                    this._logger.info(`handle successful delete category request`);
                                     this._categoriesStatusMonitorService.updateCategoriesStatus();
                                     this._categoriesService.reload();
                                 },
                                 error => {
+                                    this._logger.warn(`handle failed delete category request`, { errorMessage: error.message });
                                     this._browserService.alert({
                                         header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
                                         message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
@@ -364,6 +376,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                     }
                 },
                 error => {
+                    this._logger.warn(`handle failed delete category request`, { errorMessage: error.message });
                     this._browserService.alert({
                         header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
                         message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
@@ -379,20 +392,26 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     onFreetextChanged(): void {
-        this._categoriesService.filter({freetext: this._query.freetext});
+        // prevent searching for empty strings
+        if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
+            this._query.freetext = '';
+        }else {
+            this._categoriesService.filter({freetext: this._query.freetext});
+        }
     }
 
     onTagsChange() {
         this.tags.updateLayout();
     }
 
-    onCategoryAdded({categoryId}: { categoryId: number }): void {
-        if (!categoryId) {
-            console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters')
+    onCategoryAdded(category: KalturaCategory): void {
+        this._logger.info(`handle category added event`);
+        if (!category) {
+            this._logger.info('no category provided, abort action');
         } else {
             this._categoriesService.reload();
             // use a flag so the categories will be refreshed upon clicking 'back' from the category page
-            this.router.navigate(['/content/categories/category', categoryId]);
+            this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
         }
     }
 }

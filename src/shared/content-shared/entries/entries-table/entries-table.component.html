@@ -74,7 +74,7 @@
                 </td>
 
                 <td *ngIf="_columnsMetadata.name" [ngStyle]="_columnsMetadata.name.style">
-                    <span class="kTitle kTableColumn" [kTooltip]="entry.name" [maxWidth]="300"
+                    <span class="kTitle kTableColumn" [kTooltip]="entry.name"
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
                         {{entry.name}}

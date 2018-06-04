@@ -5,7 +5,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {MediaAddAction} from "kaltura-ngx-client/api/types/MediaAddAction";
 import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 import {KalturaMediaType} from "kaltura-ngx-client/api/types/KalturaMediaType";
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 
 
 export interface DraftEntry {

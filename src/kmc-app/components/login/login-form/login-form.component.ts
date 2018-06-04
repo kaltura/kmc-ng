@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginScreens } from '../login.component';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { serverConfig } from 'config/server';
 
 @Component({
   selector: 'kKMCLoginForm',
@@ -10,6 +12,7 @@ import { LoginScreens } from '../login.component';
 export class LoginFormComponent {
   @Input() inProgress = false;
   @Input() errorMessage: string;
+  @Input() errorCode: string;
 
   @Input()
   set username(value: string) {
@@ -25,6 +28,7 @@ export class LoginFormComponent {
   _usernameField: AbstractControl;
   _passwordField: AbstractControl;
   _rememberMeField: AbstractControl;
+  _supportAddress: string;
 
   public get _loginValidationMessage(): string {
     return this._showError(this._usernameField) ? 'app.login.error.email' : '';
@@ -34,8 +38,13 @@ export class LoginFormComponent {
     return this.inProgress ? 'app.login.wait' : 'app.login.login.title';
   }
 
-  constructor(private _fb: FormBuilder) {
-    this.buildForm();
+  constructor(private _fb: FormBuilder,
+              private _browserService: BrowserService) {
+      this.buildForm();
+
+      if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support) {
+          this._supportAddress = serverConfig.externalLinks.kaltura.support;
+      }
   }
 
   private buildForm(): void {
@@ -79,5 +88,9 @@ export class LoginFormComponent {
 
   _forgotPassword(): void {
     this.onSetScreen.emit(LoginScreens.ForgotPassword);
+  }
+
+  public _contactSupport(): void {
+      this._browserService.openSupport();
   }
 }

@@ -10,14 +10,11 @@ import {KalturaLiveStreamEntry} from 'kaltura-ngx-client/api/types/KalturaLiveSt
 import {KalturaDVRStatus} from 'kaltura-ngx-client/api/types/KalturaDVRStatus';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import {LiveStreamRegenerateStreamTokenAction} from 'kaltura-ngx-client/api/types/LiveStreamRegenerateStreamTokenAction';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
-
-import {EntryWidgetKeys} from '../entry-widget-keys';
 import {LiveXMLExporter} from './live-xml-exporter';
 import {AVAIL_BITRATES} from './bitrates';
 import {EntryWidget} from '../entry-widget';
-import {serverConfig} from 'config/server';
 import {ConversionProfileListAction} from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
 import {KalturaConversionProfileFilter} from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
 import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
@@ -26,6 +23,9 @@ import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullab
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface bitrate {
 	enabled: boolean,
@@ -62,11 +62,12 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	];
 
 	constructor(private _kalturaServerClient: KalturaClient,
-              private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
-              private _browserService: BrowserService) {
-		super(EntryWidgetKeys.Live);
+              private _browserService: BrowserService,
+                private _liveDasboardAppViewService: LiveDashboardAppViewService,
+                logger: KalturaLogger) {
+		super(ContentEntryViewSections.Live, logger);
 	}
 
 	protected onReset() {
@@ -114,7 +115,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		switch (this.data.sourceType.toString()) {
       case KalturaSourceType.liveStream.toString():
 				this._liveType = "kaltura";
-        this._liveDashboardEnabled = serverConfig.externalApps.liveDashboard.enabled
+        this._liveDashboardEnabled = this._liveDasboardAppViewService.isAvailable()
           && this._permissionsService.hasPermission(KMCPermissions.ANALYTICS_BASE);
 				this._setRecordStatus();
 				this._setDVRStatus();
@@ -132,8 +133,6 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
             })
           }))
             .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('get conversion profiles')
-
             .catch((error, caught) => {
               super._hideLoader();
               super._showActivationError();
@@ -285,7 +284,6 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		this._kalturaServerClient.multiRequest(multiRequest)
 			.cancelOnDestroy(this, this.widgetReset$)
 			.tag('block-shell')
-			.monitor('regenerate stream token')
 			.subscribe(
 				response => {
 					if (response.hasErrors()) {

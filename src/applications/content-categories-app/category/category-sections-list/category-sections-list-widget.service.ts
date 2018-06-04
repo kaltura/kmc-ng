@@ -2,18 +2,18 @@ import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {CategorySectionsList} from './category-sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
-import {CategoryWidgetKeys} from '../category-widget-keys';
-import { modulesConfig } from 'config/modules';
+import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface SectionWidgetItem {
-  label: string,
-  isValid: boolean,
-  attached: boolean,
-  key: string
+  label: string;
+  isValid: boolean;
+  attached: boolean;
+  key: ContentCategoryViewSections;
 }
 
 @Injectable()
@@ -21,8 +21,11 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
   private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
   public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
-  constructor(private _appLocalization: AppLocalization) {
-    super('categorySectionsList');
+  constructor(private _appLocalization: AppLocalization,
+              private _contentCategoryView: ContentCategoryViewService,
+              logger: KalturaLogger
+              ) {
+    super('categorySectionsList', logger);
   }
 
   protected onDataLoading(dataId: any): void {
@@ -66,8 +69,9 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
 
   private _clearSectionsList(): void {
     this._sections.next([]);
-
   }
+
+
 
   private _reloadSections(category: KalturaCategory): void {
       const sections = [];
@@ -76,10 +80,9 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
       if (category) {
           CategorySectionsList.forEach((section) => {
 
-              if (this._isSectionEnabled(section.key, category)) {
+              if (this._contentCategoryView.isAvailable({ category, section: section.key })) {
                   const sectionFormWidgetState = formWidgetsState ? formWidgetsState[section.key] : null;
                   const isSectionActive = sectionFormWidgetState && sectionFormWidgetState.isActive;
-
 
                   sections.push(
                       {
@@ -96,22 +99,7 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
       this._sections.next(sections);
   }
 
-  private _isSectionEnabled(sectionKey: string, category: KalturaCategory): boolean {
-    switch (sectionKey) {
-      case CategoryWidgetKeys.Metadata:
-        return true;
-      case CategoryWidgetKeys.Entitlements:
-        // Enable if any of these conditions are met:
-        // TODO [kmcng] Permissions: showEndUsersTab is set to true
-        // KalturaCategory.privacyContexts is defined
-        return category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
-      case CategoryWidgetKeys.SubCategories:
-        return category.directSubCategoriesCount > 0 &&
-          category.directSubCategoriesCount <= modulesConfig.contentShared.categories.subCategoriesLimit;
-      default:
-        return true;
-    }
-  }
+
 
   ngOnDestroy() {
   }

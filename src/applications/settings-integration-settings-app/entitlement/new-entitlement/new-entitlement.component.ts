@@ -3,8 +3,9 @@ import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {EntitlementService} from '../entitlement.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 function privacyContextLabelValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -36,6 +37,7 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
               private _logger: KalturaLogger,
+              private _browserService: BrowserService,
               private _entitlementService: EntitlementService) {
     this.addEntitlementForm = this._fb.group({
       privacyContextLabel: ['', [Validators.required, privacyContextLabelValidator()]]
@@ -59,7 +61,11 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
     const privacyContextLabel = this.addEntitlementForm.controls['privacyContextLabel'].value;
     if (privacyContextLabel && privacyContextLabel.length) {
-      this._addEntitlement(this._selectedCategory, privacyContextLabel);
+        this._browserService.confirm({
+            header: this._appLocalization.get('applications.settings.integrationSettings.entitlement.addEntitlement.title'),
+            message: this._appLocalization.get('applications.settings.integrationSettings.entitlement.addEntitlement.confirmation'),
+            accept: () => this._addEntitlement(this._selectedCategory, privacyContextLabel)
+        });
     } else {
       this._logger.info(`privacyContextLabel is empty, abort action, show alert`);
       this._blockerMessage = new AreaBlockerMessage({

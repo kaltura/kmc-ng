@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
@@ -78,11 +78,6 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private _buildMenu(bulkLogItem: KalturaBulkUpload): void {
     this._items = [
-      {
-        id: 'delete',
-        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
-        command: () => this._onActionSelected('delete', bulkLogItem)
-      },
       {
         id: 'downloadLog',
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),

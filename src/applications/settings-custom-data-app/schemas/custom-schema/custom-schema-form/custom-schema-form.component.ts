@@ -27,7 +27,7 @@ export class CustomSchemaFormComponent {
           this._schema = value;
           this._schemaForm.patchValue(
               {
-                  name: value.name,
+                  name: (value.name || '').trim(),
                   description: value.description,
                   systemName: value.systemName,
                   applyTo: value.applyTo
@@ -62,6 +62,11 @@ export class CustomSchemaFormComponent {
     entry: KalturaMetadataObjectType.entry.toString(),
     category: KalturaMetadataObjectType.category.toString()
   };
+    public _nameMaxLength = 32;
+
+    public get isValid(): boolean {
+        return this._schemaForm.valid;
+    }
 
   constructor(private _fb: FormBuilder,
               private _permissionsService: KMCPermissionsService,
@@ -71,7 +76,7 @@ export class CustomSchemaFormComponent {
 
   private _buildForm(): void {
     this._schemaForm = this._fb.group({
-      name: ['', Validators.compose([Validators.required, Validators.maxLength(31)])],
+      name: ['', Validators.compose([Validators.required, Validators.maxLength(this._nameMaxLength)])],
       description: '',
       systemName: '',
       applyTo: KalturaMetadataObjectType.entry.toString()
@@ -85,17 +90,17 @@ export class CustomSchemaFormComponent {
     this._schemaForm.valueChanges.subscribe((change) => {
       let sendUpdate = false;
       if (this._schema.name !== change.name) {
-        this._schema.name = change.name;
+        this._schema.name = (change.name || '').trim();;
         sendUpdate = true;
       }
 
       if (this._schema.description !== change.description) {
-        this._schema.description = change.description;
+        this._schema.description = (change.description || '').trim();
         sendUpdate = true;
       }
 
       if (this._schema.systemName !== change.systemName) {
-        this._schema.systemName = change.systemName;
+        this._schema.systemName = change.systemName.trim();
         sendUpdate = true;
       }
 

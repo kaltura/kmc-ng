@@ -1,6 +1,7 @@
 import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
@@ -91,7 +92,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
                 this._actions.push({id: 'delete', styleClass: 'kDanger', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), command: (event) => {this.actionSelected("delete");}});
             }
 
-            this._permissionsService.filterList(<{ id: string }[]>this._actions, { 'import': KMCPermissions.CONTENT_INGEST_UPLOAD });
+            this._permissionsService.filterList(<{ id: string }[]>this._actions, { 'import': KMCPermissions.CONTENT_INGEST_UPLOAD, 'upload': KMCPermissions.CONTENT_INGEST_UPLOAD });
 
 			if (this._actions.length) {
 				this._selectedFlavor = flavor;

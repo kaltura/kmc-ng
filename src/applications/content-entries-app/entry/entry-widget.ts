@@ -4,15 +4,16 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { EntryWidgetsManager } from './entry-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export abstract class EntryWidget extends WidgetBase<EntryWidgetsManager, KalturaMediaEntry, KalturaMultiRequest>
 {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 
-    constructor(private _widgetKey : string)
+    constructor(private _widgetKey: string, logger: KalturaLogger)
     {
-        super(_widgetKey);
+        super(_widgetKey, logger);
     }
 
     protected _showLoader() {

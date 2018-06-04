@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppAuthentication, BrowserService, UnpermittedActionReasons} from 'app-shared/kmc-shell';
+import {AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kAnalyticsLive',
@@ -15,17 +16,19 @@ export class AnalyticsLiveComponent implements OnInit, OnDestroy {
 
   constructor(private appAuthentication: AppAuthentication,
               private logger: KalturaLogger,
-              private browserService: BrowserService) {
+              private browserService: BrowserService,
+              private _liveAnalyticsView: LiveAnalyticsMainViewService
+  ) {
   }
 
   ngOnInit() {
     try {
-      if (!serverConfig.externalApps.liveAnalytics.enabled) { // Deep link when disabled handling
-        this.browserService.handleUnpermittedAction(UnpermittedActionReasons.InvalidConfiguration);
+      if (!this._liveAnalyticsView.isAvailable()) {
+          this.browserService.handleUnpermittedAction(true);
         return undefined;
       }
       const cdnUrl = serverConfig.cdnServers.serverUri.replace('http://', '').replace('https://', '');
-      this._url = serverConfig.externalApps.liveAnalytics.uri;
+      this._url = serverConfig.externalApps.liveAnalytics.uri + '#/dashboard/nonav';
       window['kmc'] = {
         'vars': {
           'ks': this.appAuthentication.appUser.ks,

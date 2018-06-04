@@ -32,7 +32,7 @@ import {ContentEntriesComponent} from './content-entries.component';
 
 import {DynamicMetadataFormModule} from 'app-shared/kmc-shared';
 
-import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -50,6 +50,7 @@ import {CopyToClipboardModule} from '@kaltura-ng/mc-shared/components/copy-to-cl
 import {KEditHosterModule} from 'app-shared/kmc-shared/kedit-hoster/kedit-hoster.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
+import { EntriesListService } from './entries/entries-list.service';
 
 @NgModule({
   imports: [
@@ -68,7 +69,7 @@ import { TableModule } from 'primeng/table';
     FormsModule,
     InputTextareaModule,
     InputTextModule,
-    KalturaCommonModule,
+    LocalizationModule,
     DynamicMetadataFormModule,
     KalturaPrimeNgUIModule,
     KalturaUIModule,
@@ -106,6 +107,7 @@ import { TableModule } from 'primeng/table';
   providers: [
     ConfirmationService,
     EntryCanDeactivate,
+    EntriesListService,
     ContentEntriesAppService
   ],
 })

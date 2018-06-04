@@ -21,6 +21,7 @@ import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaS
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters';
+import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 const localStoragePageSizeKey = 'bulklog.list.pageSize';
 
@@ -54,9 +55,14 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
+              contentBulkUploadsMainView: ContentBulkUploadsMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('BulkLogStoreService'));
-    this._prepare();
+    if (contentBulkUploadsMainView.isAvailable()) {
+        this._prepare();
+    }else{
+        this._browserService.handleUnpermittedAction(true);
+    }
   }
 
   ngOnDestroy() {
@@ -240,13 +246,11 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
   public deleteBulkLog(id: number): Observable<KalturaBulkUpload> {
     return this._kalturaServerClient
-      .request(new BulkUploadAbortAction({ id }))
-      .monitor('BulkLogStoreService::deleteBulkLog');
+      .request(new BulkUploadAbortAction({ id }));
   }
 
   public deleteBulkLogs(files: Array<KalturaBulkUpload>): Observable<KalturaMultiResponse> {
-    return this._kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })))
-      .monitor('BulkLogStoreService::deleteBulkLogs');
+    return this._kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })));
   }
 }
 

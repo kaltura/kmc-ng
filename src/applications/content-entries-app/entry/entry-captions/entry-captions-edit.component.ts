@@ -4,15 +4,15 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaCaptionAsset } from 'kaltura-ngx-client/api/types/KalturaCaptionAsset';
-import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
 import { KalturaCaptionType } from 'kaltura-ngx-client/api/types/KalturaCaptionType';
-import { AppLocalization, KalturaUtils, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
-import { subApplicationsConfig } from 'config/sub-applications';
 import { globalConfig } from 'config/global';
+import { LanguageOptionsService } from 'app-shared/kmc-shared/language-options';
 
 function urlValidator(control: AbstractControl): {[key: string]: boolean} | null {
 	let v: string = control.value;
@@ -22,7 +22,8 @@ function urlValidator(control: AbstractControl): {[key: string]: boolean} | null
 @Component({
     selector: 'kEntryCaptionsEdit',
     templateUrl: './entry-captions-edit.component.html',
-    styleUrls: ['./entry-captions-edit.component.scss']
+    styleUrls: ['./entry-captions-edit.component.scss'],
+    providers: [LanguageOptionsService]
 })
 export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 
@@ -45,35 +46,13 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
   constructor(private _appLocalization: AppLocalization,
               private _uploadManagement: UploadManagement,
               private _fb: FormBuilder,
+              private _languageOptions: LanguageOptionsService,
               private _browserService: BrowserService) {
 
   }
 
-    ngOnInit(){
-	    // load all supported languages
-	    this._languages = [];
-	    // let exludedLanguages = ['he', 'id', 'yi']; // duplicated languages TODO [KMCNG] - should be checked with beckend
-	    for (let lang in KalturaLanguage){
-		    if (lang !== "en") { // we push English to the top of the array after sorting
-			    if (this._appLocalization.get("languages." + lang.toUpperCase()) !== "languages." + lang.toUpperCase()) { // get only supported languages as listed in the localization file
-				    const value = KalturaLanguage[lang];
-				    if (!this._languages.find(language => language.value === value)) {
-					    this._languages.push({
-						    label: this._appLocalization.get("languages." + lang.toUpperCase()),
-						    value
-					    });
-				    }
-			    }
-		    }
-	    }
-	    // sort the language array by language alphabetically
-	    this._languages.sort(function(a, b) {
-		    let x = a["label"];
-		    let y = b["label"];
-		    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-	    });
-	    // put English on top
-	    this._languages.unshift({ label: this._appLocalization.get("languages.EN"), value: "EN" });
+    ngOnInit() {
+        this._languages = this._languageOptions.get();
 
 	    // set caption formats array. Note that WEBVTT cannot be set on client side - only on backend so is doesn't appear in the list
 	    this._captionFormats = [

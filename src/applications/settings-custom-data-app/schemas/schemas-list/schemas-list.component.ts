@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { SchemasFilters, SchemasStore } from '../schemas-store/schemas-store.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -23,7 +23,6 @@ export class SchemasListComponent implements OnInit, OnDestroy {
   public _selectedSchema: SettingsMetadataProfile = null;
   public _tableIsBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _tableBlockerMessage: AreaBlockerMessage = null;
   public _serverValidationError = null;
   public _kmcPermissions = KMCPermissions;
 
@@ -87,24 +86,20 @@ export class SchemasListComponent implements OnInit, OnDestroy {
           this._tableIsBusy = result.loading;
 
           if (result.errorMessage) {
-            this._tableBlockerMessage = new AreaBlockerMessage({
+            this._blockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || this._appLocalization.get('applications.settings.metadata.errorLoading'),
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
-                  this._tableBlockerMessage = null;
+                  this._blockerMessage = null;
                   this._schemasStore.reload();
                 }
               }
               ]
             });
           } else {
-            this._tableBlockerMessage = null;
+            this._blockerMessage = null;
           }
-        },
-        error => {
-          this._logger.warn('[kmcng] -> could not load schemas'); // navigate to error page
-          throw error;
         });
   }
 
@@ -244,6 +239,7 @@ export class SchemasListComponent implements OnInit, OnDestroy {
           this._logger.info(`handle failing delete by the server`, { errorMessage: error.message });
           this._serverValidationError = error;
           this._browserService.alert({
+              header: this._appLocalization.get('app.common.attention'),
             message: error.message,
             accept: () => {
               this._logger.info(`handle dismiss request by the user`);

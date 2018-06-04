@@ -1,10 +1,10 @@
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
-import {CategoryWidgetKeys} from '../category-widget-keys';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
@@ -22,6 +22,8 @@ import {CategoriesUtilsService} from '../../categories-utils.service';
 import {CategoryService} from '../category.service';
 import { modulesConfig } from 'config/modules';
 import { globalConfig } from 'config/global';
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -33,13 +35,14 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
               private _browserService: BrowserService,
               private _categoriesUtilsService: CategoriesUtilsService,
               private _categoryService: CategoryService,
-              private _appLocalization: AppLocalization) {
-    super(CategoryWidgetKeys.SubCategories);
+              private _appLocalization: AppLocalization,
+              logger: KalturaLogger) {
+    super(ContentCategoryViewSections.SubCategories, logger);
   }
 
   protected onActivate(firstTimeActivating: boolean) {
     if (this.data && !this.data.directSubCategoriesCount) {
-      this._categoryService.openSection(CategoryWidgetKeys.Metadata);
+      this._categoryService.openSection(ContentCategoryViewSections.Metadata);
       return;
     }
 
@@ -66,7 +69,6 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   private _loadSubcategories(): Observable<void> {
     return this._getSubcategories(this.data)
       .cancelOnDestroy(this, this.widgetReset$)
-      .monitor('load Sub-Categories')
       .map(
         response => {
           this._subcategories.next(response.objects || []);
@@ -99,7 +101,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
       const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
-        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, tags'
+        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, tags, partnerSortValue'
       });
 
       // build the request

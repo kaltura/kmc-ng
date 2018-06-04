@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { UsersStore } from './users.service';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -115,7 +115,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       }];
       const isCurrentUser = this._appAuthentication.appUser.id === user.id;
       const isAdminUser = this._partnerInfo.adminUserId === user.id;
-      if (!isCurrentUser || !isAdminUser) {
+      if (!isCurrentUser && !isAdminUser) {
           this._items.push(
               {
                   id: 'blockUnblock', label: this._appLocalization.get('applications.content.table.blockUnblock'),

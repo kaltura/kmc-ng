@@ -1,10 +1,9 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CreateLiveService} from './create-live.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {Router} from '@angular/router';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
 import {ManualLive} from './manual-live/manual-live.interface';
@@ -14,6 +13,7 @@ import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceTyp
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export enum StreamTypes {
   kaltura,
@@ -70,7 +70,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
               private _permissionsService: KMCPermissionsService,
-              private _router: Router) {
+              private _contentEntryViewService: ContentEntryViewService) {
   }
 
   ngOnInit() {
@@ -196,10 +196,11 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
           header,
           message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.kalturaMessage'),
           accept: () => {
-            this._router.navigate(
-              ['/content/entries/entry', liveStream.id],
-              { queryParams: { reloadEntriesListOnNavigateOut: true } }
-            );
+              this._contentEntryViewService.open({
+                  entry: liveStream,
+                  section: ContentEntryViewSections.Metadata,
+                  reloadEntriesListOnNavigateOut: true
+              });
             this._showConfirmationOnClose = false;
             this.parentPopupWidget.close();
           },

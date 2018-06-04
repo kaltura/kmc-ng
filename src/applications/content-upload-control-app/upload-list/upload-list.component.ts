@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
-import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { KalturaUploadFile } from 'app-shared/kmc-shared';
+import { ContentUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 type MonitoredUploadFile = NewEntryUploadFile | NewEntryFlavourFile;
 
@@ -39,74 +41,79 @@ export class UploadListComponent implements OnInit, OnDestroy {
   constructor(private _uploadManagement: UploadManagement,
               private _newEntryUploadService: NewEntryUploadService,
               private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _contentUploadsMainView: ContentUploadsMainViewService) {
   }
 
   ngOnInit() {
-    this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
+      if (this._contentUploadsMainView.isAvailable()) {
+          this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
 
-    // listen for mediaCreated to show entryId in the upload list once media is created for this upload
-    this._newEntryUploadService.onMediaCreated$
-      .cancelOnDestroy(this)
-      .subscribe(
-        file => {
-          this._updateFile(file.id, { entryId: file.entryId });
-        }
-      );
+          // listen for mediaCreated to show entryId in the upload list once media is created for this upload
+          this._newEntryUploadService.onMediaCreated$
+              .cancelOnDestroy(this)
+              .subscribe(
+                  file => {
+                      this._updateFile(file.id, {entryId: file.entryId});
+                  }
+              );
 
-    this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
-      .filter(trackedFile => isMonitoredUploadFile(trackedFile.data))
-      .subscribe(
-        (trackedFile) => {
-          // NOTE: this service does not handle 'waitingUpload' status by design.
-          switch (trackedFile.status) {
-            case TrackedFileStatuses.added:
-              this._addFile(trackedFile);
-              break;
+          this._uploadManagement.onTrackedFileChanged$
+              .cancelOnDestroy(this)
+              .filter(trackedFile => isMonitoredUploadFile(trackedFile.data))
+              .subscribe(
+                  (trackedFile) => {
+                      // NOTE: this service does not handle 'waitingUpload' status by design.
+                      switch (trackedFile.status) {
+                          case TrackedFileStatuses.added:
+                              this._addFile(trackedFile);
+                              break;
 
-            case TrackedFileStatuses.uploading:
-              const changes = {
-                progress: trackedFile.progress,
-                status: trackedFile.status
-              };
+                          case TrackedFileStatuses.uploading:
+                              const changes = {
+                                  progress: trackedFile.progress,
+                                  status: trackedFile.status
+                              };
 
-              if (trackedFile.progress === 0) {
-                this._sortUploads();
-                Object.assign(changes, { uploadedOn: trackedFile.uploadStartAt });
-              }
+                              if (trackedFile.progress === 0) {
+                                  this._sortUploads();
+                                  Object.assign(changes, {uploadedOn: trackedFile.uploadStartAt});
+                              }
 
-              this._updateFile(trackedFile.id, changes);
+                              this._updateFile(trackedFile.id, changes);
 
-              break;
+                              break;
 
-            case TrackedFileStatuses.uploadCompleted:
-              this._updateFile(trackedFile.id, {
-                progress: trackedFile.progress,
-                status: trackedFile.status
-              });
+                          case TrackedFileStatuses.uploadCompleted:
+                              this._updateFile(trackedFile.id, {
+                                  progress: trackedFile.progress,
+                                  status: trackedFile.status
+                              });
 
-              this._sortUploads();
+                              this._sortUploads();
 
-              setTimeout(() => {
-                this._removeFile(trackedFile.id);
-              }, 5000);
-              break;
+                              setTimeout(() => {
+                                  this._removeFile(trackedFile.id);
+                              }, 5000);
+                              break;
 
-            case TrackedFileStatuses.failure:
-              this._updateFile(trackedFile.id, { status: trackedFile.status });
-              this._sortUploads();
-              break;
+                          case TrackedFileStatuses.failure:
+                              this._updateFile(trackedFile.id, {status: trackedFile.status});
+                              this._sortUploads();
+                              break;
 
-            case TrackedFileStatuses.purged:
-              this._removeFile(trackedFile.id);
-              break;
+                          case TrackedFileStatuses.purged:
+                              this._removeFile(trackedFile.id);
+                              break;
 
-            default:
-              break;
-          }
-        }
-      )
+                          default:
+                              break;
+                      }
+                  }
+              )
+      }else{
+          this._browserService.handleUnpermittedAction(true);
+      }
   }
 
   ngOnDestroy() {

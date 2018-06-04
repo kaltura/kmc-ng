@@ -70,6 +70,7 @@ export interface EntriesFilters {
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
+export const EntriesManualExecutionModeToken = new InjectionToken<boolean>('entries-data-provider');
 export const EntriesStorePaginationCacheToken = new InjectionToken('entries-store-pagination-cache-token');
 
 @Injectable()
@@ -95,13 +96,17 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
               private _metadataProfileService: MetadataProfileStore,
               @Inject(EntriesDataProviderToken) private _dataProvider: EntriesDataProvider,
               @Inject(EntriesStorePaginationCacheToken) @Optional() private _paginationCacheToken: string,
+              @Inject(EntriesManualExecutionModeToken) @Optional() manualExecutionMode: boolean,
               _logger: KalturaLogger) {
     super(_logger);
 
     if (!this._paginationCacheToken) {
       this._paginationCacheToken = 'default';
     }
-    this._prepare();
+
+    if (!manualExecutionMode) {
+        this._prepare();
+    }
   }
 
   protected _preFiltersReset(updates: Partial<EntriesFilters>): Partial<EntriesFilters> {

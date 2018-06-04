@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { DefaultFiltersList } from './default-filters-list';
-import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
 
@@ -29,6 +29,7 @@ export class BulkLogRefineFiltersService {
   }
 
   private _buildDefaultFiltersGroup(): RefineList[] {
+    const hasEntitlementPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_ENTITLEMENT);
     const hasEndUserPermission = this._permissionsService.hasPermission(KMCPermissions.FEATURE_END_USER_MANAGE);
     return DefaultFiltersList.map((list) => {
       const refineList = new RefineList(
@@ -40,6 +41,10 @@ export class BulkLogRefineFiltersService {
         if (item.value === KalturaBulkUploadObjectType.user && !hasEndUserPermission) {
           return;
         }
+
+	    if (item.value === KalturaBulkUploadObjectType.categoryUser && !hasEntitlementPermission) {
+	        return;
+	    }
 
         refineList.items.push({
           value: item.value,

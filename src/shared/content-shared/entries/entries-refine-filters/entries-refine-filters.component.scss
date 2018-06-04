@@ -50,8 +50,16 @@
   color: $kDandger;
 }
 
+.kTreeNodeLabelWrapper {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .kTreeNodeLabel {
-  width: 100%;
+  max-width: 100%;
+  display: inline-block;
   font-size: 14px;
   font-weight: 700;
   line-height: 43px;
@@ -110,6 +118,10 @@ a.disabled {
 
 :host /deep/ .ui-tree .ui-tree-container {
   overflow: visible;
+}
+
+:host /deep/ .ui-treenode-label {
+  width: 100%;
 }
 
 :host /deep/ .ui-tree .ui-chkbox {

@@ -33,7 +33,6 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                 uploadToken: new KalturaUploadToken()
             })
         )
-            .monitor('get upload token')
             .map(
                 (response) => {
                     return response.id;
@@ -108,16 +107,16 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                                 const uploadedFileSize = response && response.objects && response.objects.length > 0 ? response.objects[0].uploadedFileSize : null;
 
                                 if (typeof uploadedFileSize === 'number') {
-                                    this._logger.info(`$file '${id}': got from server 'uploadedFileSize' value ${uploadedFileSize} for '${fileData.serverUploadToken}'. resume upload. `);
+                                    this._logger.info(`file '${id}': got from server 'uploadedFileSize' value ${uploadedFileSize} for '${fileData.serverUploadToken}'. resume upload. `);
                                     return uploadedFileSize*1;
                                 }else
                                 {
-                                    this._logger.info(`$file '${id}': server resulted without information about previous uploads '${fileData.serverUploadToken}'. (re)start new upload.`);
+                                    this._logger.info(`file '${id}': server resulted without information about previous uploads '${fileData.serverUploadToken}'. (re)start new upload.`);
                                     return 0;
                                 }
                             }).catch(caught =>
                             {
-                                this._logger.warn(`$file '${id}': failed to get 'uploadedFileSize' for '${fileData.serverUploadToken}'. re-start new upload. error: ${caught.message}`);
+                                this._logger.warn(`file '${id}': failed to get 'uploadedFileSize' for '${fileData.serverUploadToken}'. re-start new upload. error: ${caught.message}`);
                                 return Observable.of(0);
                             });
                         }
@@ -163,6 +162,6 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                 observer.error(new Error('missing upload token and content'));
             }
 
-        }).monitor(`upload with token ${id}`);
+        });
     }
 }
