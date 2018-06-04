@@ -10,6 +10,7 @@ import {
     ContentEntryViewSections,
     ContentEntryViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface SectionWidgetItem {
     label: string;
@@ -25,9 +26,10 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
     public sections$ : Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
     constructor(private _appLocalization: AppLocalization,
-                private _contentEntryViewService: ContentEntryViewService)
+                private _contentEntryViewService: ContentEntryViewService,
+                logger: KalturaLogger)
     {
-        super('sectionsList');
+        super('sectionsList', logger);
     }
 
     protected onDataLoading(dataId : any) : void {

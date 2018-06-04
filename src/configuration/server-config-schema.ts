@@ -22,30 +22,21 @@ export const ServerConfigSchema = {
                 previewUIConf: {type: 'number'},
                 freeTrialExpiration: {
                     properties: {
-                        enabled: {type: 'boolean'},
                         trialPeriodInDays: {type: 'number'}
                     },
-                    required: ['enabled', 'trialPeriodInDays'],
-                    additionalProperties: false
+                    required: ['trialPeriodInDays'],
+                    additionalProperties: true
                 },
-                login: {
+                limitAccess: {
                     properties: {
-                        limitAccess: {
-                            properties: {
-                                enabled: {type: 'boolean'},
-                                verifyBetaServiceUrl: { type: 'string' },
-                            },
-                            required: ['enabled'],
-                            additionalProperties: false
-                        }
+                        serviceUrl: { type: 'string' },
                     },
-                    required: ['limitAccess'],
-                    additionalProperties: false
-                },
-
+                    required: ['serviceUrl'],
+                    additionalProperties: true
+                }
             },
-            required: ['uri', 'previewUIConf', 'deployUrl', 'freeTrialExpiration'],
-            additionalProperties: false
+            required: ['uri', 'previewUIConf', 'deployUrl'],
+            additionalProperties: true
         },
         cdnServers: {
             properties: {
@@ -53,76 +44,68 @@ export const ServerConfigSchema = {
                 securedServerUri: {type: 'string'}
             },
             required: ['serverUri', 'securedServerUri'],
-            additionalProperties: false
+            additionalProperties: true
         },
         externalApps: {
             properties: {
-                studio: {
+                studioV2: {
                     properties: {
-                        enabled: {type: 'boolean'},
                         uri: {type: 'string'},
                         html5_version: {type: 'string'},
-                        html5lib: {type: 'string'},
-                        showStudioV3: {type: 'boolean'}
+                        html5lib: {type: 'string'}
                     },
-                    required: ['enabled'],
-                    additionalProperties: false
+                    required: ['uri', 'html5_version', 'html5lib'],
+                    additionalProperties: true
                 },
                 studioV3: {
                     properties: {
-                        enabled: {type: 'boolean'},
                         uri: {type: 'string'},
                         html5_version: {type: 'string'},
                         html5lib: {type: 'string'},
-                        showHTMLStudio: {type: 'boolean'}
+                        playerVersionsMap: {type: 'string'}
                     },
-                    required: ['enabled'],
-                    additionalProperties: false
+                    required: ['uri', 'html5_version', 'html5lib', 'playerVersionsMap'],
+                    additionalProperties: true
                 },
                 usageDashboard: {
                     properties: {
-                        enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled'],
-                    additionalProperties: true // TODO set this to false once the server updates the runtime configuration generator for this app
+                    required: ['uri'],
+                    additionalProperties: true
                 },
                 liveDashboard: {
                     properties: {
-                        enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled'],
-                    additionalProperties: false
+                    required: ['uri'],
+                    additionalProperties: true
                 },
                 liveAnalytics: {
                     properties: {
-                        enabled: {type: 'boolean'},
                         uri: {type: 'string'},
                         uiConfId: {type: 'number'}
                     },
-                    required: ['enabled'],
-                    additionalProperties: false
+                    required: ['uri', 'uiConfId'],
+                    additionalProperties: true
                 },
                 editor: {
                     properties: {
-                        enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled'],
-                    additionalProperties: false
+                    required: ['uri'],
+                    additionalProperties: true
                 },
                 kava: {
                     properties: {
-                        enabled: {type: 'boolean'},
                         uri: {type: 'string'}
                     },
-                    required: ['enabled'],
-                    additionalProperties: false
+                    required: ['uri'],
+                    additionalProperties: true
                 }
             },
-            required: ['studio', 'studioV3', 'liveAnalytics', 'usageDashboard', 'liveDashboard', 'kava', 'editor'],
-            additionalProperties: false
+            required: [],
+            additionalProperties: true
         },
         externalLinks: {
             properties: {
@@ -132,7 +115,7 @@ export const ServerConfigSchema = {
                         deliveryProtocols: {type: 'string'}
                     },
                     required: [],
-                    additionalProperties: false
+                    additionalProperties: true
                 },
                 kaltura: {
                     properties: {
@@ -147,14 +130,14 @@ export const ServerConfigSchema = {
                         dropFoldersManual: {type: 'string'}
                     },
                     required: [],
-                    additionalProperties: false
+                    additionalProperties: true
                 },
                 entitlements: {
                     properties: {
                         manage: {type: 'string'}
                     },
                     required: [],
-                    additionalProperties: false
+                    additionalProperties: true
                 },
                 uploads: {
                     properties: {
@@ -163,20 +146,20 @@ export const ServerConfigSchema = {
                         bulkUploadSamples: {type: 'string'}
                     },
                     required: [],
-                    additionalProperties: false
+                    additionalProperties: true
                 },
                 live: {
                     properties: {
                         akamaiEdgeServerIpURL: {type: 'string'}
                     },
                     required: [],
-                    additionalProperties: false
+                    additionalProperties: true
                 }
             },
             required: [],
-            additionalProperties: false
+            additionalProperties: true
         }
     },
     required: ['kalturaServer', 'cdnServers', 'externalApps', 'externalLinks'],
-    additionalProperties: false
+    additionalProperties: true
 };

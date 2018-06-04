@@ -23,37 +23,31 @@ Follow these instructions to test external apps integration:
 2. update file `server-config.json`, copy the following into `externalApps` element. Make sure you don't commit it into the git repository.
 
 ```
-"studio": {
-    "enabled": true,
+"studioV2": {
     "uri": "/__local_machine_only__/studio_v2_2_1/index.html",
     "html5_version":"v2.57.2",
     "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
 },
 "studioV3": {
-    "enabled": true,
-    "uri": "/__local_machine_only__/studio_v3_1_1/index.html",
+    "uri": "/__local_machine_only__/studio_v3_2_0/index.html",
     "html5_version":"v2.67",
-    "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.67/mwEmbedLoader.php"
+    "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.67/mwEmbedLoader.php",
+    "playerVersionsMap": "{'kaltura-ovp-player':'0.27.4','kaltura-tv-player':'0.27.4','playkit-ima':'0.6.1','playkit-youbora':'0.4.1','playkit-comscore':'1.0.4','playkit-google-analytics':'0.1.3','playkit-offline-manager':'1.0.2'}"       
 },
 "liveDashboard": {
-    "enabled": true,
     "uri": "/__local_machine_only__/live-dashboard_v1_4_1/index.html"
 },
 "kava": {
-    "enabled": false,
     "uri": ""
 },
 "liveAnalytics": {
-    "enabled": true,
     "uri": "/__local_machine_only__/live-analytics-vFuture/index.html",
     "uiConfId": 36060752
 },
 "usageDashboard": {
-    "enabled": true,
     "uri": "/__local_machine_only__/usage-dashboard-v1_0_0/index.html"
 },
 "editor": {
-    "enabled": true,
     "uri": "/__local_machine_only__/kea2-2.23.0/index.html"
 }
 ```

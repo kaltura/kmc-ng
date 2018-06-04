@@ -251,7 +251,6 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
           );
 
           return this._kalturaClient.multiRequest(requests)
-              .monitor('ManageEndUserPermissionsService: get Category users')
               .map(result => {
                   if (result.hasErrors()) {
                       throw new Error(result.find(item => !!item.error).error.message);
@@ -304,7 +303,6 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
     });
 
     return this._kalturaClient.multiRequest(multiRequest)
-      .monitor('ManageEndUserPermissionsService: get Kaltura Users for Category Users')
       .map(
         data => {
           if (data.hasErrors()) {
