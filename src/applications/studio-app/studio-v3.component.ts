@@ -4,8 +4,8 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { PlayersUpdatedEvent } from 'app-shared/kmc-shared/events';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { StudioV3MainViewService, StudioV2MainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { StudioV3MainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kStudioV3',
@@ -22,45 +22,40 @@ export class StudioV3Component implements OnInit, AfterViewInit, OnDestroy {
         private _appEvents: AppEventsService, private logger: KalturaLogger,
         private browserService: BrowserService,
         private _permissionsService: KMCPermissionsService,
-        private _studioV3MainView: StudioV3MainViewService,
-        private _studioHtmlMainView: StudioV2MainViewService
-  ) {
+        private _studioV3MainView: StudioV3MainViewService) {
   }
 
   ngOnInit() {
-       if (!this._studioV3MainView.isAvailable()) {
-          this.browserService.handleUnpermittedAction(true);
-        return undefined;
-      }
-      window['kmc'] = {
-        'version': '3',
-        'preview_embed': {
-          'updateList': (isPlaylist: boolean) => {
-            this._updatePlayers(isPlaylist);
-          }
-        },
-        'vars': {
-          'ks': this.appAuthentication.appUser.ks,
-          'api_url': getKalturaServerUri(),
-          'host': serverConfig.kalturaServer.uri,
-          'studioV3':{
-            'config': {
-              'name': 'Video Studio V3',
-              'tags': 'studio_v3',
-              'html5_version': serverConfig.externalApps.studioV3.html5_version,
-              'html5lib': serverConfig.externalApps.studioV3.html5lib
-            },
-            'publisherEnvType': this.appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
-            'html5_version': serverConfig.externalApps.studioV3.html5_version,
-            'showFlashStudio': false,
-            'showHTMLStudio': false,
-            'playerVersionsMap': serverConfig.externalApps.studioV3.playerVersionsMap
-          }
-        },
-        'functions': {
-        }
-      };
-      this.studioUrl = serverConfig.externalApps.studioV3.uri;
+       if (this._studioV3MainView.viewEntered()) {
+           window['kmc'] = {
+               'version': '3',
+               'preview_embed': {
+                   'updateList': (isPlaylist: boolean) => {
+                       this._updatePlayers(isPlaylist);
+                   }
+               },
+               'vars': {
+                   'ks': this.appAuthentication.appUser.ks,
+                   'api_url': getKalturaServerUri(),
+                   'host': serverConfig.kalturaServer.uri,
+                   'studioV3': {
+                       'config': {
+                           'name': 'Video Studio V3',
+                           'tags': 'studio_v3',
+                           'html5_version': serverConfig.externalApps.studioV3.html5_version,
+                           'html5lib': serverConfig.externalApps.studioV3.html5lib
+                       },
+                       'publisherEnvType': this.appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
+                       'html5_version': serverConfig.externalApps.studioV3.html5_version,
+                       'showFlashStudio': false,
+                       'showHTMLStudio': false,
+                       'playerVersionsMap': serverConfig.externalApps.studioV3.playerVersionsMap
+                   }
+               },
+               'functions': {}
+           };
+           this.studioUrl = serverConfig.externalApps.studioV3.uri;
+       }
   }
 
   ngAfterViewInit() {

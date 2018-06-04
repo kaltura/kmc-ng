@@ -128,10 +128,8 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                 contentCategoriesMainViewService: ContentCategoriesMainViewService,
                 _logger: KalturaLogger) {
         super(_logger.subLogger('CategoriesService'));
-        if (contentCategoriesMainViewService.isAvailable()) {
+        if (contentCategoriesMainViewService.viewEntered()) {
             this._prepare();
-        }else{
-            this.browserService.handleUnpermittedAction(true);
         }
     }
 

@@ -71,10 +71,8 @@ export class UsersStore implements OnDestroy {
         pageSize: defaultPageSize
       });
     }
-    if (adminUsersMainViewService.isAvailable()) {
+    if (adminUsersMainViewService.viewEntered()) {
         this._loadData();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

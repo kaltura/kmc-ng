@@ -73,7 +73,7 @@ export class KmcMainViewsService {
     private _getMainViewsList(): KMCAppMenuItem[] {
         return [
             {
-                titleToken: 'Content',
+                titleToken: 'content',
                 isAvailable: true,
                 isActiveView: (activePath: string) => (activePath.indexOf(`/content`) !== -1),
                 position: 'left',
@@ -84,7 +84,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentEntriesMain.open();
                         },
-                        titleToken: 'Entries',
+                        titleToken: this._contentEntriesMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -93,7 +93,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentModerationMain.open();
                         },
-                        titleToken: 'Moderation',
+                        titleToken: this._contentModerationMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -102,7 +102,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentPlaylistsMain.open();
                         },
-                        titleToken: 'Playlists',
+                        titleToken: this._contentPlaylistsMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -111,7 +111,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentSyndicationMain.open();
                         },
-                        titleToken: 'Syndication',
+                        titleToken: this._contentSyndicationMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -120,7 +120,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentCategoriesMain.open();
                         },
-                        titleToken: 'Categories',
+                        titleToken: this._contentCategoriesMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -129,7 +129,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentUploadsMain.open();
                         },
-                        titleToken: 'UploadControl',
+                        titleToken: this._contentUploadsMain.getViewMetadata().menuToken,
                         'position': 'right'
                     },
                     {
@@ -138,7 +138,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentBulkUploadsMain.open();
                         },
-                        titleToken: 'BulkUpload',
+                        titleToken: this._contentBulkUploadsMain.getViewMetadata().menuToken,
                         'position': 'right'
                     },
                     {
@@ -147,13 +147,13 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentDropFoldersMain.open();
                         },
-                        titleToken: 'DropFolders',
+                        titleToken: this._contentDropFoldersMain.getViewMetadata().menuToken,
                         'position': 'right'
                     }
                 ]
             },
             {
-                titleToken: 'Studio',
+                titleToken: 'studio',
                 isAvailable: true,
                 isActiveView: (activePath: string) => (activePath.indexOf(`/studio`) !== -1),
                 position: 'left',
@@ -164,7 +164,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._studioV2Main.open();
                         },
-                        titleToken: 'StudioV2'
+                        titleToken: this._studioV2Main.getViewMetadata().menuToken
                     },
                     {
                         isAvailable: this._studioV3Main.isAvailable(),
@@ -172,7 +172,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._studioV3Main.open();
                         },
-                        titleToken: 'StudioV3'
+                        titleToken: this._studioV3Main.getViewMetadata().menuToken
                     },
                 ]
             },
@@ -183,13 +183,13 @@ export class KmcMainViewsService {
                     this._usageDashboardMain.open();
                 },
                 position: 'left',
-                titleToken: 'Usage Dashboard',
+                titleToken: this._usageDashboardMain.getViewMetadata().menuToken,
             },
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
                 position: 'left',
                 isAvailable: true,
-                titleToken: 'Analytics',
+                titleToken: 'analytics',
                 children: [
                     {
                         isAvailable: this._liveAnalyticsMain.isAvailable(),
@@ -197,19 +197,19 @@ export class KmcMainViewsService {
                         open: () => {
                             this._liveAnalyticsMain.open();
                         },
-                        titleToken: 'Live Analytics'
+                        titleToken: this._liveAnalyticsMain.getViewMetadata().menuToken
                     },
                     {
                         isAvailable: false,
                         isActiveView: (path) => false,
-                        titleToken: 'Kava'
+                        titleToken: 'analyticsKavaMenuTitle'
                     }
                 ]
             },
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/settings`) !== -1,
                 isAvailable: true,
-                titleToken: 'Settings',
+                titleToken: 'settings',
                 icon: 'kIcongear',
                 position: 'right',
                 children: [
@@ -219,7 +219,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsAccountSettingsMain.open();
                         },
-                        titleToken: 'Account Settings',
+                        titleToken: this._settingsAccountSettingsMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -228,7 +228,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsIntegrationSettingsMain.open();
                         },
-                        titleToken: 'Integration Settings',
+                        titleToken: this._settingsIntegrationSettingsMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -237,7 +237,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsAccessControlMain.open();
                         },
-                        titleToken: 'AccessControl',
+                        titleToken: this._settingsAccessControlMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -246,7 +246,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsTranscodingMain.open();
                         },
-                        titleToken: 'Transcoding settings',
+                        titleToken: this._settingsTranscodingMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -255,7 +255,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsMetadataMain.open();
                         },
-                        titleToken: 'CustomData',
+                        titleToken: this._settingsMetadataMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -264,7 +264,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsMyUserSettingsMain.open();
                         },
-                        titleToken: 'My User Settings',
+                        titleToken: this._settingsMyUserSettingsMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -273,7 +273,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsAccountInformationMain.open();
                         },
-                        titleToken: 'Account Information',
+                        titleToken: this._settingsAccountInformationMain.getViewMetadata().menuToken,
                         'position': 'left'
                     }
                 ]
@@ -290,7 +290,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._adminUsersMain.open();
                         },
-                        titleToken: 'Users',
+                        titleToken: this._adminUsersMain.getViewMetadata().menuToken,
                         'position': 'left'
                     },
                     {
@@ -299,7 +299,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._adminRolesMain.open();
                         },
-                        titleToken: 'Roles',
+                        titleToken: this._adminRolesMain.getViewMetadata().menuToken,
                         'position': 'left'
                     }
                 ]

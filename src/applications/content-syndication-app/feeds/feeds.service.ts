@@ -88,10 +88,8 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
               private _appLocalization: AppLocalization,
               _logger: KalturaLogger) {
     super(_logger);
-    if (contentSyndicationMainView.isAvailable()) {
+    if (contentSyndicationMainView.viewEntered()) {
         this._prepare();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

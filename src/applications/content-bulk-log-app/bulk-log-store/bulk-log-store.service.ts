@@ -58,10 +58,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
               contentBulkUploadsMainView: ContentBulkUploadsMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('BulkLogStoreService'));
-    if (contentBulkUploadsMainView.isAvailable()) {
+    if (contentBulkUploadsMainView.viewEntered()) {
         this._prepare();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

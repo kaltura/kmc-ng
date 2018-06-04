@@ -60,10 +60,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     this._logger.info(`initiate account settings view`);
     this._createForm();
     this._fillDescribeYourselfOptions();
-    if (this._settingsAccountSettingsMainView.isAvailable()) {
+    if (this._settingsAccountSettingsMainView.viewEntered()) {
         this._loadPartnerAccountSettings();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
 
       this.accountSettingsForm

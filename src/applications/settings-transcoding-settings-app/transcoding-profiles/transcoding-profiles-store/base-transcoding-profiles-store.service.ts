@@ -58,7 +58,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
                         settingsTranscodingMainView: SettingsTranscodingMainViewService,
                         _logger: KalturaLogger) {
     super(_logger);
-    if (settingsTranscodingMainView.isAvailable()) {
+    if (settingsTranscodingMainView.viewEntered()) {
         setTimeout(() => {
             this._prepare();
         });

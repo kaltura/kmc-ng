@@ -2,17 +2,28 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { Router } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { Title } from '@angular/platform-browser';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+
+export interface ViewMetadata {
+    menuToken: string;
+    titleToken: string;
+}
 
 export abstract class KmcMainViewBaseService {
 
     constructor(protected _logger: KalturaLogger,
                 protected _browserService: BrowserService,
-                private _router: Router) {
+                private _router: Router,
+                private _appLocalization: AppLocalization,
+                private _titleService: Title) {
     }
 
     abstract isAvailable(): boolean;
 
     abstract getRoutePath(): string;
+
+    abstract getViewMetadata(): ViewMetadata;
 
     protected _open(): Observable<boolean> {
         return Observable.create(observer => {
@@ -69,5 +80,16 @@ export abstract class KmcMainViewBaseService {
             }
         });
 
+    }
+
+    viewEntered(): boolean {
+        if (this.isAvailable()) {
+            const title = this._appLocalization.get(`app.titles.${this.getViewMetadata().titleToken}`);
+            this._titleService.setTitle(title);
+            return true;
+        } else {
+            this._browserService.handleUnpermittedAction(true);
+            return false;
+        }
     }
 }

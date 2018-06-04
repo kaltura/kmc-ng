@@ -23,29 +23,27 @@ export class AnalyticsLiveComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     try {
-      if (!this._liveAnalyticsView.isAvailable()) {
-          this.browserService.handleUnpermittedAction(true);
-        return undefined;
+      if (this._liveAnalyticsView.viewEntered()) {
+          const cdnUrl = serverConfig.cdnServers.serverUri.replace('http://', '').replace('https://', '');
+          this._url = serverConfig.externalApps.liveAnalytics.uri + '#/dashboard/nonav';
+          window['kmc'] = {
+              'vars': {
+                  'ks': this.appAuthentication.appUser.ks,
+                  'partner_id': this.appAuthentication.appUser.partnerId,
+                  'cdn_host': cdnUrl,
+                  'service_url': getKalturaServerUri(),
+                  'liveanalytics': {
+                      'player_id': +serverConfig.externalApps.liveAnalytics.uiConfId,
+                      'hideSubNav': true
+                  }
+              },
+              'functions': {
+                  expired: () => {
+                      this.appAuthentication.logout();
+                  }
+              }
+          };
       }
-      const cdnUrl = serverConfig.cdnServers.serverUri.replace('http://', '').replace('https://', '');
-      this._url = serverConfig.externalApps.liveAnalytics.uri + '#/dashboard/nonav';
-      window['kmc'] = {
-        'vars': {
-          'ks': this.appAuthentication.appUser.ks,
-          'partner_id': this.appAuthentication.appUser.partnerId,
-          'cdn_host': cdnUrl,
-          'service_url': getKalturaServerUri(),
-          'liveanalytics': {
-            'player_id': +serverConfig.externalApps.liveAnalytics.uiConfId,
-            'hideSubNav': true
-          }
-        },
-        'functions': {
-          expired: () => {
-            this.appAuthentication.logout();
-          }
-        }
-      };
     } catch (ex) {
       this.logger.warn(`Could not load live real-time dashboard, please check that liveAnalytics configurations are loaded correctly\n error: ${ex}`);
       this._url = null;

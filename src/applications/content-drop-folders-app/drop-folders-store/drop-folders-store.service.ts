@@ -83,10 +83,8 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
               contentDropFoldersMainView: ContentDropFoldersMainViewService,
               _logger: KalturaLogger) {
     super(_logger);
-    if (contentDropFoldersMainView.isAvailable()) {
+    if (contentDropFoldersMainView.viewEntered()) {
         this._prepare();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

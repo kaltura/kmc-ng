@@ -46,7 +46,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      if (this._contentUploadsMainView.isAvailable()) {
+      if (this._contentUploadsMainView.viewEntered()) {
           this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
 
           // listen for mediaCreated to show entryId in the upload list once media is created for this upload
@@ -110,9 +110,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
                               break;
                       }
                   }
-              )
-      }else{
-          this._browserService.handleUnpermittedAction(true);
+              );
       }
   }
 

@@ -41,7 +41,7 @@ export class EntitlementComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      if (this._settingsIntegrationSettingsMainView.isAvailable()) {
+      if (this._settingsIntegrationSettingsMainView.viewEntered()) {
           this._loadEntitlementSectionData();
       }
   }

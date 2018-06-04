@@ -42,7 +42,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       this._trialExpirationDateString =
         (new DatePipe()).transform(this._appAuthentication.appUser.createdAt.getTime() + trialPeriod, 'dateOnly'); // "01/15/1992"
     }
-    if (this._settingsAccountInformationMainView.isAvailable()) {
+    if (this._settingsAccountInformationMainView.viewEntered()) {
         this.loadStatistics();
     }
   }

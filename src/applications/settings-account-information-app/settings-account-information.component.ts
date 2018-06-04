@@ -48,13 +48,11 @@ export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._logger.info(`initiate account information view`);
     this._createForm();
-    if (this._settingsAccountInformationMainView.isAvailable()) {
+    if (this._settingsAccountInformationMainView.viewEntered()) {
         this._canContactSalesForceInformation = this._accountInformationService.canContactSalesForceInformation();
         if (this._canContactSalesForceInformation) {
             this._logger.warn('Cannot send message to SalesForce: missing \'contactsalesforce\' configuration');
         }
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

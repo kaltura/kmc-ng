@@ -13,10 +13,8 @@ export class ModerationsListService {
 
     constructor(contentModerationMainView: ContentModerationMainViewService,
                 browserService: BrowserService) {
-        if (contentModerationMainView.isAvailable()) {
+        if (contentModerationMainView.viewEntered()) {
             this._isViewAvailable = true;
-        } else {
-            browserService.handleUnpermittedAction(true);
         }
     }
 }

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { ViewMetadata } from 'app-shared/kmc-shared/kmc-views/kmc-main-view-base.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { Title } from '@angular/platform-browser';
 
 @Injectable()
 export class AdminUsersMainViewService extends KmcMainViewBaseService {
@@ -14,9 +15,11 @@ export class AdminUsersMainViewService extends KmcMainViewBaseService {
         logger: KalturaLogger,
         browserService: BrowserService,
         router: Router,
-        private _appPermissions: KMCPermissionsService
+        private _appPermissions: KMCPermissionsService,
+        appLocalization: AppLocalization,
+        titleService: Title
     ) {
-        super(logger.subLogger('AdminUsersMainViewService'), browserService, router);
+        super(logger.subLogger('AdminUsersMainViewService'), browserService, router, appLocalization, titleService);
     }
 
     isAvailable(): boolean {
@@ -29,5 +32,12 @@ export class AdminUsersMainViewService extends KmcMainViewBaseService {
 
     getRoutePath(): string {
         return 'administration/users/list';
+    }
+
+    getViewMetadata(): ViewMetadata {
+        return {
+            titleToken: 'administrationUsersPageTitle',
+            menuToken: 'administrationUsersMenuTitle'
+        };
     }
 }

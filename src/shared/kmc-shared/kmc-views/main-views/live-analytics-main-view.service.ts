@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
+import { KmcMainViewBaseService, ViewMetadata } from '../kmc-main-view-base.service';
 import { Router } from '@angular/router';
 import {serverConfig} from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { Title } from '@angular/platform-browser';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 
 @Injectable()
 export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
@@ -15,9 +15,11 @@ export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
         logger: KalturaLogger,
         browserService: BrowserService,
         router: Router,
-        private _appPermissions: KMCPermissionsService
+        private _appPermissions: KMCPermissionsService,
+        appLocalization: AppLocalization,
+        titleService: Title
     ) {
-        super(logger.subLogger('LiveAnalyticsMainViewService'), browserService, router);
+        super(logger.subLogger('LiveAnalyticsMainViewService'), browserService, router, appLocalization, titleService);
     }
 
     isAvailable(): boolean {
@@ -28,6 +30,12 @@ export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
         return 'analytics/liveAnalytics';
     }
 
+    getViewMetadata(): ViewMetadata {
+        return {
+            titleToken: 'analyticsLivePageTitle',
+            menuToken: 'analyticsLiveMenuTitle'
+        };
+    }
 }
 
 

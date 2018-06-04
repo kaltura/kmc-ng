@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
-import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
-import { Router, NavigationEnd } from '@angular/router';
+import { KmcMainViewBaseService, ViewMetadata } from '../kmc-main-view-base.service';
+import { Router } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { Title } from '@angular/platform-browser';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 
 @Injectable()
 export class SettingsAccountInformationMainViewService extends KmcMainViewBaseService {
@@ -14,9 +13,10 @@ export class SettingsAccountInformationMainViewService extends KmcMainViewBaseSe
         logger: KalturaLogger,
         browserService: BrowserService,
         router: Router,
-        private _appPermissions: KMCPermissionsService
+        appLocalization: AppLocalization,
+        titleService: Title
     ) {
-        super(logger.subLogger('SettingsAccountInformationMainViewService'), browserService, router);
+        super(logger.subLogger('SettingsAccountInformationMainViewService'), browserService, router, appLocalization, titleService);
     }
 
     isAvailable(): boolean {
@@ -25,5 +25,12 @@ export class SettingsAccountInformationMainViewService extends KmcMainViewBaseSe
 
     getRoutePath(): string {
         return 'settings/accountInformation';
+    }
+
+    getViewMetadata(): ViewMetadata {
+        return {
+            titleToken: 'settingsAccountInfoPageTitle',
+            menuToken: 'settingsAccountInfoMenuTitle'
+        };
     }
 }

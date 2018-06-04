@@ -44,10 +44,8 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._logger.info(`initiate my user settings view`);
-    if (this._settingsMyUserSettingsMainView.isAvailable()) {
+    if (this._settingsMyUserSettingsMainView.viewEntered()) {
         this._getUserData();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

@@ -11,8 +11,6 @@ import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 export class SettingsIntegrationSettingsComponent {
   public _kmcPermissions = KMCPermissions;
   constructor(browserService: BrowserService, settingsIntegrationSettingsMainViewService: SettingsIntegrationSettingsMainViewService){
-      if (!settingsIntegrationSettingsMainViewService.isAvailable()){
-          browserService.handleUnpermittedAction(true);
-      }
+      settingsIntegrationSettingsMainViewService.viewEntered();
   }
 }
