@@ -219,19 +219,19 @@ export class BrowserService implements IAppStorage {
         window.open(baseUrl, target);
     }
 
-    public openEmail(emailConfig: EmailConfig, useMailTo = false): void {
-        if (useMailTo){
-            const windowRef = window.open('mailto:' + emailConfig.email, '_blank');
-            windowRef.focus();
+    public openEmailWithMailTo(email: string): void {
+        const windowRef = window.open('mailto:' + email, '_blank');
+        windowRef.focus();
 
-            setTimeout(function () {
-                if (!windowRef.document.hasFocus()) {
-                    windowRef.close();
-                }
-            }, 500);
-        }else {
-            this._appEvents.publish(new OpenEmailEvent(emailConfig.email, emailConfig.title, emailConfig.message));
-        }
+        setTimeout(function () {
+            if (!windowRef.document.hasFocus()) {
+                windowRef.close();
+            }
+        }, 500);
+    }
+
+    public openEmail(emailConfig: EmailConfig, useMailTo = false): void {
+        this._appEvents.publish(new OpenEmailEvent(emailConfig.email, emailConfig.title, emailConfig.message));
     }
 
     public openSupport(): void{

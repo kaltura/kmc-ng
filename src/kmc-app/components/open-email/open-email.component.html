@@ -1,12 +1,12 @@
 <div class="kOpenEmailWin" #changeAccount>
 
   <div class="kHeader">
-    <span class="kTitle">{{emailConfig.title}}</span>
+    <span class="kTitle">{{emailConfig?.title}}</span>
   </div>
 
   <div class="kContainer">
-    <div>{{emailConfig.message}}</div>
-      <div class="emailLink">
+    <div>{{emailConfig?.message}}</div>
+      <div class="emailLink" *ngIf="emailConfig?.email">
           <a (click)="openEmail()">{{emailConfig.email}}</a>
           <kCopyToClipboard class="kIcon" [text]="emailConfig.email" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
       </div>

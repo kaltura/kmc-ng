@@ -72,16 +72,7 @@ export class AppBootstrap implements CanActivate {
                 console.log("Bootstrap Error::" + error); // TODO [kmc-infra] - move to log
                 this._bootstrapStatusSource.next(BoostrappingStatus.Error);
             }
-
-
-            // TODO [kmcng] remove mail to temporary - can delete this code once backend removes the "mailto" in @CONTACT_US@ variable
-            if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support) {
-                let supportEmail = serverConfig.externalLinks.kaltura.support;
-                if (supportEmail.indexOf("mailto:") === 0) {
-                    serverConfig.externalLinks.kaltura.support = supportEmail.substr(7, supportEmail.length - 1);
-                }
-            }
-
+            
             this._initialized = true;
 
             // init localization, wait for localization to load before continuing

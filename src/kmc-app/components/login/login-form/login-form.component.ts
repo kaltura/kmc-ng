@@ -28,14 +28,7 @@ export class LoginFormComponent {
   _usernameField: AbstractControl;
   _passwordField: AbstractControl;
   _rememberMeField: AbstractControl;
-
-    public get _supportAddress(): string {
-        let res = null;
-        if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support){
-            res = serverConfig.externalLinks.kaltura.support;
-        }
-        return res;
-    }
+  _supportAddress: string;
 
   public get _loginValidationMessage(): string {
     return this._showError(this._usernameField) ? 'app.login.error.email' : '';
@@ -47,7 +40,11 @@ export class LoginFormComponent {
 
   constructor(private _fb: FormBuilder,
               private _browserService: BrowserService) {
-    this.buildForm();
+      this.buildForm();
+
+      if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support) {
+          this._supportAddress = serverConfig.externalLinks.kaltura.support;
+      }
   }
 
   private buildForm(): void {
