@@ -15,20 +15,16 @@ export class ProgressBarComponent implements OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(event => {
                 if (event instanceof RouteConfigLoadStart) {
-                    console.log('>>> 1');
                     renderer.addClass(this._bar.nativeElement, 'kProgressStep1');
                 }
 
                 if ((event instanceof RouteConfigLoadEnd || event instanceof NavigationCancel)) {
-                    console.log('>>> 2');
-
                     renderer.removeClass(this._bar.nativeElement, 'kProgressStep1');
                     renderer.addClass(this._bar.nativeElement, 'kProgressStep2');
 
                     this._timeout = setTimeout(() => {
-                        console.log('>>> 3');
                         renderer.removeClass(this._bar.nativeElement, 'kProgressStep2');
-                    }, 1000);
+                    }, 2000);
                 }
             });
     }
