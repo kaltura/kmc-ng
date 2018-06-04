@@ -104,6 +104,12 @@
                     "instructions": "An Email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
                 }
             },
+            "invalidResetPasswordHash": {
+                "title": "Link Invalid",
+                "placeholder": "Enter Email",
+                "instructions": "This link is invalid or has expired. Please enter your email address to receive a new link.",
+                "sentInstructions": "An email has been sent to {{0}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
+            },
             "forgotPassword": {
                 "title": "Forgot Password",
                 "placeholder": "Your Email",
@@ -129,7 +135,8 @@
                 }
             },
             "restorePassword": {
-        "title": "Welcome to Kaltura, please select your password.",
+            "welcome": "Welcome to Kaltura.",
+            "selectPassword": "Please select your password.",
         "restored": "Your new password has been set, please login to Kaltura management console.",
         "error": {
           "equal": "Passwords do not match",

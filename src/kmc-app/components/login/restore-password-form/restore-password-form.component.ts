@@ -15,6 +15,7 @@ export class RestorePasswordFormComponent {
   @Input() passwordRestored = false;
 
   @Output() onRestorePassword = new EventEmitter<{ newPassword: string, hashKey: string }>();
+    @Output() returnToLogin = new EventEmitter<void>();
 
   public _formSent = false;
   public _resetPasswordForm: FormGroup;
@@ -31,11 +32,11 @@ export class RestorePasswordFormComponent {
   }
 
   public get _passwordStructureInvalid(): boolean {
-    return 'PASSWORD_STRUCTURE_INVALID' === this.errorCode;
+    return this._resetPasswordForm.pristine && 'PASSWORD_STRUCTURE_INVALID' === this.errorCode;
   }
 
   public get _passwordStructureInvalidMessage(): string {
-    return this._passwordStructureInvalid ? 'app.login.error.invalidStructure' : '';
+    return this._passwordStructureInvalid  ? 'app.login.error.invalidStructure' : '';
   }
 
   constructor(private _fb: FormBuilder) {
@@ -55,6 +56,16 @@ export class RestorePasswordFormComponent {
     this._repeatPasswordField = this._passwords.controls['repeatPassword'];
   }
 
+  private _markAsPristine(): void {
+      for (const control in this._resetPasswordForm.controls) {
+          if (this._resetPasswordForm.controls.hasOwnProperty(control)) {
+              this._resetPasswordForm.controls[control].markAsUntouched();
+              this._resetPasswordForm.controls[control].markAsPristine();
+              this._resetPasswordForm.controls[control].updateValueAndValidity();
+          }
+      }
+  }
+
   public _showError(control: AbstractControl): boolean {
     return control.invalid && (control.dirty || this._formSent);
   }
@@ -72,6 +83,7 @@ export class RestorePasswordFormComponent {
 
     if (this._resetPasswordForm.valid) {
       this._formSent = false;
+        this._markAsPristine();
       const value = this._resetPasswordForm.value;
       this.onRestorePassword.emit({
         newPassword: value.passwords.newPassword,

@@ -13,8 +13,14 @@ const routes: Routes = <Routes>[
     {
         path: 'error', component: ErrorComponent
     },
-    { path: 'actions/login-by-ks/:ks', component: LoginByKSComponent, pathMatch: 'full' },
-    { path: 'actions/restore-password/:hash', component: RestorePasswordComponent, pathMatch: 'full'  },
+    {
+        path: 'actions',
+        children: [
+            { path: 'login-by-ks/:ks', component: LoginByKSComponent, pathMatch: 'full' },
+            { path: 'restore-password/:hash', component: RestorePasswordComponent, pathMatch: 'full'  },
+            { path: '**', redirectTo: '../login' }
+        ]
+    },
     {
         path: '', canActivate: [AppBootstrap],
         children: [

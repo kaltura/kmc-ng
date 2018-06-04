@@ -92,6 +92,7 @@ import { LoginByKSComponent } from './components/app-actions/login-by-ks.compone
 import { RestorePasswordComponent } from './components/app-actions/restore-password.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
 import { RestorePasswordFormComponent } from './components/login/restore-password-form/restore-password-form.component';
+import { InvalidRestorePasswordHashFormComponent } from './components/login/invalid-restore-password-hash-form/invalid-restore-password-hash-form.component';
 
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
@@ -175,7 +176,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     LoginByKSComponent,
       RestorePasswordComponent,
       NotFoundPageComponent,
-      RestorePasswordFormComponent
+      RestorePasswordFormComponent,
+      InvalidRestorePasswordHashFormComponent
   ],
   bootstrap: <any>[
     AppComponent

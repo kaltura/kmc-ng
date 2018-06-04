@@ -1,7 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { kmcAppConfig } from '../../kmc-app-config';
-
-import { AppAuthentication,  AutomaticLoginErrorReasons,BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
+import { AppAuthentication,  AutomaticLoginErrorReasons, BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
 import { serverConfig } from 'config/server';
@@ -13,7 +11,8 @@ export enum LoginScreens {
   ForgotPassword,
   PasswordExpired,
   InvalidLoginHash,
-  RestorePassword
+  RestorePassword,
+  RestorePasswordInvalidHash
 }
 
 @Component({
@@ -55,16 +54,34 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               private _renderer: Renderer2,
               private _route: ActivatedRoute,
               private _router: Router,
-              restorePasswordView: RestorePasswordViewService) {
-      const restorePasswordArgs = restorePasswordView.popOpenArgs();
-      if (restorePasswordArgs && restorePasswordArgs.hash) {
-          this._currentScreen = LoginScreens.RestorePassword;
-          this._restorePasswordHash = restorePasswordArgs.hash;
-      }
+              private _restorePasswordView: RestorePasswordViewService) {
+      this._prepare();
   }
 
   ngAfterViewInit() {
     this.onResize();
+  }
+
+  private _prepare(): void {
+      const restorePasswordArgs = this._restorePasswordView.popOpenArgs();
+      if (restorePasswordArgs && restorePasswordArgs.hash) {
+          this._validateHash(restorePasswordArgs.hash)
+              .cancelOnDestroy(this)
+              .subscribe(({ errorCode }) => {
+                  if (errorCode) {
+                      this._currentScreen = LoginScreens.RestorePasswordInvalidHash;
+                      this._errorCode = errorCode;
+                  } else {
+                      this._currentScreen = LoginScreens.RestorePassword;
+                      this._restorePasswordHash = restorePasswordArgs.hash;
+                  }
+              });
+      }
+  }
+
+  private _validateHash(hash: string): Observable<{ errorCode: string }> {
+      // TODO validate hash on the server
+      return Observable.of({ errorCode: null });
   }
 
   private _makeLoginRequest(username: string, password: string): Observable<LoginResponse> {
