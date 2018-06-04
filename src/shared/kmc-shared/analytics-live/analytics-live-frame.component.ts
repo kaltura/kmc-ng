@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'shared/kmc-shell/index';
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
     selector: 'kAnalyticsLiveFrame',
@@ -9,32 +10,33 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
         'iframe { width: 100%; height: 100% }'
-    ]
+    ],
+    providers: [KalturaLogger.createLogger('AnalyticsLiveFrameComponent')]
 })
 export class AnalyticsLiveFrameComponent implements OnInit, OnDestroy {
     @Input() entryId: string;
 
     public _url = null;
 
-    constructor(private _appAuthentication: AppAuthentication,
-                private _logger: KalturaLogger,
-                private _browserService: BrowserService) {
-
+    constructor(private appAuthentication: AppAuthentication,
+                private logger: KalturaLogger,
+                private browserService: BrowserService,
+                private _liveAnalyticsView: LiveAnalyticsMainViewService
+    ) {
     }
 
     ngOnInit() {
         try {
-            if (!serverConfig.externalApps.liveAnalytics.enabled) { // Deep link when disabled handling
-                this._browserService.handleUnpermittedAction(true);
+            if (!this._liveAnalyticsView.isAvailable()) {
+                this.browserService.handleUnpermittedAction(true);
                 return undefined;
             }
             const cdnUrl = serverConfig.cdnServers.serverUri.replace('http://', '').replace('https://', '');
-            const path = `#/${this.entryId ? 'entry/' + this.entryId : 'dashboard'}/nonav`;
-            this._url = serverConfig.externalApps.liveAnalytics.uri + path;
+            this._url = serverConfig.externalApps.liveAnalytics.uri + '#/dashboard/nonav';
             window['kmc'] = {
                 'vars': {
-                    'ks': this._appAuthentication.appUser.ks,
-                    'partner_id': this._appAuthentication.appUser.partnerId,
+                    'ks': this.appAuthentication.appUser.ks,
+                    'partner_id': this.appAuthentication.appUser.partnerId,
                     'cdn_host': cdnUrl,
                     'service_url': getKalturaServerUri(),
                     'liveanalytics': {
@@ -44,12 +46,12 @@ export class AnalyticsLiveFrameComponent implements OnInit, OnDestroy {
                 },
                 'functions': {
                     expired: () => {
-                        this._appAuthentication.logout();
+                        this.appAuthentication.logout();
                     }
                 }
             };
         } catch (ex) {
-            this._logger.warn(`Could not load live real-time dashboard, please check that liveAnalytics configurations are loaded correctly\n error: ${ex}`);
+            this.logger.warn(`Could not load live real-time dashboard, please check that liveAnalytics configurations are loaded correctly\n error: ${ex}`);
             this._url = null;
             window['kmc'] = null;
         }
