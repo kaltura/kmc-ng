@@ -1,7 +1,9 @@
 @import "app-theme/_variables.scss";
 
+$appContentHeight : calc(100vh - 286px);
+
 .kApp{
-  height: $contentArea;
+  height: $appContentHeight;
     .kComingSoonWrapper {
         display: flex;
         align-items: center;
@@ -27,6 +29,6 @@
 
   iframe{
     width: 100%;
-    height: calc(100vh - 55px);
+    height: $appContentHeight;
   }
 }
