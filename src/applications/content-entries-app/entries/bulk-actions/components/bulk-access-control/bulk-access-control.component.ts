@@ -172,8 +172,8 @@ export class BulkAAccessControl implements OnInit, OnDestroy, AfterViewInit {
 		this._loading = true;
 		this._accessControlProfiles.next({items: []});
 
-		const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this).monitor('load access control profiles');
-		const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this).monitor('load flavours');
+		const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this);
+		const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this);
 
 		return Observable.forkJoin(getAPProfiles$, getFlavours$).cancelOnDestroy(this);
 	}

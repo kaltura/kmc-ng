@@ -32,7 +32,6 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
     public metadataForm: FormGroup;
     public customDataForms: DynamicMetadataForm[] = [];
     private _categoryMetadata: KalturaMetadata[] = [];
-    private _logger: KalturaLogger;
 
     constructor(private _kalturaServerClient: KalturaClient,
         private _formBuilder: FormBuilder,
@@ -40,8 +39,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         private _permissionsService: KMCPermissionsService,
         logger: KalturaLogger,
         private _dynamicMetadataFormFactory: DynamicMetadataFormFactory) {
-        super(ContentCategoryViewSections.Metadata);
-        this._logger = logger.subLogger('CategoryMetadataWidget');
+        super(ContentCategoryViewSections.Metadata, logger);
         this._buildForm();
     }
 
@@ -198,7 +196,6 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             }
         ))
             .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('get category custom metadata')
             .do(response => {
                 this._categoryMetadata = response.objects;
             })
@@ -215,7 +212,6 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             ignoredCreateMode: MetadataProfileCreateModes.App
         })
             .cancelOnDestroy(this)
-            .monitor('load metadata profiles')
             .do(response => {
 
                 this.customDataForms = [];
@@ -294,7 +290,6 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                     )
                 )
                     .cancelOnDestroy(this, this.widgetReset$)
-                    .monitor('search tags')
                     .subscribe(
                     result => {
                         const tags = result.objects.map(item => item.tag);

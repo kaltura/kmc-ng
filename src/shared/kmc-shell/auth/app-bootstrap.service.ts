@@ -72,8 +72,7 @@ export class AppBootstrap implements CanActivate {
                 console.log("Bootstrap Error::" + error); // TODO [kmc-infra] - move to log
                 this._bootstrapStatusSource.next(BoostrappingStatus.Error);
             }
-
-
+            
             this._initialized = true;
 
             // init localization, wait for localization to load before continuing

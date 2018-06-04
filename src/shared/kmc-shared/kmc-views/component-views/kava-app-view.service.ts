@@ -21,6 +21,6 @@ export class KavaAppViewService extends KmcComponentViewBaseService<void> {
     }
 
     isAvailable(): boolean {
-        return serverConfig.externalApps.kava.enabled;
+        return !!serverConfig.externalApps.kava;
     }
 }

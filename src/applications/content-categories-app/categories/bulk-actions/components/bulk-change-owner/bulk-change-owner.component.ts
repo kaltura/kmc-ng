@@ -99,7 +99,6 @@ export class CategoriesBulkChangeOwner implements OnInit, OnDestroy, AfterViewIn
       )
     )
       .cancelOnDestroy(this)
-      .monitor('search owners')
       .subscribe(
         data =>
         {

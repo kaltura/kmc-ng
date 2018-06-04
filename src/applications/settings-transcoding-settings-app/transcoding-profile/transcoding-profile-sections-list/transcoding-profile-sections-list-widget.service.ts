@@ -9,6 +9,7 @@ import {
     SettingsTranscodingProfileViewSections,
     SettingsTranscodingProfileViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface SectionWidgetItem {
   label: string;
@@ -23,8 +24,9 @@ export class TranscodingProfileSectionsListWidget extends TranscodingProfileWidg
   public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
   constructor(private _appLocalization: AppLocalization,
-              private _settingsTranscodingProfileViewService: SettingsTranscodingProfileViewService) {
-    super('sectionsList');
+              private _settingsTranscodingProfileViewService: SettingsTranscodingProfileViewService,
+              logger: KalturaLogger) {
+    super('sectionsList', logger);
   }
 
   ngOnDestroy() {

@@ -1,0 +1,42 @@
+@import 'app-theme/_variables.scss';
+
+:host {
+    z-index: 701;
+    position: fixed;
+    display: block;
+    width: 100%;
+}
+
+.kProgressBar {
+    height: 3px;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+
+    .kProgress {
+        width: 0%;
+        height: 100%;
+        background-color: $kPrimary;
+        animation-fill-mode: forwards;
+
+        &.kProgressStep1 {
+            width: 70%;
+            animation: progressStep1 8s ease-in-out;
+        }
+
+        &.kProgressStep2 {
+            width: 100%;
+            animation: progressStep2 1s ease-in-out;
+        }
+    }
+}
+
+@keyframes progressStep1 {
+    0% { width: 0; }
+    100% { width: 70%; }
+}
+
+@keyframes progressStep2 {
+    0% { width: 70%; }
+    100% { width: 100%; }
+}

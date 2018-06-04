@@ -268,8 +268,19 @@ export class EditUserComponent implements OnInit, OnDestroy {
                           this.parentPopupWidget.close();
                       },
                       addUserError => {
+                          let errorMessage = addUserError.message;
+                          if (addUserError.code === 'INVALID_FIELD_VALUE') {
+                              switch (addUserError.args['FIELD_NAME']) {
+                                  case 'email':
+                                      errorMessage = this._appLocalization.get('applications.administration.users.emailFormat');
+                                      break;
+                                  case 'id':
+                                      errorMessage = this._appLocalization.get('applications.administration.users.publisherIdFormat');
+                                      break;
+                              }
+                          }
                           this._blockerMessage = new AreaBlockerMessage({
-                              message: addUserError.message,
+                              message: errorMessage,
                               buttons: [{
                                   label: this._appLocalization.get('app.common.ok'),
                                   action: () => {
