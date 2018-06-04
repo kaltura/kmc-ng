@@ -2,6 +2,29 @@
 
 .kApp{
   height: $contentArea;
+    .kComingSoonWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .kComingSoon {
+            margin: 25px 80px;
+            padding: 25px;
+            background-color: $kPrimary;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 16px;
+            max-width: 890px;
+            box-shadow: 0 5px 10px -1px $kGrayscale3;
+
+            h1 {
+                margin: 0 0 16px 0;
+                font-size: 20px;
+            }
+        }
+    }
+
+
   iframe{
     width: 100%;
     height: calc(100vh - 55px);
