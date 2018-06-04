@@ -87,6 +87,11 @@
             "redirect2": "If you are not redirected in few seconds, click ",
             "redirect3": "here"
         },
+        "openMail":{
+            "supportMailTitle": "Contact Kaltura Support",
+            "supportMailMsg": "Please send an email to the following email address:",
+            "supportMailMsgNoMail": "Please send an email to the Kaltura support team."
+        },
         "login": {
             "login": {
                 "title": "Login",
