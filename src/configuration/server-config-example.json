@@ -3,56 +3,13 @@
         "uri" : "www.kaltura.com",
         "defaultPrivileges": "",
         "deployUrl": "",
-        "previewUIConf": 38524931,
-        "freeTrialExpiration": {
-            "enabled": false,
-            "trialPeriodInDays": 30
-        },
-        "login": {
-            "limitAccess": {
-                "enabled": false,
-                "verifyBetaServiceUrl": ""
-            }
-        }
+        "previewUIConf": 38524931
     },
     "cdnServers": {
         "serverUri": "http://cdnapi.kaltura.com",
         "securedServerUri": "https://cdnapisec.kaltura.com"
     },
     "externalApps": {
-        "studio": {
-            "enabled": false,
-            "uri": "",
-            "html5_version":"",
-            "html5lib":""
-        },
-        "studioV3": {
-            "enabled": false,
-            "uri": "",
-            "html5_version":"",
-            "html5lib":""
-        },
-        "liveDashboard": {
-            "enabled": false,
-            "uri": ""
-        },
-        "kava": {
-            "enabled": false,
-            "uri": ""
-        },
-        "liveAnalytics": {
-            "enabled": false,
-            "uri": "",
-            "uiConfId": 0
-        },
-        "usageDashboard": {
-            "enabled": false,
-            "uri": ""
-        },
-        "editor": {
-            "enabled": false,
-            "uri": ""
-        }
     },
     "externalLinks": {
         "previewAndEmbed": {

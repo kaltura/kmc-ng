@@ -188,14 +188,12 @@ export class EntryStore implements  OnDestroy {
 		this._widgetsManager.notifyDataSaving(newEntry, request, this.entry)
             .cancelOnDestroy(this)
             .tag('block-shell')
-			.monitor('entry store: prepare entry for save')
             .flatMap(
 				(response) => {
 					if (response.ready) {
 						this._refreshEntriesListUponLeave = true;
 
 						return this._kalturaServerClient.multiRequest(request)
-                            .monitor('entry store: save entry')
                             .tag('block-shell')
                             .map(
 								response => {
@@ -376,7 +374,7 @@ export class EntryStore implements  OnDestroy {
 				observer.next({allowed: true});
 				observer.complete();
 			}
-		}).monitor('entry store: check if can leave section without saving');
+		});
 	}
 
     public returnToEntries(): void {

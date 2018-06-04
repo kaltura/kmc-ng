@@ -7,7 +7,7 @@ import {EntryWidget} from '../entry-widget';
 import {serverConfig, getKalturaServerUri} from 'config/server';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import { EntryStore } from '../entry-store.service';
-
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
@@ -17,8 +17,9 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
     constructor(private appAuthentication: AppAuthentication,
                 private _store: EntryStore,
                 private _permissionsService: KMCPermissionsService,
-                appEvents: AppEventsService) {
-        super('entryPreview');
+                appEvents: AppEventsService,
+                logger: KalturaLogger) {
+        super('entryPreview', logger);
 
 
         appEvents.event(PreviewMetadataChangedEvent)

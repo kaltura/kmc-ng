@@ -23,7 +23,6 @@ export class AccountInfoService {
 
 
     return this._kalturaServerClient.request(new PartnerGetInfoAction())
-      .monitor('get account info')
       .map(
         (response: KalturaPartner) => {
 
