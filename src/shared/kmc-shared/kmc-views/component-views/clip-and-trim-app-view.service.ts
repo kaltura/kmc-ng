@@ -80,7 +80,9 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
                 isEntryReplacing,
                 isExternalMedia,
                 entryMediaType: entry.mediaType,
-                isEntryRelevant
+                isEntryRelevant,
+                isAvailableForLive,
+                isAvailableForMedia
             }
         ));
 
