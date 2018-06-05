@@ -4,7 +4,6 @@
         <div #appmenu class="appMenu">
 
             <div class="kIconkaltura_logo kLogo"></div>
-            <div class="k-beta-logo kBeta"></div>
 
             <div *ngFor="let item of leftMenuConfig">
                 <a class="kMenuLink" *ngIf="item.titleToken.length && !item.icon" [class.activeLink]="item === selectedMenuItem" (click)="item.open()">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
