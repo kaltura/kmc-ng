@@ -71,6 +71,7 @@ import { AppMenuContentComponent } from './components/app-menu/app-menu-content.
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
 import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
+import { OpenEmailComponent } from './components/open-email/open-email.component';
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
@@ -91,11 +92,14 @@ import { AppDefaultViewComponent } from './components/app-default-view/app-defau
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 import { NewReplaceVideoUploadModule } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload.module';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
+import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
+
     return  {
         endpointUrl: getKalturaServerUri(),
         clientTag: 'kmcng'
@@ -134,6 +138,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
+    CopyToClipboardModule,
     KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),
       NewReplaceVideoUploadModule.forRoot(),
@@ -170,10 +175,12 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
     ChangeAccountComponent,
+    OpenEmailComponent,
     ChangelogComponent,
     ChangelogContentComponent,
     LoginByKSComponent,
-      NotFoundPageComponent
+      NotFoundPageComponent,
+      ProgressBarComponent
   ],
   bootstrap: <any>[
     AppComponent

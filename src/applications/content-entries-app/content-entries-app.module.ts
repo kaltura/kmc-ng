@@ -52,6 +52,7 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
 import { EntriesListService } from './entries/entries-list.service';
 import { InputHelperModule } from '@kaltura-ng/kaltura-ui/input-helper/input-helper.module';
+import { AnalyticsLiveModule } from 'app-shared/kmc-shared/analytics-live/analytics-live.module';
 
 @NgModule({
   imports: [
@@ -98,7 +99,8 @@ import { InputHelperModule } from '@kaltura-ng/kaltura-ui/input-helper/input-hel
     StickyModule,
     KMCPermissionsModule,
     TableModule,
-      InputHelperModule
+    InputHelperModule,
+    AnalyticsLiveModule
   ],
   declarations: [
     ContentEntriesComponent,

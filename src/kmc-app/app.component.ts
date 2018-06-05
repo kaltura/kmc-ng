@@ -2,11 +2,14 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { BrowserService, GrowlMessage } from 'app-shared/kmc-shell/providers/browser.service';
 import { OperationTagManagerService} from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 import { async } from 'rxjs/scheduler/async';
 
+import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { EmailConfig } from './components/open-email/open-email.component';
 /*
  * App Component
  * Top Level Component
@@ -21,19 +24,21 @@ export class AppComponent implements OnInit {
 
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
   @ViewChild('alert') private _alertDialog: ConfirmDialog;
+  @ViewChild('openEmailPopup') private _emailDialog: PopupWidgetComponent;
 
   public _isBusy: boolean = false;
   public _growlMessages: GrowlMessage[] = [];
   public _confirmDialogAlignLeft = false;
+  public _openEmailConfig: EmailConfig = {email: "", title: "", message:""};
 
   constructor(private _confirmationService: ConfirmationService,
               private _browserService : BrowserService,
-              private _appLocalization: AppLocalization,
               private router: Router,
-              private _route: ActivatedRoute,
               private _loggerConfigurator: KmcLoggerConfigurator,
-              private _oprationsTagManager: OperationTagManagerService
+              private _oprationsTagManager: OperationTagManagerService,
+              private _appEvents: AppEventsService
               ) {
+
   }
 
   ngOnInit() {
@@ -75,6 +80,13 @@ export class AppComponent implements OnInit {
         this._growlMessages = [ ...this._growlMessages, message ];
       }
     );
+
+      // handle open Email event
+      this._appEvents.event(OpenEmailEvent)
+          .subscribe(({email, title, message}) => {
+              this._openEmailConfig = {email, title, message}
+              this._emailDialog.open();
+          });
 
       this._loggerConfigurator.init();
   }
