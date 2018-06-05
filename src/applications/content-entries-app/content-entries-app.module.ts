@@ -5,25 +5,26 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DetailsBarModule} from '@kaltura-ng/kaltura-ui/details-bar';
 import {TagsModule} from '@kaltura-ng/kaltura-ui/tags';
 import {
-  AccordionModule,
-  ButtonModule,
-  CalendarModule,
-  CheckboxModule,
-  ConfirmationService,
-  ConfirmDialogModule,
-  DataTableModule,
-  DropdownModule,
-  InputTextareaModule,
-  InputTextModule,
-  MenuModule,
-  MultiSelectModule,
-  OverlayPanelModule,
-  PaginatorModule,
-  RadioButtonModule,
-  SharedModule,
-  SpinnerModule,
-  TieredMenuModule,
-  TreeModule
+    AccordionModule,
+    ButtonModule,
+    CalendarModule,
+    CheckboxModule,
+    ConfirmationService,
+    ConfirmDialogModule,
+    DataTableModule,
+    DropdownModule,
+    InputSwitchModule,
+    InputTextareaModule,
+    InputTextModule,
+    MenuModule,
+    MultiSelectModule,
+    OverlayPanelModule,
+    PaginatorModule,
+    RadioButtonModule,
+    SharedModule,
+    SpinnerModule,
+    TieredMenuModule,
+    TreeModule
 } from 'primeng/primeng';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 
@@ -99,6 +100,7 @@ import { AnalyticsLiveModule } from 'app-shared/kmc-shared/analytics-live/analyt
     StickyModule,
     KMCPermissionsModule,
     TableModule,
+    InputSwitchModule,
     InputHelperModule,
     AnalyticsLiveModule
   ],
