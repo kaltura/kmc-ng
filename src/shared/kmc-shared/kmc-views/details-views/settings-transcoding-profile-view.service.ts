@@ -43,7 +43,7 @@ export class SettingsTranscodingProfileViewService extends KmcDetailsViewBaseSer
         const mainTitle = this._appLocalization.get('app.titles.settingsTranscodingPageTitle');
         const profileId = args.profile.id;
         const section = args.section === SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
-        const sectionTitle = this._appLocalization.get(`applications.settings.transcoding.sections.${section.toLocaleLowerCase()}`);
+        const sectionTitle = this._appLocalization.get(`applications.settings.transcoding.sections.${section.toLowerCase()}`);
         return { title: `${mainTitle} > ${profileId} > ${sectionTitle}`};
     }
 

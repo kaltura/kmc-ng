@@ -32,7 +32,7 @@ export class ContentNewCategoryViewService extends KmcDetailsViewBaseService<Con
         const mainTitle = this._appLocalization.get('app.titles.contentCategoriesPageTitle');
         const categoryId = 'new';
         const section = ContentCategoryViewSections.Metadata;
-        const sectionTitle = this._appLocalization.get(`applications.content.categoryDetails.sections.${section.toLocaleLowerCase()}`);
+        const sectionTitle = this._appLocalization.get(`applications.content.categoryDetails.sections.${section.toLowerCase()}`);
         return { title: `${mainTitle} > ${categoryId} > ${sectionTitle}`};
     }
 

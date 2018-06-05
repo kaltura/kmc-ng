@@ -57,7 +57,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
         const mainTitle = this._appLocalization.get('app.titles.contentEntriesPageTitle');
         const entryId = args.entry.id;
         const section = args.section === ContentEntryViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
-        const sectionTitle = this._appLocalization.get(`applications.content.entryDetails.sections.${section.toLocaleLowerCase()}`);
+        const sectionTitle = this._appLocalization.get(`applications.content.entryDetails.sections.${section.toLowerCase()}`);
         return { title: `${mainTitle} > ${entryId} > ${sectionTitle}`};
     }
 

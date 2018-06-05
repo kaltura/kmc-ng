@@ -40,7 +40,7 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
         const mainTitle = this._appLocalization.get('app.titles.contentPlaylistsPageTitle');
         const playlistId = args.playlist.id;
         const section = args.section === ContentPlaylistViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute, args.playlist) : args.section;
-        const sectionTitle = this._appLocalization.get(`applications.content.playlistDetails.sections.${section.toLocaleLowerCase()}`);
+        const sectionTitle = this._appLocalization.get(`applications.content.playlistDetails.sections.${section.toLowerCase()}`);
         return { title: `${mainTitle} > ${playlistId} > ${sectionTitle}`};
     }
 
