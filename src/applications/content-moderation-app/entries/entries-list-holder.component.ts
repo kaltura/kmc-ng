@@ -16,6 +16,7 @@ import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ModerationsListService } from './moderations-list.service';
+import { ContentModerationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
@@ -74,21 +75,26 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _entriesStore: EntriesStore,
               private _moderationsListService: ModerationsListService,
               private _permissionsService: KMCPermissionsService,
+              private _contentModerationMainViewService: ContentModerationMainViewService,
               private _bulkService: BulkService) {
-
-      if (this._moderationsListService.isViewAvailable) {
-          this._entriesStore.reload();
-      }
-    if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MODERATE_APPROVE_REJECT)) {
-      this._rowActions = [];
-    }
   }
 
   ngOnInit() {
-
+    if (this._contentModerationMainViewService.viewEntered()) {
+        this._prepare();
+    }
   }
 
   ngOnDestroy() {
+  }
+
+  private _prepare(): void {
+      if (this._moderationsListService.isViewAvailable) {
+          this._entriesStore.reload();
+      }
+      if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MODERATE_APPROVE_REJECT)) {
+          this._rowActions = [];
+      }
   }
 
 

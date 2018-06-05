@@ -47,78 +47,78 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
       if (this._contentUploadsMainView.viewEntered()) {
-          this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
-
-          // listen for mediaCreated to show entryId in the upload list once media is created for this upload
-          this._newEntryUploadService.onMediaCreated$
-              .cancelOnDestroy(this)
-              .subscribe(
-                  file => {
-                      this._updateFile(file.id, {entryId: file.entryId});
-                  }
-              );
-
-          this._uploadManagement.onTrackedFileChanged$
-              .cancelOnDestroy(this)
-              .filter(trackedFile => isMonitoredUploadFile(trackedFile.data))
-              .subscribe(
-                  (trackedFile) => {
-                      // NOTE: this service does not handle 'waitingUpload' status by design.
-                      switch (trackedFile.status) {
-                          case TrackedFileStatuses.added:
-                              this._addFile(trackedFile);
-                              break;
-
-                          case TrackedFileStatuses.uploading:
-                              const changes = {
-                                  progress: trackedFile.progress,
-                                  status: trackedFile.status
-                              };
-
-                              if (trackedFile.progress === 0) {
-                                  this._sortUploads();
-                                  Object.assign(changes, {uploadedOn: trackedFile.uploadStartAt});
-                              }
-
-                              this._updateFile(trackedFile.id, changes);
-
-                              break;
-
-                          case TrackedFileStatuses.uploadCompleted:
-                              this._updateFile(trackedFile.id, {
-                                  progress: trackedFile.progress,
-                                  status: trackedFile.status
-                              });
-
-                              this._sortUploads();
-
-                              setTimeout(() => {
-                                  this._removeFile(trackedFile.id);
-                              }, 5000);
-                              break;
-
-                          case TrackedFileStatuses.failure:
-                              this._updateFile(trackedFile.id, {status: trackedFile.status});
-                              this._sortUploads();
-                              break;
-
-                          case TrackedFileStatuses.purged:
-                              this._removeFile(trackedFile.id);
-                              break;
-
-                          default:
-                              break;
-                      }
-                  }
-              );
+          this._prepare();
       }
   }
 
   ngOnDestroy() {
   }
 
-  private _filterUploadFiles(data: KalturaUploadFile): boolean {
-    return data instanceof NewEntryUploadFile || data instanceof NewEntryFlavourFile;
+  private _prepare(): void {
+      this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
+
+      // listen for mediaCreated to show entryId in the upload list once media is created for this upload
+      this._newEntryUploadService.onMediaCreated$
+          .cancelOnDestroy(this)
+          .subscribe(
+              file => {
+                  this._updateFile(file.id, {entryId: file.entryId});
+              }
+          );
+
+      this._uploadManagement.onTrackedFileChanged$
+          .cancelOnDestroy(this)
+          .filter(trackedFile => isMonitoredUploadFile(trackedFile.data))
+          .subscribe(
+              (trackedFile) => {
+                  // NOTE: this service does not handle 'waitingUpload' status by design.
+                  switch (trackedFile.status) {
+                      case TrackedFileStatuses.added:
+                          this._addFile(trackedFile);
+                          break;
+
+                      case TrackedFileStatuses.uploading:
+                          const changes = {
+                              progress: trackedFile.progress,
+                              status: trackedFile.status
+                          };
+
+                          if (trackedFile.progress === 0) {
+                              this._sortUploads();
+                              Object.assign(changes, {uploadedOn: trackedFile.uploadStartAt});
+                          }
+
+                          this._updateFile(trackedFile.id, changes);
+
+                          break;
+
+                      case TrackedFileStatuses.uploadCompleted:
+                          this._updateFile(trackedFile.id, {
+                              progress: trackedFile.progress,
+                              status: trackedFile.status
+                          });
+
+                          this._sortUploads();
+
+                          setTimeout(() => {
+                              this._removeFile(trackedFile.id);
+                          }, 5000);
+                          break;
+
+                      case TrackedFileStatuses.failure:
+                          this._updateFile(trackedFile.id, {status: trackedFile.status});
+                          this._sortUploads();
+                          break;
+
+                      case TrackedFileStatuses.purged:
+                          this._removeFile(trackedFile.id);
+                          break;
+
+                      default:
+                          break;
+                  }
+              }
+          );
   }
 
   private _updateSelectedUploadsOnRemove(fileId: string): void {

@@ -18,6 +18,7 @@ import {
     SettingsTranscodingProfileViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -55,12 +56,15 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
               private _logger: KalturaLogger,
               private _browserService: BrowserService,
               private _settingsTranscodingProfileViewService: SettingsTranscodingProfileViewService,
+              private _settingsTranscodingProfilesMainViewService: SettingsTranscodingMainViewService,
               private _liveTranscodingProfilesStore: LiveTranscodingProfilesStore,
               private _mediaTranscodingProfilesStore: MediaTranscodingProfilesStore) {
   }
 
   ngOnInit() {
-    this._prepare();
+      if (this._settingsTranscodingProfilesMainViewService.viewEntered()) {
+          this._prepare();
+      }
   }
 
   ngOnDestroy() {
