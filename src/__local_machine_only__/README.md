@@ -42,7 +42,9 @@ Follow these instructions to test external apps integration:
 },
 "liveAnalytics": {
     "uri": "/__local_machine_only__/live-analytics-vFuture/index.html",
-    "uiConfId": 36060752
+    "uiConfId": 36060752,
+    "mapUrls": ["cf1.kaltura.com/content/static/maps/v1", "cf2.kaltura.com/content/static/maps/v1", "cf3.kaltura.com/content/static/maps/v1"],
+    "mapZoomLevels": "12"
 },
 "usageDashboard": {
     "uri": "/__local_machine_only__/usage-dashboard-v1_0_0/index.html"
