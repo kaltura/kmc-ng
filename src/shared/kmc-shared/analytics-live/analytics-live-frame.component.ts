@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, OnChanges } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'shared/kmc-shell/index';
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { LiveAnalyticsMainViewService } from '../kmc-views/main-views/live-analytics-main-view.service';
 
 @Component({
     selector: 'kAnalyticsLiveFrame',
@@ -13,7 +13,7 @@ import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
     ],
     providers: [KalturaLogger.createLogger('AnalyticsLiveFrameComponent')]
 })
-export class AnalyticsLiveFrameComponent implements OnInit, OnDestroy {
+export class AnalyticsLiveFrameComponent implements OnInit, OnDestroy, OnChanges {
     @Input() entryId: string;
 
     public _url = null;
@@ -25,14 +25,30 @@ export class AnalyticsLiveFrameComponent implements OnInit, OnDestroy {
     ) {
     }
 
+    ngOnChanges(changes) {
+        if (changes.entryId) {
+            this._updateUrl();
+        }
+    }
+
+    private _updateUrl(): void {
+        if (this.entryId) {
+            this._url = serverConfig.externalApps.liveAnalytics.uri + `#/entry/${this.entryId}/nonav`;
+        } else {
+            this._url = serverConfig.externalApps.liveAnalytics.uri + '#/dashboard/nonav';
+        }
+    }
+
     ngOnInit() {
         try {
             if (!this._liveAnalyticsView.isAvailable()) {
                 this.browserService.handleUnpermittedAction(true);
                 return undefined;
             }
+
+            this._updateUrl();
+
             const cdnUrl = serverConfig.cdnServers.serverUri.replace('http://', '').replace('https://', '');
-            this._url = serverConfig.externalApps.liveAnalytics.uri + '#/dashboard/nonav';
             window['kmc'] = {
                 'vars': {
                     'ks': this.appAuthentication.appUser.ks,
@@ -41,7 +57,8 @@ export class AnalyticsLiveFrameComponent implements OnInit, OnDestroy {
                     'service_url': getKalturaServerUri(),
                     'liveanalytics': {
                         'player_id': +serverConfig.externalApps.liveAnalytics.uiConfId,
-                        'hideSubNav': true
+                        map_urls: serverConfig.externalApps.liveAnalytics.mapUrls,
+                        map_zoom_levels: serverConfig.externalApps.liveAnalytics.mapZoomLevels
                     }
                 },
                 'functions': {

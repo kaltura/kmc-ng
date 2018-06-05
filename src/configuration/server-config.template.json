@@ -31,7 +31,10 @@
       "uri": "@externalApps.liveDashboard.uri@"
     },
     "liveAnalytics": {
-      "uri": "@externalApps.liveAnalytics.uri@"
+       "uri": "@externalApps.liveAnalytics.uri@",
+       "uiConfId": @externalApps.liveAnalytics.uiConfId@
+       "mapUrls": ["@externalApps.liveAnalytics.mapUrls@"],
+       "mapZoomLevels": "@externalApps.liveAnalytics.mapZoomLevels@"
     },
     "kava": {
       "uri": "@externalApps.kava.uri@"
