@@ -17,8 +17,7 @@ const routes: Routes = <Routes>[
         path: 'actions',
         children: [
             { path: 'login-by-ks/:ks', component: LoginByKSComponent, pathMatch: 'full' },
-            { path: 'restore-password/:hash', component: RestorePasswordComponent, pathMatch: 'full'  },
-            { path: '**', redirectTo: '../login' }
+            { path: 'restore-password/:hash', component: RestorePasswordComponent, pathMatch: 'full'  }
         ]
     },
     {
