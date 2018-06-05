@@ -26,9 +26,7 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
                 .map(result => result === null ? true : result) // treat navigation to save route as successful operation
                 .subscribe(
                 result => {
-                    if (result) {
-                        this._titleService.setTitle(this.getViewMetadata(args).title);
-                    } else {
+                    if (!result) {
                         this._logger.info('open view operation failed');
                     }
 

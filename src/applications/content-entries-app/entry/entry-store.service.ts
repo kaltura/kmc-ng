@@ -153,27 +153,32 @@ export class EntryStore implements  OnDestroy {
 	}
 
 	private _onRouterEvents() : void {
-		this._router.events
+        this._router.events
             .cancelOnDestroy(this)
             .subscribe(
-				event => {
-					if (event instanceof NavigationStart) {
-					} else if (event instanceof NavigationEnd) {
+                event => {
+                    if (event instanceof NavigationStart) {
+                    } else if (event instanceof NavigationEnd) {
 
-						// we must defer the loadEntry to the next event cycle loop to allow components
-						// to init them-selves when entering this module directly.
-						setTimeout(() =>
-						{
-							const currentEntryId = this._entryRoute.snapshot.params.id;
-							const entry = this._entry.getValue();
-							if (!entry || (entry && entry.id !== currentEntryId)) {
-								this._loadEntry(currentEntryId);
-							}
-						});
-					}
-				}
-			)
-	}
+                        // we must defer the loadEntry to the next event cycle loop to allow components
+                        // to init them-selves when entering this module directly.
+                        setTimeout(() => {
+                            const currentEntryId = this._entryRoute.snapshot.params.id;
+                            const entry = this._entry.getValue();
+                            if (!entry || (entry && entry.id !== currentEntryId)) {
+                                this._loadEntry(currentEntryId);
+                            } else {
+                                this._contentEntryViewService.viewEntered({
+                                    entry,
+                                    activatedRoute: this._entryRoute,
+                                    section: ContentEntryViewSections.ResolveFromActivatedRoute
+                                });
+                            }
+                        });
+                    }
+                }
+            )
+    }
 
 	private _transmitSaveRequest(newEntry : KalturaMediaEntry) {
 		this._state.next({action: ActionTypes.EntrySaving});

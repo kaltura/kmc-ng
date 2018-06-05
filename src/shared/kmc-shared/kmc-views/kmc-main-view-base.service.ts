@@ -83,7 +83,8 @@ export abstract class KmcMainViewBaseService {
 
     viewEntered(): boolean {
         if (this.isAvailable()) {
-            this._titleService.setTitle(this.getViewMetadata().title);
+            const title = this.getViewMetadata().title || '';
+            this._titleService.setTitle(`KMC > ${title}`);
             return true;
         } else {
             this._browserService.handleUnpermittedAction(true);
