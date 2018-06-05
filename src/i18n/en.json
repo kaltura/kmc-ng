@@ -2691,6 +2691,10 @@
                     "systemNamePlaceholder": "Enter System Name"
                 }
             }
+        },
+        "analytics": {
+            "comingSoon": "Coming soon! Analytics for all media types.",
+            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please login to the legacy KMC to view and create analytics and reports. Analytics for all media should be available soon"
         }
     },
     "entriesShared": {

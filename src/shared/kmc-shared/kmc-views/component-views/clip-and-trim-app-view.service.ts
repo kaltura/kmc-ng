@@ -12,9 +12,10 @@ import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatu
 import {KalturaEntryReplacementStatus} from 'kaltura-ngx-client/api/types/KalturaEntryReplacementStatus';
 import {KalturaExternalMediaEntry} from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaLiveEntry } from 'kaltura-ngx-client/api/types/KalturaLiveEntry';
 
 export interface ClipAndTrimAppViewArgs {
-    entry: KalturaMediaEntry;
+    entry: KalturaMediaEntry | KalturaLiveEntry;
     hasSource: boolean;
 }
 
@@ -60,11 +61,15 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
         const isEntryReplacing = entry.replacementStatus !== KalturaEntryReplacementStatus.none;
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
         const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1 && !isExternalMedia;
-        const isLiveEntry = entry.mediaType === KalturaMediaType.liveStreamFlash ||
-            entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
-            entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
-            entry.mediaType === KalturaMediaType.liveStreamQuicktime;
-        const result = hasSource && entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
+        const isLiveEntry = [
+            KalturaMediaType.liveStreamFlash,
+            KalturaMediaType.liveStreamWindowsMedia,
+            KalturaMediaType.liveStreamRealMedia,
+            KalturaMediaType.liveStreamQuicktime
+        ].indexOf(entry.mediaType) !== -1;
+        const isAvailableForLive = isLiveEntry && !!(<KalturaLiveEntry>entry).recordedEntryId;
+        const isAvailableForMedia = !isLiveEntry && isEntryRelevant && hasSource && entryReady && !isEntryReplacing;
+        const result = isAvailableForMedia || isAvailableForLive;
 
         this._logger.trace(`conditions used to check availability status by data`, () => (
             {
@@ -75,7 +80,9 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
                 isEntryReplacing,
                 isExternalMedia,
                 entryMediaType: entry.mediaType,
-                isEntryRelevant
+                isEntryRelevant,
+                isAvailableForLive,
+                isAvailableForMedia
             }
         ));
 

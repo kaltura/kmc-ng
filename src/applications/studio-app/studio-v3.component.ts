@@ -28,7 +28,6 @@ export class StudioV3Component implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
        if (this._studioV3MainView.viewEntered()) {
            window['kmc'] = {
-               'version': '3',
                'preview_embed': {
                    'updateList': (isPlaylist: boolean) => {
                        this._updatePlayers(isPlaylist);

@@ -5,10 +5,9 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
-  selector: 'kAnalyticsLive',
+  selector: 'kAnalyticsLiveApp',
   templateUrl: './analytics-live.component.html',
-  styleUrls: ['./analytics-live.component.scss'],
-  providers: []
+  styleUrls: ['./analytics-live.component.scss']
 })
 export class AnalyticsLiveComponent implements OnInit, OnDestroy {
 
