@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import {getKalturaServerUri, serverConfig} from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { UsageDashboardMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kUsageDashboard',
@@ -12,12 +13,15 @@ export class UsageDashboardComponent implements OnInit, OnDestroy {
 
   public _usageDashboardUrl = null;
 
-  constructor(private appAuthentication: AppAuthentication, private logger: KalturaLogger, private browserService: BrowserService) {
+  constructor(private appAuthentication: AppAuthentication,
+              private logger: KalturaLogger,
+              private browserService: BrowserService,
+              private _usageDashboardMainView: UsageDashboardMainViewService) {
   }
 
   ngOnInit() {
     try {
-      if (!serverConfig.externalApps.usageDashboard.enabled) { // Deep link when disabled handling
+      if (!this._usageDashboardMainView.isAvailable()) { // Deep link when disabled handling
           this.browserService.handleUnpermittedAction(true);
         return undefined;
       }

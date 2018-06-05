@@ -243,16 +243,12 @@ export class AppAuthentication {
     }
 
     private _checkIfPartnerCanAccess(partner: KalturaPartner): Observable<boolean> {
-        if (!(!!serverConfig.kalturaServer.login && !!serverConfig.kalturaServer.login.limitAccess)){
+        if (!serverConfig.kalturaServer.limitAccess){
             return Observable.of(true);
         }
-        const limitAccess = serverConfig.kalturaServer.login.limitAccess;
+        const serviceUrl = serverConfig.kalturaServer.limitAccess.serviceUrl;
 
-        if (!limitAccess.enabled) {
-            return Observable.of(true);
-        }
-
-        const url = buildKalturaServerUri(limitAccess.verifyBetaServiceUrl + partner.id);
+        const url = buildKalturaServerUri(serviceUrl + partner.id);
         this._logger.debug(`check if partner can access the KMC`, {partnerId: partner.id, limitAccess: true, url});
 
         return this._http.get(url, { responseType: 'json' })

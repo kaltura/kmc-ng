@@ -51,6 +51,7 @@ import {KEditHosterModule} from 'app-shared/kmc-shared/kedit-hoster/kedit-hoster
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
 import { EntriesListService } from './entries/entries-list.service';
+import { AnalyticsLiveModule } from 'app-shared/kmc-shared/analytics-live/analytics-live.module';
 
 @NgModule({
   imports: [
@@ -96,7 +97,8 @@ import { EntriesListService } from './entries/entries-list.service';
     KEditHosterModule,
     StickyModule,
     KMCPermissionsModule,
-    TableModule
+    TableModule,
+    AnalyticsLiveModule
   ],
   declarations: [
     ContentEntriesComponent,
