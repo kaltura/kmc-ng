@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
+import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { Title } from '@angular/platform-browser';
 
 export interface KalturaConversionProfileWithAsset extends KalturaConversionProfile {
     assets?: KalturaConversionProfileAssetParams[];
@@ -34,8 +34,17 @@ export class SettingsTranscodingProfileViewService extends KmcDetailsViewBaseSer
                 private _appLocalization: AppLocalization,
                 private _router: Router,
                 _browserService: BrowserService,
-                _logger: KalturaLogger) {
-        super(_logger.subLogger('SettingsTranscodingProfileViewService'), _browserService);
+                _logger: KalturaLogger,
+                _titleService: Title) {
+        super(_logger.subLogger('SettingsTranscodingProfileViewService'), _browserService, _titleService);
+    }
+
+    getViewMetadata(args: SettingsTranscodingProfileViewArgs): DetailsViewMetadata {
+        const mainTitle = this._appLocalization.get('app.titles.settingsTranscodingPageTitle');
+        const profileId = args.profile.id;
+        const section = args.section === SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
+        const sectionTitle = this._appLocalization.get(`applications.settings.transcoding.sections.${section.toLocaleLowerCase()}`);
+        return { title: `${mainTitle} > ${profileId} > ${sectionTitle}`};
     }
 
     isAvailable(args: SettingsTranscodingProfileViewArgs): boolean {

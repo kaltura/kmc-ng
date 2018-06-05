@@ -337,7 +337,7 @@ export class TranscodingProfileStore implements OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-            if (this._settingsTranscodingProfileViewService.isAvailable({
+            if (this._settingsTranscodingProfileViewService.viewEntered({
                 profile: response,
                 activatedRoute: this._profileRoute,
                 section: SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute
@@ -355,8 +355,6 @@ export class TranscodingProfileStore implements OnDestroy {
                 } else {
                     this._profile.state.next({ action: ActionTypes.ProfileLoaded });
                 }
-            } else {
-                this._browserService.handleUnpermittedAction(true);
             }
         },
         error => {

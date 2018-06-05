@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissionsService, KMCPermissions } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
+import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
@@ -14,6 +13,7 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { Title } from '@angular/platform-browser';
 
 export enum ContentEntryViewSections {
     Metadata = 'Metadata',
@@ -48,8 +48,17 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 private _kalturaClient: KalturaClient,
                 private _router: Router,
                 _browserService: BrowserService,
-                _logger: KalturaLogger) {
-        super(_logger.subLogger('ContentEntryViewService'), _browserService);
+                _logger: KalturaLogger,
+                _titleService: Title) {
+        super(_logger.subLogger('ContentEntryViewService'), _browserService, _titleService);
+    }
+
+    getViewMetadata(args: ContentEntryViewArgs): DetailsViewMetadata {
+        const mainTitle = this._appLocalization.get('app.titles.contentEntriesPageTitle');
+        const entryId = args.entry.id;
+        const section = args.section === ContentEntryViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
+        const sectionTitle = this._appLocalization.get(`applications.content.entryDetails.sections.${section.toLocaleLowerCase()}`);
+        return { title: `${mainTitle} > ${entryId} > ${sectionTitle}`};
     }
 
     isAvailable(args: ContentEntryViewArgs): boolean {

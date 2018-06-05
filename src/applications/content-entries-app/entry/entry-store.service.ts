@@ -272,7 +272,7 @@ export class EntryStore implements  OnDestroy {
             .subscribe(
                 ({ entry, hasSource }) => {
                     this._hasSource.next(hasSource);
-                    if (this._contentEntryViewService.isAvailable({
+                    if (this._contentEntryViewService.viewEntered({
                         entry,
                         activatedRoute: this._entryRoute,
                         section: ContentEntryViewSections.ResolveFromActivatedRoute
@@ -290,8 +290,6 @@ export class EntryStore implements  OnDestroy {
                         } else {
                             this._state.next({ action: ActionTypes.EntryLoaded });
                         }
-                    } else {
-                        this._browserService.handleUnpermittedAction(true);
                     }
 				},
 				error => {

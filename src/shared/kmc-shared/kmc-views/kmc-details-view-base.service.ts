@@ -26,7 +26,9 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
                 .map(result => result === null ? true : result) // treat navigation to save route as successful operation
                 .subscribe(
                 result => {
-                    if (!result) {
+                    if (result) {
+                        this._titleService.setTitle(this.getViewMetadata(args).title);
+                    } else {
                         this._logger.info('open view operation failed');
                     }
 
@@ -41,12 +43,12 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
         }
     }
 
-    viewEntered(args: TArgs): boolean {
+    viewEntered(args: TArgs, redirectToDefault = true): boolean {
         if (this.isAvailable(args)) {
             this._titleService.setTitle(this.getViewMetadata(args).title);
             return true;
         } else {
-            this._browserService.handleUnpermittedAction(true);
+            this._browserService.handleUnpermittedAction(redirectToDefault);
             return false;
         }
     }

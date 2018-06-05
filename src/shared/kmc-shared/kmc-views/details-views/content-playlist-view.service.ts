@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
+import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { Title } from '@angular/platform-browser';
 
 export enum ContentPlaylistViewSections {
     Metadata = 'Metadata',
@@ -31,8 +31,17 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
                 private _appLocalization: AppLocalization,
                 private _router: Router,
                 _browserService: BrowserService,
-                _logger: KalturaLogger) {
-        super(_logger.subLogger('ContentPlaylistViewService'), _browserService);
+                _logger: KalturaLogger,
+                _titleService: Title) {
+        super(_logger.subLogger('ContentPlaylistViewService'), _browserService, _titleService);
+    }
+
+    getViewMetadata(args: ContentPlaylistViewArgs): DetailsViewMetadata {
+        const mainTitle = this._appLocalization.get('app.titles.contentPlaylistsPageTitle');
+        const playlistId = args.playlist.id;
+        const section = args.section === ContentPlaylistViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute, args.playlist) : args.section;
+        const sectionTitle = this._appLocalization.get(`applications.content.playlistDetails.sections.${section.toLocaleLowerCase()}`);
+        return { title: `${mainTitle} > ${playlistId} > ${sectionTitle}`};
     }
 
     isAvailable(args: ContentPlaylistViewArgs): boolean {
