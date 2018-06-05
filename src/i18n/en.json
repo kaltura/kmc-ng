@@ -329,7 +329,7 @@
                     "transcodingProfile": "Live Transcoding Profiles",
                     "liveDVR": "Live DVR",
                     "liveDVR_message": "Seeking to previous parts of the live stream. The DVR window is 2 hours by default.",
-                    "enableRecording": "Enable Recording",
+                    "enableRecording": "Recording",
                     "enableRecordingOptions": {
                         "perSession": "Create new entries for every broadcast session",
                         "appended": "Append recorded content to a single entry"
@@ -1546,11 +1546,9 @@
                     "config": "Live Stream Configuration",
                     "dvrStatus": "DVR Status:",
                     "dvrWindow": "DVR Window:",
-                    "activeRec": "Active Recording:",
-                    "autoStart": "Auto-start:",
+                    "activeRec": "Recording:",
+                    "previewMode": "Preview Mode:",
                     "rtsp": "RTSP Broadcasting URLs",
-                    "enabled": "Enabled",
-                    "disabled": "Disabled",
                     "hlsStream": "HLS stream URL:",
                     "akamaiStream": "Akamai Stream ID:",
                     "transcoding": "Transcoding Profile Configuration",
