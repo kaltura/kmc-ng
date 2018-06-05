@@ -42,10 +42,14 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
     }
 
     viewEntered(args: TArgs, redirectToDefault = true): boolean {
+        this._logger.info('handle view entered');
         if (this.isAvailable(args)) {
-            this._titleService.setTitle(this.getViewMetadata(args).title);
+            const title = `KMC > ${this.getViewMetadata(args).title || ''}`;
+            this._logger.info('update browser page title', { title });
+            this._titleService.setTitle(title);
             return true;
         } else {
+            this._logger.warn('view is not available, handle unpermitted action');
             this._browserService.handleUnpermittedAction(redirectToDefault);
             return false;
         }

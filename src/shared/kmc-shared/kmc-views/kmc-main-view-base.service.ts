@@ -82,11 +82,14 @@ export abstract class KmcMainViewBaseService {
     }
 
     viewEntered(): boolean {
+        this._logger.info('handle view entered');
         if (this.isAvailable()) {
-            const title = this.getViewMetadata().title || '';
-            this._titleService.setTitle(`KMC > ${title}`);
+            const title = `KMC > ${this.getViewMetadata().title || ''}`;
+            this._logger.info('update browser page title', { title });
+            this._titleService.setTitle(title);
             return true;
         } else {
+            this._logger.warn('view is not available, handle unpermitted action');
             this._browserService.handleUnpermittedAction(true);
             return false;
         }

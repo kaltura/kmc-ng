@@ -162,6 +162,8 @@ export class CategoryService implements OnDestroy {
                         const category = this._category.getValue();
                         if (!category || (category && category.id.toString() !== currentCategoryId)) {
                           this._loadCategory(currentCategoryId);
+                        } else {
+                            this._contentCategoryView.viewEntered({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  });
                         }
 					});
 				});

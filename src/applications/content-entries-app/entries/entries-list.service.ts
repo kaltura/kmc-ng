@@ -10,8 +10,6 @@ export class EntriesListService {
     }
 
     constructor(contentEntriesMainView: ContentEntriesMainViewService) {
-        if (contentEntriesMainView.viewEntered()) {
-            this._isViewAvailable = true;
-        }
+        this._isViewAvailable = contentEntriesMainView.isAvailable();
     }
 }

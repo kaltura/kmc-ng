@@ -250,6 +250,15 @@ export class PlaylistStore implements OnDestroy {
               // to init them-selves when entering this module directly.
               setTimeout(() => this._loadPlaylist(currentPlaylistId), 0);
             }
+          } else {
+              const currentPlaylist = this._playlist.getValue();
+              if (currentPlaylist && currentPlaylist.playlist) {
+                  this._contentPlaylistView.viewEntered({
+                      playlist: currentPlaylist.playlist,
+                      activatedRoute: this._playlistRoute,
+                      section: ContentPlaylistViewSections.ResolveFromActivatedRoute
+                  });
+              }
           }
         }
       )

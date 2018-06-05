@@ -157,9 +157,7 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
                 event => {
-                    if (event instanceof NavigationStart) {
-                    } else if (event instanceof NavigationEnd) {
-
+                    if (event instanceof NavigationEnd) {
                         // we must defer the loadEntry to the next event cycle loop to allow components
                         // to init them-selves when entering this module directly.
                         setTimeout(() => {

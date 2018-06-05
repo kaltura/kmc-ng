@@ -83,7 +83,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
               settingsAccessControlMainView: SettingsAccessControlMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('AccessControlProfilesStore'));
-    if (settingsAccessControlMainView.viewEntered()) {
+    if (settingsAccessControlMainView.isAvailable()) {
         this._prepare();
     }
   }

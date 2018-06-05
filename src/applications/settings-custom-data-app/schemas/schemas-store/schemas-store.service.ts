@@ -56,7 +56,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
               settingsMetadataMainView: SettingsMetadataMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('SchemasStore'));
-    if (settingsMetadataMainView.viewEntered()) {
+    if (settingsMetadataMainView.isAvailable()) {
         this._prepare();
     }
   }

@@ -159,8 +159,7 @@ export class TranscodingProfileStore implements OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         event => {
-          if (event instanceof NavigationStart) {
-          } else if (event instanceof NavigationEnd) {
+          if (event instanceof NavigationEnd) {
             const currentProfileId = this._profileRoute.snapshot.params.id;
             if (currentProfileId !== this._profileId) {
               if (currentProfileId === 'new') {
@@ -197,6 +196,15 @@ export class TranscodingProfileStore implements OnDestroy {
                   }
                 });
               }
+            } else {
+                const profile = this._profile.data.getValue();
+                if (profile) {
+                    this._settingsTranscodingProfileViewService.viewEntered({
+                        profile: profile,
+                        activatedRoute: this._profileRoute,
+                        section: SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute
+                    });
+                }
             }
           }
         }
