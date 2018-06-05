@@ -33,7 +33,6 @@ export class StudioV3Component implements OnInit, AfterViewInit, OnDestroy {
         return undefined;
       }
       window['kmc'] = {
-        'version': '3',
         'preview_embed': {
           'updateList': (isPlaylist: boolean) => {
             this._updatePlayers(isPlaylist);

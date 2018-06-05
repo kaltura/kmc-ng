@@ -84,9 +84,11 @@ export const ServerConfigSchema = {
                 liveAnalytics: {
                     properties: {
                         uri: {type: 'string'},
-                        uiConfId: {type: 'number'}
+                        uiConfId: {type: 'number'},
+                        mapUrls: { type: 'array', items: { type: 'string' } },
+                        mapZoomLevels: {type: 'string'}
                     },
-                    required: ['uri', 'uiConfId'],
+                    required: ['uri', 'uiConfId', 'mapUrls', 'mapZoomLevels'],
                     additionalProperties: true
                 },
                 editor: {

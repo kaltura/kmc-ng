@@ -39,7 +39,9 @@ export interface ExternalApplications {
     };
     liveAnalytics?: {
         uiConfId: number,
-        uri: string
+        uri: string,
+        mapUrls: string[],
+        mapZoomLevels: string
     };
     editor?: {
         uri?: string
@@ -193,7 +195,9 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
         if (configuration) {
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g) && // not contains white spaces
-                !!configuration.uiConfId;
+                !!configuration.uiConfId &&
+                !!configuration.mapUrls &&
+                !!configuration.mapZoomLevels;
 
             if (result) {
                 configuration.uri = buildKalturaServerUri(configuration.uri);
