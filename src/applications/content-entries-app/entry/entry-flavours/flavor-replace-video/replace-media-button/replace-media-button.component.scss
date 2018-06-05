@@ -1,7 +1,12 @@
 @import 'app-theme/_variables.scss';
 
-.kFlavorReplaceButton {
+:host {
+    display: block;
     margin-left: 24px;
+}
+
+.kFlavorReplaceButton {
+    margin-right: 20px;
     font-size: 14px;
     font-weight: bold;
 }

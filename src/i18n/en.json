@@ -1504,7 +1504,8 @@
                         "link": "Link",
                         "filePathName": "File Path Name",
                         "required": "Please enter a URL",
-                        "enterFlavorUrl": "Enter the Flavor URL"
+                        "enterFlavorUrl": "Enter the Flavor URL",
+                        "linkRemoteStorage": "Link to Remote Storage"
                     },
                     "deleteConfirm": "Are you sure you want to delete this Asset: {{0}} ?",
                     "deleteConfirmTitle": "Delete Flavor Asset",

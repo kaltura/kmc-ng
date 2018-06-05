@@ -255,8 +255,9 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                         this._transcodingProfileField.setValue(this._transcodingProfilesOptions[0].value);
                     }
 
-                    if (this.entry.conversionProfileId) {
-                        this._transcodingProfileField.setValue(this.entry.conversionProfileId);
+                    const preselectedProfile = transcodingProfiles.find(({ id }) => this.entry.conversionProfileId === id);
+                    if (preselectedProfile) {
+                        this._transcodingProfileField.setValue(preselectedProfile.id);
                     }
 
                     this._transcodingProfiles = profilesWithAssets;
