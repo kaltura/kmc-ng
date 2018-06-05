@@ -99,7 +99,6 @@ export class CategoriesBulkAddTags implements OnInit, OnDestroy, AfterViewInit {
       )
     )
       .cancelOnDestroy(this)
-      .monitor('search tags')
       .subscribe(
         result =>
         {

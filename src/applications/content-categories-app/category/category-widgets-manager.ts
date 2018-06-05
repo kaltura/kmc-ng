@@ -4,14 +4,15 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui'
 import { CategoryService } from './category.service';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class CategoryWidgetsManager extends WidgetsManagerBase<KalturaCategory, KalturaMultiRequest>
 {
     private _categoryStore: CategoryService;
 
-    constructor() {
-        super();
+    constructor(logger: KalturaLogger) {
+        super(logger.subLogger('CategoryWidgetsManager'));
     }
 
     set categoryStore(value: CategoryService) {

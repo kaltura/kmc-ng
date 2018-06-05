@@ -15,6 +15,7 @@ import { PlaylistWidget } from '../../playlist-widget';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
   selectionId?: string;
@@ -29,8 +30,8 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   public entriesDuration = 0;
 
 
-  constructor(private _kalturaClient: KalturaClient) {
-    super(ContentPlaylistViewSections.Content);
+  constructor(private _kalturaClient: KalturaClient, logger: KalturaLogger) {
+    super(ContentPlaylistViewSections.Content, logger);
   }
 
   ngOnDestroy() {

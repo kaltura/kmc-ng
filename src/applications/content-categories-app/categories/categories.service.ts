@@ -149,7 +149,6 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                     ignoredCreateMode: MetadataProfileCreateModes.App
                 })
                 .cancelOnDestroy(this)
-                .monitor('categories.service: get metadata profiles')
                 .subscribe(
                     metadataProfiles => {
                         this._logger.info(`handle successful loading additional categories data`);

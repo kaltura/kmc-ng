@@ -57,7 +57,7 @@ export class UsersStore implements OnDestroy {
     return this._users.data.value;
   }
 
-  public query$ = this._querySource.monitor('queryData update');
+  public query$ = this._querySource;
   public readonly users = { data$: this._users.data.asObservable(), state$: this._users.state.asObservable() };
 
   constructor(private _kalturaServerClient: KalturaClient,

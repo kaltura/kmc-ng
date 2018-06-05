@@ -16,6 +16,7 @@ import { EntryWidget } from '../entry-widget';
 import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -28,9 +29,10 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 	constructor(private _formBuilder: FormBuilder,
               private _kalturaServerClient: KalturaClient,
-              private _permissionsService: KMCPermissionsService)
+              private _permissionsService: KMCPermissionsService,
+                logger: KalturaLogger)
     {
-        super(ContentEntryViewSections.Users);
+        super(ContentEntryViewSections.Users, logger);
 	    this._buildForm();
     }
 	private _buildForm() : void{
@@ -116,7 +118,6 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
         new UserGetAction({ userId: this.data.userId })
       ))
         .cancelOnDestroy(this, this.widgetReset$)
-        .monitor('get users details')
         .map(([creatorResponse, ownerResponse]) => {
           if (creatorResponse.error || (ownerResponse.error && ownerResponse.error.code !== 'INVALID_USER_ID')) {
             throw new Error('failed to fetch users data');
@@ -138,7 +139,6 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 		    const fetchEditorsData$ = this._kalturaServerClient.multiRequest(request)
 			    .cancelOnDestroy(this, this.widgetReset$)
-			    .monitor('get editors')
 			    .map(
 				    responses =>
 				    {
@@ -170,7 +170,6 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 		    const fetchPublishersData$ = this._kalturaServerClient.multiRequest(request)
 			    .cancelOnDestroy(this, this.widgetReset$)
-			    .monitor('get publishers')
 			    .map(
 				    responses =>
 				    {
@@ -226,7 +225,6 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 					)
 				)
 				.cancelOnDestroy(this, this.widgetReset$)
-				.monitor('search owners')
 				.subscribe(
 					result =>
 					{

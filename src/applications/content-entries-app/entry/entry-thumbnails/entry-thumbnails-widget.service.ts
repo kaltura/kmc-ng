@@ -29,6 +29,7 @@ import { globalConfig } from 'config/global';
 import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface ThumbnailRow {
   id: string;
@@ -55,8 +56,9 @@ export class EntryThumbnailsWidget extends EntryWidget {
 
     constructor(private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
                 private _permissionsService: KMCPermissionsService,
-                private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _browserService: BrowserService) {
-        super(ContentEntryViewSections.Thumbnails);
+                private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _browserService: BrowserService,
+                logger: KalturaLogger) {
+        super(ContentEntryViewSections.Thumbnails, logger);
     }
 
     /**
@@ -75,12 +77,11 @@ export class EntryThumbnailsWidget extends EntryWidget {
         const getThumbnails$ = this._kalturaServerClient.request(new ThumbAssetGetByEntryIdAction(
             {
                 entryId: this.data.id
-            }))
-            .monitor('get thumbnails');
+            }));
 
         const canLoadProfiles = this._permissionsService.hasPermission(KMCPermissions.CONTENTDISTRIBUTION_PLUGIN_PERMISSION);
         const getProfiles$ = canLoadProfiles
-            ? this._kalturaServerClient.request(new DistributionProfileListAction({})).monitor('get distribution profiles')
+            ? this._kalturaServerClient.request(new DistributionProfileListAction({}))
             : Observable.of({});
 
         return Observable.forkJoin(getThumbnails$, getProfiles$)
@@ -170,7 +171,6 @@ export class EntryThumbnailsWidget extends EntryWidget {
                 entryId: this.data.id
             }))
             .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('reload thumbnails')
             .subscribe(
                 (responses) => {
                     const thumbnails = responses || [];
@@ -209,7 +209,6 @@ export class EntryThumbnailsWidget extends EntryWidget {
         this._kalturaServerClient.request(new ThumbAssetSetAsDefaultAction({thumbAssetId: thumb.id}))
             .cancelOnDestroy(this, this.widgetReset$)
             .tag('block-shell')
-            .monitor('set thumb as default')
             .subscribe(
                 () => {
                     thumbs.forEach(thumb => {
@@ -245,7 +244,6 @@ export class EntryThumbnailsWidget extends EntryWidget {
         this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
             .cancelOnDestroy(this, this.widgetReset$)
             .tag('block-shell')
-            .monitor('delete thumb')
             .subscribe(
                 () => {
                     this._browserService.scrollToTop();
@@ -286,7 +284,6 @@ export class EntryThumbnailsWidget extends EntryWidget {
                 }))
                     .tag('block-shell')
                     .cancelOnDestroy(this, this.widgetReset$)
-                    .monitor('add thumb')
                     .subscribe(
                         () => this.reloadThumbnails(),
                         () => {
@@ -313,7 +310,6 @@ export class EntryThumbnailsWidget extends EntryWidget {
 
         this._kalturaServerClient.request(new ThumbAssetGenerateAction({entryId: this.data.id, thumbParams: params}))
             .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('capture thumb from video')
             .subscribe(
                 () => {
                     super._hideLoader();

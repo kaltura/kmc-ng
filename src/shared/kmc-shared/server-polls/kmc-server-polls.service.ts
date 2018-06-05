@@ -18,7 +18,7 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
   }
 
   constructor(private _kalturaClient: KalturaClient, private _kalturaLogger: KalturaLogger, private _appEvents: AppEventsService) {
-      super(_kalturaLogger);
+      super(null); // _kalturaLogger.subLogger('KmcServerPolls')
 
       _appEvents.event(UserLoginStatusEvent).subscribe(
           event => {

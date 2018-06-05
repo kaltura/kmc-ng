@@ -226,9 +226,9 @@
 </k-area-blocker>
 
 <kPopupWidget #liveAnalytics [fullScreen]="true">
-  <!--ng-template>
-    <kAnalyticsLive></kAnalyticsLive>
-  </ng-template-->
+  <ng-template>
+    <kAnalyticsLive [entry]="_widgetService.data" [parentPopup]="liveAnalytics"></kAnalyticsLive>
+  </ng-template>
 </kPopupWidget>
 
 <kPopupWidget #liveDashboard [fullScreen]="true">

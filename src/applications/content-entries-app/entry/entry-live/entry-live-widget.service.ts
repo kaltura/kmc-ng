@@ -25,6 +25,7 @@ import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetActio
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface bitrate {
 	enabled: boolean,
@@ -61,12 +62,12 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	];
 
 	constructor(private _kalturaServerClient: KalturaClient,
-              private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
-                private _liveDasboardAppViewService: LiveDashboardAppViewService) {
-		super(ContentEntryViewSections.Live);
+                private _liveDasboardAppViewService: LiveDashboardAppViewService,
+                logger: KalturaLogger) {
+		super(ContentEntryViewSections.Live, logger);
 	}
 
 	protected onReset() {
@@ -132,8 +133,6 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
             })
           }))
             .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('get conversion profiles')
-
             .catch((error, caught) => {
               super._hideLoader();
               super._showActivationError();
@@ -285,7 +284,6 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		this._kalturaServerClient.multiRequest(multiRequest)
 			.cancelOnDestroy(this, this.widgetReset$)
 			.tag('block-shell')
-			.monitor('regenerate stream token')
 			.subscribe(
 				response => {
 					if (response.hasErrors()) {

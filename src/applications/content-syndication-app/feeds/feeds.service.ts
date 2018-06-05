@@ -235,7 +235,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     )
       .map((response: KalturaPlaylistListResponse) => {
         return response.objects;
-      }).monitor('FeedsService: get playlists');
+      });
 
   }
 
@@ -254,7 +254,6 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
       });
 
       this._transmit(requests, true)
-          .monitor('FeedsService: delete feeds')
           .subscribe(
         result => {
           observer.next({});
@@ -380,13 +379,13 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
     return this._kalturaClient.request(
       new SyndicationFeedGetEntryCountAction({feedId})
-    ).monitor('FeedsService: getFeedEntryCount');
+    );
   }
 
   public update(id: string, syndicationFeed: KalturaBaseSyndicationFeed): Observable<void> {
     return this._kalturaClient.request(
       new SyndicationFeedUpdateAction({id, syndicationFeed})
-    ).monitor('FeedsService: update')
+    )
       .map(() => undefined);
   }
 
@@ -396,6 +395,6 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     }
     return this._kalturaClient.request(
       new SyndicationFeedAddAction({syndicationFeed})
-    ).monitor('FeedsService: create');
+    );
   }
 }

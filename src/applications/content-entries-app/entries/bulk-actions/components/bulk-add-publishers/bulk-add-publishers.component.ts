@@ -95,7 +95,6 @@ export class BulkAddPublishersComponent implements OnInit, OnDestroy, AfterViewI
       )
     }))
       .cancelOnDestroy(this)
-      .monitor('search users')
       .subscribe(
         result => {
           const suggestions = [];

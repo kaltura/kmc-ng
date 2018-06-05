@@ -32,6 +32,7 @@ import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client/api/types
 import { getKalturaServerUri } from 'config/server';
 import { globalConfig } from 'config/global';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 export interface RelatedFile extends KalturaAttachmentAsset {
   uploading?: boolean,
@@ -62,8 +63,9 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               private _appAuthentication: AppAuthentication,
               private _objectDiffers: KeyValueDiffers,
               private _listDiffers: IterableDiffers,
-              private _uploadManagement: UploadManagement) {
-    super(ContentEntryViewSections.Related);
+              private _uploadManagement: UploadManagement,
+              logger: KalturaLogger) {
+    super(ContentEntryViewSections.Related, logger);
   }
 
 
@@ -146,7 +148,6 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
       filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
     }))
       .cancelOnDestroy(this, this.widgetReset$)
-      .monitor('get entry related files')
       .do(response => {
         // Set file type and restore previous upload state
         this._updateAssetsResponse(response);

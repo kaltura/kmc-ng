@@ -13,6 +13,7 @@ import {CategoriesModule} from 'app-shared/content-shared/categories/categories.
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { LocalizationModule } from '@kaltura-ng/mc-shared/localization';
+import { KalturaLoggerInjectionToken } from '@kaltura-ng/kaltura-common';
 
 import {
     AppBootstrap,
@@ -70,6 +71,7 @@ import { AppMenuContentComponent } from './components/app-menu/app-menu-content.
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
 import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
+import { OpenEmailComponent } from './components/open-email/open-email.component';
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
@@ -89,11 +91,14 @@ import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
+import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
+
     return  {
         endpointUrl: getKalturaServerUri(),
         clientTag: 'kmcng'
@@ -132,6 +137,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
+    CopyToClipboardModule,
     KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),
     BulkUploadModule.forRoot(),
@@ -148,7 +154,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     TranscodingProfileCreationModule.forRoot(),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcLogsModule.forRoot(),
-      KalturaLoggerModule.forRoot(),
+      KalturaLoggerModule.forRoot('kmc'),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcViewsModule.forRoot(),
       LocalizationModule.forRoot()
@@ -167,10 +173,12 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
     ChangeAccountComponent,
+    OpenEmailComponent,
     ChangelogComponent,
     ChangelogContentComponent,
     LoginByKSComponent,
-      NotFoundPageComponent
+      NotFoundPageComponent,
+      ProgressBarComponent
   ],
   bootstrap: <any>[
     AppComponent
@@ -178,13 +186,10 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
   exports: [],
   providers: <any>[
       ...partnerProviders,
-      KalturaLogger,
-      {
-          provide: KalturaLoggerName, useValue: 'kmc'
-      },
       {
            provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
-    ConfirmationService
+    ConfirmationService,
+      { provide: KalturaLoggerInjectionToken, useClass: KalturaLogger }
   ]
 })
 export class AppModule {

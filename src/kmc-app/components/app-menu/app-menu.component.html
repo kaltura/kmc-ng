@@ -1,12 +1,12 @@
 <kSticky stickyId="header" [stickyClass]="'kStickyClass'">
     <div class="kMainMenuWrapper">
+        <kLazyModuleLoadingProgressBar></kLazyModuleLoadingProgressBar>
         <div #appmenu class="appMenu">
 
             <div class="kIconkaltura_logo kLogo"></div>
-            <div class="k-beta-logo kBeta"></div>
 
             <div *ngFor="let item of leftMenuConfig">
-                <a *ngIf="item.titleToken.length && !item.icon" [class.activeLink]="item === selectedMenuItem" (click)="item.open()">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
+                <a class="kMenuLink" *ngIf="item.titleToken.length && !item.icon" [class.activeLink]="item === selectedMenuItem" (click)="item.open()">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
             </div>
 
             <div class="kMenu-right">

@@ -16,7 +16,7 @@
     position: fixed;
     z-index: 700;
     width: 100%;
-    a {
+    a.kMenuLink {
         color: $mainLinkColor;
         outline: 0;
         opacity: 0.6;
@@ -120,12 +120,7 @@
         color: white;
         font-size: 32px;
         margin-left: 16px;
-    }
-    .kBeta{
-        width:30px;
-        height:15px;
-        margin-right: 20px;
-        margin-top: -10px;
+        margin-right: 18px;
     }
 }
 
