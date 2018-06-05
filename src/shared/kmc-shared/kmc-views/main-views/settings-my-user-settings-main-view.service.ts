@@ -13,10 +13,10 @@ export class SettingsMyUserSettingsMainViewService extends KmcMainViewBaseServic
         logger: KalturaLogger,
         browserService: BrowserService,
         router: Router,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('SettingsMyUserSettingsMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('SettingsMyUserSettingsMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -29,8 +29,8 @@ export class SettingsMyUserSettingsMainViewService extends KmcMainViewBaseServic
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'settingsMyUserSettingsPageTitle',
-            menuToken: 'settingsMyUserSettingsMenuTitle'
+            title: this._appLocalization.get('app.titles.settingsMyUserSettingsPageTitle'),
+            menu: this._appLocalization.get('app.titles.settingsMyUserSettingsMenuTitle')
         };
     }
 }

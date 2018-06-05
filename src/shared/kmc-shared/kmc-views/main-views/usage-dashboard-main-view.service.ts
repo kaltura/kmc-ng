@@ -16,10 +16,10 @@ export class UsageDashboardMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('UsageDashboardMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('UsageDashboardMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -34,8 +34,8 @@ export class UsageDashboardMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'usageDashboardPageTitle',
-            menuToken: 'usageDashboardMenuTitle'
+            title: this._appLocalization.get('app.titles.usageDashboardPageTitle'),
+            menu: this._appLocalization.get('app.titles.usageDashboardMenuTitle')
         };
     }
 }

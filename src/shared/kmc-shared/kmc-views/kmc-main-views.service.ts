@@ -26,7 +26,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 export interface KMCAppMenuItem {
-    titleToken: string;
+    menuTitle: string;
     icon?: string;
     isAvailable: boolean;
     isActiveView: (activePath: string) => boolean;
@@ -73,7 +73,7 @@ export class KmcMainViewsService {
     private _getMainViewsList(): KMCAppMenuItem[] {
         return [
             {
-                titleToken: 'content',
+                menuTitle: 'content',
                 isAvailable: true,
                 isActiveView: (activePath: string) => (activePath.indexOf(`/content`) !== -1),
                 position: 'left',
@@ -84,7 +84,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentEntriesMain.open();
                         },
-                        titleToken: this._contentEntriesMain.getViewMetadata().menuToken,
+                        menuTitle: this._contentEntriesMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -93,7 +93,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentModerationMain.open();
                         },
-                        titleToken: this._contentModerationMain.getViewMetadata().menuToken,
+                        menuTitle: this._contentModerationMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -102,7 +102,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentPlaylistsMain.open();
                         },
-                        titleToken: this._contentPlaylistsMain.getViewMetadata().menuToken,
+                        menuTitle: this._contentPlaylistsMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -111,7 +111,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentSyndicationMain.open();
                         },
-                        titleToken: this._contentSyndicationMain.getViewMetadata().menuToken,
+                        menuTitle: this._contentSyndicationMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -120,7 +120,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentCategoriesMain.open();
                         },
-                        titleToken: this._contentCategoriesMain.getViewMetadata().menuToken,
+                        menuTitle: this._contentCategoriesMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -129,7 +129,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentUploadsMain.open();
                         },
-                        titleToken: this._contentUploadsMain.getViewMetadata().menuToken,
+                        menuTitle: this._contentUploadsMain.getViewMetadata().menu,
                         'position': 'right'
                     },
                     {
@@ -138,7 +138,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentBulkUploadsMain.open();
                         },
-                        titleToken: this._contentBulkUploadsMain.getViewMetadata().menuToken,
+                        menuTitle: this._contentBulkUploadsMain.getViewMetadata().menu,
                         'position': 'right'
                     },
                     {
@@ -147,13 +147,13 @@ export class KmcMainViewsService {
                         open: () => {
                             this._contentDropFoldersMain.open();
                         },
-                        titleToken: this._contentDropFoldersMain.getViewMetadata().menuToken,
+                        menuTitle: this._contentDropFoldersMain.getViewMetadata().menu,
                         'position': 'right'
                     }
                 ]
             },
             {
-                titleToken: 'studio',
+                menuTitle: 'studio',
                 isAvailable: true,
                 isActiveView: (activePath: string) => (activePath.indexOf(`/studio`) !== -1),
                 position: 'left',
@@ -164,7 +164,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._studioV2Main.open();
                         },
-                        titleToken: this._studioV2Main.getViewMetadata().menuToken
+                        menuTitle: this._studioV2Main.getViewMetadata().menu
                     },
                     {
                         isAvailable: this._studioV3Main.isAvailable(),
@@ -172,7 +172,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._studioV3Main.open();
                         },
-                        titleToken: this._studioV3Main.getViewMetadata().menuToken
+                        menuTitle: this._studioV3Main.getViewMetadata().menu
                     },
                 ]
             },
@@ -183,13 +183,13 @@ export class KmcMainViewsService {
                     this._usageDashboardMain.open();
                 },
                 position: 'left',
-                titleToken: this._usageDashboardMain.getViewMetadata().menuToken,
+                menuTitle: this._usageDashboardMain.getViewMetadata().menu,
             },
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
                 position: 'left',
                 isAvailable: true,
-                titleToken: 'analytics',
+                menuTitle: 'analytics',
                 children: [
                     {
                         isAvailable: this._liveAnalyticsMain.isAvailable(),
@@ -197,19 +197,19 @@ export class KmcMainViewsService {
                         open: () => {
                             this._liveAnalyticsMain.open();
                         },
-                        titleToken: this._liveAnalyticsMain.getViewMetadata().menuToken
+                        menuTitle: this._liveAnalyticsMain.getViewMetadata().menu
                     },
                     {
                         isAvailable: false,
                         isActiveView: (path) => false,
-                        titleToken: 'analyticsKavaMenuTitle'
+                        menuTitle: 'analyticsKavaMenuTitle'
                     }
                 ]
             },
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/settings`) !== -1,
                 isAvailable: true,
-                titleToken: 'settings',
+                menuTitle: 'settings',
                 icon: 'kIcongear',
                 position: 'right',
                 children: [
@@ -219,7 +219,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsAccountSettingsMain.open();
                         },
-                        titleToken: this._settingsAccountSettingsMain.getViewMetadata().menuToken,
+                        menuTitle: this._settingsAccountSettingsMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -228,7 +228,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsIntegrationSettingsMain.open();
                         },
-                        titleToken: this._settingsIntegrationSettingsMain.getViewMetadata().menuToken,
+                        menuTitle: this._settingsIntegrationSettingsMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -237,7 +237,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsAccessControlMain.open();
                         },
-                        titleToken: this._settingsAccessControlMain.getViewMetadata().menuToken,
+                        menuTitle: this._settingsAccessControlMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -246,7 +246,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsTranscodingMain.open();
                         },
-                        titleToken: this._settingsTranscodingMain.getViewMetadata().menuToken,
+                        menuTitle: this._settingsTranscodingMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -255,7 +255,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsMetadataMain.open();
                         },
-                        titleToken: this._settingsMetadataMain.getViewMetadata().menuToken,
+                        menuTitle: this._settingsMetadataMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -264,7 +264,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsMyUserSettingsMain.open();
                         },
-                        titleToken: this._settingsMyUserSettingsMain.getViewMetadata().menuToken,
+                        menuTitle: this._settingsMyUserSettingsMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -273,14 +273,14 @@ export class KmcMainViewsService {
                         open: () => {
                             this._settingsAccountInformationMain.open();
                         },
-                        titleToken: this._settingsAccountInformationMain.getViewMetadata().menuToken,
+                        menuTitle: this._settingsAccountInformationMain.getViewMetadata().menu,
                         'position': 'left'
                     }
                 ]
             }, {
                 isActiveView: (activePath: string) => activePath.indexOf(`/administration`) !== -1,
                 isAvailable: true,
-                titleToken: 'Administration',
+                menuTitle: 'Administration',
                 icon: 'kIconuser',
                 position: 'right',
                 children: [
@@ -290,7 +290,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._adminUsersMain.open();
                         },
-                        titleToken: this._adminUsersMain.getViewMetadata().menuToken,
+                        menuTitle: this._adminUsersMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {
@@ -299,7 +299,7 @@ export class KmcMainViewsService {
                         open: () => {
                             this._adminRolesMain.open();
                         },
-                        titleToken: this._adminRolesMain.getViewMetadata().menuToken,
+                        menuTitle: this._adminRolesMain.getViewMetadata().menu,
                         'position': 'left'
                     }
                 ]
@@ -332,7 +332,7 @@ export class KmcMainViewsService {
                     if (itemHasChildren) {
                         if (item.open) {
                             this._logger.warn('override menu item open behavior, will select the first available child instead', {
-                                titleToken: item.titleToken,
+                                titleToken: item.menuTitle,
                                 itemHasChildren: !!itemHasChildren,
                                 itemIsActionable: !!itemIsActionable
                             });
@@ -342,13 +342,13 @@ export class KmcMainViewsService {
                     target.push(item);
                 } else {
                     this._logger.debug(`remove menu item from app main views list`, {
-                        titleToken: item.titleToken,
+                        titleToken: item.menuTitle,
                         itemHasChildren: !!itemHasChildren,
                         itemIsActionable: !!itemIsActionable
                     });
                 }
             } else {
-                this._logger.debug(`remove menu item from app main views list`, {titleToken: item.titleToken,
+                this._logger.debug(`remove menu item from app main views list`, {titleToken: item.menuTitle,
                     isAvailable: !!item.isAvailable});
             }
 

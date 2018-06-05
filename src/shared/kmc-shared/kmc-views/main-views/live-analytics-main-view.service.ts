@@ -16,10 +16,10 @@ export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('LiveAnalyticsMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('LiveAnalyticsMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -32,8 +32,8 @@ export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'analyticsLivePageTitle',
-            menuToken: 'analyticsLiveMenuTitle'
+            title: this._appLocalization.get('app.titles.analyticsLivePageTitle'),
+            menu: this._appLocalization.get('app.titles.analyticsLiveMenuTitle')
         };
     }
 }

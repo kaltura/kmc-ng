@@ -15,10 +15,10 @@ export class ContentDropFoldersMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('ContentDropFoldersMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('ContentDropFoldersMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -33,8 +33,8 @@ export class ContentDropFoldersMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'contentDropFoldersPageTitle',
-            menuToken: 'contentDropFoldersMenuTitle'
+            title: this._appLocalization.get('app.titles.contentDropFoldersPageTitle'),
+            menu: this._appLocalization.get('app.titles.contentDropFoldersMenuTitle')
         };
     }
 }

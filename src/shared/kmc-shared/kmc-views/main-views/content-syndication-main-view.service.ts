@@ -15,10 +15,10 @@ export class ContentSyndicationMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('ContentSyndicationMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('ContentSyndicationMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -36,8 +36,8 @@ export class ContentSyndicationMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'contentSyndicationPageTitle',
-            menuToken: 'contentSyndicationMenuTitle'
+            title: this._appLocalization.get('app.titles.contentSyndicationPageTitle'),
+            menu: this._appLocalization.get('app.titles.contentSyndicationMenuTitle')
         };
     }
 }

@@ -16,10 +16,10 @@ export class AdminUsersMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('AdminUsersMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('AdminUsersMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -36,8 +36,8 @@ export class AdminUsersMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'administrationUsersPageTitle',
-            menuToken: 'administrationUsersMenuTitle'
+            title: this._appLocalization.get('app.titles.administrationUsersPageTitle'),
+            menu: this._appLocalization.get('app.titles.administrationUsersMenuTitle')
         };
     }
 }

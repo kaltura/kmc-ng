@@ -16,9 +16,9 @@ export class StudioV2MainViewService extends KmcMainViewBaseService {
                 browserService: BrowserService,
                 router: Router,
                 private _appPermissions: KMCPermissionsService,
-                appLocalization: AppLocalization,
+                private _appLocalization: AppLocalization,
                 titleService: Title) {
-        super(logger.subLogger('StudioV2MainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('StudioV2MainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -43,8 +43,8 @@ export class StudioV2MainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'studioV2PageTitle',
-            menuToken: 'studioV2MenuTitle'
+            title: this._appLocalization.get('app.titles.studioV2PageTitle'),
+            menu: this._appLocalization.get('app.titles.studioV2MenuTitle')
         };
     }
 }

@@ -15,10 +15,10 @@ export class ContentUploadsMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('ContentUploadsMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('ContentUploadsMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -35,8 +35,8 @@ export class ContentUploadsMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'contentUploadsPageTitle',
-            menuToken: 'contentUploadsMenuTitle'
+            title: this._appLocalization.get('app.titles.contentUploadsPageTitle'),
+            menu: this._appLocalization.get('app.titles.contentUploadsMenuTitle')
         };
     }
 }

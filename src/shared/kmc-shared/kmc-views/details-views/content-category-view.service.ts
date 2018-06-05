@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
+import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { modulesConfig } from 'config/modules';
@@ -13,6 +12,7 @@ import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetActio
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { Title } from '@angular/platform-browser';
 
 export enum ContentCategoryViewSections {
     Metadata = 'Metadata',
@@ -36,8 +36,17 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
                 private _kalturaClient: KalturaClient,
                 private _router: Router,
                 _browserService: BrowserService,
+                _title: Title,
                 _logger: KalturaLogger) {
-        super(_logger.subLogger('ContentCategoryViewService'), _browserService);
+        super(_logger.subLogger('ContentCategoryViewService'), _browserService, _title);
+    }
+
+    getViewMetadata(args: ContentCategoryViewArgs): DetailsViewMetadata {
+        const mainTitle = this._appLocalization.get('app.titles.contentCategoriesPageTitle');
+        const categoryId = args.category.id;
+        const section = args.section === ContentCategoryViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
+        const sectionTitle = this._appLocalization.get(`applications.content.categoryDetails.sections.${section.toLocaleLowerCase()}`);
+        return { title: `${mainTitle} > ${categoryId} > ${sectionTitle}`};
     }
 
     isAvailable(args: ContentCategoryViewArgs): boolean {

@@ -15,10 +15,10 @@ export class SettingsMetadataMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('SettingsMetadataMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('SettingsMetadataMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -36,8 +36,8 @@ export class SettingsMetadataMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'settingsMetadataPageTitle',
-            menuToken: 'settingsMetadataMenuTitle'
+            title: this._appLocalization.get('app.titles.settingsMetadataPageTitle'),
+            menu: this._appLocalization.get('app.titles.settingsMetadataMenuTitle')
         };
     }
 }

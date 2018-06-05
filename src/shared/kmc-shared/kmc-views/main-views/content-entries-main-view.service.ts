@@ -15,10 +15,10 @@ export class ContentEntriesMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('ContentEntriesMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('ContentEntriesMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -42,8 +42,8 @@ export class ContentEntriesMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'contentEntriesPageTitle',
-            menuToken: 'contentEntriesMenuTitle'
+            title: this._appLocalization.get('app.titles.contentEntriesPageTitle'),
+            menu: this._appLocalization.get('app.titles.contentEntriesMenuTitle')
         };
     }
 }

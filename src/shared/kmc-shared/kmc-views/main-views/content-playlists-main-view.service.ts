@@ -15,10 +15,10 @@ export class ContentPlaylistsMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('ContentPlaylistsMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('ContentPlaylistsMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -37,8 +37,8 @@ export class ContentPlaylistsMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'contentPlaylistsPageTitle',
-            menuToken: 'contentPlaylistsMenuTitle'
+            title: this._appLocalization.get('app.titles.contentPlaylistsPageTitle'),
+            menu: this._appLocalization.get('app.titles.contentPlaylistsMenuTitle')
         };
     }
 }

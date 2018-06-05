@@ -1,16 +1,24 @@
 import { Observable } from 'rxjs/Observable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { Title } from '@angular/platform-browser';
+
+export interface DetailsViewMetadata {
+    title: string;
+}
 
 export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
 
     protected constructor(protected _logger: KalturaLogger,
-                          protected _browserService: BrowserService) {
+                          protected _browserService: BrowserService,
+                          private _titleService: Title) {
     }
 
     protected abstract _open(args: TArgs): Observable<boolean>;
 
     abstract isAvailable(args: TArgs): boolean;
+
+    abstract getViewMetadata(args: TArgs): DetailsViewMetadata;
 
     open(args: TArgs): void {
         if (this.isAvailable(args)) {
@@ -30,6 +38,16 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
         } else {
             this._logger.warn('ignore open view operation request, view is not available');
             this._browserService.handleUnpermittedAction(false);
+        }
+    }
+
+    viewEntered(args: TArgs): boolean {
+        if (this.isAvailable(args)) {
+            this._titleService.setTitle(this.getViewMetadata(args).title);
+            return true;
+        } else {
+            this._browserService.handleUnpermittedAction(true);
+            return false;
         }
     }
 }

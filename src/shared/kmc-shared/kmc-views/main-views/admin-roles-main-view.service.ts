@@ -15,10 +15,10 @@ export class AdminRolesMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('AdminRolesMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('AdminRolesMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -35,8 +35,8 @@ export class AdminRolesMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'administrationRolesPageTitle',
-            menuToken: 'administrationRolesMenuTitle'
+            title: this._appLocalization.get('app.titles.administrationRolesPageTitle'),
+            menu: this._appLocalization.get('app.titles.administrationRolesMenuTitle')
         };
     }
 }

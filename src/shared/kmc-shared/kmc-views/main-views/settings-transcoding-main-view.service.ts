@@ -15,10 +15,10 @@ export class SettingsTranscodingMainViewService extends KmcMainViewBaseService {
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('SettingsTranscodingMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('SettingsTranscodingMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -36,8 +36,8 @@ export class SettingsTranscodingMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'settingsTranscodingPageTitle',
-            menuToken: 'settingsTranscodingRolesMenuTitle'
+            title: this._appLocalization.get('app.titles.settingsTranscodingPageTitle'),
+            menu: this._appLocalization.get('app.titles.settingsTranscodingRolesMenuTitle')
         };
     }
 }

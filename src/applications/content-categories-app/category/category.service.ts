@@ -338,7 +338,7 @@ export class CategoryService implements OnDestroy {
 			.cancelOnDestroy(this)
 			.subscribe(category => {
 			    this._logger.info(`handle successful loading of category data`);
-                if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  })) {
+                if (this._contentCategoryView.viewEntered({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  })) {
                     this._loadCategorySubscription = null;
 
                     this._category.next(category);
@@ -353,8 +353,6 @@ export class CategoryService implements OnDestroy {
                     } else {
                         this._state.next({ action: ActionTypes.CategoryLoaded });
                     }
-                } else {
-                    this._browserService.handleUnpermittedAction(true);
                 }
             },
 			error => {

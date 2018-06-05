@@ -15,10 +15,10 @@ export class SettingsIntegrationSettingsMainViewService extends KmcMainViewBaseS
         browserService: BrowserService,
         router: Router,
         private _appPermissions: KMCPermissionsService,
-        appLocalization: AppLocalization,
+        private _appLocalization: AppLocalization,
         titleService: Title
     ) {
-        super(logger.subLogger('SettingsIntegrationSettingsMainViewService'), browserService, router, appLocalization, titleService);
+        super(logger.subLogger('SettingsIntegrationSettingsMainViewService'), browserService, router, titleService);
     }
 
     isAvailable(): boolean {
@@ -34,8 +34,8 @@ export class SettingsIntegrationSettingsMainViewService extends KmcMainViewBaseS
 
     getViewMetadata(): ViewMetadata {
         return {
-            titleToken: 'settingsIntegrationPageTitle',
-            menuToken: 'settingsIntegrationMenuTitle'
+            title: this._appLocalization.get('app.titles.settingsIntegrationPageTitle'),
+            menu: this._appLocalization.get('app.titles.settingsIntegrationMenuTitle')
         };
     }
 }

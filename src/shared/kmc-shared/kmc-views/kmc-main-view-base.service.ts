@@ -6,8 +6,8 @@ import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 
 export interface ViewMetadata {
-    menuToken: string;
-    titleToken: string;
+    menu: string;
+    title: string;
 }
 
 export abstract class KmcMainViewBaseService {
@@ -15,7 +15,6 @@ export abstract class KmcMainViewBaseService {
     constructor(protected _logger: KalturaLogger,
                 protected _browserService: BrowserService,
                 private _router: Router,
-                private _appLocalization: AppLocalization,
                 private _titleService: Title) {
     }
 
@@ -84,8 +83,7 @@ export abstract class KmcMainViewBaseService {
 
     viewEntered(): boolean {
         if (this.isAvailable()) {
-            const title = this._appLocalization.get(`app.titles.${this.getViewMetadata().titleToken}`);
-            this._titleService.setTitle(title);
+            this._titleService.setTitle(this.getViewMetadata().title);
             return true;
         } else {
             this._browserService.handleUnpermittedAction(true);
