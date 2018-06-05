@@ -14,6 +14,8 @@ import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaLiveEntry } from 'kaltura-ngx-client/api/types/KalturaLiveEntry';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
 
 @Component({
@@ -26,7 +28,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 })
 export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
-  @Input() entry: KalturaMediaEntry = null;
+  @Input() entry: KalturaMediaEntry | KalturaLiveEntry = null;
   @Input() tab: 'quiz' | 'editor' | 'advertisements' = null;
     @Input() entryHasSource = false;
 
@@ -241,6 +243,13 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
           if (keditUrl) {
               this._logger.debug('show kedit application', {keditUrl: keditUrl, tab: this.tab});
+              const isLiveEntry = [
+                  KalturaMediaType.liveStreamFlash,
+                  KalturaMediaType.liveStreamWindowsMedia,
+                  KalturaMediaType.liveStreamRealMedia,
+                  KalturaMediaType.liveStreamQuicktime
+              ].indexOf(this.entry.mediaType) !== -1;
+              const entryId = isLiveEntry ? (<KalturaLiveEntry>this.entry).recordedEntryId : this.entry.id;
               this.keditUrl = keditUrl;
               this._keditConfig = {
                   'messageType': 'kea-config',
@@ -276,7 +285,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
                       'css_url': '',
 
                       /* id of the entry to start with */
-                      'entry_id': this.entry.id,
+                      'entry_id': entryId,
 
                       /* should a KS be appended to the thumbnails url, for access control issues */
                       'load_thumbnail_with_ks': false,
