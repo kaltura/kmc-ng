@@ -7,6 +7,10 @@ import {Observable} from 'rxjs/Observable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
+import { AppEventsService } from 'app-shared/kmc-shared/app-events/app-events.service';
+import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
+import { EmailConfig } from '../../../kmc-app/components/open-email/open-email.component';
+import { serverConfig } from 'config/server';
 
 export enum HeaderTypes {
     error = 1,
@@ -89,6 +93,7 @@ export class BrowserService implements IAppStorage {
                 private sessionStorage: SessionStorageService,
                 private _router: Router,
                 private _logger: KalturaLogger,
+                private _appEvents: AppEventsService,
                 private _appLocalization: AppLocalization) {
         this._recordInitialQueryParams();
         this._recordRoutingActions();
@@ -218,8 +223,8 @@ export class BrowserService implements IAppStorage {
         window.open(baseUrl, target);
     }
 
-    public openEmail(email: string): void {
-        const windowRef = window.open(email, '_blank');
+    public openEmailWithMailTo(email: string): void {
+        const windowRef = window.open('mailto:' + email, '_blank');
         windowRef.focus();
 
         setTimeout(function () {
@@ -227,6 +232,24 @@ export class BrowserService implements IAppStorage {
                 windowRef.close();
             }
         }, 500);
+    }
+
+    public openEmail(emailConfig: EmailConfig, useMailTo = false): void {
+        this._appEvents.publish(new OpenEmailEvent(emailConfig.email, emailConfig.title, emailConfig.message));
+    }
+
+    public openSupport(): void{
+        let emailAddress = null;
+        let msg = this._appLocalization.get('app.openMail.supportMailMsg');
+        if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support){
+            emailAddress = serverConfig.externalLinks.kaltura.support;
+            msg = this._appLocalization.get('app.openMail.supportMailMsgNoMail');
+        }
+        this.openEmail({
+            email: emailAddress,
+            title: this._appLocalization.get('app.openMail.supportMailTitle'),
+            message: msg
+        });
     }
 
     public isSafari(): boolean {

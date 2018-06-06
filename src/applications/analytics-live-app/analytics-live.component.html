@@ -1,3 +1,9 @@
 <div class="kApp">
-    <iframe frameborder="0px" [src]="_url | safe"></iframe>
+    <div class="kComingSoonWrapper">
+        <div class="kComingSoon">
+            <h1>{{'applications.analytics.comingSoon' | translate}}</h1>
+            {{'applications.analytics.releaseSupports' | translate}}
+        </div>
+    </div>
+    <kAnalyticsLiveFrame></kAnalyticsLiveFrame>
 </div>

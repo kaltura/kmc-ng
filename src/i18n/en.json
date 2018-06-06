@@ -15,6 +15,8 @@
             "Usage Dashboard": "Usage Dashboard",
             "Administration": "Administration",
             "Settings": "Settings",
+            "StudioV2": "Universal Studio",
+            "StudioV3": "TV Platform Studio",
             "Users": "Users",
             "Account Settings": "Account Settings",
             "Integration Settings": "Integration Settings",
@@ -84,6 +86,11 @@
             "redirect1": "Redirecting to default view...",
             "redirect2": "If you are not redirected in few seconds, click ",
             "redirect3": "here"
+        },
+        "openMail":{
+            "supportMailTitle": "Contact Kaltura Support",
+            "supportMailMsg": "Please send an email to the following email address:",
+            "supportMailMsgNoMail": "Please send an email to the Kaltura support team."
         },
         "login": {
             "login": {
@@ -341,7 +348,7 @@
                     "transcodingProfile": "Live Transcoding Profiles",
                     "liveDVR": "Live DVR",
                     "liveDVR_message": "Seeking to previous parts of the live stream. The DVR window is 2 hours by default.",
-                    "enableRecording": "Enable Recording",
+                    "enableRecording": "Recording",
                     "enableRecordingOptions": {
                         "perSession": "Create new entries for every broadcast session",
                         "appended": "Append recorded content to a single entry"
@@ -1558,11 +1565,9 @@
                     "config": "Live Stream Configuration",
                     "dvrStatus": "DVR Status:",
                     "dvrWindow": "DVR Window:",
-                    "activeRec": "Active Recording:",
-                    "autoStart": "Auto-start:",
+                    "activeRec": "Recording:",
+                    "previewMode": "Preview Mode:",
                     "rtsp": "RTSP Broadcasting URLs",
-                    "enabled": "Enabled",
-                    "disabled": "Disabled",
                     "hlsStream": "HLS stream URL:",
                     "akamaiStream": "Akamai Stream ID:",
                     "transcoding": "Transcoding Profile Configuration",
@@ -2681,6 +2686,10 @@
                     "systemNamePlaceholder": "Enter System Name"
                 }
             }
+        },
+        "analytics": {
+            "comingSoon": "Coming soon! Analytics for all media types.",
+            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please login to the legacy KMC to view and create analytics and reports. Analytics for all media should be available soon"
         }
     },
     "entriesShared": {
@@ -2732,7 +2741,7 @@
         "cf": "Central African Republic",
         "cg": "Congo",
         "ch": "Switzerland",
-        "ci": "C�te d'Ivoire",
+        "ci": "Côte d’Ivoire",
         "ck": "Cook Islands",
         "cl": "Chile",
         "cm": "Cameroon",
@@ -2890,7 +2899,7 @@
         "sn": "Senegal",
         "so": "Somalia",
         "sr": "Suriname",
-        "st": "S�o Tom� and Pr�ncipe",
+        "st": "São Tomé and Príncipe",
         "sv": "El Salvador",
         "sy": "Syria",
         "sz": "Swaziland",

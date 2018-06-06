@@ -71,6 +71,7 @@ import { AppMenuContentComponent } from './components/app-menu/app-menu-content.
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
 import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
+import { OpenEmailComponent } from './components/open-email/open-email.component';
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
@@ -91,13 +92,16 @@ import { AppDefaultViewComponent } from './components/app-default-view/app-defau
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 import { RestorePasswordComponent } from './components/app-actions/restore-password.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { RestorePasswordFormComponent } from './components/login/restore-password-form/restore-password-form.component';
 import { InvalidRestorePasswordHashFormComponent } from './components/login/invalid-restore-password-hash-form/invalid-restore-password-hash-form.component';
 
+import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
+
     return  {
         endpointUrl: getKalturaServerUri(),
         clientTag: 'kmcng'
@@ -136,6 +140,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
+    CopyToClipboardModule,
     KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),
     BulkUploadModule.forRoot(),
@@ -171,13 +176,15 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
     ChangeAccountComponent,
+    OpenEmailComponent,
     ChangelogComponent,
     ChangelogContentComponent,
     LoginByKSComponent,
       RestorePasswordComponent,
       NotFoundPageComponent,
       RestorePasswordFormComponent,
-      InvalidRestorePasswordHashFormComponent
+      InvalidRestorePasswordHashFormComponent,
+      ProgressBarComponent
   ],
   bootstrap: <any>[
     AppComponent

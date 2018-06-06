@@ -49,6 +49,20 @@
 			display: flex;
 			padding-top: 18px;
 			align-items: center;
+
+            .kControl {
+                color: $kGrayscale2;
+                height: 34px;
+                width: 360px;
+                border-radius: 3px;
+                &.kInputSwitch {
+                    padding-right: 12px;
+
+                    & + span {
+                        vertical-align: middle;
+                    }
+                }
+            }
 		}
 		.kCopyBtn{
 			border: 0px solid white;

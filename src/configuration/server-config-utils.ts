@@ -86,7 +86,7 @@ export function initializeConfiguration<TExternalApplications>(externalAppsAdapt
                     const externalAppAdapter = (<any>externalAppsAdapter)[externalAppName];
                     const externalAppConfiguration = response.externalApps[externalAppName];
                     if (!externalAppAdapter(externalAppConfiguration)) {
-                        response.externalApps[externalAppName].enabled = false;
+                        response.externalApps[externalAppName] = null;
                     }
                 }
 

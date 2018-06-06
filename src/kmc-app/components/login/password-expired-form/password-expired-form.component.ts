@@ -23,11 +23,7 @@ export class PasswordExpiredFormComponent {
   public _oldPasswordField: AbstractControl;
   public _newPasswordField: AbstractControl;
   public _repeatPasswordField: AbstractControl;
-
-    public get _supportAddress(): string {
-        const supportAddress = serverConfig.externalLinks.kaltura.support;
-        return supportAddress.replace('mailto:', '');
-    }
+  public _supportAddress: string;
 
   public get _sendBtnText(): string {
     return this.inProgress ? 'app.login.wait' : 'app.login.send';
@@ -51,7 +47,11 @@ export class PasswordExpiredFormComponent {
 
   constructor(private _fb: FormBuilder,
               private _browserService: BrowserService) {
-    this._buildForm();
+      this._buildForm();
+
+      if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support) {
+          this._supportAddress = serverConfig.externalLinks.kaltura.support;
+      }
   }
 
   private _buildForm(): void {
@@ -95,6 +95,6 @@ export class PasswordExpiredFormComponent {
     }
   }
     public _contactSupport(): void {
-        this._browserService.openEmail(serverConfig.externalLinks.kaltura.support);
+        this._browserService.openSupport();
     }
 }
