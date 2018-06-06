@@ -132,7 +132,6 @@ export class EntryComponent implements OnInit, OnDestroy {
             .subscribe(
                 ({ type, error }) => {
                     switch(type) {
-                        case NotificationTypes.UnpermittedViewEntered:
                         case NotificationTypes.ViewEntered:
                             const { entry } = this._entryStore;
 

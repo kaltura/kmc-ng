@@ -71,7 +71,6 @@ export class PlaylistComponent implements OnInit, OnDestroy {
           .subscribe(
               ({ type, error }) => {
                   switch(type) {
-                      case NotificationTypes.UnpermittedViewEntered:
                       case NotificationTypes.ViewEntered:
                           const playlist = this._playlistStore.playlist;
                           if (playlist ) {

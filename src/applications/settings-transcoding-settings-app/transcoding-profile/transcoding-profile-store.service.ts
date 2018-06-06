@@ -44,7 +44,6 @@ export enum ActionTypes {
   ActiveSectionBusy
 }
 export enum NotificationTypes {
-    UnpermittedViewEntered,
     ViewEntered
 }
 export interface StatusArgs {
@@ -346,13 +345,13 @@ export class TranscodingProfileStore implements OnDestroy {
         response => {
             this._profile.data.next(response);
             this._profileId = String(response.id);
+            this._notifications.next({ type: NotificationTypes.ViewEntered });
 
             if (this._settingsTranscodingProfileViewService.isAvailable({
                 profile: response,
                 activatedRoute: this._profileRoute,
                 section: SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute
             })) {
-                this._notifications.next({ type: NotificationTypes.ViewEntered });
                 this._setProfilesStoreServiceByType(response.type);
 
                 const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
@@ -364,8 +363,6 @@ export class TranscodingProfileStore implements OnDestroy {
                 } else {
                     this._profile.state.next({ action: ActionTypes.ProfileLoaded });
                 }
-            }else {
-                this._notifications.next({ type: NotificationTypes.UnpermittedViewEntered });
             }
         },
         error => {

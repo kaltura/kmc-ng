@@ -3,6 +3,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { BrowserService } from 'app-shared/kmc-shell';
 import { Title } from '@angular/platform-browser';
 
+
 export interface DetailsViewMetadata {
     title: string;
 }

@@ -33,7 +33,6 @@ export enum ActionTypes {
   ActiveSectionBusy
 }
 export enum NotificationTypes {
-    UnpermittedViewEntered,
     ViewEntered
 }
 export interface StatusArgs {
@@ -158,14 +157,13 @@ export class PlaylistStore implements OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(playlist => {
               this._playlist.next({ playlist });
-          if (this._contentPlaylistView.isAvailable({
+              this._notifications.next({ type: NotificationTypes.ViewEntered });
+
+              if (this._contentPlaylistView.isAvailable({
               playlist,
               activatedRoute: this._playlistRoute,
               section: ContentPlaylistViewSections.ResolveFromActivatedRoute
           })) {
-
-              this._notifications.next({ type: NotificationTypes.ViewEntered });
-
               if (playlist.playlistType === KalturaPlaylistType.dynamic) {
                   if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
                       playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
@@ -183,9 +181,6 @@ export class PlaylistStore implements OnDestroy {
               } else {
                   this._state.next({ action: ActionTypes.PlaylistLoaded });
               }
-          } else {
-              this._notifications.next({ type: NotificationTypes.UnpermittedViewEntered });
-
           }
         },
         error => {

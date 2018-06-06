@@ -41,7 +41,6 @@ export enum ActionTypes {
 }
 
 export enum NotificationTypes {
-    UnpermittedViewEntered,
     ViewEntered
 }
 
@@ -348,9 +347,10 @@ export class CategoryService implements OnDestroy {
 			.subscribe(category => {
 			    this._logger.info(`handle successful loading of category data`);
                     this._category.next(category);
+                    this._notifications.next({ type: NotificationTypes.ViewEntered });
+
                 if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  })) {
                     this._loadCategorySubscription = null;
-                    this._notifications.next({ type: NotificationTypes.ViewEntered });
 
                     const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
 
@@ -362,9 +362,6 @@ export class CategoryService implements OnDestroy {
                     } else {
                         this._state.next({ action: ActionTypes.CategoryLoaded });
                     }
-                }else {
-                    this._notifications.next({ type: NotificationTypes.UnpermittedViewEntered });
-
                 }
             },
 			error => {

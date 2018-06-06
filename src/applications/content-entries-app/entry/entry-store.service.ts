@@ -37,7 +37,6 @@ export enum ActionTypes
 }
 
 export enum NotificationTypes {
-    UnpermittedViewEntered,
     ViewEntered
 }
 
@@ -278,14 +277,13 @@ export class EntryStore implements  OnDestroy {
                     this._entry.next(entry);
                     this._entryId = entry.id;
                     this._hasSource.next(hasSource);
+                    this._notifications.next({ type: NotificationTypes.ViewEntered });
 
                     if (this._contentEntryViewService.isAvailable({
                         entry,
                         activatedRoute: this._entryRoute,
                         section: ContentEntryViewSections.ResolveFromActivatedRoute
                     })) {
-                        this._notifications.next({ type: NotificationTypes.ViewEntered });
-
                         const dataLoadedResult = this._widgetsManager.notifyDataLoaded(entry, { isNewData: false });
 
                         if (dataLoadedResult.errors.length) {
@@ -296,8 +294,6 @@ export class EntryStore implements  OnDestroy {
                         } else {
                             this._state.next({ action: ActionTypes.EntryLoaded });
                         }
-                    } else {
-                        this._notifications.next({ type: NotificationTypes.UnpermittedViewEntered });
                     }
 				},
 				error => {

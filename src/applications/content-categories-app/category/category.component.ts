@@ -97,7 +97,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
           .subscribe(
               ({ type, error }) => {
                   switch(type) {
-                      case NotificationTypes.UnpermittedViewEntered:
                       case NotificationTypes.ViewEntered:
                           const { category } = this._categoryStore;
 

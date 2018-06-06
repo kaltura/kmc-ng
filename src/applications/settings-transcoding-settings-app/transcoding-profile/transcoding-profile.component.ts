@@ -99,7 +99,6 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
           .subscribe(
               ({ type, error }) => {
                   switch(type) {
-                      case NotificationTypes.UnpermittedViewEntered:
                       case NotificationTypes.ViewEntered:
                           const profile = this._profileStore.profile.data();
 
