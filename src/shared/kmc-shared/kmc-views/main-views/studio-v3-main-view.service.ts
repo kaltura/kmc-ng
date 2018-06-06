@@ -7,6 +7,7 @@ import { serverConfig } from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 import { Title } from '@angular/platform-browser';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class StudioV3MainViewService extends KmcMainViewBaseService {
@@ -17,8 +18,9 @@ export class StudioV3MainViewService extends KmcMainViewBaseService {
                 router: Router,
                 private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
-                titleService: Title) {
-        super(logger.subLogger('StudioV3MainViewService'), browserService, router, titleService);
+                titleService: Title,
+                contextualHelpService: ContextualHelpService) {
+        super(logger.subLogger('StudioV3MainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -43,6 +45,7 @@ export class StudioV3MainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
+            viewKey: 'studio-v3',
             title: this._appLocalization.get('app.titles.studioV3PageTitle'),
             menu: this._appLocalization.get('app.titles.studio3MenuTitle')
         };

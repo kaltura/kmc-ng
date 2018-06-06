@@ -7,6 +7,7 @@ import {serverConfig} from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class UsageDashboardMainViewService extends KmcMainViewBaseService {
@@ -17,9 +18,10 @@ export class UsageDashboardMainViewService extends KmcMainViewBaseService {
         router: Router,
         private _appPermissions: KMCPermissionsService,
         private _appLocalization: AppLocalization,
-        titleService: Title
+        titleService: Title,
+        contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('UsageDashboardMainViewService'), browserService, router, titleService);
+        super(logger.subLogger('UsageDashboardMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -34,6 +36,7 @@ export class UsageDashboardMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
+            viewKey: 'usage-dashboard',
             title: this._appLocalization.get('app.titles.usageDashboardPageTitle'),
             menu: this._appLocalization.get('app.titles.usageDashboardMenuTitle')
         };

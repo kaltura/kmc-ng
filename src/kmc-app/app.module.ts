@@ -94,6 +94,7 @@ import { NotFoundPageComponent } from './components/not-found-page/not-found-pag
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
 import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
+import { ContextualHelpModule } from 'app-shared/kmc-shared/contextual-help/contextual-help.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -156,6 +157,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       KmcLogsModule.forRoot(),
       KalturaLoggerModule.forRoot('kmc'),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      ContextualHelpModule.forRoot(),
       KmcViewsModule.forRoot(),
       LocalizationModule.forRoot()
   ],

@@ -6,6 +6,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 import { Title } from '@angular/platform-browser';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class ContentUploadsMainViewService extends KmcMainViewBaseService {
@@ -16,9 +17,10 @@ export class ContentUploadsMainViewService extends KmcMainViewBaseService {
         router: Router,
         private _appPermissions: KMCPermissionsService,
         private _appLocalization: AppLocalization,
-        titleService: Title
+        titleService: Title,
+        contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('ContentUploadsMainViewService'), browserService, router, titleService);
+        super(logger.subLogger('ContentUploadsMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -35,6 +37,7 @@ export class ContentUploadsMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
+            viewKey: 'content-uploads',
             title: this._appLocalization.get('app.titles.contentUploadsPageTitle'),
             menu: this._appLocalization.get('app.titles.contentUploadsMenuTitle')
         };

@@ -7,6 +7,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { ViewMetadata } from 'app-shared/kmc-shared/kmc-views/kmc-main-view-base.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 import { Title } from '@angular/platform-browser';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class AdminUsersMainViewService extends KmcMainViewBaseService {
@@ -17,9 +18,10 @@ export class AdminUsersMainViewService extends KmcMainViewBaseService {
         router: Router,
         private _appPermissions: KMCPermissionsService,
         private _appLocalization: AppLocalization,
-        titleService: Title
+        titleService: Title,
+        contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('AdminUsersMainViewService'), browserService, router, titleService);
+        super(logger.subLogger('AdminUsersMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -36,6 +38,7 @@ export class AdminUsersMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
+            viewKey: 'admin-users',
             title: this._appLocalization.get('app.titles.administrationUsersPageTitle'),
             menu: this._appLocalization.get('app.titles.administrationUsersMenuTitle')
         };
