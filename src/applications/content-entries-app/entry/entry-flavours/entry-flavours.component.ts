@@ -125,7 +125,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
                 this._actions.push({id: 'delete', styleClass: 'kDanger', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), command: (event) => {this.actionSelected("delete");}});
             }
 
-            this._permissionsService.filterList(<{ id: string }[]>this._actions, { 'import': KMCPermissions.CONTENT_INGEST_UPLOAD, 'upload': KMCPermissions.CONTENT_INGEST_UPLOAD });
+            this._permissionsService.filterList(<{ id: string }[]>this._actions, {
+                'import': KMCPermissions.CONTENT_INGEST_UPLOAD,
+                'upload': KMCPermissions.CONTENT_INGEST_UPLOAD,
+                'link': KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE
+            });
 
 			if (this._actions.length) {
 				this._selectedFlavor = flavor;

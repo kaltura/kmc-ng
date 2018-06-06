@@ -53,6 +53,11 @@ import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/type
 import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
+import { KalturaResponse } from 'kaltura-ngx-client/api/kaltura-response';
+import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaStorageProfileListResponse';
+import { KalturaConversionProfileAssetParamsListResponse } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsListResponse';
 
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
@@ -86,6 +91,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 private _uploadManagement: UploadManagement,
                 private _appEvents: AppEventsService,
                 private _kmcServerPolls: KmcServerPolls,
+                private _permissionsService: KMCPermissionsService,
                 private _entryStore: EntryStore,
                 logger: KalturaLogger) {
         super(ContentEntryViewSections.Flavours, logger);
@@ -131,25 +137,6 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     private _getStorageProfile(): Observable<{ storageProfile: KalturaStorageProfile, conversionProfileAsset: KalturaConversionProfileAssetParams }> {
-        const conversionProfileAction = new ConversionProfileGetAction({ id: this.data.conversionProfileId })
-            .setRequestOptions(
-                new KalturaRequestOptions({
-                    responseProfile: new KalturaDetachedResponseProfile({
-                        type: KalturaResponseProfileType.includeFields,
-                        fields: 'storageProfileId'
-                    })
-                })
-            );
-        const storageProfileListAction = new StorageProfileListAction({
-            filter: new KalturaStorageProfileFilter({ idEqual: 0 }).setDependency(['idEqual', 0, 'storageProfileId'])
-        }).setRequestOptions(
-            new KalturaRequestOptions({
-                responseProfile: new KalturaDetachedResponseProfile({
-                    type: KalturaResponseProfileType.includeFields,
-                    fields: 'id,name,storageUrl,storageBaseDir'
-                })
-            })
-        );
         const filter = new KalturaConversionProfileFilter({
             orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
             typeEqual: KalturaConversionProfileType.media,
@@ -168,20 +155,43 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             })
         );
 
+        const requests: KalturaRequest<any>[] = [conversionProfileAssetAction];
+
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)) {
+            const conversionProfileAction = new ConversionProfileGetAction({ id: this.data.conversionProfileId })
+                .setRequestOptions(
+                    new KalturaRequestOptions({
+                        responseProfile: new KalturaDetachedResponseProfile({
+                            type: KalturaResponseProfileType.includeFields,
+                            fields: 'storageProfileId'
+                        })
+                    })
+                );
+            const storageProfileListAction = new StorageProfileListAction({
+                filter: new KalturaStorageProfileFilter({ idEqual: 0 }).setDependency(['idEqual', 0, 'storageProfileId'])
+            }).setRequestOptions(
+                new KalturaRequestOptions({
+                    responseProfile: new KalturaDetachedResponseProfile({
+                        type: KalturaResponseProfileType.includeFields,
+                        fields: 'id,name,storageUrl,storageBaseDir'
+                    })
+                })
+            );
+
+            requests.push(conversionProfileAction);
+            requests.push(storageProfileListAction);
+        }
+
         return this._kalturaServerClient
-            .multiRequest(new KalturaMultiRequest(
-                conversionProfileAction,
-                storageProfileListAction,
-                conversionProfileAssetAction
-            ))
+            .multiRequest(new KalturaMultiRequest(...requests))
             .map(responses => {
                 if (responses.hasErrors()) {
                     const message = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
                     throw new Error(message);
                 }
 
-                const storageProfiles = responses[1].result.objects;
-                const conversionProfileAssets = responses[2].result.objects;
+                const storageProfiles = this._getResponseByType<KalturaStorageProfile[]>(responses, KalturaStorageProfileListResponse);
+                const conversionProfileAssets = this._getResponseByType<KalturaConversionProfileAssetParams[]>(responses, KalturaConversionProfileAssetParamsListResponse);
                 const storageProfile = Array.isArray(storageProfiles) && storageProfiles.length ? storageProfiles[0] : null;
                 let conversionProfileAsset = Array.isArray(conversionProfileAssets) && conversionProfileAssets.length
                     ? conversionProfileAssets[0]
@@ -191,6 +201,15 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     : null;
                 return { storageProfile, conversionProfileAsset };
             });
+    }
+
+    private _getResponseByType<T>(responses: KalturaMultiResponse, type: any): T {
+        const relevantResponse = responses.find(response => response.result instanceof type);
+        if (relevantResponse) {
+            return relevantResponse.result.objects;
+        }
+
+        return null;
     }
 
     private _stopPolling(): void {
