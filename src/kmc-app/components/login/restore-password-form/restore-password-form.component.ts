@@ -1,29 +1,27 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EqualFieldsValidator } from 'app-shared/kmc-shell/validators/equalFields.validator';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { serverConfig } from 'config/server';
 
 @Component({
-  selector: 'kKMCPasswordExpiredForm',
-  templateUrl: './password-expired-form.component.html',
-  styleUrls: ['./password-expired-form.component.scss']
+  selector: 'kKMCRestorePassword',
+  templateUrl: './restore-password-form.component.html',
+  styleUrls: ['./restore-password-form.component.scss']
 })
-export class PasswordExpiredFormComponent {
+export class RestorePasswordFormComponent {
   @Input() errorMessage: string;
   @Input() errorCode: string;
   @Input() inProgress = false;
+  @Input() restorePasswordHash: string;
   @Input() passwordRestored = false;
 
-  @Output() onResetPassword = new EventEmitter<{ password: string, newPassword: string }>();
+  @Output() onRestorePassword = new EventEmitter<{ newPassword: string, hashKey: string }>();
+    @Output() returnToLogin = new EventEmitter<void>();
 
   public _formSent = false;
   public _resetPasswordForm: FormGroup;
   public _passwords: FormGroup;
-  public _oldPasswordField: AbstractControl;
   public _newPasswordField: AbstractControl;
   public _repeatPasswordField: AbstractControl;
-  public _supportAddress: string;
 
   public get _sendBtnText(): string {
     return this.inProgress ? 'app.login.wait' : 'app.login.send';
@@ -33,40 +31,39 @@ export class PasswordExpiredFormComponent {
     return (this._repeatPasswordField.touched || this._formSent) && this._showError(this._passwords);
   }
 
-  public get _oldPasswordWrong(): boolean {
-    return 'WRONG_OLD_PASSWORD' === this.errorCode;
-  }
-
   public get _passwordStructureInvalid(): boolean {
-    return 'PASSWORD_STRUCTURE_INVALID' === this.errorCode;
+    return this._resetPasswordForm.pristine && 'PASSWORD_STRUCTURE_INVALID' === this.errorCode;
   }
 
   public get _passwordStructureInvalidMessage(): string {
-    return this._passwordStructureInvalid ? 'app.login.error.invalidStructure' : '';
+    return this._passwordStructureInvalid  ? 'app.login.error.invalidStructure' : '';
   }
 
-  constructor(private _fb: FormBuilder,
-              private _browserService: BrowserService) {
-      this._buildForm();
-
-      if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support) {
-          this._supportAddress = serverConfig.externalLinks.kaltura.support;
-      }
+  constructor(private _fb: FormBuilder) {
+    this._buildForm();
   }
 
   private _buildForm(): void {
     this._resetPasswordForm = this._fb.group({
-      oldPassword: ['', Validators.required],
       passwords: this._fb.group({
         newPassword: ['', Validators.required],
         repeatPassword: ['', Validators.required],
       }, { validator: EqualFieldsValidator.validate('newPassword', 'repeatPassword') })
     });
 
-    this._oldPasswordField = this._resetPasswordForm.controls['oldPassword'];
     this._passwords = <FormGroup>this._resetPasswordForm.controls['passwords'];
     this._newPasswordField = this._passwords.controls['newPassword'];
     this._repeatPasswordField = this._passwords.controls['repeatPassword'];
+  }
+
+  private _markAsPristine(): void {
+      for (const control in this._resetPasswordForm.controls) {
+          if (this._resetPasswordForm.controls.hasOwnProperty(control)) {
+              this._resetPasswordForm.controls[control].markAsUntouched();
+              this._resetPasswordForm.controls[control].markAsPristine();
+              this._resetPasswordForm.controls[control].updateValueAndValidity();
+          }
+      }
   }
 
   public _showError(control: AbstractControl): boolean {
@@ -76,25 +73,22 @@ export class PasswordExpiredFormComponent {
   public _getClientValidationMessage(control: AbstractControl): string {
     const invalid = this._showError(control);
     const message = control.hasError('fieldsEqual')
-      ? 'app.login.passwordExpired.error.equal'
-      : 'app.login.passwordExpired.error.required';
+      ? 'app.login.restorePassword.error.equal'
+      : 'app.login.restorePassword.error.required';
     return invalid ? message : '';
   }
 
-  public _resetPassword(event: Event): void {
-    event.preventDefault();
-
+  public _resetPassword(): void {
     this._formSent = true;
 
     if (this._resetPasswordForm.valid) {
       this._formSent = false;
-      this.onResetPassword.emit({
-        password: this._oldPasswordField.value,
-        newPassword: this._newPasswordField.value
+        this._markAsPristine();
+      const value = this._resetPasswordForm.value;
+      this.onRestorePassword.emit({
+        newPassword: value.passwords.newPassword,
+        hashKey: this.restorePasswordHash
       });
     }
   }
-    public _contactSupport(): void {
-        this._browserService.openSupport();
-    }
 }

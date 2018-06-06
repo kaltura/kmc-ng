@@ -20,6 +20,7 @@ export const ServerConfigSchema = {
                 defaultPrivileges: {type: 'string'},
                 deployUrl: {type: 'string'},
                 previewUIConf: {type: 'number'},
+                resetPasswordUri: {type: 'string'},
                 freeTrialExpiration: {
                     properties: {
                         trialPeriodInDays: {type: 'number'}
