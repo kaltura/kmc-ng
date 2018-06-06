@@ -1,6 +1,7 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client/api/types/PlaylistGetAction';
@@ -31,7 +32,10 @@ export enum ActionTypes {
   PlaylistDataIsInvalid,
   ActiveSectionBusy
 }
-
+export enum NotificationTypes {
+    UnpermittedViewEntered,
+    ViewEntered
+}
 export interface StatusArgs {
   action: ActionTypes;
   error?: Error;
@@ -39,6 +43,8 @@ export interface StatusArgs {
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
+    private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
+    public notifications$ = this._notifications.asObservable();
   private _loadPlaylistSubscription: ISubscription;
   private _sectionToRouteMapping: { [key: number]: string } = {};
   private _state = new BehaviorSubject<StatusArgs>({ action: ActionTypes.PlaylistLoading, error: null });
@@ -151,11 +157,15 @@ export class PlaylistStore implements OnDestroy {
       .request(new PlaylistGetAction({ id }))
       .cancelOnDestroy(this)
       .subscribe(playlist => {
-          if (this._contentPlaylistView.viewEntered({
+              this._playlist.next({ playlist });
+          if (this._contentPlaylistView.isAvailable({
               playlist,
               activatedRoute: this._playlistRoute,
               section: ContentPlaylistViewSections.ResolveFromActivatedRoute
           })) {
+
+              this._notifications.next({ type: NotificationTypes.ViewEntered });
+
               if (playlist.playlistType === KalturaPlaylistType.dynamic) {
                   if (typeof playlist.totalResults === 'undefined' || playlist.totalResults <= 0) {
                       playlist.totalResults = subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
@@ -163,7 +173,7 @@ export class PlaylistStore implements OnDestroy {
               }
 
               this._loadPlaylistSubscription = null;
-              this._playlist.next({ playlist });
+
               const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(playlist, { isNewData: false });
               if (playlistLoadedResult.errors.length) {
                   this._state.next({
@@ -173,6 +183,9 @@ export class PlaylistStore implements OnDestroy {
               } else {
                   this._state.next({ action: ActionTypes.PlaylistLoaded });
               }
+          } else {
+              this._notifications.next({ type: NotificationTypes.UnpermittedViewEntered });
+
           }
         },
         error => {
@@ -251,17 +264,10 @@ export class PlaylistStore implements OnDestroy {
               setTimeout(() => this._loadPlaylist(currentPlaylistId), 0);
             }
           } else {
-              const currentPlaylist = this._playlist.getValue();
-              if (currentPlaylist && currentPlaylist.playlist) {
-                  this._contentPlaylistView.viewEntered({
-                      playlist: currentPlaylist.playlist,
-                      activatedRoute: this._playlistRoute,
-                      section: ContentPlaylistViewSections.ResolveFromActivatedRoute
-                  });
-              }
+              this._notifications.next({ type: NotificationTypes.ViewEntered });
           }
         }
-      )
+      );
   }
 
   public savePlaylist(): void {

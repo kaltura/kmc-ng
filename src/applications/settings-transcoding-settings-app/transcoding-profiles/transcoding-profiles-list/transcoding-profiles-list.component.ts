@@ -62,7 +62,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      if (this._settingsTranscodingProfilesMainViewService.viewEntered()) {
+      if (this._settingsTranscodingProfilesMainViewService.isAvailable()) {
           this._prepare();
       }
   }

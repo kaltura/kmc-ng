@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActionTypes, TranscodingProfileStore } from './transcoding-profile-store.service';
+import { ActivatedRoute } from '@angular/router';
+import { NotificationTypes, ActionTypes, TranscodingProfileStore } from './transcoding-profile-store.service';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { Observable } from 'rxjs/Observable';
@@ -13,6 +14,10 @@ import { BaseTranscodingProfilesStore } from '../transcoding-profiles/transcodin
 import { MediaTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/media-transcoding-profiles-store.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/live-transcoding-profiles-store.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import {
+    SettingsTranscodingProfileViewSections,
+    SettingsTranscodingProfileViewService
+} from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kTranscodingProfile',
@@ -53,7 +58,10 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
               private _appLocalization: AppLocalization,
               private _mediaTranscodingProfilesStore: MediaTranscodingProfilesStore,
               private _liveTranscodingProfilesStore: LiveTranscodingProfilesStore,
-              public _profileStore: TranscodingProfileStore) {
+              public _profileStore: TranscodingProfileStore,
+              private _settingsTranscodingProfileViewService: SettingsTranscodingProfileViewService,
+              private _profileRoute: ActivatedRoute
+  ) {
     _profileWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4]);
   }
 
@@ -85,6 +93,28 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+      this._profileStore.notifications$
+          .cancelOnDestroy(this)
+          .subscribe(
+              ({ type, error }) => {
+                  switch(type) {
+                      case NotificationTypes.UnpermittedViewEntered:
+                      case NotificationTypes.ViewEntered:
+                          const profile = this._profileStore.profile.data();
+
+                          if (profile) {
+                              this._settingsTranscodingProfileViewService.viewEntered({
+                                  profile,
+                                  activatedRoute: this._profileRoute,
+                                  section: SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute
+                              });
+                          }
+                          break;
+                      default:
+                          break;
+                  }
+              });
     this._profileStore.profile.state$
       .cancelOnDestroy(this)
       .filter(Boolean)

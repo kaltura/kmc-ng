@@ -136,11 +136,13 @@ export class EntryComponent implements OnInit, OnDestroy {
                         case NotificationTypes.ViewEntered:
                             const { entry } = this._entryStore;
 
-                            this._contentEntryViewService.viewEntered({
-                                entry,
-                                activatedRoute: this._entryRoute,
-                                section: ContentEntryViewSections.ResolveFromActivatedRoute
-                            })
+                            if (entry) {
+                                this._contentEntryViewService.viewEntered({
+                                    entry,
+                                    activatedRoute: this._entryRoute,
+                                    section: ContentEntryViewSections.ResolveFromActivatedRoute
+                                });
+                            }
                             break;
                         default:
                             break;

@@ -2,6 +2,7 @@ import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
@@ -42,7 +43,10 @@ export enum ActionTypes {
   ProfileDataIsInvalid,
   ActiveSectionBusy
 }
-
+export enum NotificationTypes {
+    UnpermittedViewEntered,
+    ViewEntered
+}
 export interface StatusArgs {
   action: ActionTypes;
   error?: Error;
@@ -50,6 +54,8 @@ export interface StatusArgs {
 
 @Injectable()
 export class TranscodingProfileStore implements OnDestroy {
+    private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
+    public notifications$ = this._notifications.asObservable();
   private _profilesStore: BaseTranscodingProfilesStore;
   private _loadProfileSubscription: ISubscription;
   private _pageExitVerificationToken: string;
@@ -197,14 +203,7 @@ export class TranscodingProfileStore implements OnDestroy {
                 });
               }
             } else {
-                const profile = this._profile.data.getValue();
-                if (profile) {
-                    this._settingsTranscodingProfileViewService.viewEntered({
-                        profile: profile,
-                        activatedRoute: this._profileRoute,
-                        section: SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute
-                    });
-                }
+                this._notifications.next({ type: NotificationTypes.ViewEntered });
             }
           }
         }
@@ -345,13 +344,15 @@ export class TranscodingProfileStore implements OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-            if (this._settingsTranscodingProfileViewService.viewEntered({
+            this._profile.data.next(response);
+            this._profileId = String(response.id);
+
+            if (this._settingsTranscodingProfileViewService.isAvailable({
                 profile: response,
                 activatedRoute: this._profileRoute,
                 section: SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute
             })) {
-                this._profile.data.next(response);
-                this._profileId = String(response.id);
+                this._notifications.next({ type: NotificationTypes.ViewEntered });
                 this._setProfilesStoreServiceByType(response.type);
 
                 const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
@@ -363,6 +364,8 @@ export class TranscodingProfileStore implements OnDestroy {
                 } else {
                     this._profile.state.next({ action: ActionTypes.ProfileLoaded });
                 }
+            }else {
+                this._notifications.next({ type: NotificationTypes.UnpermittedViewEntered });
             }
         },
         error => {

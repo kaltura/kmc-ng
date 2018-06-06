@@ -51,8 +51,8 @@ declare interface StatusArgs {
 export class EntryStore implements  OnDestroy {
 	private _loadEntrySubscription : ISubscription;
 	private _state = new BehaviorSubject<StatusArgs>({ action : ActionTypes.EntryLoading, error : null});
-	private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
     private _pageExitVerificationToken: string;
+    private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
     public notifications$ = this._notifications.asObservable();
 	public state$ = this._state.asObservable();
 	private _entryIsDirty : boolean;

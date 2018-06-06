@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { Observable } from 'rxjs/Observable';
-import { ActionTypes, PlaylistStore } from './playlist-store.service';
+import { NotificationTypes, ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-sections-list-widget.service';
@@ -13,6 +14,7 @@ import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widge
 import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kPlaylist',
@@ -55,12 +57,36 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               widget2: PlaylistDetailsWidget,
               widget3: ManualContentWidget,
               widget4: PlaylistMetadataWidget,
-              widget5: RuleBasedContentWidget) {
+              widget5: RuleBasedContentWidget,
+              private _contentPlaylistView: ContentPlaylistViewService,
+              private _playlistRoute: ActivatedRoute) {
     _playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5])
   }
 
   ngOnInit() {
     let errorMessage;
+
+      this._playlistStore.notifications$
+          .cancelOnDestroy(this)
+          .subscribe(
+              ({ type, error }) => {
+                  switch(type) {
+                      case NotificationTypes.UnpermittedViewEntered:
+                      case NotificationTypes.ViewEntered:
+                          const playlist = this._playlistStore.playlist;
+                          if (playlist ) {
+                              this._contentPlaylistView.viewEntered({
+                                  playlist,
+                                  activatedRoute: this._playlistRoute,
+                                  section: ContentPlaylistViewSections.ResolveFromActivatedRoute
+                              });
+                          }
+
+                          break;
+                      default:
+                          break;
+                  }
+              });
 
     this._playlistStore.state$
       .cancelOnDestroy(this)
