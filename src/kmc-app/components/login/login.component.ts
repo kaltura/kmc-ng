@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { AppAuthentication,  AutomaticLoginErrorReasons, BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
+import { AppAuthentication, AutomaticLoginErrorReasons, BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
 import { serverConfig } from 'config/server';
@@ -62,27 +62,39 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onResize();
   }
 
-  private _prepare(): void {
-      const restorePasswordArgs = this._restorePasswordView.popOpenArgs();
-      if (restorePasswordArgs && restorePasswordArgs.hash) {
-          this._validateHash(restorePasswordArgs.hash)
-              .cancelOnDestroy(this)
-              .subscribe(({ errorCode }) => {
-                  if (errorCode) {
-                      this._currentScreen = LoginScreens.RestorePasswordInvalidHash;
-                      this._errorCode = errorCode;
-                  } else {
-                      this._currentScreen = LoginScreens.RestorePassword;
-                      this._restorePasswordHash = restorePasswordArgs.hash;
-                  }
-              });
-      }
-  }
+    private _prepare(): void {
+        const restorePasswordArgs = this._restorePasswordView.popOpenArgs();
+        if (restorePasswordArgs && restorePasswordArgs.hash) {
+            this._validateRestorePasswordHash(restorePasswordArgs.hash);
+        }
+    }
 
-  private _validateHash(hash: string): Observable<{ errorCode: string }> {
-      // TODO validate hash on the server
-      return Observable.of({ errorCode: null });
-  }
+    private _validateRestorePasswordHash(hash: string): void {
+        this._appAuthentication.validateResetPasswordHash(hash)
+            .tag('block-shell')
+            .cancelOnDestroy(this)
+            .subscribe(
+                ({ errorCode }) => {
+                    if (!errorCode) {
+                        this._currentScreen = LoginScreens.RestorePassword;
+                        this._restorePasswordHash = hash;
+                    } else if (errorCode === 'RESET_URI_NOT_DEFINED') {
+                        this._browserService.navigateToError();
+                    } else {
+                        this._currentScreen = LoginScreens.RestorePasswordInvalidHash;
+                        this._errorCode = errorCode;
+                    }
+                },
+                error => {
+                    this._browserService.confirm({
+                        header: this._appLocalization.get('app.error'),
+                        message: this._appLocalization.get('app.login.restorePassword.error.failedValidateHash', [error.message]),
+                        accept: () => this._validateRestorePasswordHash(hash),
+                        reject: () => this._setScreen(LoginScreens.Login)
+                    });
+                }
+            );
+    }
 
   private _makeLoginRequest(username: string, password: string): Observable<LoginResponse> {
     return this._appAuthentication.login(username, password).cancelOnDestroy(this);

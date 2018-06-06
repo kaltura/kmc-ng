@@ -137,6 +137,24 @@ export class AppAuthentication {
         return this._appUser;
     }
 
+    validateResetPasswordHash(hash: string): Observable<{ errorCode: string }> {
+        if (!serverConfig.kalturaServer.resetPasswordUri) {
+            this._logger.warn(`resetPasswordUri was not provided by configuration, abort request`);
+            return Observable.of({ errorCode: 'RESET_URI_NOT_DEFINED' });
+        }
+
+        const url = serverConfig.kalturaServer.resetPasswordUri.replace('{hash}', hash);
+
+        this._logger.debug(`check if provided hash is valid`, { hash, url });
+
+        return this._http.get(url, { responseType: 'json' })
+            .map(res => res['errorCode'])
+            .catch((e) => {
+                this._logger.error('Failed to check if provided hash is valid', e);
+                throw Error('Failed to check if provided hash is valid');
+            });
+    }
+
     resetPassword(email: string): Observable<void> {
         if (!this.isLogged()) {
             return this.kalturaServerClient.request(new UserResetPasswordAction({email}));

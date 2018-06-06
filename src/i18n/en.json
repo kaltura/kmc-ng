@@ -147,7 +147,8 @@
         "restored": "Your new password has been set, please login to Kaltura management console.",
         "error": {
           "equal": "Passwords do not match",
-          "required": "Field is required"
+          "required": "Field is required",
+            "failedValidateHash": "{{0}}\nDo you want to retry?"
         },
         "placeholder": {
           "new": "Enter new password",
