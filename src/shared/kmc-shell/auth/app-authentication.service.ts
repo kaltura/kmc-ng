@@ -140,7 +140,7 @@ export class AppAuthentication {
     validateResetPasswordHash(hash: string): Observable<string> {
         if (!serverConfig.kalturaServer.resetPasswordUri) {
             this._logger.warn(`resetPasswordUri was not provided by configuration, abort request`);
-            return Observable.of({ errorCode: 'RESET_URI_NOT_DEFINED' });
+            return Observable.of('RESET_URI_NOT_DEFINED');
         }
 
         const url = serverConfig.kalturaServer.resetPasswordUri.replace('{hash}', hash);
