@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             .tag('block-shell')
             .cancelOnDestroy(this)
             .subscribe(
-                ({ errorCode }) => {
+                (errorCode) => {
                     if (!errorCode) {
                         this._currentScreen = LoginScreens.RestorePassword;
                         this._restorePasswordHash = hash;
