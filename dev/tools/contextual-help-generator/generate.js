@@ -4,7 +4,7 @@ const fs = require('fs');
 const findRoot = require('../../../scripts/libs/find-root');
 
 const rootPath = findRoot(process.cwd());
-const csvFilePath = path.resolve(rootPath, 'dev/tools/contextual-help-generator/contextual-help.csv');
+const csvFilePath = path.resolve(rootPath, 'docs/kaltura-internal-docs/contextual-help.csv');
 const jsonOutputFilePath = path.resolve(rootPath, 'src/public/contextual-help.json');
 
 try {

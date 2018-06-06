@@ -21,7 +21,16 @@
     },
     {
         "viewKey": "content-entries",
-        "links": []
+        "links": [
+            {
+                "value": "https://www.bing.com",
+                "label": "Test1"
+            },
+            {
+                "value": "https://google.com",
+                "label": "Test2"
+            }
+        ]
     },
     {
         "viewKey": "content-moderation",
@@ -85,6 +94,96 @@
     },
     {
         "viewKey": "usage-dashboard",
+        "links": []
+    },
+    {
+        "viewKey": "content-category-subcategories",
+        "links": []
+    },
+    {
+        "viewKey": "content-category-entitlements",
+        "links": []
+    },
+    {
+        "viewKey": "content-category-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-thumbnails",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-accesscontrol",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-scheduling",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-flavours",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-captions",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-live",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-related",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-clips",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-advertisements",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-users",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-distribution",
+        "links": []
+    },
+    {
+        "viewKey": "content-playlist-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "content-playlist-content",
+        "links": [
+            {
+                "value": "https://www.bing.com",
+                "label": "Test2"
+            }
+        ]
+    },
+    {
+        "viewKey": "content-playlist-contentrulebased",
+        "links": [
+            {
+                "value": "https://google.com",
+                "label": "Test"
+            }
+        ]
+    },
+    {
+        "viewKey": "settings-transcoding-profile-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "settings-transcoding-profile-flavors",
         "links": []
     }
 ]

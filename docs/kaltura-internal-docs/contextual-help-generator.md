@@ -3,13 +3,13 @@ The generator converts provided csv file to json structure and writes the result
 
 `"viewKey","linkLabel","linkValue"` > `[ { "viewKey": string, "links": [{ "label": string, "value": string" }] }`
 ### How to use
-1. Put `contextual-help.csv` file in this folder
+1. Put `contextual-help.csv` file in the following folder `kmc-ng/docs/kaltura-internal-docs`
 2. run `npm run generate:ch`
 3. commit generated file
 ### `contextual-help.csv`
 The file has the following structure `"viewKey","linkLabel","linkValue"` (**the header is mandatory!**).
 
-`viewKey` - a key of corresponding view in the application, see `contextual-help.template.csv` as example, it has all available key in the application.
+`viewKey` - a key of corresponding view in the application, see `kmc-ng/docs/kaltura-internal-docs/contextual-help.template.csv` as example, it has all available key in the application.
 
 `linkLabel` - a label of the link, will go there `<a ...>{linkLabel}</a>`
 
