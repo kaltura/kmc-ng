@@ -57,27 +57,29 @@
 </kPopupWidget>
 
 <kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">
-    <div class="kHelpMenu">
-        <p [hidden]="!_kmcOverviewLinkExists && !_mediaManagementLinkExists" class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
-        <p [hidden]="!_kmcOverviewLinkExists" class="kHelpLink" (click)="openHelpLink('kmcOverview')">{{'app.helpMenu.kmcOverview' | translate}}</p>
-        <p [hidden]="!_mediaManagementLinkExists" class="kHelpLink" (click)="openHelpLink('mediaManagement')">{{'app.helpMenu.mediaManagement' | translate}}</p>
-        <p class="kDisabled">{{'app.helpMenu.productTour' | translate}}</p>
-        <hr>
-        <p [hidden]="!_userManualLinkExists && !_supportLinkExists" class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
-        <p [hidden]="!_userManualLinkExists" class="kDisabled">{{'app.helpMenu.userManual' | translate}}</p>
-        <p [hidden]="!_supportLinkExists" class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
-        <k-logs-record mode="link"
-                       [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"
-                       [class.kHelpLinkHidden]="!(_kmcLogs.logsRecordMode | async).enabled"></k-logs-record>
-        <hr>
-        <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
-        <k-power-user-console [class.kHelpLinkHidden]="!_powerUser"></k-power-user-console>
-
-        <!--div class="kContexualHelp">
+    <ng-template>
+        <div class="kHelpMenu">
+            <p *ngIf="_kmcOverviewLinkExists || _mediaManagementLinkExists" class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
+            <p *ngIf="_kmcOverviewLinkExists" class="kHelpLink" (click)="openHelpLink('kmcOverview')">{{'app.helpMenu.kmcOverview' | translate}}</p>
+            <p *ngIf="_mediaManagementLinkExists" class="kHelpLink" (click)="openHelpLink('mediaManagement')">{{'app.helpMenu.mediaManagement' | translate}}</p>
+            <p class="kDisabled">{{'app.helpMenu.productTour' | translate}}</p>
             <hr>
-            <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
-            <p class="kHelpLink">Contextual link 1</p>
-            <p class="kHelpLink">Contextual link 2</p>
-        </div-->
-    </div>
+            <p *ngIf="_userManualLinkExists || _supportLinkExists" class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
+            <p *ngIf="_userManualLinkExists" class="kDisabled">{{'app.helpMenu.userManual' | translate}}</p>
+            <p *ngIf="_supportLinkExists" class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
+            <k-logs-record mode="link"
+                           *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
+                           [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"></k-logs-record>
+            <hr>
+            <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
+            <k-power-user-console *ngIf="_powerUser"></k-power-user-console>
+
+            <div class="kContexualHelp">
+                <hr>
+                <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
+                <p class="kHelpLink">Contextual link 1</p>
+                <p class="kHelpLink">Contextual link 2</p>
+            </div>
+        </div>
+    </ng-template>
 </kPopupWidget>
