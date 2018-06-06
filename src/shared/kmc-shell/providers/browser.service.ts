@@ -41,6 +41,10 @@ export interface GrowlMessage {
   detail?: string;
 }
 
+export declare type QueryParams = {
+    [key: string]: any;
+};
+
 export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
 
 export type AppStatus = {
@@ -411,9 +415,14 @@ export class BrowserService implements IAppStorage {
         }
     }
 
-    public navigateToLogin(): void {
+    public navigateToLoginWithStatus(): Observable<boolean> {
         this._logger.info(`navigate to login view`);
-        this._router.navigateByUrl(kmcAppConfig.routing.loginRoute, { replaceUrl: true });
+        return Observable.fromPromise(this._router.navigateByUrl(kmcAppConfig.routing.loginRoute, {replaceUrl: true}));
+    }
+
+    public navigateToLogin(): void {
+        this.navigateToLoginWithStatus().subscribe();
+        return;
     }
 
     public navigateToDefault(removeCurrentFromBrowserHistory: boolean = true): void {

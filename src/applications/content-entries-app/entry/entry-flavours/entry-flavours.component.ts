@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy, HostListener } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
@@ -8,13 +8,16 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { EntryFlavoursWidget } from './entry-flavours-widget.service';
+import { EntryFlavoursWidget, ReplacementData } from './entry-flavours-widget.service';
 import { Flavor } from './flavor';
 
 import { BrowserService } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { Observable } from 'rxjs/Observable';
+import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -31,8 +34,9 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
 	@ViewChild('importPopup') importPopup: PopupWidgetComponent;
-	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
+    @ViewChild('linkPopup') linkPopup: FileDialogComponent;
+    @ViewChild('actionsmenu') private actionsMenu: Menu;
+    @ViewChild('fileDialog') private fileDialog: FileDialogComponent;
 	public _actions: MenuItem[] = [];
 	public _kmcPermissions = KMCPermissions;
 
@@ -41,8 +45,6 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
     public _loadingError = null;
 
 	public _documentWidth: number = 2000;
-
-	private _importPopupStateChangeSubscribe: ISubscription;
 
 	constructor(public _widgetService: EntryFlavoursWidget,
               private _uploadManagement: UploadManagement,
@@ -56,11 +58,37 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
         this._widgetService.attachForm();
     }
 
+    public _showActionsView(replacementData: ReplacementData): boolean {
+        if (!replacementData || !this._widgetService.data) {
+            return false;
+        }
+
+        const entry = this._widgetService.data;
+        const noCurrentlyReplacing = !replacementData.tempEntryId;
+        const hasReplacePermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_INTO_READY);
+        let showActionsView = true;
+        switch (entry.status) {
+            case KalturaEntryStatus.noContent:
+                showActionsView = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_INTO_ORPHAN);
+                break;
+            case KalturaEntryStatus.ready:
+            case KalturaEntryStatus.errorConverting:
+            case KalturaEntryStatus.errorImporting:
+                showActionsView = noCurrentlyReplacing && hasReplacePermission;
+                break;
+            default:
+                showActionsView = hasReplacePermission;
+                break;
+        }
+
+        return showActionsView;
+    }
+
 	openActionsMenu(event: any, flavor: Flavor): void{
 		if (this.actionsMenu){
 			this._actions = [];
 			this._uploadFilter = this._setUploadFilter(this._widgetService.data);
-			if (this._widgetService.sourceAvailabale && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted.toString()))){
+			if (this._widgetService.sourceAvailable && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted.toString()))){
 				this._actions.push({id: 'convert', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.convert'), command: (event) => {this.actionSelected("convert");}});
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor)) || ( !flavor.isSource && flavor.id !== '' &&
@@ -74,12 +102,17 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			){
 				this._actions.push({id: 'upload', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.upload'), command: (event) => {this.actionSelected("upload");}});
 				this._actions.push({id: 'import', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.import'), command: (event) => {this.actionSelected("import");}});
+                this._actions.push({
+                    id: 'link',
+                    label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.link'),
+                    command: () => this.actionSelected('link')
+                });
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor) && flavor.isWeb) ||
 					(flavor.id !== "" && flavor.isWeb && (flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString()))){
 				this._actions.push({id: 'preview', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.preview'), command: (event) => {this.actionSelected("preview");}});
 			}
-			if (this._widgetService.sourceAvailabale && !flavor.isSource && (flavor.status === KalturaFlavorAssetStatus.error.toString() || flavor.status === KalturaFlavorAssetStatus.exporting.toString() ||
+			if (this._widgetService.sourceAvailable && !flavor.isSource && (flavor.status === KalturaFlavorAssetStatus.error.toString() || flavor.status === KalturaFlavorAssetStatus.exporting.toString() ||
 				flavor.status === KalturaFlavorAssetStatus.ready.toString() || flavor.status === KalturaFlavorAssetStatus.notApplicable.toString())){
 				this._actions.push({id: 'reconvert', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.reconvert'), command: (event) => {this.actionSelected("reconvert");}});
 			}
@@ -92,7 +125,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
                 this._actions.push({id: 'delete', styleClass: 'kDanger', label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.delete'), command: (event) => {this.actionSelected("delete");}});
             }
 
-            this._permissionsService.filterList(<{ id: string }[]>this._actions, { 'import': KMCPermissions.CONTENT_INGEST_UPLOAD, 'upload': KMCPermissions.CONTENT_INGEST_UPLOAD });
+            this._permissionsService.filterList(<{ id: string }[]>this._actions, {
+                'import': KMCPermissions.CONTENT_INGEST_UPLOAD,
+                'upload': KMCPermissions.CONTENT_INGEST_UPLOAD,
+                'link': KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE
+            });
 
 			if (this._actions.length) {
 				this._selectedFlavor = flavor;
@@ -133,8 +170,24 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			case "drm":
 				this.drmPopup.open();
 				break;
+            case 'link':
+                this._linkFlavor();
+                break;
+            default:
+                break;
 		}
 	}
+
+    private _linkFlavor(): void {
+        if (this._widgetService.storageProfile) {
+            this.linkPopup.open();
+        } else {
+            this._browserService.alert({
+                header: this._appLocalization.get('app.common.error'),
+                message: this._appLocalization.get('applications.content.entryDetails.flavours.link.noStorageProfile')
+            });
+        }
+    }
 
 	private _setUploadFilter(entry: KalturaMediaEntry): string{
 		let filter = "";
@@ -171,8 +224,6 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnDestroy() {
 	    this.actionsMenu.hide();
-	    this._importPopupStateChangeSubscribe.unsubscribe();
-
 		this._widgetService.detachForm();
 
 	}
@@ -180,7 +231,8 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
     ngAfterViewInit() {
 	    if (this.importPopup) {
-		    this._importPopupStateChangeSubscribe = this.importPopup.state$
+		    this.importPopup.state$
+                .cancelOnDestroy(this)
 			    .subscribe(event => {
 				    if (event.state === PopupWidgetStates.Close) {
 					    if (event.context && event.context.flavorUrl){

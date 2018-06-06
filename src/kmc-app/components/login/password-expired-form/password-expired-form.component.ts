@@ -13,6 +13,7 @@ export class PasswordExpiredFormComponent {
   @Input() errorMessage: string;
   @Input() errorCode: string;
   @Input() inProgress = false;
+  @Input() passwordRestored = false;
 
   @Output() onResetPassword = new EventEmitter<{ password: string, newPassword: string }>();
 

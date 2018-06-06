@@ -39,23 +39,28 @@
 	.kFlavorStatusError{
 		color: $kDandger;
 	}
-	.kRefreshBtn {
-		float: right;
-		font-size: 24px;
-		border: none;
-		min-width: inherit;
-		outline: 0;
-		color: $kGrayscale3;
-		&:active{
-			box-shadow: none;
-		}
-		&:hover{
-			background-color: #ffffff;
-			color: $kPrimary;
-		}
-	}
+    .kFlavorReplacement {
+        position: relative;
+        .kRefreshBtn {
+            position: absolute;
+            right: 10px;
+            bottom: 0;
+            font-size: 24px;
+            border: none;
+            min-width: inherit;
+            outline: 0;
+            color: $kGrayscale3;
+            &:active {
+                box-shadow: none;
+            }
+            &:hover {
+                background-color: #ffffff;
+                color: $kPrimary;
+            }
+        }
+    }
 	.kTable{
-		margin-top: 14px;
+		margin-top: 16px;
 		.kFlavorName{
 			font-weight: bold;
 		}
