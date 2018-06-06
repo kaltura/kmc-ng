@@ -89,7 +89,7 @@ export abstract class KmcMainViewBaseService {
         if (this.isAvailable()) {
             const { title, viewKey } = this.getViewMetadata();
             const formattedTitle = `KMC > ${title || ''}`;
-            this._logger.info('update browser page title and contextual help information', { title: formattedTitle, viewKey });
+            this._logger.debug('update browser page title and contextual help information', { title: formattedTitle, viewKey });
             this._titleService.setTitle(formattedTitle);
             this._contextualHelpService.updateHelpItems(viewKey);
             return true;
