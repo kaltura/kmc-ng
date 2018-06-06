@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import {ActionTypes, EntryStore} from './entry-store.service';
+import { ActionTypes, EntryStore, NotificationTypes } from './entry-store.service';
 import {EntrySectionsListWidget} from './entry-sections-list/entry-sections-list-widget.service';
 import {EntryMetadataWidget} from './entry-metadata/entry-metadata-widget.service';
 import {EntryPreviewWidget} from './entry-preview/entry-preview-widget.service';
@@ -22,6 +23,7 @@ import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entr
 import {EntryDistributionWidget} from './entry-distribution/entry-distribution-widget.service';
 import {EntryAdvertisementsWidget} from './entry-advertisements/entry-advertisements-widget.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
 	selector: 'kEntry',
@@ -96,7 +98,9 @@ export class EntryComponent implements OnInit, OnDestroy {
 	            private _permissionsService: KMCPermissionsService,
 	            private _entriesStore: EntriesStore,
 	            private _appLocalization: AppLocalization,
-	            public _entryStore: EntryStore) {
+	            public _entryStore: EntryStore,
+                private _contentEntryViewService: ContentEntryViewService,
+                private _entryRoute: ActivatedRoute) {
 		entryWidgetsManager.registerWidgets([
 			widget1, widget2, widget3, widget4, widget5, widget6, widget7,
 			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
@@ -122,6 +126,27 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+
+	    this._entryStore.notifications$
+            .cancelOnDestroy(this)
+            .subscribe(
+                ({ type, error }) => {
+                    switch(type) {
+                        case NotificationTypes.UnpermittedViewEntered:
+                        case NotificationTypes.ViewEntered:
+                            const { entry } = this._entryStore;
+
+                            this._contentEntryViewService.viewEntered({
+                                entry,
+                                activatedRoute: this._entryRoute,
+                                section: ContentEntryViewSections.ResolveFromActivatedRoute
+                            })
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
 		this._entryStore.state$
 			.cancelOnDestroy(this)
 			.subscribe(
@@ -143,8 +168,9 @@ export class EntryComponent implements OnInit, OnDestroy {
 								this._entryHasChanges = false;
 								break;
 							case ActionTypes.EntryLoaded:
-								this._entryName = this._entryStore.entry.name;
-								this._entryType = this._entryStore.entry.mediaType;
+							    const { entry } = this._entryStore;
+								this._entryName = entry.name;
+								this._entryType = entry.mediaType;
 								break;
 							case ActionTypes.EntryLoadingFailed:
 								let message = status.error ? status.error.message : '';

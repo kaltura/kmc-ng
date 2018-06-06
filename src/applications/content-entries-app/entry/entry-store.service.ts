@@ -2,6 +2,7 @@ import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
@@ -32,11 +33,15 @@ export enum ActionTypes
 	EntryPrepareSavingFailed,
 	EntrySavingFailed,
 	EntryDataIsInvalid,
-	ActiveSectionBusy
+	ActiveSectionBusy,
 }
 
-declare type StatusArgs =
-{
+export enum NotificationTypes {
+    UnpermittedViewEntered,
+    ViewEntered
+}
+
+declare interface StatusArgs {
 	action : ActionTypes;
 	error? : Error;
 
@@ -44,11 +49,11 @@ declare type StatusArgs =
 
 @Injectable()
 export class EntryStore implements  OnDestroy {
-
 	private _loadEntrySubscription : ISubscription;
 	private _state = new BehaviorSubject<StatusArgs>({ action : ActionTypes.EntryLoading, error : null});
-  private _pageExitVerificationToken: string;
-
+	private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
+    private _pageExitVerificationToken: string;
+    public notifications$ = this._notifications.asObservable();
 	public state$ = this._state.asObservable();
 	private _entryIsDirty : boolean;
 
@@ -166,11 +171,7 @@ export class EntryStore implements  OnDestroy {
                             if (!entry || (entry && entry.id !== currentEntryId)) {
                                 this._loadEntry(currentEntryId);
                             } else {
-                                this._contentEntryViewService.viewEntered({
-                                    entry,
-                                    activatedRoute: this._entryRoute,
-                                    section: ContentEntryViewSections.ResolveFromActivatedRoute
-                                });
+                                this._notifications.next({ type: NotificationTypes.ViewEntered });
                             }
                         });
                     }
@@ -274,14 +275,16 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
                 ({ entry, hasSource }) => {
+                    this._entry.next(entry);
+                    this._entryId = entry.id;
                     this._hasSource.next(hasSource);
-                    if (this._contentEntryViewService.viewEntered({
+
+                    if (this._contentEntryViewService.isAvailable({
                         entry,
                         activatedRoute: this._entryRoute,
                         section: ContentEntryViewSections.ResolveFromActivatedRoute
                     })) {
-                        this._entry.next(entry);
-                        this._entryId = entry.id;
+                        this._notifications.next({ type: NotificationTypes.ViewEntered });
 
                         const dataLoadedResult = this._widgetsManager.notifyDataLoaded(entry, { isNewData: false });
 
@@ -293,6 +296,8 @@ export class EntryStore implements  OnDestroy {
                         } else {
                             this._state.next({ action: ActionTypes.EntryLoaded });
                         }
+                    } else {
+                        this._notifications.next({ type: NotificationTypes.UnpermittedViewEntered });
                     }
 				},
 				error => {
