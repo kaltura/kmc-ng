@@ -8,12 +8,12 @@ import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tr
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { KalturaUploadFile } from 'app-shared/kmc-shared';
 import { ContentUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { NewReplaceVideoUploadFile } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload-file';
 
 type MonitoredUploadFile = NewEntryUploadFile | NewEntryFlavourFile;
 
-function isMonitoredUploadFile(object: any): object is MonitoredUploadFile
-{
-    return object instanceof NewEntryUploadFile || object instanceof NewEntryFlavourFile;
+function isMonitoredUploadFile(object: any): object is MonitoredUploadFile {
+    return object instanceof NewEntryUploadFile || object instanceof NewEntryFlavourFile || object instanceof NewReplaceVideoUploadFile;
 }
 
 export interface UploadFileData {

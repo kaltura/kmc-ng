@@ -284,7 +284,6 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             .request(baseEntryAction)
             .tag('block-shell')
             .map(response => {
-                console.warn(response);
                 if (response instanceof KalturaMediaEntry) {
                     return response;
                 } else {
