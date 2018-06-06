@@ -9,6 +9,7 @@ import { ContentCategoriesMainViewService } from '../main-views/content-categori
 import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-category-view.service';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 export interface ContentNewCategoryViewArgs {
     entries: KalturaMediaEntry[];
@@ -24,8 +25,9 @@ export class ContentNewCategoryViewService extends KmcDetailsViewBaseService<Con
                 private _appLocalization: AppLocalization,
                 _logger: KalturaLogger,
                 _browserService: BrowserService,
-                _titleService: Title) {
-        super(_logger.subLogger('ContentNewCategoryViewService'), _browserService, _titleService);
+                _titleService: Title,
+                _contextualHelpService: ContextualHelpService) {
+        super(_logger.subLogger('ContentNewCategoryViewService'), _browserService, _titleService, _contextualHelpService);
     }
 
     getViewMetadata(args: ContentNewCategoryViewArgs): DetailsViewMetadata {
@@ -33,7 +35,10 @@ export class ContentNewCategoryViewService extends KmcDetailsViewBaseService<Con
         const categoryId = 'new';
         const section = ContentCategoryViewSections.Metadata;
         const sectionTitle = this._appLocalization.get(`applications.content.categoryDetails.sections.${section.toLowerCase()}`);
-        return { title: `${mainTitle} > ${categoryId} > ${sectionTitle}`};
+        return {
+            title: `${mainTitle} > ${categoryId} > ${sectionTitle}`,
+            viewKey: `content-new-category-${section.toLowerCase()}`
+        };
     }
 
     isAvailable(args: ContentNewCategoryViewArgs): boolean {

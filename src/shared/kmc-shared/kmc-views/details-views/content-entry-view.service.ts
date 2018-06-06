@@ -14,6 +14,7 @@ import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/Kaltura
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { Title } from '@angular/platform-browser';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 export enum ContentEntryViewSections {
     Metadata = 'Metadata',
@@ -49,8 +50,9 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 private _router: Router,
                 _browserService: BrowserService,
                 _logger: KalturaLogger,
-                _titleService: Title) {
-        super(_logger.subLogger('ContentEntryViewService'), _browserService, _titleService);
+                _titleService: Title,
+                _contextualHelpService: ContextualHelpService) {
+        super(_logger.subLogger('ContentEntryViewService'), _browserService, _titleService, _contextualHelpService);
     }
 
     getViewMetadata(args: ContentEntryViewArgs): DetailsViewMetadata {
@@ -58,7 +60,10 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
         const entryId = args.entry.id;
         const section = args.section === ContentEntryViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
         const sectionTitle = this._appLocalization.get(`applications.content.entryDetails.sections.${section.toLowerCase()}`);
-        return { title: `${mainTitle} > ${entryId} > ${sectionTitle}`};
+        return {
+            title: `${mainTitle} > ${entryId} > ${sectionTitle}`,
+            viewKey: `content-entry-${section.toLowerCase()}`
+        };
     }
 
     isAvailable(args: ContentEntryViewArgs): boolean {

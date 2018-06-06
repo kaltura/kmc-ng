@@ -9,6 +9,7 @@ import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaCo
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { Title } from '@angular/platform-browser';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 export interface KalturaConversionProfileWithAsset extends KalturaConversionProfile {
     assets?: KalturaConversionProfileAssetParams[];
@@ -35,8 +36,9 @@ export class SettingsTranscodingProfileViewService extends KmcDetailsViewBaseSer
                 private _router: Router,
                 _browserService: BrowserService,
                 _logger: KalturaLogger,
-                _titleService: Title) {
-        super(_logger.subLogger('SettingsTranscodingProfileViewService'), _browserService, _titleService);
+                _titleService: Title,
+                _contextualHelpService: ContextualHelpService) {
+        super(_logger.subLogger('SettingsTranscodingProfileViewService'), _browserService, _titleService, _contextualHelpService);
     }
 
     getViewMetadata(args: SettingsTranscodingProfileViewArgs): DetailsViewMetadata {
@@ -44,7 +46,10 @@ export class SettingsTranscodingProfileViewService extends KmcDetailsViewBaseSer
         const profileId = args.profile.id;
         const section = args.section === SettingsTranscodingProfileViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute) : args.section;
         const sectionTitle = this._appLocalization.get(`applications.settings.transcoding.sections.${section.toLowerCase()}`);
-        return { title: `${mainTitle} > ${profileId} > ${sectionTitle}`};
+        return {
+            title: `${mainTitle} > ${profileId} > ${sectionTitle}`,
+            viewKey: `settings-transcoding-profile-${section.toLowerCase()}`
+        };
     }
 
     isAvailable(args: SettingsTranscodingProfileViewArgs): boolean {

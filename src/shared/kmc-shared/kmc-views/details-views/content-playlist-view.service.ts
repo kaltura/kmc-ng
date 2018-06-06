@@ -9,6 +9,7 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { Title } from '@angular/platform-browser';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 export enum ContentPlaylistViewSections {
     Metadata = 'Metadata',
@@ -32,8 +33,9 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
                 private _router: Router,
                 _browserService: BrowserService,
                 _logger: KalturaLogger,
-                _titleService: Title) {
-        super(_logger.subLogger('ContentPlaylistViewService'), _browserService, _titleService);
+                _titleService: Title,
+                _contextualHelpService: ContextualHelpService) {
+        super(_logger.subLogger('ContentPlaylistViewService'), _browserService, _titleService, _contextualHelpService);
     }
 
     getViewMetadata(args: ContentPlaylistViewArgs): DetailsViewMetadata {
@@ -41,7 +43,10 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
         const playlistId = args.playlist.id;
         const section = args.section === ContentPlaylistViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute, args.playlist) : args.section;
         const sectionTitle = this._appLocalization.get(`applications.content.playlistDetails.sections.${section.toLowerCase()}`);
-        return { title: `${mainTitle} > ${playlistId} > ${sectionTitle}`};
+        return {
+            title: `${mainTitle} > ${playlistId} > ${sectionTitle}`,
+            viewKey: `content-playlist-${section.toLowerCase()}`
+        };
     }
 
     isAvailable(args: ContentPlaylistViewArgs): boolean {
