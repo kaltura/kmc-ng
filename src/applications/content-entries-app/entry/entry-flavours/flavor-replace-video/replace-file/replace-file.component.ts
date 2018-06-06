@@ -530,7 +530,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                     isValid = false;
                     file.hasError = true;
                     file.errorToken = 'applications.upload.validation.emptyUrl';
-                } else if (!urlRegex.test(url)) {
+                } else if (this.replaceType !== 'link' && !urlRegex.test(url)) {
                     isValid = false;
                     file.hasError = true;
                     file.errorToken = 'applications.upload.validation.invalidUrl';
