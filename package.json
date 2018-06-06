@@ -44,7 +44,7 @@
     "standalone:update": "npm run kws -- bookmark standalone --update && git commit -am 'chore: update standalone commit' && git push",
     "start": "ng serve --preserve-symlinks",
     "test": "ng test",
-      "generate:ch": "node ./dev/tools/contextual-help-generator/generate.js"
+    "generate:ch": "node ./dev/tools/contextual-help-generator/generate.js"
   },
   "dependencies": {
     "@angular/animations": "~5.2.0",
