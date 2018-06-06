@@ -56,7 +56,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
               adminRolesMainViewService: AdminRolesMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('RolesStoreService'));
-    if (adminRolesMainViewService.viewEntered()) {
+    if (adminRolesMainViewService.isAvailable()) {
         this._prepare();
     }
   }

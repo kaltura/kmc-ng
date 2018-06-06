@@ -3,6 +3,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { BrowserService } from 'app-shared/kmc-shell';
 import { Title } from '@angular/platform-browser';
 
+
 export interface DetailsViewMetadata {
     title: string;
 }
@@ -26,9 +27,7 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
                 .map(result => result === null ? true : result) // treat navigation to save route as successful operation
                 .subscribe(
                 result => {
-                    if (result) {
-                        this._titleService.setTitle(this.getViewMetadata(args).title);
-                    } else {
+                    if (!result) {
                         this._logger.info('open view operation failed');
                     }
 
@@ -44,10 +43,14 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
     }
 
     viewEntered(args: TArgs, redirectToDefault = true): boolean {
+        this._logger.info('handle view entered');
         if (this.isAvailable(args)) {
-            this._titleService.setTitle(this.getViewMetadata(args).title);
+            const title = `KMC > ${this.getViewMetadata(args).title || ''}`;
+            this._logger.info('update browser page title', { title });
+            this._titleService.setTitle(title);
             return true;
         } else {
+            this._logger.warn('view is not available, handle unpermitted action');
             this._browserService.handleUnpermittedAction(redirectToDefault);
             return false;
         }

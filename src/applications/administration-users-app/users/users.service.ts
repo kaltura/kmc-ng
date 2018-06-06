@@ -65,7 +65,7 @@ export class UsersStore implements OnDestroy {
               private _appLocalization: AppLocalization,
               private _appAuthentication: AppAuthentication,
               adminUsersMainViewService: AdminUsersMainViewService) {
-    if (adminUsersMainViewService.viewEntered()) {
+    if (adminUsersMainViewService.isAvailable()) {
         const defaultPageSize = this._browserService.getFromLocalStorage('users.list.pageSize');
         if (defaultPageSize !== null) {
             this._updateQueryData({

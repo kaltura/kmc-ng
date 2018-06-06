@@ -59,7 +59,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
               contentPlaylistsMainView: ContentPlaylistsMainViewService,
               _logger: KalturaLogger) {
         super(_logger);
-        if (contentPlaylistsMainView.viewEntered()) {
+        if (contentPlaylistsMainView.isAvailable()) {
             this._prepare();
         }
   }

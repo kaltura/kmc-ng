@@ -85,12 +85,16 @@ export abstract class KmcMainViewBaseService {
     }
 
     viewEntered(): boolean {
+        this._logger.info('handle view entered');
         if (this.isAvailable()) {
             const { title, viewKey } = this.getViewMetadata();
-            this._titleService.setTitle(title);
+            const formattedTitle = `KMC > ${title || ''}`;
+            this._logger.debug('update browser page title and contextual help information', { title: formattedTitle, viewKey });
+            this._titleService.setTitle(formattedTitle);
             this._contextualHelpService.updateHelpItems(viewKey);
             return true;
         } else {
+            this._logger.warn('view is not available, handle unpermitted action');
             this._browserService.handleUnpermittedAction(true);
             return false;
         }

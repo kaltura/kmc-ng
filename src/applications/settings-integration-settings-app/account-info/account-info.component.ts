@@ -32,7 +32,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      if (this._settingsIntegrationSettingsMainView.viewEntered()) {
+      if (this._settingsIntegrationSettingsMainView.isAvailable()) {
           this._loadPartnerAccountInfo();
       }
   }

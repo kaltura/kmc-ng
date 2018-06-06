@@ -11,6 +11,7 @@ import { AppEventsService } from 'app-shared/kmc-shared/app-events/app-events.se
 import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { EmailConfig } from '../../../kmc-app/components/open-email/open-email.component';
 import { serverConfig } from 'config/server';
+import { PageExitVerificationService } from '../page-exit-verification';
 
 export enum HeaderTypes {
     error = 1,
@@ -90,7 +91,8 @@ export class BrowserService implements IAppStorage {
                 private _router: Router,
                 private _logger: KalturaLogger,
                 private _appEvents: AppEventsService,
-                private _appLocalization: AppLocalization) {
+                private _appLocalization: AppLocalization,
+                private _pageExitVerificationService: PageExitVerificationService) {
         this._recordInitialQueryParams();
         this._recordRoutingActions();
     }
@@ -392,6 +394,7 @@ export class BrowserService implements IAppStorage {
                     header: this._appLocalization.get('app.UnpermittedActionReasons.header'),
                     message: this._appLocalization.get('app.UnpermittedActionReasons.messageNav'),
                     accept: () => {
+                        this._pageExitVerificationService.removeAll();
                         this.navigateToDefault();
                     }
                 }
