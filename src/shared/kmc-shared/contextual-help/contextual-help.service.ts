@@ -35,7 +35,7 @@ export class ContextualHelpService implements OnDestroy {
 
     }
 
-    private _validateResponse(data: { data: ContextualHelpData[] }): { isValid: boolean, error?: string } {
+    private _validateResponse(data: ContextualHelpData[]): { isValid: boolean, error?: string } {
         const ajv = new Ajv({ allErrors: true, verbose: true });
         const validate = ajv.compile(ContextualHelpDataSchema);
         const isValid = !!validate(data);
@@ -51,10 +51,10 @@ export class ContextualHelpService implements OnDestroy {
     private _load(): Observable<any> {
         const url = buildDeployUrl(`public/contextual-help.json?v=${globalConfig.client.appVersion}`);
         return this._http.get(url)
-            .map((response: { data: ContextualHelpData[] }) => {
+            .map((response: ContextualHelpData[]) => {
                 const validationResult = this._validateResponse(response);
                 if (validationResult.isValid) {
-                    return response['data'];
+                    return response;
                 } else {
                     this._logger.warn(validationResult.error || 'Invalid contextual help data');
                     return [];

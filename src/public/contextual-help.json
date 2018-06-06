@@ -1,43 +1,90 @@
-{
-    "data": [
-        {
-            "viewKey": "content-entries",
-            "links": [
-                {
-                    "label": "Google",
-                    "value": "https://google.com"
-                },
-                {
-                    "label": "Bing",
-                    "value": "https://www.bing.com"
-                }
-            ]
-        },
-        {
-            "viewKey": "content-moderation",
-            "links": [
-                {
-                    "label": "Google",
-                    "value": "https://google.com"
-                },
-                {
-                    "label": "Bing",
-                    "value": "https://www.bing.com"
-                }
-            ]
-        },
-        {
-            "viewKey": "content-playlists",
-            "links": [
-                {
-                    "label": "Google",
-                    "value": "https://google.com"
-                },
-                {
-                    "label": "Bing",
-                    "value": "https://www.bing.com"
-                }
-            ]
-        }
-    ]
-}
+[
+    {
+        "viewKey": "admin-roles",
+        "links": []
+    },
+    {
+        "viewKey": "admin-users",
+        "links": []
+    },
+    {
+        "viewKey": "content-bulk-uploads",
+        "links": []
+    },
+    {
+        "viewKey": "content-categories",
+        "links": []
+    },
+    {
+        "viewKey": "content-drop-folders",
+        "links": []
+    },
+    {
+        "viewKey": "content-entries",
+        "links": []
+    },
+    {
+        "viewKey": "content-moderation",
+        "links": []
+    },
+    {
+        "viewKey": "content-playlists",
+        "links": []
+    },
+    {
+        "viewKey": "content-syndication",
+        "links": []
+    },
+    {
+        "viewKey": "content-uploads",
+        "links": []
+    },
+    {
+        "viewKey": "analytics-kava",
+        "links": []
+    },
+    {
+        "viewKey": "analytics-live",
+        "links": []
+    },
+    {
+        "viewKey": "settings-access-control",
+        "links": []
+    },
+    {
+        "viewKey": "settings-account-info",
+        "links": []
+    },
+    {
+        "viewKey": "settings-account",
+        "links": []
+    },
+    {
+        "viewKey": "settings-integration",
+        "links": []
+    },
+    {
+        "viewKey": "settings-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "settings-my-user-settings",
+        "links": []
+    },
+    {
+        "viewKey": "settings-transcoding",
+        "links": []
+    },
+    {
+        "viewKey": "studio-v2",
+        "links": []
+    },
+    {
+        "viewKey": "studio-v3",
+        "links": []
+    },
+    {
+        "viewKey": "usage-dashboard",
+        "links": []
+    }
+]
