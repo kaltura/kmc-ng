@@ -6,13 +6,20 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ErrorComponent } from './components/error/error.component';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
+import { RestorePasswordComponent } from './components/app-actions/restore-password.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
 
 const routes: Routes = <Routes>[
     {
         path: 'error', component: ErrorComponent
     },
-    { path: 'actions/login-by-ks/:ks', component: LoginByKSComponent, pathMatch: 'full' },
+    {
+        path: 'actions',
+        children: [
+            { path: 'login-by-ks/:ks', component: LoginByKSComponent, pathMatch: 'full' },
+            { path: 'restore-password/:hash', component: RestorePasswordComponent, pathMatch: 'full'  }
+        ]
+    },
     {
         path: '', canActivate: [AppBootstrap],
         children: [

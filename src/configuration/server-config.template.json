@@ -4,6 +4,7 @@
     "defaultPrivileges" : "@kalturaServer.defaultPrivileges@",
     "deployUrl": "@kalturaServer.deployUrl@",
     "previewUIConf": @kalturaServer.previewUIConf@,
+    "resetPasswordUri": "@kalturaServer.resetPasswordUri@",
     "freeTrialExpiration": {
       "trialPeriodInDays": @kalturaServer.freeTrialExpiration.trialPeriodInDays@
     },

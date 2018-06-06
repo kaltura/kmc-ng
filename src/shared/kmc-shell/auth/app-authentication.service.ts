@@ -36,6 +36,8 @@ import { buildKalturaServerUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 const ksSessionStorageKey = 'auth.login.ks';
+import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client/api/types/AdminUserSetInitialPasswordAction';
+import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 
 export interface UpdatePasswordPayload {
     email: string;
@@ -74,7 +76,7 @@ export class AppAuthentication {
         return this._automaticLoginErrorReason;
     }
 
-    private _automaticLoginCredentials: { ks: string} = null;
+    private _automaticLogin: {  ks: string} = { ks: null };
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
 
@@ -88,7 +90,8 @@ export class AppAuthentication {
                 private _http: HttpClient,
                 private _appEvents: AppEventsService,
                 private _location: Location,
-                private _kmcViewsManager: KmcMainViewsService) {
+                private _kmcViewsManager: KmcMainViewsService,
+                private _restorePasswordView: RestorePasswordViewService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
 
@@ -134,6 +137,24 @@ export class AppAuthentication {
         return this._appUser;
     }
 
+    validateResetPasswordHash(hash: string): Observable<string> {
+        if (!serverConfig.kalturaServer.resetPasswordUri) {
+            this._logger.warn(`resetPasswordUri was not provided by configuration, abort request`);
+            return Observable.of('RESET_URI_NOT_DEFINED');
+        }
+
+        const url = serverConfig.kalturaServer.resetPasswordUri.replace('{hash}', hash);
+
+        this._logger.debug(`check if provided hash is valid`, { hash, url });
+
+        return this._http.get(url, { responseType: 'json' })
+            .map(res => res['errorCode'])
+            .catch((e) => {
+                this._logger.error('Failed to check if provided hash is valid', e);
+                throw Error('Failed to check if provided hash is valid');
+            });
+    }
+
     resetPassword(email: string): Observable<void> {
         if (!this.isLogged()) {
             return this.kalturaServerClient.request(new UserResetPasswordAction({email}));
@@ -149,6 +170,11 @@ export class AppAuthentication {
         } else {
             return Observable.throw(new Error('cannot update password, user is not logged'));
         }
+    }
+
+    setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<void> {
+        return this.kalturaServerClient.request(new AdminUserSetInitialPasswordAction(payload))
+            .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }
 
     login(loginId: string, password: string): Observable<LoginResponse> {
@@ -313,6 +339,7 @@ export class AppAuthentication {
         return !!this._appUser;
     }
 
+
     private _clearSessionCredentials(): void {
         this._logger.debug(`clear previous stored credentials in session storage if found`);
         this._browserService.removeFromSessionStorage(ksSessionStorageKey);
@@ -400,11 +427,26 @@ export class AppAuthentication {
     }
 
     public setAutomaticLoginCredentials(ks: string) {
-        this._automaticLoginCredentials = { ks };
+        this._automaticLogin.ks = ks;
     }
-    public loginAutomatically(): Observable<boolean> {
 
-        const ksFromApp = this._automaticLoginCredentials && this._automaticLoginCredentials.ks;
+
+    public restorePassword(hash: string): void {
+        this._clearSessionCredentials();
+
+        if (this._restorePasswordView.isAvailable({hash})) {
+            this._restorePasswordView.open({hash});
+        } else {
+
+            this._logger.warn(`restore password view is not available, redirect to default view`, {
+                restorePasswordHash: hash
+            });
+            this._browserService.navigateToDefault();
+        }
+    }
+
+    public loginAutomatically(): Observable<boolean> {
+        const ksFromApp = this._automaticLogin.ks;
         if (ksFromApp) {
             this._logger.info(`try to login automatically with KS provided explicitly by the app`);
             this._clearSessionCredentials();
@@ -418,7 +460,7 @@ export class AppAuthentication {
             return this._loginByKS(ksFromSession, true);
         }
 
-        this._logger.debug(`bypass automatic login logic as no ks was provided by router or stored in session storage`);
+        this._logger.debug(`ignore automatic login logic as no session ks found `);
         return Observable.of(false);
     }
 

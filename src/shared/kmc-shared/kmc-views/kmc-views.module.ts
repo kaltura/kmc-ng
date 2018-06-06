@@ -28,7 +28,8 @@ import {
     ContentEntryViewService,
     ContentNewCategoryViewService,
     ContentPlaylistViewService,
-    SettingsTranscodingProfileViewService
+    SettingsTranscodingProfileViewService,
+    RestorePasswordViewService
 } from './details-views';
 import {
     AdvertisementsAppViewService,
@@ -81,6 +82,7 @@ export class KmcViewsModule {
                 ClipAndTrimAppViewService,
                 AdvertisementsAppViewService,
                 QuizAppViewService,
+                RestorePasswordViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };
