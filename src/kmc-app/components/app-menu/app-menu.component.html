@@ -74,11 +74,12 @@
             <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
             <k-power-user-console *ngIf="_powerUser"></k-power-user-console>
 
-            <div class="kContexualHelp">
+            <div class="kContexualHelp" *ngIf="_contextualHelp.length">
                 <hr>
                 <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
-                <p class="kHelpLink">Contextual link 1</p>
-                <p class="kHelpLink">Contextual link 2</p>
+                <p class="kHelpLink" *ngFor="let link of _contextualHelp">
+                    <a [href]="link.value" target="_blank">{{link.label}}</a>
+                </p>
             </div>
         </div>
     </ng-template>

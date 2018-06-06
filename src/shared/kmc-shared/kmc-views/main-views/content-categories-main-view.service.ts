@@ -6,6 +6,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 import { Title } from '@angular/platform-browser';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class ContentCategoriesMainViewService extends KmcMainViewBaseService {
@@ -16,9 +17,10 @@ export class ContentCategoriesMainViewService extends KmcMainViewBaseService {
         router: Router,
         private _appPermissions: KMCPermissionsService,
         private _appLocalization: AppLocalization,
-        titleService: Title
+        titleService: Title,
+        contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('ContentCategoriesMainViewService'), browserService, router, titleService);
+        super(logger.subLogger('ContentCategoriesMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -34,6 +36,7 @@ export class ContentCategoriesMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
+            viewKey: 'content-categories',
             title: this._appLocalization.get('app.titles.contentCategoriesPageTitle'),
             menu: this._appLocalization.get('app.titles.contentCategoriesMenuTitle')
         };

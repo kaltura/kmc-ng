@@ -5,6 +5,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class SettingsAccountInformationMainViewService extends KmcMainViewBaseService {
@@ -14,9 +15,10 @@ export class SettingsAccountInformationMainViewService extends KmcMainViewBaseSe
         browserService: BrowserService,
         router: Router,
         private _appLocalization: AppLocalization,
-        titleService: Title
+        titleService: Title,
+        contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('SettingsAccountInformationMainViewService'), browserService, router, titleService);
+        super(logger.subLogger('SettingsAccountInformationMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -29,6 +31,7 @@ export class SettingsAccountInformationMainViewService extends KmcMainViewBaseSe
 
     getViewMetadata(): ViewMetadata {
         return {
+            viewKey: 'settings-account-info',
             title: this._appLocalization.get('app.titles.settingsAccountInfoPageTitle'),
             menu: this._appLocalization.get('app.titles.settingsAccountInfoMenuTitle')
         };

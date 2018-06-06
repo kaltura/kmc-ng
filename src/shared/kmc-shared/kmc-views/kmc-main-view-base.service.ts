@@ -4,8 +4,10 @@ import { Router } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 export interface ViewMetadata {
+    viewKey: string;
     menu: string;
     title: string;
 }
@@ -15,7 +17,8 @@ export abstract class KmcMainViewBaseService {
     constructor(protected _logger: KalturaLogger,
                 protected _browserService: BrowserService,
                 private _router: Router,
-                private _titleService: Title) {
+                private _titleService: Title,
+                private _contextualHelpService: ContextualHelpService) {
     }
 
     abstract isAvailable(): boolean;
@@ -83,7 +86,9 @@ export abstract class KmcMainViewBaseService {
 
     viewEntered(): boolean {
         if (this.isAvailable()) {
-            this._titleService.setTitle(this.getViewMetadata().title);
+            const { title, viewKey } = this.getViewMetadata();
+            this._titleService.setTitle(title);
+            this._contextualHelpService.updateHelpItems(viewKey);
             return true;
         } else {
             this._browserService.handleUnpermittedAction(true);

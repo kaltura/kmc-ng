@@ -6,6 +6,7 @@ import { KmcMainViewBaseService, ViewMetadata } from 'app-shared/kmc-shared/kmc-
 import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class KavaAppMainViewService extends KmcMainViewBaseService {
@@ -14,8 +15,9 @@ export class KavaAppMainViewService extends KmcMainViewBaseService {
                 router: Router,
                 browserService: BrowserService,
                 titleService: Title,
-                logger: KalturaLogger) {
-        super(logger.subLogger('KavaAppMainViewService'), browserService, router, titleService);
+                logger: KalturaLogger,
+                contextualHelpService: ContextualHelpService) {
+        super(logger.subLogger('KavaAppMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -28,6 +30,7 @@ export class KavaAppMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
+            viewKey: 'analytics-kava',
             title: this._appLocalization.get('app.titles.analyticsKavaPageTitle'),
             menu: this._appLocalization.get('app.titles.analyticsKavaMenuTitle')
         };

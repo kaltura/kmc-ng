@@ -6,6 +6,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class ContentDropFoldersMainViewService extends KmcMainViewBaseService {
@@ -16,9 +17,10 @@ export class ContentDropFoldersMainViewService extends KmcMainViewBaseService {
         router: Router,
         private _appPermissions: KMCPermissionsService,
         private _appLocalization: AppLocalization,
-        titleService: Title
+        titleService: Title,
+        contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('ContentDropFoldersMainViewService'), browserService, router, titleService);
+        super(logger.subLogger('ContentDropFoldersMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -33,6 +35,7 @@ export class ContentDropFoldersMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
+            viewKey: 'content-drop-folders',
             title: this._appLocalization.get('app.titles.contentDropFoldersPageTitle'),
             menu: this._appLocalization.get('app.titles.contentDropFoldersMenuTitle')
         };
