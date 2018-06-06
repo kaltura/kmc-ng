@@ -1,0 +1,43 @@
+{
+    "data": [
+        {
+            "viewKey": "content-entries",
+            "links": [
+                {
+                    "label": "Google",
+                    "value": "https://google.com"
+                },
+                {
+                    "label": "Bing",
+                    "value": "https://www.bing.com"
+                }
+            ]
+        },
+        {
+            "viewKey": "content-moderation",
+            "links": [
+                {
+                    "label": "Google",
+                    "value": "https://google.com"
+                },
+                {
+                    "label": "Bing",
+                    "value": "https://www.bing.com"
+                }
+            ]
+        },
+        {
+            "viewKey": "content-playlists",
+            "links": [
+                {
+                    "label": "Google",
+                    "value": "https://google.com"
+                },
+                {
+                    "label": "Bing",
+                    "value": "https://www.bing.com"
+                }
+            ]
+        }
+    ]
+}
