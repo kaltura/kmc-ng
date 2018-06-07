@@ -85,8 +85,6 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     super(_logger.subLogger('AccessControlProfilesStore'));
     if (settingsAccessControlMainView.isAvailable()) {
         this._prepare();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

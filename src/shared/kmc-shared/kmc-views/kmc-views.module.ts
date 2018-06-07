@@ -21,7 +21,8 @@ import {
     SettingsTranscodingMainViewService,
     StudioV2MainViewService,
     StudioV3MainViewService,
-    UsageDashboardMainViewService
+    UsageDashboardMainViewService,
+    KavaAppMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService,
@@ -34,7 +35,6 @@ import {
 import {
     AdvertisementsAppViewService,
     ClipAndTrimAppViewService,
-    KavaAppViewService,
     LiveDashboardAppViewService
 } from './component-views';
 import { QuizAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
@@ -78,7 +78,7 @@ export class KmcViewsModule {
                 ContentEntryViewService,
                 ContentNewCategoryViewService,
                 LiveDashboardAppViewService,
-                KavaAppViewService,
+                KavaAppMainViewService,
                 ClipAndTrimAppViewService,
                 AdvertisementsAppViewService,
                 QuizAppViewService,

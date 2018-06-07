@@ -9,6 +9,7 @@ import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kFeedsList',
@@ -45,19 +46,22 @@ export class FeedsListComponent implements OnInit, OnDestroy {
               private router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _contentSyndicationMainViewService: ContentSyndicationMainViewService,
               private _logger: KalturaLogger) {
   }
 
   ngOnInit() {
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
-    this._feedsService.feeds.data$
-      .cancelOnDestroy(this)
-      .subscribe(response => {
-        this._feedsTotalCount = response.totalCount;
-      });
+      if (this._contentSyndicationMainViewService.viewEntered()) {
+          this._restoreFiltersState();
+          this._registerToFilterStoreDataChanges();
+          this._feedsService.feeds.data$
+              .cancelOnDestroy(this)
+              .subscribe(response => {
+                  this._feedsTotalCount = response.totalCount;
+              });
 
-    this._prepare();
+          this._prepare();
+      }
   }
 
 

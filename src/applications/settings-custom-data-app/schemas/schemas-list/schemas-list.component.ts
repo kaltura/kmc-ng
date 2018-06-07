@@ -9,6 +9,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { SettingsMetadataMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kSchemasList',
@@ -35,17 +36,24 @@ export class SchemasListComponent implements OnInit, OnDestroy {
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               private _logger: KalturaLogger,
+              private _settingsCustomDataMainViewService: SettingsMetadataMainViewService,
               private _browserService: BrowserService) {
   }
 
   ngOnInit() {
-    this._logger.info(`init custom data list view`);
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
-    this._registerToDataChanges();
+    if (this._settingsCustomDataMainViewService.viewEntered()) {
+        this._prepare();
+    }
   }
 
   ngOnDestroy() {
+  }
+
+  private _prepare(): void {
+      this._logger.info(`init custom data list view`);
+      this._restoreFiltersState();
+      this._registerToFilterStoreDataChanges();
+      this._registerToDataChanges();
   }
 
   private _restoreFiltersState(): void {

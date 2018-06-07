@@ -24,34 +24,31 @@ export class StudioV2Component implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (!this._studioV2MainView.isAvailable()) {
-            this.browserService.handleUnpermittedAction(true);
-            return undefined;
-        }
-
-        window['kmc'] = {
-            'preview_embed': {
-                'updateList': (isPlaylist: boolean) => {
-                    this._updatePlayers(isPlaylist);
-                }
-            },
-            'vars': {
-                'ks': this.appAuthentication.appUser.ks,
-                'api_url': getKalturaServerUri(),
-                'studio': {
-                    'config': {
-                        'name': 'Video Studio V2',
-                        'tags': 'studio_v2',
-                        'html5_version': serverConfig.externalApps.studioV2.html5_version,
-                        'html5lib': serverConfig.externalApps.studioV2.html5lib
-                    },
-                    'showFlashStudio': false,
-                    'showStudioV3': false,
+        if (this._studioV2MainView.viewEntered()) {
+            window['kmc'] = {
+                'preview_embed': {
+                    'updateList': (isPlaylist: boolean) => {
+                        this._updatePlayers(isPlaylist);
+                    }
                 },
-                'functions': {}
-            }
-        };
-        this.studioUrl = serverConfig.externalApps.studioV2.uri;
+                'vars': {
+                    'ks': this.appAuthentication.appUser.ks,
+                    'api_url': getKalturaServerUri(),
+                    'studio': {
+                        'config': {
+                            'name': 'Video Studio V2',
+                            'tags': 'studio_v2',
+                            'html5_version': serverConfig.externalApps.studioV2.html5_version,
+                            'html5lib': serverConfig.externalApps.studioV2.html5lib
+                        },
+                        'showFlashStudio': false,
+                        'showStudioV3': false,
+                    },
+                    'functions': {}
+                }
+            };
+            this.studioUrl = serverConfig.externalApps.studioV2.uri;
+        }
     }
 
     ngAfterViewInit() {

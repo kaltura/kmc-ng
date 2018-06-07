@@ -4,11 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
+import {
+    DetailsViewMetadata,
+    KmcDetailsViewBaseService
+} from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { Title } from '@angular/platform-browser';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 export interface RestorePasswordViewArgs {
     hash: string;
@@ -22,10 +25,20 @@ export class RestorePasswordViewService extends KmcDetailsViewBaseService<Restor
                 private _appLocalization: AppLocalization,
                 private _router: Router,
                 _browserService: BrowserService,
-                _logger: KalturaLogger) {
-        super(_logger.subLogger('RestorePasswordViewService'), _browserService);
+                _logger: KalturaLogger,
+                _titleService: Title,
+                _contextualHelpService: ContextualHelpService) {
+        super(_logger.subLogger('RestorePasswordViewService'), _browserService,
+            _titleService, _contextualHelpService);
     }
 
+    getViewMetadata(args: RestorePasswordViewArgs): DetailsViewMetadata {
+        const title = this._appLocalization.get('app.titles.restorePasswordPageTitle');
+        return {
+            title,
+            viewKey: 'restore-password'
+        };
+    }
     isAvailable(args: RestorePasswordViewArgs): boolean {
         const hasHash = args && !!args.hash;
         this._logger.info(`handle isAvailable action by user`, { hasHash });

@@ -1,0 +1,170 @@
+[
+    {
+        "viewKey": "admin-roles",
+        "links": []
+    },
+    {
+        "viewKey": "admin-users",
+        "links": []
+    },
+    {
+        "viewKey": "content-bulk-uploads",
+        "links": []
+    },
+    {
+        "viewKey": "content-categories",
+        "links": []
+    },
+    {
+        "viewKey": "content-drop-folders",
+        "links": []
+    },
+    {
+        "viewKey": "content-entries",
+        "links": []
+    },
+    {
+        "viewKey": "content-moderation",
+        "links": []
+    },
+    {
+        "viewKey": "content-playlists",
+        "links": []
+    },
+    {
+        "viewKey": "content-syndication",
+        "links": []
+    },
+    {
+        "viewKey": "content-uploads",
+        "links": []
+    },
+    {
+        "viewKey": "analytics-kava",
+        "links": []
+    },
+    {
+        "viewKey": "analytics-live",
+        "links": []
+    },
+    {
+        "viewKey": "settings-access-control",
+        "links": []
+    },
+    {
+        "viewKey": "settings-account-info",
+        "links": []
+    },
+    {
+        "viewKey": "settings-account",
+        "links": []
+    },
+    {
+        "viewKey": "settings-integration",
+        "links": []
+    },
+    {
+        "viewKey": "settings-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "settings-my-user-settings",
+        "links": []
+    },
+    {
+        "viewKey": "settings-transcoding",
+        "links": []
+    },
+    {
+        "viewKey": "studio-v2",
+        "links": []
+    },
+    {
+        "viewKey": "studio-v3",
+        "links": []
+    },
+    {
+        "viewKey": "usage-dashboard",
+        "links": []
+    },
+    {
+        "viewKey": "content-category-subcategories",
+        "links": []
+    },
+    {
+        "viewKey": "content-category-entitlements",
+        "links": []
+    },
+    {
+        "viewKey": "content-category-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-thumbnails",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-accesscontrol",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-scheduling",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-flavours",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-captions",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-live",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-related",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-clips",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-advertisements",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-users",
+        "links": []
+    },
+    {
+        "viewKey": "content-entry-distribution",
+        "links": []
+    },
+    {
+        "viewKey": "content-playlist-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "content-playlist-content",
+        "links": []
+    },
+    {
+        "viewKey": "content-playlist-contentrulebased",
+        "links": []
+    },
+    {
+        "viewKey": "settings-transcoding-profile-metadata",
+        "links": []
+    },
+    {
+        "viewKey": "settings-transcoding-profile-flavors",
+        "links": []
+    }
+]

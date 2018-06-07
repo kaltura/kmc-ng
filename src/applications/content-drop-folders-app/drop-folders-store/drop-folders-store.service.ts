@@ -85,8 +85,6 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
     super(_logger);
     if (contentDropFoldersMainView.isAvailable()) {
         this._prepare();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 
