@@ -9,64 +9,75 @@
             [rowTrackBy]="rowTrackBy"
             [sortField]="sortField"
             [sortOrder]="sortOrder"
+            [resizableColumns]="true"
             [defaultSortOrder]="_defaultSortOrder"
             (sortFunction)="_onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedCategories"
             (selectionChange)="_onSelectionChange($event)"
             kStickyHeader [sticksTo]="'categoriesTags'" stickyClass="stickyHeader" [stickyId]="'categoriesTable'">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col style="width:44px; padding-left: 13px">
+                <col>
+                <col>
+                <col>
+                <col>
+                <col>
+                <col style="width: 80px">
+            </colgroup>
+        </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th style="width:44px; padding-left: 14px">
+          <th style="width:44px; padding-left: 13px">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th [pSortableColumn]="'name'">
+          <th pResizableColumn [pSortableColumn]="'name'">
             {{'applications.content.table.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th>
+          <th pResizableColumn>
             {{'applications.content.table.id' | translate}}
           </th>
-          <th [pSortableColumn]="'createdAt'">
+          <th pResizableColumn [pSortableColumn]="'createdAt'">
             {{'applications.content.table.createdOn' | translate}}
             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'directSubCategoriesCount'">
+          <th pResizableColumn [pSortableColumn]="'directSubCategoriesCount'">
             {{'applications.content.table.subcategories' | translate}}
             <p-sortIcon [field]="'directSubCategoriesCount'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'entriesCount'">
+          <th pResizableColumn [pSortableColumn]="'entriesCount'">
             {{'applications.content.table.entries' | translate}}
             <p-sortIcon [field]="'entriesCount'"></p-sortIcon>
           </th>
-          <th style="width: 120px"></th>
+          <th style="width: 80px"></th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-category>
         <tr [pSelectableRow]="category">
 
-          <td style="width:44px; padding-left: 14px">
+          <td style="width:44px; padding-left: 13px">
             <p-tableCheckbox [value]="category"></p-tableCheckbox>
           </td>
 
-          <td>
+          <td class="ui-resizable-column">
             <div [kTooltip]="category.fullName" class="kTitle kTableColumn" (click)="onActionSelected('edit',category)">
               {{category.name}}</div>
           </td>
 
-          <td>{{category.id}}</td>
+          <td class="ui-resizable-column">{{category.id}}</td>
 
-          <td>{{category.createdAt | kDate}}
+          <td class="ui-resizable-column">{{category.createdAt | kDate}}
           </td>
 
-          <td>{{category.directSubCategoriesCount}}
+          <td class="ui-resizable-column">{{category.directSubCategoriesCount}}
           </td>
 
-          <td>{{category.entriesCount}}
+          <td class="ui-resizable-column">{{category.entriesCount}}
           </td>
 
-
-          <td style="overflow: visible; width: 120px">
+          <td style="width: 80px">
             <div class="kCategoriesTableActions">
               <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, category)"></button>
             </div>
@@ -76,7 +87,9 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-        <div class="emptymessage">{{_emptyMessage}}</div>
+        <div class="emptymessage">
+            <div class="kEmptyMessage">{{_emptyMessage}}</div>
+        </div>
       </ng-template>
     </p-table>
 
