@@ -58,10 +58,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     super(_logger.subLogger('RolesStoreService'));
     if (adminRolesMainViewService.isAvailable()) {
         this._prepare();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
-
   }
 
   public getPermissionsTree(): PermissionTreeNode[] {

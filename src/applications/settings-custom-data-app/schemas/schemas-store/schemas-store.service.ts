@@ -58,8 +58,6 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
     super(_logger.subLogger('SchemasStore'));
     if (settingsMetadataMainView.isAvailable()) {
         this._prepare();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

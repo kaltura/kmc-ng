@@ -10,6 +10,7 @@ import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
+import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -32,6 +33,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _kmcOverviewLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.kmcOverview;
     public _mediaManagementLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.mediaManagement;
     public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.support;
+    public _contextualHelp: ContextualHelpLink[] = [];
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -40,10 +42,17 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     showSubMenu = true;
 
     constructor(public _kmcLogs: KmcLoggerConfigurator,
+                private _contextualHelpService: ContextualHelpService,
                 private userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
                 private router: Router,
                 private _browserService: BrowserService) {
+
+        _contextualHelpService.contextualHelpData$
+            .cancelOnDestroy(this)
+            .subscribe(data => {
+                this._contextualHelp = data;
+            });
 
         router.events
             .cancelOnDestroy(this)

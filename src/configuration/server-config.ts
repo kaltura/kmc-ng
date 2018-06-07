@@ -26,7 +26,7 @@ export interface ExternalApplications {
         uri: string,
         html5_version: string,
         html5lib: string,
-        playerVersionsMap? : string
+        playerVersionsMap?: string
     };
     liveDashboard?: {
         uri: string,
@@ -54,6 +54,7 @@ export interface ServerConfig {
         defaultPrivileges?: string,
         deployUrl: string,
         previewUIConf: number,
+        resetPasswordUri?: string,
         freeTrialExpiration?: {
             trialPeriodInDays: number
         },

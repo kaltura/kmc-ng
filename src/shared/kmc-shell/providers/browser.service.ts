@@ -11,6 +11,7 @@ import { AppEventsService } from 'app-shared/kmc-shared/app-events/app-events.se
 import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { EmailConfig } from '../../../kmc-app/components/open-email/open-email.component';
 import { serverConfig } from 'config/server';
+import { PageExitVerificationService } from '../page-exit-verification';
 
 export enum HeaderTypes {
     error = 1,
@@ -39,6 +40,10 @@ export interface GrowlMessage {
   summary?: string;
   detail?: string;
 }
+
+export declare type QueryParams = {
+    [key: string]: any;
+};
 
 export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
 
@@ -90,7 +95,8 @@ export class BrowserService implements IAppStorage {
                 private _router: Router,
                 private _logger: KalturaLogger,
                 private _appEvents: AppEventsService,
-                private _appLocalization: AppLocalization) {
+                private _appLocalization: AppLocalization,
+                private _pageExitVerificationService: PageExitVerificationService) {
         this._recordInitialQueryParams();
         this._recordRoutingActions();
     }
@@ -392,6 +398,7 @@ export class BrowserService implements IAppStorage {
                     header: this._appLocalization.get('app.UnpermittedActionReasons.header'),
                     message: this._appLocalization.get('app.UnpermittedActionReasons.messageNav'),
                     accept: () => {
+                        this._pageExitVerificationService.removeAll();
                         this.navigateToDefault();
                     }
                 }
@@ -408,9 +415,14 @@ export class BrowserService implements IAppStorage {
         }
     }
 
-    public navigateToLogin(): void {
+    public navigateToLoginWithStatus(): Observable<boolean> {
         this._logger.info(`navigate to login view`);
-        this._router.navigateByUrl(kmcAppConfig.routing.loginRoute, { replaceUrl: true });
+        return Observable.fromPromise(this._router.navigateByUrl(kmcAppConfig.routing.loginRoute, {replaceUrl: true}));
+    }
+
+    public navigateToLogin(): void {
+        this.navigateToLoginWithStatus().subscribe();
+        return;
     }
 
     public navigateToDefault(removeCurrentFromBrowserHistory: boolean = true): void {

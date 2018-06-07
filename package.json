@@ -43,7 +43,8 @@
     "standalone": "node ./scripts/checkout-standalone.js",
     "standalone:update": "npm run kws -- bookmark standalone --update && git commit -am 'chore: update standalone commit' && git push",
     "start": "ng serve --preserve-symlinks",
-    "test": "ng test"
+    "test": "ng test",
+    "generate:ch": "node ./dev/tools/contextual-help-generator/generate.js"
   },
   "dependencies": {
     "@angular/animations": "~5.2.0",
@@ -92,6 +93,7 @@
     "@types/jquery": "^2.0.40",
     "@types/node": "~6.0.60",
     "codelyzer": "~4.0.1",
+    "csvtojson": "~2.0.3",
     "enhanced-resolve": "~3.3.0",
     "minimist": "~1.2.0",
     "ts-node": "~4.1.0",

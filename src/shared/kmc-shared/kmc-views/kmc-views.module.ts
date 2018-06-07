@@ -21,19 +21,20 @@ import {
     SettingsTranscodingMainViewService,
     StudioV2MainViewService,
     StudioV3MainViewService,
-    UsageDashboardMainViewService
+    UsageDashboardMainViewService,
+    KavaAppMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService,
     ContentEntryViewService,
     ContentNewCategoryViewService,
     ContentPlaylistViewService,
-    SettingsTranscodingProfileViewService
+    SettingsTranscodingProfileViewService,
+    RestorePasswordViewService
 } from './details-views';
 import {
     AdvertisementsAppViewService,
     ClipAndTrimAppViewService,
-    KavaAppViewService,
     LiveDashboardAppViewService
 } from './component-views';
 import { QuizAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
@@ -77,10 +78,11 @@ export class KmcViewsModule {
                 ContentEntryViewService,
                 ContentNewCategoryViewService,
                 LiveDashboardAppViewService,
-                KavaAppViewService,
+                KavaAppMainViewService,
                 ClipAndTrimAppViewService,
                 AdvertisementsAppViewService,
                 QuizAppViewService,
+                RestorePasswordViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };

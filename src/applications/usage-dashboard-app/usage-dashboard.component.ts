@@ -21,18 +21,15 @@ export class UsageDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     try {
-      if (!this._usageDashboardMainView.isAvailable()) { // Deep link when disabled handling
-          this.browserService.handleUnpermittedAction(true);
-        return undefined;
-      }
-
-      this._usageDashboardUrl = serverConfig.externalApps.usageDashboard.uri;
-      window['kmc'] = {
-        'vars': {
-          'ks': this.appAuthentication.appUser.ks,
-          'partner_id': this.appAuthentication.appUser.partnerId,
-          'service_url': getKalturaServerUri()
-        }
+      if (this._usageDashboardMainView.viewEntered()) { // Deep link when disabled handling
+          this._usageDashboardUrl = serverConfig.externalApps.usageDashboard.uri;
+          window['kmc'] = {
+              'vars': {
+                  'ks': this.appAuthentication.appUser.ks,
+                  'partner_id': this.appAuthentication.appUser.partnerId,
+                  'service_url': getKalturaServerUri()
+              }
+          };
       }
     } catch (ex) {
       this.logger.warn(`Could not load usage dashboard, please check that usage dashboard configurations are loaded correctly\n error: ${ex}`);
