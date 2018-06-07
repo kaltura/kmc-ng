@@ -21,16 +21,7 @@
     },
     {
         "viewKey": "content-entries",
-        "links": [
-            {
-                "value": "https://www.bing.com",
-                "label": "Test1"
-            },
-            {
-                "value": "https://google.com",
-                "label": "Test2"
-            }
-        ]
+        "links": []
     },
     {
         "viewKey": "content-moderation",
@@ -162,21 +153,11 @@
     },
     {
         "viewKey": "content-playlist-content",
-        "links": [
-            {
-                "value": "https://www.bing.com",
-                "label": "Test2"
-            }
-        ]
+        "links": []
     },
     {
         "viewKey": "content-playlist-contentrulebased",
-        "links": [
-            {
-                "value": "https://google.com",
-                "label": "Test"
-            }
-        ]
+        "links": []
     },
     {
         "viewKey": "settings-transcoding-profile-metadata",
