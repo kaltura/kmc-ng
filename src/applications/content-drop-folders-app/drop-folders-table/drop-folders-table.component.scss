@@ -12,6 +12,19 @@
     overflow-y: hidden;
     position: absolute;
     padding: 0;
+
+      .emptymessage {
+          display: table-row;
+          border: 0;
+          height: 200px;
+
+          .kEmptyMessage {
+              position: absolute;
+              width: 100%;
+              height: 200px;
+              border-bottom: 1px solid $kGrayscale4;
+          }
+      }
   }
 
   .kDropFoldersTableActions {
@@ -58,11 +71,6 @@
   flex-direction: column;
 }
 
-:host /deep/ .kSelectionColumn {
-  width: 44px;
-  padding-left: 14px !important;
-}
-
 :host /deep/ .kFileNameColumn {
   width: 250px;
 }
@@ -77,4 +85,9 @@
 :host /deep/ p-table .stickyHeader {
   z-index: 10;
   display: table;
+}
+:host /deep/ p-table {
+    .ui-table .ui-table-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
 }

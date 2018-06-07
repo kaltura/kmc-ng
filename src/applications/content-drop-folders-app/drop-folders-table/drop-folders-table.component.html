@@ -7,36 +7,49 @@
               [value]="_dropFolders"
               dataKey="id"
               [defaultSortOrder]="_defaultSortOrder"
+              [resizableColumns]="true"
               (sortFunction)="_onSortChanged($event)" [customSort]="true"
               [(selection)]="selectedDropFolders"
               (selectionChange)="selectedDropFoldersChange.emit($event)"
               kStickyHeader [sticksTo]="'dropFoldersTags'" stickyClass="stickyHeader" [stickyId]="'dropFoldersTable'">
+          <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                  <col style="width:44px; padding-left: 13px">
+                  <col style="width: 250px">
+                  <col>
+                  <col>
+                  <col>
+                  <col>
+                  <col>
+                  <col style="width: 80px">
+              </colgroup>
+          </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th class="kSelectionColumn">
+            <th style="width:44px; padding-left: 13px">
               <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>
-            <th class="kFileNameColumn" [pSortableColumn]="'fileName'">
+            <th pResizableColumn [pSortableColumn]="'fileName'">
               {{'applications.content.dropFolders.table.fileName' | translate}}
               <p-sortIcon [field]="'fileName'"></p-sortIcon>
             </th>
-            <th  [pSortableColumn]="'dropFolderId'">
+            <th pResizableColumn [pSortableColumn]="'dropFolderId'">
               {{'applications.content.dropFolders.table.dropFolderName' | translate}}
               <p-sortIcon [field]="'dropFolderId'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'createdAt'">
+            <th pResizableColumn [pSortableColumn]="'createdAt'">
               {{'applications.content.dropFolders.table.createdOn' | translate}}
               <p-sortIcon [field]="'createdAt'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'fileSize'">
+            <th pResizableColumn [pSortableColumn]="'fileSize'">
               {{'applications.content.dropFolders.table.fileSize' | translate}}
               <p-sortIcon [field]="'fileSize'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'entryId'">
+            <th pResizableColumn [pSortableColumn]="'entryId'">
               {{'applications.content.dropFolders.table.entryId' | translate}}
               <p-sortIcon [field]="'entryId'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'status'">
+            <th pResizableColumn [pSortableColumn]="'status'">
               {{'applications.content.dropFolders.table.status' | translate}}
               <p-sortIcon [field]="'status'"></p-sortIcon>
             </th>
@@ -48,15 +61,15 @@
         <ng-template pTemplate="body" let-folder>
           <tr [pSelectableRow]="folder">
 
-            <td class="kSelectionColumn">
+            <td style="width:44px; padding-left: 13px">
               <p-tableCheckbox [value]="folder"></p-tableCheckbox>
             </td>
 
-            <td class="kFileNameColumn">
+            <td class="ui-resizable-column">
               <span class="kTitle kTableColumn" [kTooltip]="folder.fileName">{{folder.fileName}}</span>
             </td>
 
-            <td>
+            <td class="ui-resizable-column">
               {{folder.dropFolderId}}
             </td>
 
@@ -64,15 +77,15 @@
               <span [kTooltip]="_dateTooltip(folder)">{{ folder.createdAt | kDate }}</span>
             </td>
 
-            <td>
+            <td class="ui-resizable-column">
               {{ folder.fileSize | kFileSize }}
             </td>
 
-            <td>
+            <td class="ui-resizable-column">
               <a (click)="navigateToEntry.emit(folder.entryId)">{{ folder.entryId }}</a>
             </td>
 
-            <td>
+            <td class="ui-resizable-column">
               <div class="kStatusWrap">
                 <div [ngClass]="folder.status | kFolderFileStatus: true: false" class="kDropFolderStatusIcon"></div>
                 <div class="kStatusLabel" [kTooltip]="folder.status | kFolderFileStatus: false: true">
@@ -91,7 +104,9 @@
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
-          <div class="emptymessage">{{_emptyMessage}}</div>
+            <div class="emptymessage">
+                <div class="kEmptyMessage">{{_emptyMessage}}</div>
+            </div>
         </ng-template>
       </p-table>
 
