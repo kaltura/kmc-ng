@@ -52,7 +52,7 @@
     <kKMCUserSettings [parentPopup]="usersettings"></kKMCUserSettings>
 </kPopupWidget>
 
-<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">
+<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="_helpMenuOpened = true" (onClose)="_helpMenuOpened = false">
     <div class="kHelpMenu">
         <p [hidden]="!_kmcOverviewLinkExists && !_mediaManagementLinkExists" class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
         <p [hidden]="!_kmcOverviewLinkExists" class="kHelpLink" (click)="openHelpLink('kmcOverview')">{{'app.helpMenu.kmcOverview' | translate}}</p>
