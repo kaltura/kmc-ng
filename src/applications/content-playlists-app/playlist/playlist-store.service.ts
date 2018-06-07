@@ -1,6 +1,7 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client/api/types/PlaylistGetAction';
@@ -31,7 +32,9 @@ export enum ActionTypes {
   PlaylistDataIsInvalid,
   ActiveSectionBusy
 }
-
+export enum NotificationTypes {
+    ViewEntered
+}
 export interface StatusArgs {
   action: ActionTypes;
   error?: Error;
@@ -39,6 +42,8 @@ export interface StatusArgs {
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
+    private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
+    public notifications$ = this._notifications.asObservable();
   private _loadPlaylistSubscription: ISubscription;
   private _sectionToRouteMapping: { [key: number]: string } = {};
   private _state = new BehaviorSubject<StatusArgs>({ action: ActionTypes.PlaylistLoading, error: null });
@@ -151,7 +156,10 @@ export class PlaylistStore implements OnDestroy {
       .request(new PlaylistGetAction({ id }))
       .cancelOnDestroy(this)
       .subscribe(playlist => {
-          if (this._contentPlaylistView.isAvailable({
+              this._playlist.next({ playlist });
+              this._notifications.next({ type: NotificationTypes.ViewEntered });
+
+              if (this._contentPlaylistView.isAvailable({
               playlist,
               activatedRoute: this._playlistRoute,
               section: ContentPlaylistViewSections.ResolveFromActivatedRoute
@@ -163,7 +171,7 @@ export class PlaylistStore implements OnDestroy {
               }
 
               this._loadPlaylistSubscription = null;
-              this._playlist.next({ playlist });
+
               const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(playlist, { isNewData: false });
               if (playlistLoadedResult.errors.length) {
                   this._state.next({
@@ -173,8 +181,6 @@ export class PlaylistStore implements OnDestroy {
               } else {
                   this._state.next({ action: ActionTypes.PlaylistLoaded });
               }
-          } else {
-              this._browserService.handleUnpermittedAction(true);
           }
         },
         error => {
@@ -252,9 +258,11 @@ export class PlaylistStore implements OnDestroy {
               // to init them-selves when entering this module directly.
               setTimeout(() => this._loadPlaylist(currentPlaylistId), 0);
             }
+          } else {
+              this._notifications.next({ type: NotificationTypes.ViewEntered });
           }
         }
-      )
+      );
   }
 
   public savePlaylist(): void {

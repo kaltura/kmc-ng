@@ -98,6 +98,7 @@ import { RestorePasswordFormComponent } from './components/login/restore-passwor
 import { InvalidRestorePasswordHashFormComponent } from './components/login/invalid-restore-password-hash-form/invalid-restore-password-hash-form.component';
 
 import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
+import { ContextualHelpModule } from 'app-shared/kmc-shared/contextual-help/contextual-help.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -161,6 +162,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       KmcLogsModule.forRoot(),
       KalturaLoggerModule.forRoot('kmc'),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      ContextualHelpModule.forRoot(),
       KmcViewsModule.forRoot(),
       LocalizationModule.forRoot()
   ],

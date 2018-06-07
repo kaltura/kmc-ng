@@ -57,22 +57,23 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._logger.info(`initiate account settings view`);
-    this._createForm();
-    this._fillDescribeYourselfOptions();
-    if (this._settingsAccountSettingsMainView.isAvailable()) {
-        this._loadPartnerAccountSettings();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
-    }
+      if (this._settingsAccountSettingsMainView.viewEntered()) {
+          this._prepare();
+      }
+  }
 
+  ngOnDestroy(): void {
+  }
+
+  private _prepare(): void {
+      this._logger.info(`initiate account settings view`);
+      this._createForm();
+      this._fillDescribeYourselfOptions();
+      this._loadPartnerAccountSettings();
       this.accountSettingsForm
           .statusChanges
           .cancelOnDestroy(this)
           .subscribe(() => this._updatePageExitVerification());
-  }
-
-  ngOnDestroy(): void {
   }
 
   onSubmit(): void {

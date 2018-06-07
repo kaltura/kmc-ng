@@ -11,6 +11,7 @@
       "assets": [
         "server-config.json",
         "assets",
+        "public",
         "i18n",
         "favicon.ico",
         "__local_machine_only__/**/*"

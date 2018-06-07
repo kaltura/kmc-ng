@@ -28,14 +28,13 @@ export class AppDefaultViewComponent {
             const firstItem = menu && menu.length ? menu[0] : null;
 
             if (firstItem && firstItem.isAvailable) {
-                const viewTitle = this._appLocalization.get(firstItem.titleToken);
-                this._logger.info(`navigate to first available view`, { viewTitle, viewTitleToken: firstItem.titleToken  });
+                this._logger.info(`navigate to first available view`, { viewTitle: firstItem.menuTitle  });
                 firstItem.open();
             } else {
                 this._logger.warn(`cannot find available view to navigate to`);
                 this._browserService.navigateToError();
             }
-        }else {
+        } else {
             this._logger.info(`navigate to login page`);
             this._browserService.navigateToLogin();
         }

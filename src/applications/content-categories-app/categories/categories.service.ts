@@ -130,8 +130,6 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         super(_logger.subLogger('CategoriesService'));
         if (contentCategoriesMainViewService.isAvailable()) {
             this._prepare();
-        }else{
-            this.browserService.handleUnpermittedAction(true);
         }
     }
 

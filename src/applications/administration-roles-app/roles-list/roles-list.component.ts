@@ -7,6 +7,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { AdminRolesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kRolesList',
@@ -32,17 +33,24 @@ export class RolesListComponent implements OnInit, OnDestroy {
   constructor(public _rolesStore: RolesStoreService,
               private _logger: KalturaLogger,
               private _browserService: BrowserService,
+              private _adminRolesMainViewService: AdminRolesMainViewService,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
-    this._logger.info(`initiate roles list view`);
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
-    this._registerToDataChanges();
+      if (this._adminRolesMainViewService.viewEntered()) {
+          this._prepare();
+      }
   }
 
   ngOnDestroy() {
+  }
+
+  private _prepare(): void {
+      this._logger.info(`initiate roles list view`);
+      this._restoreFiltersState();
+      this._registerToFilterStoreDataChanges();
+      this._registerToDataChanges();
   }
 
   private _restoreFiltersState(): void {

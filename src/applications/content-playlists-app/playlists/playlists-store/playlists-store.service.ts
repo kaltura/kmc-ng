@@ -61,8 +61,6 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
         super(_logger);
         if (contentPlaylistsMainView.isAvailable()) {
             this._prepare();
-        } else {
-            this._browserService.handleUnpermittedAction(true);
         }
   }
 

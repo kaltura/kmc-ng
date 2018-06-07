@@ -1,7 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import {getKalturaServerUri, serverConfig} from 'config/server';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {Component} from '@angular/core';
 import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
@@ -10,4 +7,11 @@ import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
   styleUrls: ['./analytics-live.component.scss']
 })
 export class AnalyticsLiveComponent {
+
+    public _enabled = false;
+
+  constructor(liveAnalyticsView: LiveAnalyticsMainViewService
+  ) {
+      this._enabled = liveAnalyticsView.viewEntered();
+  }
 }
