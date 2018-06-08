@@ -2,13 +2,13 @@
   <ul>
     <li class="kMenuItemLabel"><span class="kIcon kIconuser_small"></span>
       <div class="kMenuItem">
-        <span>{{_userContext.fullName}}</span>
+        <span>{{_userAuthentication.appUser?.fullName}}</span>
         <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>
       </div>
     </li>
     <li class="kMenuItemLabel"><span (dblclick)="egg()" class="kIcon kIconhouse"></span>
       <div class="kMenuItem">
-        <span>{{_userContext.partnerInfo.name}}</span>
+        <span>{{_userAuthentication.appUser?.partnerInfo?.name}}</span>
         <a (click)="changeAccountPopup.open();parentPopup.close()">{{'app.userSettings.changeAccount' | translate}}</a>
       </div>
     </li>
