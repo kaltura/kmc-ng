@@ -66,6 +66,11 @@ export class UploadMonitorComponent implements OnDestroy {
       this._prepare();
   }
 
+  private _reducePopupHeight(): void {
+      this._popupHeight -= this._sectionHeight;
+      this._popupHeight = this._popupHeight < 0 ? 0 : this._popupHeight;
+  }
+
   private _prepare(): void {
 
       this._isUploadAvailable = this._contentUploadsMainViewService.isAvailable();
@@ -84,6 +89,8 @@ export class UploadMonitorComponent implements OnDestroy {
                       this._uploadFromDesktop = totals;
                       this._checkUpToDate();
                   });
+          } else {
+              this._reducePopupHeight();
           }
 
           if (this._isBulkAvailable) {
@@ -110,6 +117,8 @@ export class UploadMonitorComponent implements OnDestroy {
                           this._bulkUploadLayout = 'totals';
                       }
                   });
+          } else {
+              this._reducePopupHeight();
           }
 
 
@@ -119,7 +128,7 @@ export class UploadMonitorComponent implements OnDestroy {
                   .subscribe(state => {
                       if (state.error && state.notPermitted) {
                           this._dropFoldersLayout = null;
-                          this._popupHeight -= this._sectionHeight; // reduce popup height
+                          this._reducePopupHeight();
                       } else if (state.error && state.isErrorRecoverable) {
                           this._dropFoldersLayout = 'recoverableError';
                       } else if (state.error && !state.isErrorRecoverable) {
@@ -140,6 +149,8 @@ export class UploadMonitorComponent implements OnDestroy {
                       this._dropFolders = totals;
                       this._checkUpToDate();
                   });
+          } else {
+              this._reducePopupHeight();
           }
       }
   }
