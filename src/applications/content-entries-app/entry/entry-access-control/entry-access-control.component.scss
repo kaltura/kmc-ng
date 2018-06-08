@@ -15,6 +15,16 @@
 		padding-left: 20px;
 		padding-right: 20px;
 		width: 100%;
+
+        .kAccessProfileItem {
+            white-space: nowrap;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 190px;
+            font-weight: normal;
+        }
+
 		.kRow{
 			display: flex;
 			padding-top: 24px;
@@ -39,4 +49,20 @@
 
 :host /deep/ .ui-dropdown-label {
   text-overflow: ellipsis;
+}
+:host /deep/ .kAccessControlProfiles {
+    .ui-dropdown-panel {
+        width: 250px;
+    }
+
+    .ui-dropdown-label {
+        text-overflow: ellipsis;
+        font-weight: normal;
+        font-size: 15px;
+        color: $kGrayscale1;
+    }
+
+    .ui-dropdown.ui-widget {
+        width: 184px;
+    }
 }
