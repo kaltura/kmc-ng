@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { AppAuthentication, AppShellService } from "app-shared/kmc-shell";
+import { AppAuthentication, AppShellService, BrowserService, PartnerPackageTypes } from "app-shared/kmc-shell";
 
 import * as $ from 'jquery';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kKMCDashboard',
@@ -10,10 +11,11 @@ import * as $ from 'jquery';
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('appMenu') private _appMenuRef : any;
+  @ViewChild('whatsNew') private _whatsNewWin : PopupWidgetComponent;
   private onResize : () => void;
 
 
-  constructor(private appShellService : AppShellService, private appAuthentication: AppAuthentication) {
+  constructor(private appShellService : AppShellService, private appAuthentication: AppAuthentication, private _browserService: BrowserService) {
       this.onResize = this._resizeContent.bind(this);
 
 
@@ -32,6 +34,14 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   {
     $(window).bind('resize',this.onResize); // We bind the event to a function reference that proxy 'actual' this inside
     this._resizeContent();
+    const isRegisteredUser = this.appAuthentication.appUser.partnerInfo.partnerPackage !== PartnerPackageTypes.PartnerPackageFree;
+    const whatsNewShown = this._browserService.getFromLocalStorage('whatsNewShown') || false;
+    if (isRegisteredUser && !whatsNewShown){
+        setTimeout(()=>{
+            this._browserService.setInLocalStorage('whatsNewShown',true);
+            this._whatsNewWin.open();
+        },200);
+    }
   }
 
   ngOnInit() {
