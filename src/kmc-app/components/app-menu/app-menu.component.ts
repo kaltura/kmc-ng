@@ -24,8 +24,6 @@ import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared
 export class AppMenuComponent implements OnInit, OnDestroy{
 
     @ViewChild('helpmenu') private _helpmenu: PopupWidgetComponent;
-
-    public _userContext: AppUser;
     public _showChangelog = false;
     public _helpMenuOpened = false;
     public _powerUser = false;
@@ -43,7 +41,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     constructor(public _kmcLogs: KmcLoggerConfigurator,
                 private _contextualHelpService: ContextualHelpService,
-                private userAuthentication: AppAuthentication,
+                public _userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
                 private router: Router,
                 private _browserService: BrowserService) {
@@ -61,7 +59,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                     this.setSelectedRoute(event.urlAfterRedirects);
                 }
             });
-        this._userContext = userAuthentication.appUser;
         this.menuConfig = this._kmcMainViews.getMenu();
         this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'left';
