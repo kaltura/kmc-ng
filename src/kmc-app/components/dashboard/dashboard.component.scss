@@ -1,5 +1,29 @@
 @import 'app-theme/_variables.scss';
 
+.whatsNew{
+    position: relative;
+    padding: 12px;
+    .kTitle{
+        width: 100%;
+        font-size: 28px;
+        text-align: center;
+    }
+    .kContent{
+        width: 100%;
+        margin-top: 24px;
+        font-size: 18px;
+        padding-top: 24px;
+    }
+    .kFooter{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        .kNote{
+            font-size: 10px;
+        }
+    }
+}
+
 :host {
   width: 100%;
 }

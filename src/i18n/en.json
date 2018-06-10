@@ -2104,7 +2104,7 @@
                                 "backToEntitlements": "Back to Entitlements",
                                 "duplicateUsers": "Some of the added users were already set with permissions for this category.",
                                 "error": "Error",
-                                "deleteOwner": "The Category Owner can not be deleted.\nPlease adjust or reset the category's ownership first'"
+                                "deleteOwner": "The Category Owner can not be deleted.\nPlease adjust or reset the category's ownership first"
                             }
                         },
                         "errors" : {
