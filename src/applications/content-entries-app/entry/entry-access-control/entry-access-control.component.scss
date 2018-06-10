@@ -19,6 +19,14 @@
 			display: flex;
 			padding-top: 24px;
 			align-items: center;
+
+            .kAccessControlProfileItem {
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 130px;
+                white-space: nowrap;
+            }
 		}
 		.kMultiLine{
 			white-space: pre-wrap;

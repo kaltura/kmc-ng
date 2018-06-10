@@ -7,7 +7,13 @@
 				<p-dropdown [options]="(_widgetService._accessControlProfiles$ | async)?.items"
                     [(ngModel)]="_widgetService.selectedProfile"
                     [disabled]="!_canSetAccessControl"
-                    (onChange)="_widgetService.setDirty()"></p-dropdown>
+                    (onChange)="_widgetService.setDirty()">
+                    <ng-template let-profile pTemplate="item">
+                        <span class="kAccessControlProfileItem" [kTooltip]="profile.label" [maxWidth]="200">
+                            {{profile.label}}
+                        </span>
+                    </ng-template>
+                </p-dropdown>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.name' | translate}}</span>
