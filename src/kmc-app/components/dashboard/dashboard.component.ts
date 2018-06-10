@@ -30,18 +30,23 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private _showWhatsNew(): void {
+      // const isRegisteredUser = this.appAuthentication.appUser.partnerInfo.partnerPackage !== PartnerPackageTypes.PartnerPackageFree;
+      // const whatsNewShown = this._browserService.getFromLocalStorage('whatsNewShown') || false;
+      // if (isRegisteredUser && !whatsNewShown){
+      //     setTimeout(()=>{
+      //         this._browserService.setInLocalStorage('whatsNewShown',true);
+      //         this._whatsNewWin.open();
+      //     },200);
+      // }
+  }
+
   ngAfterViewInit()
   {
     $(window).bind('resize',this.onResize); // We bind the event to a function reference that proxy 'actual' this inside
     this._resizeContent();
-    const isRegisteredUser = this.appAuthentication.appUser.partnerInfo.partnerPackage !== PartnerPackageTypes.PartnerPackageFree;
-    const whatsNewShown = this._browserService.getFromLocalStorage('whatsNewShown') || false;
-    if (isRegisteredUser && !whatsNewShown){
-        setTimeout(()=>{
-            this._browserService.setInLocalStorage('whatsNewShown',true);
-            this._whatsNewWin.open();
-        },200);
-    }
+
+    this._showWhatsNew();
   }
 
   ngOnInit() {
