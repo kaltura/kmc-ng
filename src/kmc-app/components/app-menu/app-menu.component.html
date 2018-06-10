@@ -24,7 +24,7 @@
 
                 <i #help class="kIconhelp" [class.has-notification]="_showChangelog" [class.open]="_helpMenuOpened"></i>
                 <div #username class="kUserName">
-                    <span>{{_userContext.fullName}}</span>
+                    <span>{{_userAuthentication.appUser?.fullName}}</span>
                     <i class="kIcondropdown_arrow_bottom"></i>
                 </div>
             </div>
