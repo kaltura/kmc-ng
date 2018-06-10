@@ -52,7 +52,7 @@ export interface ServerConfig {
     kalturaServer: {
         uri: string,
         defaultPrivileges?: string,
-        deployUrl: string,
+        deployUrl?: string,
         previewUIConf: number,
         resetPasswordUri?: string,
         freeTrialExpiration?: {
@@ -224,7 +224,7 @@ export function buildKalturaServerUri(suffix: string): string {
 }
 
 export function buildDeployUrl(suffix: string): string {
-    return `${serverConfig.kalturaServer.deployUrl}${suffix}`;
+    return `${serverConfig.kalturaServer.deployUrl || ''}${suffix}`;
 }
 
 export function getKalturaServerUri(suffix: string = ''): string {

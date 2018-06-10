@@ -36,7 +36,7 @@ export const ServerConfigSchema = {
                     additionalProperties: true
                 }
             },
-            required: ['uri', 'previewUIConf', 'deployUrl'],
+            required: ['uri', 'previewUIConf'],
             additionalProperties: true
         },
         cdnServers: {
