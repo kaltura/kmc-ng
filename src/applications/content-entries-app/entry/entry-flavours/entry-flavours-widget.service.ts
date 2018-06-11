@@ -168,7 +168,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     })
                 );
             const storageProfileListAction = new StorageProfileListAction({
-                filter: new KalturaStorageProfileFilter({ idEqual: 0 }).setDependency(['idEqual', 0, 'storageProfileId'])
+                filter: new KalturaStorageProfileFilter({ idEqual: 0 }).setDependency(['idEqual', 1, 'storageProfileId'])
             }).setRequestOptions(
                 new KalturaRequestOptions({
                     responseProfile: new KalturaDetachedResponseProfile({

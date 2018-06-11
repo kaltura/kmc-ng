@@ -56,9 +56,9 @@ export class AnalyticsLiveFrameComponent implements OnInit, OnDestroy, OnChanges
                     'cdn_host': cdnUrl,
                     'service_url': getKalturaServerUri(),
                     'liveanalytics': {
-                        'player_id': +serverConfig.externalApps.liveAnalytics.uiConfId,
-                        map_urls: serverConfig.externalApps.liveAnalytics.mapUrls,
-                        map_zoom_levels: serverConfig.externalApps.liveAnalytics.mapZoomLevels
+                        'player_id': +serverConfig.externalApps.liveAnalytics.uiConfId || '',
+                        map_urls: serverConfig.externalApps.liveAnalytics.mapUrls || [],
+                        map_zoom_levels: serverConfig.externalApps.liveAnalytics.mapZoomLevels || ''
                     }
                 },
                 'functions': {

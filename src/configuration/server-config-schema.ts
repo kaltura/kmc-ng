@@ -17,10 +17,10 @@ export const ServerConfigSchema = {
         kalturaServer: {
             properties: {
                 uri: {type: 'string'},
-                defaultPrivileges: {type: 'string'},
-                deployUrl: {type: 'string'},
+                defaultPrivileges: {type: ['string', 'null']},
+                deployUrl: {type: ['string', 'null']},
                 previewUIConf: {type: 'number'},
-                resetPasswordUri: {type: 'string'},
+                resetPasswordUri: {type: ['string', 'null']},
                 freeTrialExpiration: {
                     properties: {
                         trialPeriodInDays: {type: 'number'}
@@ -85,11 +85,11 @@ export const ServerConfigSchema = {
                 liveAnalytics: {
                     properties: {
                         uri: {type: 'string'},
-                        uiConfId: {type: 'number'},
-                        mapUrls: { type: 'array', items: { type: 'string' } },
-                        mapZoomLevels: {type: 'string'}
+                        uiConfId: {type: ['string', 'null']},
+                        mapUrls: { type: ['array', 'null'], items: { type: 'string' } },
+                        mapZoomLevels: {type: ['string', 'null']}
                     },
-                    required: ['uri', 'uiConfId', 'mapUrls', 'mapZoomLevels'],
+                    required: ['uri'],
                     additionalProperties: true
                 },
                 editor: {
