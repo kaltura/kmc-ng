@@ -1,5 +1,46 @@
 @import 'app-theme/_variables.scss';
 
+.whatsNew{
+    position: relative;
+    text-align: center;
+    .kHeader{
+        border-bottom: 1px solid #cccccc;
+        height: 78px;
+        width: 100%;
+        .kTitle{
+            width: 100%;
+            text-align: center;
+            color: $kGrayscale1;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 78px;
+        }
+    }
+    .kContent{
+        width: 540px;
+        font-size: 18px;
+        padding-top: 32px;
+        line-height: 28px;
+        height: 220px;
+        color: $kGrayscale2;
+    }
+    .kFooter{
+        border-top: 1px solid #cccccc;
+        height: 78px;
+        width: 100%;
+        padding-top: 18px;
+        button{
+            width: 80px;
+            margin-left: 165px;
+        }
+        .kNote{
+            margin-left: 4px;
+            font-size: 10px;
+            font-weight: normal;
+        }
+    }
+}
+
 :host {
   width: 100%;
 }
