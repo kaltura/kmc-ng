@@ -4,6 +4,7 @@
 
 ### Bug Fixes
 
+* **administration/users:** associate new user to the account KMCNG-1836 ([a7975a1](https://github.com/kaltura/kmc-ng/commit/a7975a1))
 * change owner - allow saving not registered username ([1b3f9b4](https://github.com/kaltura/kmc-ng/commit/1b3f9b4))
 * changing username update the name shown in the app main menu ([#697](https://github.com/kaltura/kmc-ng/issues/697)) ([1e329fa](https://github.com/kaltura/kmc-ng/commit/1e329fa))
 * disable delete action for default thumbnail instead of preview ([c504b43](https://github.com/kaltura/kmc-ng/commit/c504b43))
@@ -16,17 +17,16 @@
 * No indication when trying to add a user with invalid email value ([#566](https://github.com/kaltura/kmc-ng/issues/566)) KMCNG-1420 ([e21e044](https://github.com/kaltura/kmc-ng/commit/e21e044))
 * stronger selector for main menu link to force styling in Safari ([297c951](https://github.com/kaltura/kmc-ng/commit/297c951))
 * truncate long metadata section names in dropdown ([4974e59](https://github.com/kaltura/kmc-ng/commit/4974e59))
-* **administration/users:** associate new user to the account KMCNG-1836 ([a7975a1](https://github.com/kaltura/kmc-ng/commit/a7975a1))
 
 
 ### Features
 
+* **content/entries:** add feature replace video in entry flavors section ([#634](https://github.com/kaltura/kmc-ng/issues/634)) ([e084a43](https://github.com/kaltura/kmc-ng/commit/e084a43))
+* **content/entries:** show live analytics of specific entry ([#687](https://github.com/kaltura/kmc-ng/issues/687)) KMCNG-1791 ([4b2656d](https://github.com/kaltura/kmc-ng/commit/4b2656d))
 * **analytics:** show coming soon message for analytics  ([#676](https://github.com/kaltura/kmc-ng/issues/676)) KMCNG-1777 ([a62762c](https://github.com/kaltura/kmc-ng/commit/a62762c))
 * allow live entry to open clip&trim only if it has recorded entry ([55de56e](https://github.com/kaltura/kmc-ng/commit/55de56e))
 * show progress bar when loading a view ([#679](https://github.com/kaltura/kmc-ng/issues/679)) KMCNG-1790 ([d290e57](https://github.com/kaltura/kmc-ng/commit/d290e57))
 * support link open a dialog window instead of direct mail invocation ([#669](https://github.com/kaltura/kmc-ng/issues/669)) KMCNG-1766 ([9575768](https://github.com/kaltura/kmc-ng/commit/9575768))
-* **content/entries:** add feature replace video in entry flavors section ([#634](https://github.com/kaltura/kmc-ng/issues/634)) ([e084a43](https://github.com/kaltura/kmc-ng/commit/e084a43))
-* **content/entries:** show live analytics of specific entry ([#687](https://github.com/kaltura/kmc-ng/issues/687)) KMCNG-1791 ([4b2656d](https://github.com/kaltura/kmc-ng/commit/4b2656d))
 * update browser title when navigating between views ([#691](https://github.com/kaltura/kmc-ng/issues/691)) KMCNG-1812 ([3fc96c0](https://github.com/kaltura/kmc-ng/commit/3fc96c0))
 * welcome screen placeholder ([#699](https://github.com/kaltura/kmc-ng/issues/699)) ([924674e](https://github.com/kaltura/kmc-ng/commit/924674e))
 
