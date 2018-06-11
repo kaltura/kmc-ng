@@ -71,7 +71,7 @@
                            *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
                            [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"></k-logs-record>
             <hr>
-            <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
+            <kChangelog [changelogIsShown]="_showChangelog" (showChangelog)="_changelogPopupOpened()"></kChangelog>
             <k-power-user-console *ngIf="_powerUser"></k-power-user-console>
 
             <div class="kContexualHelp" *ngIf="_contextualHelp.length">
