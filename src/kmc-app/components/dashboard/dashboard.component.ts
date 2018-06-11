@@ -41,6 +41,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
   }
 
+    closeWin():void{
+        this._whatsNewWin.close();
+    }
+
   ngAfterViewInit()
   {
     $(window).bind('resize', this.onResize); // We bind the event to a function reference that proxy 'actual' this inside
