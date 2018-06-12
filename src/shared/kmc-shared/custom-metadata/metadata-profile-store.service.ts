@@ -13,6 +13,7 @@ import { KalturaMetadataProfileFilter } from 'kaltura-ngx-client/api/types/Kaltu
 import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export enum MetadataProfileCreateModes {
     Api,
@@ -36,7 +37,9 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
 {
     private _cachedProfiles : { [key : string] : MetadataProfile[]} = {};
 
-    constructor(private _kalturaServerClient: KalturaClient, _appEvents: AppEventsService) {
+    constructor(private _kalturaServerClient: KalturaClient,
+                private _permissionsService: KMCPermissionsService,
+                _appEvents: AppEventsService) {
         super();
 
         _appEvents.event(MetadataProfileUpdatedEvent)
@@ -56,6 +59,10 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
 
     public get(filters : GetFilters) : Observable<{items : MetadataProfile[]}>
     {
+        if (!this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
+            return Observable.of({ items: [] });
+        }
+
         return Observable.create(observer =>
         {
 	        let sub: ISubscription;
