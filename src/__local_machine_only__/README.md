@@ -54,6 +54,6 @@ Follow these instructions to test external apps integration:
 }
 ```
 
-#### External application supported versions
+#### Supported versions
 
-For extrenal application supported versions, please see the general [README.md](../../README.md) file 
+The code snippet above contains configuration for all the available external apps. For each app the uri includes the version that we were using to test its integration. If you encounter integration issues make sure that you are not using an obslete version of that app.  
