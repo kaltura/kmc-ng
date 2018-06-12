@@ -33,6 +33,7 @@
 <kPopupWidget #matchDropFolder [popupWidth]="791" [popupHeight]="607"
               [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
     <ng-template>
-        <kReplaceMatchDropFolder [parentPopupWidget]="matchDropFolder"></kReplaceMatchDropFolder>
+        <kReplaceMatchDropFolder [entry]="entry"
+                                 [parentPopupWidget]="matchDropFolder"></kReplaceMatchDropFolder>
     </ng-template>
 </kPopupWidget>
