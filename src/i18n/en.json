@@ -1596,6 +1596,8 @@
                         "approveReplacementTooltip": "All current flavors will be replaced upon replacement approval. Any time based metadata may be effected as well.",
                         "currentFlavors": "Current Flavors",
                         "replacementFlavors": "Replacement Flavors",
+                        "setReferenceId": "Set Reference ID",
+                        "addFilesBtn": "Add File/s",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",

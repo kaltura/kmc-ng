@@ -44,7 +44,7 @@
         .kRefreshBtn {
             position: absolute;
             right: 10px;
-            bottom: 0;
+            bottom: 16px;
             font-size: 24px;
             border: none;
             min-width: inherit;
@@ -60,7 +60,6 @@
         }
     }
 	.kTable{
-		margin-top: 16px;
 		.kFlavorName{
 			font-weight: bold;
 		}
