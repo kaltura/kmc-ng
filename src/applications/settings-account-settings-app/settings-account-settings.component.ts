@@ -216,6 +216,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
   // Fill the form with data
   private _fillForm(partner: KalturaPartner): void {
+      this.partnerAdminEmail = partner.adminEmail;
     this.accountSettingsForm.reset({
       name: partner.name,
       adminUserId: partner.adminUserId,
