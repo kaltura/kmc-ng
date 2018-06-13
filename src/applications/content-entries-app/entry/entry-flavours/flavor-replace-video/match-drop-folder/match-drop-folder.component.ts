@@ -14,7 +14,6 @@ import { KalturaDropFolderContentFileHandlerConfig } from 'kaltura-ngx-client/ap
 import { KalturaDropFolder } from 'kaltura-ngx-client/api/types/KalturaDropFolder';
 import { KalturaDropFolderContentFileHandlerMatchPolicy } from 'kaltura-ngx-client/api/types/KalturaDropFolderContentFileHandlerMatchPolicy';
 import { KalturaDropFolderFileHandlerType } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileHandlerType';
-import { map, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { SelectItem } from 'primeng/api';
 import { DropFolderFileListAction } from 'kaltura-ngx-client/api/types/DropFolderFileListAction';
@@ -22,6 +21,12 @@ import { KalturaDropFolderFileFilter } from 'kaltura-ngx-client/api/types/Kaltur
 import { KalturaDropFolderFileOrderBy } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileOrderBy';
 import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileStatus';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
+
+export interface KalturaDropFolderFileGroup extends KalturaDropFolderFile {
+    files?: KalturaDropFolderFile[];
+    name?: string;
+    displayName?: string;
+}
 
 @Component({
     selector: 'kReplaceMatchDropFolder',
@@ -38,6 +43,8 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
     public _dropFoldersList: KalturaDropFolder[] = [];
     public _dropFoldersListOptions: SelectItem[] = [];
     public _selectedDropFolder: number = null;
+    public _dropFolderFiles = [];
+    public _selectedFile: any;
 
     constructor(private _kalturaClient: KalturaClient,
                 private _transcodingProfileManagement: TranscodingProfileManagement,
@@ -52,6 +59,23 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
 
+    }
+
+    private _getDisplayName(file: KalturaDropFolderFileGroup): string {
+        let displayName: string;
+        if (file.files) {
+            displayName = `${file.parsedSlug} (${file.files.length}`;
+            if (file.status === KalturaDropFolderFileStatus.waiting) {
+                displayName += `, ${this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.waiting')}`;
+            }
+            displayName += ')';
+        } else if (file.name) {
+            displayName = file.name;
+        } else {
+            displayName = file.fileName;
+        }
+
+        return displayName;
     }
 
     private _loadDropFolder(searchTerm: string = null): Observable<any> {
@@ -71,75 +95,78 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
 
         const dropFolderFilesListAction = new DropFolderFileListAction({ filter });
         return this._kalturaClient.request(dropFolderFilesListAction)
-            .pipe(
-                map(response => {
-                    let dropFolderFile: KalturaDropFolderFile;
-                    const result = []; // results array
-                    const dict = {}; // slugs dictionary
-                    let group: KalturaDropFolderFile; // dffs group (by slug)
-                    const parseFailedStr = '* Error '; // TODO should be localized
+            .map(response => {
+                const result = []; // results array
+                const dict = {}; // slugs dictionary
+                let group: KalturaDropFolderFile; // dffs group (by slug)
+                const parseFailedStr = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.error');
 
-                    response.objects.forEach(file => {
-                        if (file instanceof KalturaDropFolderFile) {
-                            dropFolderFile = file as KalturaDropFolderFile;
-                            // for files in status waiting, we only want files with a matching slug
-                            if (dropFolderFile.status === KalturaDropFolderFileStatus.waiting
-                                && dropFolderFile.parsedSlug !== this.entry.referenceId) {
-                                return;
-                            }
-                            // group all files where status == ERROR_HANDLING under same group
-                            if (dropFolderFile.status === KalturaDropFolderFileStatus.errorHandling) {
-                                dropFolderFile.parsedSlug = parseFailedStr;
-                            }
-                            // get relevant group
-                            if (!dict[dropFolderFile.parsedSlug]) {
-                                // create group
-                                group = new KalturaDropFolderFile();
-                                group.parsedSlug = dropFolderFile.parsedSlug;
-                                (<any>group).createdAt = dropFolderFile.createdAt;
-                                (<any>group).files = [];
-                                dict[group.parsedSlug] = group;
-                            } else {
-                                group = dict[dropFolderFile.parsedSlug];
-                                // update date if needed
-                                if (group.createdAt > dropFolderFile.createdAt) {
-                                    (<any>group).createdAt = dropFolderFile.createdAt;
-                                }
-                            }
-                            // add dff to files list
-                            (<any>group).files.push(dropFolderFile);
-                            // if any file in the group is in waiting status, set the group to waiting:
-                            if (dropFolderFile.status === KalturaDropFolderFileStatus.waiting) {
-                                (<any>group).status = KalturaDropFolderFileStatus.waiting;
+                response.objects.forEach(file => {
+                    if (file instanceof KalturaDropFolderFile) {
+                        // for files in status waiting, we only want files with a matching slug
+                        if (file.status === KalturaDropFolderFileStatus.waiting && file.parsedSlug !== this.entry.referenceId) {
+                            return;
+                        }
+
+                        // group all files where status == ERROR_HANDLING under same group
+                        if (file.status === KalturaDropFolderFileStatus.errorHandling) {
+                            file.parsedSlug = parseFailedStr;
+                        }
+
+                        // get relevant group
+                        if (!dict[file.parsedSlug]) {
+                            // create group
+                            group = new KalturaDropFolderFile();
+                            group.parsedSlug = file.parsedSlug;
+                            (<any>group).createdAt = file.createdAt;
+                            (<KalturaDropFolderFileGroup>group).files = [];
+                            dict[group.parsedSlug] = group;
+                        } else {
+                            group = dict[file.parsedSlug];
+                            // update date if needed
+                            if (group.createdAt > file.createdAt) {
+                                (<any>group).createdAt = file.createdAt;
                             }
                         }
-                    });
 
-                    let wait: KalturaDropFolderFile;
-                    for (const slug in dict) {
-                        if (dict.hasOwnProperty(slug) && slug !== parseFailedStr) {
-                            if (dict[slug].status === KalturaDropFolderFileStatus.waiting) {
-                                // we assume there's only one...
-                                wait = dict[slug] as KalturaDropFolderFile;
-                            } else {
-                                result.push(dict[slug]);
-                            }
+                        // add dff to files list
+                        (<KalturaDropFolderFileGroup>group).files.push(file);
+
+                        // if any file in the group is in waiting status, set the group to waiting:
+                        if (file.status === KalturaDropFolderFileStatus.waiting) {
+                            (<any>group).status = KalturaDropFolderFileStatus.waiting;
                         }
                     }
-                    // put the matched waiting file first
-                    if (wait) {
-                        result.unshift(wait);
+                });
+
+                let wait: KalturaDropFolderFile;
+                for (const slug in dict) {
+                    if (dict.hasOwnProperty(slug) && slug !== parseFailedStr) {
+                        if (dict[slug].status === KalturaDropFolderFileStatus.waiting) {
+                            // we assume there's only one...
+                            wait = dict[slug];
+                        } else {
+                            (<KalturaDropFolderFileGroup>dict[slug]).displayName = this._getDisplayName(dict[slug]);
+                            result.push(dict[slug]);
+                        }
                     }
-                    // put the parseFailed last
-                    if (dict[parseFailedStr]) {
-                        result.push(dict[parseFailedStr]);
-                    }
-                    return result;
-                })
-            );
+                }
+                // put the matched waiting file first
+                if (wait) {
+                    result.unshift(wait);
+                }
+
+                // put the parseFailed last
+                if (dict[parseFailedStr]) {
+                    (<KalturaDropFolderFileGroup>dict[parseFailedStr]).displayName = this._getDisplayName(dict[parseFailedStr]);
+                    result.push(dict[parseFailedStr]);
+                }
+
+                return result;
+            });
     }
 
-    private _loadDropFoldersList(): Observable<void> {
+    private _loadDropFoldersList(): Observable<any> {
         const dropFoldersListAction = new DropFolderListAction({
             filter: new KalturaDropFolderFilter({
                 orderBy: KalturaDropFolderOrderBy.nameDesc,
@@ -149,50 +176,46 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
 
         return this._kalturaClient.request(dropFoldersListAction)
             .cancelOnDestroy(this)
-            .pipe(
-                map(response => {
-                    if (response.objects.length) {
-                        let df: KalturaDropFolder;
+            .map(response => {
+                if (response.objects.length) {
+                    let df: KalturaDropFolder;
 
-                        const dropFoldersList = [];
-                        response.objects.forEach(object => {
-                            if (object instanceof KalturaDropFolder) {
-                                df = object;
-                                if (df.fileHandlerType === KalturaDropFolderFileHandlerType.content) {
-                                    const cfg: KalturaDropFolderContentFileHandlerConfig = df.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
-                                    if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
-                                        dropFoldersList.push(df);
-                                    } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrKeepInFolder) {
-                                        dropFoldersList.push(df);
-                                    } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrAddAsNew) {
-                                        dropFoldersList.push(df);
-                                    }
-                                } else if (df.fileHandlerType === KalturaDropFolderFileHandlerType.xml) {
+                    const dropFoldersList = [];
+                    response.objects.forEach(object => {
+                        if (object instanceof KalturaDropFolder) {
+                            df = object;
+                            if (df.fileHandlerType === KalturaDropFolderFileHandlerType.content) {
+                                const cfg: KalturaDropFolderContentFileHandlerConfig = df.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
+                                if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
+                                    dropFoldersList.push(df);
+                                } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrKeepInFolder) {
+                                    dropFoldersList.push(df);
+                                } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrAddAsNew) {
                                     dropFoldersList.push(df);
                                 }
-                            } else {
-                                throw new Error(`invalid type provided, expected KalturaDropFolder, got ${typeof object}`);
                             }
-                        });
+                        } else {
+                            throw new Error(`invalid type provided, expected KalturaDropFolder, got ${typeof object}`);
+                        }
+                    });
 
-                        return dropFoldersList;
-                    } else {
-                        return [];
-                    }
-                }),
-                tap(dropFoldersList => {
-                    this._dropFoldersList = dropFoldersList;
-                    this._dropFoldersListOptions = dropFoldersList.map(folder => ({ label: folder.name, value: folder.id }));
-                    this._selectedDropFolder = dropFoldersList.length ? dropFoldersList[0].id : null;
-                }),
-                switchMap(() => {
-                    if (this._selectedDropFolder === null) {
-                        return Observable.of(null);
-                    }
+                    return dropFoldersList;
+                } else {
+                    return [];
+                }
+            })
+            .do(dropFoldersList => {
+                this._dropFoldersList = dropFoldersList;
+                this._dropFoldersListOptions = dropFoldersList.map(folder => ({ label: folder.name, value: folder.id }));
+                this._selectedDropFolder = dropFoldersList.length ? dropFoldersList[0].id : null;
+            })
+            .switchMap(() => {
+                if (this._selectedDropFolder === null) {
+                    return Observable.of(null);
+                }
 
-                    return this._loadDropFolder();
-                })
-            );
+                return this._loadDropFolder();
+            });
     }
 
     private _prepare(): void {
@@ -201,6 +224,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
             .subscribe(
                 (res) => {
                     this._isLoading = false;
+                    this._dropFolderFiles = res;
                     console.warn(res);
                 },
                 error => {
@@ -213,9 +237,14 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         this._isLoading = true;
         this._loadDropFolder()
             .cancelOnDestroy(this)
-            .subscribe(res => {
-                this._isLoading = false;
-                console.warn(res);
-            });
+            .subscribe(
+                res => {
+                    this._isLoading = false;
+                    this._dropFolderFiles = res;
+                    console.warn(res);
+                }, error => {
+                    this._isLoading = false;
+                    // TODO handle retry
+                });
     }
 }

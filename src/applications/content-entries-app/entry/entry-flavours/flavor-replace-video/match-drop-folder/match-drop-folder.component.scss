@@ -2,7 +2,7 @@
 
 .kMatchDropFolder {
     color: $kGrayscale1;
-    height: 607px;
+    height: 560px;
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
@@ -26,10 +26,7 @@
 
     }
 
-    .kContent {
-        flex: 1 1 auto;
-        display: flex;
-        flex-direction: column;
+    .kMatchDropFolderContent {
         width: 100%;
 
         .kMatchDropFolderControls {
@@ -95,7 +92,17 @@
         }
 
         .kMatchDropFolderTable {
+            .kFileName {
+                font-size: 15px;
+                font-weight: bold;
+                color: $kGrayscale1;
+            }
 
+            .kCreatedAt {
+                font-size: 15px;
+                font-weight: bold;
+                color: $kGrayscale3;
+            }
         }
     }
 
@@ -133,5 +140,12 @@
 
     .ui-dropdown.ui-widget {
         width: 238px;
+    }
+}
+
+:host /deep/ .kMatchDropFolderTable {
+    .ui-table .ui-table-scrollable-body {
+        max-height: 208px !important;
+        height: 208px !important;
     }
 }

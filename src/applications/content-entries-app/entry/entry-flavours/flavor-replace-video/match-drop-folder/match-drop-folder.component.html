@@ -3,7 +3,7 @@
         <div class="kHeader">
             <h1>{{'applications.content.entryDetails.flavours.replaceVideo.matchFromDropFolder' | translate}}</h1>
         </div>
-        <div class="kContent">
+        <div class="kMatchDropFolderContent">
             <div class="kMatchDropFolderControls">
                 <span class="kMatchDropFolderControlsLabel">
                     {{'applications.content.entryDetails.flavours.replaceVideo.selectDropFolder' | translate}}
@@ -34,12 +34,38 @@
                 : ('applications.content.entryDetails.flavours.replaceVideo.na' | translate)}}
             </div>
             <div class="kMatchDropFolderTable">
-
+                <p-table dataKey="displayName"
+                         [scrollable]="true"
+                         scrollHeight="208px"
+                         [value]="_dropFolderFiles"
+                         [(selection)]="_selectedFile">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 44px"></th>
+                            <th>
+                                {{'applications.content.entryDetails.flavours.replaceVideo.mediaPackageName' | translate}}
+                            </th>
+                            <th style="width: 200px">
+                                {{'applications.content.entryDetails.flavours.replaceVideo.createdOn' | translate}}
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-file let-columns="columns">
+                        <tr [pSelectableRow]="file">
+                            <td style="width: 44px">
+                                <p-tableRadioButton [value]="file"></p-tableRadioButton>
+                            </td>
+                            <td class="kFileName">{{file?.displayName}}</td>
+                            <td class="kCreatedAt" style="width: 200px">{{file?.createdAt | kDate:'dateOnly'}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
             </div>
         </div>
         <div class="kFooter">
             <button class="kButtonDefault kUploadButton" pButton
-                    [label]="'applications.content.entryDetails.flavours.replaceVideo.cancel' | translate"></button>
+                    [label]="'applications.content.entryDetails.flavours.replaceVideo.cancel' | translate"
+                    (click)="parentPopupWidget?.close()"></button>
             <button class="kButtonBranded kUploadButton" pButton
                     [label]="'applications.content.entryDetails.flavours.replaceVideo.setReferenceId' | translate"></button>
             <button class="kButtonBranded kUploadButton" pButton
