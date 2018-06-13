@@ -196,17 +196,26 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
     }
 
     private _prepare(): void {
+        this._isLoading = true;
         this._loadDropFoldersList()
             .subscribe(
                 (res) => {
+                    this._isLoading = false;
                     console.warn(res);
                 },
                 error => {
+                    this._isLoading = false;
                     // TODO handle retry
                 });
     }
 
     public _loadFolderData(): void {
-
+        this._isLoading = true;
+        this._loadDropFolder()
+            .cancelOnDestroy(this)
+            .subscribe(res => {
+                this._isLoading = false;
+                console.warn(res);
+            });
     }
 }

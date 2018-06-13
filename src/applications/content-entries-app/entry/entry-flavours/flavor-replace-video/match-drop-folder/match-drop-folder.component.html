@@ -24,11 +24,14 @@
 
                 <button pButton class="kButtonDefault kRefreshBtn small"
                         type="text"
-                        icon="kIconrefresh"></button>
+                        icon="kIconrefresh"
+                        (click)="_loadFolderData()"></button>
             </div>
             <div class="kMatchDropFolderReferenceId">
                 <span>{{'applications.content.entryDetails.flavours.replaceVideo.referenceId' | translate}}</span>&nbsp;
-                {{entry?.referenceId ? entry?.referenceId : ('applications.content.entryDetails.flavours.replaceVideo.na' | translate)}}
+                {{entry?.referenceId
+                ? entry?.referenceId
+                : ('applications.content.entryDetails.flavours.replaceVideo.na' | translate)}}
             </div>
             <div class="kMatchDropFolderTable">
 
