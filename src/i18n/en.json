@@ -1605,6 +1605,7 @@
                         "createdOn": "Created On",
                         "waiting": "Waiting",
                         "error": "* Error *",
+                        "setReferenceIdWarning": "The automatic ingestion action is now in process, please check again in a few minutes.",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",

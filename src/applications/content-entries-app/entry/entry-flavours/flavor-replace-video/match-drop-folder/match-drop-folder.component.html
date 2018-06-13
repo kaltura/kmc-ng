@@ -41,7 +41,8 @@
                          [(selection)]="_selectedFile">
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th style="width: 44px"></th>
+                            <th style="width: 45px; padding-left: 28px"></th>
+                            <th style="width: 45px; padding-left: 16px"></th>
                             <th>
                                 {{'applications.content.entryDetails.flavours.replaceVideo.mediaPackageName' | translate}}
                             </th>
@@ -50,14 +51,35 @@
                             </th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-file let-columns="columns">
+                    <ng-template pTemplate="body" let-file let-columns="columns" let-expanded="expanded">
                         <tr [pSelectableRow]="file">
-                            <td style="width: 44px">
-                                <p-tableRadioButton [value]="file"></p-tableRadioButton>
+                            <td style="width: 45px; padding-left: 28px">
+                                <p-tableRadioButton [value]="file"
+                                                    [class.kAvoidClick]="file.error"
+                                                    [disabled]="file.error"></p-tableRadioButton>
+                            </td>
+                            <td style="width: 45px; padding-left: 16px">
+                                <a [pRowToggler]="file">
+                                    <i [ngClass]="expanded ? 'k-arrow-down' : 'k-arrow-right'"></i>
+                                </a>
                             </td>
                             <td class="kFileName">{{file?.displayName}}</td>
                             <td class="kCreatedAt" style="width: 200px">{{file?.createdAt | kDate:'dateOnly'}}</td>
                         </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-file let-columns="columns">
+                        <div class="kDropFolderFiles">
+                            <table>
+                                <tr *ngFor="let dff of file?.files">
+                                    <td style="width: 45px; padding-left: 28px"></td>
+                                    <td style="width: 45px; padding-left: 16px"></td>
+                                    <td style="padding-left: 3px">
+                                        <span class="kTableColumn" [kTooltip]="dff?.fileName">{{dff?.fileName}}</span>
+                                    </td>
+                                    <td style="width: 200px; padding-left: 8px">{{dff?.createdAt | kDate:'dateOnly'}}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </ng-template>
                 </p-table>
             </div>
@@ -67,7 +89,9 @@
                     [label]="'applications.content.entryDetails.flavours.replaceVideo.cancel' | translate"
                     (click)="parentPopupWidget?.close()"></button>
             <button class="kButtonBranded kUploadButton" pButton
-                    [label]="'applications.content.entryDetails.flavours.replaceVideo.setReferenceId' | translate"></button>
+                    [disabled]="!_setReferenceIdEnabled"
+                    [label]="'applications.content.entryDetails.flavours.replaceVideo.setReferenceId' | translate"
+                    (click)="_setReferenceId()"></button>
             <button class="kButtonBranded kUploadButton" pButton
                     [label]="'applications.content.entryDetails.flavours.replaceVideo.addFilesBtn' | translate"></button>
         </div>

@@ -103,6 +103,52 @@
                 font-weight: bold;
                 color: $kGrayscale3;
             }
+
+            .k-arrow-right {
+                display: block;
+                width: 0;
+                height: 0;
+                border-top: 8px solid transparent;
+                border-left: 12px solid $kGrayscale4;
+                border-bottom: 8px solid transparent;
+                margin-top: 2px;
+            }
+
+            .k-arrow-down {
+                display: block;
+                width: 0;
+                height: 0;
+                border-left: 8px solid transparent;
+                border-right: 8px solid transparent;
+                border-top: 12px solid $kGrayscale4;
+                margin-left: -3px;
+                margin-top: 4px;
+            }
+
+            .kDropFolderFiles {
+                background-color: $kGrayscale6;
+                border-left: 4px solid $kGrayscale3;
+                font-size: 15px;
+                color: $kGrayscale3;
+                overflow-y: auto;
+                max-height: 195px;
+                padding: 12px 0;
+                width: 790px;
+
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    table-layout: fixed;
+
+                    tr {
+                        height: 44px;
+
+                        td {
+                            padding: 0;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -147,5 +193,18 @@
     .ui-table .ui-table-scrollable-body {
         max-height: 208px !important;
         height: 208px !important;
+    }
+
+    .ui-table .ui-table-tbody > tr > td:first-child {
+        border-color: #d9d9d9;
+    }
+
+    .ui-radiobutton {
+        margin-top: -2px;
+    }
+
+    .kAvoidClick {
+        pointer-events: none;
+        touch-action: none;
     }
 }

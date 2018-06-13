@@ -21,11 +21,15 @@ import { KalturaDropFolderFileFilter } from 'kaltura-ngx-client/api/types/Kaltur
 import { KalturaDropFolderFileOrderBy } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileOrderBy';
 import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileStatus';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { BaseEntryUpdateAction } from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
+import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 
 export interface KalturaDropFolderFileGroup extends KalturaDropFolderFile {
     files?: KalturaDropFolderFile[];
     name?: string;
     displayName?: string;
+    error?: boolean;
 }
 
 @Component({
@@ -43,12 +47,19 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
     public _dropFoldersList: KalturaDropFolder[] = [];
     public _dropFoldersListOptions: SelectItem[] = [];
     public _selectedDropFolder: number = null;
-    public _dropFolderFiles = [];
-    public _selectedFile: any;
+    public _dropFolderFiles: KalturaDropFolderFileGroup[] = [];
+    public _selectedFile: KalturaDropFolderFileGroup;
+
+    public get _setReferenceIdEnabled(): boolean {
+        return this._selectedFile
+            && this._selectedFile.status !== KalturaDropFolderFileStatus.waiting
+            && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REFERENCE_MODIFY);
+    }
 
     constructor(private _kalturaClient: KalturaClient,
                 private _transcodingProfileManagement: TranscodingProfileManagement,
                 private _logger: KalturaLogger,
+                private _permissionsService: KMCPermissionsService,
                 private _appLocalization: AppLocalization) {
 
     }
@@ -78,7 +89,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         return displayName;
     }
 
-    private _loadDropFolder(searchTerm: string = null): Observable<any> {
+    private _loadDropFolder(searchTerm: string = null): Observable<KalturaDropFolderFileGroup[]> {
         const filter = new KalturaDropFolderFileFilter({
             orderBy: KalturaDropFolderFileOrderBy.createdAtDesc,
             dropFolderIdEqual: this._selectedDropFolder,
@@ -159,6 +170,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                 // put the parseFailed last
                 if (dict[parseFailedStr]) {
                     (<KalturaDropFolderFileGroup>dict[parseFailedStr]).displayName = this._getDisplayName(dict[parseFailedStr]);
+                    (<KalturaDropFolderFileGroup>dict[parseFailedStr]).error = true;
                     result.push(dict[parseFailedStr]);
                 }
 
@@ -166,7 +178,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
             });
     }
 
-    private _loadDropFoldersList(): Observable<any> {
+    private _loadDropFoldersList(): Observable<KalturaDropFolderFileGroup[]> {
         const dropFoldersListAction = new DropFolderListAction({
             filter: new KalturaDropFolderFilter({
                 orderBy: KalturaDropFolderOrderBy.nameDesc,
@@ -222,14 +234,32 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         this._isLoading = true;
         this._loadDropFoldersList()
             .subscribe(
-                (res) => {
+                files => {
                     this._isLoading = false;
-                    this._dropFolderFiles = res;
-                    console.warn(res);
+                    this._dropFolderFiles = files;
                 },
                 error => {
                     this._isLoading = false;
-                    // TODO handle retry
+                    this._blockerMessage = new AreaBlockerMessage({
+                        title: this._appLocalization.get('app.common.error'),
+                        message: error.message,
+                        buttons: [
+                            {
+                                label: this._appLocalization.get('app.common.retry'),
+                                action: () => {
+                                    this._blockerMessage = null;
+                                    this._loadDropFoldersList();
+                                }
+                            },
+                            {
+                                label: this._appLocalization.get('app.common.ok'),
+                                action: () => {
+                                    this._blockerMessage = null;
+                                    this.parentPopupWidget.close();
+                                }
+                            }
+                        ]
+                    });
                 });
     }
 
@@ -238,13 +268,64 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         this._loadDropFolder()
             .cancelOnDestroy(this)
             .subscribe(
-                res => {
+                files => {
                     this._isLoading = false;
-                    this._dropFolderFiles = res;
-                    console.warn(res);
+                    this._dropFolderFiles = files;
+                    this._selectedFile = null;
                 }, error => {
                     this._isLoading = false;
-                    // TODO handle retry
+                    this._blockerMessage = new AreaBlockerMessage({
+                        title: this._appLocalization.get('app.common.error'),
+                        message: error.message,
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.ok'),
+                            action: () => {
+                                this._blockerMessage = null;
+                            }
+                        }]
+                    });
+                });
+    }
+
+    public _setReferenceId(): void {
+        if (!this._selectedFile) {
+            return;
+        }
+
+        const updateEntryAction = new BaseEntryUpdateAction({
+            entryId: this.entry.id,
+            baseEntry: new KalturaBaseEntry({ referenceId: this._selectedFile.parsedSlug })
+        });
+
+        this._kalturaClient.request(updateEntryAction)
+            .tag('block-shell')
+            .cancelOnDestroy(this)
+            .subscribe(
+                () => {
+                    this._blockerMessage = new AreaBlockerMessage({
+                        title: this._appLocalization.get('app.common.attention'),
+                        message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.setReferenceIdWarning'),
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.ok'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this.parentPopupWidget.close();
+                            }
+                        }]
+                    });
+                },
+                error => {
+                    this._blockerMessage = new AreaBlockerMessage({
+                        title: this._appLocalization.get(''),
+                        message: error.message,
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.cancel'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this.parentPopupWidget.close();
+                            }
+                        }]
+                    });
                 });
     }
 }
