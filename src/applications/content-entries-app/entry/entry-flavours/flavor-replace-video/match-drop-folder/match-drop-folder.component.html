@@ -4,6 +4,35 @@
             <h1>{{'applications.content.entryDetails.flavours.replaceVideo.matchFromDropFolder' | translate}}</h1>
         </div>
         <div class="kContent">
+            <div class="kMatchDropFolderControls">
+                <span class="kMatchDropFolderControlsLabel">
+                    {{'applications.content.entryDetails.flavours.replaceVideo.selectDropFolder' | translate}}
+                </span>
+                <p-dropdown class="kDropFoldersList"
+                            [options]="_dropFoldersListOptions"
+                            [autoWidth]="false"
+                            (onChange)="_loadFolderData()"
+                            [(ngModel)]="_selectedDropFolder">
+                    <ng-template let-profile pTemplate="item">
+                        <span class="kDropFoldersListItem" [kTooltip]="profile.label">{{profile.label}}</span>
+                    </ng-template>
+                </p-dropdown>
+
+                <input pInputText
+                       class="kDropFolderSearch"
+                       [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.searchFolder' | translate">
+
+                <button pButton class="kButtonDefault kRefreshBtn small"
+                        type="text"
+                        icon="kIconrefresh"></button>
+            </div>
+            <div class="kMatchDropFolderReferenceId">
+                <span>{{'applications.content.entryDetails.flavours.replaceVideo.referenceId' | translate}}</span>&nbsp;
+                {{entry?.referenceId ? entry?.referenceId : ('applications.content.entryDetails.flavours.replaceVideo.na' | translate)}}
+            </div>
+            <div class="kMatchDropFolderTable">
+
+            </div>
         </div>
         <div class="kFooter">
             <button class="kButtonDefault kUploadButton" pButton

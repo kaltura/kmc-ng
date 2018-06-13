@@ -77,7 +77,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                     const result = []; // results array
                     const dict = {}; // slugs dictionary
                     let group: KalturaDropFolderFile; // dffs group (by slug)
-                    const parseFailedStr = '* Error '; // should be localized
+                    const parseFailedStr = '* Error '; // TODO should be localized
 
                     response.objects.forEach(file => {
                         if (file instanceof KalturaDropFolderFile) {
@@ -117,7 +117,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
 
                     let wait: KalturaDropFolderFile;
                     for (const slug in dict) {
-                        if (slug !== parseFailedStr) {
+                        if (dict.hasOwnProperty(slug) && slug !== parseFailedStr) {
                             if (dict[slug].status === KalturaDropFolderFileStatus.waiting) {
                                 // we assume there's only one...
                                 wait = dict[slug] as KalturaDropFolderFile;
@@ -204,5 +204,9 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                 error => {
                     // TODO handle retry
                 });
+    }
+
+    public _loadFolderData(): void {
+
     }
 }

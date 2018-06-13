@@ -28,10 +28,75 @@
 
     .kContent {
         flex: 1 1 auto;
-        padding: 20px 0 24px 0;
         display: flex;
         flex-direction: column;
         width: 100%;
+
+        .kMatchDropFolderControls {
+            height: 98px;
+            border-bottom: 1px solid $kGrayscale6;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+
+            .kMatchDropFolderControlsLabel {
+                font-weight: bold;
+                font-size: 15px;
+            }
+
+            .kDropFoldersList {
+                .kDropFoldersListItem {
+                    white-space: nowrap;
+                    display: inline-block;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: 190px;
+                    font-weight: normal;
+                }
+            }
+
+            .kDropFolderSearch {
+                width: 284px;
+                height: 34px;
+            }
+
+            .kRefreshBtn {
+                font-size: 24px;
+                border: none;
+                min-width: inherit;
+                outline: 0;
+                color: $kGrayscale3;
+                &:active {
+                    box-shadow: none;
+                    transform: rotate(45deg);
+                }
+                &:hover {
+                    background-color: #ffffff;
+                    color: $kPrimary;
+                }
+            }
+        }
+
+        .kMatchDropFolderReferenceId {
+            padding: 0 28px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+            height: 74px;
+            border-bottom: 1px solid $kGrayscale6;
+            font-size: 15px;
+
+            span {
+                font-weight: bold;
+            }
+        }
+
+        .kMatchDropFolderTable {
+
+        }
     }
 
     .kFooter {
@@ -51,5 +116,22 @@
                 margin-right: 0;
             }
         }
+    }
+}
+
+:host /deep/ .kDropFoldersList {
+    .ui-dropdown-panel {
+        width: 238px;
+    }
+
+    .ui-dropdown-label {
+        text-overflow: ellipsis;
+        font-weight: normal;
+        font-size: 15px;
+        color: $kGrayscale1;
+    }
+
+    .ui-dropdown.ui-widget {
+        width: 238px;
     }
 }

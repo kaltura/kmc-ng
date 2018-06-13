@@ -1598,6 +1598,11 @@
                         "replacementFlavors": "Replacement Flavors",
                         "setReferenceId": "Set Reference ID",
                         "addFilesBtn": "Add File/s",
+                        "referenceId": "Reference ID:",
+                        "selectDropFolder": "Select Drop Folder",
+                        "searchFolder": "Search Folder",
+                        "mediaPackageName": "Media Package Name",
+                        "createdOn": "Created On",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",
