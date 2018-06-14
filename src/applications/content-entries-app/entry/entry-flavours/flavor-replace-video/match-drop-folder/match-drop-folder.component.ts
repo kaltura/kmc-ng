@@ -69,12 +69,14 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
     public get _setReferenceIdEnabled(): boolean {
         return this._selectedFile
             && this._selectedFile.status !== KalturaDropFolderFileStatus.waiting
-            && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REFERENCE_MODIFY);
+            && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REFERENCE_MODIFY)
+            && !!this._dropFoldersListOptions.length;
     }
 
     public get _addFilesEnabled(): boolean {
         return this._selectedFile
-            && this._selectedFile.status !== KalturaDropFolderFileStatus.waiting;
+            && this._selectedFile.status !== KalturaDropFolderFileStatus.waiting
+            && !!this._dropFoldersListOptions.length;
     }
 
     constructor(private _kalturaClient: KalturaClient,
@@ -242,7 +244,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
             })
             .switchMap(() => {
                 if (this._selectedDropFolder === null) {
-                    return Observable.of(null);
+                    return Observable.of([]);
                 }
 
                 return this._loadDropFolder();
@@ -302,6 +304,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         const selectedFolder = this._dropFoldersList.find(({ id }) => id === this._selectedDropFolder);
         const mediaResource = new KalturaAssetsParamsResourceContainers({
             resources: this._selectedFile.files.map(file => {
+                console.warn(file);
                 return new KalturaAssetParamsResourceContainer({
                     resource: new KalturaDropFolderFileResource({ dropFolderFileId: file.id }),
                     assetParamsId: this._getAssetParamsId(selectedFolder.conversionProfileId, file.parsedFlavor)
@@ -345,7 +348,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         this._isLoading = true;
         this._loadDropFoldersList()
             .switchMap(
-                () => this._loadConversionProfilesWithAssets(),
+                (dropFolderFiles) => dropFolderFiles.length ? this._loadConversionProfilesWithAssets() : Observable.of([]),
                 (dropFolderFiles, conversionProfilesWithAsset) => ({ dropFolderFiles, conversionProfilesWithAsset })
             )
             .subscribe(
@@ -354,6 +357,19 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                     this._isLoading = false;
                     this._dropFolderFiles = dropFolderFiles;
                     this._conversionProfilesList = conversionProfilesWithAsset;
+
+                    if (!this._dropFoldersList.length) {
+                        this._blockerMessage = new AreaBlockerMessage({
+                            title: this._appLocalization.get('app.common.attention'),
+                            message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.noDropFoldersWarning'),
+                            buttons: [{
+                                label: this._appLocalization.get('app.common.ok'),
+                                action: () => {
+                                    this._blockerMessage = null;
+                                }
+                            }]
+                        });
+                    }
                 },
                 error => {
                     this._isLoading = false;

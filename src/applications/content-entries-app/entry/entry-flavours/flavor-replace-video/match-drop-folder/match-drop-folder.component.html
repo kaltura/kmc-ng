@@ -11,6 +11,8 @@
                 <p-dropdown class="kDropFoldersList"
                             [options]="_dropFoldersListOptions"
                             [autoWidth]="false"
+                            [disabled]="!_dropFoldersListOptions?.length"
+                            [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.noDropFolders' | translate"
                             (onChange)="_loadFolderData()"
                             [(ngModel)]="_selectedDropFolder">
                     <ng-template let-profile pTemplate="item">
@@ -20,11 +22,12 @@
 
                 <input pInputText
                        class="kDropFolderSearch"
+                       [disabled]="!_dropFoldersListOptions.length"
                        [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.searchFolder' | translate">
 
                 <button pButton class="kButtonDefault kRefreshBtn small"
-                        type="text"
-                        icon="kIconrefresh"
+                        type="text" icon="kIconrefresh"
+                        [disabled]="!_dropFoldersListOptions.length"
                         (click)="_loadFolderData()"></button>
             </div>
             <div class="kMatchDropFolderReferenceId">

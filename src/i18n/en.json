@@ -1607,6 +1607,8 @@
                         "error": "* Error *",
                         "setReferenceIdWarning": "The automatic ingestion action is now in process, please check again in a few minutes.",
                         "addFilesWarning": "Adding this file manually will interrupt the automatic ingestion process and should be done only as a fallback option. Do you want to continue?",
+                        "noDropFolders": "No drop folders available",
+                        "noDropFoldersWarning": "Your account configuration does not support automatic matching of media packages from drop folders.",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",
