@@ -1606,6 +1606,7 @@
                         "waiting": "Waiting",
                         "error": "* Error *",
                         "setReferenceIdWarning": "The automatic ingestion action is now in process, please check again in a few minutes.",
+                        "addFilesWarning": "Adding this file manually will interrupt the automatic ingestion process and should be done only as a fallback option. Do you want to continue?",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",
