@@ -55,6 +55,7 @@ export interface KalturaDropFolderFileGroup extends KalturaDropFolderFile {
 export class MatchDropFolderComponent implements OnInit, OnDestroy {
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Input() entry: KalturaMediaEntry;
+    @Input() matchFlavor = false;
 
     private _dropFoldersList: KalturaDropFolder[] = [];
     private _conversionProfilesList: { id: number, assets: KalturaConversionProfileAssetParams[] }[] = [];

@@ -1,5 +1,5 @@
 <k-area-blocker [showLoader]="_isLoading" [message]="_blockerMessage">
-    <div class="kMatchDropFolder">
+    <div class="kMatchDropFolder" [class.kMatchDropFolderFlavor]="matchFlavor">
         <div class="kHeader">
             <h1>{{'applications.content.entryDetails.flavours.replaceVideo.matchFromDropFolder' | translate}}</h1>
         </div>
@@ -32,7 +32,7 @@
                         [disabled]="!_dropFoldersListOptions.length"
                         (click)="dropFolderSearch.clearValue();_loadFolderData()"></button>
             </div>
-            <div class="kMatchDropFolderReferenceId">
+            <div *ngIf="!matchFlavor" class="kMatchDropFolderReferenceId">
                 <span>{{'applications.content.entryDetails.flavours.replaceVideo.referenceId' | translate}}</span>&nbsp;
                 {{entry?.referenceId
                 ? entry?.referenceId
@@ -47,7 +47,7 @@
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th style="width: 45px; padding-left: 28px"></th>
-                            <th style="width: 45px; padding-left: 16px"></th>
+                            <th *ngIf="!matchFlavor" style="width: 45px; padding-left: 16px"></th>
                             <th>
                                 {{'applications.content.entryDetails.flavours.replaceVideo.mediaPackageName' |
                                 translate}}
@@ -64,7 +64,7 @@
                                                     [class.kAvoidClick]="file.error"
                                                     [disabled]="file.error"></p-tableRadioButton>
                             </td>
-                            <td style="width: 45px; padding-left: 16px">
+                            <td *ngIf="!matchFlavor" style="width: 45px; padding-left: 16px">
                                 <a [pRowToggler]="file">
                                     <i [ngClass]="expanded ? 'k-arrow-down' : 'k-arrow-right'"></i>
                                 </a>
@@ -99,7 +99,7 @@
             <button class="kButtonDefault kUploadButton" pButton
                     [label]="'applications.content.entryDetails.flavours.replaceVideo.cancel' | translate"
                     (click)="parentPopupWidget?.close()"></button>
-            <button class="kButtonBranded kUploadButton" pButton
+            <button *ngIf="!matchFlavor" class="kButtonBranded kUploadButton" pButton
                     [disabled]="!_setReferenceIdEnabled"
                     [label]="'applications.content.entryDetails.flavours.replaceVideo.setReferenceId' | translate"
                     (click)="_setReferenceId()"></button>

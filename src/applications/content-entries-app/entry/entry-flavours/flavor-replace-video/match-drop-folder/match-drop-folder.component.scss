@@ -8,6 +8,10 @@
     flex-flow: column nowrap;
     align-items: stretch;
 
+    &.kMatchDropFolderFlavor {
+        height: 586px;
+    }
+
     .kHeader, .kFooter {
         display: flex;
         align-items: center;
