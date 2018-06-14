@@ -54,9 +54,18 @@
                 }
             }
 
-            .kDropFolderSearch {
-                width: 284px;
-                height: 34px;
+            .kDropFolderSearch /deep/ {
+                .k-clearable-input-input {
+                    width: 284px;
+                    height: 34px;
+                    background: $kMagnifyingGlassBkg;
+                    padding-left: 38px;
+                    margin-right: 8px;
+                }
+
+                .k-clearable-input-clear-btn {
+                    right: 13px;
+                }
             }
 
             .kRefreshBtn {
@@ -92,6 +101,10 @@
         }
 
         .kMatchDropFolderTable {
+            .emptymessage {
+                border: none;
+            }
+
             .kFileName {
                 font-size: 15px;
                 font-weight: bold;

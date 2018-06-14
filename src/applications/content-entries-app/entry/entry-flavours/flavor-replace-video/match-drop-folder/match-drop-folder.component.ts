@@ -399,9 +399,9 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                 });
     }
 
-    public _loadFolderData(): void {
+    public _loadFolderData(searchTerm: string = null): void {
         this._isLoading = true;
-        this._loadDropFolder()
+        this._loadDropFolder(searchTerm)
             .cancelOnDestroy(this)
             .subscribe(
                 files => {
@@ -499,5 +499,15 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                 }
             ]
         });
+    }
+
+    public _searchFolder(searchTerm: string): void {
+        this._logger.info(`handle search drop folder action by user`, { searchTerm });
+        this._loadFolderData(searchTerm);
+    }
+
+    public _clearFolderSearch(): void {
+        this._logger.info(`handle clear search drop folder action by user`);
+        this._loadFolderData();
     }
 }

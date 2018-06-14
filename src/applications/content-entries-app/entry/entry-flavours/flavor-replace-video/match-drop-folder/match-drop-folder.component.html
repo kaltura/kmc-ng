@@ -20,21 +20,23 @@
                     </ng-template>
                 </p-dropdown>
 
-                <input pInputText
-                       class="kDropFolderSearch"
-                       [disabled]="!_dropFoldersListOptions.length"
-                       [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.searchFolder' | translate">
+                <kClearableInput #dropFolderSearch
+                                 class="kDropFolderSearch"
+                                 [disabled]="!_dropFoldersListOptions.length"
+                                 [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.searchFolder' | translate"
+                                 (onEnterKeyup)="_searchFolder($event)"
+                                 (onClear)="_clearFolderSearch()"></kClearableInput>
 
                 <button pButton class="kButtonDefault kRefreshBtn small"
                         type="text" icon="kIconrefresh"
                         [disabled]="!_dropFoldersListOptions.length"
-                        (click)="_loadFolderData()"></button>
+                        (click)="dropFolderSearch.clearValue();_loadFolderData()"></button>
             </div>
             <div class="kMatchDropFolderReferenceId">
                 <span>{{'applications.content.entryDetails.flavours.replaceVideo.referenceId' | translate}}</span>&nbsp;
                 {{entry?.referenceId
-                    ? entry?.referenceId
-                    : ('applications.content.entryDetails.flavours.replaceVideo.na' | translate)}}
+                ? entry?.referenceId
+                : ('applications.content.entryDetails.flavours.replaceVideo.na' | translate)}}
             </div>
             <div class="kMatchDropFolderTable">
                 <p-table dataKey="displayName"
@@ -47,7 +49,8 @@
                             <th style="width: 45px; padding-left: 28px"></th>
                             <th style="width: 45px; padding-left: 16px"></th>
                             <th>
-                                {{'applications.content.entryDetails.flavours.replaceVideo.mediaPackageName' | translate}}
+                                {{'applications.content.entryDetails.flavours.replaceVideo.mediaPackageName' |
+                                translate}}
                             </th>
                             <th style="width: 200px">
                                 {{'applications.content.entryDetails.flavours.replaceVideo.createdOn' | translate}}
@@ -85,6 +88,9 @@
                                 </tr>
                             </table>
                         </div>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
                     </ng-template>
                 </p-table>
             </div>
