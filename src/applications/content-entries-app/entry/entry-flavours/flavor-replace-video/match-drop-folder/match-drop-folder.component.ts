@@ -3,7 +3,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaClient, KalturaRequestOptions } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaRequestOptions } from 'kaltura-ngx-client';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 import { DropFolderListAction } from 'kaltura-ngx-client/api/types/DropFolderListAction';
@@ -38,6 +38,11 @@ import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { MediaUpdateContentAction } from 'kaltura-ngx-client/api/types/MediaUpdateContentAction';
 import { EntryFlavoursWidget } from '../../entry-flavours-widget.service';
+import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
+import { Flavor } from '../../flavor';
+import { FlavorAssetSetContentAction } from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
+import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
+import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
 
 export interface KalturaDropFolderFileGroup extends KalturaDropFolderFile {
     files?: KalturaDropFolderFile[];
@@ -55,7 +60,7 @@ export interface KalturaDropFolderFileGroup extends KalturaDropFolderFile {
 export class MatchDropFolderComponent implements OnInit, OnDestroy {
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Input() entry: KalturaMediaEntry;
-    @Input() matchFlavor = false;
+    @Input() flavor: Flavor;
 
     private _dropFoldersList: KalturaDropFolder[] = [];
     private _conversionProfilesList: { id: number, assets: KalturaConversionProfileAssetParams[] }[] = [];
@@ -78,6 +83,12 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         return this._selectedFile
             && this._selectedFile.status !== KalturaDropFolderFileStatus.waiting
             && !!this._dropFoldersListOptions.length;
+    }
+
+    public get _addFilesBtnLabel(): string {
+        return this.flavor
+            ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.addFileBtn')
+            : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.addFilesBtn');
     }
 
     constructor(private _kalturaClient: KalturaClient,
@@ -114,6 +125,100 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         return displayName;
     }
 
+    private _mapDropFolderFilesForFlavor(response: KalturaDropFolderFileListResponse): KalturaDropFolderFileGroup[] {
+        const result = []; // results array
+        const waiting = []; // waiting array
+
+        response.objects.forEach(file => {
+            if (file instanceof KalturaDropFolderFile) {
+                (<KalturaDropFolderFileGroup>file).displayName = file.parsedSlug;
+                (<KalturaDropFolderFileGroup>file).error = file.status === KalturaDropFolderFileStatus.errorHandling;
+                // for files in status waiting, we only want files with a matching slug
+                // selectedEntry is the currently selected entry
+                if (file.status === KalturaDropFolderFileStatus.waiting) {
+                    if (file.parsedSlug === this.entry.referenceId) {
+                        waiting.push(file);
+                    }
+                } else {
+                    result.push(file);
+                }
+            }
+        });
+
+        return [...waiting, ...result];
+    }
+
+    private _mapDropFolderFiles(response: KalturaDropFolderFileListResponse): KalturaDropFolderFileGroup[] {
+        const result = []; // results array
+        const dict = {}; // slugs dictionary
+        let group: KalturaDropFolderFile; // dffs group (by slug)
+        const parseFailedStr = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.error');
+
+        response.objects.forEach(file => {
+            if (file instanceof KalturaDropFolderFile) {
+                // for files in status waiting, we only want files with a matching slug
+                if (file.status === KalturaDropFolderFileStatus.waiting && file.parsedSlug !== this.entry.referenceId) {
+                    return;
+                }
+
+                // group all files where status == ERROR_HANDLING under same group
+                if (file.status === KalturaDropFolderFileStatus.errorHandling) {
+                    file.parsedSlug = parseFailedStr;
+                }
+
+                // get relevant group
+                if (!dict[file.parsedSlug]) {
+                    // create group
+                    group = new KalturaDropFolderFile();
+                    group.parsedSlug = file.parsedSlug;
+                    (<any>group).createdAt = file.createdAt;
+                    (<KalturaDropFolderFileGroup>group).files = [];
+                    dict[group.parsedSlug] = group;
+                } else {
+                    group = dict[file.parsedSlug];
+                    // update date if needed
+                    if (group.createdAt > file.createdAt) {
+                        (<any>group).createdAt = file.createdAt;
+                    }
+                }
+
+                // add dff to files list
+                (<KalturaDropFolderFileGroup>group).files.push(file);
+
+                // if any file in the group is in waiting status, set the group to waiting:
+                if (file.status === KalturaDropFolderFileStatus.waiting) {
+                    (<any>group).status = KalturaDropFolderFileStatus.waiting;
+                }
+            }
+        });
+
+        let wait: KalturaDropFolderFile;
+        for (const slug in dict) {
+            if (dict.hasOwnProperty(slug) && slug !== parseFailedStr) {
+                if (dict[slug].status === KalturaDropFolderFileStatus.waiting) {
+                    // we assume there's only one...
+                    wait = dict[slug];
+                } else {
+                    (<KalturaDropFolderFileGroup>dict[slug]).displayName = this._getDisplayName(dict[slug]);
+                    result.push(dict[slug]);
+                }
+            }
+        }
+        // put the matched waiting file first
+        if (wait) {
+            result.unshift(wait);
+        }
+
+        // put the parseFailed last
+        if (dict[parseFailedStr]) {
+            (<KalturaDropFolderFileGroup>dict[parseFailedStr]).displayName = this._getDisplayName(dict[parseFailedStr]);
+            (<KalturaDropFolderFileGroup>dict[parseFailedStr]).error = true;
+            result.push(dict[parseFailedStr]);
+        }
+
+        return result;
+    }
+
     private _loadDropFolder(searchTerm: string = null): Observable<KalturaDropFolderFileGroup[]> {
         const filter = new KalturaDropFolderFileFilter({
             orderBy: KalturaDropFolderFileOrderBy.createdAtDesc,
@@ -130,77 +235,11 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         }
 
         const dropFolderFilesListAction = new DropFolderFileListAction({ filter });
-        return this._kalturaClient.request(dropFolderFilesListAction)
-            .map(response => {
-                const result = []; // results array
-                const dict = {}; // slugs dictionary
-                let group: KalturaDropFolderFile; // dffs group (by slug)
-                const parseFailedStr = this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.error');
-
-                response.objects.forEach(file => {
-                    if (file instanceof KalturaDropFolderFile) {
-                        // for files in status waiting, we only want files with a matching slug
-                        if (file.status === KalturaDropFolderFileStatus.waiting && file.parsedSlug !== this.entry.referenceId) {
-                            return;
-                        }
-
-                        // group all files where status == ERROR_HANDLING under same group
-                        if (file.status === KalturaDropFolderFileStatus.errorHandling) {
-                            file.parsedSlug = parseFailedStr;
-                        }
-
-                        // get relevant group
-                        if (!dict[file.parsedSlug]) {
-                            // create group
-                            group = new KalturaDropFolderFile();
-                            group.parsedSlug = file.parsedSlug;
-                            (<any>group).createdAt = file.createdAt;
-                            (<KalturaDropFolderFileGroup>group).files = [];
-                            dict[group.parsedSlug] = group;
-                        } else {
-                            group = dict[file.parsedSlug];
-                            // update date if needed
-                            if (group.createdAt > file.createdAt) {
-                                (<any>group).createdAt = file.createdAt;
-                            }
-                        }
-
-                        // add dff to files list
-                        (<KalturaDropFolderFileGroup>group).files.push(file);
-
-                        // if any file in the group is in waiting status, set the group to waiting:
-                        if (file.status === KalturaDropFolderFileStatus.waiting) {
-                            (<any>group).status = KalturaDropFolderFileStatus.waiting;
-                        }
-                    }
-                });
-
-                let wait: KalturaDropFolderFile;
-                for (const slug in dict) {
-                    if (dict.hasOwnProperty(slug) && slug !== parseFailedStr) {
-                        if (dict[slug].status === KalturaDropFolderFileStatus.waiting) {
-                            // we assume there's only one...
-                            wait = dict[slug];
-                        } else {
-                            (<KalturaDropFolderFileGroup>dict[slug]).displayName = this._getDisplayName(dict[slug]);
-                            result.push(dict[slug]);
-                        }
-                    }
-                }
-                // put the matched waiting file first
-                if (wait) {
-                    result.unshift(wait);
-                }
-
-                // put the parseFailed last
-                if (dict[parseFailedStr]) {
-                    (<KalturaDropFolderFileGroup>dict[parseFailedStr]).displayName = this._getDisplayName(dict[parseFailedStr]);
-                    (<KalturaDropFolderFileGroup>dict[parseFailedStr]).error = true;
-                    result.push(dict[parseFailedStr]);
-                }
-
-                return result;
-            });
+        return this._kalturaClient
+            .request(dropFolderFilesListAction)
+            .map(response =>
+                this.flavor ? this._mapDropFolderFilesForFlavor(response) : this._mapDropFolderFiles(response)
+            );
     }
 
     private _loadDropFoldersList(): Observable<KalturaDropFolderFileGroup[]> {
@@ -400,6 +439,71 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                 });
     }
 
+    private _updateFlavor(): void {
+        this._logger.info(`handle update flavor action by user`);
+        if (!this.flavor) {
+            this._logger.info(`flavor was not provided, abort action`);
+        }
+
+        const resource = new KalturaDropFolderFileResource({ dropFolderFileId: this._selectedFile.id });
+        let request$;
+
+        if (this.flavor.flavorAsset && this.flavor.flavorAsset.id) {
+            this._logger.info(`flavor asset exist, update flavor`);
+            request$ = this._kalturaClient.request(
+                new FlavorAssetSetContentAction({
+                    id: this.flavor.flavorAsset.id,
+                    contentResource: resource
+                })
+            );
+        } else {
+            this._logger.info(`flavor asset does not exist, create flavor and update content`);
+            const flavorAssetAddAction = new FlavorAssetAddAction({
+                entryId: this.entry.id,
+                flavorAsset: new KalturaFlavorAsset({ flavorParamsId: this.flavor.flavorParams.id })
+            });
+            const flavorAssetSetContentAction = new FlavorAssetSetContentAction({
+                id: '0',
+                contentResource: resource
+            }).setDependency(['id', 0, 'id']);
+
+            request$ = this._kalturaClient
+                .multiRequest(new KalturaMultiRequest(flavorAssetAddAction, flavorAssetSetContentAction))
+                .map(responses => {
+                    if (responses.hasErrors()) {
+                        const message = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
+                        throw new Error(message);
+                    }
+                });
+        }
+
+        request$
+            .tag('block-shell')
+            .cancelOnDestroy(this)
+            .subscribe(
+                () => {
+                    this._logger.info(`handle successful update flavor action, close popup`);
+                    this._widgetService.refresh();
+                    this.parentPopupWidget.close();
+                },
+                error => {
+                    this._logger.warn(`handle failed update flavor action, show alert`);
+                    this._blockerMessage = new AreaBlockerMessage({
+                        title: this._appLocalization.get('app.common.error'),
+                        message: error.message,
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.cancel'),
+                            action: () => {
+                                this._logger.info(`user dismissed alert, close popup`);
+                                this._blockerMessage = null;
+                                this._widgetService.refresh();
+                                this.parentPopupWidget.close();
+                            }
+                        }]
+                    });
+                });
+    }
+
     public _loadFolderData(searchTerm: string = null): void {
         this._isLoading = true;
         this._loadDropFolder(searchTerm)
@@ -488,7 +592,12 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                     action: () => {
                         this._logger.info(`user confirmed, proceed action`);
                         this._blockerMessage = null;
-                        this._updateContent();
+                        if (this.flavor) {
+                            this._updateFlavor();
+                        } else {
+                            this._updateContent();
+                        }
+
                     }
                 },
                 {

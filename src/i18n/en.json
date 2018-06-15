@@ -1510,7 +1510,8 @@
                         "preview": "Preview",
                         "reconvert": "Reconvert",
                         "drm": "View DRM Details",
-                        "link": "Link"
+                        "link": "Link",
+                        "match": "Drop Folder"
                     },
                     "drm": {
                         "header": "DRM Details",
@@ -1602,6 +1603,7 @@
                         "selectDropFolder": "Select Drop Folder",
                         "searchFolder": "Search Folder",
                         "mediaPackageName": "Media Package Name",
+                        "mediaName": "Media Name",
                         "createdOn": "Created On",
                         "waiting": "Waiting",
                         "error": "* Error *",
