@@ -4,7 +4,7 @@ import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-compl
 import {Subject} from 'rxjs/Subject';
 import {Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {JumpToSection} from './jump-to-section.component';
-import {DOCUMENT} from '@angular/platform-browser';
+import {DOCUMENT} from '@angular/common';
 import {PageScrollInstance, PageScrollService} from 'ng2-page-scroll';
 import {CategoryMetadataWidget} from './category-metadata-widget.service';
 
