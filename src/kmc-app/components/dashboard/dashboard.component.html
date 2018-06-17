@@ -6,15 +6,26 @@
   <kScrollToTop [scrollOffset]="50"></kScrollToTop>
 </div>
 
-<kPopupWidget #whatsNew [popupWidth]="600" [popupHeight]="400" [modal]="true">
+<kPopupWidget #whatsNew [popupWidth]="790" [popupHeight]="521" [modal]="true" [closeBtn]="false">
     <div class="whatsNew">
+       <div class="icons">
+           <i class="kIconimage-small"></i>
+           <i class="kIconlive_transcoding"></i>
+           <i class="kIconvideo-small"></i>
+           <i class="kIconsound-small"></i>
+           <i class="kIconfile-small"></i>
+       </div>
+
         <div class="kHeader">
-            <span class="kTitle">Welcome to the New Version of the KMC!</span>
+            <span class="kTitle">WELCOME TO THE NEW VERSION OF THE KMC!</span>
         </div>
-        <div class="kContent">We are delighted to introduce you to the new version of the Kaltura Management Console. The KMC has undergone a full facelift and is now Flash-free, with a new design, enhanced usability and faster performance.<br><br>Enjoy!</div>
+        <div class="kWelcomeContent">
+            <span>We are delighted to introduce you to the new version of the Kaltura Management Console. The KMC has undergone a full facelift and is now Flash-free, with a new design, enhanced usability and faster performance.</span>
+            <span class="enjoy">Enjoy!</span>
+        </div>
+
         <div class="kFooter">
-            <button type="button" pButton class="kButtonBranded" label="Got it!" (click)="closeWin()"></button>
-            <span class="kNote">This message will only appear once</span>
+            <button type="button" pButton label="Got it!" (click)="closeWin()"></button>
         </div>
     </div>
 </kPopupWidget>
