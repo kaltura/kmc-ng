@@ -30,7 +30,7 @@
   ],
   "homepage": "https://github.com/kaltura/kmc-ng#readme",
   "scripts": {
-    "build": "ng build --aot --preserve-symlinks",
+    "build": "ng build",
     "build:prod": "node scripts/build-prod.js",
     "build:analyze": "node --max_old_space_size=8092 ./node_modules/@angular/cli/bin/ng build --prod--preserve-symlinks --aot --extract-licenses --named-chunks --stats-json && webpack-bundle-analyzer dist/stats.json",
     "kws": "kws",
@@ -42,7 +42,7 @@
     "release:publish": "kws release --prepare=false",
     "standalone": "node ./scripts/checkout-standalone.js",
     "standalone:update": "npm run kws -- bookmark standalone --update && git commit -am 'chore: update standalone commit' && git push",
-    "start": "ng serve --preserve-symlinks",
+    "start": "ng serve",
     "test": "ng test",
     "generate:ch": "node ./dev/tools/contextual-help-generator/generate.js"
   },
@@ -64,7 +64,7 @@
     "@kaltura-ng/mc-theme": "~2.1.6",
     "@types/seamless-immutable": "~7.1.1",
     "ajv": "~6.1.1",
-    "angularx-qrcode": "~1.0.1",
+    "angularx-qrcode": "~1.0.3",
     "core-js": "~2.4.1",
     "intl": "^1.2.5",
     "jquery": "^3.1.0",
@@ -77,12 +77,13 @@
     "primeng": "~5.2.4",
     "ramda": "~0.25.0",
     "rxjs": "~6.2.1",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-10.3.1-v20180509-122918.tgz",
+    "rxjs-compat": "^6.0.0-rc.0",
     "seamless-immutable": "~7.1.2",
     "ts-md5": "~1.2.4",
     "tslib": "^1.5.0",
     "web-animations-js": "~2.3.1",
-    "zone.js": "~0.8.26",
-    "rxjs-compat": "^6.0.0-rc.0"
+    "zone.js": "~0.8.26"
   },
   "devDependencies": {
     "@angular/cli": "~6.0.8",
