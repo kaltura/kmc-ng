@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable } from 'rxjs/Observable';
 import { NotificationTypes, ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
@@ -12,7 +12,7 @@ import { ManualContentWidget } from './playlist-content/manual/manual-content-wi
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
 import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KalturaPlaylistType } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 

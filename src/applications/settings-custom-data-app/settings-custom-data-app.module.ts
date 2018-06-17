@@ -12,11 +12,11 @@ import {
   RadioButtonModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module.ts';
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
-import { TooltipModule } from '@kaltura-ng/kaltura-ui/tooltip/k-tooltip.module';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.module';
-import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui/kaltura-primeng-ui.module';
-import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
+import { TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
+import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { StickyModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({

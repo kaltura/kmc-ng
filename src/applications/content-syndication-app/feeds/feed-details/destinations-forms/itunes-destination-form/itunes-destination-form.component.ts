@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
-import { KalturaITunesSyndicationFeed } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeed';
+import { KalturaITunesSyndicationFeed } from 'kaltura-ngx-client';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { KalturaValidators } from '@kaltura-ng/kaltura-ui/validators/validators';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { KalturaITunesSyndicationFeedAdultValues } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeedAdultValues';
+import { KalturaValidators } from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
+import { KalturaITunesSyndicationFeedAdultValues } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { LanguageOptionsService } from 'app-shared/kmc-shared/language-options';

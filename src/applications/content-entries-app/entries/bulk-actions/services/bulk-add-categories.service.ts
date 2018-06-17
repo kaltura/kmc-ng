@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from 'kaltura-ngx-client';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaCategoryEntry } from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaCategoryEntry } from 'kaltura-ngx-client';
 import { BulkActionBaseService } from './bulk-action-base.service';
-import { CategoryEntryAddAction } from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
-import { CategoryEntryListAction } from 'kaltura-ngx-client/api/types/CategoryEntryListAction';
-import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
+import { CategoryEntryAddAction } from 'kaltura-ngx-client';
+import { CategoryEntryListAction } from 'kaltura-ngx-client';
+import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Injectable()
 export class BulkAddCategoriesService extends BulkActionBaseService<CategoryData[]> {

@@ -1,12 +1,12 @@
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {CategoriesFilters, CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
 
 import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
 import {CategoriesRefineFiltersService, RefineGroup} from '../categories-refine-filters.service';
@@ -20,7 +20,7 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 import { async } from 'rxjs/scheduler/async';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({

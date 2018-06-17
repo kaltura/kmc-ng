@@ -4,27 +4,27 @@ import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from 'primeng/primeng';
 
-import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
-import { KalturaSiteRestriction } from 'kaltura-ngx-client/api/types/KalturaSiteRestriction';
-import { KalturaSiteRestrictionType } from 'kaltura-ngx-client/api/types/KalturaSiteRestrictionType';
-import { KalturaCountryRestriction } from 'kaltura-ngx-client/api/types/KalturaCountryRestriction';
-import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/KalturaCountryRestrictionType';
-import { KalturaIpAddressRestriction } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestriction';
-import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
-import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestriction';
-import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
-import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
-import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { KalturaAccessControl } from 'kaltura-ngx-client';
+import { KalturaSiteRestriction } from 'kaltura-ngx-client';
+import { KalturaSiteRestrictionType } from 'kaltura-ngx-client';
+import { KalturaCountryRestriction } from 'kaltura-ngx-client';
+import { KalturaCountryRestrictionType } from 'kaltura-ngx-client';
+import { KalturaIpAddressRestriction } from 'kaltura-ngx-client';
+import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client';
+import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client';
+import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client';
+import { KalturaSessionRestriction } from 'kaltura-ngx-client';
+import { KalturaPreviewRestriction } from 'kaltura-ngx-client';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AccessControlProfileStore, FlavoursStore } from 'app-shared/kmc-shared';
 
 import 'rxjs/add/observable/forkJoin';

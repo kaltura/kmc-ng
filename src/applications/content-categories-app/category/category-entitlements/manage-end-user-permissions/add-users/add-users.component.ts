@@ -1,17 +1,17 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
-import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
-import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {KalturaUser} from 'kaltura-ngx-client';
+import {KalturaInheritanceType} from 'kaltura-ngx-client';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
 import {AddUsersService} from './add-users.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kAddUsers',

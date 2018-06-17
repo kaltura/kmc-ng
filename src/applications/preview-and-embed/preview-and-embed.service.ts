@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
-import { UiConfListAction } from 'kaltura-ngx-client/api/types/UiConfListAction';
-import { KalturaUiConfFilter } from 'kaltura-ngx-client/api/types/KalturaUiConfFilter';
-import { KalturaUiConfListResponse } from 'kaltura-ngx-client/api/types/KalturaUiConfListResponse';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { ShortLinkAddAction } from 'kaltura-ngx-client/api/types/ShortLinkAddAction';
-import { KalturaShortLink } from 'kaltura-ngx-client/api/types/KalturaShortLink';
+import { UiConfListAction } from 'kaltura-ngx-client';
+import { KalturaUiConfFilter } from 'kaltura-ngx-client';
+import { KalturaUiConfListResponse } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { ShortLinkAddAction } from 'kaltura-ngx-client';
+import { KalturaShortLink } from 'kaltura-ngx-client';
 
 @Injectable()
 export class PreviewEmbedService {

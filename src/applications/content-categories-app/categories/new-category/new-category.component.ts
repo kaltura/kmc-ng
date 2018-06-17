@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, AfterViewInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
 import {CategoriesService} from '../categories.service';
 
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 import {
   CategoriesStatus,
@@ -12,8 +12,8 @@ import {
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { SelectedCategory } from 'app-shared/content-shared/categories/category-selector/category-selector.component';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaCategory } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kNewCategory',

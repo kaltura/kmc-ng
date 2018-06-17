@@ -4,20 +4,20 @@ import {
     EndUserPermissionsUser, ManageEndUserPermissionsService,
     UsersFilters
 } from './manage-end-user-permissions.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
 import {Observable} from 'rxjs/Observable';
 import {
     ManageEndUserPermissionsRefineFiltersService,
     RefineList
 } from './manage-end-user-permissions-refine-filters.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export interface UserActionData {
   action: 'activate' | 'deactivate' | 'permissionLevel'| 'updateMethod' | 'delete',

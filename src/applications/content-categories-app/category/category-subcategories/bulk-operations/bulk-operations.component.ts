@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({

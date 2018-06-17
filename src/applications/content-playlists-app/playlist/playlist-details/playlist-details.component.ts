@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { PlaylistDetailsWidget } from './playlist-details-widget.service';
 
 @Component({

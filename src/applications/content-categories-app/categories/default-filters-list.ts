@@ -1,6 +1,6 @@
-import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
-import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {KalturaPrivacyType} from 'kaltura-ngx-client';
+import {KalturaAppearInListType} from 'kaltura-ngx-client';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client';
 
 export interface DefaultFilterList {
   label: string;

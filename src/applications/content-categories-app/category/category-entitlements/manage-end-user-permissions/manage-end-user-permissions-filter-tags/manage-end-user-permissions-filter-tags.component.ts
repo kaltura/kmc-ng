@@ -1,9 +1,9 @@
 import {Component, Input, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 
 import { RefineList } from '../manage-end-user-permissions-refine-filters.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {ManageEndUserPermissionsService, UsersFilters} from '../manage-end-user-permissions.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export interface TagItem {
   type: string,

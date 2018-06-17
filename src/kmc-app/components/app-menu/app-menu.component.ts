@@ -5,10 +5,10 @@ import { AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
 
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
 import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 import { globalConfig } from 'config/global';

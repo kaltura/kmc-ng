@@ -1,19 +1,19 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PreviewEmbedService } from './preview-and-embed.service';
 
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaUiConfListResponse } from 'kaltura-ngx-client/api/types/KalturaUiConfListResponse';
-import { KalturaUiConf } from 'kaltura-ngx-client/api/types/KalturaUiConf';
-import { KalturaShortLink } from 'kaltura-ngx-client/api/types/KalturaShortLink';
-import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaUiConfListResponse } from 'kaltura-ngx-client';
+import { KalturaUiConf } from 'kaltura-ngx-client';
+import { KalturaShortLink } from 'kaltura-ngx-client';
+import { KalturaSourceType } from 'kaltura-ngx-client';
 import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 

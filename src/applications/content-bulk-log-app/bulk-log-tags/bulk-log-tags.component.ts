@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {BulkLogFilters, BulkLogStoreService} from '../bulk-log-store/bulk-log-store.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {RefineList} from '../bulk-log-store/bulk-log-refine-filters.service';
 import {DatePipe} from "@kaltura-ng/kaltura-ui";
 

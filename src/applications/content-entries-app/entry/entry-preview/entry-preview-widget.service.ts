@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {AppAuthentication} from 'app-shared/kmc-shell';
-import {KalturaSourceType} from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import {KalturaSourceType} from 'kaltura-ngx-client';
 import {PreviewMetadataChangedEvent} from '../../preview-metadata-changed-event';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {EntryWidget} from '../entry-widget';

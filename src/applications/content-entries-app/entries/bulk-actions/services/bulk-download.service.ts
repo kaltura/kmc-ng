@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from 'kaltura-ngx-client';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { BulkActionBaseService } from './bulk-action-base.service';
 import { XInternalXAddBulkDownloadAction } from './XInternalXAddBulkDownloadAction';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 export class BulkDownloadError extends Error {
   type = 'bulkDownload';

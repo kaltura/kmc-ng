@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KmcMainViewBaseService, ViewMetadata } from '../kmc-main-view-base.service';
 import { Router } from '@angular/router';
 import {serverConfig} from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { Title } from '@angular/platform-browser';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()

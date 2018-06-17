@@ -1,6 +1,6 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
@@ -9,24 +9,24 @@ import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
-import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client';
+import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client';
 import {
   BaseTranscodingProfilesStore,
   KalturaConversionProfileWithAsset
 } from '../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
-import { ConversionProfileGetAction } from 'kaltura-ngx-client/api/types/ConversionProfileGetAction';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { ConversionProfileGetAction } from 'kaltura-ngx-client';
+import { KalturaConversionProfile } from 'kaltura-ngx-client';
 import { TranscodingProfileCreationService } from 'app-shared/kmc-shared/events/transcoding-profile-creation';
-import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui/widgets/widgets-manager-base';
-import { ConversionProfileAddAction } from 'kaltura-ngx-client/api/types/ConversionProfileAddAction';
-import { ConversionProfileUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileUpdateAction';
+import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { ConversionProfileAddAction } from 'kaltura-ngx-client';
+import { ConversionProfileUpdateAction } from 'kaltura-ngx-client';
 import { MediaTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/media-transcoding-profiles-store.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/live-transcoding-profiles-store.service';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import {
     SettingsTranscodingProfileViewSections,
     SettingsTranscodingProfileViewService

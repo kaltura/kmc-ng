@@ -12,7 +12,7 @@ import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import {CategoriesStatusModule} from 'app-shared/content-shared/categories-status/categories-status.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
-import { LocalizationModule } from '@kaltura-ng/mc-shared/localization';
+import { LocalizationModule } from '@kaltura-ng/mc-shared';
 import { KalturaLoggerInjectionToken } from '@kaltura-ng/kaltura-common';
 
 import {
@@ -30,7 +30,7 @@ import {
 } from '@kaltura-ng/kaltura-common';
 import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 import {KalturaClientModule, KalturaClientOptions} from 'kaltura-ngx-client';
-import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
+import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
 import {
   AccessControlProfileStore,
   AppEventsModule,
@@ -60,7 +60,7 @@ import {
 } from 'primeng/primeng';
 
 
-import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
+import { UploadManagementModule } from '@kaltura-ng/kaltura-common';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
@@ -84,9 +84,9 @@ import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { TranscodingProfileCreationModule } from 'app-shared/kmc-shared/events/transcoding-profile-creation/transcoding-profile-creation.module';
-import { APP_STORAGE_TOKEN } from '@kaltura-ng/kaltura-common/app-storage.service';
+import { APP_STORAGE_TOKEN } from '@kaltura-ng/kaltura-common';
 import { KmcLogsModule } from 'app-shared/kmc-shell/kmc-logs/kmc-logs.module';
-import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger/kaltura-logger.module';
+import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger';
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
@@ -97,7 +97,7 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
 import { RestorePasswordFormComponent } from './components/login/restore-password-form/restore-password-form.component';
 import { InvalidRestorePasswordHashFormComponent } from './components/login/invalid-restore-password-hash-form/invalid-restore-password-hash-form.component';
 
-import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
+import { CopyToClipboardModule } from '@kaltura-ng/mc-shared';
 import { ContextualHelpModule } from 'app-shared/kmc-shared/contextual-help/contextual-help.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];

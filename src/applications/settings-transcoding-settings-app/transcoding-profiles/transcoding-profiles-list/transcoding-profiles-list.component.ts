@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import {
   BaseTranscodingProfilesStore,
   KalturaConversionProfileWithAsset,
@@ -8,11 +8,11 @@ import {
 import { MediaTranscodingProfilesStore } from '../transcoding-profiles-store/media-transcoding-profiles-store.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles-store/live-transcoding-profiles-store.service';
 import { Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {
     SettingsTranscodingProfileViewSections,
     SettingsTranscodingProfileViewService

@@ -1,7 +1,7 @@
 import { MetadataItemTypes, MetadataItem, MetadataProfile } from '../custom-metadata';
-import { KalturaMetadata } from 'kaltura-ngx-client/api/types/KalturaMetadata';
-import { XmlParser } from '@kaltura-ng/kaltura-common/xml-parser';
-import { DynamicSectionControl, DynamicFormService } from '@kaltura-ng/kaltura-ui/dynamic-form';
+import { KalturaMetadata } from 'kaltura-ngx-client';
+import { XmlParser } from '@kaltura-ng/kaltura-common';
+import { DynamicSectionControl, DynamicFormService } from '@kaltura-ng/kaltura-ui';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { FormGroup } from '@angular/forms';
 

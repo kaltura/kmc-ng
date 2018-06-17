@@ -3,13 +3,13 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaCaptionAsset } from 'kaltura-ngx-client/api/types/KalturaCaptionAsset';
-import { KalturaCaptionType } from 'kaltura-ngx-client/api/types/KalturaCaptionType';
+import { KalturaCaptionAsset } from 'kaltura-ngx-client';
+import { KalturaCaptionType } from 'kaltura-ngx-client';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { globalConfig } from 'config/global';
 import { LanguageOptionsService } from 'app-shared/kmc-shared/language-options';

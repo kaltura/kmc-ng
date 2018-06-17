@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {DropFoldersFilters, DropFoldersStoreService} from '../drop-folders-store/drop-folders-store.service';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {RefineList} from '../drop-folders-store/drop-folders-refine-filters.service';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
 

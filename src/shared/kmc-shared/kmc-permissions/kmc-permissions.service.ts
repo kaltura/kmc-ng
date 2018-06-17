@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AppPermissionsServiceBase } from '@kaltura-ng/mc-shared/app-permissions';
+import { AppPermissionsServiceBase } from '@kaltura-ng/mc-shared';
 import { KMCPermissions } from './kmc-permissions';
 import { KMCPermissionsRules } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions-rules';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class KMCPermissionsService extends AppPermissionsServiceBase<KMCPermissions> {

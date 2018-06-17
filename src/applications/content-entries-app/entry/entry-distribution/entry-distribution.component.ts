@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EntryDistributionWidget, ExtendedKalturaEntryDistribution } from './entry-distribution-widget.service';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { KalturaDistributionProfile } from 'kaltura-ngx-client';
 
 
 @Component({

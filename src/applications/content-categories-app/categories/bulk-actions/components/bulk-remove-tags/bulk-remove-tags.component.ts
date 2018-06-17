@@ -1,11 +1,11 @@
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 
 import {KalturaClient} from 'kaltura-ngx-client';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kCategoriesBulkRemoveTags',

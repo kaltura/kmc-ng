@@ -6,7 +6,7 @@ import {CategorySectionsListWidget} from './category-sections-list/category-sect
 import {CategoriesService} from '../categories/categories.service';
 import {CategoryWidgetsManager} from './category-widgets-manager';
 import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {Observable} from 'rxjs/Observable';
 import {CategoryEntitlementsWidget} from './category-entitlements/category-entitlements-widget.service';
 import {CategorySubcategoriesWidget} from './category-subcategories/category-subcategories-widget.service';
@@ -17,7 +17,7 @@ import {
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 

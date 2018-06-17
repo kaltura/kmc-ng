@@ -4,23 +4,23 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
-import {CategoryUserDeleteAction} from 'kaltura-ngx-client/api/types/CategoryUserDeleteAction';
-import {CategoryUserListAction} from 'kaltura-ngx-client/api/types/CategoryUserListAction';
-import {KalturaCategoryUserFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryUserFilter';
-import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
-import {KalturaCategoryUser} from 'kaltura-ngx-client/api/types/KalturaCategoryUser';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
-import {CategoryUserActivateAction} from 'kaltura-ngx-client/api/types/CategoryUserActivateAction';
-import {CategoryUserDeactivateAction} from 'kaltura-ngx-client/api/types/CategoryUserDeactivateAction';
-import {CategoryUserUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUserUpdateAction';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {KalturaUser} from 'kaltura-ngx-client';
+import {CategoryUserDeleteAction} from 'kaltura-ngx-client';
+import {CategoryUserListAction} from 'kaltura-ngx-client';
+import {KalturaCategoryUserFilter} from 'kaltura-ngx-client';
+import {UserGetAction} from 'kaltura-ngx-client';
+import {KalturaCategoryUser} from 'kaltura-ngx-client';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
+import {CategoryUserActivateAction} from 'kaltura-ngx-client';
+import {CategoryUserDeactivateAction} from 'kaltura-ngx-client';
+import {CategoryUserUpdateAction} from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
   BooleanTypeAdapter,
   FiltersStoreBase,
@@ -28,11 +28,11 @@ import {
     ListTypeAdapter,
   StringTypeAdapter,
   TypeAdaptersMapping
-} from '@kaltura-ng/mc-shared/filters';
-import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
-import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
+} from '@kaltura-ng/mc-shared';
+import {KalturaSearchOperator} from 'kaltura-ngx-client';
+import {KalturaSearchOperatorType} from 'kaltura-ngx-client';
+import {KalturaCategoryUserStatus} from 'kaltura-ngx-client';
+import { CategoryGetAction } from 'kaltura-ngx-client';
 
 export interface LoadingStatus {
   loading: boolean;

@@ -1,21 +1,21 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { Flavor } from '../flavor';
-import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
+import { KalturaStorageProfile } from 'kaltura-ngx-client';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaRemoteStorageResource } from 'kaltura-ngx-client/api/types/KalturaRemoteStorageResource';
-import { FlavorAssetSetContentAction } from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
+import { KalturaRemoteStorageResource } from 'kaltura-ngx-client';
+import { FlavorAssetSetContentAction } from 'kaltura-ngx-client';
 import { EntryFlavoursWidget } from '../entry-flavours-widget.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
-import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
-import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
-import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
-import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/KalturaFlavorReadyBehaviorType';
-import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { KalturaFlavorAsset } from 'kaltura-ngx-client';
+import { FlavorAssetAddAction } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
+import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client';
+import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Component({
     selector: 'kFlavorLink',

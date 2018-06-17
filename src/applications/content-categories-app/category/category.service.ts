@@ -1,7 +1,7 @@
 import {CategoriesService} from './../categories/categories.service';
 import {Host, Injectable, OnDestroy} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import {ISubscription} from 'rxjs/Subscription';
@@ -11,9 +11,9 @@ import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
 import {KalturaClient, KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {CategoryGetAction} from 'kaltura-ngx-client/api/types/CategoryGetAction';
-import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {CategoryGetAction} from 'kaltura-ngx-client';
+import {CategoryUpdateAction} from 'kaltura-ngx-client';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidgetsManager} from './category-widgets-manager';
 import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
@@ -22,12 +22,12 @@ import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verifi
 import {AppEventsService} from 'app-shared/kmc-shared';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { CategoriesStatusMonitorService } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
-import { CategoryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
-import { CategoryListAction } from 'kaltura-ngx-client/api/types/CategoryListAction';
-import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
+import { CategoryDeleteAction } from 'kaltura-ngx-client';
+import { CategoryListAction } from 'kaltura-ngx-client';
+import { KalturaCategoryFilter } from 'kaltura-ngx-client';
 import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export enum ActionTypes {
   CategoryLoading,

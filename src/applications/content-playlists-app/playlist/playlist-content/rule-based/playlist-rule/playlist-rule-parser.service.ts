@@ -1,14 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
-import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
-import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
+import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
+import { KalturaSearchOperator } from 'kaltura-ngx-client';
+import { GroupedListType } from '@kaltura-ng/mc-shared';
+import { KalturaMetadataSearchItem } from 'kaltura-ngx-client';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { MetadataProfile } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { PlaylistRule } from './playlist-rule.interface';
-import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
+import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()

@@ -3,7 +3,7 @@ import { AppAuthentication, AutomaticLoginErrorReasons, BrowserService, LoginErr
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
 import { serverConfig } from 'config/server';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 
 export enum LoginScreens {

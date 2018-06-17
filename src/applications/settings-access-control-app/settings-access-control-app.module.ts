@@ -18,13 +18,13 @@ import {
 } from 'primeng/primeng';
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
-import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
-import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete/auto-complete.module';
-import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui/kaltura-primeng-ui.module';
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
-import { TimeSpinnerModule } from '@kaltura-ng/kaltura-primeng-ui/time-spinner/time-spinner.module';
+import { TagsModule } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
+import { FiltersModule } from '@kaltura-ng/mc-shared';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
+import { TimeSpinnerModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
     EntriesListComponent
 } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
@@ -11,7 +11,7 @@ import {
 } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';

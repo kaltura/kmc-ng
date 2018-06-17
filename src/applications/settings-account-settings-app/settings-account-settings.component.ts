@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
+import {KalturaPartner} from 'kaltura-ngx-client';
 import {SettingsAccountSettingsService} from './settings-account-settings.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsAccountSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 import { Observable } from 'rxjs/Observable';

@@ -10,7 +10,7 @@ import {SettingsIntegrationSettingsComponent} from './settings-integration-setti
 import {AccountInfoComponent} from './account-info/account-info.component';
 import {EntitlementComponent} from './entitlement/entitlement.component';
 import {EntitlementTableComponent} from './entitlement/entitlement-table/entitlement-table.component';
-import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
+import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
 import {NewEntitlementComponent} from './entitlement/new-entitlement/new-entitlement.component';
 import {EditEntitlementComponent} from './entitlement/edit-entitlement/edit-entitlement.component';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';

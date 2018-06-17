@@ -1,11 +1,11 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {KalturaUser} from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kBulkRemoveEditors',

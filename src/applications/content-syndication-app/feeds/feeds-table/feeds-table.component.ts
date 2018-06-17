@@ -10,9 +10,9 @@ import {
   ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
-import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client';
+import {KalturaPlaylist} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService, KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 

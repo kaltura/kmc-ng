@@ -1,4 +1,4 @@
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KalturaCategory } from 'kaltura-ngx-client';
 import { Injectable } from '@angular/core';
 import { WidgetBase } from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
@@ -6,7 +6,7 @@ import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltur
 import { CategoryWidgetsManager } from './category-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 
 export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, KalturaCategory, KalturaMultiRequest> {

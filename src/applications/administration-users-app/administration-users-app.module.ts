@@ -9,8 +9,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { ButtonModule, DataTableModule, DropdownModule, MenuModule, PaginatorModule } from 'primeng/primeng';
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({

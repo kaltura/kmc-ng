@@ -10,8 +10,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
-import {KalturaDropFolderFile} from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import {KalturaDropFolderFile} from 'kaltura-ngx-client';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { globalConfig } from 'config/global';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';

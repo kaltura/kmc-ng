@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
-import { UserRoleGetAction } from 'kaltura-ngx-client/api/types/UserRoleGetAction';
-import { UserUpdateLoginDataAction, UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { UserGetAction } from 'kaltura-ngx-client';
+import { UserRoleGetAction } from 'kaltura-ngx-client';
+import { UserUpdateLoginDataAction, UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaUserRole } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 
 @Injectable()

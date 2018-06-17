@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
 import { TranscodingProfileFlavorsWidget } from './transcoding-profile-flavors-widget.service';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kTranscodingProfilesFlavors',

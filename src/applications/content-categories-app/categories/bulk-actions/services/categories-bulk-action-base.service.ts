@@ -3,7 +3,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
-import { KalturaCategory } from "kaltura-ngx-client/api/types/KalturaCategory";
+import { KalturaCategory } from 'kaltura-ngx-client';
 
 
 export abstract class CategoriesBulkActionBaseService<T> {

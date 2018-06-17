@@ -1,10 +1,10 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { Flavor } from '../../flavor';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 export type UploadMenuType = 'upload' | 'import' | 'link' | 'match';
 

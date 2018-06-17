@@ -1,9 +1,9 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren} from '@angular/core';
-import {RefinePrimeTree} from '@kaltura-ng/mc-shared/filters'
+import {RefinePrimeTree} from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
+import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui';
 import {ManageEndUserPermissionsService, UsersFilters} from '../manage-end-user-permissions.service';
 import {
     RefineList

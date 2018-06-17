@@ -18,17 +18,17 @@ import {
   TreeModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { TagsModule } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 
 import { ContentDropFoldersComponent } from './content-drop-folders.component';
 import { DropFoldersComponentsList } from './drop-folders-components-list';
 import { KMCShellModule } from 'app-shared/kmc-shell';
-import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
+import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({

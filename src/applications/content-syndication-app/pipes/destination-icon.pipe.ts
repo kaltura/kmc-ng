@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {KalturaSyndicationFeedType} from "kaltura-ngx-client/api/types/KalturaSyndicationFeedType";
+import {KalturaSyndicationFeedType} from 'kaltura-ngx-client';
 
 @Pipe({name: 'kDestinationIcon'})
 export class DestinationIconPipe implements PipeTransform {

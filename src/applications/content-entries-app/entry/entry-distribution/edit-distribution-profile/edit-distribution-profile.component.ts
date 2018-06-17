@@ -1,20 +1,20 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Flavor } from '../../entry-flavours/flavor';
-import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
+import { KalturaDistributionProfile } from 'kaltura-ngx-client';
 import { EntryDistributionWidget, ExtendedKalturaEntryDistribution } from '../entry-distribution-widget.service';
-import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { KalturaThumbAsset } from 'kaltura-ngx-client/api/types/KalturaThumbAsset';
-import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client/api/types/KalturaDistributionThumbDimensions';
-import { KalturaThumbAssetStatus } from 'kaltura-ngx-client/api/types/KalturaThumbAssetStatus';
+import { KalturaThumbAsset } from 'kaltura-ngx-client';
+import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client';
+import { KalturaThumbAssetStatus } from 'kaltura-ngx-client';
 import { getKalturaServerUri } from 'config/server';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
-import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
+import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client';
+import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {

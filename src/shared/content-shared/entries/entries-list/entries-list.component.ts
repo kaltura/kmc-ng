@@ -5,14 +5,14 @@ import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categori
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 
 import { EntriesRefineFiltersService,
     RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
 
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({

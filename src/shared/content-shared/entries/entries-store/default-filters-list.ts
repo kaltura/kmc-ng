@@ -1,4 +1,4 @@
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
 
 export interface DefaultFilterList {
     label: string;

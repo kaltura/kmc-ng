@@ -3,15 +3,15 @@ import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 
 import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { KalturaUserFilter } from 'kaltura-ngx-client/api/types/KalturaUserFilter';
-import { UserListAction } from 'kaltura-ngx-client/api/types/UserListAction';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaUserFilter } from 'kaltura-ngx-client';
+import { UserListAction } from 'kaltura-ngx-client';
 
 export enum AppearInListType {
   NoRestriction = 0,

@@ -1,18 +1,18 @@
 import {Injectable} from '@angular/core';
-import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
-import {KalturaLiveStreamEntry} from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
-import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import {KalturaDVRStatus} from 'kaltura-ngx-client/api/types/KalturaDVRStatus';
+import {KalturaRecordStatus} from 'kaltura-ngx-client';
+import {KalturaLiveStreamEntry} from 'kaltura-ngx-client';
+import {KalturaMediaType} from 'kaltura-ngx-client';
+import {KalturaDVRStatus} from 'kaltura-ngx-client';
 import {KalturaClient} from 'kaltura-ngx-client';
-import {LiveStreamAddAction} from 'kaltura-ngx-client/api/types/LiveStreamAddAction';
-import {KalturaSourceType} from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import {LiveStreamAddAction} from 'kaltura-ngx-client';
+import {KalturaSourceType} from 'kaltura-ngx-client';
 import {Observable} from 'rxjs/Observable';
-import {KalturaLiveStreamConfiguration} from 'kaltura-ngx-client/api/types/KalturaLiveStreamConfiguration';
-import {KalturaPlaybackProtocol} from 'kaltura-ngx-client/api/types/KalturaPlaybackProtocol';
+import {KalturaLiveStreamConfiguration} from 'kaltura-ngx-client';
+import {KalturaPlaybackProtocol} from 'kaltura-ngx-client';
 import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
 import {ManualLive} from './manual-live/manual-live.interface';
 import {UniversalLive} from './universal-live/universal-live.interface';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 
 @Injectable()
 export class CreateLiveService {

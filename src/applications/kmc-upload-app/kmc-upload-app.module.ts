@@ -12,9 +12,9 @@ import {
   MenuModule,
   SharedModule
 } from 'primeng/primeng';
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
-import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
+import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
 
 import {UploadMenuComponent} from './upload-menu/upload-menu.component';
 import {UploadSettingsComponent} from './upload-settings/upload-settings.component';
@@ -31,7 +31,7 @@ import {PrepareEntryComponent} from './prepare-entry/prepare-entry.component';
 import { NewUploadMonitorService } from './upload-monitor/new-upload-monitor.service';
 import { BulkUploadMonitorService } from './upload-monitor/bulk-upload-monitor.service';
 import { DropFoldersMonitorService } from './upload-monitor/drop-folders-monitor.service';
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 
 @NgModule({

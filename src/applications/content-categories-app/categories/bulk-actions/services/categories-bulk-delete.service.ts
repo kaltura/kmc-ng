@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {KalturaClient} from 'kaltura-ngx-client';
 import {CategoriesBulkActionBaseService} from "./categories-bulk-action-base.service";
-import {KalturaCategory} from "kaltura-ngx-client/api/types/KalturaCategory";
-import {CategoryDeleteAction} from "kaltura-ngx-client/api/types/CategoryDeleteAction";
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {CategoryDeleteAction} from 'kaltura-ngx-client';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { AppEventsService } from 'app-shared/kmc-shared';
 

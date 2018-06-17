@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
 import { RuleBasedContentWidget } from './rule-based-content-widget.service';
 import { EntriesDataProviderToken, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { PlaylistEntriesDataProvider } from './playlist-rule/playlist-entries-data-provider.service';
 import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
 

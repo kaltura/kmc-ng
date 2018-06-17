@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { PlaylistWidget } from '../playlist-widget';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TagSearchAction } from 'kaltura-ngx-client/api/types/TagSearchAction';
-import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter';
-import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { TagSearchAction } from 'kaltura-ngx-client';
+import { KalturaTagFilter } from 'kaltura-ngx-client';
+import { KalturaTaggedObjectType } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';

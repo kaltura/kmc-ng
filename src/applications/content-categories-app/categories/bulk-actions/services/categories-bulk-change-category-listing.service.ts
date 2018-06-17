@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { CategoriesBulkActionBaseService } from "./categories-bulk-action-base.service";
-import { CategoryUpdateAction } from "kaltura-ngx-client/api/types/CategoryUpdateAction";
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaAppearInListType } from "kaltura-ngx-client/api/types/KalturaAppearInListType";
+import { CategoryUpdateAction } from 'kaltura-ngx-client';
+import { KalturaCategory } from 'kaltura-ngx-client';
+import { KalturaAppearInListType } from 'kaltura-ngx-client';
 
 @Injectable()
 export class CategoriesBulkChangeCategoryListingService extends CategoriesBulkActionBaseService<KalturaAppearInListType> {

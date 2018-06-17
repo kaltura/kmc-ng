@@ -1,20 +1,20 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/KalturaFlavorReadyBehaviorType';
-import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import { KalturaAssetParamsDeletePolicy } from 'kaltura-ngx-client/api/types/KalturaAssetParamsDeletePolicy';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client';
+import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
+import { KalturaAssetParamsDeletePolicy } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
   ExtendedKalturaConversionProfileAssetParams,
   KalturaConversionProfileWithAsset
 } from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kEditMediaFlavor',

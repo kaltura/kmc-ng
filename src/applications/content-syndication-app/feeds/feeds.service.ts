@@ -4,7 +4,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequest} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {
@@ -12,27 +12,27 @@ import {
   NumberTypeAdapter,
   StringTypeAdapter,
   TypeAdaptersMapping
-} from '@kaltura-ng/mc-shared/filters';
-import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import {SyndicationFeedListAction} from 'kaltura-ngx-client/api/types/SyndicationFeedListAction';
-import {KalturaBaseSyndicationFeedFilter} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeedFilter';
-import {KalturaTubeMogulSyndicationFeedOrderBy} from 'kaltura-ngx-client/api/types/KalturaTubeMogulSyndicationFeedOrderBy';
-import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
-import {KalturaGenericSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGenericSyndicationFeed';
-import {KalturaGenericXsltSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGenericXsltSyndicationFeed';
-import {KalturaBaseSyndicationFeedListResponse} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeedListResponse';
-import {KalturaPlaylistFilter} from 'kaltura-ngx-client/api/types/KalturaPlaylistFilter';
-import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import {PlaylistListAction} from 'kaltura-ngx-client/api/types/PlaylistListAction';
-import {KalturaPlaylistOrderBy} from 'kaltura-ngx-client/api/types/KalturaPlaylistOrderBy';
-import {KalturaPlaylistListResponse} from 'kaltura-ngx-client/api/types/KalturaPlaylistListResponse';
-import {SyndicationFeedDeleteAction} from 'kaltura-ngx-client/api/types/SyndicationFeedDeleteAction';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
-import {KalturaSyndicationFeedEntryCount} from "kaltura-ngx-client/api/types/KalturaSyndicationFeedEntryCount";
-import {SyndicationFeedGetEntryCountAction} from "kaltura-ngx-client/api/types/SyndicationFeedGetEntryCountAction";
-import {SyndicationFeedAddAction} from "kaltura-ngx-client/api/types/SyndicationFeedAddAction";
-import {SyndicationFeedUpdateAction} from "kaltura-ngx-client/api/types/SyndicationFeedUpdateAction";
+} from '@kaltura-ng/mc-shared';
+import {KalturaSearchOperator} from 'kaltura-ngx-client';
+import {KalturaSearchOperatorType} from 'kaltura-ngx-client';
+import {SyndicationFeedListAction} from 'kaltura-ngx-client';
+import {KalturaBaseSyndicationFeedFilter} from 'kaltura-ngx-client';
+import {KalturaTubeMogulSyndicationFeedOrderBy} from 'kaltura-ngx-client';
+import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client';
+import {KalturaGenericSyndicationFeed} from 'kaltura-ngx-client';
+import {KalturaGenericXsltSyndicationFeed} from 'kaltura-ngx-client';
+import {KalturaBaseSyndicationFeedListResponse} from 'kaltura-ngx-client';
+import {KalturaPlaylistFilter} from 'kaltura-ngx-client';
+import {KalturaPlaylist} from 'kaltura-ngx-client';
+import {PlaylistListAction} from 'kaltura-ngx-client';
+import {KalturaPlaylistOrderBy} from 'kaltura-ngx-client';
+import {KalturaPlaylistListResponse} from 'kaltura-ngx-client';
+import {SyndicationFeedDeleteAction} from 'kaltura-ngx-client';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client';
+import {SyndicationFeedGetEntryCountAction} from 'kaltura-ngx-client';
+import {SyndicationFeedAddAction} from 'kaltura-ngx-client';
+import {SyndicationFeedUpdateAction} from 'kaltura-ngx-client';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';

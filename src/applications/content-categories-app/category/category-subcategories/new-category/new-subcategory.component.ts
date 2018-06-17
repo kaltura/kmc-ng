@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {CategoriesService} from '../../../categories/categories.service';
 
 @Component({

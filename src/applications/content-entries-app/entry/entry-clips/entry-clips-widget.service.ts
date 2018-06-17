@@ -3,16 +3,16 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 
 import {KalturaClient} from 'kaltura-ngx-client';
-import {KalturaMediaEntryFilter} from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import {KalturaClipAttributes} from 'kaltura-ngx-client/api/types/KalturaClipAttributes';
-import {KalturaOperationAttributes} from 'kaltura-ngx-client/api/types/KalturaOperationAttributes';
-import {BaseEntryListAction} from 'kaltura-ngx-client/api/types/BaseEntryListAction';
+import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {KalturaClipAttributes} from 'kaltura-ngx-client';
+import {KalturaOperationAttributes} from 'kaltura-ngx-client';
+import {BaseEntryListAction} from 'kaltura-ngx-client';
 import {KalturaUtils} from '@kaltura-ng/kaltura-common';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 

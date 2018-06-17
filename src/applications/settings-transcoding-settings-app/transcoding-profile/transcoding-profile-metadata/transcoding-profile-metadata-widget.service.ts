@@ -5,11 +5,11 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { async } from 'rxjs/scheduler/async';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { KalturaStorageProfile } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { BaseEntryGetAction } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { PlaylistSectionsListWidget, SectionWidgetItem } from './playlist-sections-list-widget.service';
 import { BrowserService } from 'app-shared/kmc-shell';

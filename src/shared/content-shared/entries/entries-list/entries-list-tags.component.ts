@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
+import {GroupedListType} from '@kaltura-ng/mc-shared';
 import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
   RefineGroup,
   RefineGroupList

@@ -1,16 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaCategoryEntry } from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaCategoryEntry } from 'kaltura-ngx-client';
 import { BulkActionBaseService } from './bulk-action-base.service';
-import { CategoryEntryListAction } from 'kaltura-ngx-client/api/types/CategoryEntryListAction';
+import { CategoryEntryListAction } from 'kaltura-ngx-client';
 
-import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { CategoryEntryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryEntryDeleteAction';
+import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { CategoryEntryDeleteAction } from 'kaltura-ngx-client';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 

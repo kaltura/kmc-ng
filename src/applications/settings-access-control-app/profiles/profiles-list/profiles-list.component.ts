@@ -1,15 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AccessControlProfilesFilters, AccessControlProfilesStore } from '../profiles-store/profiles-store.service';
 import { SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KalturaAccessControl } from 'kaltura-ngx-client';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AccessControlProfileUpdatedEvent } from 'app-shared/kmc-shared/events/access-control-profile-updated.event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsAccessControlMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({

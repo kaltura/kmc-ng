@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MetadataProfile, MetadataItemTypes, MetadataItem } from '../custom-metadata';
-import { DynamicSectionControl, DynamicFormControlBase, TextAreaControl, DatePickerControl, ListControl, TextboxControl, DynamicDropdownControl } from '@kaltura-ng/kaltura-ui/dynamic-form';
+import { DynamicSectionControl, DynamicFormControlBase, TextAreaControl, DatePickerControl, ListControl, TextboxControl, DynamicDropdownControl } from '@kaltura-ng/kaltura-ui';
 import { LinkedEntriesControl } from './linked-entries-control';
 
 @Injectable()

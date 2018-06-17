@@ -1,9 +1,9 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kEntryEditor',

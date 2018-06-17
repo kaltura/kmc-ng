@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaModerationFlagType } from 'kaltura-ngx-client/api/types/KalturaModerationFlagType';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaModerationFlagType } from 'kaltura-ngx-client';
 
 @Pipe({ name: 'kFlagType' })
 export class FlagTypePipe implements PipeTransform {

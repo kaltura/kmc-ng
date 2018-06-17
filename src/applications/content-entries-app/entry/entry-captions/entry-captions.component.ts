@@ -3,11 +3,11 @@ import { Component, ElementRef, AfterViewInit,OnInit, OnDestroy, ViewChild } fro
 import { Menu, MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client/api/types/KalturaCaptionAssetStatus'
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
 

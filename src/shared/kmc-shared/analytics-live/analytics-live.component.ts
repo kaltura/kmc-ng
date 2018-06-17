@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { KalturaLiveEntry } from 'kaltura-ngx-client/api/types/KalturaLiveEntry';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KalturaLiveEntry } from 'kaltura-ngx-client';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 
 @Component({
     selector: 'kAnalyticsLive',

@@ -1,13 +1,13 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaUiConf} from 'kaltura-ngx-client/api/types/KalturaUiConf';
-import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaUiConf} from 'kaltura-ngx-client';
+import {KalturaFlavorParams} from 'kaltura-ngx-client';
 import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
-import {KalturaYahooSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaYahooSyndicationFeed';
+import {KalturaYahooSyndicationFeed} from 'kaltura-ngx-client';
 import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kYahooDestinationForm',

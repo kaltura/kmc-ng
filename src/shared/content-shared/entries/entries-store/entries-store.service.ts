@@ -3,8 +3,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { MetadataProfileStore } from 'app-shared/kmc-shared';
-import { BaseEntryDeleteAction } from 'kaltura-ngx-client/api/types/BaseEntryDeleteAction';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { BaseEntryDeleteAction } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -19,11 +19,11 @@ import {
   NumberTypeAdapter,
   StringTypeAdapter,
   TypeAdaptersMapping
-} from '@kaltura-ng/mc-shared/filters';
+} from '@kaltura-ng/mc-shared';
 import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-shared/content-shared/categories/categories-mode-type';
 import { Subject } from 'rxjs/Subject';
-import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
-import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
+import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 
 export enum SortDirection {

@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { KalturaEntryModerationStatus } from 'kaltura-ngx-client/api/types/KalturaEntryModerationStatus';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
+import { KalturaEntryModerationStatus } from 'kaltura-ngx-client';
+import { KalturaMediaType } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 
 @Pipe({ name: 'entryStatus' })
 export class EntryStatusPipe implements PipeTransform {

@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { SchemasFilters, SchemasStore } from '../schemas-store/schemas-store.service';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsMetadataMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({

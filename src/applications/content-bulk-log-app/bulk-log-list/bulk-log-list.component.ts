@@ -1,16 +1,16 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 
 import {BulkLogFilters, BulkLogStoreService} from '../bulk-log-store/bulk-log-store.service';
-import {KalturaBulkUpload} from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import {KalturaBulkUpload} from 'kaltura-ngx-client';
 import {getBulkUploadType} from '../utils/get-bulk-upload-type';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {BulkLogUploadingStartedEvent} from 'app-shared/kmc-shared/events';
 import {BulkLogRefineFiltersService, RefineList} from '../bulk-log-store/bulk-log-refine-filters.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 

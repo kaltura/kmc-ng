@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, OnChanges } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'shared/kmc-shell/index';
 import { getKalturaServerUri, serverConfig } from 'config/server';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { LiveAnalyticsMainViewService } from '../kmc-views/main-views/live-analytics-main-view.service';
 
 @Component({

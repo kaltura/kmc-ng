@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable } from 'rxjs/Observable';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaClient, KalturaRequest } from 'kaltura-ngx-client';
-import { BaseEntryApproveAction } from 'kaltura-ngx-client/api/types/BaseEntryApproveAction';
-import { BaseEntryRejectAction } from 'kaltura-ngx-client/api/types/BaseEntryRejectAction';
+import { BaseEntryApproveAction } from 'kaltura-ngx-client';
+import { BaseEntryRejectAction } from 'kaltura-ngx-client';
 
 @Injectable()
 export class BulkService implements OnDestroy {

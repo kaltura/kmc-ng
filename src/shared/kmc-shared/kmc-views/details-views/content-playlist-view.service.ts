@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaPlaylistType } from 'kaltura-ngx-client';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Title } from '@angular/platform-browser';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 

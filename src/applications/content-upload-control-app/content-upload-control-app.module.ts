@@ -18,15 +18,15 @@ import {
   SharedModule,
   ProgressBarModule,
 } from 'primeng/primeng';
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {
   KalturaUIModule,
   TooltipModule
 } from '@kaltura-ng/kaltura-ui';
-import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { TagsModule } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 
 import { ContentUploadControlComponent } from './content-upload-control.component';
 import { UploadListComponent } from './upload-list/upload-list.component';

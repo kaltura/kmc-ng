@@ -2,17 +2,17 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaMediaType } from 'kaltura-ngx-client';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryUploadFile } from './new-entry-upload-file';
-import { MediaAddAction } from 'kaltura-ngx-client/api/types/MediaAddAction';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
-import { KalturaAssetParamsResourceContainer } from 'kaltura-ngx-client/api/types/KalturaAssetParamsResourceContainer';
-import { KalturaAssetsParamsResourceContainers } from 'kaltura-ngx-client/api/types/KalturaAssetsParamsResourceContainers';
-import { MediaUpdateContentAction } from 'kaltura-ngx-client/api/types/MediaUpdateContentAction';
-import { UploadTokenDeleteAction } from 'kaltura-ngx-client/api/types/UploadTokenDeleteAction';
-import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import { MediaAddAction } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client';
+import { KalturaAssetParamsResourceContainer } from 'kaltura-ngx-client';
+import { KalturaAssetsParamsResourceContainers } from 'kaltura-ngx-client';
+import { MediaUpdateContentAction } from 'kaltura-ngx-client';
+import { UploadTokenDeleteAction } from 'kaltura-ngx-client';
+import { TrackedFileData } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
 
 export interface KmcNewEntryUpload {

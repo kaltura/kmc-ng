@@ -11,11 +11,11 @@ import {
   ViewChild
 } from '@angular/core';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaMediaType } from 'kaltura-ngx-client';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaSourceType } from 'kaltura-ngx-client';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
@@ -42,7 +42,7 @@ export interface CustomMenuItem extends MenuItem {
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     public _kmcPermissions = KMCPermissions;
-    
+
   @Input() set columns(value: EntriesTableColumns) {
     this._columns = value || this._defaultColumns;
   }

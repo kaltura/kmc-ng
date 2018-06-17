@@ -1,15 +1,15 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {CategoryEntitlementsWidget} from './category-entitlements-widget.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
-import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
-import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
-import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import {KalturaUser} from 'kaltura-ngx-client';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client';
+import {KalturaAppearInListType} from 'kaltura-ngx-client';
+import {KalturaPrivacyType} from 'kaltura-ngx-client';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kCategoryEntitlements',

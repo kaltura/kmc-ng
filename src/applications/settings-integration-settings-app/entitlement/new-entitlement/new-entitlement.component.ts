@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {EntitlementService} from '../entitlement.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
 
 function privacyContextLabelValidator(): ValidatorFn {

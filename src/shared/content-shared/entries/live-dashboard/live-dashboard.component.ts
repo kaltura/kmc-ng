@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kLiveDashboard',

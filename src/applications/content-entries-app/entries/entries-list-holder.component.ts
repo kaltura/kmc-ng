@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {EntriesListComponent} from 'app-shared/content-shared/entries/entries-list/entries-list.component';
 import {BrowserService, NewEntryUploadFile} from 'app-shared/kmc-shell';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
@@ -9,10 +9,10 @@ import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-tab
 import {ContentEntriesAppService} from '../content-entries-app.service';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
-import {UploadManagement} from '@kaltura-ng/kaltura-common/upload-management/upload-management.service';
-import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import {UploadManagement} from '@kaltura-ng/kaltura-common';
+import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';

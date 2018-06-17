@@ -1,5 +1,5 @@
-import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
-import { KalturaBatchJobStatus } from 'kaltura-ngx-client/api/types/KalturaBatchJobStatus';
+import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client';
+import { KalturaBatchJobStatus } from 'kaltura-ngx-client';
 
 export const DefaultFiltersList: {
   name: string;

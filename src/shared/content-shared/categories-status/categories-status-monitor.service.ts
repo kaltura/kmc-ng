@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaFeatureStatusListResponse } from 'kaltura-ngx-client/api/types/KalturaFeatureStatusListResponse';
-import { KalturaFeatureStatusType } from 'kaltura-ngx-client/api/types/KalturaFeatureStatusType';
+import { KalturaFeatureStatusListResponse } from 'kaltura-ngx-client';
+import { KalturaFeatureStatusType } from 'kaltura-ngx-client';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { modulesConfig } from 'config/modules';
 import { CategoriesStatusRequestFactory } from './categories-status-request-factory';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { KalturaFeatureStatus } from 'kaltura-ngx-client/api/types/KalturaFeatureStatus';
+import { KalturaFeatureStatus } from 'kaltura-ngx-client';
 import { PollInterval } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';

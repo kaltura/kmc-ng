@@ -5,15 +5,15 @@ import {
   SortDirection
 } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistRuleParserService } from './playlist-rule-parser.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaEntryModerationStatus } from 'kaltura-ngx-client/api/types/KalturaEntryModerationStatus';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaEntryModerationStatus } from 'kaltura-ngx-client';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { PlaylistRule } from './playlist-rule.interface';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kPlaylistRule',

@@ -1,9 +1,9 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kPreviewEmbed',

@@ -1,14 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UsersStore } from '../users.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { IsUserExistsStatuses } from '../user-exists-statuses';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface PartnerInfo {

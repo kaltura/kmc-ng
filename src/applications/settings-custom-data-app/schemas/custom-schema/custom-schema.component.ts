@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
-import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
+import { KalturaMetadataProfile } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { KalturaAPIException, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { KalturaMetadataObjectType } from 'kaltura-ngx-client';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kCustomSchema',

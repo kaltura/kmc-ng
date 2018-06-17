@@ -1,11 +1,11 @@
 import { Component, Input, IterableDiffers, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { KalturaUserRole } from 'kaltura-ngx-client';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observer } from 'rxjs/Observer';
 import { PermissionsTableComponent, RolePermissionFormValue } from '../permissions-table/permissions-table.component';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { RolesStoreService } from '../roles-store/roles-store.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';

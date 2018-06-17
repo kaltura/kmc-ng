@@ -3,12 +3,12 @@ import {Observable} from 'rxjs/Observable';
 import {PartnerProfileStore} from '../partner-profile';
 import 'rxjs/add/observable/throw';
 import {KalturaClient} from 'kaltura-ngx-client';
-import {FlavorParamsListAction} from 'kaltura-ngx-client/api/types/FlavorParamsListAction';
-import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaFlavorParamsListResponse} from 'kaltura-ngx-client/api/types/KalturaFlavorParamsListResponse';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {FlavorParamsListAction} from 'kaltura-ngx-client';
+import {KalturaFlavorParams} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaFlavorParamsListResponse} from 'kaltura-ngx-client';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Injectable()

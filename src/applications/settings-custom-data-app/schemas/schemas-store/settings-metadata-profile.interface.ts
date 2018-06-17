@@ -1,6 +1,6 @@
-import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
+import { KalturaMetadataProfile } from 'kaltura-ngx-client';
 import { MetadataProfile } from 'app-shared/kmc-shared';
-import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { KalturaMetadataObjectType } from 'kaltura-ngx-client';
 
 export interface SettingsMetadataProfile extends KalturaMetadataProfile {
   profileDisabled: boolean;

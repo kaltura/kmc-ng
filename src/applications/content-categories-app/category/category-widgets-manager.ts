@@ -1,4 +1,4 @@
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KalturaCategory } from 'kaltura-ngx-client';
 import { Injectable } from '@angular/core';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui'

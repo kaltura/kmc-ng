@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
-import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaMediaType } from 'kaltura-ngx-client';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursWidget, ReplacementData } from './entry-flavours-widget.service';
 import { Flavor } from './flavor';
@@ -15,9 +15,9 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
-import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
+import { KalturaStorageProfile } from 'kaltura-ngx-client';
 
 @Component({
     selector: 'kEntryFlavours',

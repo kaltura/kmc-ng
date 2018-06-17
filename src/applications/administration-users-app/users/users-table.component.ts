@@ -1,10 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { UsersStore } from './users.service';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KalturaUser } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export interface PartnerInfo {

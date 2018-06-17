@@ -1,24 +1,24 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { KalturaSiteRestrictionType } from 'kaltura-ngx-client/api/types/KalturaSiteRestrictionType';
-import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/KalturaCountryRestrictionType';
-import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
-import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
+import { KalturaSiteRestrictionType } from 'kaltura-ngx-client';
+import { KalturaCountryRestrictionType } from 'kaltura-ngx-client';
+import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client';
+import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client';
 import { AccessControlProfilesStore, ExtendedKalturaAccessControl } from '../profiles-store/profiles-store.service';
 
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
-import { KalturaSiteRestriction } from 'kaltura-ngx-client/api/types/KalturaSiteRestriction';
-import { KalturaCountryRestriction } from 'kaltura-ngx-client/api/types/KalturaCountryRestriction';
-import { KalturaIpAddressRestriction } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestriction';
-import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestriction';
-import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
-import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
+import { KalturaAccessControl } from 'kaltura-ngx-client';
+import { KalturaSiteRestriction } from 'kaltura-ngx-client';
+import { KalturaCountryRestriction } from 'kaltura-ngx-client';
+import { KalturaIpAddressRestriction } from 'kaltura-ngx-client';
+import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client';
+import { KalturaSessionRestriction } from 'kaltura-ngx-client';
+import { KalturaPreviewRestriction } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export interface AccessControlAutocompleteItem {
   value: string;

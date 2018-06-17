@@ -4,14 +4,14 @@ import {
   CategoriesStatus,
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Subject } from 'rxjs/Subject';
-import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
-import { TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';
+import { TagsComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 

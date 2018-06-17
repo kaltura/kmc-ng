@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {MenuItem} from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {
   CategoriesStatus,
@@ -20,17 +20,17 @@ import {
   BulkSchedulingService,
   SchedulingParams
 } from './services';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {BulkActionBaseService} from './services/bulk-action-base.service';
 import {subApplicationsConfig} from 'config/sub-applications';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
-import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
+import {KalturaUser} from 'kaltura-ngx-client';
+import {KalturaMediaType} from 'kaltura-ngx-client';
+import {KalturaAccessControl} from 'kaltura-ngx-client';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {CreateNewPlaylistEvent} from 'app-shared/kmc-shared/events/playlist-creation';
-import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import {KalturaPlaylistType} from 'kaltura-ngx-client';
+import {KalturaEntryStatus} from 'kaltura-ngx-client';
 import {CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {BulkAddPublishersService} from './services/bulk-add-publishers.service';

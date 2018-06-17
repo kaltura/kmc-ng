@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RolesFilters, RolesStoreService } from '../roles-store/roles-store.service';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { KalturaUserRole } from 'kaltura-ngx-client';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { AdminRolesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 

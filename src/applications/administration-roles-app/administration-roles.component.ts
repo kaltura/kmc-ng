@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RolesStoreService } from './roles-store/roles-store.service';
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kRoles',

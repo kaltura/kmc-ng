@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
+import { KalturaDistributionProviderType } from 'kaltura-ngx-client';
 
 @Pipe({ name: 'kEntriesDistributionProviderTypeIcon' })
 export class DistributionProviderTypeIconPipe implements PipeTransform {

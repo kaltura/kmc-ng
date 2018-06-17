@@ -4,8 +4,8 @@ import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 import { serverConfig } from 'config/server';
 import { KmcMainViewBaseService, ViewMetadata } from 'app-shared/kmc-shared/kmc-views/kmc-main-view-base.service';
 import { Title } from '@angular/platform-browser';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()

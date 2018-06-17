@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesService } from '../categories.service';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KalturaCategory } from 'kaltura-ngx-client';
 import {
   CategoriesStatus,
   CategoriesStatusMonitorService
@@ -13,7 +13,7 @@ import { SelectedCategory } from 'app-shared/content-shared/categories/category-
 import { Observable } from 'rxjs/Observable';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kMoveCategory',

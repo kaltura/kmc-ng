@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { routing } from './settings-my-user-settings-app.routes';
 import { RouterModule } from '@angular/router';
 import { AreaBlockerModule, KalturaUIModule } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { SettingsMyUserSettingsComponent } from './settings-my-user-settings.component';
 import { TranslateModule } from 'ng2-translate';
 import { EditUserNameComponent } from './edit-user-name/edit-user-name.component';

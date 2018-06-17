@@ -1,6 +1,6 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
@@ -10,9 +10,9 @@ import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
 import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { BaseEntryUpdateAction } from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { BaseEntryGetAction } from 'kaltura-ngx-client';
+import { BaseEntryUpdateAction } from 'kaltura-ngx-client';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryWidgetsManager } from './entry-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
@@ -22,7 +22,7 @@ import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-veri
 import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
-import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
+import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client';
 
 export enum ActionTypes
 {

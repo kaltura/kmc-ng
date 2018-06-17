@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { EntriesFilters } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 
 @Component({

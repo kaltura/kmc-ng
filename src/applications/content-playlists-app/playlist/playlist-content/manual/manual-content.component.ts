@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
 import { ManualContentWidget } from './manual-content-widget.service';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kPlaylistContentManual',

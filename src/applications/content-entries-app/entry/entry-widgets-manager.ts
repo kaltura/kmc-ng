@@ -1,6 +1,6 @@
 import {  Injectable } from '@angular/core';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui'
 import { EntryStore } from './entry-store.service';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';

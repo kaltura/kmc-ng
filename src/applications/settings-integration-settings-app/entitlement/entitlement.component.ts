@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import {EntitlementSectionData, EntitlementService} from './entitlement.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from "app-shared/kmc-shell";
 import { serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({

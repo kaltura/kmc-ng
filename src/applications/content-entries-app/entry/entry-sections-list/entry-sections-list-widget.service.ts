@@ -1,10 +1,10 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {SectionsList} from './sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {EntryWidget} from '../entry-widget';
 import {
     ContentEntryViewSections,

@@ -1,14 +1,14 @@
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {FeedsFilters, FeedsService, SortDirection} from '../feeds.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
-import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client';
+import {KalturaPlaylist} from 'kaltura-ngx-client';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({

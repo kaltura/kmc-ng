@@ -3,12 +3,12 @@ import { Observable } from 'rxjs/Observable';
 import { PartnerProfileStore } from '../partner-profile';
 
 import { KalturaClient } from 'kaltura-ngx-client';
-import { AccessControlListAction } from 'kaltura-ngx-client/api/types/AccessControlListAction';
+import { AccessControlListAction } from 'kaltura-ngx-client';
 
-import { KalturaAccessControlFilter } from 'kaltura-ngx-client/api/types/KalturaAccessControlFilter';
-import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
+import { KalturaAccessControlFilter } from 'kaltura-ngx-client';
+import { KalturaAccessControl } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaAccessControlListResponse } from 'kaltura-ngx-client';
 import { AppEventsService } from '../app-events';
 import { AccessControlProfileUpdatedEvent } from '../events/access-control-profile-updated.event';
 

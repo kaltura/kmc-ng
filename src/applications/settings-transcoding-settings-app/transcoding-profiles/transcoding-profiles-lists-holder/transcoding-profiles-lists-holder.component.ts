@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 

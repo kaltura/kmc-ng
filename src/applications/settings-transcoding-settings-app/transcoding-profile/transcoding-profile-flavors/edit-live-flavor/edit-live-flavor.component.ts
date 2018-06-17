@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import {
   ExtendedKalturaConversionProfileAssetParams,
   KalturaConversionProfileWithAsset
 } from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
 import { KalturaTypesFactory } from 'kaltura-ngx-client';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kEditLiveFlavor',

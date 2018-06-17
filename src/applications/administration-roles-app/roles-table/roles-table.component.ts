@@ -10,8 +10,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaUserRole} from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({

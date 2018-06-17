@@ -4,7 +4,7 @@ import { globalConfig } from 'config/global';
 import { buildDeployUrl } from 'config/server';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HttpClient } from '@angular/common/http';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import * as Ajv from 'ajv';
 import { ContextualHelpDataSchema } from './contextual-help-data-schema';
 

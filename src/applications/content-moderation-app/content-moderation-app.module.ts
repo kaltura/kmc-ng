@@ -27,15 +27,15 @@ import {
   TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
-import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
-import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { DynamicFormModule } from '@kaltura-ng/kaltura-ui';
+import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KMCShellModule } from 'app-shared/kmc-shell';
-import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
+import { TagsModule } from '@kaltura-ng/kaltura-ui';
 import { DynamicMetadataFormModule } from 'app-shared/kmc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 

@@ -4,12 +4,12 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
-import { UserListAction } from 'kaltura-ngx-client/api/types/UserListAction';
-import { KalturaUserFilter } from 'kaltura-ngx-client/api/types/KalturaUserFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { UserGetAction } from 'kaltura-ngx-client';
+import { UserListAction } from 'kaltura-ngx-client';
+import { KalturaUserFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 
 import 'rxjs/add/observable/forkJoin';
 import { EntryWidget } from '../entry-widget';

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kCategoriesBulkChangeContributionPolicy',

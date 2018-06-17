@@ -15,7 +15,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {TagsModule} from '@kaltura-ng/kaltura-ui/tags';
+import {TagsModule} from '@kaltura-ng/kaltura-ui';
 import {
   AccordionModule,
   ButtonModule,
@@ -44,7 +44,7 @@ import {ContentCategoriesComponent} from './content-categories.component';
 
 import {DynamicMetadataFormModule} from 'app-shared/kmc-shared';
 
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
 
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {
@@ -54,19 +54,19 @@ import {
   StickyModule,
   TooltipModule
 } from '@kaltura-ng/kaltura-ui';
-import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
-import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
-import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
+import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui';
+import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
+import {DynamicFormModule} from '@kaltura-ng/kaltura-ui';
+import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {CategoryComponentsList} from './category/category-components-list';
 import {CategoriesComponentsList} from './categories/categories-components-list';
 import {CategoryCanDeactivate} from './category/category-can-deactivate.service';
-import {DetailsBarModule} from '@kaltura-ng/kaltura-ui/details-bar';
+import {DetailsBarModule} from '@kaltura-ng/kaltura-ui';
 import {CategoriesUtilsService} from './categories-utils.service';
 import {NewCategoryComponent} from './categories/new-category/new-category.component';
 import {MoveCategoryComponent} from './categories/move-category/move-category.component';
 import {CategoriesRefineFiltersService} from './categories/categories-refine-filters.service';
-import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
+import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 

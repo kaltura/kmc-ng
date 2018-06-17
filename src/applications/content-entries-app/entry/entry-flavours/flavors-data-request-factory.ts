@@ -1,9 +1,9 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaMultiRequest, KalturaMultiResponse, KalturaRequestOptions } from 'kaltura-ngx-client';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
+import { BaseEntryGetAction } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client';
 
 export class FlavorsDataRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse> {
     constructor(private _entryId: string) {

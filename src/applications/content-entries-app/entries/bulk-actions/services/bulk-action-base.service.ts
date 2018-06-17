@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { subApplicationsConfig } from 'config/sub-applications';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
 

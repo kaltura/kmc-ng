@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { modulesConfig } from 'config/modules';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
+import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
 

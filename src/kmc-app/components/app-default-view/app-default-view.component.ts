@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Component({
     selector: 'app-default-view',

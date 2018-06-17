@@ -1,17 +1,17 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import {Observable} from 'rxjs/Observable';
-import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
-import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
-import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
-import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
-import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
-import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
-import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
+import {CategoryListAction} from 'kaltura-ngx-client';
+import {KalturaCategoryFilter} from 'kaltura-ngx-client';
+import {PartnerGetInfoAction} from 'kaltura-ngx-client';
+import {KalturaPrivacyType} from 'kaltura-ngx-client';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client';
+import {KalturaAppearInListType} from 'kaltura-ngx-client';
+import {CategoryUpdateAction} from 'kaltura-ngx-client';
+import { CategoryGetAction } from 'kaltura-ngx-client';
 import { CategoriesSearchService } from 'app-shared/content-shared/categories/categories-search.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { AppEventsService } from 'app-shared/kmc-shared';
 

@@ -5,21 +5,21 @@ import 'rxjs/add/operator/publishReplay';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 
-import { CategoryListAction } from 'kaltura-ngx-client/api/types/CategoryListAction';
-import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaCategoryListResponse } from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
+import { CategoryListAction } from 'kaltura-ngx-client';
+import { KalturaCategoryFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaCategory } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaCategoryListResponse } from 'kaltura-ngx-client';
 
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { CategoriesGraphUpdatedEvent } from "app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated";
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
-import { KalturaAppearInListType } from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
-import { KalturaPrivacyType } from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import { KalturaContributionPolicyType } from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import { CategoryGetAction } from 'kaltura-ngx-client';
+import { KalturaAppearInListType } from 'kaltura-ngx-client';
+import { KalturaPrivacyType } from 'kaltura-ngx-client';
+import { KalturaContributionPolicyType } from 'kaltura-ngx-client';
 
 export interface CategoryData {
     parentId?: number,
