@@ -57,6 +57,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+      this._createForm();
+
       if (this._settingsAccountSettingsMainView.viewEntered()) {
           this._prepare();
       }
@@ -67,7 +69,6 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
   private _prepare(): void {
       this._logger.info(`initiate account settings view`);
-      this._createForm();
       this._fillDescribeYourselfOptions();
       this._loadPartnerAccountSettings();
       this.accountSettingsForm
