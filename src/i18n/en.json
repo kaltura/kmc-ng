@@ -1561,6 +1561,7 @@
                     "downloadFailure": "Flavor download failed.",
                     "importFailure": "Flavor import failed.",
                     "replaceVideo": {
+                        "replaceVideo": "Replace Video",
                         "noFlavors": "No Flavors",
                         "addVideo": "Add Video",
                         "addAudio": "Add Audio",

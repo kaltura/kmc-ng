@@ -6,6 +6,14 @@
 }
 
 .kReplaceMediaButtons {
+    .kReplaceMediaButtonsTitle {
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 18px;
+        color: $kGrayscale1;
+        margin-bottom: 20px;
+    }
+
     .kFlavorReplaceButton {
         margin-right: 20px;
         margin-bottom: 16px;
