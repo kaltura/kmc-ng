@@ -32,6 +32,12 @@
             "styles": [
               "src/styles/app-theme/styles.scss"
             ],
+              "stylePreprocessorOptions": {
+                  "includePaths": [
+                      "./",
+                      "node_modules"
+                  ]
+              },
             "scripts": [
               "src/assets/js/KalturaEmbedCodeGenerator.min.js"
             ]
