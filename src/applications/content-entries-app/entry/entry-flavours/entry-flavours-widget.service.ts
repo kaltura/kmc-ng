@@ -429,7 +429,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 this.entryStatusClassName = "kStatusNoContent kIconwarning";
                 break;
             case KalturaEntryStatus.ready.toString():
-                this.entryStatusClassName = "kStatusReady kIconconfirmation";
+                this.entryStatusClassName = "kStatusReady kIconcomplete";
                 break;
             case KalturaEntryStatus.errorConverting.toString():
             case KalturaEntryStatus.errorImporting.toString():
