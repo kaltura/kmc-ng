@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {Http} from '@angular/http';
 import {KalturaClient} from 'kaltura-ngx-client';

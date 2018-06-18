@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KMCPermissionsService } from '../../kmc-permissions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';

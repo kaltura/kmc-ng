@@ -10,7 +10,7 @@ import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import {KalturaMetadataFilter} from 'kaltura-ngx-client';
 import {KalturaMetadata} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
   DynamicMetadataForm,
   DynamicMetadataFormFactory,

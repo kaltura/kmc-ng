@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { ConversionProfileListAction } from 'kaltura-ngx-client';
 import { KalturaConversionProfileFilter } from 'kaltura-ngx-client';

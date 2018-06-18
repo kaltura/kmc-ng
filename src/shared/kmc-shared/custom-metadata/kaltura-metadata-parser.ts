@@ -9,7 +9,7 @@ import { KalturaMetadataProfile } from 'kaltura-ngx-client';
 
 import {
 	KalturaMetadataProfileStatus
-} from 'kaltura-ngx-client/api';
+} from 'kaltura-ngx-client';
 
 
 export class MetadataProfileParser {

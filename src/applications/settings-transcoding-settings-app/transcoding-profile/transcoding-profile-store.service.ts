@@ -4,8 +4,8 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
+import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
@@ -305,7 +305,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
   public saveProfile(): void {
       const profile = this.profile.data();
-      const newProfile = <KalturaConversionProfileWithAsset>KalturaTypesFactory.createObject(profile);
+      const newProfile = <KalturaConversionProfileWithAsset>KalturaObjectBaseFactory.createObject(profile);
       if (newProfile && newProfile instanceof KalturaConversionProfile) {
           if (this.profileId === 'new') {
               newProfile.type = profile.type;

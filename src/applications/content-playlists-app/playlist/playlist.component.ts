@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { NotificationTypes, ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';

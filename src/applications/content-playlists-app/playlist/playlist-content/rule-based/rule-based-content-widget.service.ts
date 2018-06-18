@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { PlaylistWidget } from '../../playlist-widget';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';

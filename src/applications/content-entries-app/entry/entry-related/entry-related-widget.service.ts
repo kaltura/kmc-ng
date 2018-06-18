@@ -8,7 +8,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
@@ -148,7 +148,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
       filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
     }))
       .cancelOnDestroy(this, this.widgetReset$)
-      .do(response => {
+      .map(response => {
         // Set file type and restore previous upload state
         this._updateAssetsResponse(response);
 
@@ -162,6 +162,8 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
           this.relatedFileDiffer[asset.id].diff(asset);
         });
         super._hideLoader();
+
+        return {failed: false};
       })
       .catch(error => {
           this._relatedFiles.next({ items: [] });

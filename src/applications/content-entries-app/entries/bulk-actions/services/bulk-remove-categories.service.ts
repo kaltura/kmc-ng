@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 

@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { IsUserExistsStatuses } from './user-exists-statuses';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';

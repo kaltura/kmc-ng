@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {KalturaClient} from 'kaltura-ngx-client';
 import {CategoriesBulkActionBaseService} from './categories-bulk-action-base.service';
 import {CategoryUpdateAction} from 'kaltura-ngx-client';

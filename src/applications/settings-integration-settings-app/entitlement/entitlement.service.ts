@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {CategoryListAction} from 'kaltura-ngx-client';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client';
 import {PartnerGetInfoAction} from 'kaltura-ngx-client';

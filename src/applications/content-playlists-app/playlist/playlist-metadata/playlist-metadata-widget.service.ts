@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { PlaylistWidget } from '../playlist-widget';
 import { KalturaPlaylist } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TagSearchAction } from 'kaltura-ngx-client';
 import { KalturaTagFilter } from 'kaltura-ngx-client';

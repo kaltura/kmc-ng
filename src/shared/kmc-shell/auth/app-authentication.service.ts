@@ -1,6 +1,6 @@
 import {Injectable, Optional, Inject} from '@angular/core';
 import { Location } from '@angular/common';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
 import {UserLoginByLoginIdAction} from 'kaltura-ngx-client';
@@ -38,6 +38,8 @@ import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 const ksSessionStorageKey = 'auth.login.ks';
 import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
+import { switchMap, map } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
 
 export interface UpdatePasswordPayload {
     email: string;
@@ -235,36 +237,37 @@ export class AppAuthentication {
         );
 
         return <any>(this.kalturaServerClient.multiRequest(request)
-            .switchMap(
-                response => {
-                    if (!response.hasErrors()) {
-                        return this._checkIfPartnerCanAccess(response[2].result);
-                    } else {
-                        return Observable.of(true); // errors will be handled by the map function
-                    }
-                },
-                (response, isPartnerAllowed) => ({ response, isPartnerAllowed })
-            )
-            .map(
-                ({ response, isPartnerAllowed }) => {
-                    if (!response.hasErrors()) {
-                        if (isPartnerAllowed) {
-                            this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
-                            return { success: true, error: null };
+                .pipe(
+                    switchMap(response => {
+                        if (!response.hasErrors()) {
+                            return this._checkIfPartnerCanAccess(response[2].result)
+                                .pipe(map(isPartnerAllowed => ({ response, isPartnerAllowed })));
                         } else {
-                            return {
-                                success: false, error: {
-                                    message: 'app.login.error.userForbiddenForBeta',
-                                    custom: false,
-                                    closedForBeta: true
-                                }
-                            };
+                            return ObservableOf(true) // errors will be handled by the map function
+                                .pipe(map(isPartnerAllowed => ({ response, isPartnerAllowed })));
                         }
-                    }
+                    }),
+                    map(
+                        ({ response, isPartnerAllowed }) => {
+                            if (!response.hasErrors()) {
+                                if (isPartnerAllowed) {
+                                    this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
+                                    return { success: true, error: null };
+                                } else {
+                                    return {
+                                        success: false, error: {
+                                            message: 'app.login.error.userForbiddenForBeta',
+                                            custom: false,
+                                            closedForBeta: true
+                                        }
+                                    };
+                                }
+                            }
 
-                    return { success: false, error: this._getLoginErrorMessage(response[0]) };
-                }
-            )
+                            return { success: false, error: this._getLoginErrorMessage(response[0]) };
+                        }
+                    )
+                )
         );
     }
 
@@ -388,16 +391,16 @@ export class AppAuthentication {
                             })
                     ];
 
-                    return this.kalturaServerClient.multiRequest(requests)
-                        .switchMap(
-                            response => {
-                                if (!response.hasErrors()) {
-                                    return this._checkIfPartnerCanAccess(response[1].result);
-                                } else {
-                                    return Observable.of(true); // errors will be handled by the map function
-                                }
-                            },
-                            (response, isPartnerAllowed) => ({ response, isPartnerAllowed })
+                    this.kalturaServerClient.multiRequest(requests)
+                        .pipe(
+                            switchMap(
+                                response => {
+                                    const result = !response.hasErrors()
+                                        ? this._checkIfPartnerCanAccess(response[1].result)
+                                        : ObservableOf(true);
+
+                                    return result.pipe(map(isPartnerAllowed => ({ response, isPartnerAllowed })));
+                                })
                         )
                         .subscribe(
                             ({ response, isPartnerAllowed }) => {

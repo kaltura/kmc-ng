@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { globalConfig } from 'config/global';
 import { buildDeployUrl } from 'config/server';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';

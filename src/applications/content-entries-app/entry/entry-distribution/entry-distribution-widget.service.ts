@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { EntryWidget } from '../entry-widget';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DistributionProfileListAction } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { EntryDistributionListAction } from 'kaltura-ngx-client';
@@ -276,7 +276,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
             const autoDistribution = relevantPartnerProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic ||
               profile.status === KalturaEntryDistributionStatus.queued;
             const distributedProfile = <ExtendedKalturaEntryDistribution>Object.assign(
-              KalturaTypesFactory.createObject(profile),
+              KalturaObjectBaseFactory.createObject(profile),
               profile,
               {
                 autoDistribution,

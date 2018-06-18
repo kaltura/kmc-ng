@@ -5,7 +5,7 @@ import {EntryClipsWidget} from './entry-clips-widget.service';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { EntryStore } from '../entry-store.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/merge';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 

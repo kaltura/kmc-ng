@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -30,7 +30,7 @@ import { AccessControlAddAction } from 'kaltura-ngx-client';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 import { SettingsAccessControlMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { FlavoursStore } from 'app-shared/kmc-shared';
-
+import { switchMap, map } from 'rxjs/operators';
 
 const localStoragePageSizeKey = 'accessControlProfiles.list.pageSize';
 
@@ -180,21 +180,20 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
 
       // build the request
       return this._kalturaServerClient.request(new AccessControlListAction({ filter, pager }))
-        .switchMap(
-          () => this._flavorsStore.get(),
-          (accessControlList, flavors) => ({ accessControlList, flavors })
-        )
-        .map(({ accessControlList: originalAccessControlList, flavors }) => {
+          .pipe(
+             switchMap((accessControlList) => this._flavorsStore.get().pipe(map(flavors => ({ accessControlList, flavors })))  ),
+              map(({ accessControlList: originalAccessControlList, flavors }) => {
 
-          const extendedAccessControlList = this._mapProfilesResponse(originalAccessControlList.objects, flavors.items);
-          return {
-            accessControlList: {
-              items: extendedAccessControlList,
-              totalCount: originalAccessControlList.totalCount
-            },
-            flavorsList: flavors.items
-          };
-        });
+                  const extendedAccessControlList = this._mapProfilesResponse(originalAccessControlList.objects, flavors.items);
+                  return {
+                      accessControlList: {
+                          items: extendedAccessControlList,
+                          totalCount: originalAccessControlList.totalCount
+                      },
+                      flavorsList: flavors.items
+                  };
+              })
+          );
     } catch (err) {
       return Observable.throw(err);
     }

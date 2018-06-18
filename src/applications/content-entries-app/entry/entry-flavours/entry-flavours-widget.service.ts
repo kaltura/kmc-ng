@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -58,7 +58,8 @@ import { KalturaRequest } from 'kaltura-ngx-client';
 import { KalturaResponse } from 'kaltura-ngx-client';
 import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client';
 import { KalturaConversionProfileAssetParamsListResponse } from 'kaltura-ngx-client';
-
+import { switchMap, map } from 'rxjs/operators';
+import { of as ObservableOf} from 'rxjs';
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
     tempEntryId: string;
@@ -219,47 +220,51 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         }
     }
 
-    private _mapFlavorsData(flavorsData$: Observable<{ error: KalturaAPIException, result: KalturaMultiResponse }>): Observable<{
+
+    private _mapFlavorsData(flavorsData$: any) : Observable<{
         currentEntryFlavors: Flavor[],
         replacingEntryFlavors: Flavor[],
         replacementData: Partial<KalturaMediaEntry>
     }> {
         return flavorsData$
-            .map((response: { error: KalturaAPIException, result: KalturaMultiResponse }) => {
-                if (response.error) {
-                    throw new Error(response.error.message);
-                }
-
-                if (response.result.hasErrors()) {
-                    throw new Error(response.result.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, ''));
-                }
-
-                return response.result;
-            })
-            .switchMap(
-                responses => {
-                    const [replacementDataResponse] = responses;
-                    if (replacementDataResponse.result && replacementDataResponse.result.replacingEntryId) {
-                        return this._kalturaServerClient
-                            .request(this._getFlavorsDataAction(replacementDataResponse.result.replacingEntryId));
+            .pipe(
+                map((response: { error: KalturaAPIException, result: KalturaMultiResponse }) => {
+                    if (response.error) {
+                        throw new Error(response.error.message);
                     }
 
-                    return Observable.of(null);
-                },
-                ([replacementDataResponse, currentEntryFlavorsDataResponse], replacingEntryFlavorsData) => {
-                    return {
-                        replacementData: replacementDataResponse.result,
-                        currentEntryFlavorsData: currentEntryFlavorsDataResponse.result,
-                        replacingEntryFlavorsData
-                    };
-                }
-            )
-            .map(({ replacementData, currentEntryFlavorsData, replacingEntryFlavorsData }) => {
-                const currentEntryFlavors = this._mapFlavorsResponse(currentEntryFlavorsData);
-                const replacingEntryFlavors = this._mapFlavorsResponse(replacingEntryFlavorsData);
+                    if (response.result.hasErrors()) {
+                        throw new Error(response.result.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, ''));
+                    }
 
-                return { currentEntryFlavors, replacingEntryFlavors, replacementData };
-            });
+                    return response.result;
+                }),
+                switchMap(([replacementDataResponse, currentEntryFlavorsDataResponse]) => {
+                    let result: Observable<any>;
+                    if (replacementDataResponse.result && replacementDataResponse.result.replacingEntryId) {
+                        result = this._kalturaServerClient
+                            .request(this._getFlavorsDataAction(replacementDataResponse.result.replacingEntryId));
+                    } else {
+                        result = ObservableOf(null);
+                    }
+
+                    return result.pipe(
+                        map((replacingEntryFlavorsData) => {
+                                return {
+                                    replacementData: replacementDataResponse.result,
+                                    currentEntryFlavorsData: currentEntryFlavorsDataResponse.result,
+                                    replacingEntryFlavorsData
+                                };
+                            }
+                        ));
+                }),
+                map(({replacementData, currentEntryFlavorsData, replacingEntryFlavorsData}) => {
+                    const currentEntryFlavors = this._mapFlavorsResponse(currentEntryFlavorsData);
+                    const replacingEntryFlavors = this._mapFlavorsResponse(replacingEntryFlavorsData);
+
+                    return {currentEntryFlavors, replacingEntryFlavors, replacementData};
+                })
+            );
     }
 
     private _handleFlavorsDataResponse(response: {

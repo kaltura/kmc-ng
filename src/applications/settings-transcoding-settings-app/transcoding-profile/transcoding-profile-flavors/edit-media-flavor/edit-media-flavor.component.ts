@@ -12,7 +12,7 @@ import {
 } from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { KalturaFlavorParams } from 'kaltura-ngx-client';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
-import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
@@ -165,7 +165,7 @@ export class EditMediaFlavorComponent implements OnInit {
     const assets = this.profile.assets || [];
     const relevantAssetParam = assets.find(({ assetParamsId }) => this.flavor.id === assetParamsId);
     if (relevantAssetParam instanceof KalturaConversionProfileAssetParams) {
-      return Object.assign(KalturaTypesFactory.createObject(relevantAssetParam), relevantAssetParam);
+      return Object.assign(KalturaObjectBaseFactory.createObject(relevantAssetParam), relevantAssetParam);
     }
 
     const newAssetParam = new KalturaConversionProfileAssetParams();

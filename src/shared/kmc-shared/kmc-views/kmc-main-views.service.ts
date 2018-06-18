@@ -22,7 +22,7 @@ import { ContentCategoriesMainViewService,
     SettingsMyUserSettingsMainViewService,
     SettingsAccountInformationMainViewService
 } from './main-views';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 
 export interface KMCAppMenuItem {

@@ -9,7 +9,7 @@ import { KalturaRemoteStorageResource } from 'kaltura-ngx-client';
 import { FlavorAssetSetContentAction } from 'kaltura-ngx-client';
 import { EntryFlavoursWidget } from '../entry-flavours-widget.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaFlavorAsset } from 'kaltura-ngx-client';
 import { FlavorAssetAddAction } from 'kaltura-ngx-client';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';

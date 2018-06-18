@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
 import { KalturaSearchOperator } from 'kaltura-ngx-client';

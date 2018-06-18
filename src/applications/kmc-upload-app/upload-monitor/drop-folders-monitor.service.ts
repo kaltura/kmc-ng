@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';

@@ -1,6 +1,6 @@
 import { Inject, Injectable, InjectionToken, OnDestroy, Optional } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { MetadataProfileStore } from 'app-shared/kmc-shared';
 import { BaseEntryDeleteAction } from 'kaltura-ngx-client';

@@ -11,7 +11,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
     ManageEndUserPermissionsRefineFiltersService,
     RefineList

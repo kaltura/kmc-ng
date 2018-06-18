@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PlaylistsStore } from '../playlists-store/playlists-store.service';
 import { PlaylistDeleteAction } from 'kaltura-ngx-client';
 import { KalturaRequest } from 'kaltura-ngx-client';

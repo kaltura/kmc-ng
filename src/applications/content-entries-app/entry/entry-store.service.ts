@@ -4,12 +4,12 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { BaseEntryGetAction } from 'kaltura-ngx-client';
 import { BaseEntryUpdateAction } from 'kaltura-ngx-client';
@@ -239,7 +239,7 @@ export class EntryStore implements  OnDestroy {
 	}
 	public saveEntry() : void {
 
-		const newEntry = KalturaTypesFactory.createObject(this.entry);
+		const newEntry = KalturaObjectBaseFactory.createObject(this.entry);
 
 		if (newEntry && newEntry instanceof KalturaMediaEntry) {
 			this._transmitSaveRequest(newEntry)

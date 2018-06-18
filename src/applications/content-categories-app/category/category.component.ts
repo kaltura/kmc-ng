@@ -7,7 +7,7 @@ import {CategoriesService} from '../categories/categories.service';
 import {CategoryWidgetsManager} from './category-widgets-manager';
 import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {CategoryEntitlementsWidget} from './category-entitlements/category-entitlements-widget.service';
 import {CategorySubcategoriesWidget} from './category-subcategories/category-subcategories-widget.service';
 import {CategoryDetailsWidget} from "./category-details/category-details-widget.service";

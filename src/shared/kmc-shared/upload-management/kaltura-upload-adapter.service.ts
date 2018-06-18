@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UploadFileAdapter, UploadFileData } from '@kaltura-ng/kaltura-common';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/throw';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { UploadTokenAddAction } from 'kaltura-ngx-client';

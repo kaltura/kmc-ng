@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';

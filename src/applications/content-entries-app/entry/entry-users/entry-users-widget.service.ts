@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { UserGetAction } from 'kaltura-ngx-client';

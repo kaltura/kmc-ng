@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PartnerProfileStore } from '../partner-profile';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaStorageProfileStatus } from 'kaltura-ngx-client';

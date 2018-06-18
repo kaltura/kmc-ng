@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { AppAuthentication, AutomaticLoginErrorReasons, BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { serverConfig } from 'config/server';
 import { AppLocalization } from '@kaltura-ng/mc-shared';

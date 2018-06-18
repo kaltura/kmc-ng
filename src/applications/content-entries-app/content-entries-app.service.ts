@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { BaseEntryDeleteAction } from 'kaltura-ngx-client';

@@ -1,6 +1,6 @@
 import { Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy } from '@angular/core';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 import {
   ExtendedKalturaConversionProfileAssetParams,

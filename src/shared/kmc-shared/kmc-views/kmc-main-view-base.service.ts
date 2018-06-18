@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Router } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell';

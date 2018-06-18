@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection} from './entries-store.service';
 import {KalturaBaseEntry} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
 import {KalturaMetadataSearchItem} from 'kaltura-ngx-client';
 import {KalturaNullableBoolean} from 'kaltura-ngx-client';

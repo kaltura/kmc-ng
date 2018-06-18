@@ -1,5 +1,5 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {SelectItem} from 'primeng/primeng';
 
@@ -75,7 +75,7 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
 
       return Observable.forkJoin(getAPProfiles$, getFlavours$)
         .cancelOnDestroy(this)
-        .do(
+        .map(
           response => {
             let ACProfiles = response[0].items;
             if (ACProfiles.length) {
@@ -95,6 +95,8 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
               this._setProfile();
               super._hideLoader();
             }
+
+              return {failed: false};
 
           })
         .catch((error, caught) => {

@@ -16,7 +16,7 @@ import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaStorageProfile } from 'kaltura-ngx-client';
 
 @Component({

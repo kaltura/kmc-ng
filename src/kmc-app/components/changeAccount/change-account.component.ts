@@ -8,7 +8,7 @@ import {KalturaClient} from 'kaltura-ngx-client';
 import {PartnerListPartnersForUserAction} from 'kaltura-ngx-client';
 import {KalturaPartnerFilter} from 'kaltura-ngx-client';
 import {KalturaPartnerStatus} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 

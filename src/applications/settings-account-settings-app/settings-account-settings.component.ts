@@ -10,7 +10,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsAccountSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 function phoneValidator(): ValidatorFn {

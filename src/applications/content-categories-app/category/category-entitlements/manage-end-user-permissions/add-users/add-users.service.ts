@@ -4,7 +4,7 @@ import {UserListAction} from 'kaltura-ngx-client';
 import {KalturaUserFilter} from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
 import {CategoryUserAddAction} from 'kaltura-ngx-client';
 import {KalturaCategoryUser} from 'kaltura-ngx-client';

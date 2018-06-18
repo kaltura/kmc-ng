@@ -1,6 +1,6 @@
 import {KalturaCategory} from 'kaltura-ngx-client';
 import {Injectable, OnDestroy} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {KalturaUtils} from '@kaltura-ng/kaltura-common';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';

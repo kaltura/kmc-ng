@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import { Observable, of as ObservableOf } from 'rxjs';
 
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaSourceType} from 'kaltura-ngx-client';
@@ -139,7 +139,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
               this._conversionProfiles.next({ items: [] });
               return Observable.throw(error);
             })
-            .do(response => {
+            .map(response => {
               if (response.objects && response.objects.length) {
                 // set the default profile first in the array
                 response.objects.sort((a, b) => {
@@ -161,6 +161,10 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
                 });
                 this._conversionProfiles.next({ items: conversionProfiles });
                 super._hideLoader();
+
+                  return {failed: false};
+              } else {
+                  return {failed: true};
               }
             });
         } else {
@@ -178,6 +182,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 				this._setManualStreams();
 				break;
 		}
+
+        return ObservableOf({failed: false});
 	}
 
 	public _exportXML() {

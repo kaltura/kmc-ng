@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';

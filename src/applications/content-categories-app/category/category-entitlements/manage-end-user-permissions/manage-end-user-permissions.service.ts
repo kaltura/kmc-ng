@@ -1,7 +1,7 @@
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
@@ -33,6 +33,8 @@ import {KalturaSearchOperator} from 'kaltura-ngx-client';
 import {KalturaSearchOperatorType} from 'kaltura-ngx-client';
 import {KalturaCategoryUserStatus} from 'kaltura-ngx-client';
 import { CategoryGetAction } from 'kaltura-ngx-client';
+import { switchMap, map } from 'rxjs/operators';
+
 
 export interface LoadingStatus {
   loading: boolean;
@@ -251,36 +253,41 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
           );
 
           return this._kalturaClient.multiRequest(requests)
-              .map(result => {
-                  if (result.hasErrors()) {
-                      throw new Error(result.find(item => !!item.error).error.message);
-                  } else {
-                      const users = result[0].result.objects;
-                      const totalCount = result[0].result.totalCount;
-                      const actualUsersCount = result[1].result.membersCount;
-                      return {users, totalCount, actualUsersCount};
-                  }
-              })
-              .switchMap(
-                  result => this._getKalturaUsers(result.users.map(item => item.userId)),
-                  (categoryUserListResult, getKalturaUsersResult) => {
-                      const items = categoryUserListResult.users.map((categoryUser, index) => {
-                          const kalturaUser = getKalturaUsersResult[index];
-                          return {
-                              id: categoryUser.userId,
-                              name: kalturaUser.screenName || categoryUser.userId,
-                              permissionLevel: categoryUser.permissionLevel,
-                              status: categoryUser.status,
-                              updateMethod: categoryUser.updateMethod,
-                              updatedAt: categoryUser.updatedAt
-                          };
-                      });
-                      return {
-                          items,
-                          totalCount: categoryUserListResult.totalCount,
-                          actualUsersCount: categoryUserListResult.actualUsersCount
-                      };
-                  }
+              .pipe(
+                  map(result => {
+                      if (result.hasErrors()) {
+                          throw new Error(result.find(item => !!item.error).error.message);
+                      } else {
+                          const users = result[0].result.objects;
+                          const totalCount = result[0].result.totalCount;
+                          const actualUsersCount = result[1].result.membersCount;
+                          return {users, totalCount, actualUsersCount};
+                      }
+                  }),
+                  switchMap(
+                      categoryUserListResult =>
+                          this._getKalturaUsers(categoryUserListResult.users.map(item => item.userId))
+                          .pipe(
+                              map((getKalturaUsersResult) => {
+                                  const items = categoryUserListResult.users.map((categoryUser, index) => {
+                                      const kalturaUser = getKalturaUsersResult[index];
+                                      return {
+                                          id: categoryUser.userId,
+                                          name: kalturaUser.screenName || categoryUser.userId,
+                                          permissionLevel: categoryUser.permissionLevel,
+                                          status: categoryUser.status,
+                                          updateMethod: categoryUser.updateMethod,
+                                          updatedAt: categoryUser.updatedAt
+                                      };
+                                  });
+                                  return {
+                                      items,
+                                      totalCount: categoryUserListResult.totalCount,
+                                      actualUsersCount: categoryUserListResult.actualUsersCount
+                                  };
+                              })
+                          )
+                  )
               );
       } catch (err) {
           return Observable.throw(err);

@@ -7,7 +7,7 @@ import {
 } from '../../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { KalturaFlavorParams } from 'kaltura-ngx-client';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
-import { KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
@@ -64,7 +64,7 @@ export class EditLiveFlavorComponent implements OnInit {
     const assets = this.profile.assets || [];
     const relevantAssetParam = assets.find(({ assetParamsId }) => this.flavor.id === assetParamsId);
     if (relevantAssetParam instanceof KalturaConversionProfileAssetParams) {
-      return Object.assign(KalturaTypesFactory.createObject(relevantAssetParam), relevantAssetParam);
+      return Object.assign(KalturaObjectBaseFactory.createObject(relevantAssetParam), relevantAssetParam);
     }
 
     const newAssetParam: ExtendedKalturaConversionProfileAssetParams = new KalturaConversionProfileAssetParams();

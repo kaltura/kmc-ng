@@ -3,12 +3,12 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client';
 import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PlaylistUpdateAction } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { KalturaPlaylistType } from 'kaltura-ngx-client';
@@ -267,7 +267,7 @@ export class PlaylistStore implements OnDestroy {
 
   public savePlaylist(): void {
     if (this.playlist && this.playlist instanceof KalturaPlaylist) {
-      const newPlaylist = <KalturaPlaylist>KalturaTypesFactory.createObject(this.playlist);
+      const newPlaylist = <KalturaPlaylist>KalturaObjectBaseFactory.createObject(this.playlist);
       newPlaylist.playlistType = this.playlist.playlistType;
 
       if (newPlaylist.playlistType === KalturaPlaylistType.dynamic) {

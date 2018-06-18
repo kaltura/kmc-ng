@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaClient, KalturaRequest } from 'kaltura-ngx-client';
 import { BaseEntryApproveAction } from 'kaltura-ngx-client';

@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
 import { async } from 'rxjs/scheduler/async';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';

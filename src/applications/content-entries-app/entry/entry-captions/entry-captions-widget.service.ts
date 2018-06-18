@@ -9,7 +9,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaClient } from 'kaltura-ngx-client';
@@ -148,7 +148,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
     }))
       .cancelOnDestroy(this, this.widgetReset$)
-      .do(response => {
+      .map(response => {
         // Restore previous upload state
         this._updateCaptionsResponse(response);
 
@@ -162,6 +162,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
           this.captionDiffer[caption.id].diff(caption);
         });
         super._hideLoader();
+
+          return {failed: false};
       })
       .catch(error => {
           super._hideLoader();

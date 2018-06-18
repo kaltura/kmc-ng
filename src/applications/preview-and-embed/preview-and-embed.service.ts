@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { UiConfListAction } from 'kaltura-ngx-client';
 import { KalturaUiConfFilter } from 'kaltura-ngx-client';
 import { KalturaUiConfListResponse } from 'kaltura-ngx-client';

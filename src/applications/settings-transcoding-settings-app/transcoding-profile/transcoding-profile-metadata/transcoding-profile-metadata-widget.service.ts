@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaAPIException, KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { async } from 'rxjs/scheduler/async';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';

@@ -7,7 +7,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from 'primeng/primeng';
 

@@ -3,7 +3,7 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { BulkListAction } from 'kaltura-ngx-client';
 import { KalturaBatchJobStatus } from 'kaltura-ngx-client';
 import { KalturaBulkUploadFilter } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';

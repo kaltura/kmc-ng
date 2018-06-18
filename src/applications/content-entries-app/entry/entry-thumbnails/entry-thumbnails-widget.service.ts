@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
 
 import { ThumbAssetSetAsDefaultAction } from 'kaltura-ngx-client';
@@ -93,7 +93,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                 this._thumbnails.next({items: []});
                 return Observable.throw(error);
             })
-            .do(responses => {
+            .map(responses => {
                 const thumbnails = responses[0] || [];
                 this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
                 this.buildThumbnailsData(thumbnails);
@@ -101,6 +101,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
                     && [KalturaEntryStatus.ready.toString(), KalturaEntryStatus.moderate.toString()].indexOf(this.data.status.toString()) !== -1
                     && this.data.mediaType === KalturaMediaType.video);
                 super._hideLoader();
+
+                return {failed: false};
             });
 
     }

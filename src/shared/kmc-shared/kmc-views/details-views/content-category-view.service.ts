@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';

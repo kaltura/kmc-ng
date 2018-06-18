@@ -8,7 +8,7 @@ import {KalturaNullableBoolean} from 'kaltura-ngx-client';
 import {KalturaUserStatus} from 'kaltura-ngx-client';
 import {UserRoleListAction} from 'kaltura-ngx-client';
 import {UserListAction} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaPartner} from 'kaltura-ngx-client';
 import {PartnerGetInfoAction} from 'kaltura-ngx-client';

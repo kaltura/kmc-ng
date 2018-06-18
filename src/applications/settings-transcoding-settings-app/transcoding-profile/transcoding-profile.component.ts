@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NotificationTypes, ActionTypes, TranscodingProfileStore } from './transcoding-profile-store.service';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { TranscodingProfileSectionsListWidget } from './transcoding-profile-sections-list/transcoding-profile-sections-list-widget.service';

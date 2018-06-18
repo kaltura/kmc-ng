@@ -22,7 +22,7 @@ import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import { KalturaConversionProfile } from 'kaltura-ngx-client';
 import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
 import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client';
 import { urlRegex } from '@kaltura-ng/kaltura-ui';
 import { NewReplaceVideoUploadService } from 'app-shared/kmc-shell/new-replace-video-upload';
@@ -33,6 +33,8 @@ import { KalturaStorageProfile } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Observer } from 'rxjs/Observer';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { switchMap, map } from 'rxjs/operators';
+import { of as ObservableOf} from 'rxjs';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];
@@ -209,34 +211,41 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         this._isLoading = true;
 
         this._transcodingProfileManagement.get()
-            .switchMap(
-                () => this._loadConversionProfiles(),
-                (transcodingProfiles, assets) => {
-                    return transcodingProfiles.map(profile => {
-                        return {
-                            id: profile.id,
-                            name: profile.name,
-                            isDefault: profile.isDefault,
-                            storageProfileId: profile.storageProfileId,
-                            assets: assets.filter(item => {
-                                return item.conversionProfileId === profile.id && item.origin !== KalturaAssetParamsOrigin.convert;
-                            })
-                        };
-                    });
-                }
-            )
-            .switchMap(
-                () => {
+            .pipe(
+            switchMap(
+                (transcodingProfiles) => this._loadConversionProfiles().pipe(
+                    map((assets) => {
+                        return transcodingProfiles.map(profile => {
+                            return {
+                                id: profile.id,
+                                name: profile.name,
+                                isDefault: profile.isDefault,
+                                storageProfileId: profile.storageProfileId,
+                                assets: assets.filter(item => {
+                                    return item.conversionProfileId === profile.id && item.origin !== KalturaAssetParamsOrigin.convert;
+                                })
+                            };
+                        });
+                    })
+                )
+            ),
+            switchMap(
+                (profilesWithAssets) => {
+                    let result;
                     if (this.replaceType === 'link') {
                         this._logger.debug(`link replace type detected, load storage profiles list`);
-                        return this._kalturaClient
+                        result = this._kalturaClient
                             .request(new StorageProfileListAction())
                             .map(response => response.objects);
+                    } else {
+                        result = ObservableOf(null);
                     }
 
-                    return Observable.of(null);
-                },
-                (profilesWithAssets, storageProfiles) => ({ profilesWithAssets, storageProfiles }))
+                    return result.pipe(
+                        map((storageProfiles) => ({ profilesWithAssets, storageProfiles }))
+                    );
+                })
+            )
             .subscribe(
                 ({ profilesWithAssets, storageProfiles }) => {
                     this._logger.info(`handle successful loading of replacement data`);

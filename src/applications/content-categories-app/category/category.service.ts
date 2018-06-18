@@ -5,12 +5,12 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import {ISubscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import {KalturaClient, KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import {CategoryGetAction} from 'kaltura-ngx-client';
 import {CategoryUpdateAction} from 'kaltura-ngx-client';
@@ -306,7 +306,7 @@ export class CategoryService implements OnDestroy {
 	}
 	public saveCategory(): void {
 
-		const newCategory = KalturaTypesFactory.createObject(this.category);
+		const newCategory = KalturaObjectBaseFactory.createObject(this.category);
 
 		if (newCategory && newCategory instanceof KalturaCategory) {
 			this._transmitSaveRequest(newCategory)

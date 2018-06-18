@@ -10,7 +10,7 @@ import {
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { SelectedCategory } from 'app-shared/content-shared/categories/category-selector/category-selector.component';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';

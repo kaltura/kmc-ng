@@ -6,7 +6,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import { KalturaStorageProfile } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { BaseEntryGetAction } from 'kaltura-ngx-client';
 import { KalturaAPIException, KalturaClient } from 'kaltura-ngx-client';

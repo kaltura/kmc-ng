@@ -6,7 +6,7 @@ import {KalturaDVRStatus} from 'kaltura-ngx-client';
 import {KalturaClient} from 'kaltura-ngx-client';
 import {LiveStreamAddAction} from 'kaltura-ngx-client';
 import {KalturaSourceType} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {KalturaLiveStreamConfiguration} from 'kaltura-ngx-client';
 import {KalturaPlaybackProtocol} from 'kaltura-ngx-client';
 import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';

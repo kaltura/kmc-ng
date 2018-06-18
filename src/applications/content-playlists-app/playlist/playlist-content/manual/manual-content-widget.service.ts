@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client';
 import { PlaylistExecuteAction } from 'kaltura-ngx-client';
@@ -157,7 +157,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
-      const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
+      const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaObjectBaseFactory.createObject(entry), entry);
       this._extendWithSelectionId([clonedEntry]);
       this.entries.splice(entryIndex, 0, clonedEntry);
       this._recalculateCountAndDuration();

@@ -8,7 +8,7 @@ import {FeedsService} from 'applications/content-syndication-app/feeds/feeds.ser
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KalturaSyndicationFeedType} from 'kaltura-ngx-client';
 import {FlavoursStore} from 'app-shared/kmc-shared';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';

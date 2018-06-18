@@ -2,7 +2,7 @@ import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 import { KalturaUserRoleFilter } from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';

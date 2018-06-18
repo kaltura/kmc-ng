@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';

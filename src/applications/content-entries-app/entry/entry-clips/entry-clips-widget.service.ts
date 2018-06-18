@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import {KalturaClient} from 'kaltura-ngx-client';
 import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';

@@ -4,7 +4,7 @@ import {EntryAdvertisementsWidget} from './entry-advertisements-widget.service';
 import { AdvertisementsAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryStore } from '../entry-store.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/merge';
 
 @Component({

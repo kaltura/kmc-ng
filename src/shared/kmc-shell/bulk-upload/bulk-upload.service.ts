@@ -9,7 +9,7 @@ import { KalturaBulkUploadUserData } from 'kaltura-ngx-client';
 import { KalturaBulkUploadCategoryUserData } from 'kaltura-ngx-client';
 import { UserAddFromBulkUploadAction } from 'kaltura-ngx-client';
 import { CategoryUserAddFromBulkUploadAction } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaBulkUpload } from 'kaltura-ngx-client';
 
 export enum BulkUploadTypes {

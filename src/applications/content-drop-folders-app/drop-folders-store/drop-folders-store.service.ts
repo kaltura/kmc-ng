@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { BrowserService } from 'shared/kmc-shell';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client';
 import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
