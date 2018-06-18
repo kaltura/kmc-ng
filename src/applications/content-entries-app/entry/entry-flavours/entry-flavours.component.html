@@ -2,11 +2,13 @@
 	<kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
 	<div class="kFlavours kOverrideFAIcons" #flavors>
 		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
-		<div class="kEntryStatus" *ngIf="!(_widgetService.replacementData$ | async)?.tempEntryId">
-			<i class="{{_widgetService.entryStatusClassName}}"></i><span>{{_widgetService.entryStatus}}</span>
-		</div>
 		<div class="kFlavorReplacement">
-            <kFlavorReplaceMediaBtn *ngIf="_showActionsView(_widgetService.replacementData$ | async)"
+            <div class="kEntryStatus"
+                 [class.kAddingEntry]="!_showActionsView && !((_widgetService.replacementData$ | async)?.tempEntryId && (_kmcPermissions.FEATURE_ENTRY_REPLACEMENT | kNgIfPermitted))"
+                 *ngIf="!(_widgetService.replacementData$ | async)?.tempEntryId">
+                <i class="{{_widgetService.entryStatusClassName}}"></i><span>{{_widgetService.entryStatus}}</span>
+            </div>
+            <kFlavorReplaceMediaBtn *ngIf="_showActionsView"
                                     [flavors]="(_widgetService.flavors$ | async)"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
             <kFlavorReplaceMediaStatus *ngIf="(_widgetService.replacementData$ | async)?.tempEntryId && (_kmcPermissions.FEATURE_ENTRY_REPLACEMENT | kNgIfPermitted)"
