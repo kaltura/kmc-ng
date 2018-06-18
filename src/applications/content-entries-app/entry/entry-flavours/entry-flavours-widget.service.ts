@@ -433,10 +433,10 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 break;
             case KalturaEntryStatus.errorConverting.toString():
             case KalturaEntryStatus.errorImporting.toString():
-                this.entryStatusClassName = "kStatusError kIconwarning";
+                this.entryStatusClassName = "kStatusError kIconerror";
                 break;
             default:
-                this.entryStatusClassName = "kStatusErrorProcessing kIconwarning";
+                this.entryStatusClassName = "kStatusErrorProcessing kIconerror";
                 break;
         }
         this.entryStatus = this._appLocalization.get('applications.content.entryDetails.flavours.' + this.entryStatusClassName.split(" ")[0]);
