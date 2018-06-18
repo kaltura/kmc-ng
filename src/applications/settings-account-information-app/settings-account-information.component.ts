@@ -51,6 +51,8 @@ export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
 
     if (this._settingsAccountInformationMainView.viewEntered()) {
         this._prepare();
+    } else {
+        this._logger.info(`view is not permitted, abort initialization`);
     }
   }
 
