@@ -3,44 +3,76 @@
 .whatsNew{
     position: relative;
     text-align: center;
+    height: 521px;
+    width: 790px;
+    background: linear-gradient(90deg, #00A783 0%, #3D82C7 100%);
+    opacity: 0.89;
+    border-radius: 4px;
+    .icons{
+        margin-top: 90px;
+        width: 100%;
+        height: 24px;
+        display: flex;
+        position: absolute;
+        color: white;
+        opacity: 0.6;
+        font-size: 24px;
+        justify-content: space-around;
+    }
+
     .kHeader{
-        border-bottom: 1px solid #cccccc;
-        height: 78px;
+        position: absolute;
+        margin-top: 150px;
         width: 100%;
         .kTitle{
-            width: 100%;
+            color: white;
             text-align: center;
-            color: $kGrayscale1;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            line-height: 78px;
+            width: 550px;
+            display: inline-block;
+            line-height: 38px;
+            letter-spacing: 3px;
         }
     }
-    .kContent{
-        width: 540px;
-        font-size: 18px;
-        padding-top: 32px;
-        line-height: 28px;
-        height: 220px;
-        color: $kGrayscale2;
+    .kWelcomeContent{
+        width: 100%;
+        font-size: 19px;
+        line-height: 24px;
+        text-align: center;
+        position: absolute;
+        margin-top: 250px;
+        color: white;
+        span{
+            width: 620px;
+            display: inline-block;
+        }
+        .enjoy{
+            font-weight: 700;
+            padding-top: 24px;
+        }
     }
     .kFooter{
-        border-top: 1px solid #cccccc;
-        height: 78px;
+        position: absolute;
+        margin-top: 394px;
         width: 100%;
-        padding-top: 18px;
         button{
-            width: 80px;
-            margin-left: 165px;
-        }
-        .kNote{
-            margin-left: 4px;
-            font-size: 10px;
-            font-weight: normal;
+            width: 160px;
+            height: 48px;
+            border-radius: 4px;
+            background-color: white;
+            color: $kPrimary;
+            font-size: 16px;
+            font-weight: 700;
         }
     }
 }
 
 :host {
   width: 100%;
+}
+kpopupwidget /deep/ {
+    .kPopupWidget {
+        background-color: rgba(0, 0, 0, 0);
+    }
 }

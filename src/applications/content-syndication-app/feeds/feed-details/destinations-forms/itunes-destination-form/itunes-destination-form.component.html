@@ -94,7 +94,7 @@
     <div class="kRow">
       <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.itunes.feedImageUrl.label' | translate}}</span>
       <div class="kControlContainer">
-        <input class="kControl" [formControl]="_feedImageUrlField" pInputText>
+        <input class="kControl" [formControl]="_feedImageUrlField" pInputText placeholder="http://">
         <div class="kHint">
           {{'applications.content.syndication.details.destinationsForms.itunes.feedImageUrl.hint' | translate}}
         </div>
@@ -127,7 +127,7 @@
         <div *ngIf="_feedOwnerEmailField.touched && _feedOwnerEmailField.hasError('required')" class="error">
           {{'applications.content.syndication.details.destinationsForms.itunes.errors.requiredFeedOwnerEmail' | translate}}
         </div>
-        <div *ngIf="_feedOwnerEmailField.touched && _feedOwnerEmailField.hasError('email')" class="error">
+        <div *ngIf="_feedOwnerEmailField.touched && _feedOwnerEmailField.hasError('email') && !_feedOwnerEmailField.hasError('required')" class="error">
           {{'applications.content.syndication.details.destinationsForms.itunes.errors.invalidFeedOwnerEmail' | translate}}
         </div>
         <div class="kHint">
