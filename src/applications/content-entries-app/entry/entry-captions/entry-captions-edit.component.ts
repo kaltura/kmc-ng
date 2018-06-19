@@ -53,15 +53,15 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 	    // set caption formats array. Note that WEBVTT cannot be set on client side - only on backend so is doesn't appear in the list
         this._captionFormats = [
             {
-                label: this._appLocalization.get('applications.content.entryDetails.captions.formats.srt'),
+                label: 'SRT',
                 value: KalturaCaptionType.srt
             },
             {
-                label: this._appLocalization.get('applications.content.entryDetails.captions.formats.dfxp'),
+                label: 'DFXP',
                 value: KalturaCaptionType.dfxp
             },
             {
-                label: this._appLocalization.get('applications.content.entryDetails.captions.formats.vtt'),
+                label: 'VTT',
                 value: KalturaCaptionType.webvtt
             }
         ];
