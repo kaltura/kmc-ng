@@ -13,6 +13,8 @@ import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+
 @Injectable()
 export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy {
   public metadataForm: FormGroup;
@@ -39,7 +41,7 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
 
   private _monitorFormChanges(): void {
     Observable.merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
         .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
@@ -113,7 +115,7 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
             }
           )
         )
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
             result => {
               const tags = result.objects.map(item => item.tag);

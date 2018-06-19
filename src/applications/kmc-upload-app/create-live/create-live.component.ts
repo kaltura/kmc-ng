@@ -14,6 +14,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum StreamTypes {
   kaltura,
@@ -109,7 +110,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
       this.parentPopupWidget.state$
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(event => {
           if (event.state === PopupWidgetStates.Open) {
             this._showConfirmationOnClose = true;
@@ -256,8 +257,8 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   private _submitKalturaLiveStreamData() {
     if (this.kalturaLiveStreamComponent.validate()) {
       this.createLiveService.createKalturaLiveStream(this.kalturaLiveStreamData)
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(response => {
           this._confirmEntryNavigation(response);
         }, error => {
@@ -278,8 +279,8 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   private _submitUniversalLiveStreamData() {
     if (this.universalLiveComponent.validate()) {
       this.createLiveService.createUniversalLiveStream(this.universalLiveData)
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(response => {
           this._confirmEntryNavigation(response);
         }, error => {
@@ -300,8 +301,8 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   private _submitManualLiveStreamData() {
     if (this.manualLiveComponent.validate()) {
       this.createLiveService.createManualLiveStream(this.manualLiveData)
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(response => {
           this._confirmEntryNavigation(response);
         }, error => {

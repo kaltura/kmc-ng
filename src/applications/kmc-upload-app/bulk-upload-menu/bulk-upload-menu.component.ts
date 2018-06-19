@@ -11,7 +11,7 @@ import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
 import { KalturaBulkUpload } from 'kaltura-ngx-client';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 @Component({
   selector: 'kKMCBulkUploadMenu',
   templateUrl: './bulk-upload-menu.component.html',
@@ -96,7 +96,7 @@ export class BulkUploadMenuComponent {
   private _invokeUpload(): void {
     if (this._selectedFiles) {
       this._bulkUploadService.upload(this._selectedFiles, this._selectedType)
-        .tag('block-shell')
+        .pipe(tag('block-shell'))
         .subscribe(
           (response) => this._handleUploadSuccess(response),
           (error) => this._handleUploadError(error)

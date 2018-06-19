@@ -14,7 +14,7 @@ import {KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory} from 'kalt
 import {KalturaCategory} from 'kaltura-ngx-client';
 import {CategoryGetAction} from 'kaltura-ngx-client';
 import {CategoryUpdateAction} from 'kaltura-ngx-client';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {CategoryWidgetsManager} from './category-widgets-manager';
 import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
@@ -107,7 +107,7 @@ export class CategoryService implements OnDestroy {
 
     private _onSectionsStateChanges() {
         this._widgetsManager.widgetsState$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .debounce(() => Observable.timer(500))
             .subscribe(
                 sectionsState => {
@@ -156,7 +156,7 @@ export class CategoryService implements OnDestroy {
 
 	private _onRouterEvents(): void {
 		this._router.events
-			.cancelOnDestroy(this)
+			.pipe(cancelOnDestroy(this))
 			.filter(
 			event => event instanceof NavigationEnd)
 .subscribe(
@@ -233,8 +233,8 @@ export class CategoryService implements OnDestroy {
 
 
 		this._widgetsManager.notifyDataSaving(newCategory, request, this.category)
-			.cancelOnDestroy(this)
-      .tag('block-shell')
+			.pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
 			.flatMap(
 			(response) => {
 				if (response.ready) {
@@ -246,7 +246,7 @@ export class CategoryService implements OnDestroy {
             .switchMap(proceedSaveRequest => {
               if (proceedSaveRequest) {
                 return this._kalturaServerClient.multiRequest(request)
-                  .tag('block-shell')
+                  .pipe(tag('block-shell'))
                   .map(
                     categorySavedResponse => {
 
@@ -343,7 +343,7 @@ export class CategoryService implements OnDestroy {
       return this._state.next({action: ActionTypes.CategoryLoadingFailed, error: new Error('Missing categoryId')});
     }this._loadCategorySubscription = this._kalturaServerClient
       .request(new CategoryGetAction({id}))
-			.cancelOnDestroy(this)
+			.pipe(cancelOnDestroy(this))
 			.subscribe(category => {
 			    this._logger.info(`handle successful loading of category data`);
                     this._category.next(category);
@@ -409,7 +409,7 @@ export class CategoryService implements OnDestroy {
         if (this.categoryId !== categoryId) {
             this.canLeaveWithoutSaving()
                 .filter(({ allowed }) => allowed)
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe(() => {
                     if (category instanceof KalturaCategory) {
                         this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });

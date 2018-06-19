@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core'
 import {PlaylistsFilters, PlaylistsStore} from '../playlists-store/playlists-store.service';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 export interface TagItem {
   type: string,
   value: any,
@@ -48,7 +48,7 @@ export class PlaylistsTagsComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._store.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
       });

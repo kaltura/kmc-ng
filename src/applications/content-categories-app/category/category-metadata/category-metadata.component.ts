@@ -7,7 +7,7 @@ import {JumpToSection} from './jump-to-section.component';
 import {DOCUMENT} from '@angular/common';
 import {PageScrollInstance, PageScrollService} from 'ng2-page-scroll';
 import {CategoryMetadataWidget} from './category-metadata-widget.service';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kmc-category-metadata',
@@ -72,7 +72,7 @@ export class CategoryMetadataComponent implements OnInit {
   ngAfterViewInit() {
 
     this._jumpToSectionQuery.changes
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((query) => {
         this._updateJumpToSectionsMenu();
       });

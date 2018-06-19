@@ -14,6 +14,8 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+
 @Injectable()
 export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy {
   private _selectionIdGenerator = new FriendlyHashId();
@@ -77,7 +79,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     });
 
     return this._kalturaClient.multiRequest(rules)
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(responses => {
         const responseIncomplete = !Array.isArray(responses)
           || responses.some(response => !!response.error || !Array.isArray(response.result));

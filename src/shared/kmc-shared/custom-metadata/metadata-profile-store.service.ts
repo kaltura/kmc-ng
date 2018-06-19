@@ -14,6 +14,7 @@ import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum MetadataProfileCreateModes {
     Api,
@@ -43,7 +44,7 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
         super();
 
         _appEvents.event(MetadataProfileUpdatedEvent)
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(() => {
             this._clearMetadataProfilesCache();
           })

@@ -9,6 +9,7 @@ import { KalturaITunesSyndicationFeedAdultValues } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { LanguageOptionsService } from 'app-shared/kmc-shared/language-options';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kItunesDestinationForm',
@@ -166,7 +167,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
       });
 
       this._form.valueChanges
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           () => {
             this.onFormStateChanged.emit({

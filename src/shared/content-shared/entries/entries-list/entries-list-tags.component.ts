@@ -9,6 +9,7 @@ import {
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import {ISubscription} from 'rxjs/Subscription';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface TagItem {
     type: string,
@@ -178,7 +179,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     private _registerToFilterStoreDataChanges(): void {
         this._entriesStore.filtersChange$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(({changes}) => {
                 this._updateComponentState(changes);
 
@@ -263,7 +264,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     newTag.label = `(${this._appLocalization.get('applications.content.filters.loading_lbl')})`;
                     newTag.tooltip = this._appLocalization.get('applications.content.filters.categoryId_tt', {'0': item});
                     newTag.dataFetchSubscription = this._categoriesSearch.getCategory(Number(item))
-                        .cancelOnDestroy(this)
+                        .pipe(cancelOnDestroy(this))
                         .subscribe(
                             result => {
                                 newTag.label = result.name;

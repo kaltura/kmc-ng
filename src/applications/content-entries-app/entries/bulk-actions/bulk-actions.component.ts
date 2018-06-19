@@ -26,7 +26,7 @@ import {subApplicationsConfig} from 'config/sub-applications';
 import {KalturaUser} from 'kaltura-ngx-client';
 import {KalturaMediaType} from 'kaltura-ngx-client';
 import {KalturaAccessControl} from 'kaltura-ngx-client';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {CreateNewPlaylistEvent} from 'app-shared/kmc-shared/events/playlist-creation';
 import {KalturaPlaylistType} from 'kaltura-ngx-client';
@@ -104,7 +104,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._categoriesStatusMonitorService.status$
-	    .cancelOnDestroy(this)
+	    .pipe(cancelOnDestroy(this))
 	    .subscribe((status: CategoriesStatus) => {
           this._categoriesLocked = status.lock;
         });
@@ -287,7 +287,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
     const execute = () => {
       service.execute(this.selectedEntries, data)
-        .tag('block-shell')
+        .pipe(tag('block-shell'))
         .subscribe(
         result => {if (callback) {
             callback(result);

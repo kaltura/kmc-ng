@@ -22,6 +22,7 @@ import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
   Desc = -1,
@@ -92,7 +93,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -112,7 +113,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
     this._playlists.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._querySubscription = null;

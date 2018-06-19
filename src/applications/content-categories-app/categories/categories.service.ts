@@ -52,6 +52,7 @@ import {
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -146,7 +147,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                     type: MetadataProfileTypes.Category,
                     ignoredCreateMode: MetadataProfileCreateModes.App
                 })
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe(
                     metadataProfiles => {
                         this._logger.info(`handle successful loading additional categories data`);
@@ -178,7 +179,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
 
     private _registerToFilterStoreDataChanges(): void {
         this.filtersChange$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(() => {
                 this._executeQuery();
             });
@@ -260,7 +261,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         this._logger.info(`handle loading categories data`);
 
         this._querySubscription = this.buildQueryRequest()
-            .cancelOnDestroy(this).subscribe(
+            .pipe(cancelOnDestroy(this)).subscribe(
                 response => {
                     this._logger.info(`handle successful loading categories data`);
                     this._querySubscription = null;

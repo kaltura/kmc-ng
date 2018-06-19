@@ -10,6 +10,7 @@ import { MetadataProfile } from 'app-shared/kmc-shared/custom-metadata/metadata-
 import { PlaylistRule } from './playlist-rule.interface';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class PlaylistRuleParserService implements OnDestroy {
@@ -28,7 +29,7 @@ export class PlaylistRuleParserService implements OnDestroy {
         type: MetadataProfileTypes.Entry,
         ignoredCreateMode: MetadataProfileCreateModes.App
       })
-      .cancelOnDestroy(this);
+      .pipe(cancelOnDestroy(this));
   }
 
   private _mapCustomMetadata(advancedSearch: KalturaSearchOperator): Observable<GroupedListType<string>> {

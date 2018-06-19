@@ -5,7 +5,7 @@ import {SettingsAccountSettingsService} from './settings-account-settings.servic
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsAccountSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
@@ -72,7 +72,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       this._loadPartnerAccountSettings();
       this.accountSettingsForm
           .statusChanges
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(() => this._updatePageExitVerification());
   }
 
@@ -118,8 +118,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     this._logger.info(`handle update partner account settings request`);
     this._accountSettingsService
       .updatePartnerData(this.accountSettingsForm.value)
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe(updatedPartner => {
           this._logger.info(`handle successful update partner account settings request`);
           this._fillForm(updatedPartner);
@@ -151,7 +151,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
     this._accountSettingsService
       .getPartnerAccountSettings()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(response => {
           this._fillAccountOwnersOptions(response.accountOwners);
           this.partnerId = response.partnerData.id;

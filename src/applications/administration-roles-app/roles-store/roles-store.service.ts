@@ -23,6 +23,7 @@ import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { AdminRolesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { PermissionTreeNodes, PermissionTreeNode } from './permission-tree-nodes';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
   Desc = -1,
@@ -127,7 +128,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -148,7 +149,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     this._logger.info(`loading roles list data`);
     this._roles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._logger.info(`handle success loading roles list data`);

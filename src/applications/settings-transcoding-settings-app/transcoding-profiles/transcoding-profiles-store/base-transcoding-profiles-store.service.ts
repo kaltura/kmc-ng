@@ -21,6 +21,7 @@ import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface ExtendedKalturaConversionProfileAssetParams extends KalturaConversionProfileAssetParams {
   updated?: boolean;
@@ -72,7 +73,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -92,7 +93,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     this._logger.info(`loading data from the server`);
     this._profiles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._logger.info(`handle success loading data from the server`);

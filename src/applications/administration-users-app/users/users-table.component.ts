@@ -6,6 +6,7 @@ import { Menu, MenuItem } from 'primeng/primeng';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -63,7 +64,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this._usersStore.users.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           if (response.error) {
@@ -82,7 +83,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       );
 
     this._usersStore.users.data$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           if (response.partnerInfo) {

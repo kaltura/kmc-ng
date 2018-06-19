@@ -5,7 +5,7 @@ import { EntriesDataProviderToken, EntriesStore } from 'app-shared/content-share
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { PlaylistEntriesDataProvider } from './playlist-rule/playlist-entries-data-provider.service';
 import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 @Component({
   selector: 'kPlaylistContentRuleBased',
   templateUrl: './rule-based-content.component.html',
@@ -32,7 +32,7 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
     this._widgetService.attachForm();
 
     this._widgetService.data$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(() => {
         this._clearSelection();

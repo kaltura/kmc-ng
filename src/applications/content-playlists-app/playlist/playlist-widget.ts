@@ -1,5 +1,5 @@
 import { AreaBlockerMessage, AreaBlockerMessageButton, WidgetBase } from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { KalturaPlaylist } from 'kaltura-ngx-client';

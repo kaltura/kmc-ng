@@ -21,6 +21,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
 import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views/main-views/content-playlists-main-view.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -108,7 +109,7 @@ export class PlaylistStore implements OnDestroy {
 
   private _onSectionsStateChanges(): void {
     this._widgetsManager.widgetsState$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .debounce(() => Observable.timer(500))
       .subscribe(
         sectionsState => {
@@ -154,7 +155,7 @@ export class PlaylistStore implements OnDestroy {
 
     this._loadPlaylistSubscription = this._kalturaServerClient
       .request(new PlaylistGetAction({ id }))
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(playlist => {
               this._playlist.next({ playlist });
               this._notifications.next({ type: NotificationTypes.ViewEntered });
@@ -212,7 +213,7 @@ export class PlaylistStore implements OnDestroy {
 
   private _onRouterEvents(): void {
     this._router.events
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(event => event instanceof NavigationEnd)
       .subscribe(
         () => {
@@ -281,14 +282,14 @@ export class PlaylistStore implements OnDestroy {
       const request = new KalturaMultiRequest(action);
 
       this._widgetsManager.notifyDataSaving(newPlaylist, request, this.playlist)
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .switchMap((response: { ready: boolean, reason?: OnDataSavingReasons, errors?: Error[] }) => {
             if (response.ready) {
               this._savePlaylistInvoked = true;
 
               return this._kalturaServerClient.multiRequest(request)
-                .tag('block-shell')
+                .pipe(tag('block-shell'))
                 .map(([res]) => {
                     if (res.error) {
                       this._state.next({ action: ActionTypes.PlaylistSavingFailed });
@@ -349,7 +350,7 @@ export class PlaylistStore implements OnDestroy {
     if (this.playlistId !== playlist.id) {
       this.canLeaveWithoutSaving()
             .filter(({ allowed }) => allowed)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(() => {
                 this._contentPlaylistView.open({ playlist, section: ContentPlaylistViewSections.Metadata });
             });
@@ -383,7 +384,7 @@ export class PlaylistStore implements OnDestroy {
 
   public returnToPlaylists(): void {
     this.canLeaveWithoutSaving()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(({ allowed }) => allowed)
       .subscribe(() => {
           this._contentPlaylistsMainView.open();

@@ -12,6 +12,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 import { KalturaUser } from 'kaltura-ngx-client';
 import { KalturaUserFilter } from 'kaltura-ngx-client';
 import { UserListAction } from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum AppearInListType {
   NoRestriction = 0,
@@ -104,7 +105,7 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
         }
       )
     )
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
       data => {
         const suggestions = [];

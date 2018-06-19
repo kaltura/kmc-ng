@@ -15,6 +15,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client';
 import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -101,7 +102,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
     }
 
     return this._flavorsStore.get()
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map((response: { items: KalturaFlavorParams[] }) => {
         const items = response.items;
         const profileType: KalturaConversionProfileType = this.data.type;

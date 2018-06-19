@@ -17,6 +17,7 @@ import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client';
 import { BulkUploadRequestFactory } from './bulk-upload-request-factory';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 interface BulkUploadFile
 {
@@ -72,7 +73,7 @@ export class BulkUploadMonitorService implements OnDestroy {
         this._logger.debug(`registering to app event 'BulkLogUploadingStartedEvent'`);
         this._appEvents
             .event(BulkLogUploadingStartedEvent)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(({id, status, uploadedOn}) => {
                 this._logger.debug(`handling app event 'BulkLogUploadingStartedEvent. { id: '${id}' }`);
                 this._trackNewFile({id, status, uploadedOn});
@@ -213,7 +214,7 @@ export class BulkUploadMonitorService implements OnDestroy {
 
 
             this._kmcServerPolls.register<KalturaBulkUploadListResponse>(10, this._bulkUploadChangesFactory)
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe((response) => {
                     if (response.error) {
                         this._logger.warn(`error occurred while trying to sync bulk upload status from server. server error: ${response.error.message}`);

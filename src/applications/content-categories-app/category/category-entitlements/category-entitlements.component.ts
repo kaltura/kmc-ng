@@ -10,6 +10,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 import {BrowserService} from 'app-shared/kmc-shell';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoryEntitlements',
@@ -35,7 +36,7 @@ export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnD
     this._widgetService.attachForm();
 
     this._widgetService.data$
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(data =>
         {
             this._membersCount = { loading: !data, value: data ? data.membersCount : 0, hasError: false };
@@ -58,14 +59,14 @@ export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnD
 
   ngAfterViewInit() {
       this.manageUsersPopup.state$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .skip(1)
           .subscribe(data => {
                   if (data.state === PopupWidgetStates.Close) {
                       this._membersCount.loading = true;
                       this._membersCount.hasError = false;
                       this._widgetService.fetchUpdatedMembersCount()
-                          .cancelOnDestroy(this)
+                          .pipe(cancelOnDestroy(this))
                           .subscribe(
                               value =>
                               {

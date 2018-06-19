@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import {ManualLive} from './manual-live.interface';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 @Component({
   selector: 'kManualLive',
   templateUrl: './manual-live.component.html',
@@ -79,7 +79,7 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
 
     this._form
       .valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(data => {
         this.dataChange.emit({
             name: data.name,

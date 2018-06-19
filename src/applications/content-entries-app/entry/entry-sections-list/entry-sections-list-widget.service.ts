@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {SectionsList} from './sections-list';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {EntryWidget} from '../entry-widget';
 import {
@@ -50,7 +50,7 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
 
     private _initialize() : void {
         this.form.widgetsState$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 sectionsState => {
                     this._sections.getValue().forEach((section: SectionWidgetItem) => {

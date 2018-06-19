@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren}
 import {RefinePrimeTree} from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui';
 import {ManageEndUserPermissionsService, UsersFilters} from '../manage-end-user-permissions.service';
 import {
@@ -119,7 +119,7 @@ export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, O
 
   private _registerToFilterStoreDataChanges(): void {
     this.manageEndUserPermissionsService.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         ({changes}) => {
           this._updateComponentState(changes);

@@ -24,6 +24,7 @@ import {EntryDistributionWidget} from './entry-distribution/entry-distribution-w
 import {EntryAdvertisementsWidget} from './entry-advertisements/entry-advertisements-widget.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
 	selector: 'kEntry',
@@ -128,7 +129,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 
 	    this._entryStore.notifications$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 ({ type, error }) => {
                     switch(type) {
@@ -149,7 +150,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                 });
 
 		this._entryStore.state$
-			.cancelOnDestroy(this)
+			.pipe(cancelOnDestroy(this))
 			.subscribe(
 				status => {
 

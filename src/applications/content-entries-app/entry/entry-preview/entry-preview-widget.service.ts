@@ -8,6 +8,7 @@ import {serverConfig, getKalturaServerUri} from 'config/server';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import { EntryStore } from '../entry-store.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
@@ -23,7 +24,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
 
 
         appEvents.event(PreviewMetadataChangedEvent)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(({entryId}) => {
                 if (this.data && this.data.id === entryId) {
                     this._iframeSrc = this._createUrl();

@@ -7,7 +7,7 @@ import {BrowserService} from "app-shared/kmc-shell";
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {EditEntitlementService} from "./edit-entitlement.service";
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 function privacyContextLabelValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -93,8 +93,8 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
     this._updateAreaBlockerState(true, null);
     this._editEntitlementService.updateEntitlementPrivacyContext(this.entitlement.id,
       this.editEntitlementForm.controls['privacyContextLabel'].value)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         result => {
           this._logger.info(`handle successful update request by user`);

@@ -10,6 +10,7 @@ import {
     SettingsTranscodingProfileViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface SectionWidgetItem {
   label: string;
@@ -35,7 +36,7 @@ export class TranscodingProfileSectionsListWidget extends TranscodingProfileWidg
 
   private _initialize(): void {
     this.form.widgetsState$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         sectionsState => {
           this._sections.getValue().forEach((section: SectionWidgetItem) => {

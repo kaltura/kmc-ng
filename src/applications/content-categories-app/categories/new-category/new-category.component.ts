@@ -3,9 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
 import {CategoriesService} from '../categories.service';
-
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {
   CategoriesStatus,
   CategoriesStatusMonitorService
@@ -48,7 +47,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this._categoriesStatusMonitorService.status$
-	    .cancelOnDestroy(this)
+	    .pipe(cancelOnDestroy(this))
 	    .subscribe((status: CategoriesStatus) => {
           this._categoriesUpdating = status.update;
         });
@@ -57,7 +56,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
       this.parentPopupWidget.state$
-		  .cancelOnDestroy(this)
+		  .pipe(cancelOnDestroy(this))
 		  .subscribe(({ state, context }) => {
             if (state === PopupWidgetStates.Open) {
               this._showConfirmationOnClose = true;
@@ -129,8 +128,8 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
           name: categoryName,
           linkedEntriesIds: this.linkedEntries.map(entry => entry.entryId)
         })
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(({category}) => {
             this._logger.info(`handle successful create category request`);
           this._showConfirmationOnClose = false;

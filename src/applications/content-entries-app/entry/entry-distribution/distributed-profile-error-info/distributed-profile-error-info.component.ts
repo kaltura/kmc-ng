@@ -10,6 +10,7 @@ import { KalturaDistributionValidationErrorConditionNotMet } from 'kaltura-ngx-c
 import { EntryDistributionWidget } from '../entry-distribution-widget.service';
 import { EntryStore } from '../../entry-store.service';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kEntryDistributedProfileErrorInfo',
@@ -134,7 +135,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
        Add this Flavor.name to the list of flavor names.
     */
     this._widget.flavors$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ items }) => {
         const details = errors.map(error => {
           const relevantFlavor = items.find(flavor => String(flavor.paramsId) === error.flavorParamsId);

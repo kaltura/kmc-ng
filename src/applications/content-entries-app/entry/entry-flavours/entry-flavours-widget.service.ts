@@ -60,6 +60,9 @@ import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client';
 import { KalturaConversionProfileAssetParamsListResponse } from 'kaltura-ngx-client';
 import { switchMap, map } from 'rxjs/operators';
 import { of as ObservableOf} from 'rxjs';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+
+
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
     tempEntryId: string;
@@ -125,7 +128,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         super._showLoader();
 
         return this._loadFlavorsSectionData()
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .map(() => {
                 super._hideLoader();
                 return { failed: false };
@@ -307,7 +310,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
             this._flavorsDataPollingSubscription = this._kmcServerPolls.register<KalturaMultiResponse>(10, this._flavorsDataRequestFactory)
                 .let(flavorsData$ => this._mapFlavorsData(flavorsData$))
-                .cancelOnDestroy(this, this.widgetReset$)
+                .pipe(cancelOnDestroy(this, this.widgetReset$))
                 .subscribe(
                     (response) => {
                         this._handleFlavorsDataResponse(response);
@@ -456,8 +459,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     this._kalturaServerClient.request(new FlavorAssetDeleteAction({
                         id: flavor.id
                     }))
-                        .cancelOnDestroy(this, this.widgetReset$)
-                        .tag('block-shell')
+                        .pipe(cancelOnDestroy(this, this.widgetReset$))
+                        .pipe(tag('block-shell'))
                         .subscribe(
                             response => {
                                 if (flavor.isSource) {
@@ -485,7 +488,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         this._kalturaServerClient.request(new FlavorAssetGetUrlAction({
             id: id
         }))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .subscribe(
                 dowmloadUrl => {
                     this._browserService.openLink(dowmloadUrl);
@@ -516,8 +519,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         flavor.status = KalturaFlavorAssetStatus.waitForConvert.toString();
         flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.converting');
         this._kalturaServerClient.request(request)
-            .cancelOnDestroy(this, this.widgetReset$)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                     const flavors = Array.from(this._flavors.getValue());
@@ -548,7 +551,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
     private _trackUploadFiles(): void {
         this._uploadManagement.onTrackedFileChanged$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .map(uploadedFile => {
                 let relevantFlavor = null;
                 if (uploadedFile.data instanceof NewEntryFlavourFile) {
@@ -610,8 +613,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             id: flavor.id,
             contentResource: resource
         }))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(tag('block-shell'))
             .catch(error => {
                 this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
                 return Observable.throw(error);
@@ -642,8 +645,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             entryId: this.data.id,
             flavorAsset: flavorAsset
         }))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(tag('block-shell'))
             .catch(error => {
                 this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
                 return Observable.throw(error);
@@ -684,7 +687,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         super._showLoader();
 
         this._loadFlavorsSectionData()
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .subscribe(() => {
                     super._hideLoader();
                     const entryId = this.data ? this.data.id : null;
@@ -725,8 +728,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
     public cancelReplacement(): void {
         this._kalturaServerClient.request(new MediaCancelReplaceAction({ entryId: this.data.id }))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                     this.currentEntryId = this.data.id;
@@ -751,8 +754,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
     public approveReplacement(): void {
         this._kalturaServerClient.request(new MediaApproveReplaceAction({ entryId: this.data.id }))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                     this.currentEntryId = this.data.id;

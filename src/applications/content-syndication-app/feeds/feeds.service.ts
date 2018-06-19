@@ -36,6 +36,7 @@ import {SyndicationFeedUpdateAction} from 'kaltura-ngx-client';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -103,7 +104,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -141,7 +142,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     this._logger.debug(`handle loading of feeds data`);
 
     this._querySubscription = this.buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((response: Feeds) => {
               this._logger.trace(`handle successful loading of feeds data`);
 

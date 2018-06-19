@@ -25,6 +25,7 @@ import { Subject } from 'rxjs/Subject';
 import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
   Desc = -1,
@@ -145,7 +146,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -186,7 +187,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
     this._entries.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._dataProvider.executeQuery(this._getFiltersAsReadonly())
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._querySubscription = null;

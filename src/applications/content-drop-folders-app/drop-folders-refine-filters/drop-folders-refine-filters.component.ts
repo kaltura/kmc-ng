@@ -3,7 +3,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
@@ -125,7 +125,7 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
 
   private _registerToFilterStoreDataChanges(): void {
     this._dropFoldersStore.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
       });

@@ -21,7 +21,7 @@ import {KalturaClient} from 'kaltura-ngx-client';
 import {CategoriesModes} from 'app-shared/content-shared/categories/categories-mode-type';
 import {MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes} from 'app-shared/kmc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy {
@@ -49,7 +49,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       type: MetadataProfileTypes.Entry,
       ignoredCreateMode: MetadataProfileCreateModes.App
     })
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .first()
       .map(metadataProfiles => {
         return metadataProfiles.items.map(metadataProfile => ({

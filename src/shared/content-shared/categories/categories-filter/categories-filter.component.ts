@@ -8,7 +8,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';

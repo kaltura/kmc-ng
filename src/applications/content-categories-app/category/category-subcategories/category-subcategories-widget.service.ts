@@ -3,7 +3,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import { Observable } from 'rxjs';
 import {KalturaUtils} from '@kaltura-ng/kaltura-common';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {CategoryWidget} from '../category-widget';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client';
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client';
@@ -68,7 +68,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
   private _loadSubcategories(): Observable<void> {
     return this._getSubcategories(this.data)
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(
         response => {
           this._subcategories.next(response.objects || []);
@@ -240,7 +240,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
     super._showLoader();
 
     this._loadSubcategories()
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .subscribe(() => {
           super._hideLoader();
         },

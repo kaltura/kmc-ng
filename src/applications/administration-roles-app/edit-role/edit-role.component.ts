@@ -11,6 +11,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kEditRole',
@@ -233,8 +234,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
     };
 
     this._rolesService.updateRole(this.role.id, editedRole)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(this._getObserver(retryFn, successFn));
   }
 
@@ -249,8 +250,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
     this.role = new KalturaUserRole({ name, description, permissionNames });
 
     this._rolesService.addRole(this.role)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(this._getObserver(retryFn));
   }
 

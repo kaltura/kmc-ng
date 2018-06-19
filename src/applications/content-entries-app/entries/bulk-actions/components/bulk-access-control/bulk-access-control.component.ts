@@ -29,6 +29,7 @@ import { AccessControlProfileStore, FlavoursStore } from 'app-shared/kmc-shared'
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
 	selector: 'kBulkAccessControl',
@@ -172,10 +173,10 @@ export class BulkAAccessControl implements OnInit, OnDestroy, AfterViewInit {
 		this._loading = true;
 		this._accessControlProfiles.next({items: []});
 
-		const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this);
-		const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this);
+		const getAPProfiles$ = this._accessControlProfileStore.get().pipe(cancelOnDestroy(this));
+		const getFlavours$ = this._flavoursStore.get().pipe(cancelOnDestroy(this));
 
-		return Observable.forkJoin(getAPProfiles$, getFlavours$).cancelOnDestroy(this);
+		return Observable.forkJoin(getAPProfiles$, getFlavours$).pipe(cancelOnDestroy(this));
 	}
 
 	private _setRestrictions() {

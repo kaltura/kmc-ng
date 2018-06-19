@@ -8,6 +8,7 @@ import {KalturaYahooSyndicationFeed} from 'kaltura-ngx-client';
 import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kYahooDestinationForm',
@@ -67,7 +68,7 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
       });
 
       this._form.valueChanges
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           () => {
             this.onFormStateChanged.emit({

@@ -14,6 +14,7 @@ import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Title } from '@angular/platform-browser';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum ContentCategoryViewSections {
     Metadata = 'Metadata',
@@ -215,7 +216,7 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
 
         this._kalturaClient
             .request(categoryGetAction)
-            .tag('block-shell')
+            .pipe(tag('block-shell'))
             .switchMap(category => {
                 this._logger.info(`handle successful request, proceed navigation`);
                 return this._open({category, section});

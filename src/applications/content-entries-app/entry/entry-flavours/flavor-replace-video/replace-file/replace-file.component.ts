@@ -35,6 +35,7 @@ import { Observer } from 'rxjs/Observer';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { switchMap, map } from 'rxjs/operators';
 import { of as ObservableOf} from 'rxjs';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];
@@ -465,8 +466,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             storageProfileId: this._selectedStorageProfile.id
         });
         this._newReplaceVideoUpload.link(linkFileDataList, this.entry.id, Number(transcodingProfileId), this._selectedStorageProfile.id)
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .subscribe(this._replacementResultHandler);
     }
 
@@ -482,8 +483,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             transcodingProfileId: Number(transcodingProfileId)
         });
         this._newReplaceVideoUpload.import(importFileDataList, this.entry.id, Number(transcodingProfileId))
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .subscribe(this._replacementResultHandler);
     }
 
@@ -500,8 +501,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         this._newReplaceVideoUpload.upload(uploadFileDataList, this.entry.id, Number(transcodingProfileId))
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .filter(entryId => entryId === this.entry.id)
             .map(() => {})
             .subscribe(this._replacementResultHandler);

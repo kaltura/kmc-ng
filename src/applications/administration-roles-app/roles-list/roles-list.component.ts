@@ -8,6 +8,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { AdminRolesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kRolesList',
@@ -74,7 +75,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._rolesStore.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
         this._browserService.scrollToTop();
@@ -83,7 +84,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   private _registerToDataChanges(): void {
     this._rolesStore.roles.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result => {
 
@@ -117,8 +118,8 @@ export class RolesListComponent implements OnInit, OnDestroy {
     this._logger.info(`handle delete role request by user`);
     this._blockerMessage = null;
     this._rolesStore.deleteRole(role)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._logger.info(`handle successful delete role request by user`);
@@ -156,8 +157,8 @@ export class RolesListComponent implements OnInit, OnDestroy {
     this._logger.info(`handle duplicate role request by user`, { id: role.id, name: role.name });
     this._blockerMessage = null;
     this._rolesStore.duplicateRole(role)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         (duplicatedRole) => {
           this._logger.info(`handle successful duplicate role request by user`);

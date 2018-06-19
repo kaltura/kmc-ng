@@ -12,6 +12,7 @@ import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
 import {UserListAction} from 'kaltura-ngx-client';
 import {KalturaUserFilter} from 'kaltura-ngx-client';
 import {KalturaUser} from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kBulkAddPublishers',
@@ -94,7 +95,7 @@ export class BulkAddPublishersComponent implements OnInit, OnDestroy, AfterViewI
         }
       )
     }))
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result => {
           const suggestions = [];

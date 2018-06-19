@@ -34,7 +34,7 @@ import {KalturaSearchOperatorType} from 'kaltura-ngx-client';
 import {KalturaCategoryUserStatus} from 'kaltura-ngx-client';
 import { CategoryGetAction } from 'kaltura-ngx-client';
 import { switchMap, map } from 'rxjs/operators';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface LoadingStatus {
   loading: boolean;
@@ -122,7 +122,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -160,7 +160,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
     this._logger.info(`handle loading category data`);
 
       this._querySubscription = this.buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(response => {
               this._logger.info(`handle successful loading category data`);
           this._querySubscription = null;

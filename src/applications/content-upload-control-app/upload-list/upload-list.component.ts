@@ -9,6 +9,7 @@ import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file
 import { KalturaUploadFile } from 'app-shared/kmc-shared';
 import { ContentUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { NewReplaceVideoUploadFile } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload-file';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 type MonitoredUploadFile = NewEntryUploadFile | NewEntryFlavourFile;
 
@@ -59,7 +60,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
       // listen for mediaCreated to show entryId in the upload list once media is created for this upload
       this._newEntryUploadService.onMediaCreated$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
               file => {
                   this._updateFile(file.id, {entryId: file.entryId});
@@ -67,7 +68,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
           );
 
       this._uploadManagement.onTrackedFileChanged$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .filter(trackedFile => isMonitoredUploadFile(trackedFile.data))
           .subscribe(
               (trackedFile) => {

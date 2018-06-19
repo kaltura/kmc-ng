@@ -16,6 +16,7 @@ import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
 import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client';
 import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
     selector: 'kFlavorLink',
@@ -107,8 +108,8 @@ export class FlavorLinkComponent implements OnDestroy {
     private _performAction(): void {
         const linkAction = this.flavor.flavorAsset && this.flavor.flavorAsset.id ? this._updateFlavorAction() : this._uploadFlavorAction();
         linkAction
-            .tag('block-shell')
-            .cancelOnDestroy(this)
+            .pipe(tag('block-shell'))
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 () => {
                     this._logger.info(`handle successful link action, reload flavors data`);

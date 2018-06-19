@@ -32,6 +32,7 @@ import {
     SettingsTranscodingProfileViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views/main-views/settings-transcoding-main-view.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -102,7 +103,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
   private _onSectionsStateChanges(): void {
     this._widgetsManager.widgetsState$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .debounce(() => Observable.timer(500))
       .subscribe(
         sectionsState => {
@@ -161,7 +162,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
   private _onRouterEvents(): void {
     this._router.events
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         event => {
           if (event instanceof NavigationEnd) {
@@ -239,8 +240,8 @@ export class TranscodingProfileStore implements OnDestroy {
     const request = new KalturaMultiRequest(action);
 
     this._widgetsManager.notifyDataSaving(newProfile, request, this.profile.data())
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .flatMap(prepareResponse => {
         if (prepareResponse.ready) {
           return this._checkFlavors(newProfile)
@@ -250,7 +251,7 @@ export class TranscodingProfileStore implements OnDestroy {
               }
 
               return this._kalturaServerClient.multiRequest(request)
-                .tag('block-shell')
+                .pipe(tag('block-shell'))
                 .map(multiResponse => {
                   if (multiResponse.hasErrors()) {
                     const errorMessage = multiResponse.map(response => {
@@ -340,7 +341,7 @@ export class TranscodingProfileStore implements OnDestroy {
     this._widgetsManager.notifyDataLoading(profileId);
 
     this._loadProfileSubscription = this._getProfile(profileId)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
             this._profile.data.next(response);
@@ -413,7 +414,7 @@ export class TranscodingProfileStore implements OnDestroy {
   public openProfile(profile: KalturaConversionProfileWithAsset): void {
     this.canLeave()
         .filter(({ allowed }) => allowed)
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(() => {
             this._settingsTranscodingProfileViewService.open({ profile, section: SettingsTranscodingProfileViewSections.Metadata });
         });

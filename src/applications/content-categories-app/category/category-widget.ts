@@ -1,7 +1,7 @@
 import { KalturaCategory } from 'kaltura-ngx-client';
 import { Injectable } from '@angular/core';
 import { WidgetBase } from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { CategoryWidgetsManager } from './category-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';

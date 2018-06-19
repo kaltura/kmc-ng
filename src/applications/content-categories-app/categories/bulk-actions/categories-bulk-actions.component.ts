@@ -20,7 +20,7 @@ import {PrivacyMode} from './components/bulk-change-content-privacy/bulk-change-
 import {KalturaPrivacyType} from 'kaltura-ngx-client';
 import {KalturaAppearInListType} from 'kaltura-ngx-client';
 import {AppearInListType} from './components/bulk-change-category-listing/bulk-change-category-listing.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client';
 import {CategoriesUtilsService} from "../../categories-utils.service";
 import {CategoriesStatusMonitorService} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
@@ -295,7 +295,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       this._logger.info(`handle delete categories action`);
 
     this._categoriesUtilsService.confirmDeleteMultiple(this.selectedCategories)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(result => {
         if (result.confirmed) {
             this._logger.info(`handle delete categories request`);
@@ -364,7 +364,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
     const execute = () => {
       service.execute(selectedCategories, data)
-        .tag('block-shell')
+        .pipe(tag('block-shell'))
         .subscribe(
         result => {
           if (callback) {

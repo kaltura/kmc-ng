@@ -7,6 +7,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kAddNewPlaylist',
@@ -49,7 +50,7 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
       this.parentPopupWidget.state$
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(({ state, context }) => {
           if (state === PopupWidgetStates.Open) {
             this._showConfirmationOnClose = true;

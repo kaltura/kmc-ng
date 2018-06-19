@@ -18,6 +18,7 @@ import { EntriesListService } from './entries-list.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -96,14 +97,14 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       }
 
       this._uploadManagement.onTrackedFileChanged$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted)
           .subscribe(() => {
               this._entriesStore.reload();
           });
 
       this._appEvents.event(UpdateEntriesListEvent)
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(() => this._entriesStore.reload());
 
       const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
@@ -149,7 +150,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
     this._blockerMessage = null;
     this._contentEntriesAppService.deleteEntry(entryId)
-      .tag('block-shell')
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._entriesStore.reload();

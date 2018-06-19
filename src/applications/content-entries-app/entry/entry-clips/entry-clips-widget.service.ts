@@ -18,7 +18,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 import {EntryStore} from '../entry-store.service';
 import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 import {EntryWidget} from '../entry-widget';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
@@ -61,7 +61,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
     super(ContentEntryViewSections.Clips, logger);
 
       this._appEvents.event(UpdateClipsEvent)
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(() => {
               this.updateClips();
               this._store.setRefreshEntriesListUponLeave();
@@ -152,7 +152,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
           fields: 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus'
         })
       }))
-        .cancelOnDestroy(this, this.widgetReset$)
+        .pipe(cancelOnDestroy(this, this.widgetReset$))
         .subscribe(
           response => {
             super._hideLoader();

@@ -3,7 +3,7 @@ import { PlaylistStore } from '../playlist-store.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { PlaylistSectionsListWidget, SectionWidgetItem } from './playlist-sections-list-widget.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kPlaylistSectionsList',
@@ -27,7 +27,7 @@ export class PlaylistSectionsList implements OnInit, OnDestroy {
     this._widgetService.attachForm();
 
     this._widgetService.sections$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(sections => {
         this._loading = false;
         this._sections = sections;

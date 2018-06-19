@@ -4,7 +4,7 @@ import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { modulesConfig } from 'config/modules';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
@@ -183,7 +183,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
 
   private _registerToFilterStoreDataChanges(): void {
         this._entriesStore.filtersChange$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 ({changes}) => {
                     this._updateComponentState(changes);

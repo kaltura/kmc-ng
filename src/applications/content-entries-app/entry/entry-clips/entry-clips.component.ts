@@ -7,7 +7,7 @@ import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/compo
 import { EntryStore } from '../entry-store.service';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/merge';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
     selector: 'kEntryClips',
@@ -57,7 +57,7 @@ export class EntryClips implements OnInit, OnDestroy {
             this._widgetService.data$,
             this._store.hasSource.value$
         )
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 () => {
                     if (this._widgetService.data) {

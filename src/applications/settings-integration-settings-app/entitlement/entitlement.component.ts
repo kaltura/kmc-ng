@@ -9,6 +9,7 @@ import { serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kEntitlement',
@@ -90,7 +91,7 @@ export class EntitlementComponent implements OnInit, OnDestroy {
         privacyContext: entitlement.privacyContext
       }
     })
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result => {
           this._logger.info(`handle successful delete entitlement request by user`);
@@ -126,7 +127,7 @@ export class EntitlementComponent implements OnInit, OnDestroy {
     this._logger.info(`handle loading entitlement data`);
     this._updateAreaBlockerState(true, null);
     this._entitlementService.getEntitlementsSectionData()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         (response: EntitlementSectionData) => {
           this._logger.info(`handle successful loading entitlement data`);

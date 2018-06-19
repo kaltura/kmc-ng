@@ -15,6 +15,7 @@ import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based
 import { KalturaPlaylistType } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kPlaylist',
@@ -67,7 +68,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     let errorMessage;
 
       this._playlistStore.notifications$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
               ({ type, error }) => {
                   switch(type) {
@@ -88,7 +89,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               });
 
     this._playlistStore.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         status => {
           this._showLoader = false;

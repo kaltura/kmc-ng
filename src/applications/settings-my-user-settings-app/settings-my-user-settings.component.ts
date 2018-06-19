@@ -3,7 +3,7 @@ import { SettingsMyUserSettingsService } from './settings-my-user-settings.servi
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client';
@@ -65,7 +65,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
     this._areaBlockerMessage = null;
     this._myUserSettingsStore
       .getUserData()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         ({ user, role }) => {
           this._logger.info(
@@ -108,8 +108,8 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
     this._updateBlockerMessage = null;
     this._myUserSettingsStore
       .updateLoginData(userData)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._logger.info(`handle successful update action`);

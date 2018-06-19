@@ -38,6 +38,7 @@ import { EntryDistributionRetrySubmitAction } from 'kaltura-ngx-client';
 import { KalturaDistributionProviderType } from 'kaltura-ngx-client';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -252,7 +253,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         entryFlavorsListAction,
         entryThumbnailsListAction
       ))
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(response => {
         if (response.hasErrors()) {
           response.forEach(item => {
@@ -300,8 +301,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   private _performDeleteRequest(action: KalturaRequest<KalturaEntryDistribution | void>, closePopupCallback?: () => void): void {
     this._kalturaClient.request(action)
-      .tag('block-shell')
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .subscribe(
         () => {
           if (typeof closePopupCallback === 'function') {
@@ -527,8 +528,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     }
 
     this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .map(responses => {
         responses.forEach(response => {
           if (response.error instanceof KalturaAPIException) {
@@ -564,8 +565,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       id: profile.id,
       entryDistribution: profile
     }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this.refresh();
@@ -590,8 +591,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   public submitProfileUpdate(profileId: number): void {
     this._kalturaClient.request(new EntryDistributionSubmitUpdateAction({ id: profileId }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this.refresh();
@@ -616,8 +617,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   public submitDistribution(profileId: number): void {
     this._kalturaClient.request(new EntryDistributionSubmitAddAction({ id: profileId }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this.refresh();
@@ -642,8 +643,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   public retryDistribution(profileId: number): void {
     this._kalturaClient.request(new EntryDistributionRetrySubmitAction({ id: profileId }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this.refresh();
@@ -685,7 +686,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     this._undistributedProfiles.next({ items: [] });
 
     this._loadDistributionData()
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .subscribe(
         (response) => {
           this._flavors.next({ items: response.flavors });

@@ -14,6 +14,7 @@ import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
 import {KalturaResponseProfileType} from 'kaltura-ngx-client';
 import {AppEventsService} from "app-shared/kmc-shared";
 import {PlayersUpdatedEvent} from "app-shared/kmc-shared/events";
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum PlayerTypes {
   Entry = 1,
@@ -34,7 +35,7 @@ export class PlayersStore implements OnDestroy {
     this._logger = logger.subLogger('PlayersStore');
 
     this._appEvents.event(PlayersUpdatedEvent)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((event) => {
         this._logger.info(`clear players cache (triggered by PlayersUpdatedEvent)`);
         const cacheKeyToDelete = this._createCacheKey({type: event.isPlaylist ? PlayerTypes.Playlist : PlayerTypes.Entry});

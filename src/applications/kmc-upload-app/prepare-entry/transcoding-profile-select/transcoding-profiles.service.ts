@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import { Observable } from 'rxjs';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {KalturaNullableBoolean} from 'kaltura-ngx-client';
 import {TranscodingProfileManagement} from 'app-shared/kmc-shared/transcoding-profile-management';
 

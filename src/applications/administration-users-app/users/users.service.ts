@@ -4,7 +4,7 @@ import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { IsUserExistsStatuses } from './user-exists-statuses';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
@@ -113,7 +113,7 @@ export class UsersStore implements OnDestroy {
         }),
         new PartnerGetInfoAction()
       ])
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           if (!response.hasErrors()) {

@@ -7,7 +7,7 @@ import { KalturaCountryRestrictionType } from 'kaltura-ngx-client';
 import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client';
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client';
 import { AccessControlProfilesStore, ExtendedKalturaAccessControl } from '../profiles-store/profiles-store.service';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaAccessControl } from 'kaltura-ngx-client';
 import { KalturaSiteRestriction } from 'kaltura-ngx-client';
@@ -254,7 +254,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     this._previewField.disable();
 
     this._domainsTypeField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(value => {
         if (value === KalturaSiteRestrictionType.allowSiteList) {
           this._allowedDomainsField.enable();
@@ -269,7 +269,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       });
 
     this._countriesTypeField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(value => {
         if (value === KalturaCountryRestrictionType.allowCountryList) {
           this._allowedCountriesField.enable();
@@ -288,7 +288,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       });
 
     this._ipsTypeField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(value => {
         if (value === KalturaIpAddressRestrictionType.allowList) {
           this._allowedIpsField.enable();
@@ -303,7 +303,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       });
 
     this._flavorsTypeField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(value => {
         if (value === KalturaLimitFlavorsRestrictionType.allowList) {
           this._allowedFlavorsField.enable();
@@ -322,7 +322,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       });
 
     this._secureVideoField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(value => {
         if (value) {
           this._allowPreviewField.enable();
@@ -335,7 +335,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       });
 
     this._allowPreviewField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(value => {
         if (value) {
           this._previewField.enable();
@@ -346,28 +346,28 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       });
 
     this._allowedIpsField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(value => value && this._allowedIpsField.enabled)
       .subscribe(value => {
         this._ipsFormatError = value.some(ip => ip && ip.__class === 'invalid');
       });
 
     this._restrictedIpsField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(value => value && this._restrictedIpsField.enabled)
       .subscribe(value => {
         this._ipsFormatError = value.some(ip => ip && ip.__class === 'invalid');
       });
 
     this._allowedDomainsField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(value => value && this._allowedDomainsField.enabled)
       .subscribe(value => {
         this._domainsFormatError = value.some(domain => domain && domain.__class === 'invalid');
       });
 
     this._restrictedDomainsField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(value => value && this._restrictedDomainsField.enabled)
       .subscribe(value => {
         this._domainsFormatError = value.some(domain => domain && domain.__class === 'invalid');

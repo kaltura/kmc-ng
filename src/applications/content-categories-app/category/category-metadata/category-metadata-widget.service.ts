@@ -25,6 +25,7 @@ import {async} from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -62,7 +63,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         });
 
         Observable.merge(...formsChanges)
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(
             () => {
@@ -195,7 +196,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                 )
             }
         ))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .do(response => {
                 this._categoryMetadata = response.objects;
             })
@@ -211,7 +212,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             type: MetadataProfileTypes.Category,
             ignoredCreateMode: MetadataProfileCreateModes.App
         })
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .do(response => {
 
                 this.customDataForms = [];
@@ -289,7 +290,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                         }
                     )
                 )
-                    .cancelOnDestroy(this, this.widgetReset$)
+                    .pipe(cancelOnDestroy(this, this.widgetReset$))
                     .subscribe(
                     result => {
                         const tags = result.objects.map(item => item.tag);

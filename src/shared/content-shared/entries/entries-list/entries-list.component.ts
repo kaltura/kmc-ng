@@ -1,13 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categories-status/categories-status-monitor.service';
-
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { EntriesRefineFiltersService,
     RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
@@ -66,13 +65,13 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnInit() {
         this._categoriesStatusMonitorService.status$
-		    .cancelOnDestroy(this)
+		    .pipe(cancelOnDestroy(this))
 		    .subscribe((status: CategoriesStatus) => {
                 this._categoriesUpdating = status.update;
             });
 
       this._entriesStore.entries.data$
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .filter(data => Array.isArray(data.items))
         .subscribe(({ items }) => {
           this._entriesDuration = items.reduce((total, entry) => total + entry.duration, 0);
@@ -101,13 +100,13 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 
         this._isBusy = true;
         this._entriesRefineFilters.getFilters()
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 groups => {
 
                     this._entriesStore.preFilter$
-                        .cancelOnDestroy(this)
+                        .pipe(cancelOnDestroy(this))
                         .subscribe(
                             filters => {
                                 if (this.enforcedFilters) {
@@ -153,7 +152,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 
     private _registerToDataChanges(): void {
         this._entriesStore.entries.state$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 result => {
 
@@ -254,7 +253,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 
   private _registerToFilterStoreDataChanges(): void {
     this._entriesStore.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
         this.clearSelection();

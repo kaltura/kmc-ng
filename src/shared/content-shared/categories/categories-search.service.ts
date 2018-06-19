@@ -2,9 +2,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/multicast';
 import 'rxjs/add/operator/publishReplay';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';
-
 import { CategoryListAction } from 'kaltura-ngx-client';
 import { KalturaCategoryFilter } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
@@ -12,7 +11,6 @@ import { KalturaCategory } from 'kaltura-ngx-client';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client';
 import { KalturaCategoryListResponse } from 'kaltura-ngx-client';
-
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { CategoriesGraphUpdatedEvent } from "app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated";
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -53,7 +51,7 @@ export class CategoriesSearchService implements OnDestroy {
       this._logger = logger.subLogger('CategoriesSearchService');
 
       this._appEvents.event(CategoriesGraphUpdatedEvent)
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(() => {
               this._logger.info(`clear categories cache (triggered by categories graph updated event)`);
               this._groupedCategoriesCache = {};

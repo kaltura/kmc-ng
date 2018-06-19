@@ -14,6 +14,7 @@ import {KalturaUserFilter} from 'kaltura-ngx-client';
 import {UserListAction} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoryChangeOwner',
@@ -117,7 +118,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
         }
       )
     )
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         data => {
             this._logger.info(`handle successful search users action`);

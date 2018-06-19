@@ -14,6 +14,8 @@ import {UserGetAction} from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
 
@@ -37,7 +39,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       if (this.data) {
           return this._kalturaClient.request(
               new CategoryGetAction({id: this.data.id})
-          ).cancelOnDestroy(this, this.widgetReset$)
+          ).pipe(cancelOnDestroy(this, this.widgetReset$))
               .map(value => {
                   return value.membersCount;
               });
@@ -54,7 +56,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     super._showLoader();
 
     return this._fetchAdditionalData()
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(({owner, parentCategory}) => {
         super._hideLoader();
         this.parentCategory = parentCategory || null;
@@ -125,7 +127,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
   private _monitorFormChanges() {
     Observable.merge(this.entitlementsForm.valueChanges, this.entitlementsForm.statusChanges)
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .subscribe(
         () => {
           const isValid = this.entitlementsForm.status !== 'INVALID';

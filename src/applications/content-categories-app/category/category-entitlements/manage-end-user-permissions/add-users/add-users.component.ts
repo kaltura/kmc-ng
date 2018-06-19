@@ -12,6 +12,7 @@ import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
 import {AddUsersService} from './add-users.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kAddUsers',
@@ -92,7 +93,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
     }
 
     this._searchUsersSubscription = this._addUsersService.getUsersSuggestions(event.query)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         data => {
             this._logger.info(`handle successful search users action by user`);
@@ -146,8 +147,8 @@ export class AddUsersComponent implements OnInit, OnDestroy {
             permissionLevel: this._selectedPermissionLevel,
             updateMethod: this._selectedUpdateMethod
           })
-        .tag('block-shell')
-        .cancelOnDestroy(this)
+        .pipe(tag('block-shell'))
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           result => {
               this._logger.info(`handle successful add users action`);
@@ -199,8 +200,8 @@ export class AddUsersComponent implements OnInit, OnDestroy {
     const _executeCopyUsers = () => {
       this._addUsersService
         .copyUsersFromParent({categoryId: this.category.id})
-        .tag('block-shell')
-        .cancelOnDestroy(this)
+        .pipe(tag('block-shell'))
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           result => {
               this._logger.info(`handle successful copy users from parent action by user`);

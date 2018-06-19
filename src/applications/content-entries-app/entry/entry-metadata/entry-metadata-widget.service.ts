@@ -20,14 +20,12 @@ import { KalturaMetadataObjectType } from 'kaltura-ngx-client';
 import { CategoryEntryAddAction } from 'kaltura-ngx-client';
 import { CategoryEntryDeleteAction } from 'kaltura-ngx-client';
 import { KalturaCategoryEntry } from 'kaltura-ngx-client';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from 'app-shared/kmc-shared';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { DynamicMetadataForm, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
@@ -104,7 +102,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         });
 
         Observable.merge(...formsChanges)
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(
                 () => {
@@ -246,7 +244,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 )
             }
         ))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .do(response => {
                 this._entryMetadata = response.objects;
             })
@@ -282,7 +280,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     return Observable.of({items: []});
                 }
             })
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .do(
                 categories =>
                 {
@@ -301,7 +299,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             type: MetadataProfileTypes.Entry,
             ignoredCreateMode: MetadataProfileCreateModes.App
         })
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .do(response => {
 
                 this.customDataForms = [];
@@ -414,7 +412,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                         }
                     )
                 )
-                    .cancelOnDestroy(this, this.widgetReset$)
+                    .pipe(cancelOnDestroy(this, this.widgetReset$))
                     .subscribe(
                     result =>
                     {
@@ -442,7 +440,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             observer => {
 
                 const requestSubscription = this._categoriesSearchService.getSuggestions(text)
-                    .cancelOnDestroy(this, this.widgetReset$)
+                    .pipe(cancelOnDestroy(this, this.widgetReset$))
                     .subscribe(
                         result =>
                         {

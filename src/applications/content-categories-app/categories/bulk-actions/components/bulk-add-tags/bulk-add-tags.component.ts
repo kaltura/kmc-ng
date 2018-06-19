@@ -12,7 +12,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 @Component({
   selector: 'kCategoriesBulkAddTags',
   templateUrl: './bulk-add-tags.component.html',
@@ -98,7 +98,7 @@ export class CategoriesBulkAddTags implements OnInit, OnDestroy, AfterViewInit {
         }
       )
     )
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result =>
         {

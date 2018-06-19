@@ -30,6 +30,7 @@ import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface ThumbnailRow {
   id: string;
@@ -85,7 +86,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
             : Observable.of({});
 
         return Observable.forkJoin(getThumbnails$, getProfiles$)
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
 
             .catch((error, caught) => {
                 super._hideLoader();
@@ -172,7 +173,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
             {
                 entryId: this.data.id
             }))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .subscribe(
                 (responses) => {
                     const thumbnails = responses || [];
@@ -209,8 +210,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
         const entryId = this.data ? this.data.id : null;
 
         this._kalturaServerClient.request(new ThumbAssetSetAsDefaultAction({thumbAssetId: thumb.id}))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                     thumbs.forEach(thumb => {
@@ -244,8 +245,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
         const thumbs = Array.from(this._thumbnails.getValue().items);
 
         this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                     this._browserService.scrollToTop();
@@ -284,8 +285,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
                     entryId: this.data.id,
                     fileData: fileData
                 }))
-                    .tag('block-shell')
-                    .cancelOnDestroy(this, this.widgetReset$)
+                    .pipe(tag('block-shell'))
+                    .pipe(cancelOnDestroy(this, this.widgetReset$))
                     .subscribe(
                         () => this.reloadThumbnails(),
                         () => {
@@ -311,7 +312,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
         params.stripProfiles = false;
 
         this._kalturaServerClient.request(new ThumbAssetGenerateAction({entryId: this.data.id, thumbParams: params}))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .subscribe(
                 () => {
                     super._hideLoader();

@@ -13,10 +13,10 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { BulkService } from '../bulk-service/bulk.service';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ModerationsListService } from './moderations-list.service';
 import { ContentModerationMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
@@ -135,8 +135,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   private _doApproveEntry(entryIds: string | string[]): void {
     this._bulkService.approveEntry(typeof entryIds === 'string' ? [entryIds] : entryIds)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._entriesList.onBulkChange({ reload: true });
@@ -188,8 +188,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   private _doRejectEntry(entryIds: string | string[]): void {
     this._bulkService.rejectEntry(typeof entryIds === 'string' ? [entryIds] : entryIds)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._entriesList.onBulkChange({ reload: true });

@@ -3,7 +3,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui';
 import {CategoriesFilters, CategoriesService} from '../categories.service';
 import {RefineGroup} from '../categories-refine-filters.service';
@@ -156,7 +156,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
 
   private _registerToFilterStoreDataChanges(): void {
     this._categoriesService.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         ({changes}) => {
           this._updateComponentState(changes);

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranscodingProfileStore } from '../transcoding-profile-store.service';
 import { TranscodingProfileDetailsWidget } from './transcoding-profile-details-widget.service';
 import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kTranscodingProfileDetails',
@@ -20,7 +21,7 @@ export class TranscodingProfileDetailsComponent implements OnInit, OnDestroy {
     this._widgetService.attachForm();
 
     this._widgetService.data$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(
         data => {

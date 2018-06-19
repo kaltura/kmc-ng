@@ -25,7 +25,7 @@ import { MetadataProfileUpdateAction } from 'kaltura-ngx-client';
 import { MetadataProfileAddAction } from 'kaltura-ngx-client';
 import { getKalturaServerUri } from 'config/server';
 import { SettingsMetadataMainViewService } from 'app-shared/kmc-shared/kmc-views';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 export interface SchemasFilters {
   pageSize: number;
   pageIndex: number;
@@ -85,7 +85,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -106,7 +106,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
     this._logger.info(`loading data from the server`);
     this._schemas.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .map(({ objects, totalCount }) => {
         objects.forEach((object: SettingsMetadataProfile) => {
           if (!object.createMode || object.createMode === KalturaMetadataProfileCreateMode.kmc) {

@@ -34,6 +34,7 @@ import { EntryWidget } from '../entry-widget';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface CaptionRow {
     uploading: boolean;
@@ -83,7 +84,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
   private _trackUploadFiles(): void {
     this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .map(uploadedFile => {
         let relevantCaption = null;
         if (uploadedFile.data instanceof NewEntryCaptionFile) {
@@ -147,7 +148,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     return this._kalturaServerClient.request(new CaptionAssetListAction({
       filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
     }))
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(response => {
         // Restore previous upload state
         this._updateCaptionsResponse(response);

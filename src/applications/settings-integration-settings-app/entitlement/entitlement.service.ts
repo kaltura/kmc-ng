@@ -14,6 +14,7 @@ import { CategoriesSearchService } from 'app-shared/content-shared/categories/ca
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface EntitlementSectionData {
   categories: KalturaCategory[];
@@ -37,7 +38,7 @@ export class EntitlementService implements OnDestroy{
       })
     );
 
-    return this._kalturaServerClient.multiRequest(request).cancelOnDestroy(this).map(
+    return this._kalturaServerClient.multiRequest(request).pipe(cancelOnDestroy(this)).map(
       response => {
         if (response.hasErrors()) {
           throw new Error('error occurred in action \'getEntitlementsSectionData\'');

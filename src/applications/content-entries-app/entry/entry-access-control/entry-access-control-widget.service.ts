@@ -26,6 +26,7 @@ import * as R from 'ramda';
 import {EntryWidget} from '../entry-widget';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
@@ -70,11 +71,11 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
       super._showLoader();
       this._accessControlProfiles.next({items: []});
 
-      const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this);
-      const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this);
+      const getAPProfiles$ = this._accessControlProfileStore.get().pipe(cancelOnDestroy(this));
+      const getFlavours$ = this._flavoursStore.get().pipe(cancelOnDestroy(this));
 
       return Observable.forkJoin(getAPProfiles$, getFlavours$)
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(
           response => {
             let ACProfiles = response[0].items;

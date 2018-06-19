@@ -13,6 +13,7 @@ import { BaseEntryGetAction } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -68,7 +69,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
 
   private _monitorFormChanges(): void {
     Observable.merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
@@ -152,7 +153,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     this.hideStorageProfileIdField = (this.data.type && this.data.type === KalturaConversionProfileType.liveStream) || !hasStorageProfilesPermission;
     if (!this.hideStorageProfileIdField) {
       return this._loadRemoteStorageProfiles()
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(profiles => {
           prepare();
           this.remoteStorageProfilesOptions = profiles.map(profile => ({ label: profile.name, value: profile.id }));

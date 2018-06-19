@@ -11,6 +11,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsAccessControlMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kAccessControlProfilesList',
@@ -67,7 +68,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
   private _registerToDataChanges(): void {
     this._store.profiles.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result => {
 
@@ -107,7 +108,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._store.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
         this._clearSelection();
@@ -120,8 +121,8 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
     this._logger.info(`handle delete request by the user`);
     this._store.deleteProfiles(profiles)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._logger.info(`handle success 'delete' by the server`);
@@ -215,8 +216,8 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   public _saveProfile(profile: KalturaAccessControl): void {
     this._logger.info(`handle 'save' updated profile action by the user`, { id: profile.id, name: profile.name });
     this._store.saveProfile(profile)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._logger.info(`handle success 'save' by the server`);

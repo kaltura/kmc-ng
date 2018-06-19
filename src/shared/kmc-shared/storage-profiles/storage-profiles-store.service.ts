@@ -7,6 +7,7 @@ import { KalturaStorageProfileFilter } from 'kaltura-ngx-client';
 import { StorageProfileListAction } from 'kaltura-ngx-client';
 import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client';
 import { KalturaStorageProfile } from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class StorageProfilesStore extends PartnerProfileStore implements OnDestroy {
@@ -21,7 +22,7 @@ export class StorageProfilesStore extends PartnerProfileStore implements OnDestr
     if (!this._getStorageProfiles$) {
       // execute the request
       this._getStorageProfiles$ = this._buildGetRequest()
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(response => ({ items: response ? response.objects : [] }))
         .catch(
           error => {

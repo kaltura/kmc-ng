@@ -23,7 +23,7 @@ import { AttachmentAssetDeleteAction } from 'kaltura-ngx-client';
 import { AttachmentAssetUpdateAction } from 'kaltura-ngx-client';
 import { AttachmentAssetAddAction } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { NewEntryRelatedFile } from './new-entry-related-file';
@@ -71,7 +71,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
   private _trackUploadFiles(): void {
     this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile)
       .map(uploadedFile => {
         let relevantRelatedFile = null;
@@ -147,7 +147,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
     return this._kalturaServerClient.request(new AttachmentAssetListAction({
       filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
     }))
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(response => {
         // Set file type and restore previous upload state
         this._updateAssetsResponse(response);

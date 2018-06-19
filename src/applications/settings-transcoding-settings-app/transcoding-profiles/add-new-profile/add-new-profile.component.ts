@@ -14,6 +14,7 @@ import { CreateNewTranscodingProfileEvent } from 'app-shared/kmc-shared/events/t
 import { KalturaConversionProfile } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface NewTranscodingProfileFormData {
   name: string;
@@ -75,7 +76,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
     if (!this._hideIngestFromRemoteStorage) {
       this._dataLoading = true;
       this._loadRemoteStorageProfiles()
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(profiles => profiles.map(profile => ({ label: profile.name, value: profile.id })))
         .subscribe(
           profiles => {
@@ -163,7 +164,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
       if (entryId) {
         this._dataLoading = true;
         this._validateEntryExists(entryId)
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
             exists => {
               this._dataLoading = false;

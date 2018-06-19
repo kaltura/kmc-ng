@@ -15,6 +15,7 @@ import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Title } from '@angular/platform-browser';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum ContentEntryViewSections {
     Metadata = 'Metadata',
@@ -296,7 +297,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
 
         this._kalturaClient
             .request(baseEntryAction)
-            .tag('block-shell')
+            .pipe(tag('block-shell'))
             .map(response => {
                 if (response instanceof KalturaMediaEntry) {
                     return response;

@@ -8,13 +8,11 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Subject } from 'rxjs/Subject';
 import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
-
-
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import { TagsComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoriesSelector',
@@ -57,7 +55,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this._categoriesStatusMonitorService.status$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((status: CategoriesStatus) => {
         this._categoriesLocked = status.lock;
         this._categoriesUpdating = status.update;
@@ -73,7 +71,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.parentPopupWidget) {
       this.parentPopupWidget.state$
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(event => {
           if (event.state === PopupWidgetStates.Open) {
             this._confirmClose = false;

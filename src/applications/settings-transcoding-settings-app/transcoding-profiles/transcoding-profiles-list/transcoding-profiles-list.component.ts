@@ -19,6 +19,7 @@ import {
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -80,7 +81,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._storeService.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
         this._clearSelection();
@@ -101,7 +102,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
   private _registerToDataChanges(): void {
     this._storeService.profiles.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result => {
           this._tableIsBusy = result.loading;
@@ -172,8 +173,8 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
     this._logger.info(`handle 'setAsDefault' request by the user`, { id: profile.id, name: profile.name });
     if (!profile.isDefault) {
       this._storeService.setAsDefault(profile)
-        .tag('block-shell')
-        .cancelOnDestroy(this)
+        .pipe(tag('block-shell'))
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           () => {
             this._logger.info(`handle successful 'setAsDefault' request by the user`);
@@ -215,8 +216,8 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
       () => profiles.map(profile => ({ id: profile.id, name: profile.name }))
     );
     this._storeService.deleteProfiles(profiles)
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         () => {
           this._logger.info(`handle successful 'delete' profiles request by the user`);

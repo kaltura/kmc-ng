@@ -12,6 +12,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 import { KalturaUser } from 'kaltura-ngx-client';
 import { KalturaUserFilter } from 'kaltura-ngx-client';
 import { UserListAction } from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoriesBulkChangeOwner',
@@ -98,7 +99,7 @@ export class CategoriesBulkChangeOwner implements OnInit, OnDestroy, AfterViewIn
         }
       )
     )
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         data =>
         {

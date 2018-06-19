@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { serverConfig } from 'config/server';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum LoginScreens {
   Login,
@@ -71,8 +72,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private _validateRestorePasswordHash(hash: string): void {
         this._appAuthentication.validateResetPasswordHash(hash)
-            .tag('block-shell')
-            .cancelOnDestroy(this)
+            .pipe(tag('block-shell'))
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 (errorCode) => {
                     if (!errorCode) {
@@ -97,7 +98,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
   private _makeLoginRequest(username: string, password: string): Observable<LoginResponse> {
-    return this._appAuthentication.login(username, password).cancelOnDestroy(this);
+    return this._appAuthentication.login(username, password).pipe(cancelOnDestroy(this));
   }
 
   private _handleLoginResponse(success: boolean, error: LoginError, username: string): void {
@@ -183,7 +184,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this._inProgress = true;
 
     this._appAuthentication.resetPassword(email)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         () => {
           this._passwordReset = true;

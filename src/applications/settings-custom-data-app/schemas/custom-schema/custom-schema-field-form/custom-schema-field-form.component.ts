@@ -6,6 +6,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCustomSchemaFieldForm',
@@ -80,7 +81,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
       this.parentPopupWidget.state$
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .filter(event => event.state === PopupWidgetStates.BeforeClose)
         .subscribe(event => {
           const canPreventClose = event.context && event.context.allowClose;
@@ -170,7 +171,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     this._listValuesFiled = this._fieldForm.controls['listValues'];
 
     this._typeField.valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(() => this._isNew)
       .subscribe(change => {
         this._fieldForm.patchValue({ searchable: change !== MetadataItemTypes.Date });

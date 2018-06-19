@@ -31,6 +31,7 @@ import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 import { SettingsAccessControlMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { FlavoursStore } from 'app-shared/kmc-shared';
 import { switchMap, map } from 'rxjs/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 const localStoragePageSizeKey = 'accessControlProfiles.list.pageSize';
 
@@ -114,7 +115,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -135,7 +136,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     this._logger.info(`loading data from the server`);
     this._profiles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         ({ accessControlList, flavorsList }) => {
           this._querySubscription = null;

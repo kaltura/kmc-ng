@@ -10,6 +10,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kFeedsList',
@@ -55,7 +56,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
           this._restoreFiltersState();
           this._registerToFilterStoreDataChanges();
           this._feedsService.feeds.data$
-              .cancelOnDestroy(this)
+              .pipe(cancelOnDestroy(this))
               .subscribe(response => {
                   this._feedsTotalCount = response.totalCount;
               });
@@ -114,8 +115,8 @@ export class FeedsListComponent implements OnInit, OnDestroy {
     const executeDelete = () => {
       this._blockerMessage = null;
       this._feedsService.deleteFeeds([feed.id])
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(
           result => {
               this._logger.info(`handle successful action`);
@@ -147,7 +148,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
     };
 
     this._feedsService.confirmDelete([feed])
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(result => {
         if (result.confirmed) {
           executeDelete();
@@ -172,8 +173,8 @@ export class FeedsListComponent implements OnInit, OnDestroy {
     const executeDelete = () => {
       this._blockerMessage = null;
       this._feedsService.deleteFeeds(this._selectedFeeds.map(feed => feed.id))
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(
           result => {
               this._logger.info(`handle successful action`);
@@ -206,7 +207,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
     };
 
     this._feedsService.confirmDelete(this._selectedFeeds)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(result => {
         if (result.confirmed) {
           executeDelete();
@@ -240,7 +241,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
     // first the list of playlists and afterwards the feed list
     // (while blocking the list to prevent the user from adding/editing feed without playlists provided)
     this._feedsService.getPlaylists()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(response => {
           this._logger.info(`handle successful data loading`);
           this._playlists = response;
@@ -271,7 +272,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   private _registerToDataChanges(): void {
       this._logger.info(`register to data changes`);
     this._feedsService.feeds.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result => {
 
@@ -329,7 +330,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._feedsService.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({changes}) => {
         this._updateComponentState(changes);
         this._clearSelection();

@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import * as Ajv from 'ajv';
 import { ContextualHelpDataSchema } from './contextual-help-data-schema';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface ContextualHelpData {
     viewKey: string;
@@ -82,7 +83,7 @@ export class ContextualHelpService implements OnDestroy {
         if (!this._inited) {
             this._inited = false;
             this._load()
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe(data => {
                     this._logger.info(`Contextual help data loaded`);
                     this._contextualHelpData = data;

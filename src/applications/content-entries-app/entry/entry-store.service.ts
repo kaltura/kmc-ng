@@ -13,7 +13,7 @@ import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'ka
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { BaseEntryGetAction } from 'kaltura-ngx-client';
 import { BaseEntryUpdateAction } from 'kaltura-ngx-client';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { EntryWidgetsManager } from './entry-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -97,7 +97,7 @@ export class EntryStore implements  OnDestroy {
 		this._onRouterEvents();
 
 		// hard reload the entries upon navigating back from entry (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
-    this._entryRoute.queryParams.cancelOnDestroy(this)
+    this._entryRoute.queryParams.pipe(cancelOnDestroy(this))
       .first()
       .subscribe(queryParams => {
          const reloadEntriesListOnNavigateOut = !!queryParams['reloadEntriesListOnNavigateOut']; // convert string to boolean
@@ -110,7 +110,7 @@ export class EntryStore implements  OnDestroy {
     private _onSectionsStateChanges()
 	{
 		this._widgetsManager.widgetsState$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .debounce(() => Observable.timer(500))
             .subscribe(
 				sectionsState =>
@@ -158,7 +158,7 @@ export class EntryStore implements  OnDestroy {
 
 	private _onRouterEvents() : void {
         this._router.events
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 event => {
                     if (event instanceof NavigationEnd) {
@@ -189,15 +189,15 @@ export class EntryStore implements  OnDestroy {
 		);
 
 		this._widgetsManager.notifyDataSaving(newEntry, request, this.entry)
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .flatMap(
 				(response) => {
 					if (response.ready) {
 						this._refreshEntriesListUponLeave = true;
 
 						return this._kalturaServerClient.multiRequest(request)
-                            .tag('block-shell')
+                            .pipe(tag('block-shell'))
                             .map(
 								response => {
 									if (response.hasErrors()) {
@@ -271,7 +271,7 @@ export class EntryStore implements  OnDestroy {
 		this._widgetsManager.notifyDataLoading(entryId);
 
 		this._loadEntrySubscription = this._getEntry(entryId)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 ({ entry, hasSource }) => {
                     this._entry.next(entry);
@@ -340,7 +340,7 @@ export class EntryStore implements  OnDestroy {
         if (entryId !== this.entryId) {
             this.canLeave()
                 .filter(({ allowed }) => allowed)
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe(() => {
                     if (entry instanceof KalturaMediaEntry) {
                         this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });

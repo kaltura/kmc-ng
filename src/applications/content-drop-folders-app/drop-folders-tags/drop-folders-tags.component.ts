@@ -3,6 +3,7 @@ import {DropFoldersFilters, DropFoldersStoreService} from '../drop-folders-store
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {RefineList} from '../drop-folders-store/drop-folders-refine-filters.service';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface TagItem {
   type: string,
@@ -93,7 +94,7 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._store.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
       });

@@ -1,19 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {EntryPreviewWidget} from './entry-preview-widget.service';
-
-
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {KalturaEntryStatus} from 'kaltura-ngx-client';
-
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
-
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { EntryStore } from '../entry-store.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
 	selector: 'kEntryPreview',
@@ -63,14 +60,14 @@ export class EntryPreview implements OnInit, OnDestroy {
         this._widgetService.attachForm();
 
         this._store.hasSource.value$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 data => {
                     this._checkClipAndTrimAvailability();
                 });
 
         this._widgetService.data$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
             data => {
                 if (data) {

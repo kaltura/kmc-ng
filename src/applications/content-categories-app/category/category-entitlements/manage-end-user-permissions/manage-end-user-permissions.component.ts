@@ -18,6 +18,7 @@ import {
 } from './manage-end-user-permissions-refine-filters.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface UserActionData {
   action: 'activate' | 'deactivate' | 'permissionLevel'| 'updateMethod' | 'delete',
@@ -106,12 +107,12 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
         this._isBusy = true;
         this._refineFiltersService.getFilters()
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 lists => {
                     this._usersService.users.data$
-                        .cancelOnDestroy(this)
+                        .pipe(cancelOnDestroy(this))
                         .skip(1) // skip the first emitted value which is the default for '_actualUsersCount' to behave correctly
                         .subscribe(response => {
                             this._users = response.items;
@@ -144,7 +145,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
     private _registerToDataChanges(): void {
         this._usersService.users.state$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 result => {
 
@@ -198,7 +199,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._usersService.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({changes}) => {
         this._updateComponentState(changes);
         this._clearSelection();
@@ -306,8 +307,8 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
 
     observable$
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         res => {
             this._logger.info(`handle successful action`);

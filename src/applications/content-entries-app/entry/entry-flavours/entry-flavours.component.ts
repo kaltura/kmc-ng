@@ -10,7 +10,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursWidget, ReplacementData } from './entry-flavours-widget.service';
 import { Flavor } from './flavor';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { globalConfig } from 'config/global';
@@ -232,7 +232,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
     ngAfterViewInit() {
 	    if (this.importPopup) {
 		    this.importPopup.state$
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
 			    .subscribe(event => {
 				    if (event.state === PopupWidgetStates.Close) {
 					    if (event.context && event.context.flavorUrl){

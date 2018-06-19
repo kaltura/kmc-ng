@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
 import { ManualContentWidget } from './manual-content-widget.service';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kPlaylistContentManual',
@@ -19,7 +20,7 @@ export class ManualContentComponent implements OnInit, OnDestroy {
     this._widgetService.attachForm();
     this._widgetService.data$
       .filter(Boolean)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._clearSelection();
       });

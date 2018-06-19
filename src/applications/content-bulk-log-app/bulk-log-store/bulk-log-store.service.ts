@@ -22,6 +22,7 @@ import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 const localStoragePageSizeKey = 'bulklog.list.pageSize';
 
@@ -101,7 +102,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -122,7 +123,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     this._logger.info(`handle loading of bulk-log data`);
     this._bulkLog.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._logger.info(`handle successful loading of bulk-log data`);

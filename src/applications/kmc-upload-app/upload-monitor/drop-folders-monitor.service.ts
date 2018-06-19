@@ -20,6 +20,7 @@ import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client';
 import { DropFoldersRequestFactory } from './drop-folders-request-factory';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 interface DropFoldersUploadFile {
   status: KalturaDropFolderFileStatus;
@@ -242,7 +243,7 @@ export class DropFoldersMonitorService implements OnDestroy {
 
 
       this._kmcServerPolls.register<KalturaDropFolderFileListResponse>(10, this._dropFolderChangesFactory)
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe((response) => {
           if (response.error) {
             this._logger.warn(`error occurred while trying to sync drop folders upload status from server. server error: ${response.error.message}`);

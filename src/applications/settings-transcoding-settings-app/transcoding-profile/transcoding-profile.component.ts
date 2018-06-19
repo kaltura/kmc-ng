@@ -18,6 +18,7 @@ import {
     SettingsTranscodingProfileViewSections,
     SettingsTranscodingProfileViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kTranscodingProfile',
@@ -95,7 +96,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
       this._profileStore.notifications$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
               ({ type, error }) => {
                   switch(type) {
@@ -115,7 +116,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
                   }
               });
     this._profileStore.profile.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(
         status => {

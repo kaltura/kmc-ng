@@ -12,7 +12,7 @@ import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { CategoryEntryDeleteAction } from 'kaltura-ngx-client';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]> implements OnDestroy {
@@ -48,7 +48,7 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
 
     public getCategoriesOfEntries(entries: string[]): Observable<CategoryData[]> {
         return this._getCategoryEntryMapping(entries)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .switchMap(items => {
                 // got all entry categories - load category details for each entry category
                 if (items && items.length) {
@@ -58,7 +58,7 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
                     }, {})).map(Number);
 
                     return this._categoriesSearch.getCategories(categoriesIds)
-                        .cancelOnDestroy(this)
+                        .pipe(cancelOnDestroy(this))
                         .map(categoryListResponse => categoryListResponse.items)
                 } else {
                     return Observable.of([]);
@@ -73,7 +73,7 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
 
             if (entriesId.length && categoriesId && categoriesId.length) {
                 this._getCategoryEntryMapping(entriesId)
-                    .cancelOnDestroy(this)
+                    .pipe(cancelOnDestroy(this))
                     .subscribe(
                         categoriesOfEntries => {
 

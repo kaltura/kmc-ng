@@ -14,6 +14,7 @@ import { MediaUpdateContentAction } from 'kaltura-ngx-client';
 import { UploadTokenDeleteAction } from 'kaltura-ngx-client';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface KmcNewEntryUpload {
   file: File;
@@ -37,7 +38,7 @@ export class NewEntryUploadService implements OnDestroy {
 
   private _monitorTrackedFilesChanges(): void {
     this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(
         trackedFile => {

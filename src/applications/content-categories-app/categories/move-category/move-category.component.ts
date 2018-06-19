@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kMoveCategory',
@@ -41,7 +42,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._categoriesStatusMonitorService.status$
-	    .cancelOnDestroy(this)
+	    .pipe(cancelOnDestroy(this))
 	    .subscribe((status: CategoriesStatus) => {
           this._categoriesUpdating = status.update;
         });
@@ -143,8 +144,8 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
       this._logger.info(`handle move category request, load category parent data`);
     this._getCategoryParentData()
       .switchMap(categoryParent => this._categoriesService.moveCategory({ categories: this.selectedCategories, categoryParent }))
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
               this._logger.info(`handle successful move category request`);
           this.onMovedCategories.emit();

@@ -10,7 +10,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { EntryMetadataWidget } from './entry-metadata-widget.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/category-tooltip.pipe';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -88,7 +88,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         );
 
         this._categoriesStatusMonitorService.status$
-		    .cancelOnDestroy(this)
+		    .pipe(cancelOnDestroy(this))
 		    .subscribe((status: CategoriesStatus) => {
                 this._categoriesLocked = status.lock;
             });
@@ -198,7 +198,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 	    }
 
         this._jumpToSectionQuery.changes
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe((query) => {
                 this._updateJumpToSectionsMenu();
         });

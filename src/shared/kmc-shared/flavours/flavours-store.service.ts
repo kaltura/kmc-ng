@@ -9,7 +9,7 @@ import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {KalturaFlavorParamsListResponse} from 'kaltura-ngx-client';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
 import {KalturaResponseProfileType} from 'kaltura-ngx-client';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class FlavoursStore extends PartnerProfileStore implements OnDestroy {
@@ -24,7 +24,7 @@ export class FlavoursStore extends PartnerProfileStore implements OnDestroy {
     if (!this._getFlavorsFilters$) {
       // execute the request
       this._getFlavorsFilters$ = this._buildGetRequest()
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(
           response => {
             return ({items: response ? response.objects : []});

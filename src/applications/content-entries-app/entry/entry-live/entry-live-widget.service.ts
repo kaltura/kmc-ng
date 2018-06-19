@@ -26,6 +26,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface bitrate {
 	enabled: boolean,
@@ -132,7 +133,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
               pageSize: 500
             })
           }))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .catch((error, caught) => {
               super._hideLoader();
               super._showActivationError();
@@ -288,8 +289,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 
 		this._kalturaServerClient.multiRequest(multiRequest)
-			.cancelOnDestroy(this, this.widgetReset$)
-			.tag('block-shell')
+			.pipe(cancelOnDestroy(this, this.widgetReset$))
+			.pipe(tag('block-shell'))
 			.subscribe(
 				response => {
 					if (response.hasErrors()) {

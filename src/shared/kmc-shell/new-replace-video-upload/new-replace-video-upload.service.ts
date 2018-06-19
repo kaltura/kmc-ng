@@ -17,6 +17,7 @@ import { MediaCancelReplaceAction } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaRemoteStorageResource } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface KmcNewReplaceEntryLink {
     url: string;
@@ -59,7 +60,7 @@ export class NewReplaceVideoUploadService implements OnDestroy {
 
     private _monitorTrackedFilesChanges(): void {
         this._uploadManagement.onTrackedFileChanged$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .filter(trackedFile => trackedFile.data instanceof NewReplaceVideoUploadFile)
             .subscribe(
                 trackedFile => {
@@ -88,8 +89,8 @@ export class NewReplaceVideoUploadService implements OnDestroy {
             .forEach(file => this._cancelUpload(file));
 
         this._kalturaServerClient.request(new MediaCancelReplaceAction({ entryId }))
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                 },

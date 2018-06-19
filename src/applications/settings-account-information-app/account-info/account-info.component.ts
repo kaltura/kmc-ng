@@ -7,7 +7,7 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { SettingsAccountInformationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { serverConfig } from 'config/server';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kAccountInfo',
@@ -51,7 +51,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
     this._logger.info(`handle loading statistics data`);
     this._isBusy = true;
     this._accountInformationService.getStatistics()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((response: KalturaPartnerStatistics) => {
         this._isBusy = false;
         this._bandwidthNA = typeof response.bandwidth !== 'number';

@@ -8,7 +8,7 @@ import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { BulkService } from '../bulk-service/bulk.service';
 import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntryReportSections } from './entry-report-sections';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaModerationFlag } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaSourceType } from 'kaltura-ngx-client';
@@ -124,8 +124,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
     const retryFn = () => this._doApproveEntry();
     this._areaBlockerMessage = null;
     this._bulkService.approveEntry([this._entry.id])
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(this._getObserver(retryFn));
   }
 
@@ -133,8 +133,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
     const retryFn = () => this._doRejectEntry();
     this._areaBlockerMessage = null;
     this._bulkService.rejectEntry([this._entry.id])
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(this._getObserver(retryFn));
   }
 
@@ -145,7 +145,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       { name: this._appLocalization.get('applications.content.moderation.details'), isActive: false, disabled: false }
     ];
     this._moderationStore.loadEntryModerationDetails(this.entryId)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._isBusy = false;
@@ -230,8 +230,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
 
   public _banCreator(): void {
     this._moderationStore.banCreator(this._userId)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._browserService.alert({

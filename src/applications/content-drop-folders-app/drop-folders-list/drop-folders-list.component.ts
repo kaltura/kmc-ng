@@ -10,6 +10,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kDropFoldersList',
@@ -61,7 +62,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
         this._isBusy = true;
         this._refineFiltersService.getFilters()
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 lists => {
@@ -90,7 +91,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
     private _registerToDataChanges(): void {
         this._dropFoldersStore.dropFolders.state$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 result => {
 
@@ -154,7 +155,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._dropFoldersStore.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
         this._clearSelection();
@@ -165,8 +166,8 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   private _deleteDropFiles(ids: number[]): void {
     const execute = () => {
       this._dropFoldersStore.deleteDropFiles(ids)
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(
           () => {
             this._dropFoldersStore.reload();
@@ -249,8 +250,8 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
   public _navigateToEntry(entryId: string): void {
       this._dropFoldersStore.isEntryExist(entryId)
-          .cancelOnDestroy(this)
-          .tag('block-shell')
+          .pipe(cancelOnDestroy(this))
+          .pipe(tag('block-shell'))
           .subscribe(() => {
               this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
           });

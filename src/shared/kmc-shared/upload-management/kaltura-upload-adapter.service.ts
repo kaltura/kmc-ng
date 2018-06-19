@@ -6,7 +6,7 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { UploadTokenAddAction } from 'kaltura-ngx-client';
 import { UploadTokenUploadAction } from 'kaltura-ngx-client';
 import { KalturaUploadToken } from 'kaltura-ngx-client';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaUploadFile } from './kaltura-upload-file';
 import { KalturaRequest } from 'kaltura-ngx-client';
 import { UploadTokenListAction } from 'kaltura-ngx-client';

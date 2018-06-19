@@ -4,7 +4,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
@@ -135,7 +135,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
 
   private _registerToFilterStoreDataChanges(): void {
     this._bulkLogStore.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         ({ changes }) => {
           this._updateComponentState(changes);
