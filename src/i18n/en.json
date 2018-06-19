@@ -1562,7 +1562,9 @@
                     "replaceVideo": {
                         "noFlavors": "No Flavors",
                         "addVideo": "Add Video",
+                        "replaceVideo": "Replace Video",
                         "addAudio": "Add Audio",
+                        "replaceAudio": "Replace Audio",
                         "uploadFile": "Upload file",
                         "uploadFiles": "Upload files",
                         "importFile": "Import file",
