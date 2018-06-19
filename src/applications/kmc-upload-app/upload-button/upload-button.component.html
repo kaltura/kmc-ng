@@ -4,7 +4,7 @@
         (click)="uploadmenu.open()"></button>
 
 <kPopupWidget #uploadmenu [popupWidth]="360" [popupHeight]="385" [closeBtn]="true"
-              [modal]="true" [transparent]="true" [preventPageScroll]="true" [closeBtnLabel]="true">
+              [modal]="true" [transparent]="true" [preventPageScroll]="true">
   <ng-template>
     <kKMCUploadMenu (onItemSelected)="_onMenuItemSelected($event)"></kKMCUploadMenu>
   </ng-template>
