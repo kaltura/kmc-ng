@@ -1590,7 +1590,7 @@
                         "cancel": "Cancel",
                         "continue": "Continue",
                         "tempEntryId": "Temp Entry ID: {{0}}",
-                        "cancelReplacement": "Cancel replacement",
+                        "cancelReplacement": "Cancel Replacement",
                         "autoReplacement": "Auto Replacement",
                         "approveReplacement": "Approve Replacement",
                         "approveReplacementTooltip": "All current flavors will be replaced upon replacement approval. Any time based metadata may be effected as well.",
@@ -1605,9 +1605,9 @@
                             "note": "When conversion by Kaltura is required, the file defined as Source will be imported to Kaltura."
                         },
                         "replacementStatus": {
-                            "replacementInProcess": "Video Replacement is in Process",
-                            "readyForReplacement": "Video is Ready for Replacement",
-                            "replacementFailed": "Video Replacement failed"
+                            "replacementInProcess": "Video replacement is in process",
+                            "readyForReplacement": "Video is ready for replacement",
+                            "replacementFailed": "Video replacement failed"
                         },
                         "errors": {
                             "uniqueFlavors": "More than one file is associated with the same Transcoding Flavor settings.",
