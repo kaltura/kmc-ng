@@ -60,9 +60,19 @@ export class BrowserService implements IAppStorage {
     public growlMessage$ = this._growlMessage.asObservable();
     private _currentUrl: string;
     private _previousUrl: string;
+    private _initialUrl: string;
 
     public get previousUrl(): string {
         return this._previousUrl;
+    }
+
+    public set initialUrl(value: string) {
+        const forbiddenUrls = ['/error', '/actions', '/login'];
+        const url = typeof value === 'string' ? value.trim() : '';
+        const allowedUrl = forbiddenUrls.filter(forbiddenUrl => url.indexOf(forbiddenUrl) !== -1).length === 0;
+        if (allowedUrl) {
+            this._initialUrl = url;
+        }
     }
 
     private _onConfirmationFn: OnShowConfirmationFn = (confirmation: Confirmation) => {
@@ -426,12 +436,25 @@ export class BrowserService implements IAppStorage {
     }
 
     public navigateToDefault(removeCurrentFromBrowserHistory: boolean = true): void {
-        let extras: NavigationExtras = null;
-        if (removeCurrentFromBrowserHistory) {
-            extras = { replaceUrl: true };
+        if (this._initialUrl) {
+            this._logger.info(`navigate to initial url from user`, { url: this._initialUrl });
+            this._router.navigateByUrl(this._initialUrl)
+                .then(() => {
+                    this._logger.info(`navigation successful, clear initialUrl value`);
+                    this._initialUrl = null;
+                })
+                .catch((error) => {
+                    this._logger.info(`navigation failed, clear initialUrl value`, { errorMessage: error.message });
+                    this._initialUrl = null;
+                });
+        } else {
+            let extras: NavigationExtras = null;
+            if (removeCurrentFromBrowserHistory) {
+                extras = { replaceUrl: true };
+            }
+            this._logger.info(`navigate to default view`, {removeCurrentFromBrowserHistory});
+            this._router.navigate([kmcAppConfig.routing.defaultRoute], extras);
         }
-        this._logger.info(`navigate to default view`, {removeCurrentFromBrowserHistory});
-        this._router.navigate([kmcAppConfig.routing.defaultRoute], extras);
     }
 
     public navigateToError(): void {

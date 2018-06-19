@@ -504,9 +504,16 @@ export class AppAuthentication {
         this._appUser = null;
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._pageExitVerificationService.removeAll();
+
         if (reloadPage) {
             this._logger.info(`force reload of browser`);
             document.location.reload(true);
+
+            const baseUrl = this._location.prepareExternalUrl('');
+            if (baseUrl) {
+                this._logger.info(`redirect user to default page`);
+                document.location.href = baseUrl;
+            }
         }
     }
 
