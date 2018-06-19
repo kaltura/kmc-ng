@@ -16,11 +16,7 @@
             "main": "src/kmc-app/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/styles"
-              ]
-            },
+            "preserveSymlinks": true,
             "assets": [
               "src/server-config.json",
               "src/assets",
@@ -34,7 +30,8 @@
             ],
               "stylePreprocessorOptions": {
                   "includePaths": [
-                      "./",
+                      ".",
+                      "src/styles",
                       "node_modules"
                   ]
               },
@@ -108,29 +105,6 @@
             "tsConfig": [
               "src/tsconfig.app.json",
               "src/tsconfig.spec.json"
-            ],
-            "exclude": []
-          }
-        }
-      }
-    },
-    "kmc-e2e": {
-      "root": "",
-      "sourceRoot": "e2e",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "kmc:serve"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
             ],
             "exclude": []
           }
