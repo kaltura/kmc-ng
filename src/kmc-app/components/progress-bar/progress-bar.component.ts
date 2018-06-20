@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { NavigationCancel, RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
+import {NavigationCancel, NavigationError, RouteConfigLoadEnd, RouteConfigLoadStart, Router} from "@angular/router";
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
@@ -19,7 +19,7 @@ export class ProgressBarComponent implements OnDestroy {
                     renderer.addClass(this._bar.nativeElement, 'kProgressStep1');
                 }
 
-                if ((event instanceof RouteConfigLoadEnd || event instanceof NavigationCancel)) {
+                if (event instanceof RouteConfigLoadEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
                     renderer.removeClass(this._bar.nativeElement, 'kProgressStep1');
                     renderer.addClass(this._bar.nativeElement, 'kProgressStep2');
 
