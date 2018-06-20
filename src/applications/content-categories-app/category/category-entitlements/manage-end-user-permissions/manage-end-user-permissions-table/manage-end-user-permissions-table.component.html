@@ -37,7 +37,7 @@
         <ng-template pTemplate="body" let-user>
             <tr [pSelectableRow]="user">
                 <td class="selectionColumn">
-                    <p-tableCheckbox [value]="entry"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="user"></p-tableCheckbox>
                 </td>
                 <td class="nameColumn">
                     <div class="kTitle kTableColumn" [kTooltip]="user.name">
