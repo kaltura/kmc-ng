@@ -126,7 +126,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
             }
 
             this._permissionsService.filterList(<{ id: string }[]>this._actions, {
-                'import': KMCPermissions.CONTENT_INGEST_UPLOAD,
+                'import': KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
                 'upload': KMCPermissions.CONTENT_INGEST_UPLOAD,
                 'link': KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE
             });
