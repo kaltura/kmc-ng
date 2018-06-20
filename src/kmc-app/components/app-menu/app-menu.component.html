@@ -59,13 +59,14 @@
 <kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="_helpMenuOpened = true" (onClose)="_helpMenuOpened = false">
     <ng-template>
         <div class="kHelpMenu">
-            <p *ngIf="_kmcOverviewLinkExists || _mediaManagementLinkExists" class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
+            <!--p *ngIf="_kmcOverviewLinkExists || _mediaManagementLinkExists" class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
             <p *ngIf="_kmcOverviewLinkExists" class="kHelpLink" (click)="openHelpLink('kmcOverview')">{{'app.helpMenu.kmcOverview' | translate}}</p>
             <p *ngIf="_mediaManagementLinkExists" class="kHelpLink" (click)="openHelpLink('mediaManagement')">{{'app.helpMenu.mediaManagement' | translate}}</p>
             <p class="kDisabled">{{'app.helpMenu.productTour' | translate}}</p>
-            <hr>
+            <hr-->
             <p *ngIf="_userManualLinkExists || _supportLinkExists" class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
-            <p *ngIf="_userManualLinkExists" class="kDisabled">{{'app.helpMenu.userManual' | translate}}</p>
+            <p *ngIf="_kmcOverviewLinkExists" class="kHelpLink" (click)="openHelpLink('kmcOverview')">{{'app.helpMenu.kmcOverview' | translate}}</p>
+            <p *ngIf="_userManualLinkExists" class="kHelpLink" (click)="openHelpLink('manual')">{{'app.helpMenu.userManual' | translate}}</p>
             <p *ngIf="_supportLinkExists" class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
             <k-logs-record mode="link"
                            *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
