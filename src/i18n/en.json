@@ -1295,7 +1295,7 @@
                 "changeOwner": "Change Owner",
                 "changeOwnerLabel": "Set a new owner for the selected entries.",
                 "download": "Download",
-                "downloadEntries": "Download selected entries.",
+                "downloadEntries": "Download selected entries",
                 "download1Label": "You have selected 1 entry for download.",
                 "downloadManyLabel": "You have selected {{0}} entries for download.",
                 "downloadFlavor": "If you have selected to download a video, please choose the required format:",
