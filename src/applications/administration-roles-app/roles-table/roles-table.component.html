@@ -1,35 +1,48 @@
 <div class="kRolesTable" [class.noResults]="!_roles?.length">
-  <p-dataTable #dataTable kStickyHeader scrollable="true" stickyClass="stickyHeader" scrollHeight="100%" dataKey="id"
+  <p-table #dataTable kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="100%" dataKey="id"
                [rowTrackBy]="_rowTrackBy"
-               [emptyMessage]="_emptyMessage"
                [sticksTo]="'rolesFilters'"
                [value]="_roles"
                [stickyId]="'rolesTable'">
-    <p-column field="name" styleClass="kTableFullName"
-              header="{{'applications.administration.roles.tableColumns.role' | translate}}" [sortable]="false">
-      <ng-template let-col let-role="rowData" pTemplate="body">
-          <span class="kRoleName">
-            {{role[col.field]}}
-          </span>
+      <ng-template pTemplate="header">
+          <tr>
+              <th [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
+                  {{'applications.administration.roles.tableColumns.role' | translate}}
+              </th>
+              <th [ngStyle]="{'width': '250px'}">
+                  {{'applications.administration.roles.tableColumns.description' | translate}}
+              </th>
+              <th [ngStyle]="{'width': '60px'}">
+                  {{'applications.administration.roles.tableColumns.saveDate' | translate}}
+              </th>
+              <th [ngStyle]="{'overflow': 'visible', 'width': '80px'}"></th>
+          </tr>
       </ng-template>
-    </p-column>
-    <p-column field="description"
-              header="{{'applications.administration.roles.tableColumns.description' | translate}}" [sortable]="false"
-              [style]="{'width':'250px'}"></p-column>
-    <p-column field="updatedAt" header="{{'applications.administration.roles.tableColumns.saveDate' | translate}}"
-              [sortable]="false" [style]="{'width':'60px'}">
-      <ng-template let-col let-role="rowData" pTemplate="body">
-        <span>{{role[col.field] | kDate}}</span>
+
+      <ng-template pTemplate="body" let-role>
+          <tr [pSelectableRow]="role">
+              <td [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
+                  <span class="kRoleName">{{role.name}}</span>
+              </td>
+              <td [ngStyle]="{'width': '250px'}">
+                  {{role.description}}
+              </td>
+              <td [ngStyle]="{'width': '60px'}">
+                  {{role.updatedAt | kDate}}
+              </td>
+              <td [ngStyle]="{'overflow': 'visible', 'width': '80px'}">
+                  <div class="kRolesTableActions">
+                      <button type="button" pButton icon="kIconmore"
+                              [disabled]="role.partnerId === 0" class="kMoreActionsButton"
+                              (click)="_openActionsMenu($event, role)"></button>
+                  </div>
+              </td>
+          </tr>
       </ng-template>
-    </p-column>
-    <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}" [sortable]="false">
-      <ng-template let-col let-role="rowData" pTemplate="body">
-        <div class="kRolesTableActions">
-          <button type="button" pButton icon="kIconmore" [disabled]="role.partnerId === 0" class="kMoreActionsButton"
-                  (click)="_openActionsMenu($event, role)"></button>
-        </div>
+
+      <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">{{_emptyMessage}}</div>
       </ng-template>
-    </p-column>
-  </p-dataTable>
+  </p-table>
   <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 </div>
