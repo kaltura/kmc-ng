@@ -1,85 +1,88 @@
 <div class="kFieldsTable" [class.noResults]="!fields?.length">
-  <p-dataTable
-    #dataTable
-    scrollHeight="100%"
-    dataKey="id"
-    [scrollable]="true"
-    [value]="_fields"
-    [immutable]="false"
-    [rowTrackBy]="rowTrackBy"
-    (selectionChange)="_onSelectionChange($event)"
-    [(selection)]="selectedFields">
+    <p-table
+        #dataTable
+        scrollHeight="100%"
+        dataKey="id"
+        [scrollable]="true"
+        [value]="_fields"
+        [rowTrackBy]="rowTrackBy"
+        (selectionChange)="_onSelectionChange($event)"
+        [(selection)]="selectedFields">
+        <ng-template pTemplate="header">
+            <tr>
+                <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th [ngStyle]="{'width':'50px'}"></th>
+                <th>
+                    {{'applications.settings.metadata.table.fieldLabel' | translate}}
+                </th>
+                <th [ngStyle]="{'width':'115px'}">
+                    {{'applications.settings.metadata.table.fieldType' | translate}}
+                </th>
+                <th>
+                    {{'applications.settings.metadata.table.shortDescription' | translate}}
+                </th>
+                <th>
+                    {{'applications.settings.metadata.table.description' | translate}}
+                </th>
+                <th [ngStyle]="{'width':'100px'}">
+                    {{'applications.settings.metadata.table.maxValues' | translate}}
+                </th>
+                <th [ngStyle]="{'width':'100px'}">
+                    {{'applications.settings.metadata.table.searchable' | translate}}
+                </th>
+                <th *ngIf="(isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kNgIfPermitted)) || (!isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kNgIfPermitted))"></th>
+            </tr>
+        </ng-template>
 
-    <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+        <ng-template pTemplate="body" let-field let-i="rowIndex">
+            <tr [pSelectableRow]="field">
+                <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                    <p-tableCheckbox [value]="field"></p-tableCheckbox>
+                </td>
+                <td [ngStyle]="{'width':'50px'}">
+                    <i class="kTypeIcon" [ngClass]="field.type | kCustomSchemaTypePipe:'icon'"></i>
+                </td>
+                <td>
+                    <div class="kTitle kTableColumn"
+                         [kTooltip]="'applications.settings.metadata.table.labelTT' | translate : {name: field['name']}"
+                         (click)="_editField(field)">
+                        {{field.key}}
+                    </div>
+                </td>
+                <td [ngStyle]="{'width':'115px'}">{{field.type | kCustomSchemaTypePipe:'label'}}</td>
+                <td>{{field.description}}</td>
+                <td>{{field.documentations}}</td>
+                <td [ngStyle]="{'width':'100px'}">
+                    {{field.allowMultiple ? ('applications.settings.metadata.unlimited' | translate) : '1'}}
+                </td>
+                <td [ngStyle]="{'width':'100px'}">
+                    {{(field.isSearchable ? 'app.common.yes' : 'app.common.no') | translate}}
+                </td>
+                <td *ngIf="(isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kNgIfPermitted)) || (!isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kNgIfPermitted))">
+                    <span class="kFieldsTableActions">
+                        <i class="kIconarrow_up kActionMoveDown"
+                           *ngIf="_fields.length > 1"
+                           [kTooltip]="'applications.settings.metadata.table.moveDown' | translate"
+                           [class.kActionDisabled]="i + 1 === _fields?.length"
+                           (click)="i + 1 !== _fields?.length && _moveField(field, 'down')"></i>
 
-    <p-column field="type" [style]="{'width':'50px'}">
-      <ng-template let-col let-field="rowData" pTemplate="body">
-        <i class="kTypeIcon" [ngClass]="field[col.field] | kCustomSchemaTypePipe:'icon'"></i>
-      </ng-template>
-    </p-column>
+                        <i class="kIconarrow_up"
+                           *ngIf="_fields.length > 1"
+                           [kTooltip]="'applications.settings.metadata.table.moveUp' | translate"
+                           [class.kActionDisabled]="i === 0"
+                           (click)="i !== 0 && _moveField(field, 'up')"></i>
 
-    <p-column field="key"
-              [header]="'applications.settings.metadata.table.fieldLabel' | translate">
-      <ng-template let-col let-field="rowData" pTemplate="body">
-        <div class="kTitle kTableColumn"
-             [kTooltip]="'applications.settings.metadata.table.labelTT' | translate : {name: field['name']}"
-             (click)="_editField(field)">
-          {{field[col.field]}}
-        </div>
-      </ng-template>
-    </p-column>
-
-    <p-column field="type"
-              [style]="{'width':'115px'}"
-              [header]="'applications.settings.metadata.table.fieldType' | translate">
-      <ng-template let-col let-field="rowData" pTemplate="body">
-        {{field[col.field] | kCustomSchemaTypePipe:'label'}}
-      </ng-template>
-    </p-column>
-
-    <p-column field="description"
-              [header]="'applications.settings.metadata.table.shortDescription' | translate"></p-column>
-
-    <p-column field="documentations"
-              [header]="'applications.settings.metadata.table.description' | translate"></p-column>
-
-    <p-column field="allowMultiple"
-              [style]="{'width':'100px'}"
-              [header]="'applications.settings.metadata.table.maxValues' | translate">
-      <ng-template let-col let-field="rowData" pTemplate="body">
-        {{field[col.field] ? ('applications.settings.metadata.unlimited' | translate) : '1'}}
-      </ng-template>
-    </p-column>
-
-    <p-column field="isSearchable"
-              [style]="{'width':'100px'}"
-              [header]="'applications.settings.metadata.table.searchable' | translate">
-      <ng-template let-col let-field="rowData" pTemplate="body">
-        {{ (field[col.field] ? 'app.common.yes' : 'app.common.no') | translate }}
-      </ng-template>
-    </p-column>
-
-    <p-column *ngIf="(isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kNgIfPermitted)) || (!isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kNgIfPermitted))">
-      <ng-template let-col let-field="rowData" let-i="rowIndex" pTemplate="body">
-        <span class="kFieldsTableActions">
-          <i class="kIconarrow_up kActionMoveDown"
-             *ngIf="_fields.length > 1"
-             [kTooltip]="'applications.settings.metadata.table.moveDown' | translate"
-             [class.kActionDisabled]="i + 1 === _fields?.length"
-             (click)="i + 1 !== _fields?.length && _moveField(field, 'down')"></i>
-
-          <i class="kIconarrow_up"
-             *ngIf="_fields.length > 1"
-             [kTooltip]="'applications.settings.metadata.table.moveUp' | translate"
-             [class.kActionDisabled]="i === 0"
-             (click)="i !== 0 && _moveField(field, 'up')"></i>
-
-          <i class="kIconremove kActionDelete"
-             [kTooltip]="'applications.settings.metadata.table.remove' | translate"
-             (click)="_removeField(field)"></i>
-        </span>
-      </ng-template>
-    </p-column>
-
-  </p-dataTable>
+                        <i class="kIconremove kActionDelete"
+                           [kTooltip]="'applications.settings.metadata.table.remove' | translate"
+                           (click)="_removeField(field)"></i>
+                    </span>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
+        </ng-template>
+    </p-table>
 </div>

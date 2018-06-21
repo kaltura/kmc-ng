@@ -18,6 +18,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { StickyModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     EntriesModule,
     DropdownModule,
     InputSwitchModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      TableModule
   ],
   declarations: [
     SettingsCustomDataComponent,
