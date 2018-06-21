@@ -15,6 +15,7 @@ import {NewEntitlementComponent} from './entitlement/new-entitlement/new-entitle
 import {EditEntitlementComponent} from './entitlement/edit-entitlement/edit-entitlement.component';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     CategoriesModule,
     KMCPermissionsModule,
     InputHelperModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      TableModule
   ],
   declarations: [
     SettingsIntegrationSettingsComponent,

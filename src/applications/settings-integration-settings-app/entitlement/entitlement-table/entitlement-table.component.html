@@ -1,37 +1,49 @@
 <div class="kTable">
-  <k-area-blocker [showLoader]="_deferredLoading"
-                  [message]="_blockerMessage">
-    <p-dataTable #dataTable
+    <k-area-blocker [showLoader]="_deferredLoading"
+                    [message]="_blockerMessage">
+        <p-table #dataTable
                  dataKey="id"
-                 scrollable="true"
                  scrollHeight="100%"
+                 [scrollable]="true"
                  [value]="_entitlements"
-                 [emptyMessage]="_emptyMessage"
                  [class.noResults]="!_entitlements?.length"
                  [rowTrackBy]="rowTrackBy">
-      <p-column styleClass="kApplicationRootCategory"
-                field="fullName" [header]="'applications.settings.integrationSettings.entitlement.table.applicationRootCategory' | translate">
-        <ng-template let-col let-entitlement="rowData" pTemplate="body">
-          <div class="kApplicationRootCategoryLabel kTableColumn" [kTooltip]="entitlement[col.field]">
-            {{entitlement[col.field]}}
-          </div>
-        </ng-template>
-      </p-column>
-      <p-column styleClass="kPrivacyContextLabel" field="privacyContext"
-                [header]="'applications.settings.integrationSettings.entitlement.table.privacyContextLabel' | translate">
-        <ng-template let-col let-entitlement="rowData" pTemplate="body">
-          <span class="kTableColumn" [kTooltip]="entitlement[col.field]">{{entitlement[col.field]}}</span>
-        </ng-template>
-      </p-column>
-      <p-column styleClass="kActionsColumn" header="" [style]="{'width':'60px'}">
-        <ng-template let-entitlement="rowData" let-i="rowIndex" pTemplate="body">
-          <div class="kTableActions"
-          >
-            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, entitlement)"></button>
-          </div>
-        </ng-template>
-      </p-column>
-    </p-dataTable>
-    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
-  </k-area-blocker>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="kApplicationRootCategory">
+                        {{'applications.settings.integrationSettings.entitlement.table.applicationRootCategory' | translate}}
+                    </th>
+                    <th class="kPrivacyContextLabel">
+                        {{'applications.settings.integrationSettings.entitlement.table.privacyContextLabel' | translate}}
+                    </th>
+                    <th class="kActionsColumn"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-entitlement>
+                <tr>
+                    <td class="kApplicationRootCategory">
+                        <div class="kApplicationRootCategoryLabel kTableColumn" [kTooltip]="entitlement.fullName">
+                            {{entitlement.fullName}}
+                        </div>
+                    </td>
+                    <td class="kPrivacyContextLabel">
+                    <span class="kTableColumn" [kTooltip]="entitlement.privacyContext">
+                        {{entitlement.privacyContext}}
+                    </span>
+                    </td>
+                    <td class="kActionsColumn">
+                        <div class="kTableActions">
+                            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"
+                                    (click)="_openActionsMenu($event, entitlement)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <div class="emptymessage">{{_emptyMessage}}</div>
+            </ng-template>
+        </p-table>
+        <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+    </k-area-blocker>
 </div>
