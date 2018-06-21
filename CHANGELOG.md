@@ -5,20 +5,19 @@
 ### Bug Fixes
 
 * **content/entry:** fix description label in distribution profile details form ([7438fc0](https://github.com/kaltura/kmc-ng/commit/7438fc0))
-* changelog notification badge ([#700](https://github.com/kaltura/kmc-ng/issues/700)) ([3bae52e](https://github.com/kaltura/kmc-ng/commit/3bae52e))
 * **content/entries:** fix bulk access control drop-down width ([4d71695](https://github.com/kaltura/kmc-ng/commit/4d71695))
 * **content/entry:** add missing replace buttons label ([5041d20](https://github.com/kaltura/kmc-ng/commit/5041d20))
 * **content/entry:** fix capitalization in replace video widget labels ([6649544](https://github.com/kaltura/kmc-ng/commit/6649544))
 * **content/entry:** fix permission for link flavor option ([3600417](https://github.com/kaltura/kmc-ng/commit/3600417))
 * **content/entry:** fix thumbnail download URL according to current protocol ([0ce468b](https://github.com/kaltura/kmc-ng/commit/0ce468b))
 * **content/entry:** hide replacement controls for new entry ([03d4aa5](https://github.com/kaltura/kmc-ng/commit/03d4aa5))
-* layout glitch of entries selector with multiple filter tags ([#702](https://github.com/kaltura/kmc-ng/issues/702)) KMCNG-1653 ([0df0148](https://github.com/kaltura/kmc-ng/commit/0df0148))
-* prevent loading metadata without proper permission  ([#704](https://github.com/kaltura/kmc-ng/issues/704)) KMCNG-1849 ([4f236b1](https://github.com/kaltura/kmc-ng/commit/4f236b1))
 * **content/syndication:** add missing ITunes feed author field ([08e4dd4](https://github.com/kaltura/kmc-ng/commit/08e4dd4))
 * **content/syndication:** add prompt text for feed image URL field ([91c81c3](https://github.com/kaltura/kmc-ng/commit/91c81c3))
 * **content/syndication:** fix owner email field validation logic ([7eedfe6](https://github.com/kaltura/kmc-ng/commit/7eedfe6))
-* **settings/account settings:**  update admin email on changing owner ([#703](https://github.com/kaltura/kmc-ng/issues/703)) KMCNG-1813 ([76a4591](https://github.com/kaltura/kmc-ng/commit/76a4591))
-
+* **settings/account settings:**  update admin email on changing owner ([#703](https://github.com/kaltura/kmc-ng/issues/703)) 
+* changelog notification badge ([#700](https://github.com/kaltura/kmc-ng/issues/700)) ([3bae52e](https://github.com/kaltura/kmc-ng/commit/3bae52e))
+* layout glitch of entries selector with multiple filter tags ([#702](https://github.com/kaltura/kmc-ng/issues/702)) 
+* prevent loading metadata without proper permission  ([#704](https://github.com/kaltura/kmc-ng/issues/704)) 
 
 
 <a name="4.7.0"></a>
