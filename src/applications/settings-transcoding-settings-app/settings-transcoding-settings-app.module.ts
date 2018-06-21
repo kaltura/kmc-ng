@@ -16,6 +16,7 @@ import { DetailsBarModule } from '@kaltura-ng/kaltura-ui';
 import { TranscodingProfileCanDeactivate } from './transcoding-profile/transcoding-profile-can-deactivate.service';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     TooltipModule,
     PopupWidgetModule,
     DropdownModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      TableModule
   ],
   declarations: [
     SettingsTranscodingSettingsComponent,
