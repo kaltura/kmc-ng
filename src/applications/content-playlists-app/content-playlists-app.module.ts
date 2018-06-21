@@ -26,6 +26,7 @@ import { EntriesModule } from 'app-shared/content-shared/entries/entries.module'
 import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
     imports: [
@@ -59,7 +60,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     DropdownModule,
     SliderModule,
       TableModule,
-      KMCPermissionsModule
+      KMCPermissionsModule,
+        KPTableModule
   ],declarations: [
       ContentPlaylistsComponent,
       PlaylistsComponentsList,
