@@ -26,6 +26,8 @@ import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { TimeSpinnerModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
+import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
   imports: [
@@ -58,7 +60,9 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     SpinnerModule,
     InputSwitchModule,
     KMCPermissionsModule,
-    TimeSpinnerModule
+    TimeSpinnerModule,
+      TableModule,
+      KPTableModule
   ],
   declarations: [
     SettingsAccessControlComponent,
