@@ -1,5 +1,5 @@
 <div class="kRolesTable" [class.noResults]="!_roles?.length">
-  <p-table #dataTable kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="100%" dataKey="id"
+  <p-table kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="100%" dataKey="id"
                [rowTrackBy]="_rowTrackBy"
                [sticksTo]="'rolesFilters'"
                [value]="_roles"

@@ -7,7 +7,7 @@ import { AreaBlockerModule, KalturaUIModule } from '@kaltura-ng/kaltura-ui';
 import { SchemasComponents } from './schemas/schemas-components-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputSwitchModule, InputTextModule, MenuModule,
+  ButtonModule, CalendarModule, CheckboxModule, DropdownModule, InputSwitchModule, InputTextModule, MenuModule,
   PaginatorModule,
   RadioButtonModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
@@ -24,7 +24,6 @@ import { TableModule } from 'primeng/table';
   imports: [
     CommonModule,
     AreaBlockerModule,
-    DataTableModule,
     LocalizationModule,
     KalturaUIModule,
     PaginatorModule,

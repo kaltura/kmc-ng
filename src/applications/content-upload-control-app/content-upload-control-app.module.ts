@@ -7,7 +7,6 @@ import { routing } from './content-upload-control-app.routes';
 
 import { AreaBlockerModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import {
-  DataTableModule,
   PaginatorModule,
   ButtonModule,
   TieredMenuModule,
@@ -40,7 +39,6 @@ import { TableModule } from 'primeng/table';
   imports: [
     CommonModule,
     AreaBlockerModule,
-    DataTableModule,
     LocalizationModule,
     KalturaUIModule,
     PaginatorModule,

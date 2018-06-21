@@ -1,7 +1,6 @@
 <k-area-blocker [showLoader]="_deferredLoading">
     <div class="kPlaylistEntriesTable" [class.noResults]="!_entries?.length">
         <p-table
-            #dataTable
             dataKey="selectionId"
             scrollHeight="100%"
             [scrollable]="true"

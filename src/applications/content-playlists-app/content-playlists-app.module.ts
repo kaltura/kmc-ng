@@ -8,7 +8,7 @@ import { routing } from './content-playlists-app.routes';
 
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
+  ButtonModule, CalendarModule, CheckboxModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
   RadioButtonModule, InputTextareaModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
@@ -32,7 +32,6 @@ import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
     imports: [
       CommonModule,
       AreaBlockerModule,
-      DataTableModule,
       LocalizationModule,
       KalturaUIModule,
       PaginatorModule,

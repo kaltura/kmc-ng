@@ -8,7 +8,7 @@ import {
   ButtonModule,
   CalendarModule,
   CheckboxModule,
-  DataTableModule, InputSwitchModule,
+  InputSwitchModule,
   InputTextModule,
   MenuModule, MultiSelectModule,
   PaginatorModule, RadioButtonModule,
@@ -33,7 +33,6 @@ import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
   imports: [
     CommonModule,
     AreaBlockerModule,
-    DataTableModule,
     LocalizationModule,
     KalturaUIModule,
     PaginatorModule,

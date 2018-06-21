@@ -1,7 +1,6 @@
 <div class="kUploadsTableWrapper">
     <div class="kUploadsTable" [class.noResults]="!uploads?.length">
-        <p-table #dataTable
-                 dataKey="id"
+        <p-table dataKey="id"
                  scrollHeight="100%"
                  [scrollable]="true"
                  [value]="uploads"
