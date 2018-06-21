@@ -49,7 +49,11 @@
                 </td>
                 <td>{{schema.id}}</td>
                 <td>{{schema.systemName}}</td>
-                <td>{{schema.description}}</td>
+                <td>
+                    <span class="kTableColumn" [kTooltip]="schema.description">
+                        {{schema.description}}
+                    </span>
+                </td>
                 <td>{{schema.applyTo | kMetadataObjectType}}</td>
                 <td [ngStyle]="{'width': '190px'}">{{schema.defaultLabel}}</td>
                 <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
