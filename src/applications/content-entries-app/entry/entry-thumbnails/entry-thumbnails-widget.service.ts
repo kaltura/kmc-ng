@@ -200,8 +200,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
     }
 
     // animate uploading thumbnail row
-    public _getRowStyle(rowData, rowIndex): string {
-        return rowData.uploadStatus ? "uoloading" : '';
+    public getRowStyle(rowData): string {
+        return rowData.uploadStatus ? 'uploading' : '';
     }
 
     public _setAsDefault(thumb: ThumbnailRow): void {
