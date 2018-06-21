@@ -34,6 +34,7 @@ import { UploadListTableComponent } from './upload-list/upload-list-table.compon
 import { UploadProgressComponent } from './upload-list/upload-progress/upload-progress.component';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 import { UploadStatusPipe } from './upload-list/pipes/upload-status.pipe';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import { UploadStatusPipe } from './upload-list/pipes/upload-status.pipe';
     ProgressBarModule,
     KMCShellModule,
     StickyModule,
-    RouterModule.forChild(routing)
+    RouterModule.forChild(routing),
+      TableModule
   ],
   declarations: [
     ContentUploadControlComponent,
