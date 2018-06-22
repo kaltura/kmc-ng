@@ -61,6 +61,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 export class EntryComponent implements OnInit, OnDestroy {
     @ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
     @ViewChild('clipAndTrim') _clipAndTrim: PopupWidgetComponent;
+    @ViewChild('bulkActionsPopup') _bulkActionsPopup: PopupWidgetComponent;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
 
@@ -196,6 +197,9 @@ export class EntryComponent implements OnInit, OnDestroy {
                             message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', [entry.id]),
                             accept: () => this._deleteEntry(entry.id)
                         });
+                        break;
+                    case 'download':
+                        item.command = () => this._bulkActionsPopup.open();
                         break;
                     default:
                         break;
@@ -433,5 +437,22 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public canLeave(): Observable<{ allowed: boolean }> {
 		return this._entryStore.canLeave();
 	}
+
+    public _onDownloadChanged(flavorId: number): void {
+        this._contentEntriesAppService.downloadEntry(this._currentEntryId, flavorId)
+            .subscribe(
+                ({ email }) => {
+                    this._browserService.alert({
+                        header: this._appLocalization.get('applications.content.bulkActions.download'),
+                        message: this._appLocalization.get('applications.content.bulkActions.downloadMsg', [email || ''])
+                    });
+                },
+                () => {
+                    this._browserService.alert({
+                        header: this._appLocalization.get('app.common.error'),
+                        message: this._appLocalization.get('applications.content.bulkActions.downloadFailed')
+                    });
+                });
+    }
 }
 

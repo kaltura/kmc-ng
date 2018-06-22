@@ -7,7 +7,6 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
-import { BulkRemoveCategoriesService } from '../../services/';
 import { KalturaFlavorParams } from 'kaltura-ngx-client';
 import { FlavorParamsListAction } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
@@ -37,7 +36,9 @@ export class BulkDownload implements OnInit, OnDestroy, AfterViewInit {
 	private _downloadLabel = {};
 	private _selectionChanged = false;
 
-	constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _bulkRemoveCategoriesService: BulkRemoveCategoriesService) {
+	constructor(private _kalturaServerClient: KalturaClient,
+                private _appLocalization: AppLocalization,
+                private _browserService: BrowserService) {
 	}
 
 	ngOnInit() {

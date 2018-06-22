@@ -56,3 +56,11 @@
                       [parentPopupWidget]="clipAndTrim"></kEntryEditor>
     </ng-template>
 </kPopupWidget>
+
+<kPopupWidget #bulkActionsPopup [popupWidth]="570" [popupHeight]="500" [modal]="true">
+    <ng-template>
+        <kBulkDownload [selectedEntries]="[_entryStore.entry]"
+                       [parentPopupWidget]="bulkActionsPopup"
+                       (downloadChanged)="_onDownloadChanged($event)"></kBulkDownload>
+    </ng-template>
+</kPopupWidget>
