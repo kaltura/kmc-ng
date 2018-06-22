@@ -47,7 +47,7 @@
             <div class="kPlaylistsNameWrap">
               <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
               <div class="kTitle kTableColumn"
-                   [kTooltip]="playlist.name"
+                   [kTooltip]="_getNameTooltip(playlist)"
                    (click)="onActionSelected('view',playlist)">
                 {{playlist.name}}
               </div>

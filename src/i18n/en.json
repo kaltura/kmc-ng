@@ -1113,7 +1113,8 @@
                 "ruleName": "Rule Name",
                 "entriesCount": "No. Entries",
                 "limit": "Limit",
-                "orderBy": "Order By"
+                "orderBy": "Order By",
+                "nameTooltip": "{{0}}\nTags:\n{{1}}"
             },
             "paginator": {
                 "showRows": "Show rows:"
