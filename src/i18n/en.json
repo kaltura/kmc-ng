@@ -1113,7 +1113,9 @@
                 "ruleName": "Rule Name",
                 "entriesCount": "No. Entries",
                 "limit": "Limit",
-                "orderBy": "Order By"
+                "orderBy": "Order By",
+                "download": "Download",
+                "editor": "Lunch Editor"
             },
             "paginator": {
                 "showRows": "Show rows:"
