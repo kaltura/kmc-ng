@@ -12,15 +12,15 @@
 .kContent{
   display: flex;
   flex-direction: column;
-  height: 500px;
+  height: 369px;
   .kLabel{
-    display: block;
-    margin-bottom: 8px;
+    margin-right: 42px;
+      width: 120px;
   }
   .kTags{
-    padding: 12px;
-    height: 330px;
-    width: 470px;
+    padding: 32px 28px;
+    height: 225px;
+      display: flex;
   }
 }
 .kFooter{
@@ -32,13 +32,20 @@
   border-top: 1px solid $kGrayscale4;
   align-items: center;
   justify-content: center;
+    button {
+        width: 140px;
+        height: 34px;
+        &:last-child {
+            margin-left: 24px;
+        }
+    }
 }
 :host /deep/ kautocomplete {
   .ui-autocomplete {
-    width: 475px;
+    width: 335px;
   }
   .ui-autocomplete-multiple-container {
-    max-height: 310px;
+    height: 130px !important;
     overflow-y: auto;
 
     .ui-inputtext{
@@ -46,9 +53,9 @@
       .ui-autocomplete-input-token{
         padding: 0;
         input{
-          height: 34px;
-          padding-left: 8px;
-          width: 472px;
+          height: 130px;
+          width: 335px;
+          padding: 10px 8px;
         }
       }
     }
