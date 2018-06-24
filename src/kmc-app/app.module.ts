@@ -203,10 +203,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
   ]
 })
 export class AppModule {
-    constructor(appBootstrap: AppBootstrap,
-                kalturaLogger: KalturaLogger,
+    constructor(kalturaLogger: KalturaLogger,
                 uploadManagement: UploadManagement) {
-
         if (globalConfig.client.production) {
             kalturaLogger.setOptions({level: 'Error'});
         } else {
@@ -215,9 +213,5 @@ export class AppModule {
 
         // TODO [kmcng] move to a relevant location
         uploadManagement.setMaxUploadRequests(globalConfig.kalturaServer.maxConcurrentUploads);
-
-        appBootstrap.bootstrap();
-
-
     }
 }

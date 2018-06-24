@@ -32,6 +32,10 @@
 		.kStatusError, .kStatusErrorProcessing{
 			color: $kDandger;
 		}
+        &.kAddingEntry {
+            width: calc(100% - 80px);
+            margin-bottom: 0;
+        }
 	}
 	.kFlavorStatusError{
 		color: $kDandger;
