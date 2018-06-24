@@ -29,11 +29,8 @@
 		.kStatusReady{
 			color: $kPrimary;
 		}
-		.kStatusError{
+		.kStatusError, .kStatusErrorProcessing{
 			color: $kDandger;
-		}
-		.kStatusErrorProcessing{
-			color: $kGrayscale1;
 		}
         &.kAddingEntry {
             width: calc(100% - 80px);
