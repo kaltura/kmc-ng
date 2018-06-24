@@ -26,8 +26,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() columns: EntriesTableColumns | null;
     @Input() rowActions: { label: string, commandName: string, styleClass: string }[];
     @Input() enforcedFilters: Partial<EntriesFilters>;
-    @Input() disabledFilters: Partial<EntriesFilters>;
     @Input() defaultFilters: Partial<EntriesFilters>;
+    @Input() showEnforcedFilters = false;
 
     @ViewChild('tags') private tags: StickyComponent;
 
@@ -110,7 +110,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                         .pipe(cancelOnDestroy(this))
                         .subscribe(
                             filters => {
-                                if (this.enforcedFilters) {
+                                if (this.enforcedFilters && !this.showEnforcedFilters) {
                                     Object.keys(this.enforcedFilters).forEach(filterName => {
                                         delete filters[filterName];
                                     });
@@ -119,7 +119,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                         );
 
                     this._isBusy = false;
-                    this._refineFilters = this._mapDisabledFilters(groups);
+                    this._refineFilters = this.showEnforcedFilters ? this._mapEnforcedTags(groups) : groups;
                     this._restoreFiltersState();
                     this._registerToFilterStoreDataChanges();
                     this._registerToDataChanges();
@@ -142,12 +142,12 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                 });
     }
 
-    private _mapDisabledFilters(groups: RefineGroup[]): RefineGroup[] {
-        if (!this.disabledFilters) {
+    private _mapEnforcedTags(groups: RefineGroup[]): RefineGroup[] {
+        if (!this.enforcedFilters) {
             return groups;
         }
 
-        const disabledFiltersKeys = Object.keys(this.disabledFilters);
+        const enforcedFiltersKeys = Object.keys(this.enforcedFilters);
         const defaultFilters = groups.find(({ label }) => label === '');
         const defaultFiltersIndex = groups.indexOf(defaultFilters);
 
@@ -158,7 +158,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         groups.splice(defaultFiltersIndex, 1);
 
         defaultFilters.lists.forEach(list => {
-            const relevantFilterValues = disabledFiltersKeys.indexOf(list.name) !== -1 ? this.disabledFilters[list.name] : null;
+            const relevantFilterValues = enforcedFiltersKeys.indexOf(list.name) !== -1 ? this.enforcedFilters[list.name] : null;
             if (relevantFilterValues) {
                 list.items.forEach(item => {
                     item.disabled = relevantFilterValues.indexOf(item.value) !== -1;

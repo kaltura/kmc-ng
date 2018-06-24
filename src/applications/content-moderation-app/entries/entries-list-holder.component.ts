@@ -28,13 +28,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild('moderationDetails') private _moderationDetails: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
+    public _enforcedFilters: Partial<EntriesFilters> = {
+        'moderationStatuses': ['1', '5'],
+    };
   public _defaultFilters: Partial<EntriesFilters> = {
     'moderationStatuses': ['1', '2', '3', '5'],
       'sortDirection': SortDirection.Desc
   };
-    public _disabledFilters: Partial<EntriesFilters> = {
-        'moderationStatuses': ['1', '5']
-    };
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _currentEntryId = '';

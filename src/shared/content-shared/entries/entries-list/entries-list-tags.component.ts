@@ -30,7 +30,7 @@ const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeSchedul
 })
 export class EntriesListTagsComponent implements OnInit, OnDestroy {
     @Input() enforcedFilters: Partial<EntriesFilters>;
-    @Input() disabledFilters: Partial<EntriesFilters>;
+    @Input() showEnforcedFilters = false;
     @Output() onTagsBarVisible = new EventEmitter<boolean>();
     @Output() onTagsChange = new EventEmitter<void>();
 
@@ -103,8 +103,8 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     removeAllTags() {
         this._entriesStore.resetFilters();
-        if (this.disabledFilters) {
-            this._entriesStore.filter(this.disabledFilters);
+        if (this.enforcedFilters) {
+            this._entriesStore.filter(this.enforcedFilters);
         }
     }
 
@@ -153,7 +153,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     private _updateComponentState(updates: Partial<EntriesFilters>): void {
 
-        if (this.enforcedFilters) {
+        if (this.enforcedFilters && !this.showEnforcedFilters) {
             Object.keys(this.enforcedFilters).forEach(enforcedFilter => {
                 delete updates[enforcedFilter];
             });

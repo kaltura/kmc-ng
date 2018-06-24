@@ -1,6 +1,7 @@
 <kTags *ngIf="_showTags" [title]="'applications.content.filters.activeFilters' | translate"
        [data]="_tags"
        [labelField]="'label'"
+       [disabledField]="'disabled'"
        [tooltipField]="'tooltip'"
        (onTagRemove)="removeTag($event)"
        (onRemoveAll)="removeAllTags()"
