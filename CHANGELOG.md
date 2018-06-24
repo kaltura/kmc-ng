@@ -1,3 +1,14 @@
+<a name="4.7.2"></a>
+## [4.7.2](https://github.com/kaltura/kmc-ng/compare/v4.7.1...v4.7.2) (2018-06-24)
+
+
+### Bug Fixes
+
+* **content/entries:** allow entry metadata changes for content moderator ([#719](https://github.com/kaltura/kmc-ng/issues/719)) KMCNG-1896 ([7a8e2f9](https://github.com/kaltura/kmc-ng/commit/7a8e2f9))
+* **content/entry:** add missing replacement labels in flavors tab ([0abe6b1](https://github.com/kaltura/kmc-ng/commit/0abe6b1))
+
+
+
 <a name="4.7.1"></a>
 ## [4.7.1](https://github.com/kaltura/kmc-ng/compare/v4.7.0...v4.7.1) (2018-06-21)
 
