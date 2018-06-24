@@ -15,6 +15,8 @@ export class AuthCanActivate implements CanActivate {
             return Observable.of(true);
         }
 
+        this._browserService.initialUrl = state.url;
+
         return Observable.create((observer : any) =>
         {
            const statusChangeSubscription = this.appBootstrap.bootstrapStatus$.subscribe(
