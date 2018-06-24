@@ -17,7 +17,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client';
 import { KalturaSearchOperator } from 'kaltura-ngx-client';
-import { StringTypeAdapter,  } from '@kaltura-ng/mc-shared';
+import { StringTypeAdapter } from '@kaltura-ng/mc-shared';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
