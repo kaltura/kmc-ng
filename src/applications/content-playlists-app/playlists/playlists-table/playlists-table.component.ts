@@ -130,18 +130,5 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
       this.sortChanged.emit({ field: event.field, order: event.order });
     }
   }
-
-  public _getNameTooltip(playlist: KalturaPlaylist): string {
-      const tags = playlist.tags ? playlist.tags.split(', ').join('\n') : null;
-
-      if (tags) {
-          return this._appLocalization.get(
-              'applications.content.table.nameTooltip',
-              [playlist.name, tags]
-          );
-      }
-
-      return playlist.name;
-  }
 }
 

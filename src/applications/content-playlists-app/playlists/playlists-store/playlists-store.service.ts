@@ -17,12 +17,13 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client';
 import { KalturaSearchOperator } from 'kaltura-ngx-client';
-import { StringTypeAdapter } from '@kaltura-ng/mc-shared';
+import { StringTypeAdapter,  } from '@kaltura-ng/mc-shared';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 export enum SortDirection {
   Desc = -1,
@@ -38,12 +39,16 @@ export interface PlaylistsFilters {
   createdAt: DatesRangeType
 }
 
+export interface ExtendedPlaylist extends KalturaPlaylist {
+    tooltip?: string;
+}
+
 const localStoragePageSizeKey = 'playlists.list.pageSize';
 
 @Injectable()
 export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implements OnDestroy {
   private _playlists = {
-    data: new BehaviorSubject<{ items: KalturaPlaylist[], totalCount: number }>({ items: [], totalCount: 0 }),
+    data: new BehaviorSubject<{ items: ExtendedPlaylist[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
   private _isReady = false;
@@ -56,6 +61,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   };
 
   constructor(private _kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               contentPlaylistsMainView: ContentPlaylistsMainViewService,
               _logger: KalturaLogger) {
@@ -121,7 +127,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
           this._playlists.state.next({ loading: false, errorMessage: null });
 
           this._playlists.data.next({
-            items: <any[]>response.objects,
+            items: this._extendPlaylistsWithTooltip(response.objects),
             totalCount: <number>response.totalCount
           });
         },
@@ -132,7 +138,16 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
         });
   }
 
-  private _buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
+  private _extendPlaylistsWithTooltip(playlists: ExtendedPlaylist[]): ExtendedPlaylist[] {
+      playlists.forEach(playlist => {
+          const tags = playlist.tags ? playlist.tags.split(', ').join('\n') : null;
+          playlist.tooltip = tags
+              ? this._appLocalization.get('applications.content.table.nameTooltip', [playlist.name, tags])
+              : playlist.name;
+      });
+      return playlists;
+  }
+    private _buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
     try {
 
       // create request items
