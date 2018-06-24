@@ -14,7 +14,6 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client';
 import { KalturaSearchOperator } from 'kaltura-ngx-client';
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared';
@@ -24,6 +23,7 @@ import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaPlaylistListResponse } from 'kaltura-ngx-client';
 
 export enum SortDirection {
   Desc = -1,
@@ -147,7 +147,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       });
       return playlists;
   }
-    private _buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
+    private _buildQueryRequest(): Observable<KalturaPlaylistListResponse> {
     try {
 
       // create request items
@@ -198,7 +198,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       }
 
       // build the request
-      return <any>this._kalturaServerClient.request(
+      return this._kalturaServerClient.request(
         new PlaylistListAction({ filter, pager}).setRequestOptions({
             responseProfile
         })
