@@ -57,6 +57,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
     @Input() refineFilters: RefineGroup[];
 
     @Input() enforcedFilters: Partial<EntriesFilters>;
+    @Input() disabledFilters: Partial<EntriesFilters>;
 
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
@@ -296,6 +297,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
    */
   public _clearAllComponents(): void {
       this._entriesStore.resetFilters(listOfFilterNames);
+
+      if (this.disabledFilters) {
+          this._entriesStore.filter(this.disabledFilters);
+      }
   }
 
   public _onCreatedChanged(): void {

@@ -29,9 +29,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   public _kmcPermissions = KMCPermissions;
   public _defaultFilters: Partial<EntriesFilters> = {
-    'moderationStatuses': ['1', '5'],
+    'moderationStatuses': ['1', '2', '3', '5'],
       'sortDirection': SortDirection.Desc
   };
+    public _disabledFilters: Partial<EntriesFilters> = {
+        'moderationStatuses': ['1', '5']
+    };
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _currentEntryId = '';

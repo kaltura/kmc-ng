@@ -7,16 +7,17 @@ import {
   RefineGroupList
 } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
-import {ISubscription} from 'rxjs/Subscription';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { Unsubscribable } from 'rxjs';
 
 export interface TagItem {
-    type: string,
-    value: any,
-    label: string,
-    tooltip: string,
-    dataFetchSubscription?: ISubscription
+    type: string;
+    value: any;
+    label: string;
+    tooltip: string;
+    dataFetchSubscription?: Unsubscribable;
+    disabled?: boolean;
 }
 
 const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions' ];
@@ -28,9 +29,10 @@ const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeSchedul
 
 })
 export class EntriesListTagsComponent implements OnInit, OnDestroy {
+    @Input() enforcedFilters: Partial<EntriesFilters>;
+    @Input() disabledFilters: Partial<EntriesFilters>;
     @Output() onTagsBarVisible = new EventEmitter<boolean>();
     @Output() onTagsChange = new EventEmitter<void>();
-    @Input() enforcedFilters: Partial<EntriesFilters>;
 
     @Input() set refineFilters(groups: RefineGroup[]) {
         this._refineFiltersMap.clear();
@@ -101,6 +103,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     removeAllTags() {
         this._entriesStore.resetFilters();
+        if (this.disabledFilters) {
+            this._entriesStore.filter(this.disabledFilters);
+        }
     }
 
     ngOnInit() {
@@ -115,15 +120,17 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
             (this._tags || []).forEach(tag => {
                 if ((<string[]>refineListsType).indexOf(tag.type) !== -1) {
-                    tag.label = this._getRefineLabel(tag.type, tag.value);
+                    tag.label = this._getRefineProp<string>(tag.type, tag.value, 'label');
+                    tag.disabled = this._getRefineProp<boolean>(tag.type, tag.value, 'disabled');
                     tag.tooltip = this._appLocalization.get(`applications.content.filters.${tag.type}`, {'0': tag.label});
-                }else if (tag.type.indexOf('customMetadata|') === 0)
-                {
+                } else if (tag.type.indexOf('customMetadata|') === 0) {
                     const [, listId] = tag.type.split('|');
                     const listLabel = this._getRefineCustomMetadataListName(listId);
                     tag.tooltip = `${listLabel}${listLabel ? ' : ' : ''}${tag.value}`;
                 }
             });
+
+            (this._tags || []).sort((a, b) => Number(b.disabled || 0) - Number(a.disabled || 0));
 
             this.onTagsChange.emit();
         } else {
@@ -132,8 +139,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         }
     }
 
-    private _restoreFiltersState(): void
-    {
+    private _restoreFiltersState(): void {
         this._updateComponentState(this._entriesStore.cloneFilters(
             [
                 'freetext',
@@ -171,8 +177,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             }
         });
 
-        if (typeof updates.categories !== 'undefined')
-        {
+        if (typeof updates.categories !== 'undefined') {
             this._syncTagsOfCategories();
         }
     }
@@ -286,7 +291,8 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         const currentValue = this._entriesStore.cloneFilter(filterName, []);
 
         if (currentValue instanceof Array) {
-            // Developer notice: we must make sure the type at runtime is an array. this is a safe check only we don't expect the value to be different
+            // Developer notice: we must make sure the type at runtime is an array.
+            // This is a safe check only we don't expect the value to be different
             const tagsFilters = this._tags.filter(item => item.type === filterName);
 
             const tagsFiltersMap = this._entriesStore.filtersUtils.toMap(tagsFilters, 'value');
@@ -300,26 +306,30 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             });
 
             diff.added.forEach(item => {
-                const label = this._getRefineLabel(filterName, item);
+                const label = this._getRefineProp<string>(filterName, item, 'label');
+                const disabled = this._getRefineProp<boolean>(filterName, item, 'disabled');
                 const newTag: TagItem = {
                     type: filterName,
                     value: item,
                     label: label,
+                    disabled: disabled,
                     tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': label})
                 };
                 this._tags.push(newTag);
             });
+
+            this._tags.sort((a, b) => Number(b.disabled || 0) - Number(a.disabled || 0));
         }
     }
 
-    private _getRefineLabel(listName: string, value: any): string {
-        let result = String(value);
+    private _getRefineProp<T>(listName: string, value: any, prop: string): T {
+        let result = null;
         if (this._refineFiltersMap.size > 0) {
             const list = this._refineFiltersMap.get(listName);
             if (list) {
                 const item = list.items.find(listItem => String(listItem.value) === String(value));
 
-                result = item ? item.label : result;
+                result = item ? item[prop] : result;
             }
 
         }
@@ -359,7 +369,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     this._tags.splice(
                         this._tags.indexOf(item),
                         1
-                    )
+                    );
                 });
             } else {
                 const tagsListItemsMap = this._entriesStore.filtersUtils.toMap(tagsListItems, 'value');
@@ -393,7 +403,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     tag.dataFetchSubscription.unsubscribe();
                     tag.dataFetchSubscription = null;
                 }
-            })
+            });
         }
     }
 }
