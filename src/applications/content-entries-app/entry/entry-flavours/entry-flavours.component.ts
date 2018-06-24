@@ -46,6 +46,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
 	public _documentWidth: number = 2000;
 	public _showActionsView = false;
+    public _replaceButtonsLabel = '';
 
 	constructor(public _widgetService: EntryFlavoursWidget,
               private _uploadManagement: UploadManagement,
@@ -61,6 +62,21 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
         this._widgetService.replacementData$
             .cancelOnDestroy(this)
             .subscribe(replacementData => this._updateShowActionsView(replacementData));
+
+        this._widgetService.data$
+            .cancelOnDestroy(this)
+            .filter(Boolean)
+            .subscribe(entry => {
+                if (entry.status === KalturaEntryStatus.noContent) {
+                    this._replaceButtonsLabel = entry.mediaType === KalturaMediaType.audio
+                        ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.addAudio')
+                        : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.addVideo');
+                } else {
+                    this._replaceButtonsLabel = entry.mediaType === KalturaMediaType.audio
+                        ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.replaceAudio')
+                        : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.replaceVideo');
+                }
+            })
     }
 
     public _updateShowActionsView(replacementData: ReplacementData): void {
