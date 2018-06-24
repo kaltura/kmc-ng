@@ -750,6 +750,7 @@
                                 "explanation": "Enter the URL template that you would like to appear in the iTunes Store Podcast for each video in this feed. The system will append the specific entry id for each entry. For example:\"http://mysite.com?videoid=\""
                             },
                             "feedAuthor": "Feed Author",
+                            "enforceFeedAuthor": "Use this name as the Episode Author for all episodes",
                             "website": "Website",
                             "description": "Feed Description",
                             "categories": {
