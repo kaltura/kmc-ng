@@ -9,9 +9,11 @@
                 <i class="{{_widgetService.entryStatusClassName}}"></i><span>{{_widgetService.entryStatus}}</span>
             </div>
             <kFlavorReplaceMediaBtn *ngIf="_showActionsView"
+                                    [replaceButtonsLabel]="_replaceButtonsLabel"
                                     [flavors]="(_widgetService.flavors$ | async)"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
             <kFlavorReplaceMediaStatus *ngIf="(_widgetService.replacementData$ | async)?.tempEntryId && (_kmcPermissions.FEATURE_ENTRY_REPLACEMENT | kNgIfPermitted)"
+                                       [replaceButtonsLabel]="_replaceButtonsLabel"
                                        [currentEntryId]="_widgetService.currentEntryId"
                                        [replacementData]="_widgetService.replacementData$ | async"
                                        [entry]="_widgetService.data">

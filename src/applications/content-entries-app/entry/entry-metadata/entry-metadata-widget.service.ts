@@ -91,7 +91,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
           formGroups.push(this.metadataForm);
         }
 
-        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
+        if (this._permissionsService.hasAnyPermissions([
+            KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
+            KMCPermissions.CONTENT_MODERATE_METADATA
+        ])) {
           formGroups.push(...this.customDataForms.map(customDataForm => customDataForm.formGroup));
         }
 
@@ -219,7 +222,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         if (this.customDataForms)
         {
             this.customDataForms.forEach(customDataForm => {
-                if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
+                if (!this._permissionsService.hasAnyPermissions([
+                    KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
+                    KMCPermissions.CONTENT_MODERATE_METADATA
+                ])) {
                   customDataForm.disable();
                 }
                 const entryMetadata = this._entryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
