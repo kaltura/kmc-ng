@@ -3,7 +3,7 @@
 	<div class="kFlavours kOverrideFAIcons" #flavors>
 		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
 		<div class="kFlavorReplacement">
-            <divclass="kEntryStatus"[class.kAddingEntry]="!_showActionsView && !((_widgetService.replacementData$ | async)?.tempEntryId && (_kmcPermissions.FEATURE_ENTRY_REPLACEMENT | kNgIfPermitted))" *ngIf="!(_widgetService.replacementData$ | async)?.tempEntryId">
+            <div class="kEntryStatus"[class.kAddingEntry]="!_showActionsView && !((_widgetService.replacementData$ | async)?.tempEntryId && (_kmcPermissions.FEATURE_ENTRY_REPLACEMENT | kNgIfPermitted))" *ngIf="!(_widgetService.replacementData$ | async)?.tempEntryId">
 			<i class="{{_widgetService.entryStatusClassName}}"></i><span>{{_widgetService.entryStatus}}</span>
 		</div>
 		<kFlavorReplaceMediaBtn *ngIf="_showActionsView"
