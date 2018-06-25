@@ -148,12 +148,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-            const selectedEntries = this._entriesList.selectedEntries || [];
-            const relevantEntryIndex = selectedEntries.findIndex(({ id }) => id === entryId);
-            if (relevantEntryIndex !== -1) {
-                selectedEntries.splice(relevantEntryIndex, 1);
-                this._entriesList.selectedEntries = [...selectedEntries];
-            }
+            this._entriesList.clearSelection();
             this._entriesStore.reload();
         },
         error => {
