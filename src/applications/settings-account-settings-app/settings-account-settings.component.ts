@@ -57,8 +57,13 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+      this._logger.info(`initiate account settings view`);
+      this._createForm();
+
       if (this._settingsAccountSettingsMainView.viewEntered()) {
           this._prepare();
+      } else {
+          this._logger.info(`view is not permitted, abort initialization`);
       }
   }
 
@@ -66,8 +71,6 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
-      this._logger.info(`initiate account settings view`);
-      this._createForm();
       this._fillDescribeYourselfOptions();
       this._loadPartnerAccountSettings();
       this.accountSettingsForm
@@ -216,6 +219,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
   // Fill the form with data
   private _fillForm(partner: KalturaPartner): void {
+      this.partnerAdminEmail = partner.adminEmail;
     this.accountSettingsForm.reset({
       name: partner.name,
       adminUserId: partner.adminUserId,

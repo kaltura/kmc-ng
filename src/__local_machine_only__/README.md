@@ -41,8 +41,8 @@ Follow these instructions to test external apps integration:
     "uri": ""
 },
 "liveAnalytics": {
-    "uri": "/__local_machine_only__/live-analytics-vFuture/index.html",
-    "uiConfId": 36060752,
+    "uri": "/__local_machine_only__/live-analytics-v2.7.1/index.html",
+    "uiConfId": "36060752",
     "mapUrls": ["cf1.kaltura.com/content/static/maps/v1", "cf2.kaltura.com/content/static/maps/v1", "cf3.kaltura.com/content/static/maps/v1"],
     "mapZoomLevels": "12"
 },
@@ -54,6 +54,6 @@ Follow these instructions to test external apps integration:
 }
 ```
 
-#### External application supported versions
+#### Supported versions
 
-For extrenal application supported versions, please see the general [README.md](../../README.md) file 
+The code snippet above contains configuration for all the available external apps. For each app the uri includes the version that we were using to test its integration. If you encounter integration issues make sure that you are not using an obslete version of that app.  
