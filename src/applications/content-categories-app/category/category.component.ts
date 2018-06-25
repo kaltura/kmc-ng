@@ -1,6 +1,7 @@
 import {CategoryMetadataWidget} from './category-metadata/category-metadata-widget.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActionTypes, CategoryService} from './category.service';
+import { ActivatedRoute } from '@angular/router';
+import {NotificationTypes, ActionTypes, CategoryService} from './category.service';
 import {CategorySectionsListWidget} from './category-sections-list/category-sections-list-widget.service';
 import {CategoriesService} from '../categories/categories.service';
 import {CategoryWidgetsManager} from './category-widgets-manager';
@@ -17,6 +18,7 @@ import {
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 
 @Component({
@@ -55,7 +57,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
               private _categoriesStore: CategoriesService,
               private _appLocalization: AppLocalization,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _contentCategoryView: ContentCategoryViewService,
+              private _categoryRoute: ActivatedRoute) {
 
     categoryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5]);
 
@@ -68,6 +72,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._showLoader = true;
+
     this._categoriesStatusMonitorService.status$
 	    .cancelOnDestroy(this)
 	    .first()
@@ -87,6 +92,27 @@ export class CategoryComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void{
+      this._categoryStore.notifications$
+          .cancelOnDestroy(this)
+          .subscribe(
+              ({ type, error }) => {
+                  switch(type) {
+                      case NotificationTypes.ViewEntered:
+                          const { category } = this._categoryStore;
+
+                          if (category) {
+                              this._contentCategoryView.viewEntered({
+                                  category,
+                                  activatedRoute: this._categoryRoute,
+                                  section: ContentCategoryViewSections.ResolveFromActivatedRoute
+                              });
+                          }
+                          break;
+                      default:
+                          break;
+                  }
+              });
+
     this._categoryStore.state$
 	    .cancelOnDestroy(this)
 	    .subscribe(

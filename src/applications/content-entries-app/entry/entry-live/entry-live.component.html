@@ -69,9 +69,14 @@
               <span>{{_widgetService._recordStatus}}</span>
           </div>
           <div class="kRow">
-            <span class="kLabels">{{'applications.content.entryDetails.live.autoStart' | translate}}</span>
-            <p-dropdown (onChange)="_widgetService.setDirty()" [options]="_widgetService._autoStartOptions" [(ngModel)]="_widgetService._explicitLive"
-                        [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"></p-dropdown>
+            <span class="kLabels">{{'applications.content.entryDetails.live.previewMode' | translate}}</span>
+            <div>
+              <p-inputSwitch class="kControl kInputSwitch"
+                             [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
+                             (onChange)="_widgetService.setDirty()"
+                             [(ngModel)]="_widgetService._explicitLive"></p-inputSwitch>
+              <span>{{_widgetService._explicitLive ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
+            </div>
           </div>
         </div>
 
@@ -221,9 +226,9 @@
 </k-area-blocker>
 
 <kPopupWidget #liveAnalytics [fullScreen]="true">
-  <!--ng-template>
-    <kAnalyticsLive></kAnalyticsLive>
-  </ng-template-->
+  <ng-template>
+    <kAnalyticsLive [entry]="_widgetService.data" [parentPopup]="liveAnalytics"></kAnalyticsLive>
+  </ng-template>
 </kPopupWidget>
 
 <kPopupWidget #liveDashboard [fullScreen]="true">

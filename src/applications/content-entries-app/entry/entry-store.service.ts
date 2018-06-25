@@ -2,6 +2,7 @@ import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
@@ -34,11 +35,14 @@ export enum ActionTypes
 	EntryPrepareSavingFailed,
 	EntrySavingFailed,
 	EntryDataIsInvalid,
-	ActiveSectionBusy
+	ActiveSectionBusy,
 }
 
-declare type StatusArgs =
-{
+export enum NotificationTypes {
+    ViewEntered
+}
+
+declare interface StatusArgs {
 	action : ActionTypes;
 	error? : Error;
 
@@ -46,11 +50,11 @@ declare type StatusArgs =
 
 @Injectable()
 export class EntryStore implements  OnDestroy {
-
 	private _loadEntrySubscription : ISubscription;
 	private _state = new BehaviorSubject<StatusArgs>({ action : ActionTypes.EntryLoading, error : null});
-  private _pageExitVerificationToken: string;
-
+    private _pageExitVerificationToken: string;
+    private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
+    public notifications$ = this._notifications.asObservable();
 	public state$ = this._state.asObservable();
 	private _entryIsDirty : boolean;
 
@@ -161,27 +165,26 @@ export class EntryStore implements  OnDestroy {
 	}
 
 	private _onRouterEvents() : void {
-		this._router.events
+        this._router.events
             .cancelOnDestroy(this)
             .subscribe(
-				event => {
-					if (event instanceof NavigationStart) {
-					} else if (event instanceof NavigationEnd) {
-
-						// we must defer the loadEntry to the next event cycle loop to allow components
-						// to init them-selves when entering this module directly.
-						setTimeout(() =>
-						{
-							const currentEntryId = this._entryRoute.snapshot.params.id;
-							const entry = this._entry.getValue();
-							if (!entry || (entry && entry.id !== currentEntryId)) {
-								this._loadEntry(currentEntryId);
-							}
-						});
-					}
-				}
-			)
-	}
+                event => {
+                    if (event instanceof NavigationEnd) {
+                        // we must defer the loadEntry to the next event cycle loop to allow components
+                        // to init them-selves when entering this module directly.
+                        setTimeout(() => {
+                            const currentEntryId = this._entryRoute.snapshot.params.id;
+                            const entry = this._entry.getValue();
+                            if (!entry || (entry && entry.id !== currentEntryId)) {
+                                this._loadEntry(currentEntryId);
+                            } else {
+                                this._notifications.next({ type: NotificationTypes.ViewEntered });
+                            }
+                        });
+                    }
+                }
+            )
+    }
 
 	private _transmitSaveRequest(newEntry : KalturaMediaEntry) {
 		this._state.next({action: ActionTypes.EntrySaving});
@@ -286,15 +289,16 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
                 ({ entry, hasSource }) => {
+                    this._entry.next(entry);
+                    this._entryId = entry.id;
                     this._hasSource.next(hasSource);
+                    this._notifications.next({ type: NotificationTypes.ViewEntered });
+
                     if (this._contentEntryViewService.isAvailable({
                         entry,
                         activatedRoute: this._entryRoute,
                         section: ContentEntryViewSections.ResolveFromActivatedRoute
                     })) {
-                        this._entry.next(entry);
-                        this._entryId = entry.id;
-
                         const dataLoadedResult = this._widgetsManager.notifyDataLoaded(entry, { isNewData: false });
 
                         if (dataLoadedResult.errors.length) {
@@ -305,8 +309,6 @@ export class EntryStore implements  OnDestroy {
                         } else {
                             this._state.next({ action: ActionTypes.EntryLoaded });
                         }
-                    } else {
-                        this._browserService.handleUnpermittedAction(true);
                     }
 				},
 				error => {

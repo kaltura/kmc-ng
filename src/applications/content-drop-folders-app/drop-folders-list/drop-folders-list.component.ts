@@ -9,6 +9,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kDropFoldersList',
@@ -39,11 +40,14 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
               private _appLocalization: AppLocalization,
               private _router: Router,
               private _contentEntryViewService: ContentEntryViewService,
+              private _contentDropFoldersMainView: ContentDropFoldersMainViewService,
               private _browserService: BrowserService) {
   }
 
   ngOnInit() {
-    this._prepare();
+      if (this._contentDropFoldersMainView.viewEntered()) {
+          this._prepare();
+      }
   }
 
   ngOnDestroy() {

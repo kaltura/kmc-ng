@@ -17,39 +17,33 @@ import { globalConfig } from 'config/global';
  *************************************/
 
 export interface ExternalApplications {
-    studio: {
-        enabled: boolean,
-        uri?: string,
-        html5_version?: string,
-        html5lib?: string,
-        showFlashStudio?: boolean
+    studioV2?: {
+        uri: string,
+        html5_version: string,
+        html5lib: string,
     };
-    studioV3: {
-        enabled: boolean,
-        uri?: string,
-        html5_version?: string,
-        html5lib?: string,
-        showFlashStudio?: boolean
+    studioV3?: {
+        uri: string,
+        html5_version: string,
+        html5lib: string,
+        playerVersionsMap?: string
     };
-    liveDashboard: {
-        enabled: boolean,
-        uri?: string,
+    liveDashboard?: {
+        uri: string,
     };
-    kava: {
-        enabled: boolean,
-        uri?: string
+    kava?: {
+        uri: string
     };
-    usageDashboard: {
-        enabled: boolean,
-        uri?: string,
+    usageDashboard?: {
+        uri: string,
     };
-    liveAnalytics: {
-        enabled: boolean,
-        uiConfId?: number,
-        uri?: string
+    liveAnalytics?: {
+        uri: string,
+        uiConfId?: string,
+        mapUrls?: string[],
+        mapZoomLevels?: string
     };
-    editor: {
-        enabled: boolean,
+    editor?: {
         uri?: string
     };
 }
@@ -58,18 +52,15 @@ export interface ServerConfig {
     kalturaServer: {
         uri: string,
         defaultPrivileges?: string,
-        deployUrl: string,
+        deployUrl?: string,
         previewUIConf: number,
-        freeTrialExpiration: {
-            enabled: boolean,
+        resetPasswordUri?: string,
+        freeTrialExpiration?: {
             trialPeriodInDays: number
         },
-        login?: {
-            limitAccess?: {
-                enabled: boolean,
-                verifyBetaServiceUrl?: string
-            }
-        };
+        limitAccess?: {
+            serviceUrl: string
+        }
     };
     cdnServers: {
         serverUri: string,
@@ -113,7 +104,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
         {
             let result = false;
 
-            if (configuration.enabled) {
+            if (configuration) {
 
                 result = !!configuration.uri &&
                     !configuration.uri.match(/\s/g); // not contains white spaces
@@ -125,9 +116,9 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
             return result;
         }
     },
-    studio: (configuration) => {
+    studioV2: (configuration) => {
         let result = false;
-        if (configuration.enabled) {
+        if (configuration) {
             result =  !!configuration.uri &&
                 !configuration.uri.match(/\s/g) && // not contains white spaces
                 !!configuration.html5_version &&
@@ -143,10 +134,11 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
     studioV3: (configuration) => {
         let result = false;
 
-        if (configuration.enabled) {
+        if (configuration) {
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g) && // not contains white spaces
                 !!configuration.html5_version &&
+                !!configuration.playerVersionsMap &&
                 !!configuration.html5lib;
 
             if (result) {
@@ -159,7 +151,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
     liveDashboard: (configuration) => {
         let result = false;
 
-        if (configuration.enabled) {
+        if (configuration) {
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
@@ -173,7 +165,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
     kava: (configuration) => {
         let result = false;
 
-        if (configuration.enabled) {
+        if (configuration) {
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
@@ -187,7 +179,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
     usageDashboard: (configuration) => {
         let result = false;
 
-        if (configuration.enabled) {
+        if (configuration) {
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
@@ -201,10 +193,9 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
     liveAnalytics: (configuration) => {
         let result = false;
 
-        if (configuration.enabled) {
+        if (configuration) {
             result = !!configuration.uri &&
-                !configuration.uri.match(/\s/g) && // not contains white spaces
-                !!configuration.uiConfId;
+                !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
                 configuration.uri = buildKalturaServerUri(configuration.uri);
@@ -230,7 +221,7 @@ export function buildKalturaServerUri(suffix: string): string {
 }
 
 export function buildDeployUrl(suffix: string): string {
-    return `${serverConfig.kalturaServer.deployUrl}${suffix}`;
+    return `${serverConfig.kalturaServer.deployUrl || ''}${suffix}`;
 }
 
 export function getKalturaServerUri(suffix: string = ''): string {

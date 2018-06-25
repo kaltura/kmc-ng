@@ -3,6 +3,7 @@ import {Host, Injectable, OnDestroy} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import {ISubscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
@@ -39,6 +40,10 @@ export enum ActionTypes {
   ActiveSectionBusy
 }
 
+export enum NotificationTypes {
+    ViewEntered
+}
+
 declare interface StatusArgs {
   action: ActionTypes;
   error?: Error;
@@ -46,7 +51,8 @@ declare interface StatusArgs {
 
 @Injectable()
 export class CategoryService implements OnDestroy {
-
+    private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
+    public notifications$ = this._notifications.asObservable();
     private _loadCategorySubscription: ISubscription;
     private _state = new BehaviorSubject<StatusArgs>({action: ActionTypes.CategoryLoading, error: null});
 
@@ -162,6 +168,8 @@ export class CategoryService implements OnDestroy {
                         const category = this._category.getValue();
                         if (!category || (category && category.id.toString() !== currentCategoryId)) {
                           this._loadCategory(currentCategoryId);
+                        } else {
+                            this._notifications.next({ type: NotificationTypes.ViewEntered });
                         }
 					});
 				});
@@ -338,10 +346,11 @@ export class CategoryService implements OnDestroy {
 			.cancelOnDestroy(this)
 			.subscribe(category => {
 			    this._logger.info(`handle successful loading of category data`);
+                    this._category.next(category);
+                    this._notifications.next({ type: NotificationTypes.ViewEntered });
+
                 if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  })) {
                     this._loadCategorySubscription = null;
-
-                    this._category.next(category);
 
                     const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
 
@@ -353,8 +362,6 @@ export class CategoryService implements OnDestroy {
                     } else {
                         this._state.next({ action: ActionTypes.CategoryLoaded });
                     }
-                } else {
-                    this._browserService.handleUnpermittedAction(true);
                 }
             },
 			error => {

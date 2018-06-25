@@ -4,52 +4,46 @@
     "defaultPrivileges" : "@kalturaServer.defaultPrivileges@",
     "deployUrl": "@kalturaServer.deployUrl@",
     "previewUIConf": @kalturaServer.previewUIConf@,
+    "resetPasswordUri": "@kalturaServer.resetPasswordUri@",
     "freeTrialExpiration": {
-      "enabled": @kalturaServer.freeTrialExpiration.enabled@,
       "trialPeriodInDays": @kalturaServer.freeTrialExpiration.trialPeriodInDays@
     },
-    "login": {
-        "limitAccess": {
-            "enabled": @kalturaServer.limitAccess.enabled@,
-            "verifyBetaServiceUrl": "@kalturaServer.limitAccess.verifyBetaServiceUrl@"
-        }
-    }
+      "limitAccess": {
+          "serviceUrl": "@kalturaServer.limitAccess.serviceUrl@"
+      }
   },
   "cdnServers": {
     "serverUri": "@cdnServers.serverUri@",
     "securedServerUri": "@cdnServers.securedServerUri@"
   },
   "externalApps": {
-    "studio": {
-      "enabled": @externalApps.studio.enabled@,
-      "uri": "@externalApps.studio.uri@",
-      "html5_version":"@externalApps.studio.html5_version@",
-      "html5lib":"@externalApps.studio.html5lib@"
+    "studioV2": {
+      "uri": "@externalApps.studioV2.uri@",
+      "html5_version":"@externalApps.studioV2.html5_version@",
+      "html5lib":"@externalApps.studioV2.html5lib@"
     },
     "studioV3": {
-      "enabled": @externalApps.studioV3.enabled@,
       "uri": "@externalApps.studioV3.uri@",
       "html5_version":"@externalApps.studioV3.html5_version@",
-      "html5lib":"@externalApps.studioV3.html5lib@"
+      "html5lib":"@externalApps.studioV3.html5lib@",
+      "playerVersionsMap":"@externalApps.studioV3.playerVersionsMap@"
     },
     "liveDashboard": {
-      "enabled": @externalApps.liveDashboard.enabled@,
       "uri": "@externalApps.liveDashboard.uri@"
     },
     "liveAnalytics": {
-      "enabled": @externalApps.liveAnalytics.enabled@,
-      "uri": "@externalApps.liveAnalytics.uri@"
+       "uri": "@externalApps.liveAnalytics.uri@",
+       "uiConfId": @externalApps.liveAnalytics.uiConfId@
+       "mapUrls": ["@externalApps.liveAnalytics.mapUrls@"],
+       "mapZoomLevels": "@externalApps.liveAnalytics.mapZoomLevels@"
     },
     "kava": {
-      "enabled": @externalApps.kava.enabled@,
       "uri": "@externalApps.kava.uri@"
     },
     "usageDashboard": {
-      "enabled": @externalApps.usageDashboard.enabled@,
       "uri": "@externalApps.usageDashboard.uri@"
     },
     "editor": {
-      "enabled": @externalApps.editor.enabled@,
       "uri": "@externalApps.editor.uri@"
     }
   },

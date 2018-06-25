@@ -239,20 +239,19 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   private _createOrAssociateUser(): void {
-    const { id, email } = this._userForm.value;
-    const userId = (id || email).trim();
+    const userProvidedEmail = (this._userForm.value.email || '').trim();
     this._isBusy = true;
-    this._usersStore.getUserById(userId)
+    this._usersStore.getUserById(userProvidedEmail)
       .cancelOnDestroy(this)
       .subscribe(
         user => {
           this._isBusy = false;
           this._browserService.confirm({
             header: this._appLocalization.get('applications.administration.users.userAssociatedCaption'),
-            message: this._appLocalization.get('applications.administration.users.userAssociated', { 0: userId }),
+            message: this._appLocalization.get('applications.administration.users.userAssociated', { 0: (user.id || user.email) }),
             accept: () => {
                 this._blockerMessage = null;
-                this._associateUserToAccount(user);
+                this._associateUserToAccount(userProvidedEmail, user);
             }
           });
         },
@@ -307,9 +306,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _associateUserToAccount(user: KalturaUser): void {
+  private _associateUserToAccount(userProvidedEmail: string, user: KalturaUser): void {
       const { roleIds } = this._userForm.value;
-    this._usersStore.associateUserToAccount(user, roleIds)
+    this._usersStore.associateUserToAccount(userProvidedEmail, user, roleIds)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(

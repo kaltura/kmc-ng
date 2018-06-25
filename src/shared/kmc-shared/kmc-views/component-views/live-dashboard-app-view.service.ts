@@ -21,6 +21,6 @@ export class LiveDashboardAppViewService extends KmcComponentViewBaseService<voi
     }
 
     isAvailable(): boolean {
-        return serverConfig.externalApps.liveDashboard.enabled;
+        return !!serverConfig.externalApps.liveDashboard;
     }
 }

@@ -57,9 +57,11 @@
 	.kCaptionUrl{
 		margin-top: 18px;
 		margin-left: 120px;
-		width: 234px;
+		width: 212px;
 	}
 	.kUploadFileName{
+        width: 200px;
+        text-overflow: ellipsis;
 		white-space: nowrap;
 		padding-right: 12px;
 		overflow: hidden;

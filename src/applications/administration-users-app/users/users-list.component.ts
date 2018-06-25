@@ -9,6 +9,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { Observer } from 'rxjs/Observer';
 import { serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -39,43 +40,50 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   constructor(public _usersStore: UsersStore,
               private _appLocalization: AppLocalization,
+              private _adminUsersMainViewService: AdminUsersMainViewService,
               private _browserService: BrowserService) {
   }
 
   ngOnInit() {
-    this._usersStore.query$
-      .cancelOnDestroy(this)
-      .subscribe(
-        query => {
-          this._filter.pageSize = query.pageSize;
-          this._filter.pageIndex = query.pageIndex - 1;
-          this._browserService.scrollToTop();
-        }
-      );
-
-    this._usersStore.users.data$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this._usersInfo = this._appLocalization.get('applications.administration.users.usersInfo',
-            {
-              0: response.users.totalCount,
-              1: response.users.totalCount > 1 ? this._appLocalization.get('applications.administration.users.users') : this._appLocalization.get('applications.administration.users.user'),
-              2: response.partnerInfo.adminLoginUsersQuota - response.users.totalCount
-            }
-          );
-          this._usersAmount = `${response.users.totalCount} ${response.users.totalCount > 1 ? this._appLocalization.get('applications.administration.users.users') : this._appLocalization.get('applications.administration.users.user')}`;
-          this._usersTotalCount = response.users.totalCount;
-          this._users = response.users.items;
-          this._partnerInfo = {
-            adminLoginUsersQuota: response.partnerInfo.adminLoginUsersQuota,
-            adminUserId: response.partnerInfo.adminUserId
-          };
-        }
-      );
+      if (this._adminUsersMainViewService.viewEntered()) {
+          this._prepare();
+      }
   }
 
   ngOnDestroy() {
+  }
+
+  private _prepare(): void {
+      this._usersStore.query$
+          .cancelOnDestroy(this)
+          .subscribe(
+              query => {
+                  this._filter.pageSize = query.pageSize;
+                  this._filter.pageIndex = query.pageIndex - 1;
+                  this._browserService.scrollToTop();
+              }
+          );
+
+      this._usersStore.users.data$
+          .cancelOnDestroy(this)
+          .subscribe(
+              response => {
+                  this._usersInfo = this._appLocalization.get('applications.administration.users.usersInfo',
+                      {
+                          0: response.users.totalCount,
+                          1: response.users.totalCount > 1 ? this._appLocalization.get('applications.administration.users.users') : this._appLocalization.get('applications.administration.users.user'),
+                          2: response.partnerInfo.adminLoginUsersQuota - response.users.totalCount
+                      }
+                  );
+                  this._usersAmount = `${response.users.totalCount} ${response.users.totalCount > 1 ? this._appLocalization.get('applications.administration.users.users') : this._appLocalization.get('applications.administration.users.user')}`;
+                  this._usersTotalCount = response.users.totalCount;
+                  this._users = response.users.items;
+                  this._partnerInfo = {
+                      adminLoginUsersQuota: response.partnerInfo.adminLoginUsersQuota,
+                      adminUserId: response.partnerInfo.adminUserId
+                  };
+              }
+          );
   }
 
   private _getObserver(retryFn: () => void): Observer<void> {

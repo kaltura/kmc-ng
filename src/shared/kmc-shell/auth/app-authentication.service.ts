@@ -35,7 +35,12 @@ import { HttpClient } from '@angular/common/http';
 import { buildKalturaServerUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
+
+
+
 const ksSessionStorageKey = 'auth.login.ks';
+import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client/api/types/AdminUserSetInitialPasswordAction';
+import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 
 export interface UpdatePasswordPayload {
     email: string;
@@ -74,10 +79,14 @@ export class AppAuthentication {
         return this._automaticLoginErrorReason;
     }
 
-    private _automaticLoginCredentials: { ks: string} = null;
+    private _defaultUrl: string;
+    private _automaticLogin: {  ks: string} = { ks: null };
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
 
+    public get defaultUrl(): string {
+        return this._defaultUrl;
+    }
 
     constructor(private kalturaServerClient: KalturaClient,
                 private _browserService: BrowserService,
@@ -88,7 +97,8 @@ export class AppAuthentication {
                 private _http: HttpClient,
                 private _appEvents: AppEventsService,
                 private _location: Location,
-                private _kmcViewsManager: KmcMainViewsService) {
+                private _kmcViewsManager: KmcMainViewsService,
+                private _restorePasswordView: RestorePasswordViewService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
 
@@ -134,6 +144,24 @@ export class AppAuthentication {
         return this._appUser;
     }
 
+    validateResetPasswordHash(hash: string): Observable<string> {
+        if (!serverConfig.kalturaServer.resetPasswordUri) {
+            this._logger.warn(`resetPasswordUri was not provided by configuration, abort request`);
+            return Observable.of('RESET_URI_NOT_DEFINED');
+        }
+
+        const url = serverConfig.kalturaServer.resetPasswordUri.replace('{hash}', hash);
+
+        this._logger.debug(`check if provided hash is valid`, { hash, url });
+
+        return this._http.get(url, { responseType: 'json' })
+            .map(res => res['errorCode'])
+            .catch((e) => {
+                this._logger.error('Failed to check if provided hash is valid', e);
+                throw Error('Failed to check if provided hash is valid');
+            });
+    }
+
     resetPassword(email: string): Observable<void> {
         if (!this.isLogged()) {
             return this.kalturaServerClient.request(new UserResetPasswordAction({email}));
@@ -149,6 +177,11 @@ export class AppAuthentication {
         } else {
             return Observable.throw(new Error('cannot update password, user is not logged'));
         }
+    }
+
+    setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<void> {
+        return this.kalturaServerClient.request(new AdminUserSetInitialPasswordAction(payload))
+            .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }
 
     login(loginId: string, password: string): Observable<LoginResponse> {
@@ -243,16 +276,12 @@ export class AppAuthentication {
     }
 
     private _checkIfPartnerCanAccess(partner: KalturaPartner): Observable<boolean> {
-        if (!(!!serverConfig.kalturaServer.login && !!serverConfig.kalturaServer.login.limitAccess)){
+        if (!serverConfig.kalturaServer.limitAccess){
             return Observable.of(true);
         }
-        const limitAccess = serverConfig.kalturaServer.login.limitAccess;
+        const serviceUrl = serverConfig.kalturaServer.limitAccess.serviceUrl;
 
-        if (!limitAccess.enabled) {
-            return Observable.of(true);
-        }
-
-        const url = buildKalturaServerUri(limitAccess.verifyBetaServiceUrl + partner.id);
+        const url = buildKalturaServerUri(serviceUrl + partner.id);
         this._logger.debug(`check if partner can access the KMC`, {partnerId: partner.id, limitAccess: true, url});
 
         return this._http.get(url, { responseType: 'json' })
@@ -316,6 +345,7 @@ export class AppAuthentication {
     isLogged() {
         return !!this._appUser;
     }
+
 
     private _clearSessionCredentials(): void {
         this._logger.debug(`clear previous stored credentials in session storage if found`);
@@ -404,15 +434,38 @@ export class AppAuthentication {
     }
 
     public setAutomaticLoginCredentials(ks: string) {
-        this._automaticLoginCredentials = { ks };
+        this._automaticLogin.ks = ks;
     }
-    public loginAutomatically(): Observable<boolean> {
 
-        const ksFromApp = this._automaticLoginCredentials && this._automaticLoginCredentials.ks;
+
+    public restorePassword(hash: string): void {
+        this._clearSessionCredentials();
+
+        if (this._restorePasswordView.isAvailable({hash})) {
+            this._restorePasswordView.open({hash});
+        } else {
+
+            this._logger.warn(`restore password view is not available, redirect to default view`, {
+                restorePasswordHash: hash
+            });
+            this._browserService.navigateToDefault();
+        }
+    }
+
+    public loginAutomatically(defaultUrl: string): Observable<boolean> {
+        const ksFromApp = this._automaticLogin.ks;
         if (ksFromApp) {
             this._logger.info(`try to login automatically with KS provided explicitly by the app`);
             this._clearSessionCredentials();
             return this._loginByKS(ksFromApp, false);
+        }
+
+        const forbiddenUrls = ['/error', '/actions', '/login'];
+        const url = typeof defaultUrl === 'string' ? defaultUrl.trim() : '';
+        const allowedUrl = url !== '/' && forbiddenUrls.filter(forbiddenUrl => url.indexOf(forbiddenUrl) !== -1).length === 0;
+        if (allowedUrl) {
+            this._defaultUrl = url;
+            this._logger.info(`set default url to ${url}`);
         }
 
         const ksFromSession = this._browserService.getFromSessionStorage(ksSessionStorageKey);  // get ks from session storage;
@@ -422,7 +475,7 @@ export class AppAuthentication {
             return this._loginByKS(ksFromSession, true);
         }
 
-        this._logger.debug(`bypass automatic login logic as no ks was provided by router or stored in session storage`);
+        this._logger.debug(`ignore automatic login logic as no session ks found `);
         return Observable.of(false);
     }
 
@@ -433,15 +486,7 @@ export class AppAuthentication {
                     result => {
                         this._logger.info(`switch partner account`, { partnerId });
                         this._browserService.setInSessionStorage(ksSessionStorageKey, result.ks);
-                        const baseUrl = this._location.prepareExternalUrl('');
-
-                        if (baseUrl) {
-                            this._logger.info(`redirect the user to default page`, { url: baseUrl });
-                            this._logout(false);
-                            window.location.href = baseUrl;
-                        } else {
-                            this._logout();
-                        }
+                        this._forceReload();
 
                         // DEVELOPER NOTICE: observer next/complete not implemented by design
                         // (since we are breaking the stream by reloading the page)
@@ -458,6 +503,19 @@ export class AppAuthentication {
         document.location.reload(false);
     }
 
+    private _forceReload() {
+        const baseUrl = this._location.prepareExternalUrl('');
+
+        if (baseUrl) {
+            this._logger.info(`redirect the user to base url`, { url: baseUrl });
+            this._logout(false);
+            window.location.href = baseUrl;
+        } else {
+            this._logger.info(`reload browser page`, { url: baseUrl });
+            document.location.reload(true);
+        }
+    }
+
     private _logout(reloadPage = true) {
         this._logger.info(`log out user from the application`, { forceReload: reloadPage });
         this.kalturaServerClient.setDefaultRequestOptions({});
@@ -468,7 +526,7 @@ export class AppAuthentication {
         this._pageExitVerificationService.removeAll();
         if (reloadPage) {
             this._logger.info(`force reload of browser`);
-            document.location.reload(true);
+            this._forceReload();
         }
     }
 

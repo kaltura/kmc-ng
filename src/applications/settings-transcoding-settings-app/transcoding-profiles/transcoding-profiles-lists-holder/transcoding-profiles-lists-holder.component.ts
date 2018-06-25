@@ -22,9 +22,7 @@ export class TranscodingProfilesListsHolderComponent {
   public _kmcPermissions = KMCPermissions;
 
   constructor(private _logger: KalturaLogger, browserService: BrowserService, settingsTranscodingMainView: SettingsTranscodingMainViewService) {
-        if (!settingsTranscodingMainView.isAvailable()){
-            browserService.handleUnpermittedAction(true);
-        }
+        settingsTranscodingMainView.viewEntered();
   }
 
   public _setBlockerMessage(message: AreaBlockerMessage): void {

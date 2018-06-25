@@ -17,13 +17,13 @@ export class TranscodingProfileManagement {
   }
 
   private _loadTranscodingProfiles(): Observable<KalturaConversionProfile[]> {
-    const payload = new ConversionProfileListAction({
-      filter: new KalturaConversionProfileFilter({ typeEqual: KalturaConversionProfileType.media }),
-      pager: new KalturaFilterPager({ pageSize: 500 })
-    });
-
     return this._serverClient
-      .request(new ConversionProfileListAction(payload))
+      .request(
+          new ConversionProfileListAction({
+              filter: new KalturaConversionProfileFilter({ typeEqual: KalturaConversionProfileType.media }),
+              pager: new KalturaFilterPager({ pageSize: 500 })
+          })
+      )
       .map((res: KalturaConversionProfileListResponse) => res.objects);
   }
 
@@ -45,5 +45,4 @@ export class TranscodingProfileManagement {
   public clearCache(): void {
     this._transcodingProfileCache$ = null;
   }
-
 }

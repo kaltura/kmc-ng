@@ -1,16 +1,18 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { kmcAppConfig } from '../../kmc-app-config';
-
-import { AppAuthentication,  AutomaticLoginErrorReasons,BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
+import { AppAuthentication, AutomaticLoginErrorReasons, BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute, Router } from '@angular/router';
 import { serverConfig } from 'config/server';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 
 export enum LoginScreens {
   Login,
   ForgotPassword,
   PasswordExpired,
-  InvalidLoginHash
+  InvalidLoginHash,
+  RestorePassword,
+  RestorePasswordInvalidHash
 }
 
 @Component({
@@ -29,6 +31,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
   public _signUpLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.signUp;
+  public _restorePasswordHash: string;
+  public _passwordRestored = false;
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -47,12 +51,50 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _el: ElementRef,
-              private _renderer: Renderer2) {
+              private _renderer: Renderer2,
+              private _route: ActivatedRoute,
+              private _router: Router,
+              private _restorePasswordView: RestorePasswordViewService) {
+      this._prepare();
   }
 
   ngAfterViewInit() {
     this.onResize();
   }
+
+    private _prepare(): void {
+        const restorePasswordArgs = this._restorePasswordView.popOpenArgs();
+        if (restorePasswordArgs && restorePasswordArgs.hash) {
+            this._validateRestorePasswordHash(restorePasswordArgs.hash);
+        }
+    }
+
+    private _validateRestorePasswordHash(hash: string): void {
+        this._appAuthentication.validateResetPasswordHash(hash)
+            .tag('block-shell')
+            .cancelOnDestroy(this)
+            .subscribe(
+                (errorCode) => {
+                    if (!errorCode) {
+                        this._currentScreen = LoginScreens.RestorePassword;
+                        this._restorePasswordHash = hash;
+                    } else if (errorCode === 'RESET_URI_NOT_DEFINED') {
+                        this._browserService.navigateToError();
+                    } else {
+                        this._currentScreen = LoginScreens.RestorePasswordInvalidHash;
+                        this._errorCode = errorCode;
+                    }
+                },
+                error => {
+                    this._browserService.confirm({
+                        header: this._appLocalization.get('app.error'),
+                        message: this._appLocalization.get('app.login.restorePassword.error.failedValidateHash', [error.message]),
+                        accept: () => this._validateRestorePasswordHash(hash),
+                        reject: () => this._setScreen(LoginScreens.Login)
+                    });
+                }
+            );
+    }
 
   private _makeLoginRequest(username: string, password: string): Observable<LoginResponse> {
     return this._appAuthentication.login(username, password).cancelOnDestroy(this);
@@ -63,7 +105,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this._errorMessage = '';
 
     if (success) {
-      this._browserService.navigateToDefault();
+        const defaultUrl = this._appAuthentication.defaultUrl;
+        if (defaultUrl) {
+            this._browserService.navigate(defaultUrl);
+        } else {
+            this._browserService.navigateToDefault();
+        }
+
       return;
     }
 
@@ -185,5 +233,21 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public _signUp(): void {
     this._browserService.openLink(serverConfig.externalLinks.kaltura.signUp, {}, '_self');
+  }
+
+  public _restorePassword(payload: {newPassword: string, hashKey: string}): void {
+    this._inProgress = true;
+    this._appAuthentication.setInitalPassword(payload)
+      .subscribe(
+        () => {
+          this._inProgress = false;
+          this._passwordRestored = true;
+        },
+        err => {
+          this._errorMessage = err.message;
+          this._errorCode = err.code;
+          this._inProgress = false;
+        }
+      );
   }
 }

@@ -1,0 +1,91 @@
+@import 'app-theme/_variables.scss';
+
+.kFlavorLink {
+    .kHeader {
+        height: 78px;
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        border-bottom: 1px solid $kGrayscale4;
+        .kTitle {
+            color: $kGrayscale1;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    }
+    .kContainer {
+        height: 315px;
+
+        .kFlavorUrl {
+            padding: 16px 24px ;
+
+            input {
+                margin-top: 6px;
+                width: 500px;
+
+                &.kHasError {
+                    border-color: $kDandger;
+                }
+            }
+        }
+        .kInvalid {
+            color: $kDandger;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .kFlavorUrlTitle {
+            border-top: 1px solid $kGrayscale6;
+            border-bottom: 1px solid $kGrayscale6;
+            font-size: 13px;
+            font-weight: bold;
+            color: $kGrayscale3;
+            padding: 9px 0;
+
+            span {
+                padding-left: 24px;
+            }
+        }
+
+        .kStorageProfileInfo {
+            padding: 32px 24px;
+
+            .kStorageProfileInfoItem {
+                display: inline-block;
+                padding: 5px 0;
+
+                .kStorageProfileInfoItemTitle {
+                    font-weight: bold;
+                }
+            }
+
+            .kDelimiter {
+                margin: 0 10px;
+
+                &:after {
+                    content: '|';
+                    font-size: 12px;
+                    color: $kGrayscale4;
+                    top: -2px;
+                    position: relative;
+                }
+            }
+        }
+    }
+    .kFooter {
+        text-align: center;
+        height: 66px;
+        border-top: 1px solid $kGrayscale4;
+        button {
+            margin-top: 16px;
+            height: 34px;
+            width: 140px;
+        }
+    }
+}
+
