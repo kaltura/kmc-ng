@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, Unsubscribable } from 'rxjs';
+import { Observable, throwError as ObservableThrowError } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { KalturaClient, BaseEntryDeleteAction } from 'kaltura-ngx-client';
 import { XInternalXAddBulkDownloadAction } from './entries/bulk-actions/services/XInternalXAddBulkDownloadAction';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ContentEntriesAppService {
@@ -11,27 +11,12 @@ export class ContentEntriesAppService {
   }
 
   public deleteEntry(entryId: string): Observable<void> {
-    return Observable.create(observer => {
-      let subscription: Unsubscribable;
-      if (entryId && entryId.length) {
-        subscription = this._kalturaServerClient.request(new BaseEntryDeleteAction({ entryId: entryId })).subscribe(
-          () => {
-            observer.next();
-            observer.complete();
-          },
-          error => {
-            observer.error(error);
-          }
-        );
-      } else {
-        observer.error(new Error('missing entryId argument'));
+      if (!entryId) {
+          return ObservableThrowError('missing entryId argument');
       }
-      return () => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-      }
-    });
+      return this._kalturaServerClient
+          .request(new BaseEntryDeleteAction({ entryId: entryId }))
+          .pipe(map(() => {}));
   }
 
   public downloadEntry(entryIds: string, flavorParamsId: string): Observable<{ email: string }> {
