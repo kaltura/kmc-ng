@@ -17,9 +17,10 @@ import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
 import { BulkUploadRequestFactory } from './bulk-upload-request-factory';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 
-interface BulkUploadFile
-{
+interface BulkUploadFile {
+    bulkUploadObjectType: KalturaBulkUploadObjectType;
   status: KalturaBatchJobStatus;
   uploadedOn: Date;
   id: number;
@@ -63,6 +64,8 @@ export class BulkUploadMonitorService implements OnDestroy {
         KalturaBatchJobStatus.retry
     ];
 
+    private _categoriesLastUpdate = new Date();
+
     constructor(private _kalturaClient: KalturaClient,
                 private _kmcServerPolls: KmcServerPolls,
                 private _appEvents: AppEventsService,
@@ -73,9 +76,9 @@ export class BulkUploadMonitorService implements OnDestroy {
         this._appEvents
             .event(BulkLogUploadingStartedEvent)
             .cancelOnDestroy(this)
-            .subscribe(({id, status, uploadedOn}) => {
+            .subscribe(({id, status, uploadedOn, bulkUploadObjectType}) => {
                 this._logger.debug(`handling app event 'BulkLogUploadingStartedEvent. { id: '${id}' }`);
-                this._trackNewFile({id, status, uploadedOn});
+                this._trackNewFile({id, status, uploadedOn, bulkUploadObjectType});
                 this._totals.data.next(this._calculateTotalsFromState());
             });
 
@@ -87,7 +90,13 @@ export class BulkUploadMonitorService implements OnDestroy {
         if (this._bulkUploadFiles[file.id]) {
             this._logger.warn(`cannot track new file with id: '${file.id}'. a file with such id already exists`);
         } else {
-            this._bulkUploadFiles[file.id] = {id: file.id, status: file.status, uploadedOn: file.uploadedOn, allowPurging: false};
+            this._bulkUploadFiles[file.id] = {
+                id: file.id,
+                status: file.status,
+                uploadedOn: file.uploadedOn,
+                bulkUploadObjectType: file.bulkUploadObjectType,
+                allowPurging: false
+            };
         }
     }
 
@@ -205,6 +214,25 @@ export class BulkUploadMonitorService implements OnDestroy {
         }
     }
 
+    private _updateCategoriesTree(uploads: KalturaBulkUpload[]): void {
+        const successfulUploadStatuses = [
+            KalturaBatchJobStatus.finished,
+            KalturaBatchJobStatus.finishedPartially,
+            KalturaBatchJobStatus.processed
+        ];
+        const successfulCategoriesUploads = uploads
+            .filter(upload =>
+                upload.bulkUploadObjectType === KalturaBulkUploadObjectType.category
+                && successfulUploadStatuses.indexOf(upload.status) !== -1
+                && upload.uploadedOn > this._categoriesLastUpdate
+            );
+
+        if (successfulCategoriesUploads.length) {
+            this._categoriesLastUpdate = new Date(Math.max(...successfulCategoriesUploads.map(({ uploadedOn }) => +uploadedOn)));
+            this._appEvents.publish(new CategoriesGraphUpdatedEvent());
+        }
+    }
+
     private _startPolling(): void {
 
         if (this._poolingState !== 'running') {
@@ -226,6 +254,7 @@ export class BulkUploadMonitorService implements OnDestroy {
 
 
                     if (serverFiles.length > 0) {
+                        this._updateCategoriesTree(serverFiles);
                         this._cleanDeletedUploads(serverFiles);
                         this._updateTrackedFilesFromServer(serverFiles);
                         this._updateServerQueryUploadedOnFilter();
@@ -265,7 +294,8 @@ export class BulkUploadMonitorService implements OnDestroy {
                 this._trackNewFile({
                     id: upload.id,
                     status: upload.status,
-                    uploadedOn: upload.uploadedOn
+                    uploadedOn: upload.uploadedOn,
+                    bulkUploadObjectType: upload.bulkUploadObjectType
                 });
             }
         });

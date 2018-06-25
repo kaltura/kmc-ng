@@ -21,6 +21,7 @@ import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-sha
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 import { async } from 'rxjs/scheduler/async';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
@@ -92,8 +93,12 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                     this._categoriesUpdating = status.update;
                 });
 
-            this._prepare();
-        }
+        this._appEvents.event(CategoriesGraphUpdatedEvent)
+            .cancelOnDestroy(this)
+            .subscribe(() => {
+                this._logger.info(`categories graph was updated reload categories list`);
+                this._reload();
+            });this._prepare();}
     }
 
     private _prepare(): void {
