@@ -60,8 +60,6 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     super(_logger.subLogger('BulkLogStoreService'));
     if (contentBulkUploadsMainView.isAvailable()) {
         this._prepare();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

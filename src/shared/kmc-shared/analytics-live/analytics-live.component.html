@@ -1,0 +1,12 @@
+<div class="kLiveAnalytics">
+    <div class="kHeader">
+        <div>
+            <i class="kIconclose_small kClose" (click)="parentPopup.close()"></i>
+            <span class="kTitle">{{entry?.name}}</span>
+        </div>
+    </div>
+
+    <div class="kContent">
+        <kAnalyticsLiveFrame [entryId]="entry?.id"></kAnalyticsLiveFrame>
+    </div>
+</div>

@@ -1,3 +1,70 @@
+<a name="4.7.2"></a>
+## [4.7.2](https://github.com/kaltura/kmc-ng/compare/v4.7.1...v4.7.2) (2018-06-24)
+
+
+### Bug Fixes
+
+* **content/entries:** allow entry metadata changes for content moderator ([#719](https://github.com/kaltura/kmc-ng/issues/719)) 
+* **content/entry:** add missing replacement labels in flavors tab ([0abe6b1](https://github.com/kaltura/kmc-ng/commit/0abe6b1))
+
+
+
+<a name="4.7.1"></a>
+## [4.7.1](https://github.com/kaltura/kmc-ng/compare/v4.7.0...v4.7.1) (2018-06-21)
+
+
+### Bug Fixes
+
+* **content/entry:** fix description label in distribution profile details form ([7438fc0](https://github.com/kaltura/kmc-ng/commit/7438fc0))
+* **content/entries:** fix bulk access control drop-down width ([4d71695](https://github.com/kaltura/kmc-ng/commit/4d71695))
+* **content/entry:** add missing replace buttons label ([5041d20](https://github.com/kaltura/kmc-ng/commit/5041d20))
+* **content/entry:** fix capitalization in replace video widget labels ([6649544](https://github.com/kaltura/kmc-ng/commit/6649544))
+* **content/entry:** fix permission for link flavor option ([3600417](https://github.com/kaltura/kmc-ng/commit/3600417))
+* **content/entry:** fix thumbnail download URL according to current protocol ([0ce468b](https://github.com/kaltura/kmc-ng/commit/0ce468b))
+* **content/entry:** hide replacement controls for new entry ([03d4aa5](https://github.com/kaltura/kmc-ng/commit/03d4aa5))
+* **content/syndication:** add missing ITunes feed author field ([08e4dd4](https://github.com/kaltura/kmc-ng/commit/08e4dd4))
+* **content/syndication:** add prompt text for feed image URL field ([91c81c3](https://github.com/kaltura/kmc-ng/commit/91c81c3))
+* **content/syndication:** fix owner email field validation logic ([7eedfe6](https://github.com/kaltura/kmc-ng/commit/7eedfe6))
+* **settings/account settings:**  update admin email on changing owner ([#703](https://github.com/kaltura/kmc-ng/issues/703)) 
+* changelog notification badge ([#700](https://github.com/kaltura/kmc-ng/issues/700)) ([3bae52e](https://github.com/kaltura/kmc-ng/commit/3bae52e))
+* layout glitch of entries selector with multiple filter tags ([#702](https://github.com/kaltura/kmc-ng/issues/702)) 
+* prevent loading metadata without proper permission  ([#704](https://github.com/kaltura/kmc-ng/issues/704)) 
+
+
+<a name="4.7.0"></a>
+# [4.7.0](https://github.com/kaltura/kmc-ng/compare/v4.6.0...v4.7.0) (2018-06-11)
+
+
+### Bug Fixes
+
+* **administration/users:** associate new user to the account KMCNG-1836 ([a7975a1](https://github.com/kaltura/kmc-ng/commit/a7975a1))
+* change owner - allow saving not registered username ([1b3f9b4](https://github.com/kaltura/kmc-ng/commit/1b3f9b4))
+* changing username update the name shown in the app main menu ([#697](https://github.com/kaltura/kmc-ng/issues/697)) ([1e329fa](https://github.com/kaltura/kmc-ng/commit/1e329fa))
+* disable delete action for default thumbnail instead of preview ([c504b43](https://github.com/kaltura/kmc-ng/commit/c504b43))
+* fix caption's file name overflow issue, fix upload monitor height issue, fix access control dropdown items ([fc9431c](https://github.com/kaltura/kmc-ng/commit/fc9431c))
+* fix Live section UI inconsistency, fix behavior according to legacy ([5357b07](https://github.com/kaltura/kmc-ng/commit/5357b07))
+* fix loading remote storage profile ([6630173](https://github.com/kaltura/kmc-ng/commit/6630173))
+* fix width of imported caption URL field ([6ae024f](https://github.com/kaltura/kmc-ng/commit/6ae024f))
+* hide missing country flags, move flags into access-control and create a relevant scss ([2d06fa9](https://github.com/kaltura/kmc-ng/commit/2d06fa9))
+* missing changelog notification badge ([#693](https://github.com/kaltura/kmc-ng/issues/693)) ([ffb8226](https://github.com/kaltura/kmc-ng/commit/ffb8226))
+* No indication when trying to add a user with invalid email value ([#566](https://github.com/kaltura/kmc-ng/issues/566)) KMCNG-1420 ([e21e044](https://github.com/kaltura/kmc-ng/commit/e21e044))
+* stronger selector for main menu link to force styling in Safari ([297c951](https://github.com/kaltura/kmc-ng/commit/297c951))
+* truncate long metadata section names in dropdown ([4974e59](https://github.com/kaltura/kmc-ng/commit/4974e59))
+
+
+### Features
+
+* **content/entries:** add feature replace video in entry flavors section ([#634](https://github.com/kaltura/kmc-ng/issues/634)) ([e084a43](https://github.com/kaltura/kmc-ng/commit/e084a43))
+* **content/entries:** show live analytics of specific entry ([#687](https://github.com/kaltura/kmc-ng/issues/687)) KMCNG-1791 ([4b2656d](https://github.com/kaltura/kmc-ng/commit/4b2656d))
+* **analytics:** show coming soon message for analytics  ([#676](https://github.com/kaltura/kmc-ng/issues/676)) KMCNG-1777 ([a62762c](https://github.com/kaltura/kmc-ng/commit/a62762c))
+* allow live entry to open clip&trim only if it has recorded entry ([55de56e](https://github.com/kaltura/kmc-ng/commit/55de56e))
+* show progress bar when loading a view ([#679](https://github.com/kaltura/kmc-ng/issues/679)) KMCNG-1790 ([d290e57](https://github.com/kaltura/kmc-ng/commit/d290e57))
+* support link open a dialog window instead of direct mail invocation ([#669](https://github.com/kaltura/kmc-ng/issues/669)) KMCNG-1766 ([9575768](https://github.com/kaltura/kmc-ng/commit/9575768))
+* update browser title when navigating between views ([#691](https://github.com/kaltura/kmc-ng/issues/691)) KMCNG-1812 ([3fc96c0](https://github.com/kaltura/kmc-ng/commit/3fc96c0))
+* welcome screen placeholder ([#699](https://github.com/kaltura/kmc-ng/issues/699)) ([924674e](https://github.com/kaltura/kmc-ng/commit/924674e))
+
+
+
 <a name="4.6.0"></a>
 # [4.6.0](https://github.com/kaltura/kmc-ng/compare/v4.5.1...v4.6.0) (2018-05-30)
 

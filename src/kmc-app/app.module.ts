@@ -71,6 +71,7 @@ import { AppMenuContentComponent } from './components/app-menu/app-menu-content.
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
 import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
+import { OpenEmailComponent } from './components/open-email/open-email.component';
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
@@ -89,12 +90,20 @@ import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger/kaltura-logger.m
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
+import { NewReplaceVideoUploadModule } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload.module';
+import { RestorePasswordComponent } from './components/app-actions/restore-password.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { RestorePasswordFormComponent } from './components/login/restore-password-form/restore-password-form.component';
+import { InvalidRestorePasswordHashFormComponent } from './components/login/invalid-restore-password-hash-form/invalid-restore-password-hash-form.component';
 
+import { CopyToClipboardModule } from '@kaltura-ng/mc-shared/components/copy-to-clipboard';
+import { ContextualHelpModule } from 'app-shared/kmc-shared/contextual-help/contextual-help.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
+
     return  {
         endpointUrl: getKalturaServerUri(),
         clientTag: 'kmcng'
@@ -133,8 +142,10 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
+    CopyToClipboardModule,
     KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),
+      NewReplaceVideoUploadModule.forRoot(),
     BulkUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
     RadioButtonModule,
@@ -151,6 +162,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       KmcLogsModule.forRoot(),
       KalturaLoggerModule.forRoot('kmc'),
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+      ContextualHelpModule.forRoot(),
       KmcViewsModule.forRoot(),
       LocalizationModule.forRoot()
   ],
@@ -168,10 +180,15 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
     ChangeAccountComponent,
+    OpenEmailComponent,
     ChangelogComponent,
     ChangelogContentComponent,
     LoginByKSComponent,
-      NotFoundPageComponent
+      RestorePasswordComponent,
+      NotFoundPageComponent,
+      RestorePasswordFormComponent,
+      InvalidRestorePasswordHashFormComponent,
+      ProgressBarComponent
   ],
   bootstrap: <any>[
     AppComponent
@@ -186,10 +203,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
   ]
 })
 export class AppModule {
-    constructor(appBootstrap: AppBootstrap,
-                kalturaLogger: KalturaLogger,
+    constructor(kalturaLogger: KalturaLogger,
                 uploadManagement: UploadManagement) {
-
         if (globalConfig.client.production) {
             kalturaLogger.setOptions({level: 'Error'});
         } else {
@@ -198,9 +213,5 @@ export class AppModule {
 
         // TODO [kmcng] move to a relevant location
         uploadManagement.setMaxUploadRequests(globalConfig.kalturaServer.maxConcurrentUploads);
-
-        appBootstrap.bootstrap();
-
-
     }
 }

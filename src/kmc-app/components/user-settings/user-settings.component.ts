@@ -12,13 +12,10 @@ import { Router } from '@angular/router';
 })
 export class UserSettingsComponent {
   @Input() parentPopup: PopupWidgetComponent;
-  public _userContext: AppUser;
   public _languages = [];
   public _selectedLanguage = 'en';
 
-  constructor(private userAuthentication: AppAuthentication, private browserService: BrowserService, private _router: Router) {
-    this._userContext = userAuthentication.appUser;
-
+  constructor(public _userAuthentication: AppAuthentication, private browserService: BrowserService, private _router: Router) {
       kmcAppConfig.locales.forEach(locale => {
       this._languages.push({label: locale.label, value: locale.id});
     });
@@ -35,12 +32,12 @@ export class UserSettingsComponent {
   }
 
   logout() {
-    this.userAuthentication.logout();
+    this._userAuthentication.logout();
   }
 
   onLangSelected(event) {
     this.browserService.setInLocalStorage('kmc_lang', event.value);
-    this.userAuthentication.reload();
+    this._userAuthentication.reload();
   }
 
     egg(){

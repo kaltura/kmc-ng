@@ -20,7 +20,7 @@ import {EntryPreview} from './entry-preview/entry-preview.component';
 import {EntryDetails} from './entry-details/entry-details.component';
 import {JumpToSection} from './entry-metadata/jump-to-section.component';
 import {CategoriesSelector} from './entry-metadata/category-selector/categories-selector.component';
-import {TagsPipe} from './entry-flavours/tags.pipe';
+import {TagsPipe} from './entry-flavours/pipes/tags.pipe';
 
 import {EntryDistributionComponent } from './entry-distribution/entry-distribution.component';
 import { UndistributedProfileComponent } from './entry-distribution/undistributed-profile/undistributed-profile.component';
@@ -35,8 +35,12 @@ import { EditDistributionProfileMetadataComponent } from './entry-distribution/e
 import { EditDistributionProfileThumbnailsComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/edit-distribution-profile-thumbnails.component';
 import { EditDistributionProfileThumbnailItemComponent } from './entry-distribution/edit-distribution-profile/edit-distribution-profile-thumbnails/thumbnail-item/thumbnail-item.component';
 import {EntryAdvertisementsComponent} from './entry-advertisements/entry-advertisements.component';
+import { ReplacementStatusComponent } from './entry-flavours/flavor-replace-video/replacement-status/replacement-status.component';
+import { ReplaceMediaButtonComponent } from './entry-flavours/flavor-replace-video/replace-media-button/replace-media-button.component';
+import { ReplaceFileComponent } from './entry-flavours/flavor-replace-video/replace-file/replace-file.component';
+import { FlavorReplacementStatusPipe } from './entry-flavours/pipes/flavor-replacement-status.pipe';
 import {EntryEditorComponent} from './entry-editor/entry-editor.component';
-
+import { FlavorLinkComponent } from './entry-flavours/flavor-link/flavor-link.component';
 
 
 export const EntryComponentsList = [
@@ -76,5 +80,10 @@ export const EntryComponentsList = [
     EditDistributionProfileMetadataComponent,
     EditDistributionProfileThumbnailsComponent,
     EditDistributionProfileThumbnailItemComponent,
-    EntryEditorComponent
+    ReplaceMediaButtonComponent,
+    ReplacementStatusComponent,
+    ReplaceFileComponent,
+    FlavorReplacementStatusPipe,
+    EntryEditorComponent,
+    FlavorLinkComponent
 ];

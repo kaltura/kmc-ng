@@ -1,20 +1,25 @@
 @import 'app-theme/_variables.scss';
 
 .kAccessControl{
-	padding: 8px;
-	padding-left: 12px;
-	width: 100%;
 	.kTitle{
-		padding-left: 16px;
+		padding-left: 24px;
 		color: $kGrayscale1;
 		font-size: 20px;
 		font-weight: 700;
 	}
 	.kAccessControlDetails{
-		box-sizing: border-box;
-		padding-left: 20px;
-		padding-right: 20px;
-		width: 100%;
+        padding: 0 24px 24px 24px;
+        word-break: break-word;
+
+        .kAccessProfileItem {
+            white-space: nowrap;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 190px;
+            font-weight: normal;
+        }
+
 		.kRow{
 			display: flex;
 			padding-top: 24px;
@@ -39,4 +44,20 @@
 
 :host /deep/ .ui-dropdown-label {
   text-overflow: ellipsis;
+}
+:host /deep/ .kAccessControlProfiles {
+    .ui-dropdown-panel {
+        width: 250px;
+    }
+
+    .ui-dropdown-label {
+        text-overflow: ellipsis;
+        font-weight: normal;
+        font-size: 15px;
+        color: $kGrayscale1;
+    }
+
+    .ui-dropdown.ui-widget {
+        width: 184px;
+    }
 }

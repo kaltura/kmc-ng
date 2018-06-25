@@ -10,6 +10,7 @@ import { AccessControlProfileUpdatedEvent } from 'app-shared/kmc-shared/events/a
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { SettingsAccessControlMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kAccessControlProfilesList',
@@ -35,17 +36,24 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               private _appEvents: AppEventsService,
               private _logger: KalturaLogger,
+              private _settingsAccessControlMainViewService: SettingsAccessControlMainViewService,
               public _store: AccessControlProfilesStore) {
   }
 
   ngOnInit() {
-    this._logger.info(`initiate access control list view`);
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
-    this._registerToDataChanges();
+      if (this._settingsAccessControlMainViewService.viewEntered()) {
+          this._prepare();
+      }
   }
 
   ngOnDestroy() {
+  }
+
+  private _prepare(): void {
+      this._logger.info(`initiate access control list view`);
+      this._restoreFiltersState();
+      this._registerToFilterStoreDataChanges();
+      this._registerToDataChanges();
   }
 
   private _restoreFiltersState(): void {

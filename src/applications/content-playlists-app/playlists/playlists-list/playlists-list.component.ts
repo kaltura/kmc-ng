@@ -15,6 +15,7 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { async } from 'rxjs/scheduler/async';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
 import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 
 @Component({
@@ -52,17 +53,24 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
+              private _contentPlaylistsMainViewService: ContentPlaylistsMainViewService,
               private _contentPlaylistViewService: ContentPlaylistViewService,
               public _bulkDeleteService: BulkDeleteService) {
   }
 
   ngOnInit() {
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
-      this._registerToDataChanges();
+    if (this._contentPlaylistsMainViewService.viewEntered()) {
+        this._prepare();
+    }
   }
 
   ngOnDestroy() {
+  }
+
+  private _prepare(): void {
+      this._restoreFiltersState();
+      this._registerToFilterStoreDataChanges();
+      this._registerToDataChanges();
   }
 
   private _proceedDeletePlaylists(ids: string[]): void {

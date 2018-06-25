@@ -1,17 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
+import { KMCPermissionsService } from '../../kmc-permissions';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
-import { Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
+import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { modulesConfig } from 'config/modules';
 import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { ContentCategoriesMainViewService } from '../main-views/content-categories-main-view.service';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { Title } from '@angular/platform-browser';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-category-view.service';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 export interface ContentNewCategoryViewArgs {
     entries: KalturaMediaEntry[];
@@ -24,9 +22,23 @@ export class ContentNewCategoryViewService extends KmcDetailsViewBaseService<Con
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _contentCategoriesMainView: ContentCategoriesMainViewService,
+                private _appLocalization: AppLocalization,
                 _logger: KalturaLogger,
-                _browserService: BrowserService) {
-        super(_logger.subLogger('ContentNewCategoryViewService'), _browserService);
+                _browserService: BrowserService,
+                _titleService: Title,
+                _contextualHelpService: ContextualHelpService) {
+        super(_logger.subLogger('ContentNewCategoryViewService'), _browserService, _titleService, _contextualHelpService);
+    }
+
+    getViewMetadata(args: ContentNewCategoryViewArgs): DetailsViewMetadata {
+        const mainTitle = this._appLocalization.get('app.titles.contentCategoriesPageTitle');
+        const categoryId = 'new';
+        const section = ContentCategoryViewSections.Metadata;
+        const sectionTitle = this._appLocalization.get(`applications.content.categoryDetails.sections.${section.toLowerCase()}`);
+        return {
+            title: `${mainTitle} > ${categoryId} > ${sectionTitle}`,
+            viewKey: `content-new-category-${section.toLowerCase()}`
+        };
     }
 
     isAvailable(args: ContentNewCategoryViewArgs): boolean {

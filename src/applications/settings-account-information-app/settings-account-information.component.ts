@@ -46,23 +46,27 @@ export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._logger.info(`initiate account information view`);
-    this._createForm();
-    if (this._settingsAccountInformationMainView.isAvailable()) {
-        this._canContactSalesForceInformation = this._accountInformationService.canContactSalesForceInformation();
-        if (this._canContactSalesForceInformation) {
-            this._logger.warn('Cannot send message to SalesForce: missing \'contactsalesforce\' configuration');
-        }
-    }else{
-        this._browserService.handleUnpermittedAction(true);
+      this._logger.info(`initiate account information view`);
+      this._createForm();
+
+    if (this._settingsAccountInformationMainView.viewEntered()) {
+        this._prepare();
+    } else {
+        this._logger.info(`view is not permitted, abort initialization`);
     }
   }
 
   ngOnDestroy(): void {
   }
 
-  onSubmit(): void {
-    this._logger.info(`handle sending sales force info action by user`);
+  private _prepare(): void {
+      this._canContactSalesForceInformation = this._accountInformationService.canContactSalesForceInformation();
+      if (!this._canContactSalesForceInformation) {
+          this._logger.warn('Cannot send message to SalesForce: missing \'contactsalesforce\' configuration');
+      }
+  }
+    onSubmit(): void {
+        this._logger.info(`handle sending sales force info action by user`);
     if (this.contactUsForm.valid) {
       this._sendContactSalesForceInformation();
     } else {

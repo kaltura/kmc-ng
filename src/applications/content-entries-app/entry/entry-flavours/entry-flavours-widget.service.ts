@@ -1,52 +1,97 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
-import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {KalturaClient} from 'kaltura-ngx-client';
-import {KalturaFlavorAsset} from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
-import {KalturaFlavorAssetWithParams} from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
-import {FlavorAssetGetFlavorAssetsWithParamsAction} from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
-import {KalturaFlavorAssetStatus} from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
-import {KalturaLiveParams} from 'kaltura-ngx-client/api/types/KalturaLiveParams';
-import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import {KalturaWidevineFlavorAsset} from 'kaltura-ngx-client/api/types/KalturaWidevineFlavorAsset';
-import {FlavorAssetDeleteAction} from 'kaltura-ngx-client/api/types/FlavorAssetDeleteAction';
-import {FlavorAssetConvertAction} from 'kaltura-ngx-client/api/types/FlavorAssetConvertAction';
-import {FlavorAssetReconvertAction} from 'kaltura-ngx-client/api/types/FlavorAssetReconvertAction';
-import {FlavorAssetSetContentAction} from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
-import {FlavorAssetAddAction} from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
-import {KalturaUrlResource} from 'kaltura-ngx-client/api/types/KalturaUrlResource';
-import {KalturaContentResource} from 'kaltura-ngx-client/api/types/KalturaContentResource';
-import {UploadManagement} from '@kaltura-ng/kaltura-common/upload-management';
-import {Flavor} from './flavor';
-import {FlavorAssetGetUrlAction} from 'kaltura-ngx-client/api/types/FlavorAssetGetUrlAction';
-import {KalturaUploadedFileTokenResource} from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
-import {EntryWidget} from '../entry-widget';
-import {NewEntryFlavourFile} from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequestOptions } from 'kaltura-ngx-client';
+import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
+import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
+import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
+import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
+import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaWidevineFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaWidevineFlavorAsset';
+import { FlavorAssetDeleteAction } from 'kaltura-ngx-client/api/types/FlavorAssetDeleteAction';
+import { FlavorAssetConvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetConvertAction';
+import { FlavorAssetReconvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetReconvertAction';
+import { FlavorAssetSetContentAction } from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
+import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
+import { KalturaUrlResource } from 'kaltura-ngx-client/api/types/KalturaUrlResource';
+import { KalturaContentResource } from 'kaltura-ngx-client/api/types/KalturaContentResource';
+import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
+import { Flavor } from './flavor';
+import { FlavorAssetGetUrlAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetUrlAction';
+import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
+import { EntryWidget } from '../entry-widget';
+import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { MediaCancelReplaceAction } from 'kaltura-ngx-client/api/types/MediaCancelReplaceAction';
+import { MediaApproveReplaceAction } from 'kaltura-ngx-client/api/types/MediaApproveReplaceAction';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client/api/types/KalturaEntryReplacementStatus';
+import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
+import { FlavorsDataRequestFactory } from './flavors-data-request-factory';
+import { ISubscription } from 'rxjs/Subscription';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { EntryStore } from '../entry-store.service';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
+import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
+import { ConversionProfileGetAction } from 'kaltura-ngx-client/api/types/ConversionProfileGetAction';
+import { StorageProfileListAction } from 'kaltura-ngx-client/api/types/StorageProfileListAction';
+import { KalturaStorageProfileFilter } from 'kaltura-ngx-client/api/types/KalturaStorageProfileFilter';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
+import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client/api/types/KalturaConversionProfileOrderBy';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
+import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
+import { KalturaResponse } from 'kaltura-ngx-client/api/kaltura-response';
+import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaStorageProfileListResponse';
+import { KalturaConversionProfileAssetParamsListResponse } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsListResponse';
+
+export interface ReplacementData {
+    status: KalturaEntryReplacementStatus;
+    tempEntryId: string;
+    flavors: Flavor[];
+}
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
-    private _flavors = new BehaviorSubject<{ items: Flavor[] }>(
-        {items: []}
-    );
-    public _flavors$ = this._flavors.asObservable();
+    private _flavors = new BehaviorSubject<Flavor[]>([]);
+    private _replacementData = new BehaviorSubject<ReplacementData>({ status: null, tempEntryId: null, flavors: [] });
+    private _poolingState: null | 'running' = null;
+    private _flavorsDataPollingSubscription: ISubscription;
+    private _flavorsDataRequestFactory: FlavorsDataRequestFactory;
 
-    public _entryStatus = "";
-    public _entryStatusClassName = "";
-    public sourceAvailabale: boolean = false;
+    public flavors$ = this._flavors.asObservable();
+    public replacementData$ = this._replacementData.asObservable();
+    public selectedFlavors: Flavor[] = [];
+    public entryStatus = '';
+    public entryStatusClassName = '';
+    public sourceAvailable = false;
+    public showFlavorActions = true;
+    public currentEntryId: string;
+    public storageProfile: KalturaStorageProfile;
+    public conversionProfileAsset: KalturaConversionProfileAssetParams;
 
-    constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
-                private _appAuthentication: AppAuthentication, private _browserService: BrowserService,
-                private _uploadManagement: UploadManagement, private _appEvents: AppEventsService,
+    constructor(private _kalturaServerClient: KalturaClient,
+                private _appLocalization: AppLocalization,
+                private _appAuthentication: AppAuthentication,
+                private _browserService: BrowserService,
+                private _uploadManagement: UploadManagement,
+                private _appEvents: AppEventsService,
+                private _kmcServerPolls: KmcServerPolls,
+                private _permissionsService: KMCPermissionsService,
                 private _entryStore: EntryStore,
                 logger: KalturaLogger) {
         super(ContentEntryViewSections.Flavours, logger);
@@ -56,8 +101,14 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
      * Do some cleanups if needed once the section is removed
      */
     protected onReset() {
-        this.sourceAvailabale = false;
-        this._flavors.next({items: []});
+        this.sourceAvailable = false;
+        this.showFlavorActions = true;
+        this.currentEntryId = null;
+        this.storageProfile = null;
+        this.conversionProfileAsset = null;
+        this._stopPolling();
+        this._flavors.next([]);
+        this._replacementData.next({ status: null, tempEntryId: null, flavors: [] });
     }
 
     protected onActivate(firstTimeActivating: boolean) {
@@ -65,58 +116,247 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             this._trackUploadFiles();
         }
 
+        this.currentEntryId = this.data ? this.data.id : null;
+        this._flavorsDataRequestFactory = new FlavorsDataRequestFactory(this.currentEntryId);
+
         this._setEntryStatus();
 
         super._showLoader();
 
-        return this._loadFlavors()
+        return this._loadFlavorsSectionData()
+            .cancelOnDestroy(this, this.widgetReset$)
             .map(() => {
                 super._hideLoader();
                 return { failed: false };
             })
-            .catch((error, caught) => {
+            .catch(error => {
                 super._hideLoader();
                 super._showActivationError();
-                return Observable.of({failed: true, error});
+                return Observable.of({ failed: true, error });
             });
     }
 
-    private _loadFlavors(): Observable<void> {
+    private _getStorageProfile(): Observable<{ storageProfile: KalturaStorageProfile, conversionProfileAsset: KalturaConversionProfileAssetParams }> {
+        const filter = new KalturaConversionProfileFilter({
+            orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
+            typeEqual: KalturaConversionProfileType.media,
+            idEqual: this.data.conversionProfileId
+        });
 
-        this.sourceAvailabale = false;
+        const conversionProfileAssetAction = new ConversionProfileAssetParamsListAction({
+            filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdFilter: filter }),
+            pager: new KalturaFilterPager({ pageSize: 1 })
+        }).setRequestOptions(
+            new KalturaRequestOptions({
+                responseProfile: new KalturaDetachedResponseProfile({
+                    type: KalturaResponseProfileType.includeFields,
+                    fields: 'readyBehavior,origin,assetParamsId,id'
+                })
+            })
+        );
 
-        return this._kalturaServerClient.request(new FlavorAssetGetFlavorAssetsWithParamsAction({
-            entryId: this.data.id
-        }))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .map(
-                response => {
-                    let flavors: Flavor[] = [];
-                    if (response && response.length) {
-                        const flavorsWithAssets: Flavor[] = [];
-                        const flavorsWithoutAssets: Flavor[] = [];
-                        response.forEach((flavor: KalturaFlavorAssetWithParams) => {
-                            if (flavor.flavorAsset && flavor.flavorAsset.isOriginal) {
-                                flavors.push(this.createFlavor(flavor, response)); // this is the source. put it first in the array
-                                this.sourceAvailabale = true;
-                            } else if (flavor.flavorAsset && (!flavor.flavorAsset.status ||
-                                    (flavor.flavorAsset.status && flavor.flavorAsset.status.toString() !== KalturaFlavorAssetStatus.temp.toString()))) {
-                                flavorsWithAssets.push(this.createFlavor(flavor, response)); // flavors with assets that is not in temp status
-                            } else if (!flavor.flavorAsset && flavor.flavorParams && !(flavor.flavorParams instanceof KalturaLiveParams)) {
-                                flavorsWithoutAssets.push(this.createFlavor(flavor, response)); // flavors without assets
-                            }
-                        });
-                        flavors = flavors.concat(flavorsWithAssets).concat(flavorsWithoutAssets); // source first, then flavors with assets, then flavors without assets
-                    }
+        const requests: KalturaRequest<any>[] = [conversionProfileAssetAction];
 
-                    this._flavors.next({items: flavors});
-
-                    return undefined;
-                }
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)) {
+            const conversionProfileAction = new ConversionProfileGetAction({ id: this.data.conversionProfileId })
+                .setRequestOptions(
+                    new KalturaRequestOptions({
+                        responseProfile: new KalturaDetachedResponseProfile({
+                            type: KalturaResponseProfileType.includeFields,
+                            fields: 'storageProfileId'
+                        })
+                    })
+                );
+            const storageProfileListAction = new StorageProfileListAction({
+                filter: new KalturaStorageProfileFilter({ idEqual: 0 }).setDependency(['idEqual', 1, 'storageProfileId'])
+            }).setRequestOptions(
+                new KalturaRequestOptions({
+                    responseProfile: new KalturaDetachedResponseProfile({
+                        type: KalturaResponseProfileType.includeFields,
+                        fields: 'id,name,storageUrl,storageBaseDir'
+                    })
+                })
             );
+
+            requests.push(conversionProfileAction);
+            requests.push(storageProfileListAction);
+        }
+
+        return this._kalturaServerClient
+            .multiRequest(new KalturaMultiRequest(...requests))
+            .map(responses => {
+                if (responses.hasErrors()) {
+                    const message = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
+                    throw new Error(message);
+                }
+
+                const storageProfiles = this._getResponseByType<KalturaStorageProfile[]>(responses, KalturaStorageProfileListResponse);
+                const conversionProfileAssets = this._getResponseByType<KalturaConversionProfileAssetParams[]>(responses, KalturaConversionProfileAssetParamsListResponse);
+                const storageProfile = Array.isArray(storageProfiles) && storageProfiles.length ? storageProfiles[0] : null;
+                let conversionProfileAsset = Array.isArray(conversionProfileAssets) && conversionProfileAssets.length
+                    ? conversionProfileAssets[0]
+                    : null;
+                conversionProfileAsset = conversionProfileAsset && conversionProfileAsset.origin !== KalturaAssetParamsOrigin.convert
+                    ? conversionProfileAsset
+                    : null;
+                return { storageProfile, conversionProfileAsset };
+            });
     }
 
-    private createFlavor(flavor: KalturaFlavorAssetWithParams, allFlavors: KalturaFlavorAssetWithParams[]): Flavor {
+    private _getResponseByType<T>(responses: KalturaMultiResponse, type: any): T {
+        const relevantResponse = responses.find(response => response.result instanceof type);
+        if (relevantResponse) {
+            return relevantResponse.result.objects;
+        }
+
+        return null;
+    }
+
+    private _stopPolling(): void {
+        if (this._flavorsDataPollingSubscription) {
+            this._flavorsDataPollingSubscription.unsubscribe();
+            this._poolingState = null;
+        }
+    }
+
+    private _mapFlavorsData(flavorsData$: Observable<{ error: KalturaAPIException, result: KalturaMultiResponse }>): Observable<{
+        currentEntryFlavors: Flavor[],
+        replacingEntryFlavors: Flavor[],
+        replacementData: Partial<KalturaMediaEntry>
+    }> {
+        return flavorsData$
+            .map((response: { error: KalturaAPIException, result: KalturaMultiResponse }) => {
+                if (response.error) {
+                    throw new Error(response.error.message);
+                }
+
+                if (response.result.hasErrors()) {
+                    throw new Error(response.result.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, ''));
+                }
+
+                return response.result;
+            })
+            .switchMap(
+                responses => {
+                    const [replacementDataResponse] = responses;
+                    if (replacementDataResponse.result && replacementDataResponse.result.replacingEntryId) {
+                        return this._kalturaServerClient
+                            .request(this._getFlavorsDataAction(replacementDataResponse.result.replacingEntryId));
+                    }
+
+                    return Observable.of(null);
+                },
+                ([replacementDataResponse, currentEntryFlavorsDataResponse], replacingEntryFlavorsData) => {
+                    return {
+                        replacementData: replacementDataResponse.result,
+                        currentEntryFlavorsData: currentEntryFlavorsDataResponse.result,
+                        replacingEntryFlavorsData
+                    };
+                }
+            )
+            .map(({ replacementData, currentEntryFlavorsData, replacingEntryFlavorsData }) => {
+                const currentEntryFlavors = this._mapFlavorsResponse(currentEntryFlavorsData);
+                const replacingEntryFlavors = this._mapFlavorsResponse(replacingEntryFlavorsData);
+
+                return { currentEntryFlavors, replacingEntryFlavors, replacementData };
+            });
+    }
+
+    private _handleFlavorsDataResponse(response: {
+        currentEntryFlavors: Flavor[],
+        replacingEntryFlavors: Flavor[],
+        replacementData: Partial<KalturaMediaEntry>
+    }): void {
+        const { currentEntryFlavors, replacingEntryFlavors, replacementData } = response;
+        const hasSource = !!currentEntryFlavors.find(flavor => flavor.isSource);
+        this._entryStore.updateHasSourceStatus(hasSource);
+        this._flavors.next(currentEntryFlavors);
+        this.loadFlavorsByEntryId(this.currentEntryId);
+
+        if (replacementData.replacingEntryId) {
+            this._replacementData.next({
+                status: replacementData.replacementStatus,
+                tempEntryId: replacementData.replacingEntryId,
+                flavors: replacingEntryFlavors
+            });
+            const shouldStopPolling = [
+                KalturaEntryReplacementStatus.readyButNotApproved,
+                KalturaEntryReplacementStatus.failed
+            ].indexOf(replacementData.replacementStatus) !== -1;
+            if (shouldStopPolling) {
+                this._stopPolling();
+            } else {
+                this._startPolling();
+            }
+        } else {
+            this.currentEntryId = this.data.id;
+            this._replacementData.next({ status: replacementData.replacementStatus, tempEntryId: null, flavors: [] });
+        }
+    }
+
+    private _startPolling(): void {
+        if (this._poolingState !== 'running') {
+            this._poolingState = 'running';
+            this._logger.info(`start server polling every 10 seconds to sync entry's flavors data`, { entryId: this.data.id });
+
+            this._flavorsDataPollingSubscription = this._kmcServerPolls.register<KalturaMultiResponse>(10, this._flavorsDataRequestFactory)
+                .let(flavorsData$ => this._mapFlavorsData(flavorsData$))
+                .cancelOnDestroy(this, this.widgetReset$)
+                .subscribe(
+                    (response) => {
+                        this._handleFlavorsDataResponse(response);
+                    },
+                    error => {
+                        this._logger.warn(`error occurred while trying to sync bulk upload status from server. server error: ${error.message}`);
+                    });
+        }
+    }
+
+    private _loadFlavorsSectionData(): Observable<void> {
+        this.sourceAvailable = false;
+
+        return this._kalturaServerClient
+            .multiRequest(this._flavorsDataRequestFactory.create())
+            .let(flavorsData$ => this._mapFlavorsData(flavorsData$.map(result => ({ result, error: null }))))
+            .map((response) => {
+                this._handleFlavorsDataResponse(response);
+            })
+            .switchMap(() => this._getStorageProfile())
+            .map(({ storageProfile, conversionProfileAsset }) => {
+                this.storageProfile = storageProfile;
+                this.conversionProfileAsset = conversionProfileAsset;
+                return undefined;
+            });
+    }
+
+    private _getFlavorsDataAction(entryId: string): FlavorAssetGetFlavorAssetsWithParamsAction {
+        return new FlavorAssetGetFlavorAssetsWithParamsAction({ entryId });
+    }
+
+    private _mapFlavorsResponse(response: KalturaFlavorAssetWithParams[]): Flavor[] {
+        let flavors: Flavor[] = [];
+        if (response && response.length) {
+            const flavorsWithAssets: Flavor[] = [];
+            const flavorsWithoutAssets: Flavor[] = [];
+            response.forEach((flavor: KalturaFlavorAssetWithParams) => {
+                if (flavor.flavorAsset && flavor.flavorAsset.isOriginal) {
+                    flavors.push(this._createFlavor(flavor, response)); // this is the source. put it first in the array
+                    this.sourceAvailable = true;
+                } else if (flavor.flavorAsset && (!flavor.flavorAsset.status ||
+                    (flavor.flavorAsset.status && flavor.flavorAsset.status.toString() !== KalturaFlavorAssetStatus.temp.toString()))) {
+                    flavorsWithAssets.push(this._createFlavor(flavor, response)); // flavors with assets that is not in temp status
+                } else if (!flavor.flavorAsset && flavor.flavorParams && !(flavor.flavorParams instanceof KalturaLiveParams)) {
+                    flavorsWithoutAssets.push(this._createFlavor(flavor, response)); // flavors without assets
+                }
+            });
+            // source first, then flavors with assets, then flavors without assets
+            flavors = flavors.concat(flavorsWithAssets).concat(flavorsWithoutAssets);
+        }
+
+        return flavors;
+    }
+
+    private _createFlavor(flavor: KalturaFlavorAssetWithParams, allFlavors: KalturaFlavorAssetWithParams[]): Flavor {
         let newFlavor: Flavor = <Flavor>flavor;
         newFlavor.name = flavor.flavorParams ? flavor.flavorParams.name : '';
         newFlavor.id = flavor.flavorAsset ? flavor.flavorAsset.id : '';
@@ -185,20 +425,20 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         const status = this.data.status.toString();
         switch (status) {
             case KalturaEntryStatus.noContent.toString():
-                this._entryStatusClassName = "kStatusNoContent kIconwarning";
+                this.entryStatusClassName = "kStatusNoContent kIconwarning";
                 break;
             case KalturaEntryStatus.ready.toString():
-                this._entryStatusClassName = "kStatusReady kIconconfirmation";
+                this.entryStatusClassName = "kStatusReady kIconcomplete";
                 break;
             case KalturaEntryStatus.errorConverting.toString():
             case KalturaEntryStatus.errorImporting.toString():
-                this._entryStatusClassName = "kStatusError kIconwarning";
+                this.entryStatusClassName = "kStatusError kIconerror";
                 break;
             default:
-                this._entryStatusClassName = "kStatusErrorProcessing kIconwarning";
+                this.entryStatusClassName = "kStatusErrorProcessing kIconerror";
                 break;
         }
-        this._entryStatus = this._appLocalization.get('applications.content.entryDetails.flavours.' + this._entryStatusClassName.split(" ")[0]);
+        this.entryStatus = this._appLocalization.get('applications.content.entryDetails.flavours.' + this.entryStatusClassName.split(" ")[0]);
     }
 
     public deleteFlavor(flavor: Flavor): void {
@@ -217,7 +457,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                                 if (flavor.isSource) {
                                     this._entryStore.updateHasSourceStatus(false);
                                 }
-                                this._refresh();
+                                this.refresh();
                                 this._browserService.scrollToTop();
                             },
                             error => {
@@ -273,14 +513,14 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .cancelOnDestroy(this, this.widgetReset$)
             .tag('block-shell')
             .subscribe(
-                response => {
-                    let flavors: Flavor[] = Array.from(this._flavors.getValue().items);
+                () => {
+                    const flavors = Array.from(this._flavors.getValue());
                     flavors.forEach((fl: Flavor) => {
-                        if (parseInt(fl.id) == id) {
+                        if (parseInt(fl.id, 10) === id) {
                             fl.status = KalturaFlavorAssetStatus.converting.toString();
                         }
                     });
-                    this._flavors.next({items: flavors});
+                    this._flavors.next(flavors);
                 },
                 error => {
                     const message = error.code === 'ORIGINAL_FLAVOR_ASSET_IS_MISSING'
@@ -291,7 +531,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
-                                this._refresh();
+                                this.refresh();
                                 this._removeBlockerMessage();
                             }
                         }]
@@ -306,7 +546,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .map(uploadedFile => {
                 let relevantFlavor = null;
                 if (uploadedFile.data instanceof NewEntryFlavourFile) {
-                    const flavors = this._flavors.getValue().items;
+                    const flavors = this._flavors.getValue();
                     relevantFlavor = flavors ? flavors.find(flavorFile => flavorFile.uploadFileId === uploadedFile.id) : null;
                 }
                 return {relevantFlavor, uploadedFile};
@@ -326,7 +566,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                             break;
 
                         case TrackedFileStatuses.uploadCompleted:
-                            this._refresh(false, false);
+                            this.refresh();
                             break;
 
                         case TrackedFileStatuses.failure:
@@ -334,7 +574,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                                 severity: 'error',
                                 detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
                             });
-                            this._refresh();
+                            this.refresh();
                             break;
 
                         default:
@@ -355,7 +595,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         severity: 'error',
                         detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
                     });
-                    this._refresh();
+                    this.refresh();
                 });
     }
 
@@ -372,7 +612,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             })
             .subscribe(
                 response => {
-                    this._refresh(false, true);
+                    this.refresh();
                 },
                 error => {
                     this._showBlockerMessage(new AreaBlockerMessage({
@@ -380,7 +620,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
-                                this._refresh();
+                                this.refresh();
                                 this._removeBlockerMessage()
                             }
                         }]
@@ -413,7 +653,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         buttons: [{
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
-                                this._refresh();
+                                this.refresh();
                                 this._removeBlockerMessage();
                             }
                         }]
@@ -434,10 +674,10 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         }
     }
 
-    public _refresh(reset = false, showLoader = true) {
+    public refresh(): void {
         super._showLoader();
 
-        this._loadFlavors()
+        this._loadFlavorsSectionData()
             .cancelOnDestroy(this, this.widgetReset$)
             .subscribe(() => {
                     super._hideLoader();
@@ -446,7 +686,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         this._appEvents.publish(new PreviewMetadataChangedEvent(entryId));
                     }
                 },
-                (error) => {
+                () => {
                     super._hideLoader();
 
                     this._showBlockerMessage(new AreaBlockerMessage(
@@ -456,13 +696,77 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                                 {
                                     label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
                                     action: () => {
-                                        this._refresh(reset);
+                                        this.refresh();
+                                    }
+                                },
+                                {
+                                    label: this._appLocalization.get('app.common.cancel'),
+                                    action: () => {
+                                        this._removeBlockerMessage();
                                     }
                                 }
                             ]
                         }
-                    ), true);
+                    ), false);
                 });
+    }
+
+    public loadFlavorsByEntryId(entryId: string): void {
+        this.currentEntryId = entryId;
+        this.showFlavorActions = entryId === this.data.id;
+        this.selectedFlavors = this.showFlavorActions ? this._flavors.getValue() : this._replacementData.getValue().flavors;
+    }
+
+    public cancelReplacement(): void {
+        this._kalturaServerClient.request(new MediaCancelReplaceAction({ entryId: this.data.id }))
+            .cancelOnDestroy(this, this.widgetReset$)
+            .tag('block-shell')
+            .subscribe(
+                () => {
+                    this.currentEntryId = this.data.id;
+                    this.refresh();
+                },
+                error => {
+                    this._showBlockerMessage(new AreaBlockerMessage(
+                        {
+                            message: error.message,
+                            buttons: [{
+                                label: this._appLocalization.get('app.common.ok'),
+                                action: () => {
+                                    this._removeBlockerMessage();
+                                    this.refresh();
+                                }
+                            }]
+                        }
+                    ), false);
+                }
+            );
+    }
+
+    public approveReplacement(): void {
+        this._kalturaServerClient.request(new MediaApproveReplaceAction({ entryId: this.data.id }))
+            .cancelOnDestroy(this, this.widgetReset$)
+            .tag('block-shell')
+            .subscribe(
+                () => {
+                    this.currentEntryId = this.data.id;
+                    this.refresh();
+                },
+                error => {
+                    this._showBlockerMessage(new AreaBlockerMessage(
+                        {
+                            message: error.message,
+                            buttons: [{
+                                label: this._appLocalization.get('app.common.ok'),
+                                action: () => {
+                                    this._removeBlockerMessage();
+                                    this.refresh();
+                                }
+                            }]
+                        }
+                    ), false);
+                }
+            );
     }
 
     ngOnDestroy() {

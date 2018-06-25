@@ -65,16 +65,14 @@ export class UsersStore implements OnDestroy {
               private _appLocalization: AppLocalization,
               private _appAuthentication: AppAuthentication,
               adminUsersMainViewService: AdminUsersMainViewService) {
-    const defaultPageSize = this._browserService.getFromLocalStorage('users.list.pageSize');
-    if (defaultPageSize !== null) {
-      this._updateQueryData({
-        pageSize: defaultPageSize
-      });
-    }
     if (adminUsersMainViewService.isAvailable()) {
+        const defaultPageSize = this._browserService.getFromLocalStorage('users.list.pageSize');
+        if (defaultPageSize !== null) {
+            this._updateQueryData({
+                pageSize: defaultPageSize
+            });
+        }
         this._loadData();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 
@@ -245,7 +243,7 @@ export class UsersStore implements OnDestroy {
       });
   }
 
-  public associateUserToAccount(user: KalturaUser, roleIds: string): Observable<void> {
+  public associateUserToAccount(userProvidedEmail: string, user: KalturaUser, roleIds: string): Observable<void> {
 
       if (!user || !roleIds) {
           return Observable.throw(new Error('cannot associate user to account'));
@@ -256,7 +254,7 @@ export class UsersStore implements OnDestroy {
     });
     const request = new KalturaMultiRequest(
       new UserUpdateAction({ userId: user.id, user: updatedUser }),
-      new UserEnableLoginAction({ userId: user.id, loginId: user.email })
+      new UserEnableLoginAction({ userId: user.id, loginId: userProvidedEmail })
     );
     return this._kalturaServerClient
       .multiRequest(request)
