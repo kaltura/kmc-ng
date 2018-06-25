@@ -84,7 +84,7 @@
                 <th pResizableColumn *ngIf="_columnsMetadata.status">
                     {{'applications.content.table.status' | translate}}
                 </th>
-                <th pResizableColumn *ngIf="rowActions?.length"></th>
+                <th *ngIf="rowActions?.length"></th>
                 <th *ngIf="_columnsMetadata.addToBucket"></th>
             </tr>
         </ng-template>
@@ -138,7 +138,7 @@
 
                 <td class="ui-resizable-column" *ngIf="_columnsMetadata.status">{{entry | entryStatus}}</td>
 
-                <td class="ui-resizable-column" *ngIf="rowActions?.length">
+                <td *ngIf="rowActions?.length">
                     <div class="kEntriesTableActions">
                         <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
                                 (click)="_openActionsMenu($event, entry)"></button>
