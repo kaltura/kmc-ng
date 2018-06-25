@@ -168,7 +168,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     })
                 );
             const storageProfileListAction = new StorageProfileListAction({
-                filter: new KalturaStorageProfileFilter({ idEqual: 0 }).setDependency(['idEqual', 0, 'storageProfileId'])
+                filter: new KalturaStorageProfileFilter({ idEqual: 0 }).setDependency(['idEqual', 1, 'storageProfileId'])
             }).setRequestOptions(
                 new KalturaRequestOptions({
                     responseProfile: new KalturaDetachedResponseProfile({
@@ -271,6 +271,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         const hasSource = !!currentEntryFlavors.find(flavor => flavor.isSource);
         this._entryStore.updateHasSourceStatus(hasSource);
         this._flavors.next(currentEntryFlavors);
+        this.loadFlavorsByEntryId(this.currentEntryId);
 
         if (replacementData.replacingEntryId) {
             this._replacementData.next({
@@ -289,10 +290,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             }
         } else {
             this.currentEntryId = this.data.id;
-            this._replacementData.next({ status: null, tempEntryId: null, flavors: [] });
+            this._replacementData.next({ status: replacementData.replacementStatus, tempEntryId: null, flavors: [] });
         }
-
-        this.loadFlavorsByEntryId(this.currentEntryId);
     }
 
     private _startPolling(): void {

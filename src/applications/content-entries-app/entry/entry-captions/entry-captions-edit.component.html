@@ -27,7 +27,7 @@
 
       <div class="kUpload" *ngIf="_newCaption && captionsEditForm.get('uploadMethod').value === 'upload'">
         <button type="button" class="kButtonDefault kUploadButton" pButton label="{{'applications.content.entryDetails.captions.uploadFile' | translate}}" (click)="_uploadCaption()"></button>
-        <span class="kUploadFileName" [kTooltip]="_uploadFileName">{{_uploadFileName}}</span>
+        <div class="kUploadFileName" [kTooltip]="_uploadFileName">{{_uploadFileName}}</div>
       </div>
       <div *ngIf="_newCaption && captionsEditForm.get('uploadMethod').value === 'fromUrl'">
         <input class="kCaptionUrl" placeholder="{{'applications.content.entryDetails.captions.urlPlaceholder' | translate}}" formControlName="captionUrl" type="text" (blur)="_validate('captionUrl')" pInputText/>

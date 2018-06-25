@@ -114,8 +114,8 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	}
 
   public _updateApplyButtonState(): void {
-    const [owner] = this._widgetService.usersForm.value.owners;
-    this._disableSaveButton = !(owner instanceof KalturaUser);
+      const [owner] = this._widgetService.usersForm.value.owners;
+      this._disableSaveButton = !owner || (owner.screenName || '').trim() === '';
   }
 }
 

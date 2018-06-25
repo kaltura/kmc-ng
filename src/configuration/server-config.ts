@@ -38,10 +38,10 @@ export interface ExternalApplications {
         uri: string,
     };
     liveAnalytics?: {
-        uiConfId: number,
         uri: string,
-        mapUrls: string[],
-        mapZoomLevels: string
+        uiConfId?: string,
+        mapUrls?: string[],
+        mapZoomLevels?: string
     };
     editor?: {
         uri?: string
@@ -52,7 +52,7 @@ export interface ServerConfig {
     kalturaServer: {
         uri: string,
         defaultPrivileges?: string,
-        deployUrl: string,
+        deployUrl?: string,
         previewUIConf: number,
         resetPasswordUri?: string,
         freeTrialExpiration?: {
@@ -195,10 +195,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
 
         if (configuration) {
             result = !!configuration.uri &&
-                !configuration.uri.match(/\s/g) && // not contains white spaces
-                !!configuration.uiConfId &&
-                !!configuration.mapUrls &&
-                !!configuration.mapZoomLevels;
+                !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
                 configuration.uri = buildKalturaServerUri(configuration.uri);
@@ -224,7 +221,7 @@ export function buildKalturaServerUri(suffix: string): string {
 }
 
 export function buildDeployUrl(suffix: string): string {
-    return `${serverConfig.kalturaServer.deployUrl}${suffix}`;
+    return `${serverConfig.kalturaServer.deployUrl || ''}${suffix}`;
 }
 
 export function getKalturaServerUri(suffix: string = ''): string {

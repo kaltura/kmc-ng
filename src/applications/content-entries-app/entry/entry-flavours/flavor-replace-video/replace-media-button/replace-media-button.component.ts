@@ -17,6 +17,7 @@ export type UploadMenuType = 'upload' | 'import' | 'link' | 'match';
 export class ReplaceMediaButtonComponent {
     @Input() entry: KalturaMediaEntry;
     @Input() flavors: Flavor[] = [];
+    @Input() replaceButtonsLabel: string;
 
     @ViewChild('uploadMenu') _uploadMenu: PopupWidgetComponent;
 

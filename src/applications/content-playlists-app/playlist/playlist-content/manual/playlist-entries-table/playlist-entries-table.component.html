@@ -15,7 +15,10 @@
       (onSort)="_onSortChanged($event)"
       [(selection)]="selectedEntries">
       <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
-      <p-column styleClass="thumbnailColumn" field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}">
+      <p-column *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)"
+                styleClass="thumbnailColumn"
+                field="thumbnailUrl"
+                header="{{'applications.content.table.thumbnail' | translate}}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kThumbnailHolder" [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted" (click)="_goToEntry(entry)">
             <img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'">

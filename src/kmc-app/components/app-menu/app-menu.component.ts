@@ -11,6 +11,7 @@ import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
 import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { globalConfig } from 'config/global';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -24,8 +25,8 @@ import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared
 export class AppMenuComponent implements OnInit, OnDestroy{
 
     @ViewChild('helpmenu') private _helpmenu: PopupWidgetComponent;
+    private _appCachedVersionToken = 'kmc-cached-app-version';
 
-    public _userContext: AppUser;
     public _showChangelog = false;
     public _helpMenuOpened = false;
     public _powerUser = false;
@@ -43,7 +44,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     constructor(public _kmcLogs: KmcLoggerConfigurator,
                 private _contextualHelpService: ContextualHelpService,
-                private userAuthentication: AppAuthentication,
+                public _userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
                 private router: Router,
                 private _browserService: BrowserService) {
@@ -61,7 +62,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                     this.setSelectedRoute(event.urlAfterRedirects);
                 }
             });
-        this._userContext = userAuthentication.appUser;
         this.menuConfig = this._kmcMainViews.getMenu();
         this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'left';
@@ -77,6 +77,8 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     ngOnInit() {
+        const cachedVersion = this._browserService.getFromLocalStorage(this._appCachedVersionToken);
+        this._showChangelog = cachedVersion !== globalConfig.client.appVersion;
     }
 
     setSelectedRoute(path) {
@@ -115,5 +117,10 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
 
     ngOnDestroy() {
+    }
+
+    public _changelogPopupOpened(): void {
+        this._showChangelog = false;
+        this._browserService.setInLocalStorage(this._appCachedVersionToken, globalConfig.client.appVersion);
     }
 }
