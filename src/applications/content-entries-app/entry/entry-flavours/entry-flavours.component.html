@@ -58,8 +58,7 @@
                         <th pResizableColumn>{{'applications.content.entryDetails.flavours.dimensions' | translate}}</th>
                         <th pResizableColumn>{{'applications.content.entryDetails.flavours.size' | translate}}</th>
                         <th pResizableColumn>{{'applications.content.entryDetails.flavours.stat' | translate}}</th>
-                        <th pResizableColumn
-                            [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
+                        <th [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
                             {{'applications.content.entryDetails.flavours.tags' | translate}}
                         </th>
                         <th *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted"
@@ -82,8 +81,7 @@
                         <td class="ui-resizable-column">
                             <span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
                         </td>
-                        <td class="ui-resizable-column"
-                            [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
+                        <td [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
                             <span>{{flavor.tags | tags}}</span>
                         </td>
                         <td [ngStyle]="{'width':'80px'}">
