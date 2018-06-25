@@ -34,7 +34,7 @@ export class ContentEntriesAppService {
     });
   }
 
-  public downloadEntry(entryIds: string, flavorParamsId: string): Observable<string> {
+  public downloadEntry(entryIds: string, flavorParamsId: string): Observable<{ email: string }> {
       return this._kalturaServerClient
           .request(new XInternalXAddBulkDownloadAction({ entryIds, flavorParamsId }))
           .pipe(map(email => ({ email })));

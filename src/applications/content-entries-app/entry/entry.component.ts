@@ -222,9 +222,7 @@ export class EntryComponent implements OnInit, OnDestroy {
             )
             .subscribe(
                 () => {
-                    if (!this._navigateToNext() || !this._navigateToPrevious()) {
-                        this._backToList();
-                    }
+                    this._backToList();
                 },
                 error => {
                     this._browserService.alert({
@@ -404,7 +402,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 		this._entryStore.saveEntry();
 	}
 
-	public _navigateToPrevious(): boolean {
+	public _navigateToPrevious(): void {
 		const entries = this._entriesStore.entries.data();
 
 		if (entries && this._currentEntryId) {
@@ -413,13 +411,11 @@ export class EntryComponent implements OnInit, OnDestroy {
 			if (currentEntryIndex > 0) {
 				const prevEntry = entries[currentEntryIndex - 1];
 				this._entryStore.openEntry(prevEntry.id);
-                return true;
 			}
 		}
-        return false;
 	}
 
-	public _navigateToNext(): boolean {
+	public _navigateToNext(): void {
 		const entries = this._entriesStore.entries.data();
 
 		if (entries && this._currentEntryId) {
@@ -428,17 +424,15 @@ export class EntryComponent implements OnInit, OnDestroy {
 			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length - 1)) {
 				const nextEntry = entries[currentEntryIndex + 1];
 				this._entryStore.openEntry(nextEntry.id);
-                return true;
 			}
 		}
-        return false;
 	}
 
 	public canLeave(): Observable<{ allowed: boolean }> {
 		return this._entryStore.canLeave();
 	}
 
-    public _onDownloadChanged(flavorId: number): void {
+    public _onDownloadChanged(flavorId: string): void {
         this._contentEntriesAppService.downloadEntry(this._currentEntryId, flavorId)
             .subscribe(
                 ({ email }) => {
