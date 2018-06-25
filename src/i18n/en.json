@@ -89,6 +89,7 @@
             "off": "Off",
             "ok": "OK",
             "cancel": "Cancel",
+            "continue": "Continue",
             "retry": "Retry",
             "dismiss": "Dismiss",
             "reload": "Reload",
