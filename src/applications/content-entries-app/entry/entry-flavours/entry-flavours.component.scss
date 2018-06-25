@@ -81,3 +81,9 @@
 	font-size: 11px;
 	padding-right: 4px;
 }
+
+:host /deep/ p-table {
+    .ui-table .ui-table-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
+}
