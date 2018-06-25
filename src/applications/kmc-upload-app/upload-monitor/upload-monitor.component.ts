@@ -167,7 +167,7 @@ export class UploadMonitorComponent implements OnDestroy {
   private _checkUpToDate(): void {
     const uploadFromDesktop = this._uploadFromDesktop.uploading + this._uploadFromDesktop.queued;
     const bulkUpload = this._bulkUpload.uploading + this._bulkUpload.queued;
-    const dropFolders = this._dropFolders.uploading + this._dropFolders.queued;
+    const dropFolders = this._dropFolders.uploading;
     this._upToDate = !uploadFromDesktop && !bulkUpload && !dropFolders;
   }
 

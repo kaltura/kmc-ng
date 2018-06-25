@@ -4,6 +4,7 @@ import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { DropFolderFileListAction } from 'kaltura-ngx-client/api/types/DropFolderFileListAction';
 import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
 import { KalturaDropFolderFileFilter } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileFilter';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 
 export class DropFoldersRequestFactory implements RequestFactory<DropFolderFileListAction, KalturaDropFolderFileListResponse> {
   public uploadedOn: Date;
@@ -21,7 +22,8 @@ export class DropFoldersRequestFactory implements RequestFactory<DropFolderFileL
       filter: new KalturaDropFolderFileFilter({
         createdAtGreaterThanOrEqual: this.uploadedOn,
         dropFolderIdIn: this.dropFolderIdIn
-      })
+      }),
+      pager: new KalturaFilterPager({pageSize: 1000})
     }).setRequestOptions({
         responseProfile: new KalturaDetachedResponseProfile({
           type: KalturaResponseProfileType.includeFields,
