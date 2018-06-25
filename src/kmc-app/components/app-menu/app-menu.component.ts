@@ -1,17 +1,17 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 import { AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { serverConfig } from 'config/server';
 
-import * as R from 'ramda';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppEventsService } from 'app-shared/kmc-shared';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
+import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { globalConfig } from 'config/global';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -25,8 +25,8 @@ import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-v
 export class AppMenuComponent implements OnInit, OnDestroy{
 
     @ViewChild('helpmenu') private _helpmenu: PopupWidgetComponent;
+    private _appCachedVersionToken = 'kmc-cached-app-version';
 
-    public _userContext: AppUser;
     public _showChangelog = false;
     public _helpMenuOpened = false;
     public _powerUser = false;
@@ -34,6 +34,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _kmcOverviewLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.kmcOverview;
     public _mediaManagementLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.mediaManagement;
     public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.support;
+    public _contextualHelp: ContextualHelpLink[] = [];
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -42,13 +43,17 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     showSubMenu = true;
 
     constructor(public _kmcLogs: KmcLoggerConfigurator,
-                private userAuthentication: AppAuthentication,
+                private _contextualHelpService: ContextualHelpService,
+                public _userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
-                private _logger: KalturaLogger,
                 private router: Router,
-                private _route: ActivatedRoute,
-                private _appEvents: AppEventsService,
                 private _browserService: BrowserService) {
+
+        _contextualHelpService.contextualHelpData$
+            .cancelOnDestroy(this)
+            .subscribe(data => {
+                this._contextualHelp = data;
+            });
 
         router.events
             .cancelOnDestroy(this)
@@ -57,7 +62,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                     this.setSelectedRoute(event.urlAfterRedirects);
                 }
             });
-        this._userContext = userAuthentication.appUser;
         this.menuConfig = this._kmcMainViews.getMenu();
         this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'left';
@@ -73,6 +77,8 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     ngOnInit() {
+        const cachedVersion = this._browserService.getFromLocalStorage(this._appCachedVersionToken);
+        this._showChangelog = cachedVersion !== globalConfig.client.appVersion;
     }
 
     setSelectedRoute(path) {
@@ -105,11 +111,16 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     openSupport() {
-        this._browserService.openEmail(serverConfig.externalLinks.kaltura.support);
+        this._browserService.openSupport();
         this._helpmenu.close();
     }
 
 
     ngOnDestroy() {
+    }
+
+    public _changelogPopupOpened(): void {
+        this._showChangelog = false;
+        this._browserService.setInLocalStorage(this._appCachedVersionToken, globalConfig.client.appVersion);
     }
 }

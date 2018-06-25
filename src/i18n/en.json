@@ -1,33 +1,58 @@
 {
     "app": {
-        "menu": {
-            "upload": "Create",
-            "Content": "Content",
-            "Entries": "Entries",
-            "Moderation": "Moderation",
-            "Playlists": "Playlists",
-            "Syndication": "Syndication",
-            "Categories": "Categories",
-            "Studio": "Studio",
-            "Analytics": "Analytics",
-            "Kava": "Kava",
-            "Live Analytics": "Live Real-Time Dashboard",
-            "Usage Dashboard": "Usage Dashboard",
-            "Administration": "Administration",
-            "Settings": "Settings",
-            "Users": "Users",
-            "Account Settings": "Account Settings",
-            "Integration Settings": "Integration Settings",
-            "Account Information": "Account Information",
-            "My User Settings": "My User Settings",
-            "Roles": "Roles",
-            "UploadControl": "Upload Control",
-            "BulkUpload": "Bulk Upload",
-            "DropFolders": "Drop Folders",
-            "UploadMonitor": "Upload Monitor",
-            "CustomData": "Custom Data",
-            "AccessControl": "Access Control",
-            "Transcoding settings": "Transcoding Settings"
+        "titles": {
+            "administrationRolesPageTitle": "Administration > Roles",
+            "administrationRolesMenuTitle": "Roles",
+            "administrationUsersPageTitle": "Administration > Users",
+            "administrationUsersMenuTitle": "Users",
+            "contentBulkUploadPageTitle": "Content > Bulk Upload",
+            "contentBulkUploadMenuTitle": "Bulk Upload",
+            "contentCategoriesPageTitle": "Content > Categories",
+            "contentCategoriesMenuTitle": "Categories",
+            "contentDropFoldersPageTitle": "Content > Drop Folders",
+            "contentDropFoldersMenuTitle": "Drop Folders",
+            "contentEntriesPageTitle": "Content > Entries",
+            "contentEntriesMenuTitle": "Entries",
+            "contentModerationPageTitle": "Content > Moderation",
+            "contentModerationMenuTitle": "Moderation",
+            "contentPlaylistsPageTitle": "Content > Playlists",
+            "contentPlaylistsMenuTitle": "Playlists",
+            "contentSyndicationPageTitle": "Content > Syndication",
+            "contentSyndicationMenuTitle": "Syndication",
+            "contentUploadsPageTitle": "Content > Upload Control",
+            "contentUploadsMenuTitle": "Upload Control",
+            "analyticsLivePageTitle": "Analytics > Live Real-Time Dashboard",
+            "analyticsLiveMenuTitle": "Live Real-Time Dashboard",
+            "analyticsKavaPageTitle": "Analytics > KAVA",
+            "analyticsKavaMenuTitle": "KAVA",
+            "settingsAccessControlPageTitle": "Settings > Access Control",
+            "settingsAccessControlMenuTitle": "Access Control",
+            "settingsAccountInfoPageTitle": "Settings > Account Information",
+            "settingsAccountInfoMenuTitle": "Account Information",
+            "settingsAccountSettingsPageTitle": "Settings > Account Settings",
+            "settingsAccountSettingsMenuTitle": "Account settings",
+            "settingsIntegrationPageTitle": "Settings > Integration Settings",
+            "settingsIntegrationMenuTitle": "Integration Settings",
+            "settingsMetadataPageTitle": "Settings > Custom Data",
+            "settingsMetadataMenuTitle": "Custom Data",
+            "settingsMyUserSettingsPageTitle": "Settings > My User Settings",
+            "settingsMyUserSettingsMenuTitle": "My User Settings",
+            "settingsTranscodingPageTitle": "Settings > Transcoding Settings",
+            "settingsTranscodingRolesMenuTitle": "Transcoding Settings",
+            "studioV2PageTitle": "Studio > Universal Studio",
+            "studioV2MenuTitle": "Universal Studio",
+            "studioV3PageTitle": "Studio > TV Platform Studio",
+            "studio3MenuTitle": "TV Platform Studio",
+            "usageDashboardPageTitle": "Usage Dashboard",
+            "usageDashboardMenuTitle": "Usage Dashboard",
+            "restorePasswordPageTitle": "Reset Password",
+            "uploadMonitor": "Upload Monitor",
+            "create": "Create",
+            "content": "Content",
+            "studio": "Studio",
+            "analytics": "Analytics",
+            "settings": "Settings",
+            "administration": "Administration"
         },
         "userSettings": {
             "changeAccount": "Change Account",
@@ -85,6 +110,11 @@
             "redirect2": "If you are not redirected in few seconds, click ",
             "redirect3": "here"
         },
+        "openMail":{
+            "supportMailTitle": "Contact Kaltura Support",
+            "supportMailMsg": "Please send an email to the following email address:",
+            "supportMailMsgNoMail": "Please send an email to the Kaltura support team."
+        },
         "login": {
             "login": {
                 "title": "Login",
@@ -103,6 +133,12 @@
                 "sent": {
                     "instructions": "An Email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
                 }
+            },
+            "invalidResetPasswordHash": {
+                "title": "Link Invalid",
+                "placeholder": "Enter Email",
+                "instructions": "This link is invalid or has expired. Please enter your email address to receive a new link.",
+                "sentInstructions": "An email has been sent to {{0}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
             },
             "forgotPassword": {
                 "title": "Forgot Password",
@@ -128,7 +164,21 @@
                     "confirm": "Confirm new password"
                 }
             },
-            "error": {
+            "restorePassword": {
+            "welcome": "Welcome to Kaltura.",
+            "selectPassword": "Please select your password.",
+        "restored": "Your new password has been set, please login to Kaltura management console.",
+        "error": {
+          "equal": "Passwords do not match",
+          "required": "Field is required",
+            "failedValidateHash": "{{0}}\nDo you want to retry?"
+        },
+        "placeholder": {
+          "new": "Enter new password",
+          "confirm": "Confirm new password"
+        }
+      },
+      "error": {
                 "email": "Incorrect Email format",
                 "badCredentials": "The username or password you entered is incorrect.",
                 "retriesExceeded": {
@@ -228,10 +278,13 @@
             "validation": {
                 "error": "Error",
                 "wrongType": "Select media type",
+                "selectFlavor": "Select flavor",
                 "missingTranscodingProfile": "Select Transcoding Profile",
                 "fileSizeExceeded": "File size exceeded",
                 "fileSizeExceededFor": "File size exceeded for:",
-                "fileNameRequired": "File name is required"
+                "fileNameRequired": "File name is required",
+                "emptyUrl": "URL is required",
+                "invalidUrl": "URL is invalid"
             },
             "uploadMenu": {
                 "uploadFromDesktop": "Upload from Desktop",
@@ -322,7 +375,7 @@
                     "transcodingProfile": "Live Transcoding Profiles",
                     "liveDVR": "Live DVR",
                     "liveDVR_message": "Seeking to previous parts of the live stream. The DVR window is 2 hours by default.",
-                    "enableRecording": "Enable Recording",
+                    "enableRecording": "Recording",
                     "enableRecordingOptions": {
                         "perSession": "Create new entries for every broadcast session",
                         "appended": "Append recorded content to a single entry"
@@ -1242,7 +1295,7 @@
                 "changeOwner": "Change Owner",
                 "changeOwnerLabel": "Set a new owner for the selected entries.",
                 "download": "Download",
-                "downloadEntries": "Download selected entries.",
+                "downloadEntries": "Download selected entries",
                 "download1Label": "You have selected 1 entry for download.",
                 "downloadManyLabel": "You have selected {{0}} entries for download.",
                 "downloadFlavor": "If you have selected to download a video, please choose the required format:",
@@ -1292,12 +1345,12 @@
                 "sections": {
                     "metadata": "Metadata",
                     "thumbnails": "Thumbnails",
-                    "accessControl": "Access Control",
+                    "accesscontrol": "Access Control",
                     "scheduling": "Scheduling",
                     "flavours": "Flavors",
                     "captions": "Captions",
                     "live": "Live Stream",
-                    "relatedFiles": "Related Files",
+                    "related": "Related Files",
                     "clips": "Clips",
                     "users": "Users",
                     "distribution": "Distribution",
@@ -1456,7 +1509,8 @@
                         "import": "Import",
                         "preview": "Preview",
                         "reconvert": "Reconvert",
-                        "drm": "View DRM Details"
+                        "drm": "View DRM Details",
+                        "link": "Link"
                     },
                     "drm": {
                         "header": "DRM Details",
@@ -1481,6 +1535,21 @@
                         "loading": "Loading...",
                         "loadingError": "Error loading flavor:"
                     },
+                    "link": {
+                        "noStorageProfile": "Remote Storage is not set for this Entry's Transcoding Profile",
+                        "requiredFlavorsMissing": "Some required Transcoding Flavors are missing. Continue?",
+                        "updateVideo": "Update Video",
+                        "remoteStorageName": "Remote Storage Name",
+                        "id": "ID",
+                        "storageUrl": "Storage URL",
+                        "storageBaseDirectory": "Storage Base Directory",
+                        "cancel": "Cancel",
+                        "link": "Link",
+                        "filePathName": "File Path Name",
+                        "required": "Please enter a URL",
+                        "enterFlavorUrl": "Enter the Flavor URL",
+                        "linkRemoteStorage": "Link to Remote Storage"
+                    },
                     "deleteConfirm": "Are you sure you want to delete this Asset: {{0}} ?",
                     "deleteConfirmTitle": "Delete Flavor Asset",
                     "uploadSuccess": "Flavor asset was uploaded successfully.",
@@ -1489,7 +1558,69 @@
                     "missingOriginalFlavor": "The original flavor asset is missing",
           "uploadFailure": "Flavor upload failed.",
                     "downloadFailure": "Flavor download failed.",
-                    "importFailure": "Flavor import failed."
+                    "importFailure": "Flavor import failed.",
+                    "replaceVideo": {
+                        "noFlavors": "No Flavors",
+                        "addVideo": "Add Video",
+                        "replaceVideo": "Replace Video",
+                        "addAudio": "Add Audio",
+                        "replaceAudio": "Replace Audio",
+                        "uploadFile": "Upload file",
+                        "uploadFiles": "Upload files",
+                        "importFile": "Import file",
+                        "importFiles": "Import files",
+                        "updateVideo": "Update Video",
+                        "updateAudio": "Update Audio",
+                        "uploadFromDesktop": "Upload from Desktop",
+                        "importFromUrl": "Import from URL",
+                        "linkRemoteStorage": "Link to Remote Storage",
+                        "matchFromDropFolder": "Match from Drop Folder",
+                        "transcodingProfile": "Transcoding profile",
+                        "profilePlaceholder": "Default",
+                        "addFileBtn": "Add File",
+                        "fileName": "File name",
+                        "fileUrl": "File URL",
+                        "flavor": "Transcoding Flavor",
+                        "size": "Size",
+                        "select": "Select flavor",
+                        "remove": "Remove",
+                        "upload": "Upload",
+                        "import": "Import",
+                        "link": "Link",
+                        "match": "Match",
+                        "na": "N/A",
+                        "cancel": "Cancel",
+                        "continue": "Continue",
+                        "tempEntryId": "Temp Entry ID: {{0}}",
+                        "cancelReplacement": "Cancel Replacement",
+                        "autoReplacement": "Auto Replacement",
+                        "approveReplacement": "Approve Replacement",
+                        "approveReplacementTooltip": "All current flavors will be replaced upon replacement approval. Any time based metadata may be effected as well.",
+                        "currentFlavors": "Current Flavors",
+                        "replacementFlavors": "Replacement Flavors",
+                        "storageProfile": {
+                            "name": "Name:",
+                            "id": "ID:",
+                            "url": "Storage URL:",
+                            "directory": "Storage Base Directory:",
+                            "noteTitle": "Note",
+                            "note": "When conversion by Kaltura is required, the file defined as Source will be imported to Kaltura."
+                        },
+                        "replacementStatus": {
+                            "replacementInProcess": "Video replacement is in process",
+                            "readyForReplacement": "Video is ready for replacement",
+                            "replacementFailed": "Video replacement failed"
+                        },
+                        "errors": {
+                            "uniqueFlavors": "More than one file is associated with the same Transcoding Flavor settings.",
+                            "missingFlavor": "Some required Transcoding Flavors are missing. Continue?"
+                        },
+                        "emptyMessage": {
+                            "title": "No files to upload",
+                            "getStarted": "Add some files to get started. ",
+                            "browse": "Browse"
+                        }
+                    }
                 },
                 "captions": {
                     "captions": "Captions",
@@ -1539,11 +1670,9 @@
                     "config": "Live Stream Configuration",
                     "dvrStatus": "DVR Status:",
                     "dvrWindow": "DVR Window:",
-                    "activeRec": "Active Recording:",
-                    "autoStart": "Auto-start:",
+                    "activeRec": "Recording:",
+                    "previewMode": "Preview Mode:",
                     "rtsp": "RTSP Broadcasting URLs",
-                    "enabled": "Enabled",
-                    "disabled": "Disabled",
                     "hlsStream": "HLS stream URL:",
                     "akamaiStream": "Akamai Stream ID:",
                     "transcoding": "Transcoding Profile Configuration",
@@ -1977,7 +2106,7 @@
                                 "backToEntitlements": "Back to Entitlements",
                                 "duplicateUsers": "Some of the added users were already set with permissions for this category.",
                                 "error": "Error",
-                                "deleteOwner": "The Category Owner can not be deleted.\nPlease adjust or reset the category's ownership first'"
+                                "deleteOwner": "The Category Owner can not be deleted.\nPlease adjust or reset the category's ownership first"
                             }
                         },
                         "errors" : {
@@ -2662,6 +2791,10 @@
                     "systemNamePlaceholder": "Enter System Name"
                 }
             }
+        },
+        "analytics": {
+            "comingSoon": "Coming soon! Analytics for all media types.",
+            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please login to the legacy KMC to view and create analytics and reports. Analytics for all media should be available soon"
         }
     },
     "entriesShared": {
@@ -2713,7 +2846,7 @@
         "cf": "Central African Republic",
         "cg": "Congo",
         "ch": "Switzerland",
-        "ci": "C�te d'Ivoire",
+        "ci": "Côte d’Ivoire",
         "ck": "Cook Islands",
         "cl": "Chile",
         "cm": "Cameroon",
@@ -2871,7 +3004,7 @@
         "sn": "Senegal",
         "so": "Somalia",
         "sr": "Suriname",
-        "st": "S�o Tom� and Pr�ncipe",
+        "st": "São Tomé and Príncipe",
         "sv": "El Salvador",
         "sy": "Syria",
         "sz": "Swaziland",

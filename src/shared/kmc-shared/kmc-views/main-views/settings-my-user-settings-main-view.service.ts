@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
-import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
-import { Router, NavigationEnd } from '@angular/router';
+import { KmcMainViewBaseService, ViewMetadata } from '../kmc-main-view-base.service';
+import { Router } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { Title } from '@angular/platform-browser';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class SettingsMyUserSettingsMainViewService extends KmcMainViewBaseService {
@@ -14,9 +14,11 @@ export class SettingsMyUserSettingsMainViewService extends KmcMainViewBaseServic
         logger: KalturaLogger,
         browserService: BrowserService,
         router: Router,
-        private _appPermissions: KMCPermissionsService
+        private _appLocalization: AppLocalization,
+        titleService: Title,
+        contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('SettingsMyUserSettingsMainViewService'), browserService, router);
+        super(logger.subLogger('SettingsMyUserSettingsMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -25,5 +27,13 @@ export class SettingsMyUserSettingsMainViewService extends KmcMainViewBaseServic
 
     getRoutePath(): string {
         return 'settings/myUserSettings';
+    }
+
+    getViewMetadata(): ViewMetadata {
+        return {
+            viewKey: 'settings-my-user-settings',
+            title: this._appLocalization.get('app.titles.settingsMyUserSettingsPageTitle'),
+            menu: this._appLocalization.get('app.titles.settingsMyUserSettingsMenuTitle')
+        };
     }
 }

@@ -10,7 +10,7 @@ export const SectionsList = [
         key : ContentEntryViewSections.Thumbnails
     },
     {
-        label : 'applications.content.entryDetails.sections.accessControl',
+        label : 'applications.content.entryDetails.sections.accesscontrol',
         key : ContentEntryViewSections.AccessControl
     },
     {
@@ -34,7 +34,7 @@ export const SectionsList = [
         key : ContentEntryViewSections.Live
     },
     {
-        label : 'applications.content.entryDetails.sections.relatedFiles',
+        label : 'applications.content.entryDetails.sections.related',
         key : ContentEntryViewSections.Related
     },
     {

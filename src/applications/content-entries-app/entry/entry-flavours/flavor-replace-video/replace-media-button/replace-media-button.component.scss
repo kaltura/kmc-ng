@@ -1,0 +1,42 @@
+@import 'app-theme/_variables.scss';
+
+:host {
+    display: block;
+    margin-left: 24px;
+}
+
+.kReplaceMediaButtonsLabel {
+    color: $kGrayscale1;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 18px;
+    margin-bottom: 20px;
+}
+
+.kFlavorReplaceButton {
+    margin-right: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.kReplaceVideoPopup {
+    padding-bottom: 17px;
+
+    p {
+        margin: 0;
+        padding: 17px 17px 0 17px;
+        font-size: 15px;
+        cursor: pointer;
+        color: $kGrayscale1;
+        &:hover {
+            color: #000000;
+        }
+    }
+    .kHidden {
+        display: none;
+        margin: 0;
+        padding: 0;
+        width: 0;
+        height: 0;
+    }
+}

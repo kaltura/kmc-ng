@@ -111,10 +111,10 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       description: [''],
       transcodingProfile: [''],
-      liveDVR: [false],
-      enableRecording: [false],
+      liveDVR: false,
+      enableRecording: false,
       enableRecordingSelectedOption: [{value: '', disabled: true}],
-      previewMode: [false]
+      previewMode: false
     });
 
     this._form

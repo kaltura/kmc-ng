@@ -104,11 +104,11 @@ export class CategoriesBulkChangeOwner implements OnInit, OnDestroy, AfterViewIn
         {
           const suggestions = [];
           (data.objects || []).forEach((suggestedUser: KalturaUser) => {
-            let isSelectable = true;
+              suggestedUser['__tooltip'] = suggestedUser.id;
             suggestions.push({
               name: `${suggestedUser.screenName} (${suggestedUser.id})`,
               item: suggestedUser,
-              isSelectable: isSelectable
+              isSelectable: true
             });
           });
           this._usersProvider.next({suggestions: suggestions, isLoading: false});

@@ -6,3 +6,19 @@
   <kScrollToTop [scrollOffset]="50"></kScrollToTop>
 </div>
 
+<kPopupWidget #whatsNew [popupWidth]="644" [popupHeight]="617" [modal]="true" [closeBtn]="false">
+    <div class="whatsNew">
+        <div class="kIcon"></div>
+        <div class="kHeader">
+            <span class="kTitle">Welcome to the New KMC!</span>
+        </div>
+        <div class="kWelcomeContent">
+            <span>We are happy to introduce you to the new version of the Kaltura Management Console. The KMC has undergone a full facelift and is now Flash-free, with a fresh design, enhanced usability and faster performance.</span>
+            <span class="enjoy">Enjoy!</span>
+        </div>
+
+        <div class="kFooter">
+            <button class="kButtonBranded" type="button" pButton label="Lets Go!" (click)="closeWin()"></button>
+        </div>
+    </div>
+</kPopupWidget>

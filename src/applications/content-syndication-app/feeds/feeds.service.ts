@@ -90,8 +90,6 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     super(_logger);
     if (contentSyndicationMainView.isAvailable()) {
         this._prepare();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
     }
   }
 

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { KMCPermissionsService, KMCPermissions } from '../../kmc-permissions';
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -21,8 +20,7 @@ export interface AdvertisementsAppViewArgs {
 @Injectable()
 export class AdvertisementsAppViewService extends KmcComponentViewBaseService<AdvertisementsAppViewArgs> {
 
-    constructor(private _appPermissions: KMCPermissionsService,
-                private _appLocalization: AppLocalization,
+    constructor(private _appLocalization: AppLocalization,
                 private _kalturaClient: KalturaClient,
                 private _router: Router,
                 _browserService: BrowserService,
@@ -31,30 +29,24 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
     }
 
     isAvailable(args: AdvertisementsAppViewArgs): boolean {
-        this._logger.info(
-            `handle isAvailable action for advertisements app`,
-            {
-                advertisementsConfig: {
-                    enabled: serverConfig.externalApps.editor.enabled,
-                    uri: serverConfig.externalApps.editor.uri
-                }
-            }
-        );
-
-        const availableByConfiguration = serverConfig.externalApps.editor.enabled;
+        const availableByConfiguration = !!serverConfig.externalApps.editor;
         const availableByPermissions = this._isAvailableByPermission();
         const availableByData = this._isAvailableByData(args);
         const result = availableByConfiguration && availableByData && availableByPermissions;
-        this._logger.info(`check if view is available`, {
-            result,
-            validByPermissions: availableByPermissions,
-            validByData: availableByData,
-        });
+        this._logger.info(
+            `handle isAvailable action`,
+            {
+                availableByConfiguration,
+                availableByPermissions,
+                availableByData,
+                result
+            }
+        );
         return result;
     }
 
     private _isAvailableByPermission(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.CUEPOINT_MANAGE);
+        return true;
     }
 
     private _isAvailableByData(args: AdvertisementsAppViewArgs): boolean {

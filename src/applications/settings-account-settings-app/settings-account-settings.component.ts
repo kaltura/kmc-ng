@@ -57,22 +57,26 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._logger.info(`initiate account settings view`);
-    this._createForm();
-    this._fillDescribeYourselfOptions();
-    if (this._settingsAccountSettingsMainView.isAvailable()) {
-        this._loadPartnerAccountSettings();
-    }else{
-        this._browserService.handleUnpermittedAction(true);
-    }
+      this._logger.info(`initiate account settings view`);
+      this._createForm();
 
+      if (this._settingsAccountSettingsMainView.viewEntered()) {
+          this._prepare();
+      } else {
+          this._logger.info(`view is not permitted, abort initialization`);
+      }
+  }
+
+  ngOnDestroy(): void {
+  }
+
+  private _prepare(): void {
+      this._fillDescribeYourselfOptions();
+      this._loadPartnerAccountSettings();
       this.accountSettingsForm
           .statusChanges
           .cancelOnDestroy(this)
           .subscribe(() => this._updatePageExitVerification());
-  }
-
-  ngOnDestroy(): void {
   }
 
   onSubmit(): void {
@@ -215,6 +219,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
   // Fill the form with data
   private _fillForm(partner: KalturaPartner): void {
+      this.partnerAdminEmail = partner.adminEmail;
     this.accountSettingsForm.reset({
       name: partner.name,
       adminUserId: partner.adminUserId,

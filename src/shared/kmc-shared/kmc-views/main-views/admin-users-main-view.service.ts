@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { KmcMainViewBaseService } from '../kmc-main-view-base.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { ViewMetadata } from 'app-shared/kmc-shared/kmc-views/kmc-main-view-base.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { Title } from '@angular/platform-browser';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
 export class AdminUsersMainViewService extends KmcMainViewBaseService {
@@ -14,9 +16,12 @@ export class AdminUsersMainViewService extends KmcMainViewBaseService {
         logger: KalturaLogger,
         browserService: BrowserService,
         router: Router,
-        private _appPermissions: KMCPermissionsService
+        private _appPermissions: KMCPermissionsService,
+        private _appLocalization: AppLocalization,
+        titleService: Title,
+        contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('AdminUsersMainViewService'), browserService, router);
+        super(logger.subLogger('AdminUsersMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
@@ -29,5 +34,13 @@ export class AdminUsersMainViewService extends KmcMainViewBaseService {
 
     getRoutePath(): string {
         return 'administration/users/list';
+    }
+
+    getViewMetadata(): ViewMetadata {
+        return {
+            viewKey: 'admin-users',
+            title: this._appLocalization.get('app.titles.administrationUsersPageTitle'),
+            menu: this._appLocalization.get('app.titles.administrationUsersMenuTitle')
+        };
     }
 }

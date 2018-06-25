@@ -1,0 +1,26 @@
+<div class="kReplaceMediaButtonsLabel">{{replaceButtonsLabel}}</div>
+
+<button *ngIf="_uploadEnabled"
+        pButton class="kFlavorReplaceButton kButtonDefault"
+        [label]="'applications.content.entryDetails.flavours.replaceVideo.uploadFromDesktop' | translate"
+        (click)="_openReplacementMenu('upload')"></button>
+
+<button *ngIf="_importEnabled"
+        pButton class="kFlavorReplaceButton kButtonDefault"
+        [label]="'applications.content.entryDetails.flavours.replaceVideo.importFromUrl' | translate"
+        (click)="_openReplacementMenu('import')"></button>
+
+<button *ngIf="_linkEnabled"
+        pButton class="kFlavorReplaceButton kButtonDefault"
+        [label]="'applications.content.entryDetails.flavours.replaceVideo.linkRemoteStorage' | translate"
+        (click)="_openReplacementMenu('link')"></button>
+
+<kPopupWidget #uploadMenu [popupWidth]="791" [popupHeight]="607"
+              [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kFlavorReplaceFile [entry]="entry"
+                            [flavors]="flavors"
+                            [parentPopupWidget]="uploadMenu"
+                            [replaceType]="_replaceType"></kFlavorReplaceFile>
+    </ng-template>
+</kPopupWidget>

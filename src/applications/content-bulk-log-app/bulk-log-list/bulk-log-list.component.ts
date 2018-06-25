@@ -11,6 +11,7 @@ import {BulkLogUploadingStartedEvent} from 'app-shared/kmc-shared/events';
 import {BulkLogRefineFiltersService, RefineList} from '../bulk-log-store/bulk-log-refine-filters.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 
 @Component({
@@ -45,15 +46,19 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               private _logger: KalturaLogger,
               public _store: BulkLogStoreService,
-              appEvents: AppEventsService) {
-    appEvents.event(BulkLogUploadingStartedEvent)
-      .cancelOnDestroy(this)
-      .delay(2000) // Component specific - need to wait due to updating the list on the server side
-      .subscribe(() => this._store.reload());
+              private _contentBulkUploadsMainView: ContentBulkUploadsMainViewService,
+              private _appEvents: AppEventsService) {
   }
 
   ngOnInit() {
-      this._prepare();
+      if (this._contentBulkUploadsMainView.viewEntered()) {
+          this._appEvents.event(BulkLogUploadingStartedEvent)
+              .cancelOnDestroy(this)
+              .delay(2000) // Component specific - need to wait due to updating the list on the server side
+              .subscribe(() => this._store.reload());
+
+          this._prepare();
+      }
   }
 
     private _prepare(): void {

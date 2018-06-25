@@ -17,6 +17,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { EntriesListService } from './entries-list.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -75,13 +76,22 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               public _entriesStore: EntriesStore,
               private _contentEntryViewService: ContentEntryViewService,
               private _contentEntriesAppService: ContentEntriesAppService,
+              private _contentEntriesMainViewService: ContentEntriesMainViewService,
               private _liveDashboardAppViewService: LiveDashboardAppViewService) {
   }
 
   ngOnInit() {
+      if (this._contentEntriesMainViewService.viewEntered()) {
+          this._prepare();
+      }
+  }
 
-      if (this._entriesListService.isViewAvailable)
-      {
+  ngOnDestroy() {
+
+  }
+
+  private _prepare(): void {
+      if (this._entriesListService.isViewAvailable) {
           this._entriesStore.reload();
       }
 
@@ -100,10 +110,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       if (!hasEmbedPermission) {
           this._rowActions[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
       }
-  }
-
-  ngOnDestroy() {
-
   }
 
   public _onActionSelected({ action, entry }) {

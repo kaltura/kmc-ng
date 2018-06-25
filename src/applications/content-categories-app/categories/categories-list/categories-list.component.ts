@@ -22,6 +22,7 @@ import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/d
 import { async } from 'rxjs/scheduler/async';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
+import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kCategoriesList',
@@ -74,30 +75,30 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 public _contentNewCategoryView: ContentNewCategoryViewService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
                 private _contentCategoryView: ContentCategoryViewService,
+                private _contentCategoriesMainViewService: ContentCategoriesMainViewService,
                 private _appEvents: AppEventsService,
                 private _logger: KalturaLogger) {
     }
 
     ngOnInit() {
-        this._categoriesStatusMonitorService.status$
-		    .cancelOnDestroy(this)
-		    .subscribe((status: CategoriesStatus) => {
-                if (this._categoriesLocked && status.lock === false){
-                    // categories were locked and now open - reload categories to reflect changes
-                    this._reload();
-                }
-                this._categoriesLocked = status.lock;
-                this._categoriesUpdating = status.update;
-            });
+        if (this._contentCategoriesMainViewService.viewEntered()) {
+            this._categoriesStatusMonitorService.status$
+                .cancelOnDestroy(this)
+                .subscribe((status: CategoriesStatus) => {
+                    if (this._categoriesLocked && status.lock === false){
+                        // categories were locked and now open - reload categories to reflect changes
+                        this._reload();
+                    }
+                    this._categoriesLocked = status.lock;
+                    this._categoriesUpdating = status.update;
+                });
 
         this._appEvents.event(CategoriesGraphUpdatedEvent)
             .cancelOnDestroy(this)
             .subscribe(() => {
                 this._logger.info(`categories graph was updated reload categories list`);
                 this._reload();
-            });
-
-        this._prepare();
+            });this._prepare();}
     }
 
     private _prepare(): void {
@@ -119,7 +120,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                     this._categoriesService.categories.data$
                         .cancelOnDestroy(this)
                         .subscribe(response => {
-                            this._categoriesTotalCount = response.totalCount
+                            this._categoriesTotalCount = response.totalCount;
                         });
 
 

@@ -1,0 +1,41 @@
+<div class="kReplacementStatus">
+    <div class="kMetadata">
+        <ng-template [ngIf]="_replacementUploadFailed" [ngIfElse]="uploadFine">
+            <i class="kStatusIcon kIconerror"></i>
+            {{'applications.content.entryDetails.flavours.replaceVideo.replacementStatus.replacementFailed' | translate }}
+        </ng-template>
+        <ng-template #uploadFine>
+            <i class="kStatusIcon" [ngClass]="replacementData?.status | kFlavorReplacementStatus:'icon'"></i>
+            {{replacementData?.status | kFlavorReplacementStatus:'label'}}
+        </ng-template>
+        <span class="kDelimiter"></span>
+        {{'applications.content.entryDetails.flavours.replaceVideo.tempEntryId' | translate:[replacementData?.tempEntryId]}}
+        <kInputHelper class="kHelp" icon="kIconlife_donut" trigger="click"
+                      [title]="'applications.content.entryDetails.flavours.replaceVideo.autoReplacement' | translate">
+            <span>{{'applications.content.entryDetails.flavours.replaceVideo.approveReplacementTooltip' | translate}}</span>
+        </kInputHelper>
+    </div>
+    <div class="kReplaceMediaButtonsLabel">{{replaceButtonsLabel}}</div>
+    <div class="kApprove">
+        <button pButton
+                class="kApproveReplacementBtn kButtonBranded"
+                icon="kIconcheck-medium"
+                [disabled]="_approveBtnDisabled"
+                [label]="_approveBtnLabel"
+                (click)="_approveReplacement()"></button>
+
+        <a class="kCancelReplacement" (click)="_cancelReplacement()">
+            {{'applications.content.entryDetails.flavours.replaceVideo.cancelReplacement' | translate}}
+        </a>
+    </div>
+    <div class="kFlavorsTabs">
+        <a [class.kSelected]="_currentTab === _flavorsTabs.current"
+           (click)="_selectFlavorsTab(_flavorsTabs.current)">
+            {{'applications.content.entryDetails.flavours.replaceVideo.currentFlavors' | translate}}
+        </a>
+        <a [class.kSelected]="_currentTab === _flavorsTabs.replacement"
+           (click)="_selectFlavorsTab(_flavorsTabs.replacement)">
+            {{'applications.content.entryDetails.flavours.replaceVideo.replacementFlavors' | translate}}
+        </a>
+    </div>
+</div>
