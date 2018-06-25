@@ -32,7 +32,7 @@
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
 					<ng-template let-col let-caption="rowData" pTemplate="body">
-						<div class="kCaptionsTableActions" *ngIf="!caption.uploading && !caption.uploadFailure">
+						<div class="kCaptionsTableActions" *ngIf="caption.status === _captionStatusReady">
 							<button type="button" class="kMoreActionsButton" pButton icon="kIconmore" (click)="openActionsMenu($event, caption)"></button>
 						</div>
 						<div *ngIf="caption.uploading">
