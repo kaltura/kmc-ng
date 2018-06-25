@@ -44,7 +44,6 @@ import { FlavorAssetSetContentAction } from 'kaltura-ngx-client/api/types/Flavor
 import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
 import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
 import { switchMap } from 'rxjs/operators';
-
 export interface KalturaDropFolderFileGroup extends KalturaDropFolderFile {
     files?: KalturaDropFolderFile[];
     name?: string;
@@ -466,7 +465,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
 
             request$ = this._kalturaClient
                 .request(flavorAssetAddAction)
-                .pipe(switchMap(({ id }) => new FlavorAssetSetContentAction({ id, contentResource })));
+                .pipe(switchMap(({ id }) => <any>new FlavorAssetSetContentAction({ id, contentResource })));
         }
 
         request$
