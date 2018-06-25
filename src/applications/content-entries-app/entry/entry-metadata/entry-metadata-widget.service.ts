@@ -91,7 +91,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
             KMCPermissions.CONTENT_MODERATE_METADATA
         ])) {
-            // formGroups.push(this.metadataForm);
+            formGroups.push(this.metadataForm);
             formGroups.push(...this.customDataForms.map(customDataForm => customDataForm.formGroup));
         }
 
