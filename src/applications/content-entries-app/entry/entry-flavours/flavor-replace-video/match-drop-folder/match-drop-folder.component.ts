@@ -3,7 +3,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaClient, KalturaMultiRequest, KalturaRequestOptions } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaRequestOptions } from 'kaltura-ngx-client';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 import { DropFolderListAction } from 'kaltura-ngx-client/api/types/DropFolderListAction';
@@ -43,6 +43,7 @@ import { Flavor } from '../../flavor';
 import { FlavorAssetSetContentAction } from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
 import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
 import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
+import { switchMap } from 'rxjs/operators';
 
 export interface KalturaDropFolderFileGroup extends KalturaDropFolderFile {
     files?: KalturaDropFolderFile[];
@@ -445,7 +446,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
             this._logger.info(`flavor was not provided, abort action`);
         }
 
-        const resource = new KalturaDropFolderFileResource({ dropFolderFileId: this._selectedFile.id });
+        const contentResource = new KalturaDropFolderFileResource({ dropFolderFileId: this._selectedFile.id });
         let request$;
 
         if (this.flavor.flavorAsset && this.flavor.flavorAsset.id) {
@@ -453,7 +454,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
             request$ = this._kalturaClient.request(
                 new FlavorAssetSetContentAction({
                     id: this.flavor.flavorAsset.id,
-                    contentResource: resource
+                    contentResource: contentResource
                 })
             );
         } else {
@@ -462,19 +463,10 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                 entryId: this.entry.id,
                 flavorAsset: new KalturaFlavorAsset({ flavorParamsId: this.flavor.flavorParams.id })
             });
-            const flavorAssetSetContentAction = new FlavorAssetSetContentAction({
-                id: '0',
-                contentResource: resource
-            }).setDependency(['id', 0, 'id']);
 
             request$ = this._kalturaClient
-                .multiRequest(new KalturaMultiRequest(flavorAssetAddAction, flavorAssetSetContentAction))
-                .map(responses => {
-                    if (responses.hasErrors()) {
-                        const message = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
-                        throw new Error(message);
-                    }
-                });
+                .request(flavorAssetAddAction)
+                .pipe(switchMap(({ id }) => new FlavorAssetSetContentAction({ id, contentResource })));
         }
 
         request$
