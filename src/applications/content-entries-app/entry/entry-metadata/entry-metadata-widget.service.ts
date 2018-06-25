@@ -87,15 +87,18 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         const formGroups = [];
         const formsChanges: Observable<any>[] = [];
 
-        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) {
-          formGroups.push(this.metadataForm);
+        if (this._permissionsService.hasAnyPermissions([
+            KMCPermissions.CONTENT_MANAGE_METADATA,
+            KMCPermissions.CONTENT_MODERATE_METADATA
+        ])) {
+            formGroups.push(this.metadataForm);
         }
 
-        if (this._permissionsService.hasAnyPermissions([
+      if (this._permissionsService.hasAnyPermissions([
             KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
             KMCPermissions.CONTENT_MODERATE_METADATA
         ])) {
-          formGroups.push(...this.customDataForms.map(customDataForm => customDataForm.formGroup));
+            formGroups.push(...this.customDataForms.map(customDataForm => customDataForm.formGroup));
         }
 
         if (!formGroups.length) {
