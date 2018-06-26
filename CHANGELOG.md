@@ -5,7 +5,7 @@
 ### Bug Fixes
 
 * **content/moderation:** enable save button for moderators ([#732](https://github.com/kaltura/kmc-ng/issues/732)) KMCNG-1896 ([96598b4](https://github.com/kaltura/kmc-ng/commit/96598b4))
-* use form.getRawValue() instead of form.value to preserve categories data even if the control is disabled due to permissions ([ff36cbd](https://github.com/kaltura/kmc-ng/commit/ff36cbd))
+* **content/entry:** use form.getRawValue() instead of form.value to preserve categories data even if the control is disabled due to permissions ([ff36cbd](https://github.com/kaltura/kmc-ng/commit/ff36cbd))
 
 
 
