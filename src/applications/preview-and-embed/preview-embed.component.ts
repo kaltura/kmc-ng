@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, ViewChild, EventEmitter, ElementRef, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -31,6 +31,13 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   @Input() media: KalturaPlaylist | KalturaMediaEntry;
 
   @ViewChild('previewIframe') previewIframe: ElementRef;
+    @ViewChild('listSettings') listSettings: PopupWidgetComponent;
+
+    @HostListener('window:resize') onWindowResize() {
+        if (this.listSettings) {
+            this.listSettings.close();
+        }
+    }
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
