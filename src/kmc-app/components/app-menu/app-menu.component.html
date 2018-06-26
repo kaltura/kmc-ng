@@ -68,6 +68,7 @@
             <p *ngIf="_kmcOverviewLinkExists" class="kHelpLink" (click)="openHelpLink('kmcOverview')">{{'app.helpMenu.kmcOverview' | translate}}</p>
             <p *ngIf="_userManualLinkExists" class="kHelpLink" (click)="openHelpLink('manual')">{{'app.helpMenu.userManual' | translate}}</p>
             <p *ngIf="_supportLinkExists" class="kHelpLink" (click)="openSupport()">{{'app.helpMenu.contact' | translate}}</p>
+            <p *ngIf="_supportLegacyExists" class="kHelpLink" (click)="openHelpLink('legacy')">{{'app.helpMenu.legacy' | translate}}</p>
             <k-logs-record mode="link"
                            *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
                            [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"></k-logs-record>
