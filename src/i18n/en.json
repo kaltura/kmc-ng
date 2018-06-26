@@ -1306,7 +1306,7 @@
                 "downloadNote": "Downloading other types of entries is not supported and will be ignored.",
                 "downloadMsg": "Your download request is being processed. A download link will be sent to {{0}} after processing has completed.",
                 "delete": "Delete",
-                "apply": "Apply to all selected entries",
+                "apply": "Apply",
                 "error": "An error occurred during Entries' update.",
                 "errorPlaylists": "An error occurred during Playlists' update.",
                 "cannotDeletePlaylists": "One or more playlists could not be deleted.",

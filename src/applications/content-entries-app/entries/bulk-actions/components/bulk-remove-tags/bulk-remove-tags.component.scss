@@ -1,52 +1,76 @@
 @import "app-theme/_variables.scss";
 
-.kTitle{
-  color: $kGrayscale1;
-  font-size: 24px;
-  font-weight: 700;
-  text-align: center;
-  border-bottom: 1px solid $kGrayscale4;
-  height: 78px;
-  line-height: 78px;
-}
-.kContent{
-  display: flex;
-  flex-direction: column;
-  height: 500px;
-  overflow-x: hidden;
-  .kLabel{
-    display: block;
-    margin-bottom: 12px;
-  }
-  .kTag{
-    margin-bottom: 12px;
-  }
-  .kTags{
-    padding: 12px;
-    height: 330px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 12px;
-    overflow-x: hidden;
-  }
-
-  .kNoItems {
+.kTitle {
+    color: $kGrayscale1;
+    font-size: 24px;
+    font-weight: 700;
     text-align: center;
-    width: 100%;
-    display: block;
-  }
-}
-.kFooter{
-  position: absolute;
-  bottom: 0px;
-  display: flex;
-  width: 100%;
-  height: 66px;
-  border-top: 1px solid $kGrayscale4;
-  align-items: center;
-  justify-content: center;
+    border-bottom: 1px solid $kGrayscale4;
+    height: 78px;
+    line-height: 78px;
 }
 
-:host /deep/ .ui-autocomplete {
-  width: 100%;
+.kContent {
+    display: flex;
+    flex-direction: column;
+    height: 369px;
+    .kLabel {
+        margin-right: 42px;
+        width: 120px;
+    }
+    .kTag {
+        margin-bottom: 12px;
+    }
+    .kTags {
+        padding: 32px 28px;
+        height: 225px;
+        display: flex;
+    }
+
+    .kNoItems {
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+}
+
+.kFooter {
+    position: absolute;
+    bottom: 0px;
+    display: flex;
+    width: 100%;
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    align-items: center;
+    justify-content: center;
+
+    button {
+        width: 140px;
+        height: 34px;
+        &:last-child {
+            margin-left: 24px;
+        }
+    }
+}
+
+:host /deep/ kautocomplete {
+    .ui-autocomplete {
+        width: 335px;
+    }
+    .ui-autocomplete-multiple-container {
+        height: 130px !important;
+        overflow-y: auto;
+
+        .ui-inputtext {
+            padding: 4px 6px;
+            .ui-autocomplete-input-token {
+                padding: 0;
+                input {
+                    height: 130px;
+                    width: 335px;
+                    padding: 10px 8px;
+                }
+            }
+        }
+    }
 }

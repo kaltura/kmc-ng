@@ -1,20 +1,28 @@
 <k-area-blocker [showLoader]="_loading">
-  <div class="kContent kOverrideFAIcons">
-    <span class="kTitle">{{'applications.content.categories.bActions.removeTags' | translate}}</span>
-    <div class="kTags">
-      <span class="kLabel">{{'applications.content.categories.bActions.removeTagsLabel' | translate}}</span>
-      <span  *ngIf="!tags || !tags.length" class="kNoItems">{{'applications.content.categories.bActions.noTagsToRemove' | translate}}</span>
-      <kAutoComplete *ngIf="tags && tags.length" [ngModel]="tags"
-                     [tooltipResolver]="'__tooltip'"
-                     [classField]="'__class'"
-                     [multiple]="true"
-                     [limitToSuggestions]="false"
-                     readonly="true"
-                     (onUnselect)="_removeTag($event)">
-      </kAutoComplete>
+    <div class="kContent kOverrideFAIcons">
+        <span class="kTitle">{{'applications.content.categories.bActions.removeTags' | translate}}</span>
+        <div class="kTags">
+            <span class="kLabel">{{'applications.content.categories.bActions.removeTagsLabel' | translate}}</span>
+            <div *ngIf="!tags || !tags.length" class="kNoItems">
+                {{'applications.content.categories.bActions.noTagsToRemove' | translate}}
+            </div>
+            <kAutoComplete *ngIf="tags && tags.length" [ngModel]="tags"
+                           [tooltipResolver]="'__tooltip'"
+                           [classField]="'__class'"
+                           [multiple]="true"
+                           [limitToSuggestions]="false"
+                           readonly="true"
+                           (onUnselect)="_removeTag($event)">
+            </kAutoComplete>
+        </div>
+        <div class="kFooter">
+            <button type="button" class="kButtonDefault" pButton
+                    [label]="'applications.content.bulkActions.cancel' | translate"
+                    (click)="parentPopupWidget?.close()"></button>
+            <button type="button" class="kButtonBranded" pButton
+                    [disabled]="tagsToRemove.length === 0"
+                    [label]="'applications.content.bulkActions.apply' | translate"
+                    (click)="_apply()"></button>
+        </div>
     </div>
-    <div class="kFooter">
-      <button type="button" [disabled]="tagsToRemove.length === 0" class="kButtonBranded" pButton label="{{'applications.content.categories.bActions.save' | translate}}" (click)="_apply()"></button>
-    </div>
-  </div>
 </k-area-blocker>

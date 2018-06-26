@@ -18,6 +18,7 @@
                 [label]="'applications.content.bulkActions.cancel' | translate"
                 (click)="parentPopupWidget?.close()"></button>
       <button type="button" class="kButtonBranded" pButton
+              [disabled]="!tags.length"
               [label]="'applications.content.bulkActions.addTagsBtn' | translate:[tags.length || '']"
               (click)="_apply()"></button>
     </div>

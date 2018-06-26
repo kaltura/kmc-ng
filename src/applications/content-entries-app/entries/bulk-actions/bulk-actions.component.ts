@@ -426,7 +426,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               },
               {
                   label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => {
-                  this.openBulkActionWindow('removeTags', 500, 500);
+                  this.openBulkActionWindow('removeTags', 586, 369);
               }
               }]
           },
