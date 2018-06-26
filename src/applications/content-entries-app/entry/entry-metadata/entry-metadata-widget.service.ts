@@ -331,7 +331,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     protected onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
     {
 
-	    const metadataFormValue = this.metadataForm.value;
+	    const metadataFormValue = this.metadataForm.getRawValue();
 
         // save static metadata form
         newData.name = metadataFormValue.name;
