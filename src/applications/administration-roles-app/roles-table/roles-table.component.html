@@ -22,10 +22,10 @@
       <ng-template pTemplate="body" let-role>
           <tr>
               <td [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
-                  <span class="kRoleName">{{role.name}}</span>
+                  <span class="kRoleName kTableColumn" [kTooltip]="role.name">{{role.name}}</span>
               </td>
               <td [ngStyle]="{'width': '250px'}">
-                  {{role.description}}
+                  <span class="kTableColumn" [kTooltip]="role.description">{{role.description}}</span>
               </td>
               <td [ngStyle]="{'width': '60px'}">
                   {{role.updatedAt | kDate}}
