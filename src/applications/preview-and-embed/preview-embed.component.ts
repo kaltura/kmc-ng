@@ -31,13 +31,6 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   @Input() media: KalturaPlaylist | KalturaMediaEntry;
 
   @ViewChild('previewIframe') previewIframe: ElementRef;
-    @ViewChild('listSettings') listSettings: PopupWidgetComponent;
-
-    @HostListener('window:resize') onWindowResize() {
-        if (this.listSettings) {
-            this.listSettings.close();
-        }
-    }
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;

@@ -71,7 +71,7 @@
     </div>
 </k-area-blocker>
 
-<kPopupWidget #listSettings [popupWidth]="360" [popupHeight]="220" [targetRef]="settingsBtn" [appendTo]="preview" [targetOffset]="{'x':-330, 'y': 30}" [closeBtnInside]="true">
+<kPopupWidget [closeOnResize]="true" [popupWidth]="360" [popupHeight]="220" [targetRef]="settingsBtn" [appendTo]="preview" [targetOffset]="{'x':-330, 'y': 30}" [closeBtnInside]="true">
     <div class="kSettings">
         <span>{{'applications.embed.settings' | translate | uppercase}}</span>
         <p-radioButton name="layersSortBy" value="name" label="{{'applications.embed.name' | translate}}" [(ngModel)]="_playersSortBy" (onClick)="updatePlayersSort('name')"></p-radioButton>
