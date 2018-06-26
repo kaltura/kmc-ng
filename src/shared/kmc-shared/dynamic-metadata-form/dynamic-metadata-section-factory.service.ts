@@ -66,7 +66,11 @@ export class DynamicMetadataSectionFactory {
                 label: item.key,
                 allowMultiple : item.allowMultiple,
                 key: item.name,
-                description: item.description
+                description: item.description,
+                inputHelperConfig:{
+                    title: item.key,
+                    body: item.description
+                }
             }
         );
     }
@@ -80,7 +84,11 @@ export class DynamicMetadataSectionFactory {
                 allowMultipleEntries : item.allowMultiple,
                 key: item.name,
                 description: item.description,
-                styleClass: 'kLinkedEntries'
+                styleClass: 'kLinkedEntries',
+                inputHelperConfig:{
+                    title: item.key,
+                    body: item.description
+                }
             }
         );
     }

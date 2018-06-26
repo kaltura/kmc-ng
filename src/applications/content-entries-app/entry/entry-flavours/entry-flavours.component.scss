@@ -29,12 +29,13 @@
 		.kStatusReady{
 			color: $kPrimary;
 		}
-		.kStatusError{
+		.kStatusError, .kStatusErrorProcessing{
 			color: $kDandger;
 		}
-		.kStatusErrorProcessing{
-			color: $kGrayscale1;
-		}
+        &.kAddingEntry {
+            width: calc(100% - 80px);
+            margin-bottom: 0;
+        }
 	}
 	.kFlavorStatusError{
 		color: $kDandger;
@@ -79,4 +80,10 @@
 :host /deep/ .ui-button-icon-right.ui-c.fa.fa-fw.kIcondropdown_arrow_bottom{
 	font-size: 11px;
 	padding-right: 4px;
+}
+
+:host /deep/ p-table {
+    .ui-table .ui-table-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
 }

@@ -271,6 +271,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         const hasSource = !!currentEntryFlavors.find(flavor => flavor.isSource);
         this._entryStore.updateHasSourceStatus(hasSource);
         this._flavors.next(currentEntryFlavors);
+        this.loadFlavorsByEntryId(this.currentEntryId);
 
         if (replacementData.replacingEntryId) {
             this._replacementData.next({
@@ -289,10 +290,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             }
         } else {
             this.currentEntryId = this.data.id;
-            this._replacementData.next({ status: null, tempEntryId: null, flavors: [] });
+            this._replacementData.next({ status: replacementData.replacementStatus, tempEntryId: null, flavors: [] });
         }
-
-        this.loadFlavorsByEntryId(this.currentEntryId);
     }
 
     private _startPolling(): void {
@@ -429,14 +428,14 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 this.entryStatusClassName = "kStatusNoContent kIconwarning";
                 break;
             case KalturaEntryStatus.ready.toString():
-                this.entryStatusClassName = "kStatusReady kIconconfirmation";
+                this.entryStatusClassName = "kStatusReady kIconcomplete";
                 break;
             case KalturaEntryStatus.errorConverting.toString():
             case KalturaEntryStatus.errorImporting.toString():
-                this.entryStatusClassName = "kStatusError kIconwarning";
+                this.entryStatusClassName = "kStatusError kIconerror";
                 break;
             default:
-                this.entryStatusClassName = "kStatusErrorProcessing kIconwarning";
+                this.entryStatusClassName = "kStatusErrorProcessing kIconerror";
                 break;
         }
         this.entryStatus = this._appLocalization.get('applications.content.entryDetails.flavours.' + this.entryStatusClassName.split(" ")[0]);
