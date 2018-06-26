@@ -1,3 +1,13 @@
+<a name="4.8.0"></a>
+# [4.8.0](https://github.com/kaltura/kmc-ng/compare/v4.7.3...v4.8.0) (2018-06-26)
+
+
+### Features
+
+* add link to legacy KMC in the help menu ([949ab3e](https://github.com/kaltura/kmc-ng/commit/949ab3e))
+
+
+
 <a name="4.7.3"></a>
 ## [4.7.3](https://github.com/kaltura/kmc-ng/compare/v4.7.2...v4.7.3) (2018-06-26)
 
