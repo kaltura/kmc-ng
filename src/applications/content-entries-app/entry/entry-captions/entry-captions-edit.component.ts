@@ -13,7 +13,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { globalConfig } from 'config/global';
 import { LanguageOptionsService } from 'app-shared/kmc-shared/language-options';
-import { KalturaValidators } from '@kaltura-ng/kaltura-ui/validators/validators';
+import { KalturaValidators } from '@kaltura-ng/kaltura-ui';
 
 @Component({
     selector: 'kEntryCaptionsEdit',

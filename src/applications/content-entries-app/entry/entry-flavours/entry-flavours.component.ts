@@ -61,11 +61,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
         this._widgetService.attachForm();
 
         this._widgetService.replacementData$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(replacementData => this._updateShowActionsView(replacementData));
 
         this._widgetService.data$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .filter(Boolean)
             .subscribe(entry => {
                 if (entry.status === KalturaEntryStatus.noContent) {

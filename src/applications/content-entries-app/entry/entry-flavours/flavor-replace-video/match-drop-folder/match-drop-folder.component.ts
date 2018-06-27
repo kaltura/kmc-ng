@@ -1,48 +1,48 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaClient, KalturaRequestOptions } from 'kaltura-ngx-client';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
-import { DropFolderListAction } from 'kaltura-ngx-client/api/types/DropFolderListAction';
-import { KalturaDropFolderFilter } from 'kaltura-ngx-client/api/types/KalturaDropFolderFilter';
-import { KalturaDropFolderOrderBy } from 'kaltura-ngx-client/api/types/KalturaDropFolderOrderBy';
-import { KalturaDropFolderStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderStatus';
-import { KalturaDropFolderContentFileHandlerConfig } from 'kaltura-ngx-client/api/types/KalturaDropFolderContentFileHandlerConfig';
-import { KalturaDropFolder } from 'kaltura-ngx-client/api/types/KalturaDropFolder';
-import { KalturaDropFolderContentFileHandlerMatchPolicy } from 'kaltura-ngx-client/api/types/KalturaDropFolderContentFileHandlerMatchPolicy';
-import { KalturaDropFolderFileHandlerType } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileHandlerType';
-import { Observable } from 'rxjs/Observable';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { DropFolderListAction } from 'kaltura-ngx-client';
+import { KalturaDropFolderFilter } from 'kaltura-ngx-client';
+import { KalturaDropFolderOrderBy } from 'kaltura-ngx-client';
+import { KalturaDropFolderStatus } from 'kaltura-ngx-client';
+import { KalturaDropFolderContentFileHandlerConfig } from 'kaltura-ngx-client';
+import { KalturaDropFolder } from 'kaltura-ngx-client';
+import { KalturaDropFolderContentFileHandlerMatchPolicy } from 'kaltura-ngx-client';
+import { KalturaDropFolderFileHandlerType } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
 import { SelectItem } from 'primeng/api';
-import { DropFolderFileListAction } from 'kaltura-ngx-client/api/types/DropFolderFileListAction';
-import { KalturaDropFolderFileFilter } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileFilter';
-import { KalturaDropFolderFileOrderBy } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileOrderBy';
-import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileStatus';
-import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
+import { DropFolderFileListAction } from 'kaltura-ngx-client';
+import { KalturaDropFolderFileFilter } from 'kaltura-ngx-client';
+import { KalturaDropFolderFileOrderBy } from 'kaltura-ngx-client';
+import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client';
+import { KalturaDropFolderFile } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { BaseEntryUpdateAction } from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
-import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
-import { KalturaAssetsParamsResourceContainers } from 'kaltura-ngx-client/api/types/KalturaAssetsParamsResourceContainers';
-import { KalturaDropFolderFileResource } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileResource';
-import { KalturaAssetParamsResourceContainer } from 'kaltura-ngx-client/api/types/KalturaAssetParamsResourceContainer';
-import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
-import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
-import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client/api/types/KalturaConversionProfileOrderBy';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { MediaUpdateContentAction } from 'kaltura-ngx-client/api/types/MediaUpdateContentAction';
+import { BaseEntryUpdateAction } from 'kaltura-ngx-client';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
+import { KalturaAssetsParamsResourceContainers } from 'kaltura-ngx-client';
+import { KalturaDropFolderFileResource } from 'kaltura-ngx-client';
+import { KalturaAssetParamsResourceContainer } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client';
+import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { MediaUpdateContentAction } from 'kaltura-ngx-client';
 import { EntryFlavoursWidget } from '../../entry-flavours-widget.service';
-import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
+import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client';
 import { Flavor } from '../../flavor';
-import { FlavorAssetSetContentAction } from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
-import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
-import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
+import { FlavorAssetSetContentAction } from 'kaltura-ngx-client';
+import { FlavorAssetAddAction } from 'kaltura-ngx-client';
+import { KalturaFlavorAsset } from 'kaltura-ngx-client';
 import { switchMap } from 'rxjs/operators';
 export interface KalturaDropFolderFileGroup extends KalturaDropFolderFile {
     files?: KalturaDropFolderFile[];
@@ -251,7 +251,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         });
 
         return this._kalturaClient.request(dropFoldersListAction)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .map(response => {
                 if (response.objects.length) {
                     const dropFoldersList = [];
@@ -358,8 +358,8 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                 resource: mediaResource,
                 conversionProfileId: selectedFolder.conversionProfileId
             }))
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                     this._logger.info(`handle successful update content request, close popup`);
@@ -471,8 +471,8 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         }
 
         request$
-            .tag('block-shell')
-            .cancelOnDestroy(this)
+            .pipe(tag('block-shell'))
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 () => {
                     this._logger.info(`handle successful update flavor action, close popup`);
@@ -500,7 +500,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
     public _loadFolderData(searchTerm: string = null): void {
         this._isLoading = true;
         this._loadDropFolder(searchTerm)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 files => {
                     this._isLoading = false;
@@ -534,8 +534,8 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         });
 
         this._kalturaClient.request(updateEntryAction)
-            .tag('block-shell')
-            .cancelOnDestroy(this)
+            .pipe(tag('block-shell'))
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 () => {
                     this._logger.info(`handle successful set reference id action, show alert`);
