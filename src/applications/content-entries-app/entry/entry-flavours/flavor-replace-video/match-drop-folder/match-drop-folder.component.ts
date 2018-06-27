@@ -465,7 +465,9 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
 
             request$ = this._kalturaClient
                 .request(flavorAssetAddAction)
-                .pipe(switchMap(({ id }) => <any>new FlavorAssetSetContentAction({ id, contentResource })));
+                .pipe(switchMap(({ id }) =>
+                    this._kalturaClient.request(new FlavorAssetSetContentAction({ id, contentResource })))
+                );
         }
 
         request$
