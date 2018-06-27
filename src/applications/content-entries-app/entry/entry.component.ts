@@ -73,7 +73,6 @@ export class EntryComponent implements OnInit, OnDestroy {
       KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL,
       KMCPermissions.CONTENT_MODERATE_METADATA,
       KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
-      KMCPermissions.CONTENT_MODERATE_METADATA,
       KMCPermissions.LIVE_STREAM_UPDATE,
     ]);
 
