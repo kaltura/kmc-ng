@@ -59,9 +59,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
       // (ie when returning from entry page) - we should force detect changes on an empty list
       this._entries = [];
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
       this._entries = data;
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
     } else {
       this._deferredEntries = data;
     }
@@ -96,14 +96,14 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _items: CustomMenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
-  constructor(private appLocalization: AppLocalization,
-              private cdRef: ChangeDetectorRef,
+  constructor(private _appLocalization: AppLocalization,
+              private _cdRef: ChangeDetectorRef,
               private _permissionsService: KMCPermissionsService,
-              private sanitization: DomSanitizer) {
+              private _sanitization: DomSanitizer) {
   }
 
   ngOnInit() {
-    this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
 
     Object.keys(this._columns).forEach(columnName => {
       this._columnsMetadata[columnName] = {
@@ -125,7 +125,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._deferredLoading = false;
         this._entries = this._deferredEntries;
         this._deferredEntries = null;
-        this.cdRef.detectChanges();
+        this._cdRef.detectChanges();
       }, 0);
     }
   }
@@ -202,7 +202,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public _getColumnStyle({ width = 'auto', align = 'left' } = {}): SafeStyle {
-    return this.sanitization.bypassSecurityTrustStyle(`width: ${width};text-align: ${align}`);
+    return this._sanitization.bypassSecurityTrustStyle(`width: ${width};text-align: ${align}`);
   }
 }
 

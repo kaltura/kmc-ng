@@ -19,6 +19,7 @@ export enum BoostrappingStatus
 @Injectable()
 export class AppBootstrap implements CanActivate {
 
+    private static _executed = false;
     private _initialized = false;
 
     private _bootstrapStatusSource = new BehaviorSubject<BoostrappingStatus>(BoostrappingStatus.Bootstrapping);
@@ -30,6 +31,11 @@ export class AppBootstrap implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+        if (!AppBootstrap._executed) {
+            AppBootstrap._executed = true;
+            this._bootstrap(state.url);
+        }
+
         return Observable.create((observer: any) => {
             const statusChangeSubscription = this.bootstrapStatus$.subscribe(
                 (status: BoostrappingStatus) => {
@@ -65,14 +71,14 @@ export class AppBootstrap implements CanActivate {
         });
     }
 
-    public bootstrap(): void {
+    private _bootstrap(defaultUrl: string): void {
 
         if (!this._initialized) {
             const bootstrapFailure = (error: any) => {
                 console.log("Bootstrap Error::" + error); // TODO [kmc-infra] - move to log
                 this._bootstrapStatusSource.next(BoostrappingStatus.Error);
             }
-            
+
             this._initialized = true;
 
             // init localization, wait for localization to load before continuing
@@ -83,7 +89,7 @@ export class AppBootstrap implements CanActivate {
             this.appLocalization.load(language, 'en').subscribe(
                 () => {
 
-                    this.auth.loginAutomatically().subscribe(
+                    this.auth.loginAutomatically(defaultUrl).subscribe(
                         () => {
                             this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
                         },

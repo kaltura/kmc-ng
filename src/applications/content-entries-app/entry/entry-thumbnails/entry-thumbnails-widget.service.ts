@@ -26,7 +26,7 @@ import { ThumbAssetGenerateAction } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaMediaType } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
-import { serverConfig } from 'config/server';
+import { serverConfig, getKalturaServerUri } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
@@ -127,7 +127,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                     fileExt: thumbnail.fileExt
                 };
                 thumb.isDefault = thumbnail.tags.indexOf("default_thumb") > -1;
-                thumb.url = serverConfig.cdnServers.serverUri + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
+                thumb.url = getKalturaServerUri(`/api_v3/index.php/service/thumbasset/action/serve/ks/${this._appAuthentication.appUser.ks}/thumbAssetId/${thumb.id}`);
                 thumbs.push(thumb);
             }
         });
