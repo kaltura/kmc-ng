@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
@@ -26,11 +26,13 @@ export interface UploadSettingsFile {
   templateUrl: './upload-settings.component.html',
   styleUrls: ['./upload-settings.component.scss']
 })
-export class UploadSettingsComponent implements OnInit, AfterViewInit {
+export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-
+    @Input() files: UploadSettingsFile[] = [];
+    @Input() fileDialog: FileDialogComponent;
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
+
+    @Output() clearSelectedFiles = new EventEmitter<void>();
 
   public _tableScrollableWrapper: Element;
   public _transcodingProfiles: { value: number, label: string }[];
@@ -38,7 +40,6 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   public _transcodingProfileField: AbstractControl;
   public _transcodingProfileError: AreaBlockerMessage;
   public _transcodingProfileLoading = false;
-  public _files: UploadSettingsFile[] = [];
   public _fileTypes: SelectItem[] = [
     {
       'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.video'),
@@ -54,13 +55,6 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  public _allowedExtensions = `
-    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv,
-    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav,.ra,.rm,.wma,.aif,.m4a,
-    .jpg,.jpeg,.gif,.png
-  `;
-
-
   constructor(private _newEntryUploadService: NewEntryUploadService,
               private _formBuilder: FormBuilder,
               private _transcodingProfileManagement: TranscodingProfileManagement,
@@ -75,60 +69,18 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this._fileDialog.open();
-
-    this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
+      setTimeout(() => {
+          this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
+      }, 0);
   }
 
   ngOnInit() {
     this._loadTranscodingProfiles();
   }
 
-  public _handleSelectedFiles(files: FileList) {
-    const isEditing = false;
-
-    const newItems = Array.from(files).map(file => {
-      const ext = this._getFileExtension(file.name);
-      const mediaType = this._getMediaTypeFromExtension(ext);
-      const { name, size } = file;
-      return ({ file, mediaType, name, size, isEditing });
-    });
-
-    this._files = [...this._files, ...newItems];
-  }
-
-  private _getFileExtension(filename: string): string {
-  	const extension = /(?:\.([^.]+))?$/.exec(filename)[1];
-    return typeof extension === "undefined" ? '' : extension.toLowerCase();
-  }
-
-  private _getMediaTypeFromExtension(extension: string): KalturaMediaType | null {
-    const imageFiles = ['jpg', 'jpeg', 'gif', 'png'];
-    const audioFiles = [
-      'flv', 'asf', 'qt', 'mov', 'mpg',
-      'avi', 'wmv', 'mp3', 'wav', 'ra',
-      'rm', 'wma', 'aif', 'm4a'
-    ];
-    const videoFiles = [
-      'flv', 'asf', 'qt', 'mov', 'mpg',
-      'avi', 'wmv', 'mp4', '3gp', 'f4v',
-      'm4v', 'mpeg', 'mxf', 'rm', 'rv',
-      'rmvb', 'ts', 'ogg', 'ogv', 'vob',
-      'webm', 'mts', 'arf', 'mkv'
-    ];
-
-    switch (true) {
-      case videoFiles.indexOf(extension) !== -1:
-        return KalturaMediaType.video;
-      case audioFiles.indexOf(extension) !== -1:
-        return KalturaMediaType.audio;
-      case imageFiles.indexOf(extension) !== -1:
-        return KalturaMediaType.image;
-      default:
-        return null;
+    ngOnDestroy() {
+        this.clearSelectedFiles.emit();
     }
-  }
-
 
   private _loadTranscodingProfiles() {
     this._transcodingProfileLoading = true;
@@ -177,17 +129,17 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   public _removeFile(file: UploadSettingsFile): void {
-    const fileIndex = this._files.indexOf(file);
+    const fileIndex = this.files.indexOf(file);
     if (fileIndex !== -1) {
-      const newList = Array.from(this._files);
+      const newList = Array.from(this.files);
       newList.splice(fileIndex, 1);
-      this._files = newList;
+      this.files = newList;
     }
   }
 
   public _upload(): void {
 
-    if (this._files.some(({ isEditing }) => isEditing)) {
+    if (this.files.some(({ isEditing }) => isEditing)) {
       return;
     }
 
@@ -208,9 +160,9 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this._validateFiles(this._files)) {
+    if (this._validateFiles(this.files)) {
       this.parentPopupWidget.close();
-      const uploadFileDataList = this._files.map(fileData => ({
+      const uploadFileDataList = this.files.map(fileData => ({
         file: fileData.file,
         mediaType: fileData.mediaType,
         entryName: fileData.name

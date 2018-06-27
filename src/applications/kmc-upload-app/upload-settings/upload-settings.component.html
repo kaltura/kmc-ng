@@ -24,8 +24,8 @@
                 [label]="'applications.upload.uploadSettings.addFileBtn' | translate"
                 (click)="fileDialog.open()"></button>
       </div>
-      <div class="kTable" [class.empty]="_files.length === 0">
-        <p-dataTable [value]="_files"
+      <div class="kTable" [class.empty]="files.length === 0">
+        <p-dataTable [value]="files"
                      [immutable]="false"
                      [emptyMessage]="'applications.upload.uploadSettings.table.emptyMessage.title' | translate"
                      scrollable="true">
@@ -95,7 +95,7 @@
           </p-column>
           <p-column [style]="{'width': '28px'}"></p-column>
         </p-dataTable>
-        <div *ngIf="_files.length === 0" class="kEmptyMessage">
+        <div *ngIf="files.length === 0" class="kEmptyMessage">
           <h1>{{ 'applications.upload.uploadSettings.table.emptyMessage.title' | translate }}</h1>
           <p>
             {{ 'applications.upload.uploadSettings.table.emptyMessage.getStarted' | translate }}
@@ -110,13 +110,9 @@
     <div class="kFooter">
       <button class="kButtonDefault kUploadButton"
               pButton
-              [disabled]="_files.length === 0 || _transcodingProfileLoading || !!_transcodingProfileError"
+              [disabled]="files.length === 0 || _transcodingProfileLoading || !!_transcodingProfileError"
               [label]="'applications.upload.uploadSettings.uploadBtn' | translate"
               (click)="_upload()"></button>
     </div>
   </div>
 </k-area-blocker>
-<kFileDialog #fileDialog
-             [filter]="_allowedExtensions"
-             [allowMultiple]="true"
-             (onFileSelected)="_handleSelectedFiles($event)"></kFileDialog>
