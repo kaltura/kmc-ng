@@ -41,3 +41,11 @@
         height: 0;
     }
 }
+
+@media screen and (max-width: 1310px) {
+    .kFlavorReplaceButton {
+        width: 130px;
+        height: 48px;
+        margin-right: 10px;
+    }
+}

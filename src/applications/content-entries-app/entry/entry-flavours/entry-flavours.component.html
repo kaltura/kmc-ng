@@ -18,6 +18,7 @@
                 [entry]="_widgetService.data">
             </kFlavorReplaceMediaStatus>
             <button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh"
+                    [class.kReplacementButtonsShown]="_showActionsView"
                     (click)="_widgetService.refresh()"></button>
         </div>
 
