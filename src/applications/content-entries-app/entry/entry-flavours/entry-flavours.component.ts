@@ -34,6 +34,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
 	@ViewChild('importPopup') importPopup: PopupWidgetComponent;
+	@ViewChild('matchDropFolder') matchDropFolder: PopupWidgetComponent;
     @ViewChild('linkPopup') linkPopup: FileDialogComponent;
     @ViewChild('actionsmenu') private actionsMenu: Menu;
     @ViewChild('fileDialog') private fileDialog: FileDialogComponent;
@@ -139,6 +140,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
                     label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.link'),
                     command: () => this.actionSelected('link')
                 });
+                this._actions.push({
+                    id: 'match',
+                    label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.match'),
+                    command: () => this.actionSelected('match')
+                });
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor) && flavor.isWeb) ||
 					(flavor.id !== "" && flavor.isWeb && (flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString()))){
@@ -160,7 +166,8 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
             this._permissionsService.filterList(<{ id: string }[]>this._actions, {
                 'import': KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
                 'upload': KMCPermissions.CONTENT_INGEST_UPLOAD,
-                'link': KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE
+                'link': KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE,
+                'match': KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_MATCH
             });
 
 			if (this._actions.length) {
@@ -204,6 +211,9 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				break;
             case 'link':
                 this._linkFlavor();
+                break;
+            case 'match':
+                this.matchDropFolder.open();
                 break;
             default:
                 break;

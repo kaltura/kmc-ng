@@ -1510,7 +1510,8 @@
                         "preview": "Preview",
                         "reconvert": "Reconvert",
                         "drm": "View DRM Details",
-                        "link": "Link"
+                        "link": "Link",
+                        "match": "Drop Folder"
                     },
                     "drm": {
                         "header": "DRM Details",
@@ -1560,6 +1561,7 @@
                     "downloadFailure": "Flavor download failed.",
                     "importFailure": "Flavor import failed.",
                     "replaceVideo": {
+                        "replaceVideo": "Replace Video",
                         "noFlavors": "No Flavors",
                         "addVideo": "Add Video",
                         "replaceVideo": "Replace Video",
@@ -1598,6 +1600,20 @@
                         "approveReplacementTooltip": "All current flavors will be replaced upon replacement approval. Any time based metadata may be effected as well.",
                         "currentFlavors": "Current Flavors",
                         "replacementFlavors": "Replacement Flavors",
+                        "setReferenceId": "Set Reference ID",
+                        "addFilesBtn": "Add File/s",
+                        "referenceId": "Reference ID:",
+                        "selectDropFolder": "Select Drop Folder",
+                        "searchFolder": "Search Folder",
+                        "mediaPackageName": "Media Package Name",
+                        "mediaName": "Media Name",
+                        "createdOn": "Created On",
+                        "waiting": "Waiting",
+                        "error": "* Error *",
+                        "setReferenceIdWarning": "The automatic ingestion action is now in process, please check again in a few minutes.",
+                        "addFilesWarning": "Adding this file manually will interrupt the automatic ingestion process and should be done only as a fallback option. Do you want to continue?",
+                        "noDropFolders": "No drop folders available",
+                        "noDropFoldersWarning": "Your account configuration does not support automatic matching of media packages from drop folders.",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",

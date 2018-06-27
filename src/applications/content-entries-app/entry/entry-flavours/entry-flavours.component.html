@@ -18,6 +18,7 @@
                 [entry]="_widgetService.data">
             </kFlavorReplaceMediaStatus>
             <button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh"
+                    [class.kReplacementButtonsShown]="_showActionsView"
                     (click)="_widgetService.refresh()"></button>
         </div>
 
@@ -127,4 +128,13 @@
                          [parentPopupWidget]="linkPopup"></kFlavorLink>
         </ng-template>
     </kPopupWidget>
+
+    <kPopupWidget #matchDropFolder [popupWidth]="791" [popupHeight]="486" [closeOnClickOutside]="false"
+                  [closeBtn]="false" [modal]="true" [preventPageScroll]="true">
+        <ng-template>
+            <kReplaceMatchDropFolder [entry]="_widgetService.data" [flavor]="_selectedFlavor"
+                                     [parentPopupWidget]="matchDropFolder"></kReplaceMatchDropFolder>
+        </ng-template>
+    </kPopupWidget>
+
 </k-area-blocker>
