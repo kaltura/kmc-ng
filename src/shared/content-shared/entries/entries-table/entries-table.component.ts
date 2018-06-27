@@ -42,7 +42,7 @@ export interface CustomMenuItem extends MenuItem {
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     public _kmcPermissions = KMCPermissions;
-    
+
   @Input() set columns(value: EntriesTableColumns) {
     this._columns = value || this._defaultColumns;
   }
@@ -201,8 +201,11 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.selectedEntriesChange.emit(event);
   }
 
-  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): SafeStyle {
-    return this.sanitization.bypassSecurityTrustStyle(`width: ${width};text-align: ${align}`);
+  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
+      return {
+          'width': width,
+          'text-align': align
+      };
   }
 }
 
