@@ -23,7 +23,7 @@
                     <span>{{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.note' | translate}}</span>
                 </kInputHelper>
 
-                <button *ngIf="_files?.length === 0 || (_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted)"
+                <button *ngIf="files?.length === 0 || (_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted)"
                         type="button"
                         class="kButtonDefault kAddFileButton"
                         pButton icon="kIconplus"
@@ -61,8 +61,8 @@
                 </div>
             </div>
 
-            <div class="kTable" [class.empty]="_files.length === 0">
-                <p-dataTable [value]="_files"
+            <div class="kTable" [class.empty]="files.length === 0">
+                <p-dataTable [value]="files"
                              [immutable]="false"
                              [emptyMessage]="'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.title' | translate"
                              scrollable="true">
@@ -147,7 +147,7 @@
                     </p-column>
                     <p-column [style]="{'width': '28px'}"></p-column>
                 </p-dataTable>
-                <div *ngIf="_files.length === 0" class="kEmptyMessage">
+                <div *ngIf="files.length === 0" class="kEmptyMessage">
                     <h1>
                         {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.title' | translate }}
                     </h1>
@@ -164,13 +164,9 @@
         <div class="kFooter">
             <button class="kButtonDefault kUploadButton"
                     pButton
-                    [disabled]="_files.length === 0 || _isLoading || !!_blockerMessage"
+                    [disabled]="files.length === 0 || _isLoading || !!_blockerMessage"
                     [label]="_uploadBtnLabel"
                     (click)="_upload()"></button>
         </div>
     </div>
 </k-area-blocker>
-<kFileDialog #fileDialog
-             [filter]="_allowedExtensions"
-             [allowMultiple]="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted"
-             (onFileSelected)="_handleSelectedFiles($event)"></kFileDialog>
