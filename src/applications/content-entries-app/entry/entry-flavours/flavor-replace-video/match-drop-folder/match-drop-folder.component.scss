@@ -223,5 +223,9 @@
     .kAvoidClick {
         pointer-events: none;
         touch-action: none;
+
+        .ui-state-disabled {
+            opacity: .5;
+        }
     }
 }
