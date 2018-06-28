@@ -19,6 +19,7 @@ export type UploadMenuType = 'upload' | 'import' | 'link' | 'match';
 export class ReplaceMediaButtonComponent implements OnInit {
     @Input() entry: KalturaMediaEntry;
     @Input() flavors: Flavor[] = [];
+    @Input() replaceButtonsLabel: string;
 
     @ViewChild('uploadMenu') _uploadMenu: PopupWidgetComponent;
     @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
@@ -27,6 +28,7 @@ export class ReplaceMediaButtonComponent implements OnInit {
     public _uploadEnabled = false;
     public _importEnabled = false;
     public _linkEnabled = false;
+    public _matchEnabled = false;
     public _files: UploadReplacementFile[] = [];
     public _kmcPermissions = KMCPermissions;
 
@@ -45,6 +47,9 @@ export class ReplaceMediaButtonComponent implements OnInit {
         this._linkEnabled = this._permissionsService.hasPermission(KMCPermissions.FEATURE_REMOTE_STORAGE_INGEST)
             && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)
             && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_BASE);
+        this._matchEnabled = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_DROP_FOLDER_MATCH)
+            && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_BASE)
+            && this._permissionsService.hasPermission(KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE);
     }
 
     ngOnInit() {

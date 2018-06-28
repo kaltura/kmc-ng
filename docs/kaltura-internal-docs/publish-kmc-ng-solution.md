@@ -127,17 +127,12 @@ npm run release:publish -- --gh-token xxx`
 
 If everything worked as expected you should see a new tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 
-4. Update standalone version of kmc-ng by running the following command
-```
-npm run standalone:update
-```
-
-5. Rebuild the application to include changes added automatically by the release command.
+4. Rebuild the application to include changes added automatically by the release command.
 ```
 npm run build:prod
 ```
 
-6. Create a version deployable zip using the following structure:
+5. Create a version deployable zip using the following structure:
 ```
 kmc-ng-vX.X.X.zip
 | -> deploy (folder - copied from /deploy)
@@ -146,20 +141,28 @@ kmc-ng-vX.X.X.zip
 ```
 **Note**: replace `vX.X.X` with the actual version number
 
-7.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
+6.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
 
-7.1 update the title of the release, add `(Beta)` to the versin name
+6.1 update the title of the release, add `(Beta)` to the versin name
 
-7.2 add the following information at the bottom of the release notes
+6.2 add the following information at the bottom of the release notes
 ```
 ## Installation:
 1.  Unzip *inner folder* `v<version number>` into `/opt/kaltura/apps/kmcng/v<version number>`
 2.  Run uiconf deployment with `--ini=v<version number>/deploy/config.ini`
 ```
 
-7.3 upload the zip file you created in step 6
+6.3 upload the zip file you created in step 5
 
-
+7.1 Make sure you are working on the master branch before proceeding with this step. If you published from a different branch, first merge it to master: 
+```
+git checkout master
+git merge <branchName>
+```
+7.2 Once in master branch, update standalone version of kmc-ng by running the following command
+```
+npm run standalone:update
+```
 
 #### provide debug version
 1. Rebuild the application **without** production flag.

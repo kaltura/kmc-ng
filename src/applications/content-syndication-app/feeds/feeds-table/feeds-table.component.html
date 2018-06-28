@@ -9,29 +9,42 @@
             [sortField]="sortField"
             [sortOrder]="sortOrder"
             [defaultSortOrder]="_defaultSortOrder"
+            [resizableColumns]="true"
             (sortFunction)="_onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedFeeds"
             (selectionChange)="_onSelectionChange($event)"
             kStickyHeader [sticksTo]="'feedsListFilters'" stickyClass="stickyHeader" [stickyId]="'feedsTable'">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col style="width:44px; padding-left: 14px">
+                <col style="width:44px">
+                <col>
+                <col style="width:110px">
+                <col style="width:130px">
+                <col style="width: 150px">
+                <col>
+                <col style="width: 80px">
+            </colgroup>
+        </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <th style="width:44px; padding-left: 14px">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th style="width:44px">
+          <th pResizableColumn>
           </th>
-          <th [pSortableColumn]="'name'">
+          <th pResizableColumn [pSortableColumn]="'name'">
             {{'applications.content.syndication.table.columns.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th style="width:110px">
+          <th pResizableColumn>
             {{'applications.content.syndication.table.columns.id' | translate}}
           </th>
-          <th style="width:130px" [pSortableColumn]="'type'">
+          <th pResizableColumn [pSortableColumn]="'type'">
             {{'applications.content.syndication.table.columns.destination' | translate}}
             <p-sortIcon [field]="'type'"></p-sortIcon>
           </th>
-          <th style="width: 150px" [pSortableColumn]="'playlistId'">
+          <th pResizableColumn [pSortableColumn]="'playlistId'">
             {{'applications.content.syndication.table.columns.source' | translate}}
             <p-sortIcon [field]="'playlistId'"></p-sortIcon>
           </th>
@@ -50,32 +63,32 @@
             <p-tableCheckbox [value]="feed"></p-tableCheckbox>
           </td>
 
-          <td style="width:44px">
+          <td class="ui-resizable-column">
             <div class="kColFeedIcon">
               <i class="kIconfeed"></i>
             </div>
           </td>
 
-          <td>
-            <div class="kColName kElipsis" [kTooltip]="feed.name" (click)="_editFeed(feed)">
+          <td class="ui-resizable-column">
+            <div class="ui-resizable-column kColName kElipsis" [kTooltip]="feed.name" (click)="_editFeed(feed)">
               {{feed.name}}
             </div>
           </td>
 
-          <td style="width:110px">
+          <td class="ui-resizable-column">
             <div class="kColId" [kTooltip]="feed.id">
               {{feed.id}}
             </div>
           </td>
 
-          <td style="width:130px">
+          <td class="ui-resizable-column">
             <div class="kColDestination">
               <div class="kColDestinationIcon" [ngClass]="feed.type | kDestinationIcon"></div>
               <div class="kColDestinationText">{{feed.type | kDestinationLabel}}</div>
             </div>
           </td>
 
-          <td style="width: 150px">
+          <td class="ui-resizable-column">
             <div class="kColSource">
               <span [ngClass]="feed.playlistId | kToPlaylistIcon: _idToPlaylistMap" class="kPlaylistIcon"></span>
               <span class="kElipsis" [kTooltip]="feed.playlistId | kToPlaylistName: _idToPlaylistMap">
@@ -84,7 +97,7 @@
             </div>
           </td>
 
-          <td>
+          <td class="ui-resizable-column">
             <div class="kColUrl">
               <kCopyToClipboard class="kIcon" [text]="feed.feedUrl" [iconSwitchTimeout]="5000"
                                 [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
@@ -103,7 +116,9 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-        <div class="emptymessage">{{_emptyMessage}}</div>
+        <div class="emptymessage">
+            <div class="kEmptyMessage">{{_emptyMessage}}</div>
+        </div>
       </ng-template>
     </p-table>
 

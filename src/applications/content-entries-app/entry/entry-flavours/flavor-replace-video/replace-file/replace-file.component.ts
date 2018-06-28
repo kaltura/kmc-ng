@@ -350,6 +350,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 .filter((flavor) => assetParamsIds.indexOf(flavor.paramsId) !== -1)
                 .map(({ name: label, paramsId: value }) => ({ label, value }));
 
+            this._files.forEach(file => file.flavor = null);
+
             if (!this._flavorOptions.length) {
                 this._setNoFlavorsOption();
             }
@@ -531,7 +533,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
 
-            if (filesFlavors.indexOf(file.flavor) !== index) {
+            if (file.errorToken !== 'applications.upload.validation.selectFlavor' && filesFlavors.indexOf(file.flavor) !== index) {
                 isValid = false;
                 code = 'uniqueFlavors';
             }
