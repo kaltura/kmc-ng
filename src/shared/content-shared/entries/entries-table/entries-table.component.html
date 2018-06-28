@@ -17,29 +17,29 @@
             <colgroup>
                 <col style="width:44px; padding-left: 13px" *ngIf="showBulkSelect">
                 <col *ngIf="_columnsMetadata.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)"
-                     [style]="_columnsMetadata.thumbnailUrl.style">
+                     [ngStyle]="_columnsMetadata.thumbnailUrl.style">
                 <col *ngIf="_columnsMetadata.name"
-                     [style]="_columnsMetadata.name.style">
+                     [ngStyle]="_columnsMetadata.name.style">
                 <col *ngIf="_columnsMetadata.id"
-                     [style]="_columnsMetadata.id.style">
+                     [ngStyle]="_columnsMetadata.id.style">
                 <col *ngIf="_columnsMetadata.mediaType"
-                     [style]="_columnsMetadata.mediaType.style">
+                     [ngStyle]="_columnsMetadata.mediaType.style">
                 <col *ngIf="_columnsMetadata.moderationCount"
-                     [style]="_columnsMetadata.moderationCount.style">
+                     [ngStyle]="_columnsMetadata.moderationCount.style">
                 <col *ngIf="_columnsMetadata.createdAt"
-                     [style]="_columnsMetadata.createdAt.style">
+                     [ngStyle]="_columnsMetadata.createdAt.style">
                 <col *ngIf="_columnsMetadata.moderationStatus"
-                     [style]="_columnsMetadata.moderationStatus.style">
+                     [ngStyle]="_columnsMetadata.moderationStatus.style">
                 <col *ngIf="_columnsMetadata.duration"
-                     [style]="_columnsMetadata.duration.style">
+                     [ngStyle]="_columnsMetadata.duration.style">
                 <col *ngIf="_columnsMetadata.plays"
-                     [style]="_columnsMetadata.plays.style">
+                     [ngStyle]="_columnsMetadata.plays.style">
                 <col *ngIf="_columnsMetadata.status"
-                     [style]="_columnsMetadata.status.style">
+                     [ngStyle]="_columnsMetadata.status.style">
                 <col *ngIf="rowActions?.length"
                      style="width: 80px">
                 <col *ngIf="_columnsMetadata.addToBucket"
-                     [style]="_columnsMetadata.addToBucket.style">
+                     [ngStyle]="_columnsMetadata.addToBucket.style">
             </colgroup>
         </ng-template>
 
