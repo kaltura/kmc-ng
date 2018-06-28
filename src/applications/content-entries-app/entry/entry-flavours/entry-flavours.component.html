@@ -3,51 +3,65 @@
     <kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
     <div class="kFlavours kOverrideFAIcons" #flavors>
         <p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
-        <div class="kEntryStatus" *ngIf="!(_widgetService.replacementData$ | async)?.tempEntryId">
+        <div class="kEntryStatus"
+             [class.kAddingEntry]="!_showActionsView && !((_widgetService.replacementData$ | async)?.tempEntryId && (_kmcPermissions.FEATURE_ENTRY_REPLACEMENT | kNgIfPermitted))"
+             *ngIf="!(_widgetService.replacementData$ | async)?.tempEntryId">
             <i class="{{_widgetService.entryStatusClassName}}"></i><span>{{_widgetService.entryStatus}}</span>
         </div>
         <div class="kFlavorReplacement">
             <kFlavorReplaceMediaBtn *ngIf="_showActionsView(_widgetService.replacementData$ | async)"
+                                    [replaceButtonsLabel]="_replaceButtonsLabel"
                                     [flavors]="(_widgetService.flavors$ | async)"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
             <kFlavorReplaceMediaStatus
                 *ngIf="(_widgetService.replacementData$ | async)?.tempEntryId && (_kmcPermissions.FEATURE_ENTRY_REPLACEMENT | kNgIfPermitted)"
+                [replaceButtonsLabel]="_replaceButtonsLabel"
                 [currentEntryId]="_widgetService.currentEntryId"
                 [replacementData]="_widgetService.replacementData$ | async"
                 [entry]="_widgetService.data">
             </kFlavorReplaceMediaStatus>
             <button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh"
+                    [class.kReplacementButtonsShown]="_showActionsView"
                     (click)="_widgetService.refresh()"></button>
         </div>
 
         <div class="kTable">
-            <p-table [value]="_widgetService.selectedFlavors" [scrollable]="true" scrollHeight="100%">
+            <p-table
+                [value]="_widgetService.selectedFlavors"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollHeight="100%">
+                <ng-template pTemplate="colgroup" let-columns>
+                    <colgroup>
+                        <col [ngStyle]="{'width':'144px', 'padding-left': '24px'}">
+                        <col [hidden]="_documentWidth < 1300"
+                             [ngStyle]="{'width':'100px'}">
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col
+                            [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
+                        <col *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted"
+                             [ngStyle]="{'width':'80px'}">
+                    </colgroup>
+                </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th [ngStyle]="{'width':'144px', 'padding-left': '24px'}">
+                        <th [ngStyle]="{'width':'144px', 'padding-left': '24px'}" pResizableColumn>
                             {{'applications.content.entryDetails.flavours.flavour' | translate}}
                         </th>
-                        <th [ngStyle]="{'width':'100px'}" [hidden]="_documentWidth < 1300">
+                        <th pResizableColumn [hidden]="_documentWidth < 1300">
                             {{'applications.content.entryDetails.flavours.assetId' | translate}}
                         </th>
-                        <th>
-                            {{'applications.content.entryDetails.flavours.format' | translate}}
-                        </th>
-                        <th>
-                            {{'applications.content.entryDetails.flavours.codec' | translate}}
-                        </th>
-                        <th>
-                            {{'applications.content.entryDetails.flavours.bitrate' | translate}}
-                        </th>
-                        <th>
-                            {{'applications.content.entryDetails.flavours.dimensions' | translate}}
-                        </th>
-                        <th>
-                            {{'applications.content.entryDetails.flavours.size' | translate}}
-                        </th>
-                        <th [ngStyle]="{'width':'85px'}">
-                            {{'applications.content.entryDetails.flavours.stat' | translate}}
-                        </th>
+                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.format' | translate}}</th>
+                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.codec' | translate}}</th>
+                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.bitrate' | translate}}</th>
+                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.dimensions' | translate}}</th>
+                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.size' | translate}}</th>
+                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.stat' | translate}}</th>
                         <th [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
                             {{'applications.content.entryDetails.flavours.tags' | translate}}
                         </th>
@@ -55,29 +69,26 @@
                             [ngStyle]="{'width':'80px'}"></th>
                     </tr>
                 </ng-template>
+
                 <ng-template pTemplate="body" let-flavor>
-                    <tr>
-                        <td [ngStyle]="{'width':'144px', 'padding-left': '24px'}">
+                    <tr [pSelectableRow]="flavor">
+                        <td [ngStyle]="{'width':'144px', 'padding-left': '24px'}" class="ui-resizable-column">
                             <span class="kFlavorName"
                                   [class.kConvertedFlavor]="flavor.status === '2'">{{flavor.name}}</span>
                         </td>
-                        <td [ngStyle]="{'width':'100px'}" [hidden]="_documentWidth < 1300">{{flavor.id}}</td>
-                        <td>{{flavor.format}}</td>
-                        <td>{{flavor.codec}}</td>
-                        <td>{{flavor.bitrate}}</td>
-                        <td>{{flavor.dimensions}}</td>
-                        <td>{{flavor.size}}</td>
-                        <td [ngStyle]="{'width':'85px'}">
-                            <span [kTooltip]="flavor.statusTooltip"
-                                  [class.kFlavorStatusError]="flavor.status === '-1'">
-                                {{flavor.statusLabel}}
-                            </span>
+                        <td class="ui-resizable-column" [hidden]="_documentWidth < 1300">{{flavor.id}}</td>
+                        <td class="ui-resizable-column">{{flavor.format}}</td>
+                        <td class="ui-resizable-column">{{flavor.codec}}</td>
+                        <td class="ui-resizable-column">{{flavor.bitrate}}</td>
+                        <td class="ui-resizable-column">{{flavor.dimensions}}</td>
+                        <td class="ui-resizable-column">{{flavor.size}}</td>
+                        <td class="ui-resizable-column">
+                            <span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
                         </td>
                         <td [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
-                            {{flavor.tags | tags}}
+                            <span>{{flavor.tags | tags}}</span>
                         </td>
-                        <td *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted"
-                            [ngStyle]="{'width':'80px'}">
+                        <td [ngStyle]="{'width':'80px'}">
                             <div
                                 *ngIf="_widgetService.showFlavorActions && flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8' && flavor.status !== '0'"
                                 class="kFlavorsTableActions">
@@ -93,10 +104,6 @@
                             </div>
                         </td>
                     </tr>
-                </ng-template>
-
-                <ng-template pTemplate="emptymessage">
-                    <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
                 </ng-template>
             </p-table>
             <p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
@@ -124,4 +131,13 @@
                          [parentPopupWidget]="linkPopup"></kFlavorLink>
         </ng-template>
     </kPopupWidget>
+
+    <kPopupWidget #matchDropFolder [popupWidth]="791" [popupHeight]="486" [closeOnClickOutside]="false"
+                  [closeBtn]="false" [modal]="true" [preventPageScroll]="true">
+        <ng-template>
+            <kReplaceMatchDropFolder [entry]="_widgetService.data" [flavor]="_selectedFlavor"
+                                     [parentPopupWidget]="matchDropFolder"></kReplaceMatchDropFolder>
+        </ng-template>
+    </kPopupWidget>
+
 </k-area-blocker>

@@ -16,7 +16,7 @@
                     <th class="selectionColumn">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
-                    <th class="thumbnailColumn">
+                    <th class="thumbnailColumn" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
                         {{'applications.content.table.thumbnail' | translate}}
                     </th>
                     <th [kpSortableColumn]="'name'">
@@ -46,7 +46,7 @@
                     <td class="selectionColumn">
                         <p-tableCheckbox [value]="entry"></p-tableCheckbox>
                     </td>
-                    <td class="thumbnailColumn">
+                    <td class="thumbnailColumn" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
                         <div class="kThumbnailHolder"
                              [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
                              (click)="_goToEntry(entry)">

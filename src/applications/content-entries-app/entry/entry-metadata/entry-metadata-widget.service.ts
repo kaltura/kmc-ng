@@ -85,12 +85,18 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         const formGroups = [];
         const formsChanges: Observable<any>[] = [];
 
-        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) {
-          formGroups.push(this.metadataForm);
+        if (this._permissionsService.hasAnyPermissions([
+            KMCPermissions.CONTENT_MANAGE_METADATA,
+            KMCPermissions.CONTENT_MODERATE_METADATA
+        ])) {
+            formGroups.push(this.metadataForm);
         }
 
-        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
-          formGroups.push(...this.customDataForms.map(customDataForm => customDataForm.formGroup));
+      if (this._permissionsService.hasAnyPermissions([
+            KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
+            KMCPermissions.CONTENT_MODERATE_METADATA
+        ])) {
+            formGroups.push(...this.customDataForms.map(customDataForm => customDataForm.formGroup));
         }
 
         if (!formGroups.length) {
@@ -217,7 +223,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         if (this.customDataForms)
         {
             this.customDataForms.forEach(customDataForm => {
-                if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA)) {
+                if (!this._permissionsService.hasAnyPermissions([
+                    KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
+                    KMCPermissions.CONTENT_MODERATE_METADATA
+                ])) {
                   customDataForm.disable();
                 }
                 const entryMetadata = this._entryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
@@ -320,7 +329,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     protected onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
     {
 
-	    const metadataFormValue = this.metadataForm.value;
+	    const metadataFormValue = this.metadataForm.getRawValue();
 
         // save static metadata form
         newData.name = metadataFormValue.name;

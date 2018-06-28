@@ -32,6 +32,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _kmcOverviewLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.kmcOverview;
     public _mediaManagementLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.mediaManagement;
     public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.support;
+    public _supportLegacyExists = true;
     public _contextualHelp: ContextualHelpLink[] = [];
 
     menuConfig: KMCAppMenuItem[];
@@ -100,6 +101,9 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 break;
             case 'mediaManagement':
                 link = serverConfig.externalLinks.kaltura.mediaManagement;
+                break;
+            case 'legacy':
+                link = "https://kmc.kaltura.com/index.php/kmc";
                 break;
         }
         if (link.length > 0) {
