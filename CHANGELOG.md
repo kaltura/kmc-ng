@@ -1,3 +1,13 @@
+<a name="4.8.1"></a>
+## [4.8.1](https://github.com/kaltura/kmc-ng/compare/v4.8.0...v4.8.1) (2018-06-28)
+
+
+### Bug Fixes
+
+* **content/entries:** fix entries table column style to work on older Safari versions + update changelog ([#738](https://github.com/kaltura/kmc-ng/issues/738)) ([ec7e21e](https://github.com/kaltura/kmc-ng/commit/ec7e21e))
+
+
+
 <a name="4.8.0"></a>
 # [4.8.0](https://github.com/kaltura/kmc-ng/compare/v4.7.3...v4.8.0) (2018-06-26)
 
