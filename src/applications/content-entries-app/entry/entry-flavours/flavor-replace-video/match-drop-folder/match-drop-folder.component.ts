@@ -43,7 +43,16 @@ import { Flavor } from '../../flavor';
 import { FlavorAssetSetContentAction } from 'kaltura-ngx-client';
 import { FlavorAssetAddAction } from 'kaltura-ngx-client';
 import { KalturaFlavorAsset } from 'kaltura-ngx-client';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { of as ObservableOf} from 'rxjs';
+
+
+export interface ConversionProfileWithAssets {
+    id: number;
+    assets: KalturaConversionProfileAssetParams[];
+}
+
 export interface KalturaDropFolderFileGroup extends KalturaDropFolderFile {
     files?: KalturaDropFolderFile[];
     name?: string;
@@ -313,19 +322,20 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
             .map(res => res.objects);
     }
 
-    private _loadConversionProfilesWithAssets(): Observable<{ id: number, assets: KalturaConversionProfileAssetParams[] }[]> {
+    private _loadConversionProfilesWithAssets(): Observable<ConversionProfileWithAssets[]> {
         return this._transcodingProfileManagement.get()
-            .switchMap(
-                () => this._loadConversionProfiles(),
-                (transcodingProfiles, assets) => {
-                    return transcodingProfiles.map(profile => {
-                        return {
-                            id: profile.id,
-                            assets: assets.filter(item => item.conversionProfileId === profile.id)
-                        };
-                    });
-                }
-            );
+            .pipe(switchMap(transcodingProfiles => {
+                return this._loadConversionProfiles().pipe(
+                    map((assets) => {
+                        return transcodingProfiles.map(profile => {
+                            return {
+                                id: profile.id,
+                                assets: assets.filter(item => item.conversionProfileId === profile.id)
+                            };
+                        });
+                    })
+                );
+            }));
     }
 
     private _getAssetParamsId(conversionProfileId: number, flavorName: string): number {
@@ -387,10 +397,18 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         this._logger.info(`handle prepare action, load dropfolders list and conversion profiles with assets request`);
         this._isLoading = true;
         this._loadDropFoldersList()
-            .switchMap(
-                (dropFolderFiles) => dropFolderFiles.length ? this._loadConversionProfilesWithAssets() : Observable.of([]),
-                (dropFolderFiles, conversionProfilesWithAsset) => ({ dropFolderFiles, conversionProfilesWithAsset })
-            )
+            .pipe(switchMap(dropFolderFiles => {
+                let result: Observable<ConversionProfileWithAssets[]> = null;
+                if (dropFolderFiles.length) {
+                    result = this._loadConversionProfilesWithAssets();
+                } else {
+                    result = ObservableOf([]);
+                }
+
+                return result.pipe(
+                    map((conversionProfilesWithAsset) => ({ dropFolderFiles, conversionProfilesWithAsset })
+                ));
+            }))
             .subscribe(
                 ({ dropFolderFiles, conversionProfilesWithAsset }) => {
                     this._logger.info(`handle successful data loading`);
