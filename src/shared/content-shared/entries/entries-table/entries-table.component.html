@@ -48,40 +48,40 @@
                 <th style="width:44px; padding-left: 13px" *ngIf="showBulkSelect">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+                <th pResizableColumn [ngStyle]="_columnsMetadata.thumbnailUrl.style" *ngIf="_columnsMetadata.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
                     {{'applications.content.table.thumbnail' | translate}}
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.name" [kpSortableColumn]="_columnsMetadata.name.sortable ? 'name' : null">
+                <th pResizableColumn [ngStyle]="_columnsMetadata.name.style" *ngIf="_columnsMetadata.name" [kpSortableColumn]="_columnsMetadata.name.sortable ? 'name' : null">
                     {{'applications.content.table.name' | translate}}
                     <p-sortIcon [field]="'name'"  ></p-sortIcon>
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.id">
-                    {{'applications.content.table.id' | translate}}
+                <th pResizableColumn [ngStyle]="_columnsMetadata.id.style" *ngIf="_columnsMetadata.id">{{'applications.content.table.id' |
+                    translate}}
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.mediaType" [kpSortableColumn]="_columnsMetadata.mediaType.sortable ? 'mediaType' : null">
+                <th pResizableColumn [ngStyle]="_columnsMetadata.mediaType.style" *ngIf="_columnsMetadata.mediaType" [kpSortableColumn]="_columnsMetadata.mediaType.sortable ? 'mediaType' : null">
                     {{'applications.content.table.type' | translate}}
                     <p-sortIcon [field]="'mediaType'"></p-sortIcon>
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.moderationCount" [kpSortableColumn]="_columnsMetadata.moderationCount.sortable ? 'moderationCount' : null">
+                <th pResizableColumn [ngStyle]="_columnsMetadata.moderationCount.style" *ngIf="_columnsMetadata.moderationCount" [kpSortableColumn]="_columnsMetadata.moderationCount.sortable ? 'moderationCount' : null">
                     {{'applications.content.table.flags' | translate}}
                     <p-sortIcon [field]="'moderationCount'"></p-sortIcon>
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.createdAt" [kpSortableColumn]="_columnsMetadata.createdAt.sortable ? 'createdAt' : null">
+                <th pResizableColumn [ngStyle]="_columnsMetadata.createdAt.style" *ngIf="_columnsMetadata.createdAt" [kpSortableColumn]="_columnsMetadata.createdAt.sortable ? 'createdAt' : null">
                     {{'applications.content.table.createdOn' | translate}}
                     <p-sortIcon [field]="'createdAt'"></p-sortIcon>
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.moderationStatus">
+                <th pResizableColumn [ngStyle]="_columnsMetadata.moderationStatus.style" *ngIf="_columnsMetadata.moderationStatus">
                     {{'applications.content.table.moderationStatus' | translate}}
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.duration" [kpSortableColumn]="_columnsMetadata.duration.sortable ? 'duration' : null">
+                <th pResizableColumn [ngStyle]="_columnsMetadata.duration.style" *ngIf="_columnsMetadata.duration" [kpSortableColumn]="_columnsMetadata.duration.sortable ? 'duration' : null">
                     {{'applications.content.table.duration' | translate}}
                     <p-sortIcon [field]="'duration'"></p-sortIcon>
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.plays" [kpSortableColumn]="_columnsMetadata.plays.sortable ? 'plays' : null">
+                <th pResizableColumn [ngStyle]="_columnsMetadata.plays.style" *ngIf="_columnsMetadata.plays" [kpSortableColumn]="_columnsMetadata.plays.sortable ? 'plays' : null">
                     {{'applications.content.table.plays' | translate}}
                     <p-sortIcon [field]="'plays'"></p-sortIcon>
                 </th>
-                <th pResizableColumn *ngIf="_columnsMetadata.status">
+                <th pResizableColumn [ngStyle]="_columnsMetadata.status.style" *ngIf="_columnsMetadata.status">
                     {{'applications.content.table.status' | translate}}
                 </th>
                 <th *ngIf="rowActions?.length"></th>
@@ -96,7 +96,7 @@
                     <p-tableCheckbox [value]="entry"></p-tableCheckbox>
                 </td>
 
-                <td class="ui-resizable-column" *ngIf="_columnsMetadata.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)" [ngStyle]="_columnsMetadata.thumbnailUrl.style">
                     <div class="kThumbnailHolder"
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
@@ -104,7 +104,7 @@
                     </div>
                 </td>
 
-                <td class="ui-resizable-column" *ngIf="_columnsMetadata.name">
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.name" [ngStyle]="_columnsMetadata.name.style">
                     <span class="kTitle kTableColumn" [kTooltip]="entry.name"
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
@@ -112,31 +112,31 @@
                     </span>
                 </td>
 
-                <td class="ui-resizable-column" *ngIf="_columnsMetadata.id">{{entry.id}}</td>
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.id" [ngStyle]="_columnsMetadata.id.style">{{entry.id}}</td>
 
-                <td class="ui-resizable-column kMediaTypeIcon" *ngIf="_columnsMetadata.mediaType">
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.mediaType" class="kMediaTypeIcon" [ngStyle]="_columnsMetadata.mediaType.style">
                     <div [kTooltip]="entry.mediaType | entryType: true"
                          [class]="entry.mediaType | entryType: false"></div>
                 </td>
 
-                <td class="ui-resizable-column" *ngIf="_columnsMetadata.moderationCount">
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.moderationCount" [ngStyle]="_columnsMetadata.moderationCount.style">
                     {{entry.moderationCount}}
                 </td>
 
-                <td class="ui-resizable-column" *ngIf="_columnsMetadata.createdAt">{{entry.createdAt | kDate}}
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.createdAt" [ngStyle]="_columnsMetadata.createdAt.style">{{entry.createdAt | kDate}}
                 </td>
 
-                <td class="ui-resizable-column" *ngIf="_columnsMetadata.moderationStatus">
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.moderationStatus" [ngStyle]="_columnsMetadata.moderationStatus.style">
                     {{entry.moderationStatus | kModerationStatus}}
                 </td>
 
-                <td class="ui-resizable-column" *ngIf="_columnsMetadata.duration">
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.duration" [ngStyle]="_columnsMetadata.duration.style">
                     {{entry.duration | kTime | entryDuration:entry}}
                 </td>
 
-                <td class="ui-resizable-column" *ngIf="_columnsMetadata.plays">{{entry.plays}}</td>
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.plays" [ngStyle]="_columnsMetadata.plays.style">{{entry.plays}}</td>
 
-                <td class="ui-resizable-column" *ngIf="_columnsMetadata.status">{{entry | entryStatus}}</td>
+                <td class="ui-resizable-column" *ngIf="_columnsMetadata.status" [ngStyle]="_columnsMetadata.status.style">{{entry | entryStatus}}</td>
 
                 <td *ngIf="rowActions?.length">
                     <div class="kEntriesTableActions">

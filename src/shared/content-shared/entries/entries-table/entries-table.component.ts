@@ -201,8 +201,11 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.selectedEntriesChange.emit(event);
   }
 
-  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): SafeStyle {
-    return this._sanitization.bypassSecurityTrustStyle(`width: ${width};text-align: ${align}`);
+  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
+      return {
+          'width': width,
+          'text-align': align
+      };
   }
 }
 
