@@ -1,4 +1,4 @@
-<button pButton [disabled]="disabled"
+<button pButton [disabled]="_disabled"
         label="{{'app.titles.create' | translate | uppercase}}"
         class="kButtonDefault kUploadBtn"
         (click)="uploadmenu.open()"></button>
@@ -12,7 +12,10 @@
 
 <kPopupWidget #uploadsettings [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kKMCUploadSettings [parentPopupWidget]="uploadsettings"></kKMCUploadSettings>
+    <kKMCUploadSettings [files]="_files"
+                        [fileDialog]="fileDialog"
+                        [parentPopupWidget]="uploadsettings"
+                        (clearSelectedFiles)="_files = []"></kKMCUploadSettings>
   </ng-template>
 </kPopupWidget>
 
@@ -29,3 +32,8 @@
     <kCreateLive [parentPopupWidget]="createLive"></kCreateLive>
   </ng-template>
 </kPopupWidget>
+
+<kFileDialog #fileDialog
+             [filter]="_allowedExtensions"
+             [allowMultiple]="true"
+             (onFileSelected)="_handleSelectedFiles($event)"></kFileDialog>

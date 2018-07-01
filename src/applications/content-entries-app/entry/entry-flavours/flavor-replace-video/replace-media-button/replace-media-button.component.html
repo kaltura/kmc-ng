@@ -3,7 +3,7 @@
 <button *ngIf="_uploadEnabled"
         pButton class="kFlavorReplaceButton kButtonDefault"
         [label]="'applications.content.entryDetails.flavours.replaceVideo.uploadFromDesktop' | translate"
-        (click)="_openReplacementMenu('upload')"></button>
+        (click)="fileDialog.open()"></button>
 
 <button *ngIf="_importEnabled"
         pButton class="kFlavorReplaceButton kButtonDefault"
@@ -24,9 +24,12 @@
               [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
     <ng-template>
         <kFlavorReplaceFile [entry]="entry"
+                            [fileDialog]="fileDialog"
+                            [files]="_files"
                             [flavors]="flavors"
                             [parentPopupWidget]="uploadMenu"
-                            [replaceType]="_replaceType"></kFlavorReplaceFile>
+                            [replaceType]="_replaceType"
+                            (clearFilesOnDestroy)="_files = []"></kFlavorReplaceFile>
     </ng-template>
 </kPopupWidget>
 
@@ -37,3 +40,8 @@
                                  [parentPopupWidget]="matchDropFolder"></kReplaceMatchDropFolder>
     </ng-template>
 </kPopupWidget>
+
+<kFileDialog #fileDialog
+             [filter]="_allowedExtensions"
+             [allowMultiple]="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted"
+             (onFileSelected)="_handleSelectedFiles($event)"></kFileDialog>

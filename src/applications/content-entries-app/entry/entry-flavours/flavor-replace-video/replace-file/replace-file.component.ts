@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
@@ -62,8 +62,10 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() entry: KalturaMediaEntry;
     @Input() flavors: Flavor[] = [];
     @Input() replaceType: UploadMenuType;
+    @Input() fileDialog: FileDialogComponent;
+    @Input() files: UploadReplacementFile[] = [];
 
-    @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
+    @Output() clearFilesOnDestroy = new EventEmitter<void>();
 
     private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];
     private _storageProfiles: KalturaStorageProfile[] = [];
@@ -99,7 +101,6 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     public _transcodingProfileField: AbstractControl;
     public _blockerMessage: AreaBlockerMessage;
     public _isLoading = false;
-    public _files: UploadReplacementFile[] = [];
     public _kmcPermissions = KMCPermissions;
     public _title: string;
     public _flavorOptions: SelectItem[] = [];
@@ -112,11 +113,6 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         url: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na'),
         directory: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na')
     };
-
-    public _allowedVideoExtensions = `.flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v`;
-    public _allowedAudioExtensions = `.flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav`;
-
-    public _allowedExtensions: string;
 
     constructor(private _newReplaceVideoUpload: NewReplaceVideoUploadService,
                 private _formBuilder: FormBuilder,
@@ -135,12 +131,13 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy() {
-
+        this.clearFilesOnDestroy.emit();
     }
 
     ngAfterViewInit(): void {
-        this._addFile();
-        this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
+        setTimeout(() => {
+            this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
+        }, 0);
     }
 
     private _buildForm(): void {
@@ -151,12 +148,10 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     private _prepare(): void {
         this._logger.info(`prepare replace file view`, { type: this.replaceType, entryId: this.entry.id, mediaType: this.entry.mediaType });
         if (this.entry.mediaType === KalturaMediaType.video) {
-            this._allowedExtensions = this._allowedVideoExtensions;
             this._title = this.entry.status === KalturaEntryStatus.noContent
                 ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.addVideo')
                 : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.updateVideo');
         } else if (this.entry.mediaType === KalturaMediaType.audio) {
-            this._allowedExtensions = this._allowedAudioExtensions;
             this._title = this.entry.status === KalturaEntryStatus.noContent
                 ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.addAudio')
                 : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.updateAudio');
@@ -180,17 +175,6 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this._loadReplaceData();
-    }
-
-    public _handleSelectedFiles(files: FileList): void {
-        const newItems = Array.from(files).map(file => {
-            const { name, size } = file;
-            return { file, name, size };
-        });
-
-        this._logger.info(`handle file selected action by user`, { fileNames: newItems.map(({ name }) => name) });
-
-        this._files = [...this._files, ...newItems];
     }
 
     private _loadConversionProfiles(): Observable<KalturaConversionProfileAssetParams[]> {
@@ -311,16 +295,16 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             value: 0
         }];
         this._flavorsFieldDisabled = true;
-        this._files.forEach(file => file.flavor = 0);
+        this.files.forEach(file => file.flavor = 0);
     }
 
     public _removeFile(file: UploadReplacementFile): void {
         this._logger.info(`handle remove file from the list action by user`, { fileName: file.name || file.url });
-        const fileIndex = this._files.indexOf(file);
+        const fileIndex = this.files.indexOf(file);
         if (fileIndex !== -1) {
-            const newList = Array.from(this._files);
+            const newList = Array.from(this.files);
             newList.splice(fileIndex, 1);
-            this._files = newList;
+            this.files = newList;
         }
     }
 
@@ -413,7 +397,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         };
 
-        const { isValid, code } = this._validateFiles(this._files);
+        const { isValid, code } = this._validateFiles(this.files);
         if (isValid) {
             this._logger.info(`files are valid, proceed action`);
             proceedReplacement();
@@ -457,7 +441,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private _linkFiles(transcodingProfileId: string): void {
-        const linkFileDataList = this._files.map(file => ({
+        const linkFileDataList = this.files.map(file => ({
             url: file.url,
             assetParamsId: file.flavor
         }));
@@ -474,7 +458,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private _importFiles(transcodingProfileId: string): void {
-        const importFileDataList = this._files.map(file => ({
+        const importFileDataList = this.files.map(file => ({
             url: file.url,
             assetParamsId: file.flavor
         }));
@@ -491,7 +475,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private _uploadFiles(transcodingProfileId: string): void {
-        const uploadFileDataList = this._files.map(fileData => ({
+        const uploadFileDataList = this.files.map(fileData => ({
             file: fileData.file,
             assetParamsId: fileData.flavor
         }));
@@ -580,11 +564,11 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         this._logger.info(`handle add file action by user`);
         if (this.replaceType === 'upload') {
             this._logger.info(`open file selection dialog`);
-            this._fileDialog.open();
+            this.fileDialog.open();
         } else {
             setTimeout(() => {
                 this._logger.info(`add empty file row for non-upload replacement`);
-                this._files = [...this._files, { url: '' }];
+                this.files = [...this.files, { url: '' }];
             }, 0);
         }
     }
