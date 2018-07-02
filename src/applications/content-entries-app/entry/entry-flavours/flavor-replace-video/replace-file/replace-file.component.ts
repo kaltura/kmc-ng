@@ -59,11 +59,11 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() entry: KalturaMediaEntry;
     @Input() flavors: Flavor[] = [];
     @Input() replaceType: UploadMenuType;
+    @Input() storageProfiles: KalturaStorageProfile[] = [];
 
     @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
 
     private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];
-    private _storageProfiles: KalturaStorageProfile[] = [];
     private _replacementResultHandler: Observer<void> = {
         next: () => {
             this._logger.info(`handle successful replace files action, reload widget data`);
@@ -225,22 +225,9 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                     });
                 }
             )
-            .switchMap(
-                () => {
-                    if (this.replaceType === 'link') {
-                        this._logger.debug(`link replace type detected, load storage profiles list`);
-                        return this._kalturaClient
-                            .request(new StorageProfileListAction())
-                            .map(response => response.objects);
-                    }
-
-                    return Observable.of(null);
-                },
-                (profilesWithAssets, storageProfiles) => ({ profilesWithAssets, storageProfiles }))
             .subscribe(
-                ({ profilesWithAssets, storageProfiles }) => {
+                profilesWithAssets => {
                     this._logger.info(`handle successful loading of replacement data`);
-                    this._storageProfiles = storageProfiles;
                     const transcodingProfiles = [...profilesWithAssets];
                     const defaultProfileIndex = transcodingProfiles.findIndex(({ isDefault }) => !!isDefault);
                     if (defaultProfileIndex !== -1) {
@@ -323,7 +310,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const relevantTranscodingProfile = this._transcodingProfiles.find(profile => profile.id === this._transcodingProfileField.value);
         const relevantStorageProfile = relevantTranscodingProfile
-            ? this._storageProfiles.find(({ id }) => id === relevantTranscodingProfile.storageProfileId)
+            ? this.storageProfiles.find(({ id }) => id === relevantTranscodingProfile.storageProfileId)
             : null;
         if (relevantStorageProfile) {
             this._logger.debug(`relevant storage profile was found, update _selectedStorageProfile property`, { profileId: relevantStorageProfile.id });

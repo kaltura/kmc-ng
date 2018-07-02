@@ -58,6 +58,10 @@ import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
 import { KalturaResponse } from 'kaltura-ngx-client/api/kaltura-response';
 import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaStorageProfileListResponse';
 import { KalturaConversionProfileAssetParamsListResponse } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsListResponse';
+import { map, switchMap } from 'rxjs/operators';
+import { ConversionProfileListAction } from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
+import { KalturaConversionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaConversionProfileListResponse';
+import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
@@ -83,6 +87,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     public currentEntryId: string;
     public storageProfile: KalturaStorageProfile;
     public conversionProfileAsset: KalturaConversionProfileAssetParams;
+    public storageProfiles: KalturaStorageProfile[] = [];
 
     constructor(private _kalturaServerClient: KalturaClient,
                 private _appLocalization: AppLocalization,
@@ -136,7 +141,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             });
     }
 
-    private _getStorageProfile(): Observable<{ storageProfile: KalturaStorageProfile, conversionProfileAsset: KalturaConversionProfileAssetParams }> {
+    private _getData(): Observable<any> {
         const filter = new KalturaConversionProfileFilter({
             orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
             typeEqual: KalturaConversionProfileType.media,
@@ -155,52 +160,54 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             })
         );
 
-        const requests: KalturaRequest<any>[] = [conversionProfileAssetAction];
+        return this._kalturaServerClient
+            .multiRequest(new KalturaMultiRequest(conversionProfileAssetAction, new ConversionProfileListAction()))
+            .pipe(
+                switchMap(responses => {
+                    if (responses.hasErrors()) {
+                        const message = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
+                        throw new Error(message);
+                    }
 
-        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)) {
-            const conversionProfileAction = new ConversionProfileGetAction({ id: this.data.conversionProfileId })
-                .setRequestOptions(
-                    new KalturaRequestOptions({
-                        responseProfile: new KalturaDetachedResponseProfile({
-                            type: KalturaResponseProfileType.includeFields,
-                            fields: 'storageProfileId'
-                        })
-                    })
-                );
-            const storageProfileListAction = new StorageProfileListAction({
-                filter: new KalturaStorageProfileFilter({ idEqual: 0 }).setDependency(['idEqual', 1, 'storageProfileId'])
-            }).setRequestOptions(
-                new KalturaRequestOptions({
-                    responseProfile: new KalturaDetachedResponseProfile({
-                        type: KalturaResponseProfileType.includeFields,
-                        fields: 'id,name,storageUrl,storageBaseDir'
-                    })
+                    const storageProfiles = this._getResponseByType<KalturaConversionProfile[]>(responses, KalturaConversionProfileListResponse);
+                    const conversionProfileAssets = this._getResponseByType<KalturaConversionProfileAssetParams[]>(responses, KalturaConversionProfileAssetParamsListResponse);
+                    let conversionProfileAsset = Array.isArray(conversionProfileAssets) && conversionProfileAssets.length
+                        ? conversionProfileAssets[0]
+                        : null;
+                    conversionProfileAsset = conversionProfileAsset && conversionProfileAsset.origin !== KalturaAssetParamsOrigin.convert
+                        ? conversionProfileAsset
+                        : null;
+
+                    if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)) {
+                        return this._getStorageProfile(storageProfiles)
+                            .pipe(map(storageProfile => ({ storageProfile, storageProfiles, conversionProfileAsset })));
+                    }
+
+                    return Observable.of({ storageProfile: null, storageProfiles, conversionProfileAsset });
                 })
             );
+    }
 
-            requests.push(conversionProfileAction);
-            requests.push(storageProfileListAction);
+    private _getStorageProfile(profiles: KalturaConversionProfile[]): Observable<KalturaStorageProfile> {
+        const relevantProfile = (profiles || []).find(profile => profile.id === this.data.conversionProfileId);
+
+        if (!relevantProfile) {
+            return Observable.of(null);
         }
 
-        return this._kalturaServerClient
-            .multiRequest(new KalturaMultiRequest(...requests))
-            .map(responses => {
-                if (responses.hasErrors()) {
-                    const message = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
-                    throw new Error(message);
-                }
-
-                const storageProfiles = this._getResponseByType<KalturaStorageProfile[]>(responses, KalturaStorageProfileListResponse);
-                const conversionProfileAssets = this._getResponseByType<KalturaConversionProfileAssetParams[]>(responses, KalturaConversionProfileAssetParamsListResponse);
-                const storageProfile = Array.isArray(storageProfiles) && storageProfiles.length ? storageProfiles[0] : null;
-                let conversionProfileAsset = Array.isArray(conversionProfileAssets) && conversionProfileAssets.length
-                    ? conversionProfileAssets[0]
-                    : null;
-                conversionProfileAsset = conversionProfileAsset && conversionProfileAsset.origin !== KalturaAssetParamsOrigin.convert
-                    ? conversionProfileAsset
-                    : null;
-                return { storageProfile, conversionProfileAsset };
-            });
+        const action = new StorageProfileListAction({
+            filter: new KalturaStorageProfileFilter({ idEqual: relevantProfile.storageProfileId })
+        }).setRequestOptions(
+            new KalturaRequestOptions({
+                responseProfile: new KalturaDetachedResponseProfile({
+                    type: KalturaResponseProfileType.includeFields,
+                    fields: 'id,name,storageUrl,storageBaseDir'
+                })
+            })
+        );
+        return this._kalturaServerClient.request(action).pipe(map(({ objects }) => {
+            return Array.isArray(objects) && objects.length ? objects[0] : null;
+        }));
     }
 
     private _getResponseByType<T>(responses: KalturaMultiResponse, type: any): T {
@@ -321,9 +328,10 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .map((response) => {
                 this._handleFlavorsDataResponse(response);
             })
-            .switchMap(() => this._getStorageProfile())
-            .map(({ storageProfile, conversionProfileAsset }) => {
+            .switchMap(() => this._getData())
+            .map(({ storageProfiles, storageProfile, conversionProfileAsset }) => {
                 this.storageProfile = storageProfile;
+                this.storageProfiles = storageProfiles;
                 this.conversionProfileAsset = conversionProfileAsset;
                 return undefined;
             });
