@@ -5,7 +5,6 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { Flavor } from '../../flavor';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
-import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
 
 export type UploadMenuType = 'upload' | 'import' | 'link' | 'match';
 
@@ -19,7 +18,6 @@ export class ReplaceMediaButtonComponent {
     @Input() entry: KalturaMediaEntry;
     @Input() flavors: Flavor[] = [];
     @Input() replaceButtonsLabel: string;
-    @Input() storageProfiles: KalturaStorageProfile[] = [];
 
     @ViewChild('uploadMenu') _uploadMenu: PopupWidgetComponent;
 

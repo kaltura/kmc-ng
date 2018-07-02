@@ -54,9 +54,6 @@ import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAs
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
-import { KalturaResponse } from 'kaltura-ngx-client/api/kaltura-response';
-import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaStorageProfileListResponse';
 import { KalturaConversionProfileAssetParamsListResponse } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsListResponse';
 import { map, switchMap } from 'rxjs/operators';
 import { ConversionProfileListAction } from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
@@ -87,7 +84,6 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     public currentEntryId: string;
     public storageProfile: KalturaStorageProfile;
     public conversionProfileAsset: KalturaConversionProfileAssetParams;
-    public storageProfiles: KalturaStorageProfile[] = [];
 
     constructor(private _kalturaServerClient: KalturaClient,
                 private _appLocalization: AppLocalization,
@@ -141,7 +137,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             });
     }
 
-    private _getData(): Observable<any> {
+    private _getData(): Observable<{storageProfile: KalturaStorageProfile, conversionProfileAsset: KalturaConversionProfileAssetParams}> {
         const filter = new KalturaConversionProfileFilter({
             orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
             typeEqual: KalturaConversionProfileType.media,
@@ -169,7 +165,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         throw new Error(message);
                     }
 
-                    const storageProfiles = this._getResponseByType<KalturaConversionProfile[]>(responses, KalturaConversionProfileListResponse);
+                    const conversionProfiles = this._getResponseByType<KalturaConversionProfile[]>(responses, KalturaConversionProfileListResponse);
                     const conversionProfileAssets = this._getResponseByType<KalturaConversionProfileAssetParams[]>(responses, KalturaConversionProfileAssetParamsListResponse);
                     let conversionProfileAsset = Array.isArray(conversionProfileAssets) && conversionProfileAssets.length
                         ? conversionProfileAssets[0]
@@ -179,11 +175,11 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                         : null;
 
                     if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)) {
-                        return this._getStorageProfile(storageProfiles)
-                            .pipe(map(storageProfile => ({ storageProfile, storageProfiles, conversionProfileAsset })));
+                        return this._getStorageProfile(conversionProfiles)
+                            .pipe(map(storageProfile => ({ storageProfile, conversionProfileAsset })));
                     }
 
-                    return Observable.of({ storageProfile: null, storageProfiles, conversionProfileAsset });
+                    return Observable.of({ storageProfile: null, conversionProfileAsset });
                 })
             );
     }
@@ -329,9 +325,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 this._handleFlavorsDataResponse(response);
             })
             .switchMap(() => this._getData())
-            .map(({ storageProfiles, storageProfile, conversionProfileAsset }) => {
+            .map(({ storageProfile, conversionProfileAsset }) => {
                 this.storageProfile = storageProfile;
-                this.storageProfiles = storageProfiles;
                 this.conversionProfileAsset = conversionProfileAsset;
                 return undefined;
             });

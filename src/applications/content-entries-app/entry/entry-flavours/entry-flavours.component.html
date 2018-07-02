@@ -10,7 +10,6 @@
             </div>
             <kFlavorReplaceMediaBtn *ngIf="_showActionsView"
                                     [replaceButtonsLabel]="_replaceButtonsLabel"
-                                    [storageProfiles]="_widgetService.storageProfiles"
                                     [flavors]="(_widgetService.flavors$ | async)"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
             <kFlavorReplaceMediaStatus *ngIf="(_widgetService.replacementData$ | async)?.tempEntryId && (_kmcPermissions.FEATURE_ENTRY_REPLACEMENT | kNgIfPermitted)"
