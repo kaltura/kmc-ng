@@ -158,7 +158,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
           this._roles.state.next({ loading: false, errorMessage: null });
 
           this._roles.data.next({
-            items: [...response.objects, ...response.objects, ...response.objects, ...response.objects],
+            items: response.objects,
             totalCount: <number>response.totalCount
           });
         },
