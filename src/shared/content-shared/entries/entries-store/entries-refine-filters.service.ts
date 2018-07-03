@@ -39,7 +39,8 @@ export class RefineGroupList {
 
     constructor(public name: string,
                 public label: string,
-                public group?: string
+                public group?: string,
+                public value?: any
     ) {
     }
 }
@@ -157,7 +158,9 @@ export class EntriesRefineFiltersService {
         DefaultFiltersList.forEach((defaultFilterList) => {
             const newRefineFilter = new RefineGroupList(
                 defaultFilterList.name,
-                defaultFilterList.label
+                defaultFilterList.label,
+                null,
+                defaultFilterList.value
             );
             result.lists.push(newRefineFilter);
             defaultFilterList.items.forEach((item: any) => {

@@ -68,6 +68,7 @@ export interface EntriesFilters {
   categoriesMode: CategoriesModeType;
   customMetadata: GroupedListType<string>;
   limits: number;
+    videoQuiz: number
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
@@ -249,7 +250,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       categories: new ListTypeAdapter<number>(),
       categoriesMode: new CategoriesModeAdapter(),
       customMetadata: new GroupedListAdapter<string>(),
-      limits: new NumberTypeAdapter()
+      limits: new NumberTypeAdapter(),
+        videoQuiz: new NumberTypeAdapter()
     };
   }
 

@@ -19,7 +19,7 @@ export interface TagItem {
     dataFetchSubscription?: ISubscription
 }
 
-const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions' ];
+const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'videoQuiz'];
 
 @Component({
     selector: 'k-entries-list-tags',
@@ -317,7 +317,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         if (this._refineFiltersMap.size > 0) {
             const list = this._refineFiltersMap.get(listName);
             if (list) {
-                const item = list.items.find(listItem => String(listItem.value) === String(value));
+                const item = list.items.length > 0
+                    ? list.items.find(listItem => String(listItem.value) === String(value))
+                    : list;
 
                 result = item ? item.label : result;
             }

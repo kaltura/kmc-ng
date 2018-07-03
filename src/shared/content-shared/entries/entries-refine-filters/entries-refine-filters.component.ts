@@ -236,39 +236,30 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
             this._primeListsGroups.push(filtersGroup);
 
             group.lists.forEach(list => {
-
-                if (list.items.length > 0) {
-                    const primeList = {items: [], selections: [], group: list.group};
-
-                    const shouldAllowFilter = (!this.enforcedFilters || !this.enforcedFilters[list.name]);
-
-                    if (shouldAllowFilter) {
-                        this._primeListsMap[list.name] = primeList;
-                        filtersGroup.lists.push(primeList);
-
-                        const listRootNode: PrimeListItem = {
-                            label: list.label,
-                            value: null,
-                            listName: list.name,
-                            parent: null,
-                            children: []
-                        };
-
-                        list.items.forEach(item => {
-                            listRootNode.children.push({
-                                label: item.label,
-                                value: item.value,
-                                children: [],
-                                listName: <any>list.name,
-                                parent: listRootNode
-                            })
+                const primeList = {items: [], selections: [], group: list.group};
+                const shouldAllowFilter = (!this.enforcedFilters || !this.enforcedFilters[list.name]);
+                if (shouldAllowFilter) {
+                    this._primeListsMap[list.name] = primeList;
+                    filtersGroup.lists.push(primeList);
+                    const listRootNode: PrimeListItem = {
+                        label: list.label,
+                        value: list.value || null,
+                        listName: list.name,
+                        parent: null,
+                        children: []
+                    };
+                    list.items.forEach(item => {
+                        listRootNode.children.push({
+                            label: item.label,
+                            value: item.value,
+                            children: [],
+                            listName: <any>list.name,
+                            parent: listRootNode
                         });
-
-                        primeList.items.push(listRootNode);
-                    }
+                    });
+                    primeList.items.push(listRootNode);
                 }
             });
-
         });
     }
 
