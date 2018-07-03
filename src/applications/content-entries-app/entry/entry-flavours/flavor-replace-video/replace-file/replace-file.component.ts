@@ -62,8 +62,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
 
-    private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];
     private _storageProfiles: KalturaStorageProfile[] = [];
+    private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];
     private _replacementResultHandler: Observer<void> = {
         next: () => {
             this._logger.info(`handle successful replace files action, reload widget data`);
@@ -224,19 +224,18 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                         };
                     });
                 }
-            )
-            .switchMap(
-                () => {
-                    if (this.replaceType === 'link') {
-                        this._logger.debug(`link replace type detected, load storage profiles list`);
-                        return this._kalturaClient
-                            .request(new StorageProfileListAction())
-                            .map(response => response.objects);
-                    }
+            ).switchMap(
+            () => {
+                if (this.replaceType === 'link') {
+                    this._logger.debug(`link replace type detected, load storage profiles list`);
+                    return this._kalturaClient
+                        .request(new StorageProfileListAction())
+                        .map(response => response.objects);
+                }
 
-                    return Observable.of(null);
-                },
-                (profilesWithAssets, storageProfiles) => ({ profilesWithAssets, storageProfiles }))
+                return Observable.of(null);
+            },
+            (profilesWithAssets, storageProfiles) => ({ profilesWithAssets, storageProfiles }))
             .subscribe(
                 ({ profilesWithAssets, storageProfiles }) => {
                     this._logger.info(`handle successful loading of replacement data`);
