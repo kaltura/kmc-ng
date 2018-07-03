@@ -71,6 +71,10 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
           advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
+          if (data.videoQuiz) {
+              // not supported by rulebased playlists, ignore it
+          }
+
           // filter 'freeText'
           if (data.freetext) {
             filter.freeText = data.freetext;
@@ -286,6 +290,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       categoriesMode,
       customMetadata: {},
       limits: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
+        videoQuiz: KalturaNullableBoolean.nullValue
     };
   }
 }
