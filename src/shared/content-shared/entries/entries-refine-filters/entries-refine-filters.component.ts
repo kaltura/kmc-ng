@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
-import { modulesConfig } from 'config/modules';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -22,7 +22,8 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
     'accessControlProfiles',
     'flavors',
     'distributions',
-    'customMetadata'
+    'customMetadata',
+    'videoQuiz'
 ];
 
 export interface PrimeListItem
@@ -138,7 +139,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
               listFilter = updates[listName] ;
           }
 
-          if (typeof listFilter !== 'undefined') {
+          if (typeof listFilter !== 'undefined' && typeof listFilter !== 'number') {
               // important: the above condition doesn't filter out 'null' because 'null' is valid value.
 
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
@@ -169,6 +170,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
               });
           }
 
+          if (listName === 'videoQuiz') {
+              this._syncVideoQuizMode(listData);
+          }
+
           if (listName === 'timeScheduling') {
               this._syncScheduleDatesMode();
           }
@@ -189,6 +194,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                     this._updateComponentState(changes);
                 }
             );
+    }
+
+    private _syncVideoQuizMode(listData: PrimeList): void {
+        const videoQuiz = this._entriesStore.cloneFilter('videoQuiz', KalturaNullableBoolean.nullValue);
+        listData.selections = videoQuiz === KalturaNullableBoolean.trueValue ? [listData.items[0]] : [];
     }
 
     private _syncScheduleDatesMode() {
@@ -372,9 +382,14 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      if (!newFilterItems.find(item => item === selectedNode.value)) {
-                          newFilterItems.push(selectedNode.value);
+                      if (Array.isArray(newFilterItems)) {
+                          if (!newFilterItems.find(item => item === selectedNode.value)) {
+                              newFilterItems.push(selectedNode.value);
+                          }
+                      } else {
+                          newFilterValue = selectedNode.value;
                       }
+
                   });
               this._entriesStore.filter({[newFilterName]: newFilterValue});
           }
@@ -411,17 +426,25 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
-                      if (itemIndex > -1) {
-                          newFilterItems.splice(itemIndex, 1);
+                      if (Array.isArray(newFilterItems)) {
+                          const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
+                          if (itemIndex > -1) {
+                              newFilterItems.splice(itemIndex, 1);
 
-                          if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
-                              this._entriesStore.filter({
-                                  scheduledAt: {
-                                      fromDate: null,
-                                      toDate: null
-                                  }
-                              });
+                              if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
+                                  this._entriesStore.filter({
+                                      scheduledAt: {
+                                          fromDate: null,
+                                          toDate: null
+                                      }
+                                  });
+                              }
+                          }
+                      } else {
+                          if (node.listName === 'videoQuiz') {
+                              newFilterValue = KalturaNullableBoolean.nullValue;
+                          } else {
+                              newFilterValue = null;
                           }
                       }
                   });

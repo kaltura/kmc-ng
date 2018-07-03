@@ -10,6 +10,7 @@ import {CategoriesSearchService} from 'app-shared/content-shared/categories/cate
 import {ISubscription} from 'rxjs/Subscription';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 
 export interface TagItem {
     type: string,
@@ -19,7 +20,7 @@ export interface TagItem {
     dataFetchSubscription?: ISubscription
 }
 
-const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'videoQuiz'];
+const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions'];
 
 @Component({
     selector: 'k-entries-list-tags',
@@ -95,6 +96,12 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     break;
                 case "createdAt":
                     this._entriesStore.filter({createdAt: {fromDate: null, toDate: null}});
+                    break;
+                case 'videoQuiz':
+                    this._entriesStore.filter({ videoQuiz: KalturaNullableBoolean.nullValue });
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -165,6 +172,10 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             this._syncTagsOfCustomMetadata(updates.customMetadata);
         }
 
+        if (typeof updates.videoQuiz !== 'undefined') {
+            this._syncTagOfVideoQuiz();
+        }
+
         refineListsType.forEach(listType => {
             if (typeof updates[listType] !== 'undefined') {
                 this._syncTagsOfList(listType);
@@ -226,6 +237,26 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 value: currentFreetextValue,
                 label: currentFreetextValue,
                 tooltip: this._appLocalization.get(`applications.content.filters.freeText`)
+            });
+        }
+    }
+
+    private _syncTagOfVideoQuiz(): void {
+        const previousItem = this._tags.findIndex(item => item.type === 'videoQuiz');
+        if (previousItem !== -1) {
+            this._tags.splice(
+                previousItem,
+                1);
+        }
+
+        const currentVideoQuizValue = this._entriesStore.cloneFilter('videoQuiz', null);
+
+        if (currentVideoQuizValue === KalturaNullableBoolean.trueValue) {
+            this._tags.push({
+                type: 'videoQuiz',
+                value: currentVideoQuizValue,
+                label: this._appLocalization.get(`applications.content.filters.videoQuiz`),
+                tooltip: this._appLocalization.get(`applications.content.filters.videoQuiz`)
             });
         }
     }
