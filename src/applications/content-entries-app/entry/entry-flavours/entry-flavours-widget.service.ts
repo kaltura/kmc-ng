@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequestOptions } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaClient, KalturaMultiResponse, KalturaRequestOptions } from 'kaltura-ngx-client';
 import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
 import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
 import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
@@ -57,8 +57,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { KalturaConversionProfileAssetParamsListResponse } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsListResponse';
 import { map, switchMap } from 'rxjs/operators';
 import { ConversionProfileListAction } from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
-import { KalturaConversionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaConversionProfileListResponse';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
@@ -137,82 +136,78 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             });
     }
 
-    private _getData(): Observable<{storageProfile: KalturaStorageProfile, conversionProfileAsset: KalturaConversionProfileAssetParams}> {
-        const filter = new KalturaConversionProfileFilter({
-            orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
-            typeEqual: KalturaConversionProfileType.media,
-            idEqual: this.data.conversionProfileId
-        });
+    private _getLinkData(): Observable<{storageProfile: KalturaStorageProfile, conversionProfileAsset: KalturaConversionProfileAssetParams}> {
+        if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)) {
+            return Observable.of({ storageProfile: null, conversionProfileAsset: null });
+        }
 
-        const conversionProfileAssetAction = new ConversionProfileAssetParamsListAction({
-            filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdFilter: filter }),
-            pager: new KalturaFilterPager({ pageSize: 1 })
-        }).setRequestOptions(
-            new KalturaRequestOptions({
-                responseProfile: new KalturaDetachedResponseProfile({
-                    type: KalturaResponseProfileType.includeFields,
-                    fields: 'readyBehavior,origin,assetParamsId,id'
+        let conversionProfileAssetRequest;
+
+        if (!Number.isInteger(this.data.conversionProfileId)) {
+            conversionProfileAssetRequest = Observable.of(null);
+        } else {
+            const filter = new KalturaConversionProfileFilter({
+                orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
+                typeEqual: KalturaConversionProfileType.media,
+                idEqual: this.data.conversionProfileId
+            });
+
+            const conversionProfileAssetAction = new ConversionProfileAssetParamsListAction({
+                filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdFilter: filter }),
+                pager: new KalturaFilterPager({ pageSize: 1 })
+            }).setRequestOptions(
+                new KalturaRequestOptions({
+                    responseProfile: new KalturaDetachedResponseProfile({
+                        type: KalturaResponseProfileType.includeFields,
+                        fields: 'readyBehavior,origin,assetParamsId,id'
+                    })
                 })
-            })
-        );
+            );
 
-        return this._kalturaServerClient
-            .multiRequest(new KalturaMultiRequest(conversionProfileAssetAction, new ConversionProfileListAction()))
+            conversionProfileAssetRequest = this._kalturaServerClient.request(conversionProfileAssetAction);
+        }
+        return conversionProfileAssetRequest
             .pipe(
-                switchMap(responses => {
-                    if (responses.hasErrors()) {
-                        const message = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
-                        throw new Error(message);
-                    }
-
-                    const conversionProfiles = this._getResponseByType<KalturaConversionProfile[]>(responses, KalturaConversionProfileListResponse);
-                    const conversionProfileAssets = this._getResponseByType<KalturaConversionProfileAssetParams[]>(responses, KalturaConversionProfileAssetParamsListResponse);
-                    let conversionProfileAsset = Array.isArray(conversionProfileAssets) && conversionProfileAssets.length
-                        ? conversionProfileAssets[0]
+                map((response: KalturaConversionProfileAssetParamsListResponse) => {
+                    const relevantAsset = response && Array.isArray(response.objects) && response.objects.length ? response.objects[0] : null;
+                    return relevantAsset && relevantAsset.origin !== KalturaAssetParamsOrigin.convert
+                        ? relevantAsset
                         : null;
-                    conversionProfileAsset = conversionProfileAsset && conversionProfileAsset.origin !== KalturaAssetParamsOrigin.convert
-                        ? conversionProfileAsset
-                        : null;
-
-                    if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)) {
-                        return this._getStorageProfile(conversionProfiles)
-                            .pipe(map(storageProfile => ({ storageProfile, conversionProfileAsset })));
-                    }
-
-                    return Observable.of({ storageProfile: null, conversionProfileAsset });
+                }),
+                switchMap(conversionProfileAsset => {
+                    return this._getStorageProfile()
+                        .pipe(map(storageProfile => ({ storageProfile, conversionProfileAsset })));
                 })
             );
     }
 
-    private _getStorageProfile(profiles: KalturaConversionProfile[]): Observable<KalturaStorageProfile> {
-        const relevantProfile = (profiles || []).find(profile => profile.id === this.data.conversionProfileId);
+    private _getStorageProfile(): Observable<KalturaStorageProfile> {
+        return this._kalturaServerClient.request(new ConversionProfileListAction())
+            .pipe(
+                map(response => response && Array.isArray(response.objects) ? response.objects : []),
+                switchMap(profiles => {
+                    const defaultProfile = profiles.find(profile => profile.isDefault === KalturaNullableBoolean.trueValue);
+                    const relevantProfile = profiles.find(profile => profile.id === this.data.conversionProfileId) || defaultProfile;
 
-        if (!relevantProfile) {
-            return Observable.of(null);
-        }
+                    if (!relevantProfile || !Number.isInteger(relevantProfile.storageProfileId)) {
+                        return Observable.of(null);
+                    }
 
-        const action = new StorageProfileListAction({
-            filter: new KalturaStorageProfileFilter({ idEqual: relevantProfile.storageProfileId })
-        }).setRequestOptions(
-            new KalturaRequestOptions({
-                responseProfile: new KalturaDetachedResponseProfile({
-                    type: KalturaResponseProfileType.includeFields,
-                    fields: 'id,name,storageUrl,storageBaseDir'
+                    const action = new StorageProfileListAction({
+                        filter: new KalturaStorageProfileFilter({ idEqual: relevantProfile.storageProfileId })
+                    }).setRequestOptions(
+                        new KalturaRequestOptions({
+                            responseProfile: new KalturaDetachedResponseProfile({
+                                type: KalturaResponseProfileType.includeFields,
+                                fields: 'id,name,storageUrl,storageBaseDir'
+                            })
+                        })
+                    );
+                    return this._kalturaServerClient.request(action).pipe(map(({ objects }) => {
+                        return Array.isArray(objects) && objects.length ? objects[0] : null;
+                    }));
                 })
-            })
-        );
-        return this._kalturaServerClient.request(action).pipe(map(({ objects }) => {
-            return Array.isArray(objects) && objects.length ? objects[0] : null;
-        }));
-    }
-
-    private _getResponseByType<T>(responses: KalturaMultiResponse, type: any): T {
-        const relevantResponse = responses.find(response => response.result instanceof type);
-        if (relevantResponse) {
-            return relevantResponse.result.objects;
-        }
-
-        return null;
+            );
     }
 
     private _stopPolling(): void {
@@ -324,7 +319,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .map((response) => {
                 this._handleFlavorsDataResponse(response);
             })
-            .switchMap(() => this._getData())
+            .switchMap(() => this._getLinkData())
             .map(({ storageProfile, conversionProfileAsset }) => {
                 this.storageProfile = storageProfile;
                 this.conversionProfileAsset = conversionProfileAsset;
