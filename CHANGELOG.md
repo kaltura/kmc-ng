@@ -1,3 +1,13 @@
+<a name="4.8.2"></a>
+## [4.8.2](https://github.com/kaltura/kmc-ng/compare/v4.8.1...v4.8.2) (2018-07-03)
+
+
+### Bug Fixes
+
+* **content/entry:** fix loading of flavors section when there's no entry's conversion profile ([c50d89e](https://github.com/kaltura/kmc-ng/commit/c50d89e))
+
+
+
 <a name="4.8.1"></a>
 ## [4.8.1](https://github.com/kaltura/kmc-ng/compare/v4.8.0...v4.8.1) (2018-06-28)
 
