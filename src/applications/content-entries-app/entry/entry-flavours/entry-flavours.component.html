@@ -9,7 +9,7 @@
             <i class="{{_widgetService.entryStatusClassName}}"></i><span>{{_widgetService.entryStatus}}</span>
         </div>
         <div class="kFlavorReplacement">
-            <kFlavorReplaceMediaBtn *ngIf="_showActionsView(_widgetService.replacementData$ | async)"
+            <kFlavorReplaceMediaBtn *ngIf="_showActionsView"
                                     [replaceButtonsLabel]="_replaceButtonsLabel"
                                     [flavors]="(_widgetService.flavors$ | async)"
                                     [entry]="_widgetService.data"></kFlavorReplaceMediaBtn>
