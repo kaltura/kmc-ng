@@ -220,6 +220,21 @@ export function buildKalturaServerUri(suffix: string): string {
     return result;
 }
 
+export function buildCDNUrl(suffix: string): string {
+    let protocol =  (location.protocol || '').toLowerCase();
+    if (protocol[protocol.length - 1] === ':') {
+        protocol =  location.protocol.substring(0, location.protocol.length - 1);
+    }
+    let baseUrl = '';
+    if (protocol === 'https') {
+        baseUrl = serverConfig.cdnServers.securedServerUri;
+    } else {
+        baseUrl = serverConfig.cdnServers.serverUri;
+    }
+
+    return `${baseUrl}${suffix}`;
+}
+
 export function buildDeployUrl(suffix: string): string {
     return `${serverConfig.kalturaServer.deployUrl || ''}${suffix}`;
 }
