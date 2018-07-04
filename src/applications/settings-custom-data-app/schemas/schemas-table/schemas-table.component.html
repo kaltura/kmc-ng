@@ -4,27 +4,41 @@
         dataKey="id"
         [scrollable]="true"
         [value]="_schemas"
+        [resizableColumns]="true"
         [rowTrackBy]="rowTrackBy"
         (selectionChange)="_onSelectionChange($event)"
         [(selection)]="selectedSchemas">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                <col [ngStyle]="{'width': '236px'}">
+                <col>
+                <col>
+                <col>
+                <col>
+                <col [ngStyle]="{'width': '190px'}">
+                <col [ngStyle]="{'overflow':'visible', 'width':'80px'}">
+            </colgroup>
+        </ng-template>
+
         <ng-template pTemplate="header">
             <tr>
                 <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th [ngStyle]="{'width': '236px'}">
+                <th pResizableColumn [ngStyle]="{'width': '236px'}">
                     {{'applications.settings.metadata.table.name' | translate}}
                 </th>
-                <th>
+                <th pResizableColumn>
                     {{'applications.settings.metadata.table.id' | translate}}
                 </th>
-                <th>
+                <th pResizableColumn>
                     {{'applications.settings.metadata.table.systemName' | translate}}
                 </th>
-                <th>
+                <th pResizableColumn>
                     {{'applications.settings.metadata.table.description' | translate}}
                 </th>
-                <th>
+                <th pResizableColumn>
                     {{'applications.settings.metadata.table.applyTo' | translate}}
                 </th>
                 <th [ngStyle]="{'width': '190px'}">
@@ -39,7 +53,7 @@
                 <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <p-tableCheckbox [value]="schema"></p-tableCheckbox>
                 </td>
-                <td [ngStyle]="{'width': '236px'}">
+                <td class="ui-resizable-column" [ngStyle]="{'width': '236px'}">
                     <div class="kTitle kTableColumn"
                          [class.kProfileDisabled]="schema?.profileDisabled"
                          [kTooltip]="schema?.profileDisabled ? ('applications.settings.metadata.table.disabledLabel' | translate) : schema.name"
@@ -47,14 +61,14 @@
                         {{schema.name}} <span *ngIf="schema?.profileDisabled">*</span>
                     </div>
                 </td>
-                <td>{{schema.id}}</td>
-                <td>{{schema.systemName}}</td>
-                <td>
+                <td class="ui-resizable-column">{{schema.id}}</td>
+                <td class="ui-resizable-column">{{schema.systemName}}</td>
+                <td class="ui-resizable-column">
                     <span class="kTableColumn" [kTooltip]="schema.description">
                         {{schema.description}}
                     </span>
                 </td>
-                <td>{{schema.applyTo | kMetadataObjectType}}</td>
+                <td class="ui-resizable-column">{{schema.applyTo | kMetadataObjectType}}</td>
                 <td [ngStyle]="{'width': '190px'}">{{schema.defaultLabel}}</td>
                 <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
                     <div class="kSchemasTableActions">
@@ -66,7 +80,9 @@
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
-            <div class="emptymessage">{{_emptyMessage}}</div>
+            <div class="emptymessage">
+                <div class="kEmptyMessage">{{_emptyMessage}}</div>
+            </div>
         </ng-template>
     </p-table>
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
