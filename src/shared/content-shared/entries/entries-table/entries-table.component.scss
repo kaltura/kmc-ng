@@ -33,6 +33,13 @@
     &.disable {
       cursor: auto;
     }
+      .kThumbnailTypeIcon {
+          position: absolute;
+          top: 20px;
+          right: 3px;
+          color: #FFFFFF;
+          font-size: 22px;
+      }
     img {
       position: absolute;
       left: -100%;
