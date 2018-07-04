@@ -32,10 +32,13 @@
     cursor: pointer;
       .kThumbnailTypeIcon {
           position: absolute;
-          top: 20px;
-          right: 3px;
           color: #FFFFFF;
-          font-size: 22px;
+
+          &.kIconquiz {
+              font-size: 30px;
+              top: 15px;
+              right: 1px;
+          }
       }
     &.disable {
       cursor: auto;
