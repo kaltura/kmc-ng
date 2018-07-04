@@ -3,22 +3,34 @@
         scrollHeight="100%"
         dataKey="id"
         [value]="_profiles"
+        [resizableColumns]="true"
         (selectionChange)="_onSelectionChange($event)"
         [(selection)]="selectedProfiles"
         [scrollable]="true"
         [rowTrackBy]="rowTrackBy">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                <col>
+                <col>
+                <col [ngStyle]="{'width':'90px'}">
+                <col [ngStyle]="{'width':'110px'}">
+                <col [ngStyle]="{'overflow':'visible', 'width':'80px'}">
+            </colgroup>
+        </ng-template>
+
         <ng-template pTemplate="header">
             <tr>
                 <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th>
+                <th pResizableColumn>
                     {{'applications.settings.transcoding.table.name' | translate}}
                 </th>
-                <th>
+                <th pResizableColumn>
                     {{'applications.settings.transcoding.table.description' | translate}}
                 </th>
-                <th [ngStyle]="{'width':'90px'}">
+                <th pResizableColumn [ngStyle]="{'width':'90px'}">
                     {{'applications.settings.transcoding.table.id' | translate}}
                 </th>
                 <th [ngStyle]="{'width':'110px'}">
@@ -33,7 +45,7 @@
                 <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <p-tableCheckbox [value]="profile"></p-tableCheckbox>
                 </td>
-                <td>
+                <td class="ui-resizable-column">
                     <div class="kTranscodingProfileNameWrapper">
                         <div class="kTranscodingProfileName kTableColumn"
                              [kTooltip]="profile.name"
@@ -45,12 +57,12 @@
                         </span>
                     </div>
                 </td>
-                <td>
+                <td class="ui-resizable-column">
                     <span class="kTableColumn" [kTooltip]="profile.description" [maxWidth]="300">
                         {{profile.description}}
                     </span>
                 </td>
-                <td [ngStyle]="{'width':'90px'}">{{profile.id}}</td>
+                <td class="ui-resizable-column" [ngStyle]="{'width':'90px'}">{{profile.id}}</td>
                 <td [ngStyle]="{'width':'110px'}">
                     {{'applications.settings.transcoding.profile.flavors' | translate:[profile.flavors || 0]}}
                 </td>
@@ -64,7 +76,9 @@
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
-            <div class="emptymessage">{{_emptyMessage}}</div>
+            <div class="emptymessage">
+                <div class="kEmptyMessage">{{_emptyMessage}}</div>
+            </div>
         </ng-template>
     </p-table>
     <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
