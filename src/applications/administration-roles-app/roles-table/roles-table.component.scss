@@ -1,36 +1,35 @@
 @import 'app-theme/_variables.scss';
 
 .kRolesTable {
-  background-color: white;
-  height: auto;
-  padding: 0px;
-  width: 100%;
-  .kRoleName {
-    font-weight: bold;
-    color: $kGrayscale1;
-  }
-
-  .kRolesTableActions {
+    background-color: white;
+    height: auto;
+    padding: 0px;
     width: 100%;
-    text-align: center;
-  }
+    .kRoleName {
+        font-weight: bold;
+        color: $kGrayscale1;
+    }
+
+    .kRolesTableActions {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 :host {
-  display: flex;
-  flex-flow: row wrap;
-  margin: 0px;
-  flex-direction: column;
-}
-:host /deep/ .ui-datatable .kTableFullName {
-  width: 130px;
-  padding-left: 1.5em;
-}
-:host /deep/ p-datatable .ui-datatable-scrollable-body {
-  margin-bottom: 34px;
-}
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0;
+    flex-direction: column;
 
-:host /deep/ p-datatable .stickyHeader {
-  z-index: 10;
-  display: table;
+    /deep/ p-table {
+        .ui-table-scrollable-body {
+            margin-bottom: 34px;
+        }
+
+        .stickyHeader {
+            z-index: 10;
+            display: table;
+        }
+    }
 }

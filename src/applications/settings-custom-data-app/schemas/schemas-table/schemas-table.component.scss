@@ -42,11 +42,11 @@
   flex-direction: column;
 }
 
-:host /deep/ p-datatable .ui-datatable-scrollable-body {
+:host /deep/ p-table .ui-table-scrollable-body {
   margin-bottom: 34px;
 }
 
-:host /deep/ p-datatable .stickyHeader {
+:host /deep/ p-table .stickyHeader {
   z-index: 10;
   display: table;
 }

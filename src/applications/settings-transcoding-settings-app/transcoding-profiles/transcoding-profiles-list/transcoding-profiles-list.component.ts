@@ -29,6 +29,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   @Input() title = '';
+    @Input() singleTableMode: boolean;
 
   @Input() set storeFor(value: KalturaConversionProfileType) {
     if (value) {

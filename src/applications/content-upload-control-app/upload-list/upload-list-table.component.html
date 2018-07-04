@@ -1,91 +1,80 @@
 <div class="kUploadsTableWrapper">
-  <div class="kUploadsTable" [class.noResults]="!uploads?.length">
-    <p-dataTable #dataTable
-                 [scrollable]="true"
+    <div class="kUploadsTable" [class.noResults]="!uploads?.length">
+        <p-table dataKey="id"
                  scrollHeight="100%"
-                 dataKey="id"
-                 [immutable]="false"
+                 [scrollable]="true"
                  [value]="uploads"
-                 [emptyMessage]="!uploads.length ? _emptyMessage : ''"
-                 [rowStyleClass]="_relatedTableRowStyle"
                  (selectionChange)="onSelectedEntriesChange.emit($event)"
                  [(selection)]="selectedUploads"
-                 kStickyHeader [sticksTo]="'uploadControlFilters'" stickyClass="stickyHeader" [stickyId]="'uploadControlTable'">
-      <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+                 kStickyHeader [sticksTo]="'uploadControlFilters'" stickyClass="stickyHeader"
+                 [stickyId]="'uploadControlTable'">
 
-      <p-column field="mediaType"
-                [sortable]="false"
-                [style]="{'width':'80px', 'text-align': 'center'}">
-        <ng-template let-col let-file="rowData" pTemplate="body">
-          <div class="kIconMediaType"
-               [kTooltip]="file[col.field] | entryType: true"
-               [ngClass]="file[col.field] | entryType: false"></div>
-        </ng-template>
-      </p-column>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th [ngStyle]="{'width':'80px', 'text-align': 'center'}"></th>
+                    <th>
+                        {{'applications.content.uploadControl.table.fileName' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '100px'}">
+                        {{'applications.content.uploadControl.table.entryId' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '100px'}">
+                        {{'applications.content.uploadControl.table.fileSize' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width':'120px'}">
+                        {{'applications.content.uploadControl.table.uploadedOn' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '100px'}">
+                        {{'applications.content.uploadControl.table.status.header' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '120px'}">
+                        {{'applications.content.uploadControl.table.progress' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '70px', 'text-align': 'center'}"></th>
+                </tr>
+            </ng-template>
 
-      <p-column field="fileName"
-                [header]="'applications.content.uploadControl.table.fileName' | translate"
-                [sortable]="false">
-        <ng-template let-col let-file="rowData" pTemplate="body">
-          <span class="kUploadName kTableColumn" [kTooltip]="file[col.field]">{{ file[col.field] }}</span>
-        </ng-template>
-      </p-column>
+            <ng-template pTemplate="body" let-file>
+                <tr [ngClass]="_relatedTableRowStyle(file)" [pSelectableRow]="file">
+                    <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                        <p-tableCheckbox [value]="file"></p-tableCheckbox>
+                    </td>
+                    <td [ngStyle]="{'width':'80px', 'text-align': 'center'}">
+                        <div class="kIconMediaType"
+                             [kTooltip]="file.mediaType | entryType: true"
+                             [ngClass]="file.mediaType | entryType: false"></div>
+                    </td>
+                    <td>
+                        <span class="kUploadName kTableColumn" [kTooltip]="file.fileName">{{file.fileName}}</span>
+                    </td>
+                    <td [ngStyle]="{'width': '100px'}">{{file.entryId}}</td>
+                    <td [ngStyle]="{'width': '100px'}">{{ file.fileSize | kFileSize }}</td>
+                    <td [ngStyle]="{'width':'120px'}">{{file.uploadedOn | kDate}}</td>
+                    <td [ngStyle]="{'width': '100px'}">{{ file.status | kUploadStatus }}</td>
+                    <td [ngStyle]="{'width': '120px'}">
+                        <kUploadProgress [progress]="file.progress" [status]="file.status"></kUploadProgress>
+                    </td>
+                    <td [ngStyle]="{'width': '70px', 'text-align': 'center'}">
+                        <i class="kIconplay kIconRemoveFile"
+                           *ngIf="_hasError(file.status)"
+                           [kTooltip]="'applications.content.uploadControl.table.retry' | translate"
+                           placement="top"
+                           (click)="onRetryUpload.emit(file)"></i>
+                        <i class="kIcontrash kIconRemoveFile"
+                           *ngIf="_canRemoveFile(file)"
+                           [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
+                           placement="top"
+                           (click)="onCancelUpload.emit(file)"></i>
+                    </td>
+                </tr>
+            </ng-template>
 
-      <p-column field="entryId"
-                [header]="'applications.content.uploadControl.table.entryId' | translate"
-                [style]="{ 'width': '100px' }"
-                [sortable]="false"></p-column>
-
-      <p-column field="fileSize"
-                [sortable]="false"
-                [style]="{ 'width': '100px' }"
-                [header]="'applications.content.uploadControl.table.fileSize' | translate">
-        <ng-template let-col let-file="rowData" pTemplate="body">
-          <span>{{ file.fileSize | kFileSize }}</span>
-        </ng-template>
-      </p-column>
-
-      <p-column field="uploadedOn"
-                [header]="'applications.content.uploadControl.table.uploadedOn' | translate"
-                [sortable]="false"
-                [style]="{'width':'120px'}">
-        <ng-template let-col let-file="rowData" pTemplate="body">
-          <span>{{ file[col.field] | kDate }}</span>
-        </ng-template>
-      </p-column>
-
-      <p-column field="status"
-                [header]="'applications.content.uploadControl.table.status.header' | translate"
-                [style]="{ 'width': '100px' }"
-                [sortable]="false">
-        <ng-template let-col let-file="rowData" pTemplate="body">
-          <span>{{ file[col.field] | kUploadStatus }}</span>
-        </ng-template>
-      </p-column>
-
-      <p-column field="progress"
-                [header]="'applications.content.uploadControl.table.progress' | translate"
-                [style]="{ 'width': '120px' }"
-                [sortable]="false">
-        <ng-template let-col let-file="rowData" pTemplate="body">
-          <kUploadProgress [progress]="file[col.field]" [status]="file.status"></kUploadProgress>
-        </ng-template>
-      </p-column>
-
-      <p-column [style]="{ 'width': '70px', 'text-align': 'center' }" [sortable]="false">
-        <ng-template let-col let-file="rowData" pTemplate="body">
-          <i class="kIconplay kIconRemoveFile"
-             *ngIf="_hasError(file.status)"
-             [kTooltip]="'applications.content.uploadControl.table.retry' | translate"
-             placement="top"
-             (click)="onRetryUpload.emit(file)"></i>
-          <i class="kIcontrash kIconRemoveFile"
-             *ngIf="_canRemoveFile(file)"
-             [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
-             placement="top"
-             (click)="onCancelUpload.emit(file)"></i>
-        </ng-template>
-      </p-column>
-    </p-dataTable>
-  </div>
+            <ng-template pTemplate="emptymessage">
+                <div class="emptymessage">{{!uploads.length ? _emptyMessage : ''}}</div>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
