@@ -1,6 +1,12 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection} from './entries-store.service';
-import { KalturaBaseEntry, KalturaEntryType, KalturaQuizAdvancedFilter } from 'kaltura-ngx-client';
+import {
+    KalturaBaseEntry,
+    KalturaEntryType,
+    KalturaExternalMediaEntryFilter,
+    KalturaExternalMediaSourceType,
+    KalturaQuizAdvancedFilter
+} from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
 import {KalturaMetadataSearchItem} from 'kaltura-ngx-client';
@@ -65,7 +71,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       return this._getMetadataProfiles()
         .map(metadataProfiles => {
           // create request items
-          const filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter({});
+            const filter = data.youtubeVideo
+                ? new KalturaExternalMediaEntryFilter({ externalSourceTypeEqual: KalturaExternalMediaSourceType.youtube })
+                : new KalturaMediaEntryFilter({});
+
           const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
           advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
@@ -261,10 +270,6 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
           // update the sort by args
           if (data.sortBy) {
             filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
-          }
-
-          if (data.youtubeVideo) {
-              // TODO
           }
 
           return filter;
