@@ -120,7 +120,6 @@
       align-items: center;
       justify-content: center;
       height: 280px;
-      margin-top: -280px;
       color: $kGrayscale3;
 
       h1 {
@@ -178,13 +177,14 @@
   display: none;
 }
 
-:host /deep/ .kTable .ui-datatable-scrollable-header,
-:host /deep/ .kTable .ui-datatable-scrollable-body {
+:host /deep/ .kTable .ui-table-scrollable-header,
+:host /deep/ .kTable .ui-table-scrollable-body {
   border-top: 1px $kGrayscale6 solid;
 }
 
-:host /deep/ .kTable .ui-datatable-scrollable-body {
+:host /deep/ .kTable .ui-table-scrollable-body {
   margin-bottom: -1px;
+    max-height: 280px !important;
 }
 
 :host /deep/ .kTable tr:hover .kIconRemoveFile, // show remove icon when hovering a row
@@ -192,7 +192,7 @@
   display: block !important;
 }
 
-:host /deep/ .kTable .ui-datatable-scrollable-table-wrapper {
+:host /deep/ .kTable .ui-table-scrollable-table-wrapper {
   height: 280px;
 }
 
