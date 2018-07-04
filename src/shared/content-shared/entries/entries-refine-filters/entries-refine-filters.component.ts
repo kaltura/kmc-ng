@@ -8,6 +8,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { Calendar } from 'primeng/primeng';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -60,6 +61,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
 
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
+
+    @ViewChild('scheduledfrom') scheduledFrom: Calendar;
+    @ViewChild('scheduledto') scheduledTo: Calendar;
 
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
@@ -180,6 +184,18 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       }
   }
 
+    /**
+     * Close calendar overlay
+     * Not part of the API, don't use it from outside this component
+     *
+     * @param {Calendar} calendar
+     * @private
+     */
+    private _closeCalendar(calendar: Calendar): void {
+        if (calendar) {
+            calendar.overlayVisible = false;
+        }
+    }
 
   private _registerToFilterStoreDataChanges(): void {
         this._entriesStore.filtersChange$
@@ -425,6 +441,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                           newFilterItems.splice(itemIndex, 1);
 
                           if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
+                              this._closeCalendar(this.scheduledFrom);
+                              this._closeCalendar(this.scheduledTo);
                               this._entriesStore.filter({
                                   scheduledAt: {
                                       fromDate: null,
@@ -459,4 +477,24 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       this.parentPopupWidget.close();
     }
   }
+
+    /**
+    * Fixed calendar closing issue originated by {@link _blockScheduleToggle}
+    * Not part of the API, don't use it from outside this component
+    *
+    * @param {FocusEvent} event
+    * @param {Calendar} calendar
+    * @private
+    */
+    public _fixCalendarBlurPropagation(event: FocusEvent, calendar: Calendar): void {
+        const findByClassName = (element, className) => {
+            return element && element.classList
+                ? element.classList.contains(className) || findByClassName(element.parentNode, className)
+                : false;
+        };
+        const shouldCloseCalendar = event.relatedTarget === null ? false : !findByClassName(event.relatedTarget, 'ui-datepicker');
+        if (shouldCloseCalendar) {
+            this._closeCalendar(calendar);
+        }
+    }
 }
