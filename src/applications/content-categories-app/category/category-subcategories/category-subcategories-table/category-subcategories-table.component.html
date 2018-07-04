@@ -1,49 +1,58 @@
 <div class="kTable">
-  <k-area-blocker [showLoader]="deferredLoading"
-                  [message]="_blockerMessage">
-    <p-dataTable #dataTable
-                 dataKey="id"
-                 scrollable="true"
+    <k-area-blocker [showLoader]="deferredLoading"
+                    [message]="_blockerMessage">
+        <p-table dataKey="id"
                  scrollHeight="100%"
-                 [immutable]="false"
+                 [scrollable]="true"
                  [value]="_subcategories"
-                 [emptyMessage]="_emptyMessage"
                  [class.noResults]="!_subcategories?.length"
                  (selectionChange)="_onSelectionChange($event)"
                  [rowTrackBy]="rowTrackBy"
                  [defaultSortOrder]="_defaultSortOrder"
                  [(selection)]="selectedSubcategories">
-      <p-column styleClass="selectionColumn"
-                selectionMode="multiple"></p-column>
-      <p-column styleClass="nameColumn"
-                field="name" [header]="'applications.content.table.name' | translate">
-        <ng-template let-col let-subcategory="rowData" pTemplate="body">
-          <div class="kTitle kTableColumn" [kTooltip]="subcategory[col.field]">
-            {{subcategory[col.field]}}
-          </div>
-        </ng-template>
-      </p-column>
-      <p-column styleClass="createdAtColumn" field="createdAt"
-                [header]="'applications.content.table.createdOn' | translate">
-        <ng-template let-col let-subcategory="rowData" pTemplate="body">
-          <span>{{subcategory[col.field] | kDate}}</span>
-        </ng-template>
-      </p-column>
-      <p-column styleClass="entriesCountColumn" field="entriesCount"
-                [header]="'applications.content.table.entries' | translate">
-        <ng-template let-col let-subcategory="rowData" pTemplate="body">
-          <span>{{subcategory[col.field]}}</span>
-        </ng-template>
-      </p-column>
-      <p-column styleClass="actionsColumn" header=""
-              *ngIf="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kNgIfPermitted">
-        <ng-template let-subcategory="rowData" let-i="rowIndex" pTemplate="body">
-          <div class="kTableActions">
-            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, i, subcategory)"></button>
-          </div>
-        </ng-template>
-      </p-column>
-    </p-dataTable>
-    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
-  </k-area-blocker>
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="selectionColumn">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th class="nameColumn">
+                        {{'applications.content.table.name' | translate}}
+                    </th>
+                    <th class="createdAtColumn">
+                        {{'applications.content.table.createdOn' | translate}}
+                    </th>
+                    <th class="entriesCountColumn">
+                        {{'applications.content.table.entries' | translate}}
+                    </th>
+                    <th class="actionsColumn"
+                        *ngIf="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kNgIfPermitted"></th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-subcategory let-i="rowIndex">
+                <tr [pSelectableRow]="subcategory">
+                    <td class="selectionColumn">
+                        <p-tableCheckbox [value]="subcategory"></p-tableCheckbox>
+                    </td>
+                    <td class="nameColumn">
+                        <div class="kTitle kTableColumn" [kTooltip]="subcategory.name">
+                            {{subcategory.name}}
+                        </div>
+                    </td>
+                    <td class="createdAtColumn">{{subcategory.createdAt | kDate}}</td>
+                    <td class="entriesCountColumn">{{subcategory.entriesCount}}</td>
+                    <td class="actionsColumn" *ngIf="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kNgIfPermitted">
+                        <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"
+                                (click)="_openActionsMenu($event, i, subcategory)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <div class="emptymessage">{{_emptyMessage}}</div>
+            </ng-template>
+        </p-table>
+        <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+    </k-area-blocker>
 </div>

@@ -140,7 +140,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this._addFile();
-        this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
+        this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-table-scrollable-body');
     }
 
     private _buildForm(): void {

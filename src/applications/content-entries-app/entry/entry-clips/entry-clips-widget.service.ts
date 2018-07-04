@@ -37,7 +37,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
   private _clips = new BehaviorSubject<ClipsData>({items: null, totalItems: 0});
   public entries$ = this._clips.asObservable();
   public sortBy: string = 'createdAt';
-  public sortAsc: boolean = false;
+  public sortOrder = 1;
 
   private _pageSize: number = 50;
   public set pageSize(value: number) {
@@ -74,7 +74,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
    */
   protected onReset(): void {
     this.sortBy = 'createdAt';
-    this.sortAsc = false;
+    this.sortOrder = 1;
     this.pageIndex = 0;
 
     const defaultPageSize = this.browserService.getFromLocalStorage("clipsPageSize");
@@ -89,6 +89,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
    * Updates list of clips
    */
   public updateClips(): void {
+
     if (this.data) {
       this._getEntryClips('reload').subscribe(() => {
         // do nothing
@@ -137,7 +138,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
         filter: new KalturaMediaEntryFilter(
           {
             rootEntryIdEqual: entry.id,
-            orderBy: `${this.sortAsc ? '+' : '-'}${this.sortBy}`
+            orderBy: `${this.sortOrder === 1 ? '+' : '-'}${this.sortBy}`
           }
         ),
         pager: new KalturaFilterPager(

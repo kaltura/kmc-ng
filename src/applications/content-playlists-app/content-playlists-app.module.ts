@@ -8,7 +8,7 @@ import { routing } from './content-playlists-app.routes';
 
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
+  ButtonModule, CalendarModule, CheckboxModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
   RadioButtonModule, InputTextareaModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
@@ -26,12 +26,12 @@ import { EntriesModule } from 'app-shared/content-shared/entries/entries.module'
 import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
     imports: [
       CommonModule,
       AreaBlockerModule,
-      DataTableModule,
       LocalizationModule,
       KalturaUIModule,
       PaginatorModule,
@@ -59,7 +59,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     DropdownModule,
     SliderModule,
       TableModule,
-      KMCPermissionsModule
+      KMCPermissionsModule,
+        KPTableModule
   ],declarations: [
       ContentPlaylistsComponent,
       PlaylistsComponentsList,

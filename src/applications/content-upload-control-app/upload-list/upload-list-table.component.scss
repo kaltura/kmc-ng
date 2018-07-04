@@ -59,7 +59,7 @@
   }
 }
 
-:host /deep/ p-datatable .stickyHeader{
+:host /deep/ p-table .stickyHeader{
   z-index: 10;
   display: table;
 }

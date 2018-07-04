@@ -5,7 +5,6 @@ import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@
 import {
   CheckboxModule,
   ConfirmDialogModule,
-  DataTableModule,
   DropdownModule,
   InputTextModule,
   MenuModule,
@@ -42,7 +41,6 @@ import { InputHelperModule } from '@kaltura-ng/kaltura-ui';
     CheckboxModule,
     CommonModule,
     ConfirmDialogModule,
-    DataTableModule,
     DropdownModule,
     InputTextModule,
     RadioButtonModule,
