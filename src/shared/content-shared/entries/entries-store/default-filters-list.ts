@@ -3,7 +3,8 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client';
 export interface DefaultFilterList {
     label: string;
     name: string;
-    items: { value: string, label: string }[]
+    items: { value: string, label: string }[];
+    value?: any;
 }
 
 export const DefaultFiltersList: DefaultFilterList[] = [
@@ -17,6 +18,12 @@ export const DefaultFiltersList: DefaultFilterList[] = [
       { value: '201', label: 'Live Stream' }
     ]
   },
+    {
+        name: 'youtubeVideo',
+        label: 'Youtube Video',
+        value: true,
+        items: []
+    },
     {
         name: 'ingestionStatuses', label: 'Ingestion Statuses',
         items: [

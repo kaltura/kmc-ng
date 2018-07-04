@@ -18,14 +18,15 @@ import {
   ListTypeAdapter,
   NumberTypeAdapter,
   StringTypeAdapter,
-  TypeAdaptersMapping
+  TypeAdaptersMapping,
+    BooleanTypeAdapter
 } from '@kaltura-ng/mc-shared';
 import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-shared/content-shared/categories/categories-mode-type';
 import { Subject } from 'rxjs/Subject';
 import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
   Desc = -1,
@@ -68,6 +69,7 @@ export interface EntriesFilters {
   categoriesMode: CategoriesModeType;
   customMetadata: GroupedListType<string>;
   limits: number;
+    youtubeVideo: boolean;
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
@@ -249,7 +251,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       categories: new ListTypeAdapter<number>(),
       categoriesMode: new CategoriesModeAdapter(),
       customMetadata: new GroupedListAdapter<string>(),
-      limits: new NumberTypeAdapter()
+      limits: new NumberTypeAdapter(),
+        youtubeVideo: new BooleanTypeAdapter()
     };
   }
 
