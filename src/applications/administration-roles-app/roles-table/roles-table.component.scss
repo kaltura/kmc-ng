@@ -14,6 +14,19 @@
         width: 100%;
         text-align: center;
     }
+
+    .emptymessage {
+        display: table-row;
+        border: 0;
+        height: 200px;
+
+        .kEmptyMessage {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            border-bottom: 1px solid $kGrayscale4;
+        }
+    }
 }
 
 :host {
@@ -23,6 +36,10 @@
     flex-direction: column;
 
     /deep/ p-table {
+        .ui-table .ui-table-thead > tr > th {
+            border-left: 1px solid $kGrayscale6;
+        }
+
         .ui-table-scrollable-body {
             margin-bottom: 34px;
         }

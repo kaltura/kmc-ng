@@ -2,14 +2,24 @@
   <p-table kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="100%" dataKey="id"
                [rowTrackBy]="_rowTrackBy"
                [sticksTo]="'rolesFilters'"
+               [resizableColumns]="true"
                [value]="_roles"
                [stickyId]="'rolesTable'">
+      <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+              <col [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
+              <col [ngStyle]="{'width': '250px'}">
+              <col [ngStyle]="{'width': '60px'}">
+              <col [ngStyle]="{'overflow': 'visible', 'width': '80px'}">
+          </colgroup>
+      </ng-template>
+
       <ng-template pTemplate="header">
           <tr>
-              <th [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
+              <th pResizableColumn [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
                   {{'applications.administration.roles.tableColumns.role' | translate}}
               </th>
-              <th [ngStyle]="{'width': '250px'}">
+              <th pResizableColumn [ngStyle]="{'width': '250px'}">
                   {{'applications.administration.roles.tableColumns.description' | translate}}
               </th>
               <th [ngStyle]="{'width': '60px'}">
@@ -21,10 +31,10 @@
 
       <ng-template pTemplate="body" let-role>
           <tr>
-              <td [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
+              <td class="ui-resizable-column" [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
                   <span class="kRoleName kTableColumn" [kTooltip]="role.name">{{role.name}}</span>
               </td>
-              <td [ngStyle]="{'width': '250px'}">
+              <td class="ui-resizable-column" [ngStyle]="{'width': '250px'}">
                   <span class="kTableColumn" [kTooltip]="role.description">{{role.description}}</span>
               </td>
               <td [ngStyle]="{'width': '60px'}">
@@ -41,7 +51,9 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-          <div class="emptymessage">{{_emptyMessage}}</div>
+          <div class="emptymessage">
+              <div class="kEmptyMessage">{{_emptyMessage}}</div>
+          </div>
       </ng-template>
   </p-table>
   <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
