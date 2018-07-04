@@ -4,9 +4,8 @@ import {
   EntriesFilters, EntriesStore,
   EntriesStorePaginationCacheToken
 } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaExternalMediaSourceType, KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
@@ -28,6 +27,7 @@ export enum EntriesSelectorSelectionMode {
 export class EntriesSelectorComponent {
 
   public _kmcPermissions = KMCPermissions;
+    public _youtubeExternalSourceType = KalturaExternalMediaSourceType.youtube;
 
   @Input() selectionMode: EntriesSelectorSelectionMode = EntriesSelectorSelectionMode.multiple;
   @Input() selectedEntries: KalturaMediaEntry[] = [];

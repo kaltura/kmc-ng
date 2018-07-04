@@ -30,16 +30,31 @@
     text-align: center;
     border-radius: 3px;
     cursor: pointer;
+      .kThumbnailTypeIcon {
+          position: absolute;
+          color: #FFFFFF;
+
+          &.kIconyoutube {
+              font-size: 30px;
+              top: 17px;
+              right: 1px;
+              z-index: 2;
+              color: $kDandger;
+          }
+      }
+
+      .kYoutubeIconFix {
+          position: absolute;
+          width: 15px;
+          height: 15px;
+          top: 25px;
+          right: 10px;
+          background-color: #FFFFFF;
+          z-index: 1;
+      }
     &.disable {
       cursor: auto;
     }
-      .kThumbnailTypeIcon {
-          position: absolute;
-          top: 20px;
-          right: 3px;
-          color: #FFFFFF;
-          font-size: 22px;
-      }
     img {
       position: absolute;
       left: -100%;

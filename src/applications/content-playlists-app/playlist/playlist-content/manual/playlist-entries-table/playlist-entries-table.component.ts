@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaExternalMediaSourceType, KalturaMediaEntry } from 'kaltura-ngx-client';
 import { ManualContentWidget } from '../manual-content-widget.service';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
@@ -42,6 +42,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   public _deferredLoading = true;
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+    public _youtubeExternalSourceType = KalturaExternalMediaSourceType.youtube;
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
