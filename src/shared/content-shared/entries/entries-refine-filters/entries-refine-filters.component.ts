@@ -311,6 +311,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
    * Not part of the API, don't use it from outside this component
    */
   public _clearAllComponents(): void {
+      this._closeCalendar(this.scheduledFrom);
+      this._closeCalendar(this.scheduledTo);
       this._entriesStore.resetFilters(listOfFilterNames);
   }
 
@@ -341,7 +343,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
    *
    * Not part of the API, don't use it from outside this component
    */
-  public _onSchedulingChanged(calendarRef: any): void {
+  public _onSchedulingChanged(calendarRef: Calendar): void {
       const updateResult = this._entriesStore.filter({
           scheduledAt: {
               fromDate: this._scheduledAfter,
@@ -362,10 +364,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
           this._scheduledFilterError = null;
       }
 
-      if (calendarRef && calendarRef.overlayVisible) {
-          calendarRef.overlayVisible = false;
-      }
-
+      this._closeCalendar(calendarRef);
   }
 
   public _onTreeNodeSelect({ node }: { node: PrimeListItem }) {
