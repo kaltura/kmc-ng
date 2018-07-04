@@ -11,8 +11,11 @@
   <div class="kEntrySelectorBucket" *ngIf="selectedEntries.length">
     <div class="KEntrySelectorSelectedItemsWrapper">
       <div class="KEntrySelectorSelectedItem" *ngFor="let entry of selectedEntries">
-        <img [src]="entry.thumbnailUrl" [alt]="entry.name" onError="this.onerror=null;this.style.display='none'"
-             *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+          <div class="kThumbnailHolder">
+            <img [src]="entry.thumbnailUrl" [alt]="entry.name" onError="this.onerror=null;this.style.display='none'"
+                 *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+            <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.capabilities === 'quiz.quiz'"></i>
+          </div>
         <span [kTooltip]="entry.name">{{ entry.name }}</span>
         <i class="kIcontrash" (click)="_removeSelected(entry)"></i>
       </div>

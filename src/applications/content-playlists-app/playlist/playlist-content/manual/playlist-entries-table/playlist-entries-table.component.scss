@@ -27,6 +27,17 @@
       height: auto;
       border-radius: 3px;
     }
+
+      .kThumbnailTypeIcon {
+          position: absolute;
+          color: #FFFFFF;
+
+          &.kIconquiz {
+              font-size: 30px;
+              top: 15px;
+              right: 1px;
+          }
+      }
   }
 
   .kPlaylistEntriesTableActions {
