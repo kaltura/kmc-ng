@@ -17,6 +17,6 @@ export const environment = {
       useSecuredProtocol: false
     },
     server: {
-        useSecuredProtocol: true
+      useSecuredProtocol: true
     }
 }
