@@ -1,13 +1,13 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter, HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {KalturaDropFolderFile} from 'kaltura-ngx-client';
@@ -15,11 +15,16 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { globalConfig } from 'config/global';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kDropFoldersListTable',
   templateUrl: './drop-folders-table.component.html',
-  styleUrls: ['./drop-folders-table.component.scss']
+  styleUrls: ['./drop-folders-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'dropfolders-table' }
+    ]
 })
 
 export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -52,8 +57,32 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
   public _kmcPermissions = KMCPermissions;
 
-  constructor(private _appLocalization: AppLocalization,
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'name': '250px',
+        'folderId': 'auto',
+        'time': 'auto',
+        'time': 'auto',
+        'size': '80px',
+        'entryId': 'auto',
+        'status': 'auto'
+    };
+
+    @HostListener('window:resize') _windowResize(): void {
+        if (this._columnsResizeManager.onWindowResize()) {
+            this._columnsConfig = this._defaultColumnsConfig;
+        }
+    }
+
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef) {
+      this._columnsConfig = Object.assign(
+          {},
+          this._defaultColumnsConfig,
+          this._columnsResizeManager.getConfig()
+      );
+      this._windowResize();
   }
 
   ngOnInit() {
