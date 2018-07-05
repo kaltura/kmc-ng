@@ -1,13 +1,13 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter, HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -15,11 +15,16 @@ import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client';
 import {KalturaPlaylist} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService, KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kFeedsTable',
   templateUrl: './feeds-table.component.html',
-  styleUrls: ['./feeds-table.component.scss']
+  styleUrls: ['./feeds-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'syndication-table' }
+    ]
 })
 export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -28,6 +33,13 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _deferredLoading = true;
   public _idToPlaylistMap: Map<string, KalturaPlaylist> = null; // map between KalturaPlaylist id to KalturaPlaylist.name object
   public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'name': 'auto',
+        'feedId': '110px',
+        'type': '130px',
+        'playlistId': '150px'
+    };
 
   @Input()
   set feeds(data: any[]) {
@@ -71,10 +83,23 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
-  constructor(private _appLocalization: AppLocalization,
+    @HostListener('window:resize') _windowResize(): void {
+        if (this._columnsResizeManager.onWindowResize()) {
+            this._columnsConfig = this._defaultColumnsConfig;
+        }
+    }
+
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
     this._fillCopyToClipboardTooltips();
+      this._columnsConfig = Object.assign(
+          {},
+          this._defaultColumnsConfig,
+          this._columnsResizeManager.getConfig()
+      );
+      this._windowResize();
   }
 
   ngOnInit() {

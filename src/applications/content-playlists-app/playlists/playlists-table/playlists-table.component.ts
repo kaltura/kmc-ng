@@ -80,6 +80,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
           this._defaultColumnsConfig,
           this._columnsResizeManager.getConfig()
       );
+      this._windowResize();
   }
 
   ngOnInit() {

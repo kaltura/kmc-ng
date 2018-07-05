@@ -42,7 +42,7 @@
           <th id="type" [ngStyle]="{'width': _columnsConfig.type}" pResizableColumn>
             {{'applications.content.table.playlistType' | translate}}
           </th>
-          <th [pSortableColumn]="'createdAt'">
+          <th id="createdAt" [pSortableColumn]="'createdAt'">
             {{'applications.content.table.createdOn' | translate}}
             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
           </th>

@@ -13,82 +13,83 @@
             (sortFunction)="_onSortChanged($event)" [customSort]="true"
             [(selection)]="selectedFeeds"
             (selectionChange)="_onSelectionChange($event)"
+            (onColResize)="_columnsResizeManager.onColumnResize($event)"
             kStickyHeader [sticksTo]="'feedsListFilters'" stickyClass="stickyHeader" [stickyId]="'feedsTable'">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
-                <col style="width:44px; padding-left: 14px">
-                <col style="width:44px">
+                <col [ngStyle]="{'width': '44px', 'padding-left': '14px'}">
+                <col [ngStyle]="{'width': '44px'}">
+                <col [ngStyle]="{'width': _columnsConfig.name}">
+                <col [ngStyle]="{'width': _columnsConfig.feedId}">
+                <col [ngStyle]="{'width': _columnsConfig.type}">
+                <col [ngStyle]="{'width': _columnsConfig.playlistId}">
                 <col>
-                <col style="width:110px">
-                <col style="width:130px">
-                <col style="width: 150px">
-                <col>
-                <col style="width: 80px">
+                <col [ngStyle]="{'width': '80px'}">
             </colgroup>
         </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th style="width:44px; padding-left: 14px">
+          <th [ngStyle]="{'width': '44px', 'padding-left': '14px'}">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th pResizableColumn>
+          <th [ngStyle]="{'width': '44px'}">
           </th>
-          <th pResizableColumn [pSortableColumn]="'name'">
+          <th id="name" [ngStyle]="{'width': _columnsConfig.name}" pResizableColumn [pSortableColumn]="'name'">
             {{'applications.content.syndication.table.columns.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th pResizableColumn>
+          <th id="feedId" [ngStyle]="{'width': _columnsConfig.feedId}" pResizableColumn>
             {{'applications.content.syndication.table.columns.id' | translate}}
           </th>
-          <th pResizableColumn [pSortableColumn]="'type'">
+          <th id="type" [ngStyle]="{'width': _columnsConfig.type}" pResizableColumn [pSortableColumn]="'type'">
             {{'applications.content.syndication.table.columns.destination' | translate}}
             <p-sortIcon [field]="'type'"></p-sortIcon>
           </th>
-          <th pResizableColumn [pSortableColumn]="'playlistId'">
+          <th id="playlistId" [ngStyle]="{'width': _columnsConfig.playlistId}" pResizableColumn [pSortableColumn]="'playlistId'">
             {{'applications.content.syndication.table.columns.source' | translate}}
             <p-sortIcon [field]="'playlistId'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'feedUrl'">
+          <th id="feedUrl" [pSortableColumn]="'feedUrl'">
             {{'applications.content.syndication.table.columns.url' | translate}}
             <p-sortIcon [field]="'feedUrl'"></p-sortIcon>
           </th>
-          <th style="width: 80px"></th>
+          <th [ngStyle]="{'width': '80px'}"></th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-feed>
         <tr [pSelectableRow]="feed">
 
-          <td style="width:44px; padding-left: 14px">
+          <td [ngStyle]="{'width': '44px', 'padding-left': '14px'}">
             <p-tableCheckbox [value]="feed"></p-tableCheckbox>
           </td>
 
-          <td class="ui-resizable-column">
+          <td [ngStyle]="{'width': '44px'}" class="ui-resizable-column">
             <div class="kColFeedIcon">
               <i class="kIconfeed"></i>
             </div>
           </td>
 
-          <td class="ui-resizable-column">
+          <td [ngStyle]="{'width': _columnsConfig.name}" class="ui-resizable-column">
             <div class="ui-resizable-column kColName kElipsis" [kTooltip]="feed.name" (click)="_editFeed(feed)">
               {{feed.name}}
             </div>
           </td>
 
-          <td class="ui-resizable-column">
+          <td [ngStyle]="{'width': _columnsConfig.feedId}" class="ui-resizable-column">
             <div class="kColId" [kTooltip]="feed.id">
               {{feed.id}}
             </div>
           </td>
 
-          <td class="ui-resizable-column">
+          <td [ngStyle]="{'width': _columnsConfig.type}" class="ui-resizable-column">
             <div class="kColDestination">
               <div class="kColDestinationIcon" [ngClass]="feed.type | kDestinationIcon"></div>
               <div class="kColDestinationText">{{feed.type | kDestinationLabel}}</div>
             </div>
           </td>
 
-          <td class="ui-resizable-column">
+          <td [ngStyle]="{'width': _columnsConfig.playlistId}" class="ui-resizable-column">
             <div class="kColSource">
               <span [ngClass]="feed.playlistId | kToPlaylistIcon: _idToPlaylistMap" class="kPlaylistIcon"></span>
               <span class="kElipsis" [kTooltip]="feed.playlistId | kToPlaylistName: _idToPlaylistMap">
@@ -106,7 +107,7 @@
             </div>
           </td>
 
-          <td style="overflow: visible; width: 80px">
+          <td [ngStyle]="{'width': '80px'}">
             <div class="kColActions">
               <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, feed)"></button>
             </div>
