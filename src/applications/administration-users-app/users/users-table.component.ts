@@ -1,4 +1,15 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { UsersStore } from './users.service';
@@ -6,7 +17,8 @@ import { Menu, MenuItem } from 'primeng/primeng';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { ColumnsResizeManagerService, ResizableColumns } from 'app-shared/kmc-shared/columns-resize-manager';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -27,6 +39,15 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _partnerInfo: PartnerInfo = { adminLoginUsersQuota: 0, adminUserId: null };
 
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'userName': '350px',
+        'userId': '',
+        'email': '',
+        'role': '',
+        'status': '100px'
+    };
+    public _tableName = 'users-table';
   public _users: KalturaUser[] = [];
   public _deferredUsers: any[];
   public _items: MenuItem[];
@@ -54,12 +75,23 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  @HostListener('window:resize') _windowResize(): void {
+      this._columnsResizeManager.onWindowResize(this._tableName);
+      this._columnsConfig = this._defaultColumnsConfig;
+  }
+
   constructor(public _usersStore: UsersStore,
+              public _columnsResizeManager: ColumnsResizeManagerService,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
               private _cdRef: ChangeDetectorRef) {
+      this._columnsConfig = Object.assign(
+          {},
+          this._defaultColumnsConfig,
+          this._columnsResizeManager.getConfig(this._tableName)
+      );
   }
 
   ngOnInit() {

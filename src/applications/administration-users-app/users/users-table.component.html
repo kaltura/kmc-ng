@@ -7,14 +7,15 @@
                  [scrollable]="true"
                  [resizableColumns]="true"
                  scrollHeight="100%"
-                 [rowTrackBy]="_rowTrackBy">
+                 [rowTrackBy]="_rowTrackBy"
+                 (onColResize)="_columnsResizeManager.onColumnResize($event, _tableName)">
             <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
-                    <col [ngStyle]="{'width': '350px', 'padding-left': '1.5em'}">
-                    <col>
-                    <col>
-                    <col>
-                    <col [ngStyle]="{'padding-left': '14px', 'width': '100px'}">
+                    <col [ngStyle]="{'width': _columnsConfig.userName, 'padding-left': '1.5em'}">
+                    <col [ngStyle]="{'width': _columnsConfig.userId}">
+                    <col [ngStyle]="{'width': _columnsConfig.email}">
+                    <col [ngStyle]="{'width': _columnsConfig.role}">
+                    <col [ngStyle]="{'padding-left': '14px', 'width': _columnsConfig.status}">
                     <col>
                     <col [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
                 </colgroup>
@@ -22,13 +23,23 @@
 
             <ng-template pTemplate="header">
                 <tr>
-                    <th pResizableColumn [ngStyle]="{'width': '350px', 'padding-left': '1.5em'}">
+                    <th id="userName" pResizableColumn [ngStyle]="{'width': _columnsConfig.userName, 'padding-left': '1.5em'}">
                         {{'applications.content.table.userName' | translate}}
                     </th>
-                    <th pResizableColumn>{{'applications.content.table.userId' | translate}}</th>
-                    <th pResizableColumn>{{'applications.content.table.emailAddress' | translate}}</th>
-                    <th pResizableColumn>{{'applications.content.table.role' | translate}}</th>
-                    <th pResizableColumn [ngStyle]="{'padding-left': '14px', 'width': '100px'}">
+                    <th id="userId" pResizableColumn
+                        [ngStyle]="{'width': _columnsConfig.userId}">
+                        {{'applications.content.table.userId' | translate}}
+                    </th>
+                    <th id="email" pResizableColumn
+                        [ngStyle]="{'width': _columnsConfig.email}">
+                        {{'applications.content.table.emailAddress' | translate}}
+                    </th>
+                    <th id="role" pResizableColumn
+                        [ngStyle]="{'width': _columnsConfig.role}">
+                        {{'applications.content.table.role' | translate}}
+                    </th>
+                    <th id="status" pResizableColumn
+                        [ngStyle]="{'padding-left': '14px', 'width': _columnsConfig.status}">
                         {{'applications.content.table.status' | translate}}
                     </th>
                     <th>{{'applications.content.table.lastLogin' | translate}}</th>
