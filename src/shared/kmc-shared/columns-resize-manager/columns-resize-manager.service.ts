@@ -14,8 +14,8 @@ export class ColumnsResizeManagerService {
         this._storageManager.onColumnResize(event);
     }
 
-    public onWindowResize(): void {
-        this._storageManager.onWindowResize();
+    public onWindowResize(): boolean {
+        return this._storageManager.onWindowResize();
     }
 
     public getConfig(): ResizableColumns {

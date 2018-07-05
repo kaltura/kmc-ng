@@ -1,4 +1,15 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
@@ -6,11 +17,16 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kPlaylistsTable',
   templateUrl: './playlists-table.component.html',
-  styleUrls: ['./playlists-table.component.scss']
+  styleUrls: ['./playlists-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'playlists-table' }
+    ]
 })
 export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() set playlists(data: KalturaPlaylist[]) {
@@ -41,12 +57,29 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   public _playlists: KalturaPlaylist[] = [];
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'role': '250px',
+        'description': 'auto'
+    };
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private _appLocalization: AppLocalization,
+    @HostListener('window:resize') _windowResize(): void {
+        if (this._columnsResizeManager.onWindowResize()) {
+            this._columnsConfig = this._defaultColumnsConfig;
+        }
+    }
+
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
+      this._columnsConfig = Object.assign(
+          {},
+          this._defaultColumnsConfig,
+          this._columnsResizeManager.getConfig()
+      );
   }
 
   ngOnInit() {

@@ -79,8 +79,9 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   @HostListener('window:resize') _windowResize(): void {
-      this._columnsResizeManager.onWindowResize();
-      this._columnsConfig = this._defaultColumnsConfig;
+      if (this._columnsResizeManager.onWindowResize()) {
+          this._columnsConfig = this._defaultColumnsConfig;
+      }
   }
 
   constructor(public _usersStore: UsersStore,
@@ -95,6 +96,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
           this._defaultColumnsConfig,
           this._columnsResizeManager.getConfig()
       );
+      this._windowResize();
   }
 
   ngOnInit() {

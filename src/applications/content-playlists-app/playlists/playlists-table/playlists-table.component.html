@@ -11,52 +11,58 @@
             [resizableColumns]="true"
             [defaultSortOrder]="_defaultSortOrder"
             (sortFunction)="onSortChanged($event)" [customSort]="true"
+            (onColResize)="_columnsResizeManager.onColumnResize($event)"
             [(selection)]="selectedPlaylists"
             (selectionChange)="onSelectionChange($event)"
             kStickyHeader [sticksTo]="'playlistsTags'" stickyClass="stickyHeader" [stickyId]="'playlistsTable'">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
-                <col style="width:44px; padding-left: 13px">
-                <col class="kNameHeader">
-                <col>
-                <col>
-                <col style="width: 140px">
-                <col style="width: 80px">
+                <col [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
+                <col [ngStyle]="{'width': '44px'}">
+                <col [ngStyle]="{'width': _columnsConfig.name, 'padding-left': '52px'}">
+                <col [ngStyle]="{'width': _columnsConfig.playlistId}">
+                <col [ngStyle]="{'width': _columnsConfig.type}">
+                <col [ngStyle]="{'width': '140px'}">
+                <col [ngStyle]="{'width': '80px'}">
             </colgroup>
         </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th style="width:44px; padding-left: 13px">
+          <th [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th pResizableColumn [pSortableColumn]="'name'" class="kNameHeader">
+            <th [ngStyle]="{'width': '44px'}"></th>
+          <th id="name" [ngStyle]="{'width': _columnsConfig.name}" pResizableColumn [pSortableColumn]="'name'">
             {{'applications.content.table.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th pResizableColumn>
+          <th id="playlistId" [ngStyle]="{'width': _columnsConfig.playlistId}" pResizableColumn>
             {{'applications.content.table.id' | translate}}
           </th>
-          <th pResizableColumn>
+          <th id="type" [ngStyle]="{'width': _columnsConfig.type}" pResizableColumn>
             {{'applications.content.table.playlistType' | translate}}
           </th>
           <th [pSortableColumn]="'createdAt'">
             {{'applications.content.table.createdOn' | translate}}
             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
           </th>
-          <th style="width: 80px"></th>
+          <th [ngStyle]="{'width': '80px'}"></th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-playlist>
         <tr [pSelectableRow]="playlist">
 
-          <td style="width:44px; padding-left: 14px">
+          <td [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
             <p-tableCheckbox [value]="playlist"></p-tableCheckbox>
           </td>
 
-          <td class="ui-resizable-column">
+            <td [ngStyle]="{'width': '44px'}">
+                <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
+            </td>
+
+          <td [ngStyle]="{'width': _columnsConfig.name}" class="ui-resizable-column">
             <div class="kPlaylistsNameWrap">
-              <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
               <div class="kTitle kTableColumn"
                    [kTooltip]="playlist.name"
                    (click)="onActionSelected('view',playlist)">
@@ -65,14 +71,17 @@
             </div>
           </td>
 
-          <td class="ui-resizable-column">{{playlist.id}}</td>
+          <td [ngStyle]="{'width': _columnsConfig.playlistId}" class="ui-resizable-column">{{playlist.id}}</td>
 
-          <td class="ui-resizable-column">{{playlist.playlistType | playlistType}}</td>
-
-          <td class="ui-resizable-column">{{playlist.createdAt | kDate}}
+          <td [ngStyle]="{'width': _columnsConfig.type}" class="ui-resizable-column">
+              {{playlist.playlistType | playlistType}}
           </td>
 
-          <td style="overflow: visible; width: 80px">
+          <td [ngStyle]="{'width': '140px'}" class="ui-resizable-column">
+              {{playlist.createdAt | kDate}}
+          </td>
+
+          <td [ngStyle]="{'width': '80px'}">
             <div class="kPlaylistsTableActions">
               <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, playlist)"></button>
             </div>

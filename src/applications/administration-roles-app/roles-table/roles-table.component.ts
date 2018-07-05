@@ -1,23 +1,28 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter, HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaUserRole} from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kRolesTable',
   templateUrl: './roles-table.component.html',
-  styleUrls: ['./roles-table.component.scss']
+  styleUrls: ['./roles-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'roles-table' }
+    ]
 })
 export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input()
@@ -40,15 +45,32 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private _deferredRoles: KalturaUserRole[];
 
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'role': '250px',
+        'description': 'auto'
+    };
   public _roles: KalturaUserRole[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
   public _items: MenuItem[];
   public _rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private _appLocalization: AppLocalization,
+    @HostListener('window:resize') _windowResize(): void {
+        if (this._columnsResizeManager.onWindowResize()) {
+            this._columnsConfig = this._defaultColumnsConfig;
+        }
+    }
+
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
               private _permissionsService: KMCPermissionsService) {
+      this._columnsConfig = Object.assign(
+          {},
+          this._defaultColumnsConfig,
+          this._columnsResizeManager.getConfig()
+      );
   }
 
   ngOnInit() {

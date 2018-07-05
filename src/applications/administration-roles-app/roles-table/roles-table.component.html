@@ -4,43 +4,44 @@
                [sticksTo]="'rolesFilters'"
                [resizableColumns]="true"
                [value]="_roles"
-               [stickyId]="'rolesTable'">
+               [stickyId]="'rolesTable'"
+               (onColResize)="_columnsResizeManager.onColumnResize($event)">
       <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
-              <col [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
-              <col [ngStyle]="{'width': '250px'}">
-              <col [ngStyle]="{'width': '60px'}">
-              <col [ngStyle]="{'overflow': 'visible', 'width': '80px'}">
+              <col [ngStyle]="{'width': _columnsConfig.role, 'padding-left': '1.5em'}">
+              <col [ngStyle]="{'width': _columnsConfig.description}">
+              <col [ngStyle]="{'width': '120px'}">
+              <col [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
           </colgroup>
       </ng-template>
 
       <ng-template pTemplate="header">
           <tr>
-              <th pResizableColumn [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
+              <th id="role" pResizableColumn [ngStyle]="{'width': _columnsConfig.role, 'padding-left': '1.5em'}">
                   {{'applications.administration.roles.tableColumns.role' | translate}}
               </th>
-              <th pResizableColumn [ngStyle]="{'width': '250px'}">
+              <th id="description" pResizableColumn [ngStyle]="{'width': _columnsConfig.description}">
                   {{'applications.administration.roles.tableColumns.description' | translate}}
               </th>
-              <th [ngStyle]="{'width': '60px'}">
+              <th [ngStyle]="{'width': '120px'}">
                   {{'applications.administration.roles.tableColumns.saveDate' | translate}}
               </th>
-              <th [ngStyle]="{'overflow': 'visible', 'width': '80px'}"></th>
+              <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
           </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-role>
           <tr>
-              <td class="ui-resizable-column" [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
+              <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.role, 'padding-left': '1.5em'}">
                   <span class="kRoleName kTableColumn" [kTooltip]="role.name">{{role.name}}</span>
               </td>
-              <td class="ui-resizable-column" [ngStyle]="{'width': '250px'}">
+              <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.description}">
                   <span class="kTableColumn" [kTooltip]="role.description">{{role.description}}</span>
               </td>
-              <td [ngStyle]="{'width': '60px'}">
+              <td [ngStyle]="{'width': '120px'}">
                   {{role.updatedAt | kDate}}
               </td>
-              <td [ngStyle]="{'overflow': 'visible', 'width': '80px'}">
+              <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
                   <div class="kRolesTableActions">
                       <button type="button" pButton icon="kIconmore"
                               [disabled]="role.partnerId === 0" class="kMoreActionsButton"

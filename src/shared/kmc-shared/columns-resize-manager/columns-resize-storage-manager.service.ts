@@ -122,19 +122,22 @@ export class ColumnsResizeStorageManagerService {
         this._setConfigInCache(relevantConfig);
     }
 
-    public onWindowResize(): void {
+    public onWindowResize(): boolean {
         this._logger.info(`handle window resize action by user`, { tableName: this._tableName });
         const relevantConfig = this._getConfig();
         if (!relevantConfig) {
             this._logger.info(`no relevant config found, abort action`);
-            return;
+            return false;
         }
 
         const shouldClearCache = Math.abs(relevantConfig.lastViewPortWidth - this._currentWindowWidth) >= this._windowWidthThreshold;
         if (shouldClearCache) {
             this._removeConfigFromCache();
             delete this._columnsConfig[this._tableName];
+            return true;
         }
+
+        return false;
     }
 
     public getConfig(): ResizableColumns {
