@@ -27,21 +27,22 @@
 
         <div class="kTable">
             <p-table
+                scrollHeight="100%"
                 [value]="_widgetService.selectedFlavors"
                 [resizableColumns]="true"
                 [scrollable]="true"
-                scrollHeight="100%">
+                (onColResize)="_columnsResizeManager.onColumnResize($event)">
                 <ng-template pTemplate="colgroup" let-columns>
                     <colgroup>
-                        <col [ngStyle]="{'width':'144px', 'padding-left': '24px'}">
+                        <col [ngStyle]="{'width': _columnsConfig.name, 'padding-left': '24px'}">
                         <col [hidden]="_documentWidth < 1300"
-                             [ngStyle]="{'width':'100px'}">
-                        <col>
-                        <col>
-                        <col>
-                        <col>
-                        <col>
-                        <col>
+                             [ngStyle]="{'width': _columnsConfig.assetId}">
+                        <col [ngStyle]="{'width': _columnsConfig.format}">
+                        <col [ngStyle]="{'width': _columnsConfig.codec}">
+                        <col [ngStyle]="{'width': _columnsConfig.bitrate}">
+                        <col [ngStyle]="{'width': _columnsConfig.dimensions}">
+                        <col [ngStyle]="{'width': _columnsConfig.size}">
+                        <col [ngStyle]="{'width': _columnsConfig.stat}">
                         <col
                             [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
                         <col *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted"
@@ -50,19 +51,35 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th [ngStyle]="{'width':'144px', 'padding-left': '24px'}" pResizableColumn>
+                        <th id="name" pResizableColumn
+                            [ngStyle]="{'width': _columnsConfig.name, 'padding-left': '24px'}">
                             {{'applications.content.entryDetails.flavours.flavour' | translate}}
                         </th>
-                        <th pResizableColumn [hidden]="_documentWidth < 1300">
+                        <th id="assetId" pResizableColumn
+                            [ngStyle]="{'width': _columnsConfig.assetId}"
+                            [hidden]="_documentWidth < 1300">
                             {{'applications.content.entryDetails.flavours.assetId' | translate}}
                         </th>
-                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.format' | translate}}</th>
-                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.codec' | translate}}</th>
-                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.bitrate' | translate}}</th>
-                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.dimensions' | translate}}</th>
-                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.size' | translate}}</th>
-                        <th pResizableColumn>{{'applications.content.entryDetails.flavours.stat' | translate}}</th>
-                        <th [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
+                        <th id="format" pResizableColumn [ngStyle]="{'width': _columnsConfig.format}">
+                            {{'applications.content.entryDetails.flavours.format' | translate}}
+                        </th>
+                        <th id="codec" pResizableColumn [ngStyle]="{'width': _columnsConfig.codec}">
+                            {{'applications.content.entryDetails.flavours.codec' | translate}}
+                        </th>
+                        <th id="bitrate" pResizableColumn [ngStyle]="{'width': _columnsConfig.bitrate}">
+                            {{'applications.content.entryDetails.flavours.bitrate' | translate}}
+                        </th>
+                        <th id="dimensions" pResizableColumn [ngStyle]="{'width': _columnsConfig.dimensions}">
+                            {{'applications.content.entryDetails.flavours.dimensions' | translate}}
+                        </th>
+                        <th id="size" pResizableColumn [ngStyle]="{'width': _columnsConfig.size}">
+                            {{'applications.content.entryDetails.flavours.size' | translate}}
+                        </th>
+                        <th id="stat" pResizableColumn [ngStyle]="{'width': _columnsConfig.stat}">
+                            {{'applications.content.entryDetails.flavours.stat' | translate}}
+                        </th>
+                        <th id="tags"
+                            [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
                             {{'applications.content.entryDetails.flavours.tags' | translate}}
                         </th>
                         <th *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted"
@@ -72,7 +89,7 @@
 
                 <ng-template pTemplate="body" let-flavor>
                     <tr [pSelectableRow]="flavor">
-                        <td [ngStyle]="{'width':'144px', 'padding-left': '24px'}" class="ui-resizable-column">
+                        <td [ngStyle]="{'padding-left': '24px'}"class="ui-resizable-column">
                             <span class="kFlavorName"
                                   [class.kConvertedFlavor]="flavor.status === '2'">{{flavor.name}}</span>
                         </td>
@@ -88,7 +105,7 @@
                         <td [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
                             <span>{{flavor.tags | tags}}</span>
                         </td>
-                        <td [ngStyle]="{'width':'80px'}">
+                        <td>
                             <div
                                 *ngIf="_widgetService.showFlavorActions && flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8' && flavor.status !== '0'"
                                 class="kFlavorsTableActions">

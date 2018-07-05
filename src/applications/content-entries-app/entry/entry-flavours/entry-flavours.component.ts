@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
@@ -16,22 +15,19 @@ import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs';
-import { KalturaStorageProfile } from 'kaltura-ngx-client';
+import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
     selector: 'kEntryFlavours',
     templateUrl: './entry-flavours.component.html',
-    styleUrls: ['./entry-flavours.component.scss']
+    styleUrls: ['./entry-flavours.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'flavors-table' }
+    ]
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
-
-	@HostListener("window:resize", [])
-	onWindowResize() {
-		this._documentWidth = document.body.clientWidth;
-	}
-
-	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
+    @ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
 	@ViewChild('importPopup') importPopup: PopupWidgetComponent;
 	@ViewChild('matchDropFolder') matchDropFolder: PopupWidgetComponent;
@@ -49,11 +45,38 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _showActionsView = false;
     public _replaceButtonsLabel = '';
 
-	constructor(public _widgetService: EntryFlavoursWidget,
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'name': '144px',
+        'assetId': '100px',
+        'format': 'auto',
+        'codec': 'auto',
+        'bitrate': 'auto',
+        'dimensions': 'auto',
+        'size': 'auto',
+        'stat': 'auto'
+    };
+
+    @HostListener('window:resize') _windowResize(): void {
+        if (this._columnsResizeManager.onWindowResize()) {
+            this._columnsConfig = this._defaultColumnsConfig;
+        }
+
+        this._documentWidth = document.body.clientWidth;
+    }
+
+	constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+                public _widgetService: EntryFlavoursWidget,
               private _uploadManagement: UploadManagement,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService) {
+        this._columnsConfig = Object.assign(
+            {},
+            this._defaultColumnsConfig,
+            this._columnsResizeManager.getConfig()
+        );
+        this._windowResize();
     }
 
     ngOnInit() {
