@@ -8,7 +8,7 @@
                  [resizableColumns]="true"
                  scrollHeight="100%"
                  [rowTrackBy]="_rowTrackBy"
-                 (onColResize)="_columnsResizeManager.onColumnResize($event, _tableName)">
+                 (onColResize)="_columnsResizeManager.onColumnResize($event)">
             <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
                     <col [ngStyle]="{'width': _columnsConfig.userName, 'padding-left': '1.5em'}">

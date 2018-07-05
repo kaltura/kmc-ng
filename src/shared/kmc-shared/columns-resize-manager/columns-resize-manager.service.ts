@@ -1,131 +1,24 @@
-import { Injectable } from '@angular/core';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { ColumnsResizeStorageManagerService, ResizableColumns } from './columns-resize-storage-manager.service';
 
-export interface ResizableColumns {
-    lastViewPortWidth: number;
-    [columnName: string]: string;
-}
+export const ResizableColumnsTableName = new InjectionToken('resizable-columns-table-name');
 
-export interface ResizableColumnsConfig {
-    [tableName: string]: ResizableColumns;
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ColumnsResizeManagerService {
-    private readonly _windowWidthThreshold = 20;
-    private _columnsConfig: ResizableColumnsConfig = {};
-
-    private get _currentWindowWidth(): number {
-        return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    constructor(@Inject(ResizableColumnsTableName) private _tableName: string,
+                private _storageManager: ColumnsResizeStorageManagerService) {
+        this._storageManager.registerTable(this._tableName);
     }
 
-    constructor(private _logger: KalturaLogger,
-                private _browserService: BrowserService) {
-        this._logger = _logger.subLogger('ColumnsResizeManagerService');
+    public onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }): void {
+        this._storageManager.onColumnResize(event);
     }
 
-    private _getCacheToken(tableName: string): string {
-        return !tableName ? null : `resizable-columns.${tableName}`;
+    public onWindowResize(): void {
+        this._storageManager.onWindowResize();
     }
 
-    private _getConfigFromCache(tableName: string): ResizableColumns {
-        const cacheToken = this._getCacheToken(tableName);
-        this._logger.info(`load columns config from the local storage`, { cacheToken, tableName });
-        if (cacheToken) {
-            const config = this._browserService.getFromLocalStorage(cacheToken);
-            try {
-                this._columnsConfig[tableName] = JSON.parse(config) || { lastViewPortWidth: this._currentWindowWidth };
-                return this._columnsConfig[tableName];
-            } catch (e) {
-                this._logger.warn(`couldn't load config from the local storage, return empty array`, { errorMessage: e.message });
-                return { lastViewPortWidth: this._currentWindowWidth };
-            }
-        }
-
-        return { lastViewPortWidth: this._currentWindowWidth };
-    }
-
-    private _setConfigInCache(config: ResizableColumns, tableName: string): void {
-        this._logger.info(`set config in the local storage`, { tableName });
-        const cacheToken = this._getCacheToken(tableName);
-        if (cacheToken) {
-            try {
-                this._browserService.setInLocalStorage(cacheToken, JSON.stringify(config));
-                this._columnsConfig[tableName] = Object.assign(this._columnsConfig[tableName], config);
-            } catch (e) {
-                this._logger.warn(`couldn't set updated config to the local storage, do nothing`, { errorMessage: e.message });
-            }
-        }
-    }
-
-    private _removeConfigFromCache(tableName: string): void {
-        const cacheToken = this._getCacheToken(tableName);
-        this._logger.info(`handle remove config from cache action`, { cacheToken, tableName });
-        if (cacheToken) {
-            try {
-                this._browserService.removeFromLocalStorage(cacheToken);
-            } catch (e) {
-                this._logger.warn(`couldn't load config from the local storage, return empty array`, { errorMessage: e.message });
-            }
-        }
-    }
-
-    private _getConfig(tableName: string): ResizableColumns {
-        if (!tableName) {
-            return null;
-        }
-
-        if (this._columnsConfig.hasOwnProperty(tableName)) {
-            return this._columnsConfig[tableName];
-        }
-
-        this._columnsConfig[tableName] = { lastViewPortWidth: this._currentWindowWidth };
-
-        return this._columnsConfig[tableName];
-    }
-
-    public onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }, tableName: string): void {
-        this._logger.info(`handle column resize action by user`, {
-            tableName,
-            columnName: event && event.element ? event.element.id : null
-        });
-        const relevantConfig = this._getConfig(tableName);
-        if (!relevantConfig) {
-            this._logger.info(`no relevant config found, abort action`);
-            return;
-        }
-
-        const { id: columnName, offsetWidth: columnWidth } = event.element;
-        relevantConfig[columnName] = `${columnWidth}px`;
-
-        this._setConfigInCache(relevantConfig, tableName);
-    }
-
-    public onWindowResize(tableName: string): void {
-        this._logger.info(`handle window resize action by user`, { tableName });
-        const relevantConfig = this._getConfig(tableName);
-        if (!relevantConfig) {
-            this._logger.info(`no relevant config found, abort action`);
-            return;
-        }
-
-        const shouldClearCache = Math.abs(relevantConfig.lastViewPortWidth - this._currentWindowWidth) >= this._windowWidthThreshold;
-        if (shouldClearCache) {
-            this._removeConfigFromCache(tableName);
-            delete this._columnsConfig[tableName];
-        }
-    }
-
-    public getConfig(tableName: string): ResizableColumns {
-        this._logger.info(`handle getConfig action by user`, { tableName });
-        if (!tableName) {
-            this._logger.info(`table name is not provided abort action`);
-            return null;
-        }
-
-        return this._columnsConfig.hasOwnProperty(tableName)
-            ? this._columnsConfig[tableName]
-            : this._getConfigFromCache(tableName);
+    public getConfig(): ResizableColumns {
+        return this._storageManager.getConfig();
     }
 }

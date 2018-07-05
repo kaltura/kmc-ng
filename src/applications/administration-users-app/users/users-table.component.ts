@@ -18,7 +18,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { ColumnsResizeManagerService, ResizableColumns } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -28,7 +28,11 @@ export interface PartnerInfo {
 @Component({
   selector: 'kUsersTable',
   templateUrl: './users-table.component.html',
-  styleUrls: ['./users-table.component.scss']
+  styleUrls: ['./users-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'users-table' }
+    ]
 })
 export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
@@ -47,7 +51,6 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
         'role': '',
         'status': '100px'
     };
-    public _tableName = 'users-table';
   public _users: KalturaUser[] = [];
   public _deferredUsers: any[];
   public _items: MenuItem[];
@@ -76,7 +79,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   @HostListener('window:resize') _windowResize(): void {
-      this._columnsResizeManager.onWindowResize(this._tableName);
+      this._columnsResizeManager.onWindowResize();
       this._columnsConfig = this._defaultColumnsConfig;
   }
 
@@ -90,7 +93,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       this._columnsConfig = Object.assign(
           {},
           this._defaultColumnsConfig,
-          this._columnsResizeManager.getConfig(this._tableName)
+          this._columnsResizeManager.getConfig()
       );
   }
 
