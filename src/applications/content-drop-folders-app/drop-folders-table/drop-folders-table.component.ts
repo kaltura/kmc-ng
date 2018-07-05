@@ -62,7 +62,6 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
         'name': '250px',
         'folderId': 'auto',
         'time': 'auto',
-        'time': 'auto',
         'size': '80px',
         'entryId': 'auto',
         'status': 'auto'
