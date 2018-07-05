@@ -105,7 +105,7 @@
                 </td>
 
                 <td class="ui-resizable-column" *ngIf="_columnsMetadata.name" [ngStyle]="_columnsMetadata.name.style">
-                    <span class="kTitle kTableColumn" [kTooltip]="entry.name"
+                    <span class="kTitle kTableColumn" [kTooltip]="entry.name" [showOnEllipsis]="true"
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
                         {{entry.name}}

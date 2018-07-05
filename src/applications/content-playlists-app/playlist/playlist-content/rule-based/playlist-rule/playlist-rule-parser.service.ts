@@ -136,8 +136,8 @@ export class PlaylistRuleParserService implements OnDestroy {
           sortBy: sortBy,
           sortDirection: sortDirection,
           createdAt: {
-            fromDate: new Date(originalFilter.createdAtGreaterThanOrEqual),
-            toDate: new Date(originalFilter.createdAtLessThanOrEqual)
+            fromDate: originalFilter.createdAtGreaterThanOrEqual ? new Date(originalFilter.createdAtGreaterThanOrEqual) : null,
+            toDate: originalFilter.createdAtLessThanOrEqual ? new Date(originalFilter.createdAtLessThanOrEqual) : null
           }
         };
 
