@@ -153,6 +153,7 @@ export class ColumnsResizeStorageManagerService {
     }
 
     public registerTable(tableName: string): void {
+        this._logger.info(`register table for saving columns size to LocalStorage`, { tableName });
         if (tableName) {
             this._tableName = tableName;
         }

@@ -1,11 +1,11 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 import { ColumnsResizeStorageManagerService, ResizableColumns } from './columns-resize-storage-manager.service';
 
 export const ResizableColumnsTableName = new InjectionToken('resizable-columns-table-name');
 
 @Injectable()
 export class ColumnsResizeManagerService {
-    constructor(@Inject(ResizableColumnsTableName) private _tableName: string,
+    constructor(@Inject(ResizableColumnsTableName) @Optional() private _tableName: string,
                 private _storageManager: ColumnsResizeStorageManagerService) {
         this._storageManager.registerTable(this._tableName);
     }

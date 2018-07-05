@@ -6,6 +6,7 @@
                  [resizableColumns]="true"
                  [value]="uploads"
                  (selectionChange)="onSelectedEntriesChange.emit($event)"
+                 (onColResize)="_columnsResizeManager.onColumnResize($event)"
                  [(selection)]="selectedUploads"
                  kStickyHeader [sticksTo]="'uploadControlFilters'" stickyClass="stickyHeader"
                  [stickyId]="'uploadControlTable'">
@@ -14,11 +15,11 @@
                 <colgroup>
                     <col [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <col [ngStyle]="{'width':'80px', 'text-align': 'center'}">
-                    <col>
-                    <col [ngStyle]="{'width': '100px'}">
-                    <col [ngStyle]="{'width': '100px'}">
-                    <col [ngStyle]="{'width': '120px'}">
-                    <col [ngStyle]="{'width': '100px'}">
+                    <col [ngStyle]="{'width': _columnsConfig.name}">
+                    <col [ngStyle]="{'width': _columnsConfig.entryId}">
+                    <col [ngStyle]="{'width': _columnsConfig.size}">
+                    <col [ngStyle]="{'width': _columnsConfig.uploadedOn}">
+                    <col [ngStyle]="{'width': _columnsConfig.status}">
                     <col [ngStyle]="{'width': '120px'}">
                     <col [ngStyle]="{'width': '70px', 'text-align': 'center'}">
                 </colgroup>
@@ -30,20 +31,22 @@
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
                     <th [ngStyle]="{'width':'80px', 'text-align': 'center'}"></th>
-                    <th pResizableColumn>{{'applications.content.uploadControl.table.fileName' | translate}}</th>
-                    <th pResizableColumn [ngStyle]="{'width': '100px'}">
+                    <th id="name" pResizableColumn [ngStyle]="{'width': _columnsConfig.name}">
+                        {{'applications.content.uploadControl.table.fileName' | translate}}
+                    </th>
+                    <th id="entryId" pResizableColumn [ngStyle]="{'width': _columnsConfig.entryId}">
                         {{'applications.content.uploadControl.table.entryId' | translate}}
                     </th>
-                    <th pResizableColumn [ngStyle]="{'width': '100px'}">
+                    <th id="size" pResizableColumn [ngStyle]="{'width': _columnsConfig.size}">
                         {{'applications.content.uploadControl.table.fileSize' | translate}}
                     </th>
-                    <th pResizableColumn [ngStyle]="{'width': '120px'}">
+                    <th id="uploadedOn" pResizableColumn [ngStyle]="{'width': _columnsConfig.uploadedOn}">
                         {{'applications.content.uploadControl.table.uploadedOn' | translate}}
                     </th>
-                    <th pResizableColumn [ngStyle]="{'width': '100px'}">
+                    <th id="status" pResizableColumn [ngStyle]="{'width': _columnsConfig.status}">
                         {{'applications.content.uploadControl.table.status.header' | translate}}
                     </th>
-                    <th [ngStyle]="{'width': '120px'}">
+                    <th id="progress" [ngStyle]="{'width': '120px'}">
                         {{'applications.content.uploadControl.table.progress' | translate}}
                     </th>
                     <th [ngStyle]="{'width': '70px', 'text-align': 'center'}"></th>
@@ -60,13 +63,21 @@
                              [kTooltip]="file.mediaType | entryType: true"
                              [ngClass]="file.mediaType | entryType: false"></div>
                     </td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': '100px'}">
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.name}">
                         <span class="kUploadName kTableColumn" [kTooltip]="file.fileName">{{file.fileName}}</span>
                     </td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': '100px'}">{{file.entryId}}</td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': '100px'}">{{ file.fileSize | kFileSize }}</td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': '120px'}">{{file.uploadedOn | kDate}}</td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': '100px'}">{{ file.status | kUploadStatus }}</td>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.entryId}">
+                        {{file.entryId}}
+                    </td>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.size}">
+                        {{ file.fileSize | kFileSize }}
+                    </td>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.uploadedOn}">
+                        {{file.uploadedOn | kDate}}
+                    </td>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.status}">
+                        {{ file.status | kUploadStatus }}
+                    </td>
                     <td [ngStyle]="{'width': '120px'}">
                         <kUploadProgress [progress]="file.progress" [status]="file.status"></kUploadProgress>
                     </td>

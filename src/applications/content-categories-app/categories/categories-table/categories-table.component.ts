@@ -1,24 +1,29 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter, HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kCategoriesTable',
   templateUrl: './categories-table.component.html',
-  styleUrls: ['./categories-table.component.scss']
+  styleUrls: ['./categories-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'categories-table' }
+    ]
 })
 export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input()
@@ -55,12 +60,32 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   public _emptyMessage = '';
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'name': 'auto',
+        'playlistId': 'auto',
+        'createdAt': 'auto',
+        'subcategories': 'auto'
+    };
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private appLocalization: AppLocalization,
+    @HostListener('window:resize') _windowResize(): void {
+        if (this._columnsResizeManager.onWindowResize()) {
+            this._columnsConfig = this._defaultColumnsConfig;
+        }
+    }
+
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
               private _permissionsService: KMCPermissionsService) {
+      this._columnsConfig = Object.assign(
+          {},
+          this._defaultColumnsConfig,
+          this._columnsResizeManager.getConfig()
+      );
+      this._windowResize();
   }
 
   ngOnInit() {
