@@ -86,6 +86,22 @@ export class ColumnsResizeStorageManagerService {
         return this._columnsConfig[this._tableName];
     }
 
+    private _updateNextSiblings(element: HTMLTableHeaderCellElement, config: ResizableColumns): void {
+        if (element.nextElementSibling && element.nextElementSibling.id) {
+            const { id: columnName, offsetWidth: columnWidth } = element;
+            config[columnName] = `${columnWidth}px`;
+            this._updateNextSiblings(element.nextElementSibling, config);
+        }
+    }
+
+    private _updatePrevSiblings(element: HTMLTableHeaderCellElement, config: ResizableColumns): void {
+        if (element.previousElementSibling && element.previousElementSibling.id) {
+            const { id: columnName, offsetWidth: columnWidth } = element;
+            config[columnName] = `${columnWidth}px`;
+            this._updatePrevSiblings(element.previousElementSibling, config);
+        }
+    }
+
     public onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }): void {
         this._logger.info(`handle column resize action by user`, {
             tableName: this._tableName,
@@ -99,6 +115,9 @@ export class ColumnsResizeStorageManagerService {
 
         const { id: columnName, offsetWidth: columnWidth } = event.element;
         relevantConfig[columnName] = `${columnWidth}px`;
+
+        this._updateNextSiblings(event.element, relevantConfig);
+        this._updatePrevSiblings(event.element, relevantConfig);
 
         this._setConfigInCache(relevantConfig);
     }
