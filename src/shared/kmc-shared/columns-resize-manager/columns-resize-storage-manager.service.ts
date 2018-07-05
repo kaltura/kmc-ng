@@ -90,7 +90,7 @@ export class ColumnsResizeStorageManagerService {
         if (element.nextElementSibling && element.nextElementSibling.id) {
             const { id: columnName, offsetWidth: columnWidth } = element;
             config[columnName] = `${columnWidth}px`;
-            this._updateNextSiblings(element.nextElementSibling, config);
+            this._updateNextSiblings(<HTMLTableHeaderCellElement>element.nextElementSibling, config);
         }
     }
 
@@ -98,7 +98,7 @@ export class ColumnsResizeStorageManagerService {
         if (element.previousElementSibling && element.previousElementSibling.id) {
             const { id: columnName, offsetWidth: columnWidth } = element;
             config[columnName] = `${columnWidth}px`;
-            this._updatePrevSiblings(element.previousElementSibling, config);
+            this._updatePrevSiblings(<HTMLTableHeaderCellElement>element.previousElementSibling, config);
         }
     }
 
