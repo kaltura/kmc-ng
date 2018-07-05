@@ -33,7 +33,18 @@
 }
 
 :host /deep/ .kTranscodingProfilesTable {
-  .ui-datatable-scrollable-table-wrapper {
-    max-height: 261px;
-  }
+    &:not(.kSingleTableMode) {
+        .ui-table-scrollable-body {
+            max-height: 280px !important;
+        }
+    }
+
+    .ui-widget-header,
+    .ui-table-scrollable-body-table {
+        background: #FFFFFF;
+    }
+
+    .ui-table-scrollable-table-wrapper {
+        max-height: 261px !important;
+    }
 }

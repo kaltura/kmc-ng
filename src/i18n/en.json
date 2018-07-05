@@ -73,6 +73,7 @@
             "productTour": "Watch the Product Tour",
             "support": "Help and Support",
             "userManual": "Download User Manual",
+            "legacy": "Legacy KMC",
             "contact": "Contact Support",
             "currentPage": "Current Page",
             "changelog": "Changelog"
@@ -1296,7 +1297,7 @@
                 "changeOwner": "Change Owner",
                 "changeOwnerLabel": "Set a new owner for the selected entries.",
                 "download": "Download",
-                "downloadEntries": "Download selected entries.",
+                "downloadEntries": "Download selected entries",
                 "download1Label": "You have selected 1 entry for download.",
                 "downloadManyLabel": "You have selected {{0}} entries for download.",
                 "downloadFlavor": "If you have selected to download a video, please choose the required format:",
@@ -1511,7 +1512,8 @@
                         "preview": "Preview",
                         "reconvert": "Reconvert",
                         "drm": "View DRM Details",
-                        "link": "Link"
+                        "link": "Link",
+                        "match": "Drop Folder"
                     },
                     "drm": {
                         "header": "DRM Details",
@@ -1561,9 +1563,12 @@
                     "downloadFailure": "Flavor download failed.",
                     "importFailure": "Flavor import failed.",
                     "replaceVideo": {
+                        "replaceVideo": "Replace Video",
                         "noFlavors": "No Flavors",
                         "addVideo": "Add Video",
+                        "replaceVideo": "Replace Video",
                         "addAudio": "Add Audio",
+                        "replaceAudio": "Replace Audio",
                         "uploadFile": "Upload file",
                         "uploadFiles": "Upload files",
                         "importFile": "Import file",
@@ -1591,12 +1596,26 @@
                         "cancel": "Cancel",
                         "continue": "Continue",
                         "tempEntryId": "Temp Entry ID: {{0}}",
-                        "cancelReplacement": "Cancel replacement",
+                        "cancelReplacement": "Cancel Replacement",
                         "autoReplacement": "Auto Replacement",
                         "approveReplacement": "Approve Replacement",
                         "approveReplacementTooltip": "All current flavors will be replaced upon replacement approval. Any time based metadata may be effected as well.",
                         "currentFlavors": "Current Flavors",
                         "replacementFlavors": "Replacement Flavors",
+                        "setReferenceId": "Set Reference ID",
+                        "addFilesBtn": "Add File/s",
+                        "referenceId": "Reference ID:",
+                        "selectDropFolder": "Select Drop Folder",
+                        "searchFolder": "Search Folder",
+                        "mediaPackageName": "Media Package Name",
+                        "mediaName": "Media Name",
+                        "createdOn": "Created On",
+                        "waiting": "Waiting",
+                        "error": "* Error *",
+                        "setReferenceIdWarning": "The automatic ingestion action is now in process, please check again in a few minutes.",
+                        "addFilesWarning": "Adding this file manually will interrupt the automatic ingestion process and should be done only as a fallback option. Do you want to continue?",
+                        "noDropFolders": "No drop folders available",
+                        "noDropFoldersWarning": "Your account configuration does not support automatic matching of media packages from drop folders.",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",
@@ -1606,9 +1625,9 @@
                             "note": "When conversion by Kaltura is required, the file defined as Source will be imported to Kaltura."
                         },
                         "replacementStatus": {
-                            "replacementInProcess": "Video Replacement is in Process",
-                            "readyForReplacement": "Video is Ready for Replacement",
-                            "replacementFailed": "Video Replacement failed"
+                            "replacementInProcess": "Video replacement is in process",
+                            "readyForReplacement": "Video is ready for replacement",
+                            "replacementFailed": "Video replacement failed"
                         },
                         "errors": {
                             "uniqueFlavors": "More than one file is associated with the same Transcoding Flavor settings.",

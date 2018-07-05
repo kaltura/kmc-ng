@@ -1,0 +1,231 @@
+@import 'app-theme/_variables.scss';
+
+.kMatchDropFolder {
+    color: $kGrayscale1;
+    height: 560px;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+
+    &.kMatchDropFolderFlavor {
+        height: 486px;
+    }
+
+    .kHeader, .kFooter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .kHeader {
+        text-align: center;
+        height: 77px;
+        border-bottom: 1px $kGrayscale4 solid;
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+    }
+
+    .kMatchDropFolderContent {
+        width: 100%;
+
+        .kMatchDropFolderControls {
+            height: 98px;
+            border-bottom: 1px solid $kGrayscale6;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+
+            .kMatchDropFolderControlsLabel {
+                font-weight: bold;
+                font-size: 15px;
+            }
+
+            .kDropFoldersList {
+                .kDropFoldersListItem {
+                    white-space: nowrap;
+                    display: inline-block;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: 190px;
+                    font-weight: normal;
+                }
+            }
+
+            .kDropFolderSearch /deep/ {
+                .k-clearable-input-input {
+                    width: 284px;
+                    height: 34px;
+                    background: $kMagnifyingGlassBkg;
+                    padding-left: 38px;
+                    margin-right: 8px;
+                }
+
+                .k-clearable-input-clear-btn {
+                    right: 13px;
+                }
+            }
+
+            .kRefreshBtn {
+                font-size: 24px;
+                border: none;
+                min-width: inherit;
+                outline: 0;
+                color: $kGrayscale3;
+                &:active {
+                    box-shadow: none;
+                    transform: rotate(45deg);
+                }
+                &:hover {
+                    background-color: #ffffff;
+                    color: $kPrimary;
+                }
+            }
+        }
+
+        .kMatchDropFolderReferenceId {
+            padding: 0 28px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+            height: 74px;
+            border-bottom: 1px solid $kGrayscale6;
+            font-size: 15px;
+
+            span {
+                font-weight: bold;
+            }
+        }
+
+        .kMatchDropFolderTable {
+            .emptymessage {
+                border: none;
+            }
+
+            .kFileName {
+                font-size: 15px;
+                font-weight: bold;
+                color: $kGrayscale1;
+            }
+
+            .kCreatedAt {
+                font-size: 15px;
+                font-weight: bold;
+                color: $kGrayscale3;
+            }
+
+            .k-arrow-right {
+                display: block;
+                width: 0;
+                height: 0;
+                border-top: 8px solid transparent;
+                border-left: 12px solid $kGrayscale4;
+                border-bottom: 8px solid transparent;
+                margin-top: 2px;
+            }
+
+            .k-arrow-down {
+                display: block;
+                width: 0;
+                height: 0;
+                border-left: 8px solid transparent;
+                border-right: 8px solid transparent;
+                border-top: 12px solid $kGrayscale4;
+                margin-left: -3px;
+                margin-top: 4px;
+            }
+
+            .kDropFolderFiles {
+                background-color: $kGrayscale6;
+                border-left: 4px solid $kGrayscale3;
+                font-size: 15px;
+                color: $kGrayscale3;
+                overflow-y: auto;
+                max-height: 195px;
+                padding: 12px 0;
+                width: 790px;
+
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    table-layout: fixed;
+
+                    tr {
+                        height: 44px;
+
+                        td {
+                            padding: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .kFooter {
+        z-index: 1;
+        height: 66px;
+        border-top: 1px $kGrayscale4 solid;
+        text-align: center;
+
+        .kUploadButton {
+            min-width: 100px;
+            height: 34px;
+            font-weight: normal;
+            font-size: 14px;
+            margin-right: 16px;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+:host /deep/ .kDropFoldersList {
+    .ui-dropdown-panel {
+        width: 238px;
+    }
+
+    .ui-dropdown-label {
+        text-overflow: ellipsis;
+        font-weight: normal;
+        font-size: 15px;
+        color: $kGrayscale1;
+    }
+
+    .ui-dropdown.ui-widget {
+        width: 238px;
+    }
+}
+
+:host /deep/ .kMatchDropFolderTable {
+    .ui-table .ui-table-scrollable-body {
+        max-height: 208px !important;
+        height: 208px !important;
+    }
+
+    .ui-table .ui-table-tbody > tr > td:first-child {
+        border-color: #d9d9d9;
+    }
+
+    .ui-radiobutton {
+        margin-top: -2px;
+    }
+
+    .kAvoidClick {
+        pointer-events: none;
+        touch-action: none;
+
+        .ui-state-disabled {
+            opacity: .5;
+        }
+    }
+}

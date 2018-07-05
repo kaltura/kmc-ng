@@ -4,6 +4,7 @@
     <div class="kTranscodingProfilesListsHolder kContent"
          [class.kSingleTableMode]="!(_kmcPermissions.FEATURE_KALTURA_LIVE_STREAM | kNgIfPermitted)">
       <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.media"
+                                   [singleTableMode]="!(_kmcPermissions.FEATURE_KALTURA_LIVE_STREAM | kNgIfPermitted)"
                                    [title]="'applications.settings.transcoding.transcodingProfiles'| translate"
                                    (addProfile)="_addProfile($event)"
                                    (setParentBlockerMessage)="_setBlockerMessage($event)">

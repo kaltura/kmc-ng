@@ -114,12 +114,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   public _onActionSelected({ action, entry }) {
-      this._entriesList.clearSelection();
     switch (action) {
       case 'preview':
+          this._entriesList.clearSelection();
         this._appEvents.publish(new PreviewAndEmbedEvent(entry));
         break;
       case 'view':
+          this._entriesList.clearSelection();
           this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
         break;
       case 'delete':
@@ -133,6 +134,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
       case 'liveDashboard':
         if (entry && entry.id) {
+            this._entriesList.clearSelection();
           this._entryId = entry.id;
           this._liveDashboard.open();
         }
@@ -153,7 +155,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       .pipe(tag('block-shell'))
       .subscribe(
         () => {
-          this._entriesStore.reload();
+            this._entriesList.clearSelection();
+            this._entriesStore.reload();
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({

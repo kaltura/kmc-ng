@@ -1,126 +1,128 @@
 @import 'app-theme/_variables.scss';
 
 .kTable {
-  background-color: white;
-  position: relative;
-  padding: 0px;
-  height: 100%;
-  k-area-blocker {
-    min-height: 250px;
-  }
-  .kTableActions {
-    width: 100%;
-    text-align: center;
-    button {
-      color: grey !important;
-      background-color: rgba(0, 0, 0, 0) !important;
-      border: none !important;
-      font-size: 16px !important;
-      outline: 0;
+    background-color: white;
+    position: relative;
+    padding: 0px;
+    height: 100%;
+    k-area-blocker {
+        min-height: 250px;
     }
-  }
+    .kTableActions {
+        width: 100%;
+        text-align: center;
+        button {
+            color: grey !important;
+            background-color: rgba(0, 0, 0, 0) !important;
+            border: none !important;
+            font-size: 16px !important;
+            outline: 0;
+        }
+    }
 
-  .kTitle {
-    color: $kGrayscale1;
-    font-weight: 700;
-  }
+    .kTitle {
+        color: $kGrayscale1;
+        font-weight: 700;
+    }
 
-  &.kTagsVisible /deep/ .ui-datatable-scrollable-body {
-    height: calc(100vh - 320px) !important;
-  }
+    &.kTagsVisible /deep/ .ui-table-scrollable-body {
+        height: calc(100vh - 320px) !important;
+    }
 
-  /deep/ .ui-datatable-scrollable-body {
-    height: calc(100vh - 280px) !important;
-    overflow: auto;
-  }
+    /deep/ .ui-table-scrollable-body {
+        height: calc(100vh - 280px) !important;
+        overflow: auto;
+    }
 }
 
 :host /deep/ {
 
-  .kDisabled {
-    .selectionColumn, .ui-chkbox-box {
-      pointer-events: none;
-      .ui-chkbox-box {
-        background-color: $kGrayscale6;
-      }
+    .kDisabled {
+        .selectionColumn, .ui-chkbox-box {
+            pointer-events: none;
+            .ui-chkbox-box {
+                background-color: $kGrayscale6;
+            }
+        }
     }
-  }
 
-  .selectionColumn {
-    width: 56px;
-    padding-left: 28px !important;
-  }
+    .selectionColumn {
+        width: 56px;
+        padding-left: 28px !important;
+    }
 
 }
 
-:host /deep/ .ui-datatable .nameColumn {
-  font-weight: normal;
-  width: 200px;
-}
-
-:host /deep/ .ui-datatable .permissionLevelColumn {
-  font-weight: normal;
-  width: 140px;
-  text-align: left;
-  .ui-cell-data {
-    text-align: left;
-  }
-}
-
-:host /deep/ .ui-datatable .updateMethodColumn {
-  font-weight: normal;
-  width: 140px;
-  text-align: left;
-
-  .ui-cell-data {
-    text-align: left;
-  }
-}
-
-:host /deep/ .ui-datatable .updatedAtColumn {
-  font-weight: normal;
-  width: 81px;
-  text-align: left;
-}
-
-:host /deep/ .ui-datatable {
-  .statusColumn {
+:host /deep/ .ui-table .nameColumn {
     font-weight: normal;
-    width: 170px;
+    width: 200px;
+}
+
+:host /deep/ .ui-table .permissionLevelColumn {
+    font-weight: normal;
+    width: 140px;
     text-align: left;
-    padding-left: 20px;
-    .kCategoryUserStatus {
-      padding-left: 10px;
+    overflow: visible;
+    .ui-cell-data {
+        text-align: left;
     }
-  }
+}
+
+:host /deep/ .ui-table .updateMethodColumn {
+    font-weight: normal;
+    width: 140px;
+    text-align: left;
+    overflow: visible;
+
+    .ui-cell-data {
+        text-align: left;
+    }
+}
+
+:host /deep/ .ui-table .updatedAtColumn {
+    font-weight: normal;
+    width: 81px;
+    text-align: left;
+}
+
+:host /deep/ .ui-table {
+    .statusColumn {
+        font-weight: normal;
+        width: 170px;
+        text-align: left;
+        padding-left: 20px;
+        .kCategoryUserStatus {
+            padding-left: 10px;
+        }
+    }
 }
 
 :host /deep/ tr:hover .removeColumn .kIconremove.kEnabled {
-  visibility: visible;
+    visibility: visible;
 }
 
-:host /deep/ .ui-datatable .removeColumn {
-  overflow: visible;
-  width: 55px;
-  text-align: center;
+:host /deep/ .ui-table .removeColumn {
+    overflow: visible;
+    width: 55px;
+    text-align: center;
 
-  .kIconremove {
-    font-size: 22px;
-    color: $kDandger;
-    cursor: pointer;
-    visibility: hidden;
-  }
+    .kIconremove {
+        font-size: 22px;
+        color: $kDandger;
+        cursor: pointer;
+        visibility: hidden;
+    }
 }
 
 :host {
-  display: flex;
-  flex-flow: row wrap;
-  margin: 0;
-  height: 100%;
-  flex-direction: column;
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0;
+    height: 100%;
+    flex-direction: column;
 }
 
-:host /deep/ p-datatable .stickyHeader {
-  z-index: 10;
-  display: table;
+:host /deep/ p-table .stickyHeader {
+    z-index: 10;
+    display: table;
 }

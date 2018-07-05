@@ -5,8 +5,17 @@
     margin-left: 24px;
 }
 
+.kReplaceMediaButtonsLabel {
+    color: $kGrayscale1;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 18px;
+    margin-bottom: 20px;
+}
+
 .kFlavorReplaceButton {
     margin-right: 20px;
+    margin-bottom: 16px;
     font-size: 14px;
     font-weight: bold;
 }
@@ -30,5 +39,13 @@
         padding: 0;
         width: 0;
         height: 0;
+    }
+}
+
+@media screen and (max-width: 1310px) {
+    .kFlavorReplaceButton {
+        width: 130px;
+        height: 48px;
+        margin-right: 10px;
     }
 }

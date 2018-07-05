@@ -306,3 +306,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
     font-size: 15px;
   }
 }
+
+.ui-column-resizer-helper {
+    background-color: $kGrayscale5;
+}
