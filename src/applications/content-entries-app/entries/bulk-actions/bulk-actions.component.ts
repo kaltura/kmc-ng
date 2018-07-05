@@ -140,12 +140,16 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     const canCreate = this.selectedEntries.length !== invalidEntries.length;
 
     if (canCreate) {
-      const invalidEntriesNames = invalidEntries.length < 11 ? invalidEntries.map(entry => `${entry.name}`).join('\n') : '';
+        const message = invalidEntries.length < 6
+            ? this._appLocalization.get(
+                'applications.content.bulkActions.createPlaylistWarningMsg',
+                [invalidEntries.map(entry => `${entry.name}`).join('\n')]
+            )
+            : this._appLocalization.get('applications.content.bulkActions.createPlaylistWarningMsgShort', [invalidEntries.length]);
+
         this.blockerMessageChange.emit(new AreaBlockerMessage({
             title: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
-            message: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarningMsg', {
-                0: invalidEntriesNames
-            }),
+            message: message,
             buttons: [
                 {
                     label: this._appLocalization.get('app.common.continue'),
