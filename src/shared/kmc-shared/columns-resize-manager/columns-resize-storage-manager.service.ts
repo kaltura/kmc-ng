@@ -11,7 +11,7 @@ export interface ResizableColumnsConfig {
     [tableName: string]: ResizableColumns;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ColumnsResizeStorageManagerService {
     private readonly _windowWidthThreshold = 20;
     private _columnsConfig: ResizableColumnsConfig = {};
