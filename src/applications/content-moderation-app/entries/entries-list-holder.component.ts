@@ -17,11 +17,16 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ModerationsListService } from './moderations-list.service';
 import { ContentModerationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
   templateUrl: './entries-list-holder.component.html',
-  providers: [BulkService]
+  providers: [
+      BulkService,
+      ColumnsResizeManagerService,
+      { provide: ResizableColumnsTableName, useValue: 'moderation-table' }
+  ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;

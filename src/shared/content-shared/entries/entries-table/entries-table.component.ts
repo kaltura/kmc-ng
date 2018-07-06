@@ -1,14 +1,14 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter, HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -16,10 +16,10 @@ import { KalturaMediaType } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaSourceType } from 'kaltura-ngx-client';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumns } from 'app-shared/kmc-shared/columns-resize-manager';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -32,6 +32,11 @@ export interface EntriesTableColumns {
 export interface CustomMenuItem extends MenuItem {
   metadata: any;
   commandName: string;
+}
+
+export interface EntriesTableColumnStyle {
+    'width': string;
+    'text-align': string;
 }
 
 @Component({
@@ -47,9 +52,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._columns = value || this._defaultColumns;
   }
 
-  public _columnsMetadata: {
-    [key: string]: { style: SafeStyle, sortable: boolean }
-  } = {};
+  public _columnsMetadata: { [key: string]: { style: EntriesTableColumnStyle, sortable: boolean } } = {};
 
   @Input() rowActions: { label: string, commandName: string, styleClass: string }[] = [];
 
@@ -94,22 +97,37 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _emptyMessage = '';
   public _items: CustomMenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'name': 'auto',
+        'playlistId': 'auto',
+        'createdAt': 'auto',
+        'subcategories': 'auto'
+    };
 
-  constructor(private _appLocalization: AppLocalization,
+    @HostListener('window:resize') _windowResize(): void {
+        if (this._columnsResizeManager.onWindowResize()) {
+            this._columnsConfig = this._defaultColumnsConfig;
+        }
+    }
+
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
-              private _permissionsService: KMCPermissionsService,
-              private _sanitization: DomSanitizer) {
+              private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
     this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
 
+      const columnsResizeConfig = this._columnsResizeManager.getConfig();
     Object.keys(this._columns).forEach(columnName => {
       this._columnsMetadata[columnName] = {
-        style: this._getColumnStyle(this._columns[columnName]),
+        style: this._getColumnStyle(this._columns[columnName], columnsResizeConfig[columnName]),
         sortable: this._columns[columnName].sortable || false
       };
     });
+      this._windowResize();
   }
 
   ngOnDestroy() {
@@ -200,9 +218,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.selectedEntriesChange.emit(event);
   }
 
-  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
+  public _getColumnStyle({ width = 'auto', align = 'left' } = {}, cachedWidth: string | number): EntriesTableColumnStyle {
       return {
-          'width': width,
+          'width': <string>cachedWidth || width,
           'text-align': align
       };
   }

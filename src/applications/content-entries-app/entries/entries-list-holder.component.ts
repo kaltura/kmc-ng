@@ -19,10 +19,15 @@ import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/km
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kEntriesListHolder',
-  templateUrl: './entries-list-holder.component.html'
+  templateUrl: './entries-list-holder.component.html',
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'entries-table' }
+    ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
