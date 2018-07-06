@@ -1,15 +1,31 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { SchemasStore } from '../schemas-store/schemas-store.service';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kSchemasTable',
   templateUrl: './schemas-table.component.html',
-  styleUrls: ['./schemas-table.component.scss']
+  styleUrls: ['./schemas-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'customdata-table' }
+    ]
 })
 export class SchemasTableComponent implements AfterViewInit, OnDestroy {
   @Input() set schemas(data: SettingsMetadataProfile[]) {
@@ -37,13 +53,35 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _items: MenuItem[];
   public _schemas: SettingsMetadataProfile[] = [];
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'name': '236px',
+        'schemaId': 'auto',
+        'systemName': 'auto',
+        'description': 'auto',
+        'applyTo': 'auto',
+        'fieldsIncluded': '190px'
+    };
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private _appLocalization: AppLocalization,
+    @HostListener('window:resize') _windowResize(): void {
+        if (this._columnsResizeManager.onWindowResize()) {
+            this._columnsConfig = this._defaultColumnsConfig;
+        }
+    }
+
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               public _schemasStore: SchemasStore,
               private _cdRef: ChangeDetectorRef) {
+      this._columnsConfig = Object.assign(
+          {},
+          this._defaultColumnsConfig,
+          this._columnsResizeManager.getConfig()
+      );
+      this._windowResize();
   }
 
   ngAfterViewInit() {

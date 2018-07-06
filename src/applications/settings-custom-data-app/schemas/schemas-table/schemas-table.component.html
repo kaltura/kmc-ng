@@ -7,16 +7,17 @@
         [resizableColumns]="true"
         [rowTrackBy]="rowTrackBy"
         (selectionChange)="_onSelectionChange($event)"
+        (onColResize)="_columnsResizeManager.onColumnResize($event)"
         [(selection)]="selectedSchemas">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
                 <col [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
-                <col [ngStyle]="{'width': '236px'}">
-                <col>
-                <col>
-                <col>
-                <col>
-                <col [ngStyle]="{'width': '190px'}">
+                <col [ngStyle]="{'width': _columnsConfig.name}">
+                <col [ngStyle]="{'width': _columnsConfig.schemaId}">
+                <col [ngStyle]="{'width': _columnsConfig.systemName}">
+                <col [ngStyle]="{'width': _columnsConfig.description}">
+                <col [ngStyle]="{'width': _columnsConfig.applyTo}">
+                <col [ngStyle]="{'width': _columnsConfig.fieldsIncluded}">
                 <col [ngStyle]="{'overflow':'visible', 'width':'80px'}">
             </colgroup>
         </ng-template>
@@ -26,22 +27,22 @@
                 <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th pResizableColumn [ngStyle]="{'width': '236px'}">
+                <th id="name" pResizableColumn [ngStyle]="{'width': _columnsConfig.name}">
                     {{'applications.settings.metadata.table.name' | translate}}
                 </th>
-                <th pResizableColumn>
+                <th id="schemaId" pResizableColumn [ngStyle]="{'width': _columnsConfig.schemaId}">
                     {{'applications.settings.metadata.table.id' | translate}}
                 </th>
-                <th pResizableColumn>
+                <th id="systemName" pResizableColumn [ngStyle]="{'width': _columnsConfig.systemName}">
                     {{'applications.settings.metadata.table.systemName' | translate}}
                 </th>
-                <th pResizableColumn>
+                <th id="description" pResizableColumn [ngStyle]="{'width': _columnsConfig.description}">
                     {{'applications.settings.metadata.table.description' | translate}}
                 </th>
-                <th pResizableColumn>
+                <th id="applyTo" pResizableColumn [ngStyle]="{'width': _columnsConfig.applyTo}">
                     {{'applications.settings.metadata.table.applyTo' | translate}}
                 </th>
-                <th [ngStyle]="{'width': '190px'}">
+                <th id="fieldsIncluded" [ngStyle]="{'width': _columnsConfig.fieldsIncluded}">
                     {{'applications.settings.metadata.table.fieldsIncluded' | translate}}
                 </th>
                 <th [ngStyle]="{'overflow':'visible', 'width':'80px'}"></th>
@@ -53,7 +54,7 @@
                 <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <p-tableCheckbox [value]="schema"></p-tableCheckbox>
                 </td>
-                <td class="ui-resizable-column" [ngStyle]="{'width': '236px'}">
+                <td class="ui-resizable-column">
                     <div class="kTitle kTableColumn"
                          [class.kProfileDisabled]="schema?.profileDisabled"
                          [kTooltip]="schema?.profileDisabled ? ('applications.settings.metadata.table.disabledLabel' | translate) : schema.name"
@@ -69,7 +70,7 @@
                     </span>
                 </td>
                 <td class="ui-resizable-column">{{schema.applyTo | kMetadataObjectType}}</td>
-                <td [ngStyle]="{'width': '190px'}">{{schema.defaultLabel}}</td>
+                <td>{{schema.defaultLabel}}</td>
                 <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
                     <div class="kSchemasTableActions">
                         <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"
