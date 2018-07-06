@@ -5,20 +5,20 @@ export const ResizableColumnsTableName = new InjectionToken('resizable-columns-t
 
 @Injectable()
 export class ColumnsResizeManagerService {
-    constructor(@Inject(ResizableColumnsTableName) @Optional() private _tableName: string,
-                private _storageManager: ColumnsResizeStorageManagerService) {
+    constructor(private _storageManager: ColumnsResizeStorageManagerService,
+                @Inject(ResizableColumnsTableName) @Optional() private _tableName: string,) {
         this._storageManager.registerTable(this._tableName);
     }
 
-    public onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }): void {
-        this._storageManager.onColumnResize(event);
+    public onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }, tableName: string = null): void {
+        this._storageManager.onColumnResize(event, tableName);
     }
 
-    public onWindowResize(): boolean {
-        return this._storageManager.onWindowResize();
+    public onWindowResize(tableName: string = null): boolean {
+        return this._storageManager.onWindowResize(tableName);
     }
 
-    public getConfig(): ResizableColumns {
-        return this._storageManager.getConfig();
+    public getConfig(tableName: string = null): ResizableColumns {
+        return this._storageManager.getConfig(tableName);
     }
 }

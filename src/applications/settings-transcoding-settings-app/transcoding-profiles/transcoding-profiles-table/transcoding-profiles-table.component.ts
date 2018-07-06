@@ -1,13 +1,27 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumns } from 'app-shared/kmc-shared/columns-resize-manager';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'k-transcoding-profiles-table',
   templateUrl: './transcoding-profiles-table.component.html',
-  styleUrls: ['./transcoding-profiles-table.component.scss']
+  styleUrls: ['./transcoding-profiles-table.component.scss'],
+    providers: [ColumnsResizeManagerService]
 })
 export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() set profiles(data: KalturaConversionProfileWithAsset[]) {
@@ -22,6 +36,7 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
   }
 
     @Input() singleTableMode: boolean;
+    @Input() profileType: KalturaConversionProfileType;
   @Input() selectedProfiles: KalturaConversionProfileWithAsset[] = [];
 
   @Output() selectedProfilesChange = new EventEmitter<KalturaConversionProfileWithAsset[]>();
@@ -29,19 +44,43 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
 
+    private _tableName: string;
+
   public _profiles = [];
   public _emptyMessage = '';
   public _items: MenuItem[];
   public _deferredLoading = true;
   public _deferredProfiles = [];
+    public _columnsConfig: ResizableColumns;
+    public _defaultColumnsConfig: ResizableColumns = {
+        'name': 'auto',
+        'description': 'auto',
+        'profileId': '90px',
+        'flavors': '110px'
+    };
   public rowTrackBy: Function = (index: number, item: any) => item.id;
+    @HostListener('window:resize') _windowResize(): void {
+        if (this._columnsResizeManager.onWindowResize(this._tableName)) {
+            this._columnsConfig = this._defaultColumnsConfig;
+        }
+    }
 
-  constructor(private _appLocalization: AppLocalization,
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
+        if (this.profileType) {
+            this._tableName = this.profileType === KalturaConversionProfileType.media ? 'trancodingmedia-table' : 'trancodinglive-table';
+            this._columnsConfig = Object.assign(
+                {},
+                this._defaultColumnsConfig,
+                this._columnsResizeManager.getConfig(this._tableName)
+            );
+            this._windowResize();
+        }
     this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
   }
 
@@ -92,6 +131,10 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
     }
 
     this._permissionsService.filterList(<{ id: string }[]>this._items, { 'delete': KMCPermissions.TRANSCODING_DELETE });
+  }
+
+  public _onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }): void {
+      this._columnsResizeManager.onColumnResize(event, this._tableName);
   }
 
   public _openActionsMenu(event: any, profile: KalturaConversionProfileWithAsset): void {

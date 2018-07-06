@@ -29,6 +29,7 @@
 
   <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage">
     <k-transcoding-profiles-table [profiles]="(_storeService.profiles.data$ | async)?.items"
+                                  [profileType]="_profilesType"
                                   [singleTableMode]="singleTableMode"
                                   (actionSelected)="_actionSelected($event)"
                                   [(selectedProfiles)]="_selectedProfiles"></k-transcoding-profiles-table>

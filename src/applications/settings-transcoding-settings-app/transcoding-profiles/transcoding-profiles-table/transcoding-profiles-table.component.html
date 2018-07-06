@@ -4,17 +4,18 @@
         dataKey="id"
         [value]="_profiles"
         [resizableColumns]="true"
-        (selectionChange)="_onSelectionChange($event)"
-        [(selection)]="selectedProfiles"
         [scrollable]="true"
-        [rowTrackBy]="rowTrackBy">
+        [rowTrackBy]="rowTrackBy"
+        (selectionChange)="_onSelectionChange($event)"
+        (onColResize)="_onColumnResize($event)"
+        [(selection)]="selectedProfiles">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
                 <col [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
-                <col>
-                <col>
-                <col [ngStyle]="{'width':'90px'}">
-                <col [ngStyle]="{'width':'110px'}">
+                <col [ngStyle]="{'width': _columnsConfig.name}">
+                <col [ngStyle]="{'width': _columnsConfig.description}">
+                <col [ngStyle]="{'width': _columnsConfig.profileId}">
+                <col [ngStyle]="{'width': _columnsConfig.flavors}">
                 <col [ngStyle]="{'overflow':'visible', 'width':'80px'}">
             </colgroup>
         </ng-template>
@@ -24,16 +25,16 @@
                 <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th pResizableColumn>
+                <th id="name" pResizableColumn [ngStyle]="{'width': _columnsConfig.name}">
                     {{'applications.settings.transcoding.table.name' | translate}}
                 </th>
-                <th pResizableColumn>
+                <th id="description" pResizableColumn [ngStyle]="{'width': _columnsConfig.description}">
                     {{'applications.settings.transcoding.table.description' | translate}}
                 </th>
-                <th pResizableColumn [ngStyle]="{'width':'90px'}">
+                <th id="profileId" pResizableColumn [ngStyle]="{'width': _columnsConfig.profileId}">
                     {{'applications.settings.transcoding.table.id' | translate}}
                 </th>
-                <th [ngStyle]="{'width':'110px'}">
+                <th id="flavors" [ngStyle]="{'width': _columnsConfig.flavors}">
                     {{'applications.settings.transcoding.table.flavors' | translate}}
                 </th>
                 <th [ngStyle]="{'overflow':'visible', 'width':'80px'}"></th>
@@ -62,8 +63,8 @@
                         {{profile.description}}
                     </span>
                 </td>
-                <td class="ui-resizable-column" [ngStyle]="{'width':'90px'}">{{profile.id}}</td>
-                <td [ngStyle]="{'width':'110px'}">
+                <td class="ui-resizable-column">{{profile.id}}</td>
+                <td>
                     {{'applications.settings.transcoding.profile.flavors' | translate:[profile.flavors || 0]}}
                 </td>
                 <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
