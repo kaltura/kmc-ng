@@ -289,6 +289,8 @@
                 "invalidUrl": "URL is invalid"
             },
             "uploadMenu": {
+                "createFromUrl": "Upload from URL",
+                "createFromYoutube": "Upload from YouTube",
                 "uploadFromDesktop": "Upload from Desktop",
                 "needHighSpeed": "Need High-speed Upload?",
                 "highSpeed": "High-Speed Upload",
@@ -307,6 +309,25 @@
                 },
                 "errors": {
                     "prepareEntry": "An error occurred while preparing an entry."
+                }
+            },
+            "createFromUrl": {
+                "uploadFromUrl": "Upload from URL",
+                "transcodingProfile": "Transcoding Profile",
+                "profilePlaceholder": "Default",
+                "addFile": "Add File",
+                "fileUrl": "File URL",
+                "fileUrlPlaceholder": "http://",
+                "transcodingFlavor": "Transcoding Flavor",
+                "selectFlavor": "Select Flavor",
+                "remove": "Remove File",
+                "link": "Link",
+                "cancel": "Cancel",
+                "noFlavors": "No Flavors",
+                "emptyMessage": {
+                    "title": "No files to upload",
+                    "getStarted": "Add some files to get started. ",
+                    "browse": "Add"
                 }
             },
             "uploadSettings": {
@@ -1567,7 +1588,6 @@
                         "replaceVideo": "Replace Video",
                         "noFlavors": "No Flavors",
                         "addVideo": "Add Video",
-                        "replaceVideo": "Replace Video",
                         "addAudio": "Add Audio",
                         "replaceAudio": "Replace Audio",
                         "uploadFile": "Upload file",

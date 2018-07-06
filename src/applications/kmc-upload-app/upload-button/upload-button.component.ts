@@ -15,6 +15,7 @@ export class UploadButtonComponent {
   @ViewChild('createLive') createLivePopup: PopupWidgetComponent;
   @ViewChild('prepareEntry') prepareEntryComponent: PrepareEntryComponent;
   @ViewChild('bulkuploadmenu') bulkUploadMenu: PopupWidgetComponent;
+  @ViewChild('uploadFromUrl') uploadFromUrl: PopupWidgetComponent;
 
   disabled = true;
 
@@ -46,6 +47,9 @@ export class UploadButtonComponent {
         break;
       case 'createLive':
         this.createLivePopup.open();
+        break;
+    case 'createFromUrl':
+        this.uploadFromUrl.open();
         break;
       default:
         break;

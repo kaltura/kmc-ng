@@ -38,6 +38,11 @@
         background-color: $kDandger;
       }
 
+      &.kUploadMenuLinkIcon {
+        cursor: pointer;
+        background-color: $kPrimary;
+      }
+
       &.kUploadMenuBulkUploadIcon {
         cursor: pointer;
         background-color: $kOrange;

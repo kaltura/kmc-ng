@@ -26,6 +26,18 @@
 
   </div>
 
+    <div class="kUploadMenuListItem" *ngIf="_kmcPermissions.CONTENT_INGEST_UPLOAD | kNgIfPermitted">
+        <i class="kIconlink kUploadMenuLinkIcon" (click)="onItemSelected.emit('createFromUrl')"></i>
+        <span>
+            <a (click)="onItemSelected.emit('createFromUrl')">
+                {{'applications.upload.uploadMenu.createFromUrl' | translate}}
+            </a>
+            <a class="kBulkUploadSamplesLink">
+                {{'applications.upload.uploadMenu.createFromYoutube' | translate}}
+            </a>
+        </span>
+    </div>
+
   <div class="kUploadMenuListItem last" *ngIf="_kmcPermissions.LIVE_STREAM_ADD | kNgIfPermitted">
     <i class="kIconlive kUploadMenuLiveStreamIcon" (click)="onItemSelected.emit('createLive')"></i>
     <span class="kUploadMenuListItemLive">

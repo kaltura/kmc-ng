@@ -16,6 +16,12 @@
   </ng-template>
 </kPopupWidget>
 
+<kPopupWidget #uploadFromUrl [popupWidth]="791" [popupHeight]="538" [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kUploadFromUrl [parentPopupWidget]="uploadFromUrl"></kUploadFromUrl>
+    </ng-template>
+</kPopupWidget>
+
 <kPopupWidget #bulkuploadmenu [popupWidth]="382" [popupHeight]="436" [closeBtn]="true" [modal]="true">
   <ng-template>
     <kKMCBulkUploadMenu (onClose)="bulkuploadmenu.close()"></kKMCBulkUploadMenu>

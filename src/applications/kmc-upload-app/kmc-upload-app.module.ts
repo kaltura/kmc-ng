@@ -33,6 +33,7 @@ import { DropFoldersMonitorService } from './upload-monitor/drop-folders-monitor
 import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
+import { UploadFromUrlComponent } from './upload-from-url/upload-from-url.component';
 
 @NgModule({
   imports: [
@@ -69,7 +70,8 @@ import { TableModule } from 'primeng/table';
     CreateLiveComponent,
     KalturaLiveStreamComponent,
     UniversalLiveComponent,
-    ManualLiveComponent
+    ManualLiveComponent,
+      UploadFromUrlComponent
   ],
   exports: [
     UploadButtonComponent,
