@@ -71,15 +71,26 @@
               {{category.name}}</div>
           </td>
 
-          <td class="ui-resizable-column">{{category.id}}</td>
-
-          <td class="ui-resizable-column">{{category.createdAt | kDate}}
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="category.id" [showOnEllipsis]="true">{{category.id}}</span>
           </td>
 
-          <td class="ui-resizable-column">{{category.directSubCategoriesCount}}
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="category.createdAt | kDate" [showOnEllipsis]="true">
+                  {{category.createdAt | kDate}}
+              </span>
           </td>
 
-          <td class="ui-resizable-column">{{category.entriesCount}}
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="category.directSubCategoriesCount" [showOnEllipsis]="true">
+                  {{category.directSubCategoriesCount}}
+              </span>
+          </td>
+
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="category.entriesCount" [showOnEllipsis]="true">
+                  {{category.entriesCount}}
+              </span>
           </td>
 
           <td [ngStyle]="{'width': '80px'}">

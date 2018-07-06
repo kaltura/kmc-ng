@@ -64,19 +64,29 @@
                              [ngClass]="file.mediaType | entryType: false"></div>
                     </td>
                     <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.name}">
-                        <span class="kUploadName kTableColumn" [kTooltip]="file.fileName">{{file.fileName}}</span>
+                        <span class="kUploadName kTableColumn" [kTooltip]="file.fileName" [showOnEllipsis]="true">
+                            {{file.fileName}}
+                        </span>
                     </td>
                     <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.entryId}">
-                        {{file.entryId}}
+                        <span class="kTableColumn" [kTooltip]="file.entryId" [showOnEllipsis]="true">
+                            {{file.entryId}}
+                        </span>
                     </td>
                     <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.size}">
-                        {{ file.fileSize | kFileSize }}
+                        <span class="kTableColumn" [kTooltip]="file.fileSize | kFileSize" [showOnEllipsis]="true">
+                            {{file.fileSize | kFileSize}}
+                        </span>
                     </td>
                     <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.uploadedOn}">
-                        {{file.uploadedOn | kDate}}
+                        <span class="kTableColumn" [kTooltip]="file.uploadedOn | kDate" [showOnEllipsis]="true">
+                            {{file.uploadedOn | kDate}}
+                        </span>
                     </td>
                     <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.status}">
-                        {{ file.status | kUploadStatus }}
+                        <span class="kTableColumn" [kTooltip]="file.status | kUploadStatus" [showOnEllipsis]="true">
+                            {{file.status | kUploadStatus}}
+                        </span>
                     </td>
                     <td [ngStyle]="{'width': '120px'}">
                         <kUploadProgress [progress]="file.progress" [status]="file.status"></kUploadProgress>

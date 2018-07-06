@@ -78,7 +78,7 @@
 
           <td [ngStyle]="{'width': _columnsConfig.feedId}" class="ui-resizable-column">
             <div class="kColId" [kTooltip]="feed.id">
-              {{feed.id}}
+                <span class="kTableColumn" [kTooltip]="feed.id" [showOnEllipsis]="true">{{feed.id}}</span>
             </div>
           </td>
 
@@ -92,9 +92,9 @@
           <td [ngStyle]="{'width': _columnsConfig.playlistId}" class="ui-resizable-column">
             <div class="kColSource">
               <span [ngClass]="feed.playlistId | kToPlaylistIcon: _idToPlaylistMap" class="kPlaylistIcon"></span>
-              <span class="kElipsis" [kTooltip]="feed.playlistId | kToPlaylistName: _idToPlaylistMap">
-              {{feed.playlistId | kToPlaylistName: _idToPlaylistMap}}
-            </span>
+              <span class="kElipsis" [kTooltip]="feed.playlistId | kToPlaylistName: _idToPlaylistMap" [showOnEllipsis]="true">
+                {{feed.playlistId | kToPlaylistName: _idToPlaylistMap}}
+              </span>
             </div>
           </td>
 
@@ -103,7 +103,7 @@
               <kCopyToClipboard class="kIcon" [text]="feed.feedUrl" [iconSwitchTimeout]="5000"
                                 [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
               <input readonly="true" class="kElipsis kUrl" type="text" [value]="feed.feedUrl" pInputText=""
-                     [kTooltip]="feed.feedUrl"/>
+                     [kTooltip]="feed.feedUrl" [showOnEllipsis]="true"/>
             </div>
           </td>
 

@@ -74,7 +74,9 @@
             </td>
 
             <td class="ui-resizable-column">
-              {{folder.dropFolderId}}
+              <span class="kTableColumn" [kTooltip]="folder.dropFolderId" [showOnEllipsis]="true">
+                  {{folder.dropFolderId}}
+              </span>
             </td>
 
             <td>
@@ -82,17 +84,22 @@
             </td>
 
             <td class="ui-resizable-column">
-              {{ folder.fileSize | kFileSize }}
+              <span class="kTableColumn" [kTooltip]="folder.fileSize | kFileSize" [showOnEllipsis]="true">
+                  {{folder.fileSize | kFileSize}}
+              </span>
             </td>
 
             <td class="ui-resizable-column">
-              <a (click)="navigateToEntry.emit(folder.entryId)">{{ folder.entryId }}</a>
+              <a class="kTableColumn" [kTooltip]="folder.fileSize | kFileSize" [showOnEllipsis]="true"
+                 (click)="navigateToEntry.emit(folder.entryId)">
+                  {{ folder.entryId }}
+              </a>
             </td>
 
             <td class="ui-resizable-column">
               <div class="kStatusWrap">
                 <div [ngClass]="folder.status | kFolderFileStatus: true: false" class="kDropFolderStatusIcon"></div>
-                <div class="kStatusLabel" [kTooltip]="folder.status | kFolderFileStatus: false: true">
+                <div class="kStatusLabel kTableColumn" [kTooltip]="folder.status | kFolderFileStatus: false: true">
                   {{ folder.status | kFolderFileStatus: false: false }}
                 </div>
               </div>

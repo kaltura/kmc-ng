@@ -59,13 +59,17 @@
                     </div>
                 </td>
                 <td class="ui-resizable-column">
-                    <span class="kTableColumn" [kTooltip]="profile.description" [maxWidth]="300">
+                    <span class="kTableColumn" [kTooltip]="profile.description" [showOnEllipsis]="true" [maxWidth]="300">
                         {{profile.description}}
                     </span>
                 </td>
                 <td class="ui-resizable-column">{{profile.id}}</td>
                 <td>
-                    {{'applications.settings.transcoding.profile.flavors' | translate:[profile.flavors || 0]}}
+                    <span class="kTableColumn"
+                          [kTooltip]="'applications.settings.transcoding.profile.flavors' | translate:[profile.flavors || 0]"
+                          [showOnEllipsis]="true">
+                        {{'applications.settings.transcoding.profile.flavors' | translate:[profile.flavors || 0]}}
+                    </span>
                 </td>
                 <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
                     <div class="kTranscodingProfilesTableActions">

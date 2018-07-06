@@ -64,27 +64,34 @@
 
           <td class="ui-resizable-column">
             <span [kTooltip]="bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType">
-              {{ bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType }}
+              {{bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType}}
             </span>
           </td>
 
           <td class="ui-resizable-column">
             <span [kTooltip]="bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId">
-              {{ bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId }}
+              {{bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId}}
             </span>
           </td>
 
           <td class="ui-resizable-column">
-            <span>{{ bulkLogItem.uploadedOn | kDate }}</span>
+              <span class="kTableColumn" [kTooltip]="bulkLogItem.uploadedOn | kDate" [showOnEllipsis]="true">
+                  {{bulkLogItem.uploadedOn | kDate}}
+              </span>
           </td>
 
           <td class="ui-resizable-column">
-            <span>{{ !bulkLogItem.numOfObjects || bulkLogItem.numOfObjects < 0 ? 0 : bulkLogItem.numOfObjects }}</span>
+              <span class="kTableColumn"
+                    [kTooltip]="!bulkLogItem.numOfObjects || bulkLogItem.numOfObjects < 0 ? 0 : bulkLogItem.numOfObjects"
+                    [showOnEllipsis]="true">
+                  {{!bulkLogItem.numOfObjects || bulkLogItem.numOfObjects < 0 ? 0 : bulkLogItem.numOfObjects}}</span>
           </td>
 
           <td class="ui-resizable-column">
             <i [class]="bulkLogItem.status | kBulkLogTableStatusIcon"></i>
-            <span class="kBulkLogTableStatusMessage">{{ bulkLogItem.status | kBulkLogTableStatus }}</span>
+            <span class="kTableColumn" [kTooltip]="bulkLogItem.status | kBulkLogTableStatus" [showOnEllipsis]="true">
+              {{bulkLogItem.status | kBulkLogTableStatus}}
+            </span>
           </td>
 
           <td [ngStyle]="{'width': '80px'}" *ngIf="_actionsAllowed">

@@ -62,15 +62,31 @@
                         {{schema.name}} <span *ngIf="schema?.profileDisabled">*</span>
                     </div>
                 </td>
-                <td class="ui-resizable-column">{{schema.id}}</td>
-                <td class="ui-resizable-column">{{schema.systemName}}</td>
                 <td class="ui-resizable-column">
-                    <span class="kTableColumn" [kTooltip]="schema.description">
+                    <span class="kTableColumn" [kTooltip]="schema.id" [showOnEllipsis]="true">
+                        {{schema.id}}
+                    </span>
+                </td>
+                <td class="ui-resizable-column">
+                    <span class="kTableColumn" [kTooltip]="schema.systemName" [showOnEllipsis]="true">
+                        {{schema.systemName}}
+                    </span>
+                </td>
+                <td class="ui-resizable-column">
+                    <span class="kTableColumn" [kTooltip]="schema.description" [showOnEllipsis]="true">
                         {{schema.description}}
                     </span>
                 </td>
-                <td class="ui-resizable-column">{{schema.applyTo | kMetadataObjectType}}</td>
-                <td>{{schema.defaultLabel}}</td>
+                <td class="ui-resizable-column">
+                    <span class="kTableColumn" [kTooltip]="schema.applyTo | kMetadataObjectType" [showOnEllipsis]="true">
+                        {{schema.applyTo | kMetadataObjectType}}
+                    </span>
+                </td>
+                <td>
+                    <span class="kTableColumn" [kTooltip]="schema.defaultLabel" [showOnEllipsis]="true">
+                        {{schema.defaultLabel}}
+                    </span>
+                </td>
                 <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
                     <div class="kSchemasTableActions">
                         <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"

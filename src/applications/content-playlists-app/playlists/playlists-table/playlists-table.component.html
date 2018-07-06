@@ -71,14 +71,20 @@
             </div>
           </td>
 
-          <td [ngStyle]="{'width': _columnsConfig.playlistId}" class="ui-resizable-column">{{playlist.id}}</td>
+          <td [ngStyle]="{'width': _columnsConfig.playlistId}" class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="playlist.id" [showOnEllipsis]="true">{{playlist.id}}</span>
+          </td>
 
           <td [ngStyle]="{'width': _columnsConfig.type}" class="ui-resizable-column">
-              {{playlist.playlistType | playlistType}}
+              <span class="kTableColumn" [kTooltip]="playlist.playlistType | playlistType" [showOnEllipsis]="true">
+                  {{playlist.playlistType | playlistType}}
+              </span>
           </td>
 
           <td [ngStyle]="{'width': '140px'}" class="ui-resizable-column">
-              {{playlist.createdAt | kDate}}
+              <span class="kTableColumn" [kTooltip]="playlist.createdAt | kDate" [showOnEllipsis]="true">
+                  {{playlist.createdAt | kDate}}
+              </span>
           </td>
 
           <td [ngStyle]="{'width': '80px'}">

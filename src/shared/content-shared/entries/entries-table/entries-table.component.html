@@ -132,7 +132,9 @@
                 </td>
 
                 <td class="ui-resizable-column" *ngIf="_columnsMetadata.id"
-                    [ngStyle]="_columnsMetadata.id.style">{{entry.id}}</td>
+                    [ngStyle]="_columnsMetadata.id.style">
+                    <span class="kTableColumn" [kTooltip]="entry.id" [showOnEllipsis]="true">{{entry.id}}</span>
+                </td>
 
                 <td class="ui-resizable-column kMediaTypeIcon" *ngIf="_columnsMetadata.mediaType"
                     [ngStyle]="_columnsMetadata.mediaType.style">
@@ -147,17 +149,23 @@
 
                 <td class="ui-resizable-column" *ngIf="_columnsMetadata.createdAt"
                     [ngStyle]="_columnsMetadata.createdAt.style">
-                    {{entry.createdAt | kDate}}
+                    <span class="kTableColumn" [kTooltip]="entry.createdAt | kDate" [showOnEllipsis]="true">
+                        {{entry.createdAt | kDate}}
+                    </span>
                 </td>
 
                 <td class="ui-resizable-column" *ngIf="_columnsMetadata.moderationStatus"
                     [ngStyle]="_columnsMetadata.moderationStatus.style">
-                    {{entry.moderationStatus | kModerationStatus}}
+                    <span class="kTableColumn" [kTooltip]="entry.moderationStatus | kModerationStatus" [showOnEllipsis]="true">
+                        {{entry.moderationStatus | kModerationStatus}}
+                    </span>
                 </td>
 
                 <td class="ui-resizable-column" *ngIf="_columnsMetadata.duration"
                     [ngStyle]="_columnsMetadata.duration.style">
-                    {{entry.duration | kTime | entryDuration:entry}}
+                    <span class="kTableColumn" [kTooltip]="entry.duration | kTime | entryDuration:entry" [showOnEllipsis]="true">
+                        {{entry.duration | kTime | entryDuration:entry}}
+                    </span>
                 </td>
 
                 <td class="ui-resizable-column" *ngIf="_columnsMetadata.plays"
@@ -167,7 +175,9 @@
 
                 <td class="ui-resizable-column" *ngIf="_columnsMetadata.status"
                     [ngStyle]="_columnsMetadata.status.style">
-                    {{entry | entryStatus}}
+                    <span class="kTableColumn" [kTooltip]="entry | entryStatus" [showOnEllipsis]="true">
+                        {{entry | entryStatus}}
+                    </span>
                 </td>
 
                 <td *ngIf="rowActions?.length">

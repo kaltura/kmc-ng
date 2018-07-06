@@ -33,13 +33,19 @@
       <ng-template pTemplate="body" let-role>
           <tr>
               <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.role, 'padding-left': '1.5em'}">
-                  <span class="kRoleName kTableColumn" [kTooltip]="role.name">{{role.name}}</span>
+                  <span class="kRoleName kTableColumn" [kTooltip]="role.name" [showOnEllipsis]="true">
+                      {{role.name}}
+                  </span>
               </td>
               <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.description}">
-                  <span class="kTableColumn" [kTooltip]="role.description">{{role.description}}</span>
+                  <span class="kTableColumn" [kTooltip]="role.description" [showOnEllipsis]="true">
+                      {{role.description}}
+                  </span>
               </td>
               <td [ngStyle]="{'width': '120px'}">
-                  {{role.updatedAt | kDate}}
+                  <span class="kTableColumn" [kTooltip]="role.updatedAt | kDate" [showOnEllipsis]="true">
+                      {{role.updatedAt | kDate}}
+                  </span>
               </td>
               <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
                   <div class="kRolesTableActions">
