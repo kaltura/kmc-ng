@@ -23,6 +23,8 @@ import { map, switchMap } from 'rxjs/operators';
 import { Flavor } from '../../content-entries-app/entry/entry-flavours/flavor';
 import { NewEntryCreateFromUrlService } from 'app-shared/kmc-shell/new-entry-create-from-url';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];
@@ -63,6 +65,7 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
     public _flavorsFieldDisabled = false;
 
     constructor(private _formBuilder: FormBuilder,
+                private _appEvents: AppEventsService,
                 private _newEntryCreateFromUrlService: NewEntryCreateFromUrlService,
                 private _kalturaClient: KalturaClient,
                 private _transcodingProfileManagement: TranscodingProfileManagement,
@@ -290,6 +293,7 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
             .subscribe(
                 () => {
                     this._logger.info(`handle successful import files action, close popup`);
+                    this._appEvents.publish(new UpdateEntriesListEvent())
                     this.parentPopupWidget.close();
                 },
                 error => {
