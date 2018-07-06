@@ -11,9 +11,7 @@ import {
     KalturaConversionProfileFilter,
     KalturaConversionProfileOrderBy,
     KalturaConversionProfileType,
-    KalturaFilterPager,
-    KalturaFlavorReadyBehaviorType,
-    KalturaMediaEntry
+    KalturaFilterPager
 } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, PopupWidgetComponent, urlRegex } from '@kaltura-ng/kaltura-ui';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
@@ -23,12 +21,14 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { map, switchMap } from 'rxjs/operators';
 import { Flavor } from '../../content-entries-app/entry/entry-flavours/flavor';
+import { NewEntryCreateFromUrlService } from 'app-shared/kmc-shell/new-entry-create-from-url';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];
 }
 
-export interface UploadReplacementFile {
+export interface UploadCreateFromUrlFile {
     file?: File;
     name?: string;
     hasError?: boolean;
@@ -56,13 +56,14 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
     public _transcodingProfileField: AbstractControl;
     public _blockerMessage: AreaBlockerMessage;
     public _isLoading = false;
-    public _files: UploadReplacementFile[] = [];
+    public _files: UploadCreateFromUrlFile[] = [];
     public _kmcPermissions = KMCPermissions;
     public _title: string;
     public _flavorOptions: SelectItem[] = [];
     public _flavorsFieldDisabled = false;
 
     constructor(private _formBuilder: FormBuilder,
+                private _newEntryCreateFromUrlService: NewEntryCreateFromUrlService,
                 private _kalturaClient: KalturaClient,
                 private _transcodingProfileManagement: TranscodingProfileManagement,
                 private _permissionsService: KMCPermissionsService,
@@ -90,7 +91,7 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     private _prepare(): void {
-        this._loadReplaceData();
+        this._loadCreateFromUrlData();
     }
 
     private _loadConversionProfiles(): Observable<KalturaConversionProfileAssetParams[]> {
@@ -107,7 +108,7 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
             })).map(res => res.objects);
     }
 
-    private _loadReplaceData(): void {
+    private _loadCreateFromUrlData(): void {
         this._logger.info(`handle data loading: transcoding profiles list and conversion profiles list`);
         this._isLoading = true;
 
@@ -168,7 +169,7 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
                                     this._logger.info(`user confirmed, retry action`);
                                     this._blockerMessage = null;
                                     this._isLoading = false;
-                                    this._loadReplaceData();
+                                    this._loadCreateFromUrlData();
                                 }
                             },
                             {
@@ -194,7 +195,7 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
         this._files.forEach(file => file.flavor = 0);
     }
 
-    public _removeFile(file: UploadReplacementFile): void {
+    public _removeFile(file: UploadCreateFromUrlFile): void {
         this._logger.info(`handle remove file from the list action by user`, { fileName: file.name || file.url });
         const fileIndex = this._files.indexOf(file);
         if (fileIndex !== -1) {
@@ -247,25 +248,12 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
             this._importFiles(transcodingProfileId);
         } else if (code) {
             this._logger.info(`files are not valid, show confirmation`);
-            if (code === 'uniqueFlavors') {
+            if (code === 'missingFlavors') {
                 this._blockerMessage = new AreaBlockerMessage({
-                    message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.errors.uniqueFlavors'),
+                    message: this._appLocalization.get('applications.upload.createFromUrl.missingFlavor'),
                     buttons: [
                         {
-                            label: this._appLocalization.get('app.common.ok'),
-                            action: () => {
-                                this._logger.info(`user confirmed, abort action`);
-                                this._blockerMessage = null;
-                            }
-                        }
-                    ]
-                });
-            } else if (code === 'missingFlavors') {
-                this._blockerMessage = new AreaBlockerMessage({
-                    message: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.errors.missingFlavor'),
-                    buttons: [
-                        {
-                            label: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.continue'),
+                            label: this._appLocalization.get('applications.upload.createFromUrl.continue'),
                             action: () => {
                                 this._logger.info(`user confirmed, proceed action`);
                                 this._importFiles(transcodingProfileId);
@@ -286,21 +274,42 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
 
     private _importFiles(transcodingProfileId: string): void {
         const importFileDataList = this._files.map(file => ({
-            url: file.url,
-            assetParamsId: file.flavor
+            fileUrl: file.url
+            // assetParamsId: file.flavor
         }));
 
         this._logger.info(`handle import files action`, {
             files: importFileDataList,
             transcodingProfileId: Number(transcodingProfileId)
         });
-        // this._newReplaceVideoUpload.import(importFileDataList, this.entry.id, Number(transcodingProfileId))
-        //     .pipe(cancelOnDestroy(this))
-        //     .pipe(tag('block-shell'))
-        //     .subscribe(this._replacementResultHandler);
+        this._newEntryCreateFromUrlService.import(importFileDataList, Number(transcodingProfileId))
+            .pipe(
+                cancelOnDestroy(this),
+                tag('block-shell')
+            )
+            .subscribe(
+                () => {
+                    this._logger.info(`handle successful import files action, close popup`);
+                    this.parentPopupWidget.close();
+                },
+                error => {
+                    this._logger.warn(`handle failed import files action, show alert`, { errorMessage: error.message });
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: error.message,
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.ok'),
+                            action: () => {
+                                this._logger.info(`user dismissed alert, close popup`);
+                                this._blockerMessage = null;
+                                this.parentPopupWidget.close();
+                            }
+                        }]
+                    });
+                }
+            );
     }
 
-    private _validateFiles(files: UploadReplacementFile[]): { isValid: boolean, code?: string } {
+    private _validateFiles(files: UploadCreateFromUrlFile[]): { isValid: boolean, code?: string } {
         let isValid = true;
         let code = null;
         const selectedProfile = this._transcodingProfiles.find(profile => profile.id === this._transcodingProfileField.value);
@@ -328,19 +337,14 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
                 file.errorToken = 'applications.upload.validation.invalidUrl';
             }
 
-            if (file.errorToken !== 'applications.upload.validation.selectFlavor' && filesFlavors.indexOf(file.flavor) !== index) {
-                isValid = false;
-                code = 'uniqueFlavors';
-            }
-
-            conversionProfileAssetParams.forEach(asset => {
-                if (asset.readyBehavior === KalturaFlavorReadyBehaviorType.required
-                    && asset.origin === KalturaAssetParamsOrigin.ingest
-                    && file.flavor !== asset.assetParamsId) {
-                    isValid = false;
-                    code = 'missingFlavors';
-                }
-            });
+            // conversionProfileAssetParams.forEach(asset => {
+            //     if (asset.readyBehavior === KalturaFlavorReadyBehaviorType.required
+            //         && asset.origin === KalturaAssetParamsOrigin.ingest
+            //         && file.flavor !== asset.assetParamsId) {
+            //         isValid = false;
+            //         code = 'missingFlavors';
+            //     }
+            // });
         });
 
         this._logger.debug(`validate uploading/importing/linking/matching files`, { isValid, code });
@@ -348,7 +352,7 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
         return { isValid, code };
     }
 
-    public _updateFileValidityOnTypeChange(file: UploadReplacementFile): void {
+    public _updateFileValidityOnTypeChange(file: UploadCreateFromUrlFile): void {
         if (file.hasError && file.errorToken === 'applications.upload.validation.selectFlavor') {
             file.errorToken = null;
             file.hasError = false;
@@ -358,7 +362,7 @@ export class UploadFromUrlComponent implements OnInit, AfterViewInit, OnDestroy 
     public _addFile(): void {
         this._logger.info(`handle add file action by user`);
         setTimeout(() => {
-            this._logger.info(`add empty file row for non-upload replacement`);
+            this._logger.info(`add empty file row`);
             this._files = [...this._files, { url: '' }];
         }, 0);
     }

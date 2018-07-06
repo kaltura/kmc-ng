@@ -99,6 +99,7 @@ import { InvalidRestorePasswordHashFormComponent } from './components/login/inva
 
 import { CopyToClipboardModule } from '@kaltura-ng/mc-shared';
 import { ContextualHelpModule } from 'app-shared/kmc-shared/contextual-help/contextual-help.module';
+import { NewEntryCreateFromUrlModule } from 'app-shared/kmc-shell/new-entry-create-from-url/new-entry-create-from-url.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -164,7 +165,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       ContextualHelpModule.forRoot(),
       KmcViewsModule.forRoot(),
-      LocalizationModule.forRoot()
+      LocalizationModule.forRoot(),
+      NewEntryCreateFromUrlModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
