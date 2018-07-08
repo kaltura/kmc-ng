@@ -73,7 +73,6 @@ export class FlavorLinkComponent implements OnDestroy {
     private _uploadFlavorAction(): Observable<void> {
         this._logger.info(`handle upload flavor request, create asset and set its content`, {
             fileUrl: this._form.value.filePath,
-            flavorAssetId: this.flavor.flavorAsset.id
         });
         const entryId = this._widgetService.data.id;
         const flavorAsset = new KalturaFlavorAsset({ flavorParamsId: this.flavor.flavorParams.id });

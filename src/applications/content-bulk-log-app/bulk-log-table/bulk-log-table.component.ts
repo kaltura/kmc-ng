@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { DataTable, Menu, MenuItem } from 'primeng/primeng';
+import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaBulkUpload } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
@@ -33,7 +33,6 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output()
   selectedBulkLogItemsChange = new EventEmitter<any>();
 
-  @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
   private _deferredEntries: any[];

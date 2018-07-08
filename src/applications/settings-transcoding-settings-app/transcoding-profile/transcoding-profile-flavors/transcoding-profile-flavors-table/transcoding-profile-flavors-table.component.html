@@ -1,48 +1,65 @@
 <div class="kTranscodingProfileFlavorsTable" [class.noResults]="!_flavors?.length">
-  <p-dataTable
-    #dataTable
-    dataKey="id"
-    scrollable="true"
-    scrollHeight="100%"
-    [class.kDisabled]="!_isEditAllowed"
-    [immutable]="false"
-    [value]="_flavors"
-    [emptyMessage]="_emptyMessage"
-    (selectionChange)="_onSelectionChange($event)"
-    [(selection)]="selectedFlavors">
-    <p-column selectionMode="multiple" [style]="{'width': '44px'}"></p-column>
+    <p-table
+        dataKey="id"
+        scrollHeight="100%"
+        [scrollable]="true"
+        [class.kDisabled]="!_isEditAllowed"
+        [value]="_flavors"
+        (selectionChange)="_onSelectionChange($event)"
+        [(selection)]="selectedFlavors">
+        <ng-template pTemplate="header">
+            <tr>
+                <th [ngStyle]="{'width':'44px'}">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th [ngStyle]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}">
+                    {{'applications.settings.transcoding.flavors.table.name' | translate}}
+                </th>
+                <th>
+                    {{'applications.settings.transcoding.flavors.table.id' | translate}}
+                </th>
+                <th>
+                    {{'applications.settings.transcoding.flavors.table.format' | translate}}
+                </th>
+                <th>
+                    {{'applications.settings.transcoding.flavors.table.codec' | translate}}
+                </th>
+                <th>
+                    {{'applications.settings.transcoding.flavors.table.bitrate' | translate}}
+                </th>
+                <th>
+                    {{'applications.settings.transcoding.flavors.table.dimensions' | translate}}
+                </th>
+                <th [ngStyle]="{'width': '60px'}" *ngIf="_isEditAllowed"></th>
+            </tr>
+        </ng-template>
 
-    <p-column field="name"
-              [style]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}"
-              [header]="'applications.settings.transcoding.flavors.table.name' | translate">
-      <ng-template let-col let-flavor="rowData" pTemplate="body">
-        <div class="kTitle kTableColumn" [kTooltip]="flavor[col.field]"
-             (click)="_editFlavor(flavor)">{{flavor[col.field]}}</div>
-      </ng-template>
-    </p-column>
+        <ng-template pTemplate="body" let-flavor>
+            <tr [pSelectableRow]="flavor">
+                <td [ngStyle]="{'width':'44px'}">
+                    <p-tableCheckbox [value]="flavor"></p-tableCheckbox>
+                </td>
+                <td [ngStyle]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}">
+                    <div class="kTitle kTableColumn" [kTooltip]="flavor.name"
+                         (click)="_editFlavor(flavor)">{{flavor.name}}
+                    </div>
+                </td>
+                <td>{{flavor.id}}</td>
+                <td>{{flavor.format}}</td>
+                <td>{{flavor.codec}}</td>
+                <td>{{flavor.bitrate}}</td>
+                <td>{{flavor.dimensions}}</td>
+                <td [ngStyle]="{'width': '60px'}" *ngIf="_isEditAllowed">
+                    <div class="kEditFlavorIconWrapper">
+                        <i class="kIconEdit kEditFlavorIcon" (click)="_editFlavor(flavor)"></i>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
 
-    <p-column field="id" [header]="'applications.settings.transcoding.flavors.table.id' | translate">
-    </p-column>
-
-    <p-column field="format" [header]="'applications.settings.transcoding.flavors.table.format' | translate">
-    </p-column>
-
-    <p-column field="codec" [header]="'applications.settings.transcoding.flavors.table.codec' | translate">
-    </p-column>
-
-    <p-column field="bitrate" [header]="'applications.settings.transcoding.flavors.table.bitrate' | translate">
-    </p-column>
-
-    <p-column field="dimensions" [header]="'applications.settings.transcoding.flavors.table.dimensions' | translate">
-    </p-column>
-
-    <p-column header="" [style]="{'width': '60px'}" *ngIf="_isEditAllowed">
-      <ng-template let-col let-flavor="rowData" pTemplate="body" let-i="rowIndex">
-        <div class="kEditFlavorIconWrapper">
-          <i class="kIconEdit kEditFlavorIcon" (click)="_editFlavor(flavor)"></i>
-        </div>
-      </ng-template>
-    </p-column>
-  </p-dataTable>
+        <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">{{_emptyMessage}}</div>
+        </ng-template>
+    </p-table>
 </div>
 

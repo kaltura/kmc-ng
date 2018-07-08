@@ -9,7 +9,8 @@
   line-height: 24px;
 }
 
-.kAddToDefaultTranscodingProfile {
+.kAddToDefaultTranscodingProfile,
+.kEnforceFeedAuthor {
   padding-top: 11px;
   /deep/ {
     .ui-chkbox-label {

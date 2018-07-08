@@ -93,6 +93,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 		this._searchUsersSubscription = this._widgetService.searchUsers(event.query).subscribe(data => {
 				const suggestions = [];
 				(data || []).forEach((suggestedUser: KalturaUser) => {
+                    suggestedUser['__tooltip'] = suggestedUser.id;
 					let isSelectable = true;
 					if (formControl){
 						const owners = this._widgetService.usersForm.value[formControl] || [];
@@ -101,7 +102,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 						});
 					}
 					suggestions.push({
-            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
+                        name: `${suggestedUser.screenName} (${suggestedUser.id})`,
 						item: suggestedUser,
 						isSelectable: isSelectable
 					});

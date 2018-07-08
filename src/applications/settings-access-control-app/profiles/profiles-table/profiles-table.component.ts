@@ -10,7 +10,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { DataTable, Menu, MenuItem } from 'primeng/primeng';
+import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaAccessControl } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
@@ -50,7 +50,6 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   @Output() selectedProfilesChange = new EventEmitter<KalturaAccessControl[]>();
   @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
 
-  @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
   public _deferredLoading = true;

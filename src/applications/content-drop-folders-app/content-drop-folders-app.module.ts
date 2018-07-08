@@ -9,7 +9,6 @@ import {
   ButtonModule,
   CalendarModule,
   CheckboxModule,
-  DataTableModule,
   InputTextModule,
   MenuModule,
   PaginatorModule,
@@ -35,7 +34,6 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
   imports: [
     CommonModule,
     AreaBlockerModule,
-    DataTableModule,
     LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
