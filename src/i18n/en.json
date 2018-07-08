@@ -1367,6 +1367,7 @@
                     "details": "Details",
                     "entryID": "ID:",
                     "creator": "Created By:",
+                    "owner": "Owner:",
                     "creationDate": "Creation Date:",
                     "updateDate": "Last Update:",
                     "landingPage": "Landing Page:",
