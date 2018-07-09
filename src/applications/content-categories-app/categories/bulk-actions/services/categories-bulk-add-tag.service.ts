@@ -47,7 +47,7 @@ export class CategoriesBulkAddTagsService extends CategoriesBulkActionBaseServic
           observer.complete();
         },
         error => {
-          observer.error(error);
+          observer.error({});
         }
       );
     });
