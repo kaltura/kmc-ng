@@ -1,4 +1,4 @@
-<button pButton [disabled]="disabled"
+<button pButton [disabled]="_disabled"
         label="{{'app.titles.create' | translate | uppercase}}"
         class="kButtonDefault kUploadBtn"
         (click)="uploadmenu.open()"></button>
@@ -12,14 +12,8 @@
 
 <kPopupWidget #uploadsettings [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kKMCUploadSettings [parentPopupWidget]="uploadsettings"></kKMCUploadSettings>
+    <kKMCUploadSettings [parentPopupWidget]="uploadsettings" [creationType]="_creationType"></kKMCUploadSettings>
   </ng-template>
-</kPopupWidget>
-
-<kPopupWidget #uploadFromUrl [popupWidth]="791" [popupHeight]="538" [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
-    <ng-template>
-        <kUploadFromUrl [parentPopupWidget]="uploadFromUrl"></kUploadFromUrl>
-    </ng-template>
 </kPopupWidget>
 
 <kPopupWidget #bulkuploadmenu [popupWidth]="382" [popupHeight]="436" [closeBtn]="true" [modal]="true">

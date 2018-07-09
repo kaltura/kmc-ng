@@ -333,10 +333,14 @@
                 }
             },
             "uploadSettings": {
-                "title": "Upload Settings",
+                "uploadSettings": "Upload Settings",
+                "uploadFromUrl": "Upload from URL",
+                "cancel": "Cancel",
                 "profile": "Transcoding Profile",
                 "addFileBtn": "Add Files",
                 "profilePlaceholder": "Default",
+                "fileUrl": "File URL",
+                "fileUrlPlaceholder": "http://",
                 "mediaTypes": {
                     "video": "Video",
                     "audio": "Audio",
@@ -353,10 +357,12 @@
                     "emptyMessage": {
                         "title": "No files to upload",
                         "getStarted": "Add some files to get started. ",
-                        "browse": "Browse"
+                        "browse": "Browse",
+                        "add": "Add"
                     }
                 },
-                "uploadBtn": "Upload"
+                "upload": "Upload",
+                "link": "Link"
             },
             "uploadMonitor": {
                 "uploadFromDesktop": "Upload from Desktop",
