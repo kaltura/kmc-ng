@@ -387,6 +387,7 @@ export class CategoryService implements OnDestroy {
 						header: this._appLocalization.get('applications.content.categoryDetails.cancelEdit'),
 						message: this._appLocalization.get('applications.content.categoryDetails.discard'),
 						accept: () => {
+                            this._subcategoriesMoved = false;
 							observer.next({ allowed: true });
 							observer.complete();
 						},
@@ -434,7 +435,7 @@ export class CategoryService implements OnDestroy {
         this._contentCategoriesMainViewService.open();
 	}
 
-	public notifySubcategoriesMoved(): void {
+    public notifySubcategoriesMoved(): void {
         this._subcategoriesMoved = true;
     }
 }
