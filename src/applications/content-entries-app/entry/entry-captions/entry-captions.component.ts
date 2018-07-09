@@ -23,8 +23,8 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
 
-    public _loadingError = null;
 	public _actions: MenuItem[] = [];
+    public _captionStatusReady = KalturaCaptionAssetStatus.ready;
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
@@ -49,11 +49,6 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		if (this.actionsMenu){
 			// save the selected caption for usage in the actions menu
 			this._widgetService.currentCaption = caption;
-			//disable actions for captions that are not in "ready" state
-			this._actions[0].disabled = (caption.status !== KalturaCaptionAssetStatus.ready);
-			this._actions[1].disabled = (caption.status !== KalturaCaptionAssetStatus.ready);
-			this._actions[3].disabled = (caption.status !== KalturaCaptionAssetStatus.ready);
-
 			this.actionsMenu.toggle(event);
 		}
 	}
