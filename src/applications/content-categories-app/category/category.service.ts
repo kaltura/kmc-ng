@@ -60,6 +60,7 @@ export class CategoryService implements OnDestroy {
     public state$ = this._state.asObservable();
     private _categoryIsDirty: boolean;
     private _pageExitVerificationToken: string;
+    private _subcategoriesMoved = false;
 
     public get categoryIsDirty(): boolean {
         return this._categoryIsDirty;
@@ -250,7 +251,8 @@ export class CategoryService implements OnDestroy {
                   .map(
                     categorySavedResponse => {
 
-                      if (userModifiedName) {
+                      if (userModifiedName || this._subcategoriesMoved) {
+                          this._subcategoriesMoved = false;
                         this._appEvents.publish(new CategoriesGraphUpdatedEvent());
                       }
 
@@ -431,5 +433,9 @@ export class CategoryService implements OnDestroy {
 
         this._contentCategoriesMainViewService.open();
 	}
+
+	public notifySubcategoriesMoved(): void {
+        this._subcategoriesMoved = true;
+    }
 }
 
