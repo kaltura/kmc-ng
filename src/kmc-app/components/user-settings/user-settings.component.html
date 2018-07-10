@@ -22,7 +22,7 @@
     <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" (onChange)="onLangSelected($event)"></p-dropdown>
   </ul-->
 </div>
-<kPopupWidget #changeAccountPopup [popupWidth]="500" [popupHeight]="370" [modal]="true">
+<kPopupWidget #changeAccountPopup data-aid="changeAccountPopup" [popupWidth]="500" [popupHeight]="370" [modal]="true">
   <ng-template>
     <kChangeAccount></kChangeAccount>
   </ng-template>

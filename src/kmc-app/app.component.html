@@ -9,7 +9,7 @@
     </p-footer>
 </p-confirmDialog>
 
-<kPopupWidget #openEmailPopup [modal]="true" [popupWidth]="500" [popupHeight]="320">
+<kPopupWidget #openEmailPopup data-aid="openEmailPopup" [modal]="true" [popupWidth]="500" [popupHeight]="320">
     <ng-template>
        <kOpenEmail [parentPopupWidget]="openEmailPopup" [emailConfig]="_openEmailConfig"></kOpenEmail>
     </ng-template>

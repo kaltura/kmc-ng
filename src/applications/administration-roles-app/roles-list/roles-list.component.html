@@ -33,7 +33,7 @@
       </div>
     </div>
   </div>
-  <kPopupWidget #editPopup [popupWidth]="995" [slider]="true">
+  <kPopupWidget #editPopup data-aid="rolesEditPopup" [popupWidth]="995" [slider]="true">
     <ng-template>
       <kEditRole [role]="_currentEditRole"
                  [parentPopupWidget]="editPopup"></kEditRole>

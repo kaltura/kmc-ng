@@ -22,7 +22,7 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #addNewProfile [popupWidth]="586" [popupHeight]="435" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #addNewProfile data-aid="addNewProfile" [popupWidth]="586" [popupHeight]="435" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kAddNewTranscodingProfile [parentPopupWidget]="addNewProfile"
                                [profileType]="_newProfileType"></kAddNewTranscodingProfile>
