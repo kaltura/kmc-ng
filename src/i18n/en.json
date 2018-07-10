@@ -2571,7 +2571,7 @@
                 "strongPassword": "Use a strong password that you are not using elsewhere.",
                 "currentPassword": "Current Password",
                 "newPassword": "New password",
-                "reTypeNewPassword": "Re-type the new password.",
+                "reTypeNewPassword": "Re-type the new password",
                 "errors": {
                     "required": "This field is required.",
                     "doNotMuchPasswords": "Password fields do not match.",
