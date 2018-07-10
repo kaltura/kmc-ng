@@ -2407,7 +2407,7 @@
                     "entries": "Entries",
                     "categories": "Categories",
                     "schemaNameRequired": "Name is required",
-                    "schemaNameMaxLength": "Name must be less then {{0}} characters long"
+                    "schemaNameMaxLength": "Name must be less than {{0}} characters long"
                 },
                 "table": {
                     "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
