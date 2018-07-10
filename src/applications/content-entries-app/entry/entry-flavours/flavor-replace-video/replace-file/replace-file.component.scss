@@ -115,6 +115,7 @@
             }
 
             .kIconRemoveFile {
+                color: $kDandger;
                 font-size: 24px;
                 display: none;
                 cursor: pointer;
@@ -162,12 +163,15 @@
         text-align: center;
 
         .kUploadButton {
-            width: 100px;
+            width: 130px;
             height: 34px;
-            background-color: $kPrimary;
-            color: white;
             font-weight: normal;
             font-size: 14px;
+            margin-right: 16px;
+
+            &:last-child {
+                margin-right: 0;
+            }
         }
     }
 }

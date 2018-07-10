@@ -77,6 +77,7 @@
 
 <kPopupWidget
   #refinePopup
+  data-aid="playlistsRefinePopup"
   [appendTo]="playlistsTableHolder"
   [popupWidth]="350"
   [popupHeight]="169"
@@ -94,7 +95,7 @@
   </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #addNewPlaylist [popupWidth]="586" [popupHeight]="410" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #addNewPlaylist data-aid="addNewPlaylist" [popupWidth]="586" [popupHeight]="410" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kAddNewPlaylist [parentPopupWidget]="addNewPlaylist"></kAddNewPlaylist>
   </ng-template>

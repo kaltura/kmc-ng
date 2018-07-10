@@ -163,6 +163,10 @@
         <div class="kFooter">
             <button class="kButtonDefault kUploadButton"
                     pButton
+                    [label]="'applications.content.entryDetails.flavours.replaceVideo.cancel' | translate"
+                    (click)="parentPopupWidget?.close()"></button>
+            <button class="kButtonBranded kUploadButton"
+                    pButton
                     [disabled]="_files.length === 0 || _isLoading || !!_blockerMessage"
                     [label]="_uploadBtnLabel"
                     (click)="_upload()"></button>

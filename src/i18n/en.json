@@ -2435,7 +2435,7 @@
                     "entries": "Entries",
                     "categories": "Categories",
                     "schemaNameRequired": "Name is required",
-                    "schemaNameMaxLength": "Name must be less then {{0}} characters long"
+                    "schemaNameMaxLength": "Name must be less than {{0}} characters long"
                 },
                 "table": {
                     "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
@@ -2599,7 +2599,7 @@
                 "strongPassword": "Use a strong password that you are not using elsewhere.",
                 "currentPassword": "Current Password",
                 "newPassword": "New password",
-                "reTypeNewPassword": "Re-type the new password.",
+                "reTypeNewPassword": "Re-type the new password",
                 "errors": {
                     "required": "This field is required.",
                     "doNotMuchPasswords": "Password fields do not match.",
