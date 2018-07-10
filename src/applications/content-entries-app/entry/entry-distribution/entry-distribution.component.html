@@ -19,7 +19,7 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #editProfile [popupWidth]="995" [slider]="true">
+<kPopupWidget #editProfile data-aid="editDistributionProfile" [popupWidth]="995" [slider]="true">
   <ng-template>
     <k-area-blocker [message]="_widgetService.popupMessage">
       <kEditDistributionProfile [parentPopup]="editProfile"

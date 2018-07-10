@@ -225,13 +225,13 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #liveAnalytics [fullScreen]="true">
+<kPopupWidget #liveAnalytics data-aid="liveAnalytics" [fullScreen]="true">
   <ng-template>
     <kAnalyticsLive [entry]="_widgetService.data" [parentPopup]="liveAnalytics"></kAnalyticsLive>
   </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #liveDashboard [fullScreen]="true">
+<kPopupWidget #liveDashboard data-aid="liveDashboard" [fullScreen]="true">
     <ng-template>
         <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
     </ng-template>

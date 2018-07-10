@@ -10,7 +10,7 @@
 </kEntriesList>
 </k-area-blocker>
 
-<kPopupWidget #liveDashboard [fullScreen]="true">
+<kPopupWidget #liveDashboard data-aid="liveDashboard" [fullScreen]="true">
   <ng-template>
     <kLiveDashboard [entryId]="_entryId" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
   </ng-template>

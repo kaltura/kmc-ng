@@ -77,7 +77,7 @@
     </div>
 </k-area-blocker>
 
-<kPopupWidget #clipAndTrim [fullScreen]="true">
+<kPopupWidget #clipAndTrim data-aid="clipAndTrim" [fullScreen]="true">
     <ng-template>
         <kEntryEditor [entry]="_widgetService.data"
                       [entryHasSource]="true"
