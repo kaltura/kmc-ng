@@ -29,6 +29,7 @@
           <div class="kRow">
             <span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
             <span>{{_widgetService.data?.streamName.replace('%i', '1')}}</span>
+              <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.streamName.replace('%i', '1')" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
           </div>
           <div class="kRow">
             <span class="kLabels"></span>
