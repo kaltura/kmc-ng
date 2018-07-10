@@ -16,6 +16,7 @@ export class UploadButtonComponent {
   @ViewChild('createLive') createLivePopup: PopupWidgetComponent;
   @ViewChild('prepareEntry') prepareEntryComponent: PrepareEntryComponent;
   @ViewChild('bulkuploadmenu') bulkUploadMenu: PopupWidgetComponent;
+  @ViewChild('createFromYoutube') createFromYoutube: PopupWidgetComponent;
 
     public _disabled = true;
     public _creationTypes = KMCFileCreationType;
@@ -54,6 +55,9 @@ export class UploadButtonComponent {
     case 'createFromUrl':
         this._creationType = KMCFileCreationType.import;
         this.uploadSettingsPopup.open();
+        break;
+    case 'createFromYoutube':
+        this.createFromYoutube.open();
         break;
       default:
         break;

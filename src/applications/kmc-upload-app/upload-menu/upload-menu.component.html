@@ -32,7 +32,7 @@
             <a (click)="onItemSelected.emit('createFromUrl')">
                 {{'applications.upload.uploadMenu.createFromUrl' | translate}}
             </a>
-            <a class="kBulkUploadSamplesLink">
+            <a class="kBulkUploadSamplesLink" (click)="onItemSelected.emit('createFromYoutube')">
                 {{'applications.upload.uploadMenu.createFromYoutube' | translate}}
             </a>
         </span>
