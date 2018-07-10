@@ -301,7 +301,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
             this._logger.info(`handle delete categories request`);
           setTimeout(() => {
             this.executeService(
-              this.selectedCategories,
+              this.selectedCategories
+                .filter(category =>
+                    !category.parentId || !this.selectedCategories.find(({ id }) => id === category.parentId)
+                ),
               this._bulkDeleteService,
               {},
               true,
