@@ -100,6 +100,7 @@ npm run build:prod
 
 6. Test the updated kmc-ng and make sure it works correctly
 ```
+cp src/configuration/server-config-example.json dist/server-config.json
 cd dist
 ws --spa index.html
 ```
@@ -136,23 +137,22 @@ npm run build:prod
 ```
 kmc-ng-vX.X.X.zip
 | -> deploy (folder - copied from /deploy)
-| -> server-config-example.json (file - copied from /src/configuration)
-| -> vX.X.X (folder - copied from /dist)
+| -> /dist content should be copied to the zip root
 ```
 **Note**: replace `vX.X.X` with the actual version number
 
 6.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
 
-6.1 update the title of the release, add `(Beta)` to the versin name
-
-6.2 add the following information at the bottom of the release notes
+6.1 add the following information at the bottom of the release notes
 ```
 ## Installation:
-1.  Unzip *inner folder* `v<version number>` into `/opt/kaltura/apps/kmcng/v<version number>`
+1.  Unzip `v<version number>`.zip into `/opt/kaltura/apps/kmcng/v<version number>`
 2.  Run uiconf deployment with `--ini=v<version number>/deploy/config.ini`
 ```
 
-6.3 upload the zip file you created in step 5
+6.2 upload the zip file you created in step 5
+
+6.3 upload server-config-example.json (file - copied from /src/configuration)
 
 7.1 Make sure you are working on the master branch before proceeding with this step. If you published from a different branch, first merge it to master: 
 ```
