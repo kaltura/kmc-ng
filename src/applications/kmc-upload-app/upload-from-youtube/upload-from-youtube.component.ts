@@ -65,8 +65,8 @@ export class UploadFromYoutubeComponent implements OnDestroy {
         const idRegExp = new RegExp('([A-Za-z0-9_-]{11})', 'i');
 
         const match = source.match(idRegExp);
-        if (match && match.length > 1) {
-            return match[1];
+        if (match && match.length) {
+            return match[0];
         }
 
         return null;
