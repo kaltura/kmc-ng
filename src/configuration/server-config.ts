@@ -220,6 +220,14 @@ export function buildKalturaServerUri(suffix: string): string {
     return result;
 }
 
+export function buildUrlWithClientProtocol(urlWithoutProtocol) {
+    let protocol =  (location.protocol || '').toLowerCase();
+    if (protocol[protocol.length - 1] === ':') {
+        protocol =  location.protocol.substring(0, location.protocol.length - 1);
+    }
+    return `${protocol}://${urlWithoutProtocol}`;
+}
+
 export function buildCDNUrl(suffix: string): string {
     let protocol =  (location.protocol || '').toLowerCase();
     if (protocol[protocol.length - 1] === ':') {
@@ -240,10 +248,9 @@ export function buildDeployUrl(suffix: string): string {
 }
 
 export function getKalturaServerUri(suffix: string = ''): string {
-    if (serverConfig.kalturaServer) {
-        const useHttpsProtocol = globalConfig.kalturaServer.useSecuredProtocol;
+    if (serverConfig.kalturaServer && serverConfig.kalturaServer.uri) {
         const serverEndpoint = serverConfig.kalturaServer.uri;
-        return `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}${suffix}`;
+        return buildUrlWithClientProtocol(`${serverEndpoint}${suffix}`);
     } else {
         throw new Error(`cannot provide kaltura server uri. server configuration wasn't loaded already`);
     }
