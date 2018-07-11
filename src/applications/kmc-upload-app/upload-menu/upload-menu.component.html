@@ -28,7 +28,7 @@
 
     <div class="kUploadMenuListItem" *ngIf="_kmcPermissions.CONTENT_INGEST_UPLOAD | kNgIfPermitted">
         <i class="kIconlink kUploadMenuLinkIcon" (click)="onItemSelected.emit('createFromUrl')"></i>
-        <span>
+        <span [class.kSingleItem]="!_uploadFromYoutubeAllowed">
             <a (click)="onItemSelected.emit('createFromUrl')">
                 {{'applications.upload.uploadMenu.createFromUrl' | translate}}
             </a>

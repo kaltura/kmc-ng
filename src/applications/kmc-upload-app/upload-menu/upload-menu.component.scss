@@ -58,6 +58,10 @@
       margin-left: 35px;
         margin-top: 30px;
 
+        &.kSingleItem {
+            margin-top: 0;
+        }
+
         &.kUploadMenuListItemLive {
             margin-top: 0;
         }

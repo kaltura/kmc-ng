@@ -58,7 +58,6 @@ export const ServerConfigSchema = {
                     additionalProperties: false
                 }
             },
-            required: ['youtube'],
             additionalProperties: true
         },
         externalApps: {
