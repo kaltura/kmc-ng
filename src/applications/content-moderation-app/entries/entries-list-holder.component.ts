@@ -53,7 +53,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
-    id: { width: '100px' },
+    id: { width: '120px' },
     mediaType: { sortable: true, width: '80px', align: 'center' },
     plays: { sortable: true, width: '76px' },
     moderationCount: { sortable: true, width: '76px' },

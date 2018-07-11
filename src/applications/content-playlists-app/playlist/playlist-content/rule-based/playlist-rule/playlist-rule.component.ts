@@ -54,7 +54,7 @@ export class PlaylistRuleComponent implements OnInit {
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: {},
-    id: { width: '100px' },
+    id: { width: '120px' },
     mediaType: { width: '80px', align: 'center' },
     createdAt: { width: '140px' },
     duration: { width: '104px' },

@@ -86,7 +86,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _defaultColumns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
-    id: { width: '100px' }
+    id: { width: '120px' }
   };
 
   public _columns?: EntriesTableColumns = this._defaultColumns;
