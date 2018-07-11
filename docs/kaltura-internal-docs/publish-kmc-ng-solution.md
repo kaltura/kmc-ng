@@ -44,13 +44,12 @@ git fetch
 ```
    * NOTICE: in order to sync tags you must run both `git fetch` and `git pull`
 
-3. In **kaltura-ng** root folder execute dry-run of the publish process
+3. In **kaltura-ng** root folder start the publish process:
 ```
-$ npm run publish:preview
+$ npm run publish
 ```
-   * Answer 'yes' to all questions. Since you doing a dry-run it will only affect your local machine **without** publishing anything to either Npm or Github.
-   * The publish process will change files `changelog.md` and `package.json`, Review the changes and make sure it includes the features you expect.
-   * If you are satisfy, you can continue with the publish.
+  For advanced scenarios, use the publish command flags which can be reviewed by running ```npm run publish -- -h```.
+  For example, use the -branch flag to publish from a branch different from the master branch.
 
 4. Revert changes in **kaltura-ng**
 ```
