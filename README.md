@@ -20,7 +20,7 @@ The following list contains some major features in our road-map:
 ## <a name="issue"></a> Got a question or found an Issue?
 If you find a bug in the source code, you can help us by
 [submitting an issue](https://github.com/kaltura/kmc-ng/issues).
-
+ 
 ## Getting started
 
 ### Prerequisites
