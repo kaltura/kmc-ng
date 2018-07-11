@@ -26,12 +26,6 @@ export interface SubApplicationsConfig {
     administrationRolesApp: {
         contactUsLink: string;
     };
-    kmcUploadApp: {
-        uploadFromYoutube: {
-            youtubeApiKey: string;
-            youtubeApiUri: string;
-        }
-    };
 }
 
 export const subApplicationsConfig: SubApplicationsConfig = {
@@ -60,12 +54,6 @@ export const subApplicationsConfig: SubApplicationsConfig = {
     },
     'administrationRolesApp': {
         'contactUsLink': 'http://site.kaltura.com/Request-Users.html'
-    },
-    'kmcUploadApp': {
-        'uploadFromYoutube': {
-            'youtubeApiKey': 'AIzaSyDcbErXYFB7LPBdcf-_OJShhQYN4Q6ZGIM',
-            'youtubeApiUri': 'https://www.googleapis.com/youtube/v3/videos'
-        }
     }
 };
 

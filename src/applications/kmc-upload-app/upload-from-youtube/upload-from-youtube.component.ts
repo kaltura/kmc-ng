@@ -13,7 +13,6 @@ import {
 } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { subApplicationsConfig } from 'config/sub-applications';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
@@ -21,6 +20,7 @@ import * as moment from 'moment';
 import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { serverConfig } from 'config/server';
 
 @Component({
     selector: 'kKMCUploadFromYoutube',
@@ -70,8 +70,8 @@ export class UploadFromYoutubeComponent implements OnDestroy {
     }
 
     private _getVideoMetadata(referenceId: string): Observable<{ title: string, duration: number }> {
-        const { youtubeApiUri, youtubeApiKey } = subApplicationsConfig.kmcUploadApp.uploadFromYoutube;
-        const url = `${youtubeApiUri}?part=contentDetails,snippet&fields=items(snippet(title),contentDetails(duration))&id=${referenceId}&key=${youtubeApiKey}`;
+        const { uri, key } = serverConfig.externalApi.youtube;
+        const url = `${uri}?part=contentDetails,snippet&fields=items(snippet(title),contentDetails(duration))&id=${referenceId}&key=${key}`;
         return this._http.get(url)
             .pipe(map((response: { items: any[] }) => {
                 if (response && Array.isArray(response.items) && response.items.length) {

@@ -32,7 +32,9 @@
             <a (click)="onItemSelected.emit('createFromUrl')">
                 {{'applications.upload.uploadMenu.createFromUrl' | translate}}
             </a>
-            <a class="kBulkUploadSamplesLink" (click)="onItemSelected.emit('createFromYoutube')">
+            <a *ngIf="_uploadFromYoutubeAllowed"
+               class="kBulkUploadSamplesLink"
+               (click)="onItemSelected.emit('createFromYoutube')">
                 {{'applications.upload.uploadMenu.createFromYoutube' | translate}}
             </a>
         </span>
