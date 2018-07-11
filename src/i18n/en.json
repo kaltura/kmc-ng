@@ -341,7 +341,8 @@
                 "note": "Note: Only public YouTube videos are supported",
                 "invalidUrl": "Unsupported URL or ID provided",
                 "success": "Success",
-                "successMessage": "YouTube Entry has been created successfully.\nDo you want to view entry details?"
+                "successMessage": "YouTube Entry has been created successfully.\nDo you want to view entry details?",
+                "notSupported": "Upload from YouTube is not available!"
             },
             "uploadSettings": {
                 "uploadSettings": "Upload Settings",

@@ -66,7 +66,7 @@ export interface ServerConfig {
         serverUri: string,
         securedServerUri: string
     };
-    externalApi: {
+    externalAPI: {
         youtube: {
             key: string;
             uri: string;

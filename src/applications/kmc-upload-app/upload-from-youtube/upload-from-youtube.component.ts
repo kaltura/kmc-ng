@@ -48,6 +48,16 @@ export class UploadFromYoutubeComponent implements OnDestroy {
                 private _appEvents: AppEventsService,
                 private _browserService: BrowserService,
                 private _serverClient: KalturaClient) {
+        if (!serverConfig.externalAPI || !serverConfig.externalAPI
+            || !serverConfig.externalAPI.youtube.key || !serverConfig.externalAPI.youtube.uri) {
+            this._browserService.alert({
+                header: this._appLocalization.get('app.common.attention'),
+                message: this._appLocalization.get('applications.upload.uploadFromYoutube.notSupported'),
+                accept: () => {
+                    this.parentPopupWidget.close();
+                }
+            });
+        }
     }
 
     ngOnDestroy() {
@@ -73,7 +83,7 @@ export class UploadFromYoutubeComponent implements OnDestroy {
     }
 
     private _getVideoMetadata(referenceId: string): Observable<YoutubeMetadata> {
-        const { uri, key } = serverConfig.externalApi.youtube;
+        const { uri, key } = serverConfig.externalAPI.youtube;
         const url = `${uri}?part=contentDetails,snippet&fields=items(snippet(title),contentDetails(duration))&id=${referenceId}&key=${key}`;
         return this._http.get(url)
             .pipe(map((response: { items: any[] }) => {

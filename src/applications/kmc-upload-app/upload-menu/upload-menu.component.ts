@@ -17,7 +17,7 @@ export class UploadMenuComponent {
   public _showNeedHighSpeedLink: boolean;
   public _enableNeedHighSpeedLink: boolean;
   public _enableBulkUploadSamples: boolean;
-    public _uploadFromYoutubeAllowed = !!serverConfig.externalApi.youtube;
+    public _uploadFromYoutubeAllowed = !!serverConfig.externalAPI && !!serverConfig.externalAPI.youtube;
 
   constructor(private _browserService: BrowserService,
               private _permissionsService: KMCPermissionsService) {
