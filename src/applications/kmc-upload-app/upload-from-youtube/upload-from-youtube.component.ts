@@ -62,17 +62,11 @@ export class UploadFromYoutubeComponent implements OnDestroy {
     }
 
     private _extractReferenceId(source: string): string {
-        const fromRegularUrl = new RegExp('(?!v=)([A-Za-z0-9_-]{11})', 'i');
-        const fromShortUrl = new RegExp('(?!v=)([A-Za-z0-9_-]{11})', 'i');
+        const idRegExp = new RegExp('([A-Za-z0-9_-]{11})', 'i');
 
-        const regularUrlMatch = source.match(fromRegularUrl);
-        if (regularUrlMatch && regularUrlMatch.length > 1) {
-            return regularUrlMatch[1];
-        }
-
-        const shortUrlMatch = source.match(fromShortUrl);
-        if (shortUrlMatch && shortUrlMatch.length > 1) {
-            return shortUrlMatch[1];
+        const match = source.match(idRegExp);
+        if (match && match.length > 1) {
+            return match[1];
         }
 
         return null;
