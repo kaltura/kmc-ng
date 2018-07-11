@@ -1,3 +1,56 @@
+<a name="5.0.0"></a>
+# [5.0.0](https://github.com/kaltura/kmc-ng/compare/v4.8.2...v5.0.0) (2018-07-11)
+
+
+### Bug Fixes
+
+* **administration/role:** fix role description style ([eae995f](https://github.com/kaltura/kmc-ng/commit/eae995f))
+* **content/bulk-upload:** add missing action id for "Delete" action ([ab16b7a](https://github.com/kaltura/kmc-ng/commit/ab16b7a))
+* **content/categories:** show relevant tooltip when bulk changing categories owner  ([#685](https://github.com/kaltura/kmc-ng/issues/685)) KMCNG-1406 ([412bcc7](https://github.com/kaltura/kmc-ng/commit/412bcc7))
+* **content/entries:** allow access to editor advertisement external app regardless to permission ([#701](https://github.com/kaltura/kmc-ng/issues/701)) KMCNG-1735 ([2dfc4b6](https://github.com/kaltura/kmc-ng/commit/2dfc4b6))
+* **content/entries:** clear selection once deleting an entry ([#677](https://github.com/kaltura/kmc-ng/issues/677)) KMCNG-752 ([46a1a61](https://github.com/kaltura/kmc-ng/commit/46a1a61))
+* **content/entries:** fix warning message when bulk adding invalid entries to manual playlist ([4246902](https://github.com/kaltura/kmc-ng/commit/4246902))
+* **content/entries:** remove video mix filter ([1f2cbf2](https://github.com/kaltura/kmc-ng/commit/1f2cbf2))
+* **content/entries:** show tooltip for custom metadata fields ([#684](https://github.com/kaltura/kmc-ng/issues/684)) KMCNG-1481 ([c51ed02](https://github.com/kaltura/kmc-ng/commit/c51ed02))
+* **content/entries:** show tooltip on entry name column only if text is truncated and in ellipsis mode ([f84f293](https://github.com/kaltura/kmc-ng/commit/f84f293))
+* **content/entries:** style issues in entry flavor section ([#707](https://github.com/kaltura/kmc-ng/issues/707)) KMCNG-1873 ([7f86842](https://github.com/kaltura/kmc-ng/commit/7f86842))
+* **content/entry:** display owner id instead of creator in entry details ([f2336f6](https://github.com/kaltura/kmc-ng/commit/f2336f6))
+* **content/entry:** fix bulk access control dropdown width ([0d51396](https://github.com/kaltura/kmc-ng/commit/0d51396))
+* **content/entry:** fix ui issues in flavors replace video popup ([3c6e807](https://github.com/kaltura/kmc-ng/commit/3c6e807))
+* **content/entry:** hide caption actions until caption is ready and saved ([883f09b](https://github.com/kaltura/kmc-ng/commit/883f09b))
+* **content/entry:** reset flavors on profile change ([b1287b1](https://github.com/kaltura/kmc-ng/commit/b1287b1))
+* **content/entry:** return to default view if entries list is not available ([d1ee623](https://github.com/kaltura/kmc-ng/commit/d1ee623))
+* **content/entry:** revert previewMode value according to the legacy ([4d4754e](https://github.com/kaltura/kmc-ng/commit/4d4754e))
+* **content/entry:** Share & Embed: hide players list settings popup on resize ([6093ac9](https://github.com/kaltura/kmc-ng/commit/6093ac9))
+* **content/playlist:** fix refine dates filter ([751e599](https://github.com/kaltura/kmc-ng/commit/751e599))
+* **content/playlists:** fix rule-based playlists table height for Safari 10.1 compatibility ([1fbf8a2](https://github.com/kaltura/kmc-ng/commit/1fbf8a2))
+* **content/playlists:** hide thumb column in manual playlist entries table ([#713](https://github.com/kaltura/kmc-ng/issues/713)) KMCNG-1886 ([bb3f061](https://github.com/kaltura/kmc-ng/commit/bb3f061))
+* **settings/account settings:** fix runtime error when navigating directly to the view without relevant permissions ([#708](https://github.com/kaltura/kmc-ng/issues/708)) KMCNG-1876 ([ef6e6b7](https://github.com/kaltura/kmc-ng/commit/ef6e6b7))
+* **settings/custom data:** show label yes/no next to switch input ([#712](https://github.com/kaltura/kmc-ng/issues/712)) KMCNG-1890 ([9b23463](https://github.com/kaltura/kmc-ng/commit/9b23463))
+* **settings/custom-data:** fix translation typo ([58719b6](https://github.com/kaltura/kmc-ng/commit/58719b6))
+* upload menu ui ([#717](https://github.com/kaltura/kmc-ng/issues/717)) KMCNG-916, SUP-14611 ([e458ff8](https://github.com/kaltura/kmc-ng/commit/e458ff8))
+* **settings/my-user-settings:** fix translation typo ([b4bdc55](https://github.com/kaltura/kmc-ng/commit/b4bdc55))
+* **upload:** remove selected file extension from the entry's name ([e119076](https://github.com/kaltura/kmc-ng/commit/e119076))
+
+
+### Features
+
+* **content/entries:** replace entry flavor from drop folder ([#705](https://github.com/kaltura/kmc-ng/issues/705)) KMCNG-1864 ([f0b36c9](https://github.com/kaltura/kmc-ng/commit/f0b36c9))
+* **content/entries:** support caption format vtt ([#686](https://github.com/kaltura/kmc-ng/issues/686)) KMCNG-1605 ([c859bdb](https://github.com/kaltura/kmc-ng/commit/c859bdb))
+* **content/entry:** add copy-to-clipboard button for stream name ([71d14b3](https://github.com/kaltura/kmc-ng/commit/71d14b3))
+* add breaking change commit ([103d56e](https://github.com/kaltura/kmc-ng/commit/103d56e))
+* add breaking change commit ([3e9a974](https://github.com/kaltura/kmc-ng/commit/3e9a974))
+* add column resize for bulk -log view, categories view, drop folders view, entry flavors view, playlists view, entries view and syndications view ([#695](https://github.com/kaltura/kmc-ng/issues/695)) KMCNG-1797 ([f45e31e](https://github.com/kaltura/kmc-ng/commit/f45e31e))
+* navigate the user to the page he navigated to after successful login ([#729](https://github.com/kaltura/kmc-ng/issues/729)) KMCNG-1870 ([dabfdf6](https://github.com/kaltura/kmc-ng/commit/dabfdf6))
+* use client protocol to execute kaltura server api requests ([9649b0e](https://github.com/kaltura/kmc-ng/commit/9649b0e))
+
+
+### BREAKING CHANGES
+
+* upgrade Angular stack to v6
+
+
+
 <a name="4.8.2"></a>
 ## [4.8.2](https://github.com/kaltura/kmc-ng/compare/v4.8.1...v4.8.2) (2018-07-03)
 
