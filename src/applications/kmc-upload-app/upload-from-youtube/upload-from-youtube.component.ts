@@ -8,8 +8,11 @@ import {
     KalturaExternalMediaSourceType,
     KalturaMediaType,
     KalturaMultiRequest,
-    ThumbAssetAddFromUrlAction,
-    ThumbAssetSetAsDefaultAction
+    KalturaThumbAsset,
+    KalturaUrlResource,
+    ThumbAssetAddAction,
+    ThumbAssetSetAsDefaultAction,
+    ThumbAssetSetContentAction
 } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -21,6 +24,12 @@ import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entr
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { serverConfig } from 'config/server';
+import { KalturaMultiResponse } from 'kaltura-ngx-client/lib/api/kaltura-multi-response';
+
+export interface YoutubeMetadata {
+    title: string;
+    duration: number;
+}
 
 @Component({
     selector: 'kKMCUploadFromYoutube',
@@ -69,7 +78,7 @@ export class UploadFromYoutubeComponent implements OnDestroy {
         return null;
     }
 
-    private _getVideoMetadata(referenceId: string): Observable<{ title: string, duration: number }> {
+    private _getVideoMetadata(referenceId: string): Observable<YoutubeMetadata> {
         const { uri, key } = serverConfig.externalApi.youtube;
         const url = `${uri}?part=contentDetails,snippet&fields=items(snippet(title),contentDetails(duration))&id=${referenceId}&key=${key}`;
         return this._http.get(url)
@@ -94,27 +103,32 @@ export class UploadFromYoutubeComponent implements OnDestroy {
             }));
     }
 
-    private _createExternalEntry(referenceId: string, metadata: { title: string, duration: number }): Observable<KalturaExternalMediaEntry> {
-        const externalMediaAddAction = new ExternalMediaAddAction({
-            entry: new KalturaExternalMediaEntry({
-                externalSourceType: KalturaExternalMediaSourceType.youtube,
-                mediaType: KalturaMediaType.video,
-                name: metadata.title,
-                msDuration: metadata.duration,
-                referenceId: referenceId,
-            })
-        });
+    private _createExternalEntry(referenceId: string, metadata: YoutubeMetadata): Observable<KalturaExternalMediaEntry> {
+        const requests = [
+            new ExternalMediaAddAction({
+                entry: new KalturaExternalMediaEntry({
+                    externalSourceType: KalturaExternalMediaSourceType.youtube,
+                    mediaType: KalturaMediaType.video,
+                    name: metadata.title,
+                    msDuration: metadata.duration,
+                    referenceId: referenceId,
+                })
+            }),
+            new ThumbAssetAddAction({
+                entryId: '',
+                thumbAsset: new KalturaThumbAsset()
+            }).setDependency(['entryId', 0, 'id']),
+            new ThumbAssetSetContentAction({
+                id: '',
+                contentResource: new KalturaUrlResource({ url: `http://img.youtube.com/vi/${referenceId}/hqdefault.jpg` })
+            }).setDependency(['id', 1, 'id']),
+            new ThumbAssetSetAsDefaultAction({
+                thumbAssetId: ''
+            }).setDependency(['thumbAssetId', 1, 'id'])
+        ];
 
-        const addThumbFromUrl = new ThumbAssetAddFromUrlAction({
-            entryId: '',
-            url: `http://img.youtube.com/vi/${referenceId}/hqdefault.jpg`
-        }).setDependency(['entryId', 0, 'id']);
-
-        const setDefaultThumb = new ThumbAssetSetAsDefaultAction({ thumbAssetId: '' })
-            .setDependency(['thumbAssetId', 1, 'id']);
-
-        return this._serverClient.multiRequest(new KalturaMultiRequest(externalMediaAddAction, addThumbFromUrl, setDefaultThumb))
-            .pipe(map((responses) => {
+        return this._serverClient.multiRequest(new KalturaMultiRequest(...requests))
+            .pipe(map((responses: KalturaMultiResponse) => {
                 if (responses.hasErrors()) {
                     const errorMessage = responses.reduce((acc, val) => `${acc}${val.error ? `${val.error.message}\n` : ''}`, '');
                     throw Error(errorMessage);
