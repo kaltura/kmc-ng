@@ -258,7 +258,7 @@ export class AppAuthentication {
                         ({ response, isPartnerAllowed }) => {
                             if (!response.hasErrors()) {
                                 if (isPartnerAllowed) {
-                                    this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
+                                    this._afterLogin(response[0].result, response[1].result, response[2].result, response[3].result, response[4].result);
                                     return { success: true, error: null };
                                 } else {
                                     return {
@@ -304,12 +304,8 @@ export class AppAuthentication {
             });
     }
 
-    private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
-
-        if (storeCredentialsInSessionStorage) {
-            this._browserService.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
-        }
-
+    private _afterLogin(ks: string, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
+        this._browserService.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
         this._permissionsService.load(userRolePermissionList, partnerPermissionList);
@@ -361,7 +357,7 @@ export class AppAuthentication {
         this._logout();
     }
 
-    private _loginByKS(loginToken: string, storeCredentialsInSessionStorage): Observable<boolean> {
+    private _loginByKS(loginToken: string): Observable<boolean> {
         return Observable.create((observer: any) => {
             if (!this.isLogged()) {
                 if (loginToken) {
@@ -412,7 +408,7 @@ export class AppAuthentication {
                         .subscribe(
                             ({ response, isPartnerAllowed }) => {
                                 if (!response.hasErrors() && isPartnerAllowed) {
-                                    this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result);
+                                    this._afterLogin(loginToken, response[0].result, response[1].result, response[2].result, response[3].result);
                                     observer.next(true);
                                     observer.complete();
                                     return;
@@ -460,7 +456,7 @@ export class AppAuthentication {
         if (ksFromApp) {
             this._logger.info(`try to login automatically with KS provided explicitly by the app`);
             this._clearSessionCredentials();
-            return this._loginByKS(ksFromApp, false);
+            return this._loginByKS(ksFromApp);
         }
 
         const forbiddenUrls = ['/error', '/actions', '/login'];
@@ -475,7 +471,7 @@ export class AppAuthentication {
 
         if (ksFromSession) {
             this._logger.info(`try to login automatically with KS stored in session storage`);
-            return this._loginByKS(ksFromSession, true);
+            return this._loginByKS(ksFromSession);
         }
 
         this._logger.debug(`ignore automatic login logic as no session ks found `);
