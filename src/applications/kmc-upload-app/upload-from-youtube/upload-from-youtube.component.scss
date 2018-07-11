@@ -31,6 +31,11 @@
         flex-direction: column;
         width: 100%;
 
+        .kNote {
+            margin-left: 28px;
+            margin-top: 35px;
+        }
+
         .kRow {
             display: flex;
             align-items: center;
@@ -46,9 +51,25 @@
                 line-height: 24px;
             }
 
-            input {
-                width: 500px;
-                margin-left: 28px;
+            .kInput {
+                position: relative;
+
+                input {
+                    width: 500px;
+                    margin-left: 28px;
+
+                    &.kHasError {
+                        border-color: $kDandger;
+                    }
+                }
+
+                .kError {
+                    position: absolute;
+                    margin-left: 28px;
+                    color: $kDandger;
+                    font-size: 12px;
+                    margin-top: 10px;
+                }
             }
         }
     }

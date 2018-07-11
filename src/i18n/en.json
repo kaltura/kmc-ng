@@ -337,7 +337,11 @@
                 "linkLabel": "Add video page Link or Content Id",
                 "inputPlaceholder": "http://",
                 "cancel": "Cancel",
-                "upload": "Upload"
+                "upload": "Upload",
+                "note": "Note: Only public YouTube videos are supported",
+                "invalidUrl": "Unsupported URL or ID provided",
+                "success": "Success",
+                "successMessage": "YouTube Entry has been created successfully.\nDo you want to view entry details?"
             },
             "uploadSettings": {
                 "uploadSettings": "Upload Settings",
