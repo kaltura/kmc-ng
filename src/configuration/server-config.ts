@@ -215,7 +215,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                // configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildKalturaServerUri(configuration.uri);
             }
         }
 
