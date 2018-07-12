@@ -1268,6 +1268,7 @@
                 "dismiss": "Dismiss"
             },
             "bulkActions": {
+                "captionRequest": "Caption Request",
                 "setScheduling": "Set Scheduling",
                 "setAccessControl": "Set Access Control",
                 "addRemovePublishers": "Add / Remove Co-Publishers",
@@ -1338,7 +1339,10 @@
                 "deleteRule": "Delete Rule",
                 "noCategoriesOrEntries": "No categories or entries were selected.",
                 "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}.",
-                "downloadFailed": "The Download request failed."
+                "downloadFailed": "The Download request failed.",
+                "captionRequestAllInvalid": "The selected entries do not support captions ordering. Please select only Video / Audio entries that are ready for playback",
+                "captionRequestSomeInvalid": "Please note that a few entries do not support captions ordering and will be ignored. Continue?"
+
             },
             "entryDetails": {
                 "entryEditor": {
