@@ -39,6 +39,7 @@ import {BulkRemoveEditorsService} from './services/bulk-remove-editors.service';
 import {BulkRemovePublishersService} from './services/bulk-remove-publishers.service';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kBulkActions',
@@ -76,8 +77,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   private _categoriesLocked = false;
 
   @Input() selectedEntries: KalturaMediaEntry[];
+    @Input() blockerMessage: AreaBlockerMessage;
 
   @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
+    @Output() blockerMessageChange = new EventEmitter<AreaBlockerMessage>();
 
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
@@ -137,19 +140,34 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     const canCreate = this.selectedEntries.length !== invalidEntries.length;
 
     if (canCreate) {
-      const invalidEntriesNames = invalidEntries.length < 11 ? invalidEntries.map(entry => `${entry.name}`).join('\n') : '';
-      this._browserService.confirm({
-        header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
-        message: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarningMsg', {
-          0: invalidEntriesNames
-        }),
-        accept: () => {
-          creationEvent.data.playlistContent = this.selectedEntries
-            .filter(({ status }) => this._allowedStatusesForPlaylist.indexOf(status.toString()) !== -1) // include only valid
-            .map(({ id }) => id).join(',');
-          this._appEvents.publish(creationEvent);
-        }
-      });
+        const message = invalidEntries.length < 6
+            ? this._appLocalization.get(
+                'applications.content.bulkActions.createPlaylistWarningMsg',
+                [invalidEntries.map(entry => `${entry.name}`).join('\n')]
+            )
+            : this._appLocalization.get('applications.content.bulkActions.createPlaylistWarningMsgShort', [invalidEntries.length]);
+
+        this.blockerMessageChange.emit(new AreaBlockerMessage({
+            title: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
+            message: message,
+            buttons: [
+                {
+                    label: this._appLocalization.get('app.common.continue'),
+                    action: () => {
+                        creationEvent.data.playlistContent = this.selectedEntries
+                            .filter(({ status }) => this._allowedStatusesForPlaylist.indexOf(status.toString()) !== -1) // include only valid
+                            .map(({ id }) => id).join(',');
+                        this._appEvents.publish(creationEvent);
+                    }
+                },
+                {
+                    label: this._appLocalization.get('app.common.cancel'),
+                    action: () => {
+                        this.blockerMessageChange.emit(null);
+                    }
+                }
+            ]
+        }));
     } else {
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),

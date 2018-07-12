@@ -2,6 +2,7 @@
 
 .kReplacementStatus {
     margin-left: 24px;
+    margin-bottom: 20px;
 
     .kMetadata {
         color: $kGrayscale1;
@@ -38,6 +39,14 @@
                 color: $kDandger;
             }
         }
+    }
+
+    .kReplaceMediaButtonsLabel {
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 18px;
+        margin-bottom: 20px;
     }
 
     .kApprove {

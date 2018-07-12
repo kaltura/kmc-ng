@@ -82,12 +82,12 @@
     display: flex !important;
   }
 
-  p-datatable {
-    .ui-datatable-scrollable-body {
+  p-table {
+    .ui-table-scrollable-body {
       margin-bottom: 34px;
     }
 
-    .ui-datatable-scrollable-table-wrapper {
+    .ui-table-scrollable-table-wrapper {
       height: calc(100vh - 521px);
     }
 

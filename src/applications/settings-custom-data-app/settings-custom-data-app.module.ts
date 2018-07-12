@@ -7,7 +7,7 @@ import { AreaBlockerModule, KalturaUIModule } from '@kaltura-ng/kaltura-ui';
 import { SchemasComponents } from './schemas/schemas-components-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputSwitchModule, InputTextModule, MenuModule,
+  ButtonModule, CalendarModule, CheckboxModule, DropdownModule, InputSwitchModule, InputTextModule, MenuModule,
   PaginatorModule,
   RadioButtonModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
@@ -18,12 +18,12 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { StickyModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
     CommonModule,
     AreaBlockerModule,
-    DataTableModule,
     LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
@@ -45,7 +45,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     EntriesModule,
     DropdownModule,
     InputSwitchModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      TableModule
   ],
   declarations: [
     SettingsCustomDataComponent,

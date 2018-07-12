@@ -13,11 +13,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { globalConfig } from 'config/global';
 import { LanguageOptionsService } from 'app-shared/kmc-shared/language-options';
-
-function urlValidator(control: AbstractControl): {[key: string]: boolean} | null {
-	let v: string = control.value;
-	return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(v) ? null : {'url': true};
-};
+import { KalturaValidators } from '@kaltura-ng/kaltura-ui';
 
 @Component({
     selector: 'kEntryCaptionsEdit',
@@ -55,10 +51,20 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
         this._languages = this._languageOptions.get();
 
 	    // set caption formats array. Note that WEBVTT cannot be set on client side - only on backend so is doesn't appear in the list
-	    this._captionFormats = [
-		    {label: "SRT", value: KalturaCaptionType.srt},
-		    {label: "DFXP", value: KalturaCaptionType.dfxp}
-	    ];
+        this._captionFormats = [
+            {
+                label: 'SRT',
+                value: KalturaCaptionType.srt
+            },
+            {
+                label: 'DFXP',
+                value: KalturaCaptionType.dfxp
+            },
+            {
+                label: 'VTT',
+                value: KalturaCaptionType.webvtt
+            }
+        ];
 	    this._newCaption = this.currentCaption.id === null;
 	    this._createForm();
     }
@@ -201,7 +207,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 			language: '',
 			format: '',
 			uploadMethod: 'upload',
-			captionUrl: ['', urlValidator]
+			captionUrl: ['', KalturaValidators.url]
 		});
 	}
 

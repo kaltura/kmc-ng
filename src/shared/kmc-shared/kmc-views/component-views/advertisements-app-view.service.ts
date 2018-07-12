@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { KMCPermissionsService, KMCPermissions } from '../../kmc-permissions';
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -21,8 +20,7 @@ export interface AdvertisementsAppViewArgs {
 @Injectable()
 export class AdvertisementsAppViewService extends KmcComponentViewBaseService<AdvertisementsAppViewArgs> {
 
-    constructor(private _appPermissions: KMCPermissionsService,
-                private _appLocalization: AppLocalization,
+    constructor(private _appLocalization: AppLocalization,
                 private _kalturaClient: KalturaClient,
                 private _router: Router,
                 _browserService: BrowserService,
@@ -48,7 +46,7 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
     }
 
     private _isAvailableByPermission(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.CUEPOINT_MANAGE);
+        return true;
     }
 
     private _isAvailableByData(args: AdvertisementsAppViewArgs): boolean {

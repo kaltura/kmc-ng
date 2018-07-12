@@ -11,7 +11,6 @@ import {
     CheckboxModule,
     ConfirmationService,
     ConfirmDialogModule,
-    DataTableModule,
     DropdownModule,
     InputSwitchModule,
     InputTextareaModule,
@@ -54,6 +53,8 @@ import { TableModule } from 'primeng/table';
 import { EntriesListService } from './entries/entries-list.service';
 import { InputHelperModule } from '@kaltura-ng/kaltura-ui';
 import { AnalyticsLiveModule } from 'app-shared/kmc-shared/analytics-live/analytics-live.module';
+import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { ClearableInputModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
   imports: [
@@ -65,7 +66,6 @@ import { AnalyticsLiveModule } from 'app-shared/kmc-shared/analytics-live/analyt
     CheckboxModule,
     CommonModule,
     ConfirmDialogModule,
-    DataTableModule,
       CategoriesModule,
     DropdownModule,
     DynamicFormModule,
@@ -102,7 +102,9 @@ import { AnalyticsLiveModule } from 'app-shared/kmc-shared/analytics-live/analyt
     TableModule,
     InputSwitchModule,
     InputHelperModule,
-    AnalyticsLiveModule
+    AnalyticsLiveModule,
+    KPTableModule,
+      ClearableInputModule
   ],
   declarations: [
     ContentEntriesComponent,

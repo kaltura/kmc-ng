@@ -44,24 +44,24 @@ git fetch
 ```
    * NOTICE: in order to sync tags you must run both `git fetch` and `git pull`
 
-3. In **kaltura-ng** root folder execute dry-run of the publish process
+3. In **kaltura-ng** root folder start the publish process:
 ```
-$ npm run publish:preview
+$ npm run publish
 ```
-   * Answer 'yes' to all questions. Since you doing a dry-run it will only affect your local machine **without** publishing anything to either Npm or Github.
-   * The publish process will change files `changelog.md` and `package.json`, Review the changes and make sure it includes the features you expect.
-   * If you are satisfy, you can continue with the publish.
+  For advanced scenarios, use the publish command flags which can be reviewed by running ```npm run publish -- -h```.
+  For example, use the -branch flag to publish from a branch different from the master branch.
 
-4. Revert changes in **kaltura-ng**
+4. When asked to approve the publish, review the version numbers and confirm if all is OK.
+
+5. Review changes in changelog.md in all relevant libraries. Update if needed. Do not commit changes.
+Once you approve all changes, continue to next step
+
+6. Run the following command:
 ```
-$ git reset --hard
+$ npm run publish:continue
 ```
 
-5. In **kaltura-ng** root folder run publish process:
-```
-$ npm run publish:all
-```
-   * Accept any messages during the publish process
+**Note:** You can use ```publish:continue``` and ```publish:abort``` to control the publish flow when encountering errors.
 
 That’s it, your libraries were published to NPM.  You can continue to publish kmc-ng application
 
@@ -100,6 +100,7 @@ npm run build:prod
 
 6. Test the updated kmc-ng and make sure it works correctly
 ```
+cp src/configuration/server-config-example.json dist/server-config.json
 cd dist
 ws --spa index.html
 ```
@@ -127,39 +128,41 @@ npm run release:publish -- --gh-token xxx`
 
 If everything worked as expected you should see a new tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 
-4. Update standalone version of kmc-ng by running the following command
-```
-npm run standalone:update
-```
-
-5. Rebuild the application to include changes added automatically by the release command.
+4. Rebuild the application to include changes added automatically by the release command.
 ```
 npm run build:prod
 ```
 
-6. Create a version deployable zip using the following structure:
+5. Create a version deployable zip using the following structure:
 ```
 kmc-ng-vX.X.X.zip
 | -> deploy (folder - copied from /deploy)
-| -> server-config-example.json (file - copied from /src/configuration)
-| -> vX.X.X (folder - copied from /dist)
+| -> /dist content should be copied to the zip root
 ```
 **Note**: replace `vX.X.X` with the actual version number
 
-7.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
+6.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
 
-7.1 update the title of the release, add `(Beta)` to the versin name
-
-7.2 add the following information at the bottom of the release notes
+6.1 add the following information at the bottom of the release notes
 ```
 ## Installation:
-1.  Unzip *inner folder* `v<version number>` into `/opt/kaltura/apps/kmcng/v<version number>`
+1.  Unzip `v<version number>`.zip into `/opt/kaltura/apps/kmcng/v<version number>`
 2.  Run uiconf deployment with `--ini=v<version number>/deploy/config.ini`
 ```
 
-7.3 upload the zip file you created in step 6
+6.2 upload the zip file you created in step 5
 
+6.3 upload server-config-example.json (file - copied from /src/configuration)
 
+7.1 Make sure you are working on the master branch before proceeding with this step. If you published from a different branch, first merge it to master: 
+```
+git checkout master
+git merge <branchName>
+```
+7.2 Once in master branch, update standalone version of kmc-ng by running the following command
+```
+npm run standalone:update
+```
 
 #### provide debug version
 1. Rebuild the application **without** production flag.

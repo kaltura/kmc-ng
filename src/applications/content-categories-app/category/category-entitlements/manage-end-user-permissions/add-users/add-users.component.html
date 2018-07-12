@@ -23,6 +23,8 @@
                          suggestionLabelField="name"
                          field="screenName"
                          [onItemAdding]="_convertUserInputToValidValue"
+                         [tooltipResolver]="'__tooltip'"
+                         [classField]="'__class'"
                          [multiple]="true"
                          [limitToSuggestions]="false"
                          placeholder=""

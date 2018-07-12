@@ -23,12 +23,13 @@
                     <span>{{'applications.content.entryDetails.flavours.replaceVideo.storageProfile.note' | translate}}</span>
                 </kInputHelper>
 
-                <button *ngIf="_files?.length === 0 || (_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted)"
-                        type="button"
-                        class="kButtonDefault kAddFileButton"
-                        pButton icon="kIconplus"
-                        [label]="'applications.content.entryDetails.flavours.replaceVideo.addFileBtn' | translate"
-                        (click)="_addFile()"></button>
+                <button
+                    *ngIf="_files?.length === 0 || (_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted)"
+                    type="button"
+                    class="kButtonDefault kAddFileButton"
+                    pButton icon="kIconplus"
+                    [label]="'applications.content.entryDetails.flavours.replaceVideo.addFileBtn' | translate"
+                    (click)="_addFile()"></button>
             </form>
 
             <div *ngIf="replaceType === 'link'" class="kStorageProfile">
@@ -61,100 +62,98 @@
                 </div>
             </div>
 
-            <div class="kTable" [class.empty]="_files.length === 0">
-                <p-dataTable [value]="_files"
-                             [immutable]="false"
-                             [emptyMessage]="'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.title' | translate"
-                             scrollable="true">
-                    <p-column [style]="{'width': '28px'}"></p-column>
-                    <p-column field="name"
-                              *ngIf="replaceType === 'upload'"
-                              class="kFileNameCol"
-                              [sortable]="false"
-                              [header]="'applications.content.entryDetails.flavours.replaceVideo.fileName' | translate">
-                        <ng-template let-col let-file="rowData" pTemplate="body">
-                            <span class="kFileName kTableColumn" [kTooltip]="file.name">{{ file.name }}</span>
-                        </ng-template>
-                    </p-column>
-                    <p-column *ngIf="replaceType === 'import'"
-                              [sortable]="false"
-                              [header]="'applications.content.entryDetails.flavours.replaceVideo.fileUrl' | translate">
-                        <ng-template let-col let-file="rowData" pTemplate="body">
-                            <input pInputText type="text"
-                                   class="kReplaceUrl"
-                                   [class.kHasError]="file.hasError"
-                                   [(ngModel)]="file.url">
-                        </ng-template>
-                    </p-column>
-                    <p-column *ngIf="replaceType === 'link'"
-                              [sortable]="false"
-                              [header]="'applications.content.entryDetails.flavours.replaceVideo.link' | translate">
-                        <ng-template let-col let-file="rowData" pTemplate="body">
-                            <input pInputText type="text"
-                                   class="kReplaceUrl"
-                                   [class.kHasError]="file.hasError"
-                                   [(ngModel)]="file.url">
-                        </ng-template>
-                    </p-column>
-                    <p-column field="type"
-                              *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted"
-                              [sortable]="false"
-                              [style]="{ 'width': '210px', 'overflow':'visible' }"
-                              [header]="'applications.content.entryDetails.flavours.replaceVideo.flavor' | translate">
-                        <ng-template let-col let-file="rowData" pTemplate="body">
-                            <p-dropdown class="kTranscodingProfile"
-                                        [options]="_flavorOptions"
-                                        [class.kHasError]="file.errorToken === 'applications.upload.validation.selectFlavor'"
-                                        [autoWidth]="false"
-                                        [disabled]="_flavorsFieldDisabled"
-                                        appendTo="body"
-                                        kDropdownCloseOnScroll
-                                        [scrollTarget]="_tableScrollableWrapper"
-                                        [(ngModel)]="file.flavor"
-                                        (onChange)="_updateFileValidityOnTypeChange(file)"
-                                        [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.select' | translate">
-                                <ng-template let-profile pTemplate="item">
-                                    <span class="kTranscodingProfileItem" [kTooltip]="profile.label">{{profile.label}}</span>
-                                </ng-template>
-                            </p-dropdown>
-                        </ng-template>
-                    </p-column>
-                    <p-column field="size"
-                              *ngIf="replaceType === 'upload'"
-                              [sortable]="false"
-                              [style]="{ 'width': '100px' }"
-                              [header]="'applications.content.entryDetails.flavours.replaceVideo.size' | translate">
-                        <ng-template let-col let-file="rowData" pTemplate="body">
-                            <span id="uploadSettingFileSize">{{ file.size | kFileSize }}</span>
-                        </ng-template>
-                    </p-column>
-                    <p-column [style]="{ 'width': '40px', 'text-align': 'center'}">
-                        <ng-template let-col let-file="rowData" pTemplate="body">
-                            <i *ngIf="file.hasError"
-                               class="kIconerror kIconError"
-                               [kTooltip]="file.errorToken | translate"
-                               placement="top"></i>
-                        </ng-template>
-                    </p-column>
-                    <p-column [style]="{ 'width': '45px', 'text-align': 'center'}"
-                              *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted">
-                        <ng-template let-col let-file="rowData" pTemplate="body">
-                            <i class="kIcontrash kIconRemoveFile"
-                               [kTooltip]="'applications.content.entryDetails.flavours.replaceVideo.remove' | translate"
-                               placement="top"
-                               (click)="_removeFile(file)"></i>
-                        </ng-template>
-                    </p-column>
-                    <p-column [style]="{'width': '28px'}"></p-column>
-                </p-dataTable>
+            <div class="kTable" [class.kLink]="replaceType === 'link'" [class.empty]="_files.length === 0">
+                <p-table scrollHeight="100%" [value]="_files" [scrollable]="true">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th [ngStyle]="{'width': '28px'}"></th>
+                            <th *ngIf="replaceType === 'upload'" class="kFileNameCol">
+                                {{'applications.content.entryDetails.flavours.replaceVideo.fileName' | translate}}
+                            </th>
+                            <th *ngIf="replaceType === 'import'">
+                                {{'applications.content.entryDetails.flavours.replaceVideo.fileUrl' | translate}}
+                            </th>
+                            <th *ngIf="replaceType === 'link'">
+                                {{'applications.content.entryDetails.flavours.replaceVideo.link' | translate}}
+                            </th>
+                            <th [ngStyle]="{'width': '210px', 'overflow':'visible'}"
+                                *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted">
+                                {{'applications.content.entryDetails.flavours.replaceVideo.flavor' | translate}}
+                            </th>
+                            <th [ngStyle]="{'width': '100px'}" *ngIf="replaceType === 'upload'">
+                                {{'applications.content.entryDetails.flavours.replaceVideo.size' | translate}}
+                            </th>
+                            <th [ngStyle]="{'width': '40px', 'text-align': 'center'}"></th>
+                            <th [ngStyle]="{'width': '45px', 'text-align': 'center'}"
+                                *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted"></th>
+                            <th [ngStyle]="{'width': '28px'}"></th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-file>
+                        <tr>
+                            <td [ngStyle]="{'width': '28px'}"></td>
+                            <td *ngIf="replaceType === 'upload'" class="kFileNameCol">
+                                <span class="kFileName kTableColumn" [kTooltip]="file.name">{{file.name}}</span>
+                            </td>
+                            <td *ngIf="replaceType === 'import'">
+                                <input pInputText type="text"
+                                       class="kReplaceUrl"
+                                       [class.kHasError]="file.hasError"
+                                       [(ngModel)]="file.url">
+                            </td>
+                            <td *ngIf="replaceType === 'link'">
+                                <input pInputText type="text"
+                                       class="kReplaceUrl"
+                                       [class.kHasError]="file.hasError"
+                                       [(ngModel)]="file.url">
+                            </td>
+                            <td [ngStyle]="{'width': '210px', 'overflow':'visible'}"
+                                *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted">
+                                <p-dropdown class="kTranscodingProfile"
+                                            [options]="_flavorOptions"
+                                            [class.kHasError]="file.errorToken === 'applications.upload.validation.selectFlavor'"
+                                            [autoWidth]="false"
+                                            [disabled]="_flavorsFieldDisabled"
+                                            appendTo="body"
+                                            kDropdownCloseOnScroll
+                                            [scrollTarget]="_tableScrollableWrapper"
+                                            [(ngModel)]="file.flavor"
+                                            (onChange)="_updateFileValidityOnTypeChange(file)"
+                                            [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.select' | translate">
+                                    <ng-template let-profile pTemplate="item">
+                                        <span class="kTranscodingProfileItem" [kTooltip]="profile.label">{{profile.label}}</span>
+                                    </ng-template>
+                                </p-dropdown>
+                            </td>
+                            <td [ngStyle]="{'width': '100px'}" *ngIf="replaceType === 'upload'">
+                                {{file.size | kFileSize}}
+                            </td>
+                            <td [ngStyle]="{'width': '40px', 'text-align': 'center'}">
+                                <i *ngIf="file.hasError"
+                                   class="kIconerror kIconError"
+                                   [kTooltip]="file.errorToken | translate"
+                                   placement="top"></i>
+                            </td>
+                            <td [ngStyle]="{'width': '45px', 'text-align': 'center'}"
+                                *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted">
+                                <i class="kIcontrash kIconRemoveFile"
+                                   [kTooltip]="'applications.content.entryDetails.flavours.replaceVideo.remove' | translate"
+                                   placement="top"
+                                   (click)="_removeFile(file)"></i>
+                            </td>
+                            <td [ngStyle]="{'width': '28px'}"></td>
+                        </tr>
+                    </ng-template>
+                </p-table>
                 <div *ngIf="_files.length === 0" class="kEmptyMessage">
                     <h1>
                         {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.title' | translate }}
                     </h1>
                     <p *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted">
-                        {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.getStarted' | translate }}
+                        {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.getStarted' | translate}}
                         <a (click)="_addFile()">
-                            {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.browse' | translate }}
+                            {{ 'applications.content.entryDetails.flavours.replaceVideo.emptyMessage.browse' | translate}}
                         </a>
                     </p>
 
@@ -163,6 +162,10 @@
         </div>
         <div class="kFooter">
             <button class="kButtonDefault kUploadButton"
+                    pButton
+                    [label]="'applications.content.entryDetails.flavours.replaceVideo.cancel' | translate"
+                    (click)="parentPopupWidget?.close()"></button>
+            <button class="kButtonBranded kUploadButton"
                     pButton
                     [disabled]="_files.length === 0 || _isLoading || !!_blockerMessage"
                     [label]="_uploadBtnLabel"

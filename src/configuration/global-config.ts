@@ -17,7 +17,6 @@ export interface GlobalConfig {
         }
     };
     kalturaServer: {
-        useSecuredProtocol: boolean,
         maxUploadFileSize: number,
         maxConcurrentUploads: number,
         limitToPartnerId: number | null
@@ -27,7 +26,7 @@ export interface GlobalConfig {
 export const globalConfig: GlobalConfig = {
     client: {
         production: environment.production,
-        appVersion: '4.7.0',
+        appVersion: '5.0.0',
         useSecuredProtocol: environment.client.useSecuredProtocol,
         countriesList: countryCodes,
         views: {
@@ -39,7 +38,6 @@ export const globalConfig: GlobalConfig = {
         }
     },
     kalturaServer: {
-        useSecuredProtocol: environment.server.useSecuredProtocol,
         maxUploadFileSize: 2047, // Mb
         maxConcurrentUploads: 4,
         limitToPartnerId: null

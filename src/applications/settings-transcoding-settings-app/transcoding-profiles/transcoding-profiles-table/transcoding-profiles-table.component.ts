@@ -21,6 +21,7 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
     }
   }
 
+    @Input() singleTableMode: boolean;
   @Input() selectedProfiles: KalturaConversionProfileWithAsset[] = [];
 
   @Output() selectedProfilesChange = new EventEmitter<KalturaConversionProfileWithAsset[]>();

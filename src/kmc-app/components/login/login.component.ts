@@ -106,7 +106,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this._errorMessage = '';
 
     if (success) {
-      this._browserService.navigateToDefault();
+        const defaultUrl = this._appAuthentication.defaultUrl;
+        if (defaultUrl) {
+            this._browserService.navigate(defaultUrl);
+        } else {
+            this._browserService.navigateToDefault();
+        }
+
       return;
     }
 
