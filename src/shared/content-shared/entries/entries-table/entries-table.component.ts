@@ -146,7 +146,13 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
       (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
       cannotDeleteEntry ||
-      (isCaptionRequestCommand && ((!isReadyStatus && isVideoAudio) || !isVideoAudio || isExternalMedia)) // hide caption request if not audio/video or if it is then if not ready
+      (isCaptionRequestCommand &&
+          ((!isReadyStatus && isVideoAudio)
+              || !isVideoAudio
+              || isExternalMedia
+              || !this._permissionsService.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION)
+          )
+      ) // hide caption request if not audio/video or if it is then if not ready or it's forbidden by permission
     );
   }
 

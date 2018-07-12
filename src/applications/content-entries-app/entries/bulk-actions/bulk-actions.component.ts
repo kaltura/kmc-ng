@@ -473,6 +473,13 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           }
       ];
 
+      this._permissionsService.filterList(
+          <{ id: string }[]>result,
+          {
+              'captionRequest': KMCPermissions.REACH_PLUGIN_PERMISSION
+          }
+      );
+
       return result;
   }
 

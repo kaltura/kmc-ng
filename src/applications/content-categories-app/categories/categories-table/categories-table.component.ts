@@ -131,7 +131,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       <{ id: string }[]>this._items,
       {
         'moveCategory': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
-        'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
+        'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
+        'addServiceRule': KMCPermissions.REACH_PLUGIN_PERMISSION
       }
     );
   }
