@@ -1,0 +1,45 @@
+@import 'app-theme/_variables.scss';
+
+.kReach {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+    form {
+        height: 100%;
+    }
+    .kHeader {
+        height: 58px;
+        width: 100%;
+        display: flex;
+        flex-flow: row;
+        justify-content: space-between;
+        align-items: center;
+        background-color: $kGrayscale1;
+        color: white;
+        border-bottom: 1px solid $kGrayscale4;
+        .kClose {
+            color: $kGrayscale3;
+            font-size: 18px;
+            margin-left: 24px;
+            cursor: pointer;
+            &:hover {
+                color: white;
+            }
+        }
+        .kTitle {
+            margin-left: 24px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+    }
+
+    .kContent {
+        width: 100%;
+        height: calc(100vh - 60px);
+        flex: 1 1 auto;
+        display: flex;
+        flex-flow: row;
+    }
+}

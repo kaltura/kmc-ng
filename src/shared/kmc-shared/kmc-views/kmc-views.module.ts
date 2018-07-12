@@ -22,7 +22,8 @@ import {
     StudioV2MainViewService,
     StudioV3MainViewService,
     UsageDashboardMainViewService,
-    KavaAppMainViewService
+    KavaAppMainViewService,
+    ReachAppMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService,
@@ -83,6 +84,7 @@ export class KmcViewsModule {
                 AdvertisementsAppViewService,
                 QuizAppViewService,
                 RestorePasswordViewService,
+                ReachAppMainViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };

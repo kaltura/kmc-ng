@@ -20,3 +20,4 @@ export * from './settings-metadata-main-view.service';
 export * from './settings-my-user-settings-main-view.service';
 export * from './settings-account-information-main-view.service';
 export * from './kava-app-main-view.service';
+export * from './reach-app-main-view.service';
