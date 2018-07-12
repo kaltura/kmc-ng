@@ -30,7 +30,6 @@ export interface PrimeListItem {
     parent: PrimeListItem;
     listName: string;
     children: PrimeListItem[];
-    disabled?: boolean;
 }
 
 export interface PrimeList {
@@ -260,7 +259,6 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                                 listRootNode.children.push({
                                     label: item.label,
                                     value: item.value,
-                                    disabled: item.disabled,
                                     children: [],
                                     listName: <any>list.name,
                                     parent: listRootNode
