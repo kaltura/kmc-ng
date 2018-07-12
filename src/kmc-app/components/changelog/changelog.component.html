@@ -3,7 +3,7 @@
   <i class="kIconChangelog" [class.active]="changelogIsShown"></i>
 </p>
 
-<kPopupWidget #changelog [popupWidth]="700" [popupHeight]="600" [closeBtn]="true" [modal]="true">
+<kPopupWidget #changelog data-aid="changelog" [popupWidth]="700" [popupHeight]="600" [closeBtn]="true" [modal]="true">
   <ng-template>
     <div class="kChangelogPopup">
       <div class="kChangelogHeader">

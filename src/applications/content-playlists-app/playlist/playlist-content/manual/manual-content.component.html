@@ -21,7 +21,7 @@
     </kPlaylistEntriesTable>
   </div>
 
-  <kPopupWidget #addEntry [popupWidth]="995" [slider]="true">
+  <kPopupWidget #addEntry data-aid="addEntry" [popupWidth]="995" [slider]="true">
     <ng-template>
       <kAddEntry (onClosePopupWidget)="addEntry.close()" (onAddEntries)="_widgetService.addEntries($event)"></kAddEntry>
     </ng-template>

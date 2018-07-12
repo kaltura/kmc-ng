@@ -20,7 +20,7 @@
 </k-area-blocker>
 
 
-<kPopupWidget #addNewSubcategory [popupWidth]="586" [popupHeight]="260" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #addNewSubcategory data-aid="addNewSubcategory" [popupWidth]="586" [popupHeight]="260" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kNewSubcategory [categoryParentId]="_widgetService.data?.id" (onSubCategoryAdded)="_widgetService.addSubcategoryToList($event)" [parentPopupWidget]="addNewSubcategory"></kNewSubcategory>
   </ng-template>

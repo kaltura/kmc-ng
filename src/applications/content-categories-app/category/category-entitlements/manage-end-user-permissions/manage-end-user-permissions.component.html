@@ -93,7 +93,7 @@
 </k-area-blocker>
  
  
-<kPopupWidget #addUser [popupWidth]="790" [popupHeight]="447" [modal]="true">
+<kPopupWidget #addUser data-aid="addUser" [popupWidth]="790" [popupHeight]="447" [modal]="true">
   <ng-template>
     <kAddUsers [parentPopupWidget]="addUser"
                [category]="category"
@@ -106,6 +106,7 @@
 
 
 <kPopupWidget #refinePopup
+              data-aid="manageUsersRefinePopup"
               placement="top"
               [popupWidth]="400"
               [popupHeight]="500"

@@ -98,7 +98,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			(data as KalturaLiveStreamEntry).bitrates = bitrates;
 		}
 		if (this._liveType === "kaltura") {
-			(data as KalturaLiveStreamEntry).explicitLive = this._explicitLive ? KalturaNullableBoolean.falseValue : KalturaNullableBoolean.trueValue;
+			(data as KalturaLiveStreamEntry).explicitLive = this._explicitLive ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
 			(data as KalturaLiveStreamEntry).conversionProfileId = this._selectedConversionProfile;
 		}
 	}
@@ -204,7 +204,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 				this._dvrWindowAvailable = !isNaN(entry.dvrWindow);
 			}
 		}
-		this._explicitLive = entry.explicitLive === KalturaNullableBoolean.falseValue;
+		this._explicitLive = entry.explicitLive === KalturaNullableBoolean.trueValue;
 	}
 
 	private _setRecordStatus(): void {

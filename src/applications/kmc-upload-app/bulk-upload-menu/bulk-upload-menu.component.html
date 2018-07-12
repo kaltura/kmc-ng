@@ -34,7 +34,7 @@
              [allowMultiple]="true"
              (onFileSelected)="_selectFiles($event)"></kFileDialog>
 
-<kPopupWidget #uploadSucceed [popupWidth]="440" [popupHeight]="233" [closeBtn]="false" [modal]="true" [closeOnClickOutside]="false">
+<kPopupWidget #uploadSucceed data-aid="uploadSucceed" [popupWidth]="440" [popupHeight]="233" [closeBtn]="false" [modal]="true" [closeOnClickOutside]="false">
   <div class="kSuccessBulkUpload">
     <div class="kSuccessBulkUploadMessage kCenterContent">
       <p>
