@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { KalturaMediaType } from 'kaltura-ngx-client';
+import { KalturaExternalMediaEntry, KalturaMediaType } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaSourceType } from 'kaltura-ngx-client';
@@ -129,28 +129,30 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  private _hideMenuItems(source: KalturaSourceType,
-                         status: KalturaEntryStatus,
-                         mediaType: KalturaMediaType,
-                         { commandName }: { commandName: string }): boolean {
+  private _hideMenuItems(entry: KalturaMediaEntry, { commandName }: { commandName: string }): boolean {
+    const { sourceType, status, mediaType } = entry;
     const isReadyStatus = status === KalturaEntryStatus.ready;
     const isLiveStreamFlash = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
     const isPreviewCommand = commandName === 'preview';
     const isViewCommand = commandName === 'view';
-    const isKalturaLive = source === KalturaSourceType.liveStream;
+    const isKalturaLive = sourceType === KalturaSourceType.liveStream;
     const isLiveDashboardCommand = commandName === 'liveDashboard';
     const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
+    const isCaptionRequestCommand = commandName === 'captionRequest';
+    const isVideoAudio = mediaType && (mediaType === KalturaMediaType.video || mediaType === KalturaMediaType.audio);
+    const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
     return !(
       (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
       (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
       (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
-      cannotDeleteEntry
+      cannotDeleteEntry ||
+      (isCaptionRequestCommand && ((!isReadyStatus && isVideoAudio) || !isVideoAudio || isExternalMedia)) // hide caption request if not audio/video or if it is then if not ready
     );
   }
 
   private _buildMenu(entry: KalturaMediaEntry): void {
     this._items = this.rowActions
-      .filter(item => this._hideMenuItems(entry.sourceType, entry.status, entry.mediaType, item))
+      .filter(item => this._hideMenuItems(entry, item))
       .map(action =>
         Object.assign({} as CustomMenuItem, action, {
           command: ({ item }) => {

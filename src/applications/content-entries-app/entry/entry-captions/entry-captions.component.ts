@@ -13,6 +13,9 @@ import { EntryCaptionsWidget } from './entry-captions-widget.service';
 
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { AppEventsService, ReachPages } from 'app-shared/kmc-shared';
+import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
 
 
 @Component({
@@ -25,13 +28,20 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
 	public _actions: MenuItem[] = [];
     public _captionStatusReady = KalturaCaptionAssetStatus.ready;
+    public _requestCaptionsAvailable = false;
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
 
 	private _popupStateChangeSubscribe: ISubscription;
-	constructor(public _widgetService: EntryCaptionsWidget, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(public _widgetService: EntryCaptionsWidget,
+                private _appAuthentication: AppAuthentication,
+                private _appLocalization: AppLocalization,
+                private _browserService: BrowserService,
+                private _reachAppViewService: ReachAppViewService,
+                private _appEvents: AppEventsService) {
+        this._requestCaptionsAvailable = this._reachAppViewService.isAvailable();
     }
 
 	ngOnInit() {
@@ -127,6 +137,13 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     _onLoadingAction(actionKey: string) {
         if (actionKey === 'retry') {
 
+        }
+    }
+
+    public _requestCaptions(): void {
+        const entryId = this._widgetService.data.id;
+        if (this._requestCaptionsAvailable && entryId) {
+            this._appEvents.publish(new CaptionRequestEvent({ entryId }, ReachPages.entry));
         }
     }
 }

@@ -1647,6 +1647,7 @@
                 "captions": {
                     "captions": "Captions",
                     "add": "Add Caption",
+                    "request": "Request Captions",
                     "label": "Label",
                     "type": "File Type",
                     "language": "Language",
