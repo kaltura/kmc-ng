@@ -21,8 +21,6 @@
             "contentSyndicationMenuTitle": "Syndication",
             "contentUploadsPageTitle": "Content > Upload Control",
             "contentUploadsMenuTitle": "Upload Control",
-            "contentReachPageTitle": "Content > Services Dashboard",
-            "contentReachMenuTitle": "Services Dashboard",
             "analyticsLivePageTitle": "Analytics > Live Real-Time Dashboard",
             "analyticsLiveMenuTitle": "Live Real-Time Dashboard",
             "analyticsKavaPageTitle": "Analytics > KAVA",
@@ -1118,7 +1116,8 @@
                 "ruleName": "Rule Name",
                 "entriesCount": "No. Entries",
                 "limit": "Limit",
-                "orderBy": "Order By"
+                "orderBy": "Order By",
+                "captionRequest": "Caption Request"
             },
             "paginator": {
                 "showRows": "Show rows:"
@@ -2820,8 +2819,7 @@
             "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please login to the legacy KMC to view and create analytics and reports. Analytics for all media should be available soon"
         },
         "reach": {
-            "captionRequests": "Caption Requests",
-            "servicesDashboard": "Services Dashboard"
+            "captionRequests": "Caption Requests"
         }
     },
     "entriesShared": {

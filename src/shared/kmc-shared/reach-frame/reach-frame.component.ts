@@ -2,14 +2,13 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@
 import { AppAuthentication, BrowserService } from 'shared/kmc-shell/index';
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { ContentReachMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 export enum ReachPages {
     entry = 'entry',
     entries = 'entries',
-    category = 'category',
-    dashboard = 'dashboard'
+    category = 'category'
 }
 
 export interface ReachData {
@@ -28,7 +27,7 @@ export interface ReachData {
     providers: [KalturaLogger.createLogger('ReachFrameComponent')]
 })
 export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
-    @Input() page: ReachPages = ReachPages.dashboard;
+    @Input() page: ReachPages;
     @Input() data: ReachData = {};
 
     public _url = null;
@@ -37,7 +36,7 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                 private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
                 private _browserService: BrowserService,
-                private _reachView: ContentReachMainViewService) {
+                private _reachAppView: ReachAppViewService) {
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -66,14 +65,13 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                 }
                 break;
             default:
-                this._url = `${serverConfig.externalApps.reach.uri}#/dashboard`;
                 break;
         }
     }
 
     ngOnInit() {
         try {
-            if (!this._reachView.isAvailable()) {
+            if (!this._reachAppView.isAvailable()) {
                 this._browserService.handleUnpermittedAction(true);
                 return;
             }

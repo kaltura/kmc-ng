@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { ReachData, ReachPages } from 'app-shared/kmc-shared/reach/reach-frame.component';
+import { ReachData, ReachPages } from 'app-shared/kmc-shared/reach-frame';
 
 @Component({
     selector: 'kReach',

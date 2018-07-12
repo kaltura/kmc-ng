@@ -7,8 +7,8 @@ import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entr
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import {ContentEntriesAppService} from '../content-entries-app.service';
-import {AppEventsService} from 'app-shared/kmc-shared';
-import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
+import { AppEventsService, ReachPages } from 'app-shared/kmc-shared';
+import { CaptionRequestEvent, PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import {UploadManagement} from '@kaltura-ng/kaltura-common';
 import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
@@ -16,7 +16,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { LiveDashboardAppViewService, ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
@@ -59,6 +59,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       styleClass: '',
       disabled: !this._liveDashboardAppViewService.isAvailable()
     },
+      {
+          label: this._appLocalization.get('applications.content.table.captionRequest'),
+          commandName: 'captionRequest',
+          styleClass: '',
+          disabled: !this._reachAppViewService.isAvailable()
+      },
     {
       label: this._appLocalization.get('applications.content.table.delete'),
       commandName: 'delete',
@@ -78,6 +84,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _contentEntryViewService: ContentEntryViewService,
               private _contentEntriesAppService: ContentEntriesAppService,
               private _contentEntriesMainViewService: ContentEntriesMainViewService,
+              private _reachAppViewService: ReachAppViewService,
               private _liveDashboardAppViewService: LiveDashboardAppViewService) {
   }
 
@@ -139,6 +146,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           this._liveDashboard.open();
         }
         break;
+
+        case 'captionRequest':
+            if (entry && entry.id && this._reachAppViewService.isAvailable()) {
+                this._appEvents.publish(new CaptionRequestEvent({ entryId: entry.id }, ReachPages.entry));
+            }
+            break;
       default:
         break;
     }

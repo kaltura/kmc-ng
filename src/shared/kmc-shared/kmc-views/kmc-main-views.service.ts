@@ -23,8 +23,6 @@ import { ContentCategoriesMainViewService,
     SettingsAccountInformationMainViewService
 } from './main-views';
 import { Observable } from 'rxjs';
-import { ContentReachMainViewService } from 'app-shared/kmc-shared/kmc-views/main-views';
-
 
 export interface KMCAppMenuItem {
     menuTitle: string;
@@ -54,7 +52,6 @@ export class KmcMainViewsService {
         private _contentUploadsMain: ContentUploadsMainViewService,
         private _contentBulkUploadsMain: ContentBulkUploadsMainViewService,
         private _contentDropFoldersMain: ContentDropFoldersMainViewService,
-        private _contentReachMain: ContentReachMainViewService,
         private _studioV2Main: StudioV2MainViewService,
         private _studioV3Main: StudioV3MainViewService,
         private _usageDashboardMain: UsageDashboardMainViewService,
@@ -123,15 +120,6 @@ export class KmcMainViewsService {
                             this._contentCategoriesMain.open();
                         },
                         menuTitle: this._contentCategoriesMain.getViewMetadata().menu,
-                        'position': 'left'
-                    },
-                    {
-                        isAvailable: this._contentReachMain.isAvailable(),
-                        isActiveView:  (path) => this._contentReachMain.isActiveView(path),
-                        open: () => {
-                            this._contentReachMain.open();
-                        },
-                        menuTitle: this._contentReachMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {

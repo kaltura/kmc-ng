@@ -22,8 +22,7 @@ import {
     StudioV2MainViewService,
     StudioV3MainViewService,
     UsageDashboardMainViewService,
-    KavaAppMainViewService,
-    ContentReachMainViewService
+    KavaAppMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService,
@@ -36,7 +35,8 @@ import {
 import {
     AdvertisementsAppViewService,
     ClipAndTrimAppViewService,
-    LiveDashboardAppViewService
+    LiveDashboardAppViewService,
+    ReachAppViewService
 } from './component-views';
 import { QuizAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
@@ -84,7 +84,7 @@ export class KmcViewsModule {
                 AdvertisementsAppViewService,
                 QuizAppViewService,
                 RestorePasswordViewService,
-                ContentReachMainViewService,
+                ReachAppViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };
