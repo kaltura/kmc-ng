@@ -14,7 +14,7 @@ import {
   CategoriesStatus,
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
-import { AppEventsService } from 'app-shared/kmc-shared';
+import { AppEventsService, ReachPages } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
@@ -23,6 +23,7 @@ import { async } from 'rxjs/scheduler/async';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
   selector: 'kCategoriesList',
@@ -348,6 +349,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 this._logger.debug(`publish 'ViewCategoryEntriesEvent' event`);
               this._appEvents.publish(new ViewCategoryEntriesEvent(category.id));
               break;
+            case 'addServiceRule':
+                this._logger.info(`handle add service rule action by user`, { categoryId: category.id });
+                this._logger.debug(`publish 'CaptionRequestEvent' event`);
+                this._appEvents.publish(new CaptionRequestEvent({ categoryId: String(category.id) }, ReachPages.category));
+                break;
             default:
                 break;
         }

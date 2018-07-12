@@ -529,6 +529,7 @@
                 "viewEntries": "View Entries",
                 "moveCategory": "Move Category",
                 "cancel": "Cancel",
+                "addServiceRule": "Add Service Rule",
                 "bActions": {
                     "addRemoveTags": "Add / Remove Tags",
                     "addTags": "Add Tags",
@@ -2824,7 +2825,8 @@
             "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please login to the legacy KMC to view and create analytics and reports. Analytics for all media should be available soon"
         },
         "reach": {
-            "captionRequests": "Caption Requests"
+            "captionRequests": "Caption Requests",
+            "addServiceRule": "Add Service Rule"
         }
     },
     "entriesShared": {

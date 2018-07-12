@@ -14,6 +14,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @Component({
   selector: 'kCategoriesTable',
@@ -60,6 +61,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
   constructor(private appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
+              private _reachAppViewService: ReachAppViewService,
               private _permissionsService: KMCPermissionsService) {
   }
 
@@ -111,6 +113,12 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
         label: this.appLocalization.get('applications.content.categories.moveCategory'),
         command: () => this.onActionSelected('moveCategory', category)
       },
+        {
+            id: 'addServiceRule',
+            disabled: !this._reachAppViewService.isAvailable(),
+            label: this.appLocalization.get('applications.content.categories.addServiceRule'),
+            command: () => this.onActionSelected('addServiceRule', category)
+        },
       {
         id: 'delete',
         label: this.appLocalization.get('applications.content.categories.delete'),
