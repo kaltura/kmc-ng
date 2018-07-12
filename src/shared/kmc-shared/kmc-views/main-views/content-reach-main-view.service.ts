@@ -9,7 +9,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
-export class ReachAppMainViewService extends KmcMainViewBaseService {
+export class ContentReachMainViewService extends KmcMainViewBaseService {
 
     constructor(private _appLocalization: AppLocalization,
                 router: Router,
@@ -17,7 +17,7 @@ export class ReachAppMainViewService extends KmcMainViewBaseService {
                 titleService: Title,
                 logger: KalturaLogger,
                 contextualHelpService: ContextualHelpService) {
-        super(logger.subLogger('ReachAppMainViewService'), browserService, router, titleService, contextualHelpService);
+        super(logger.subLogger('ContentReachMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {

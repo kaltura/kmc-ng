@@ -1,0 +1,8 @@
+@import "app-theme/_variables.scss";
+
+$appContentHeight: calc(100vh - 106px);
+
+:host /deep/ iframe {
+    width: 100%;
+    height: $appContentHeight !important;
+}

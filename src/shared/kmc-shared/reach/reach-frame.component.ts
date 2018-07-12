@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@
 import { AppAuthentication, BrowserService } from 'shared/kmc-shell/index';
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { ReachAppMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { ContentReachMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 export enum ReachPages {
@@ -37,7 +37,7 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                 private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
                 private _browserService: BrowserService,
-                private _reachView: ReachAppMainViewService) {
+                private _reachView: ContentReachMainViewService) {
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -52,21 +52,21 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
         switch (this.page) {
             case ReachPages.entry:
                 if (this.data.entryId) {
-                    this._url = `${serverConfig.externalApps.reach.uri}/entry/${this.data.entryId}`;
+                    this._url = `${serverConfig.externalApps.reach.uri}#/entry/${this.data.entryId}`;
                 }
                 break;
             case ReachPages.entries:
                 if (this.data.entryIds) {
-                    this._url = `${serverConfig.externalApps.reach.uri}/entries`;
+                    this._url = `${serverConfig.externalApps.reach.uri}#/entries`;
                 }
                 break;
             case ReachPages.category:
                 if (this.data.categoryId) {
-                    this._url = `${serverConfig.externalApps.reach.uri}/category/${this.data.categoryId}`;
+                    this._url = `${serverConfig.externalApps.reach.uri}#/category/${this.data.categoryId}`;
                 }
                 break;
             default:
-                this._url = `${serverConfig.externalApps.reach.uri}/dashboard`;
+                this._url = `${serverConfig.externalApps.reach.uri}#/dashboard`;
                 break;
         }
     }

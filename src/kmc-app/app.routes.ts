@@ -65,6 +65,10 @@ const routes: Routes = <Routes>[
                         {
                             path: 'moderation',
                             loadChildren: '../applications/content-moderation-app/content-moderation-app.module#ContentModerationAppModule'
+                        },
+                        {
+                            path: 'services-dashboard',
+                            loadChildren: '../applications/reach-app/reach-app.module#ReachAppModule'
                         }
                     ]
                     },
