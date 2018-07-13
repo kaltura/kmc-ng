@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Component, ElementRef,
     EventEmitter,
-    HostListener,
     Input,
     OnDestroy,
     OnInit,
@@ -17,7 +16,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kPlaylistsTable',

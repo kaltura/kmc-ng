@@ -2,7 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Component, ElementRef,
-    EventEmitter, HostListener,
+    EventEmitter,
     Input,
     OnDestroy,
     OnInit,
@@ -15,7 +15,7 @@ import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client';
 import {KalturaPlaylist} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService, KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kFeedsTable',

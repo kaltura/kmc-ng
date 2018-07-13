@@ -19,7 +19,7 @@
                   <col data-cid="name" [ngStyle]="{'width': '250px'}">
                   <col data-cid="folderId">
                   <col data-cid="time">
-                  <col data-cid="size" [ngStyle]="{'width': '80px'}">
+                  <col data-cid="size">
                   <col data-cid="entryId">
                   <col data-cid="status">
                   <col [ngStyle]="{'width': '80px'}">
@@ -42,7 +42,7 @@
               {{'applications.content.dropFolders.table.createdOn' | translate}}
               <p-sortIcon [field]="'createdAt'"></p-sortIcon>
             </th>
-            <th data-cid="size" [ngStyle]="{'width': '80px'}" pResizableColumn [pSortableColumn]="'fileSize'">
+            <th data-cid="size" pResizableColumn [pSortableColumn]="'fileSize'">
               {{'applications.content.dropFolders.table.fileSize' | translate}}
               <p-sortIcon [field]="'fileSize'"></p-sortIcon>
             </th>

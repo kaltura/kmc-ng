@@ -8,22 +8,22 @@
                (onColResize)="_columnsResizeManager.onColumnResize($event)">
       <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
-              <col data-cid="role" [ngStyle]="{'width': '250px', 'padding-left': '1em'}">
-              <col data-cid="description">
-              <col data-cid="date" [ngStyle]="{'width': '120px'}">
+              <col data-cid="role" [ngStyle]="{'width': '130px', 'padding-left': '1em'}">
+              <col data-cid="description" [ngStyle]="{'width': '250px'}">
+              <col data-cid="date" [ngStyle]="{'width': '60px'}">
               <col [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
           </colgroup>
       </ng-template>
 
       <ng-template pTemplate="header">
           <tr>
-              <th data-cid="role" pResizableColumn [ngStyle]="{'width': '250px', 'padding-left': '1em'}">
+              <th data-cid="role" pResizableColumn [ngStyle]="{'width': '130px', 'padding-left': '1em'}">
                   {{'applications.administration.roles.tableColumns.role' | translate}}
               </th>
-              <th data-cid="description" pResizableColumn>
+              <th data-cid="description" pResizableColumn [ngStyle]="{'width': '250px'}">
                   {{'applications.administration.roles.tableColumns.description' | translate}}
               </th>
-              <th data-cid="date">
+              <th data-cid="date" [ngStyle]="{'width': '60px'}">
                   {{'applications.administration.roles.tableColumns.saveDate' | translate}}
               </th>
               <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>

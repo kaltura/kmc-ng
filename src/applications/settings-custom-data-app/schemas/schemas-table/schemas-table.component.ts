@@ -3,10 +3,8 @@ import {
     ChangeDetectorRef,
     Component, ElementRef,
     EventEmitter,
-    HostListener,
     Input,
     OnDestroy,
-    OnInit,
     Output,
     ViewChild
 } from '@angular/core';
@@ -16,7 +14,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { SchemasStore } from '../schemas-store/schemas-store.service';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kSchemasTable',

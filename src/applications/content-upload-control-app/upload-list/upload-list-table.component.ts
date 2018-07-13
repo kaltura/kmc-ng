@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { UploadFileData } from './upload-list.component';
-import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 
 @Component({

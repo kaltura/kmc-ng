@@ -67,6 +67,7 @@ export class ColumnsResizeManagerService {
     }
 
     public updateColumns(el: HTMLElement = document.documentElement): void {
+        this._logger.info(`handle update columns action by user, init columns width`, { tableName: this._tableName });
         window.requestAnimationFrame(() => {
             const config = this._storageManager.loadConfig(this._tableName);
             Object.keys(config)
