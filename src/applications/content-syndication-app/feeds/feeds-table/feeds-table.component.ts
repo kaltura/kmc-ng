@@ -1,7 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectorRef,
-    Component,
+    Component, ElementRef,
     EventEmitter, HostListener,
     Input,
     OnDestroy,
@@ -33,13 +33,6 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _deferredLoading = true;
   public _idToPlaylistMap: Map<string, KalturaPlaylist> = null; // map between KalturaPlaylist id to KalturaPlaylist.name object
   public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
-    public _columnsConfig: ResizableColumns;
-    public _defaultColumnsConfig: ResizableColumns = {
-        'name': 'auto',
-        'feedId': '110px',
-        'type': '130px',
-        'playlistId': '150px'
-    };
 
   @Input()
   set feeds(data: any[]) {
@@ -83,23 +76,12 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
-    @HostListener('window:resize') _windowResize(): void {
-        if (this._columnsResizeManager.onWindowResize()) {
-            this._columnsConfig = this._defaultColumnsConfig;
-        }
-    }
-
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
+              private _el: ElementRef<HTMLElement>,
               private _cdRef: ChangeDetectorRef) {
     this._fillCopyToClipboardTooltips();
-      this._columnsConfig = Object.assign(
-          {},
-          this._defaultColumnsConfig,
-          this._columnsResizeManager.getConfig()
-      );
-      this._windowResize();
   }
 
   ngOnInit() {
@@ -119,6 +101,8 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._deferredFeeds = null;
       }, 0);
     }
+
+      this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;

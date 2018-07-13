@@ -1,7 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectorRef,
-    Component,
+    Component, ElementRef,
     EventEmitter,
     HostListener,
     Input,
@@ -57,30 +57,14 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
   public _playlists: KalturaPlaylist[] = [];
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
-    public _columnsConfig: ResizableColumns;
-    public _defaultColumnsConfig: ResizableColumns = {
-        'role': '250px',
-        'description': 'auto'
-    };
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
-
-    @HostListener('window:resize') _windowResize(): void {
-        if (this._columnsResizeManager.onWindowResize()) {
-            this._columnsConfig = this._defaultColumnsConfig;
-        }
-    }
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
-              private _cdRef: ChangeDetectorRef) {
-      this._columnsConfig = Object.assign(
-          {},
-          this._defaultColumnsConfig,
-          this._columnsResizeManager.getConfig()
-      );
-      this._windowResize();
+              private _cdRef: ChangeDetectorRef,
+              private _el: ElementRef<HTMLElement>) {
   }
 
   ngOnInit() {
@@ -97,6 +81,8 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
         this._deferredPlaylists = null;
       }, 0);
     }
+
+      this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   openActionsMenu(event: any, playlist: KalturaPlaylist) {

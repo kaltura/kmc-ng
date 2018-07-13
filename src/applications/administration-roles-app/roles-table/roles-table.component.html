@@ -8,22 +8,22 @@
                (onColResize)="_columnsResizeManager.onColumnResize($event)">
       <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
-              <col [ngStyle]="{'width': _columnsConfig.role, 'padding-left': '1.5em'}">
-              <col [ngStyle]="{'width': _columnsConfig.description}">
-              <col [ngStyle]="{'width': '120px'}">
+              <col data-cid="role" [ngStyle]="{'width': '250px', 'padding-left': '1em'}">
+              <col data-cid="description">
+              <col data-cid="date" [ngStyle]="{'width': '120px'}">
               <col [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
           </colgroup>
       </ng-template>
 
       <ng-template pTemplate="header">
           <tr>
-              <th id="role" pResizableColumn [ngStyle]="{'width': _columnsConfig.role, 'padding-left': '1.5em'}">
+              <th data-cid="role" pResizableColumn [ngStyle]="{'width': '250px', 'padding-left': '1em'}">
                   {{'applications.administration.roles.tableColumns.role' | translate}}
               </th>
-              <th id="description" pResizableColumn [ngStyle]="{'width': _columnsConfig.description}">
+              <th data-cid="description" pResizableColumn>
                   {{'applications.administration.roles.tableColumns.description' | translate}}
               </th>
-              <th id="date" [ngStyle]="{'width': '120px'}">
+              <th data-cid="date">
                   {{'applications.administration.roles.tableColumns.saveDate' | translate}}
               </th>
               <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
@@ -32,17 +32,17 @@
 
       <ng-template pTemplate="body" let-role>
           <tr>
-              <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.role, 'padding-left': '1.5em'}">
+              <td class="ui-resizable-column" [ngStyle]="{'width': '250px', 'padding-left': '1em'}">
                   <span class="kRoleName kTableColumn" [kTooltip]="role.name" [showOnEllipsis]="true">
                       {{role.name}}
                   </span>
               </td>
-              <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.description}">
+              <td class="ui-resizable-column">
                   <span class="kTableColumn" [kTooltip]="role.description" [showOnEllipsis]="true">
                       {{role.description}}
                   </span>
               </td>
-              <td [ngStyle]="{'width': '120px'}">
+              <td>
                   <span class="kTableColumn" [kTooltip]="role.updatedAt | kDate" [showOnEllipsis]="true">
                       {{role.updatedAt | kDate}}
                   </span>

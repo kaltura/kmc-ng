@@ -1,7 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectorRef,
-    Component,
+    Component, ElementRef,
     EventEmitter,
     HostListener,
     Input,
@@ -53,35 +53,15 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _items: MenuItem[];
   public _schemas: SettingsMetadataProfile[] = [];
-    public _columnsConfig: ResizableColumns;
-    public _defaultColumnsConfig: ResizableColumns = {
-        'name': '236px',
-        'schemaId': 'auto',
-        'systemName': 'auto',
-        'description': 'auto',
-        'applyTo': 'auto',
-        'fieldsIncluded': '190px'
-    };
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
-
-    @HostListener('window:resize') _windowResize(): void {
-        if (this._columnsResizeManager.onWindowResize()) {
-            this._columnsConfig = this._defaultColumnsConfig;
-        }
-    }
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               public _schemasStore: SchemasStore,
-              private _cdRef: ChangeDetectorRef) {
-      this._columnsConfig = Object.assign(
-          {},
-          this._defaultColumnsConfig,
-          this._columnsResizeManager.getConfig()
-      );
-      this._windowResize();
+              private _cdRef: ChangeDetectorRef,
+              private _el: ElementRef<HTMLElement>) {
   }
 
   ngAfterViewInit() {
@@ -94,6 +74,8 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
         this._deferredSchemas = null;
       }, 0);
     }
+
+      this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   ngOnDestroy() {

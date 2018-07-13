@@ -2,7 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component,
+    Component, ElementRef,
     EventEmitter, HostListener,
     Input,
     OnDestroy,
@@ -19,7 +19,7 @@ import { KalturaSourceType } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { ColumnsResizeManagerService, ResizableColumns } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ColumnsResizeManagerService } from 'app-shared/kmc-shared/columns-resize-manager';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -91,43 +91,28 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _columns?: EntriesTableColumns = this._defaultColumns;
 
-
   public _entries: any[] = [];
   private _deferredLoading = true;
   public _emptyMessage = '';
   public _items: CustomMenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
-    public _columnsConfig: ResizableColumns;
-    public _defaultColumnsConfig: ResizableColumns = {
-        'name': 'auto',
-        'playlistId': 'auto',
-        'createdAt': 'auto',
-        'subcategories': 'auto'
-    };
-
-    @HostListener('window:resize') _windowResize(): void {
-        if (this._columnsResizeManager.onWindowResize()) {
-            this._columnsConfig = this._defaultColumnsConfig;
-        }
-    }
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
+              private _el: ElementRef<HTMLElement>,
               private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
     this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
 
-      const columnsResizeConfig = this._columnsResizeManager.getConfig();
     Object.keys(this._columns).forEach(columnName => {
       this._columnsMetadata[columnName] = {
-        style: this._getColumnStyle(this._columns[columnName], columnsResizeConfig[columnName]),
+        style: this._getColumnStyle(this._columns[columnName]),
         sortable: this._columns[columnName].sortable || false
       };
     });
-      this._windowResize();
   }
 
   ngOnDestroy() {
@@ -145,6 +130,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._cdRef.detectChanges();
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   private _hideMenuItems(source: KalturaSourceType,
@@ -218,9 +205,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.selectedEntriesChange.emit(event);
   }
 
-  public _getColumnStyle({ width = 'auto', align = 'left' } = {}, cachedWidth: string | number): EntriesTableColumnStyle {
+  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): EntriesTableColumnStyle {
       return {
-          'width': <string>cachedWidth || width,
+          'width': width,
           'text-align': align
       };
   }

@@ -15,12 +15,12 @@
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
                 <col [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
-                <col [ngStyle]="{'width': _columnsConfig.name}">
-                <col [ngStyle]="{'width': _columnsConfig.type}">
-                <col [ngStyle]="{'width': _columnsConfig.user}">
-                <col [ngStyle]="{'width': _columnsConfig.time}">
-                <col [ngStyle]="{'width': _columnsConfig.count}">
-                <col>
+                <col data-cid="name" [ngStyle]="{'width': '350px'}">
+                <col data-cid="type" [ngStyle]="{'width': '90px'}">
+                <col data-cid="user">
+                <col data-cid="time">
+                <col data-cid="count" [ngStyle]="{'width': '80px'}">
+                <col data-cid="status">
                 <col [ngStyle]="{'width': '80px'}" *ngIf="_actionsAllowed">
             </colgroup>
         </ng-template>
@@ -29,22 +29,22 @@
           <th [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th id="name" [ngStyle]="{'width': _columnsConfig.name}" pResizableColumn>
+          <th data-cid="name" [ngStyle]="{'width': '350px'}" pResizableColumn>
             {{'applications.content.bulkUpload.table.fileName' | translate}}
           </th>
-          <th id="type" [ngStyle]="{'width': _columnsConfig.type}" pResizableColumn>
+          <th data-cid="type" [ngStyle]="{'width': '90px'}" pResizableColumn>
             {{'applications.content.bulkUpload.table.uploadedItem' | translate}}
           </th>
-          <th id="user" [ngStyle]="{'width': _columnsConfig.user}" pResizableColumn>
+          <th data-cid="user" pResizableColumn>
             {{'applications.content.bulkUpload.table.uploadedBy' | translate}}
           </th>
-          <th id="time" [ngStyle]="{'width': _columnsConfig.time}" pResizableColumn>
+          <th data-cid="time" pResizableColumn>
             {{'applications.content.bulkUpload.table.uploadedOn' | translate}}
           </th>
-          <th id="count" [ngStyle]="{'width': _columnsConfig.count}" pResizableColumn>
+          <th data-cid="count" [ngStyle]="{'width': '80px'}" pResizableColumn>
             {{'applications.content.bulkUpload.table.numOfObjects' | translate}}
           </th>
-          <th id="status">
+          <th data-cid="status">
             {{'applications.content.bulkUpload.table.status' | translate}}
           </th>
           <th id="actions" [ngStyle]="{'width': '80px'}" *ngIf="_actionsAllowed"></th>

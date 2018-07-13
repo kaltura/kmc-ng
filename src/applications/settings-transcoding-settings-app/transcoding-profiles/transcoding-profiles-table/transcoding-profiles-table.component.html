@@ -12,10 +12,10 @@
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
                 <col [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
-                <col [ngStyle]="{'width': _columnsConfig.name}">
-                <col [ngStyle]="{'width': _columnsConfig.description}">
-                <col [ngStyle]="{'width': _columnsConfig.profileId}">
-                <col [ngStyle]="{'width': _columnsConfig.flavors}">
+                <col data-cid="name">
+                <col data-cid="description">
+                <col data-cid="profileId" [ngStyle]="{'width': '90px'}">
+                <col data-cid="flavors" [ngStyle]="{'width': '110px'}">
                 <col [ngStyle]="{'overflow':'visible', 'width':'80px'}">
             </colgroup>
         </ng-template>
@@ -25,16 +25,16 @@
                 <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th id="name" pResizableColumn [ngStyle]="{'width': _columnsConfig.name}">
+                <th data-cid="name" pResizableColumn>
                     {{'applications.settings.transcoding.table.name' | translate}}
                 </th>
-                <th id="description" pResizableColumn [ngStyle]="{'width': _columnsConfig.description}">
+                <th data-cid="description" pResizableColumn>
                     {{'applications.settings.transcoding.table.description' | translate}}
                 </th>
-                <th id="profileId" pResizableColumn [ngStyle]="{'width': _columnsConfig.profileId}">
+                <th data-cid="profileId" pResizableColumn [ngStyle]="{'width': '90px'}">
                     {{'applications.settings.transcoding.table.id' | translate}}
                 </th>
-                <th id="flavors" [ngStyle]="{'width': _columnsConfig.flavors}">
+                <th data-cid="flavors" [ngStyle]="{'width': '110px'}">
                     {{'applications.settings.transcoding.table.flavors' | translate}}
                 </th>
                 <th [ngStyle]="{'overflow':'visible', 'width':'80px'}"></th>

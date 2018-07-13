@@ -19,11 +19,11 @@
             <colgroup>
                 <col [ngStyle]="{'width': '44px', 'padding-left': '14px'}">
                 <col [ngStyle]="{'width': '44px'}">
-                <col [ngStyle]="{'width': _columnsConfig.name}">
-                <col [ngStyle]="{'width': _columnsConfig.feedId}">
-                <col [ngStyle]="{'width': _columnsConfig.type}">
-                <col [ngStyle]="{'width': _columnsConfig.playlistId}">
-                <col>
+                <col data-cid="name">
+                <col data-cid="feedId" [ngStyle]="{'width': '110px'}">
+                <col data-cid="type" [ngStyle]="{'width': '130px'}">
+                <col data-cid="playlistId" [ngStyle]="{'width': '150px'}">
+                <col data-cid="feedUrl">
                 <col [ngStyle]="{'width': '80px'}">
             </colgroup>
         </ng-template>
@@ -34,22 +34,22 @@
           </th>
           <th [ngStyle]="{'width': '44px'}">
           </th>
-          <th id="name" [ngStyle]="{'width': _columnsConfig.name}" pResizableColumn [pSortableColumn]="'name'">
+          <th data-cid="name" pResizableColumn [pSortableColumn]="'name'">
             {{'applications.content.syndication.table.columns.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th id="feedId" [ngStyle]="{'width': _columnsConfig.feedId}" pResizableColumn>
+          <th data-cid="feedId" [ngStyle]="{'width': '110px'}" pResizableColumn>
             {{'applications.content.syndication.table.columns.id' | translate}}
           </th>
-          <th id="type" [ngStyle]="{'width': _columnsConfig.type}" pResizableColumn [pSortableColumn]="'type'">
+          <th data-cid="type" [ngStyle]="{'width': '130px'}" pResizableColumn [pSortableColumn]="'type'">
             {{'applications.content.syndication.table.columns.destination' | translate}}
             <p-sortIcon [field]="'type'"></p-sortIcon>
           </th>
-          <th id="playlistId" [ngStyle]="{'width': _columnsConfig.playlistId}" pResizableColumn [pSortableColumn]="'playlistId'">
+          <th data-cid="playlistId" [ngStyle]="{'width': '150px'}" pResizableColumn [pSortableColumn]="'playlistId'">
             {{'applications.content.syndication.table.columns.source' | translate}}
             <p-sortIcon [field]="'playlistId'"></p-sortIcon>
           </th>
-          <th id="feedUrl" [pSortableColumn]="'feedUrl'">
+          <th data-cid="feedUrl" [pSortableColumn]="'feedUrl'">
             {{'applications.content.syndication.table.columns.url' | translate}}
             <p-sortIcon [field]="'feedUrl'"></p-sortIcon>
           </th>
@@ -70,26 +70,26 @@
             </div>
           </td>
 
-          <td [ngStyle]="{'width': _columnsConfig.name}" class="ui-resizable-column">
+          <td class="ui-resizable-column">
             <div class="ui-resizable-column kColName kElipsis" [kTooltip]="feed.name" (click)="_editFeed(feed)">
               {{feed.name}}
             </div>
           </td>
 
-          <td [ngStyle]="{'width': _columnsConfig.feedId}" class="ui-resizable-column">
+          <td class="ui-resizable-column">
             <div class="kColId" [kTooltip]="feed.id">
                 <span class="kTableColumn" [kTooltip]="feed.id" [showOnEllipsis]="true">{{feed.id}}</span>
             </div>
           </td>
 
-          <td [ngStyle]="{'width': _columnsConfig.type}" class="ui-resizable-column">
+          <td class="ui-resizable-column">
             <div class="kColDestination">
               <div class="kColDestinationIcon" [ngClass]="feed.type | kDestinationIcon"></div>
               <div class="kColDestinationText">{{feed.type | kDestinationLabel}}</div>
             </div>
           </td>
 
-          <td [ngStyle]="{'width': _columnsConfig.playlistId}" class="ui-resizable-column">
+          <td class="ui-resizable-column">
             <div class="kColSource">
               <span [ngClass]="feed.playlistId | kToPlaylistIcon: _idToPlaylistMap" class="kPlaylistIcon"></span>
               <span class="kElipsis" [kTooltip]="feed.playlistId | kToPlaylistName: _idToPlaylistMap" [showOnEllipsis]="true">

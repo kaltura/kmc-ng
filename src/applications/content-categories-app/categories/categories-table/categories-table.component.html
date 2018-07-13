@@ -19,11 +19,11 @@
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
                 <col [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
-                <col [ngStyle]="{'width': _columnsConfig.name}">
-                <col [ngStyle]="{'width': _columnsConfig.playlistId}">
-                <col [ngStyle]="{'width': _columnsConfig.createdAt}">
-                <col [ngStyle]="{'width': _columnsConfig.subcategories}">
-                <col>
+                <col data-cid="name">
+                <col data-cid="playlistId">
+                <col data-cid="createdAt">
+                <col data-cid="subcategories">
+                <col data-cid="entriesCount">
                 <col [ngStyle]="{'width': '80px'}">
             </colgroup>
         </ng-template>
@@ -32,26 +32,22 @@
           <th [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th id="name" [ngStyle]="{'width': _columnsConfig.name}" pResizableColumn [pSortableColumn]="'name'">
+          <th data-cid="name" pResizableColumn [pSortableColumn]="'name'">
             {{'applications.content.table.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th id="playlistId" [ngStyle]="{'width': _columnsConfig.playlistId}" pResizableColumn>
+          <th data-cid="playlistId" pResizableColumn>
             {{'applications.content.table.id' | translate}}
           </th>
-          <th id="createdAt" pResizableColumn
-              [ngStyle]="{'width': _columnsConfig.createdAt}"
-              [pSortableColumn]="'createdAt'">
+          <th data-cid="createdAt" pResizableColumn [pSortableColumn]="'createdAt'">
             {{'applications.content.table.createdOn' | translate}}
             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
           </th>
-          <th id="subcategories" pResizableColumn
-              [ngStyle]="{'width': _columnsConfig.subcategories}"
-              [pSortableColumn]="'directSubCategoriesCount'">
+          <th data-cid="subcategories" pResizableColumn [pSortableColumn]="'directSubCategoriesCount'">
             {{'applications.content.table.subcategories' | translate}}
             <p-sortIcon [field]="'directSubCategoriesCount'"></p-sortIcon>
           </th>
-          <th id="entriesCount" [pSortableColumn]="'entriesCount'">
+          <th data-cid="entriesCount" [pSortableColumn]="'entriesCount'">
             {{'applications.content.table.entries' | translate}}
             <p-sortIcon [field]="'entriesCount'"></p-sortIcon>
           </th>

@@ -1,7 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectorRef,
-    Component,
+    Component, ElementRef,
     EventEmitter,
     HostListener,
     Input,
@@ -59,34 +59,14 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
   public _actionsAllowed = true;
-    public _columnsConfig: ResizableColumns;
-    public _defaultColumnsConfig: ResizableColumns = {
-        'name': '350px',
-        'type': '90px',
-        'user': 'auto',
-        'time': 'auto',
-        'count': '80px',
-        'status': 'auto'
-    };
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
-
-    @HostListener('window:resize') _windowResize(): void {
-        if (this._columnsResizeManager.onWindowResize()) {
-            this._columnsConfig = this._defaultColumnsConfig;
-        }
-    }
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
+              private _el: ElementRef<HTMLElement>,
               private _cdRef: ChangeDetectorRef) {
-      this._columnsConfig = Object.assign(
-          {},
-          this._defaultColumnsConfig,
-          this._columnsResizeManager.getConfig()
-      );
-      this._windowResize();
   }
 
   ngOnInit() {
@@ -107,6 +87,8 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._deferredEntries = null;
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   ngOnDestroy() {

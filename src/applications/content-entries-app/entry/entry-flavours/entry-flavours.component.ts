@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
@@ -15,7 +15,7 @@ import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
-import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -45,38 +45,13 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _showActionsView = false;
     public _replaceButtonsLabel = '';
 
-    public _columnsConfig: ResizableColumns;
-    public _defaultColumnsConfig: ResizableColumns = {
-        'name': '144px',
-        'assetId': '100px',
-        'format': 'auto',
-        'codec': 'auto',
-        'bitrate': 'auto',
-        'dimensions': 'auto',
-        'size': 'auto',
-        'stat': 'auto'
-    };
-
-    @HostListener('window:resize') _windowResize(): void {
-        if (this._columnsResizeManager.onWindowResize()) {
-            this._columnsConfig = this._defaultColumnsConfig;
-        }
-
-        this._documentWidth = document.body.clientWidth;
-    }
-
 	constructor(public _columnsResizeManager: ColumnsResizeManagerService,
                 public _widgetService: EntryFlavoursWidget,
+                private _el: ElementRef<HTMLElement>,
               private _uploadManagement: UploadManagement,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService) {
-        this._columnsConfig = Object.assign(
-            {},
-            this._defaultColumnsConfig,
-            this._columnsResizeManager.getConfig()
-        );
-        this._windowResize();
     }
 
     ngOnInit() {
@@ -306,6 +281,8 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				    }
 			    });
 	    }
+
+        this._columnsResizeManager.updateColumns(this._el.nativeElement);
     }
 }
 

@@ -16,12 +16,12 @@
           <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
                   <col [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
-                  <col [ngStyle]="{'width': _columnsConfig.name}">
-                  <col [ngStyle]="{'width': _columnsConfig.folderId}">
-                  <col [ngStyle]="{'width': _columnsConfig.time}">
-                  <col [ngStyle]="{'width': _columnsConfig.size}">
-                  <col [ngStyle]="{'width': _columnsConfig.entryId}">
-                  <col>
+                  <col data-cid="name" [ngStyle]="{'width': '250px'}">
+                  <col data-cid="folderId">
+                  <col data-cid="time">
+                  <col data-cid="size" [ngStyle]="{'width': '80px'}">
+                  <col data-cid="entryId">
+                  <col data-cid="status">
                   <col [ngStyle]="{'width': '80px'}">
               </colgroup>
           </ng-template>
@@ -30,29 +30,27 @@
             <th [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
               <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>
-            <th id="name" [ngStyle]="{'width': _columnsConfig.name}" pResizableColumn [pSortableColumn]="'fileName'">
+            <th data-cid="name" [ngStyle]="{'width': '250px'}" pResizableColumn [pSortableColumn]="'fileName'">
               {{'applications.content.dropFolders.table.fileName' | translate}}
               <p-sortIcon [field]="'fileName'"></p-sortIcon>
             </th>
-            <th id="folderId" [ngStyle]="{'width': _columnsConfig.folderId}"
-                pResizableColumn [pSortableColumn]="'dropFolderId'">
+            <th data-cid="folderId" pResizableColumn [pSortableColumn]="'dropFolderId'">
               {{'applications.content.dropFolders.table.dropFolderName' | translate}}
               <p-sortIcon [field]="'dropFolderId'"></p-sortIcon>
             </th>
-            <th id="time" [ngStyle]="{'width': _columnsConfig.time}" pResizableColumn [pSortableColumn]="'createdAt'">
+            <th data-cid="time" pResizableColumn [pSortableColumn]="'createdAt'">
               {{'applications.content.dropFolders.table.createdOn' | translate}}
               <p-sortIcon [field]="'createdAt'"></p-sortIcon>
             </th>
-            <th id="size" [ngStyle]="{'width': _columnsConfig.size}" pResizableColumn [pSortableColumn]="'fileSize'">
+            <th data-cid="size" [ngStyle]="{'width': '80px'}" pResizableColumn [pSortableColumn]="'fileSize'">
               {{'applications.content.dropFolders.table.fileSize' | translate}}
               <p-sortIcon [field]="'fileSize'"></p-sortIcon>
             </th>
-            <th id="entryId" [ngStyle]="{'width': _columnsConfig.entryId}"
-                pResizableColumn [pSortableColumn]="'entryId'">
+            <th data-cid="entryId" pResizableColumn [pSortableColumn]="'entryId'">
               {{'applications.content.dropFolders.table.entryId' | translate}}
               <p-sortIcon [field]="'entryId'"></p-sortIcon>
             </th>
-            <th id="status" [pSortableColumn]="'status'">
+            <th data-cid="status" [pSortableColumn]="'status'">
               {{'applications.content.dropFolders.table.status' | translate}}
               <p-sortIcon [field]="'status'"></p-sortIcon>
             </th>

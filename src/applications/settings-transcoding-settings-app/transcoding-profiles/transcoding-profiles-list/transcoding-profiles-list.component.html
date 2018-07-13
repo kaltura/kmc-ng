@@ -28,11 +28,19 @@
   </div>
 
   <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage">
-    <k-transcoding-profiles-table [profiles]="(_storeService.profiles.data$ | async)?.items"
+    <k-transcoding-media-profiles-table *ngIf="_profilesType === _profilesTypes.media"
+                                  [profiles]="(_storeService.profiles.data$ | async)?.items"
                                   [profileType]="_profilesType"
                                   [singleTableMode]="singleTableMode"
                                   (actionSelected)="_actionSelected($event)"
-                                  [(selectedProfiles)]="_selectedProfiles"></k-transcoding-profiles-table>
+                                  [(selectedProfiles)]="_selectedProfiles"></k-transcoding-media-profiles-table>
+
+      <k-transcoding-live-profiles-table *ngIf="_profilesType === _profilesTypes.liveStream"
+                                          [profiles]="(_storeService.profiles.data$ | async)?.items"
+                                          [profileType]="_profilesType"
+                                          [singleTableMode]="singleTableMode"
+                                          (actionSelected)="_actionSelected($event)"
+                                          [(selectedProfiles)]="_selectedProfiles"></k-transcoding-live-profiles-table>
   </k-area-blocker>
 
   <div class="kProfilesTableFooter kContent" #footer *ngIf="(_storeService.profiles.data$ | async)?.totalCount">

@@ -1,7 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectorRef,
-    Component,
+    Component, ElementRef,
     EventEmitter, HostListener,
     Input,
     OnDestroy,
@@ -57,31 +57,10 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
   public _kmcPermissions = KMCPermissions;
 
-    public _columnsConfig: ResizableColumns;
-    public _defaultColumnsConfig: ResizableColumns = {
-        'name': '250px',
-        'folderId': 'auto',
-        'time': 'auto',
-        'size': '80px',
-        'entryId': 'auto',
-        'status': 'auto'
-    };
-
-    @HostListener('window:resize') _windowResize(): void {
-        if (this._columnsResizeManager.onWindowResize()) {
-            this._columnsConfig = this._defaultColumnsConfig;
-        }
-    }
-
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
+              private _el: ElementRef<HTMLElement>,
               private cdRef: ChangeDetectorRef) {
-      this._columnsConfig = Object.assign(
-          {},
-          this._defaultColumnsConfig,
-          this._columnsResizeManager.getConfig()
-      );
-      this._windowResize();
   }
 
   ngOnInit() {
@@ -98,6 +77,8 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
         this._deferredDropFolders = null;
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   ngOnDestroy() {

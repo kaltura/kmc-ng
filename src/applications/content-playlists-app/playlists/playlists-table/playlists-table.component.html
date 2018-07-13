@@ -18,11 +18,11 @@
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
                 <col [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
-                <col [ngStyle]="{'width': '44px'}">
-                <col [ngStyle]="{'width': _columnsConfig.name, 'padding-left': '52px'}">
-                <col [ngStyle]="{'width': _columnsConfig.playlistId}">
-                <col [ngStyle]="{'width': _columnsConfig.type}">
-                <col [ngStyle]="{'width': '140px'}">
+                <col data-cid="typeIcon" [ngStyle]="{'width': '44px'}">
+                <col data-cid="name">
+                <col data-cid="playlistId">
+                <col data-cid="type">
+                <col data-cid="createdAt" [ngStyle]="{'width': '140px'}">
                 <col [ngStyle]="{'width': '80px'}">
             </colgroup>
         </ng-template>
@@ -31,18 +31,18 @@
           <th [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-            <th [ngStyle]="{'width': '44px'}"></th>
-          <th id="name" [ngStyle]="{'width': _columnsConfig.name}" pResizableColumn [pSortableColumn]="'name'">
+          <th data-cid="typeIcon" [ngStyle]="{'width': '44px'}"></th>
+          <th data-cid="name" pResizableColumn [pSortableColumn]="'name'">
             {{'applications.content.table.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th id="playlistId" [ngStyle]="{'width': _columnsConfig.playlistId}" pResizableColumn>
+          <th data-cid="playlistId" pResizableColumn>
             {{'applications.content.table.id' | translate}}
           </th>
-          <th id="type" [ngStyle]="{'width': _columnsConfig.type}" pResizableColumn>
+          <th data-cid="type" pResizableColumn>
             {{'applications.content.table.playlistType' | translate}}
           </th>
-          <th id="createdAt" [pSortableColumn]="'createdAt'">
+          <th data-cid="createdAt" [pSortableColumn]="'createdAt'">
             {{'applications.content.table.createdOn' | translate}}
             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
           </th>
@@ -61,7 +61,7 @@
                 <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
             </td>
 
-          <td [ngStyle]="{'width': _columnsConfig.name}" class="ui-resizable-column">
+          <td class="ui-resizable-column">
             <div class="kPlaylistsNameWrap">
               <div class="kTitle kTableColumn"
                    [kTooltip]="playlist.name"
@@ -71,17 +71,17 @@
             </div>
           </td>
 
-          <td [ngStyle]="{'width': _columnsConfig.playlistId}" class="ui-resizable-column">
+          <td class="ui-resizable-column">
               <span class="kTableColumn" [kTooltip]="playlist.id" [showOnEllipsis]="true">{{playlist.id}}</span>
           </td>
 
-          <td [ngStyle]="{'width': _columnsConfig.type}" class="ui-resizable-column">
+          <td class="ui-resizable-column">
               <span class="kTableColumn" [kTooltip]="playlist.playlistType | playlistType" [showOnEllipsis]="true">
                   {{playlist.playlistType | playlistType}}
               </span>
           </td>
 
-          <td [ngStyle]="{'width': '140px'}" class="ui-resizable-column">
+          <td class="ui-resizable-column">
               <span class="kTableColumn" [kTooltip]="playlist.createdAt | kDate" [showOnEllipsis]="true">
                   {{playlist.createdAt | kDate}}
               </span>

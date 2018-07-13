@@ -1,7 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectorRef,
-    Component,
+    Component, ElementRef,
     EventEmitter, HostListener,
     Input,
     OnDestroy,
@@ -14,7 +14,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ColumnsResizeManagerService, ResizableColumns, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kCategoriesTable',
@@ -60,32 +60,14 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   public _emptyMessage = '';
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
-    public _columnsConfig: ResizableColumns;
-    public _defaultColumnsConfig: ResizableColumns = {
-        'name': 'auto',
-        'playlistId': 'auto',
-        'createdAt': 'auto',
-        'subcategories': 'auto'
-    };
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
-
-    @HostListener('window:resize') _windowResize(): void {
-        if (this._columnsResizeManager.onWindowResize()) {
-            this._columnsConfig = this._defaultColumnsConfig;
-        }
-    }
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
+              private _el: ElementRef<HTMLElement>,
               private _permissionsService: KMCPermissionsService) {
-      this._columnsConfig = Object.assign(
-          {},
-          this._defaultColumnsConfig,
-          this._columnsResizeManager.getConfig()
-      );
-      this._windowResize();
   }
 
   ngOnInit() {
@@ -106,6 +88,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
         this._deferredCategories = null;
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   onActionSelected(action: string, category: KalturaCategory) {

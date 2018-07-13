@@ -34,76 +34,84 @@
                 (onColResize)="_columnsResizeManager.onColumnResize($event)">
                 <ng-template pTemplate="colgroup" let-columns>
                     <colgroup>
-                        <col [ngStyle]="{'width': _columnsConfig.name, 'padding-left': '24px'}">
-                        <col [hidden]="_documentWidth < 1300"
-                             [ngStyle]="{'width': _columnsConfig.assetId}">
-                        <col [ngStyle]="{'width': _columnsConfig.format}">
-                        <col [ngStyle]="{'width': _columnsConfig.codec}">
-                        <col [ngStyle]="{'width': _columnsConfig.bitrate}">
-                        <col [ngStyle]="{'width': _columnsConfig.dimensions}">
-                        <col [ngStyle]="{'width': _columnsConfig.size}">
-                        <col [ngStyle]="{'width': _columnsConfig.stat}">
-                        <col
-                            [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
-                        <col *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted"
-                             [ngStyle]="{'width':'80px'}">
+                        <col data-cid="name" [ngStyle]="{'width': '144px', 'padding-left': '24px'}">
+                        <col data-cid="assetId" [hidden]="_documentWidth < 1300" [ngStyle]="{'width': '100px'}">
+                        <col data-cid="format">
+                        <col data-cid="codec">
+                        <col data-cid="bitrate">
+                        <col data-cid="dimensions">
+                        <col data-cid="size">
+                        <col data-cid="stat">
+                        <col [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
+                        <col *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted"  [ngStyle]="{'width':'80px'}">
                     </colgroup>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th id="name" pResizableColumn
-                            [ngStyle]="{'width': _columnsConfig.name, 'padding-left': '24px'}">
+                        <th data-cid="name" pResizableColumn
+                            [ngStyle]="{'width': '144px', 'padding-left': '24px'}">
                             {{'applications.content.entryDetails.flavours.flavour' | translate}}
                         </th>
-                        <th id="assetId" pResizableColumn
-                            [ngStyle]="{'width': _columnsConfig.assetId}"
+                        <th data-cid="assetId" pResizableColumn
+                            [ngStyle]="{'width': '100px'}"
                             [hidden]="_documentWidth < 1300">
                             {{'applications.content.entryDetails.flavours.assetId' | translate}}
                         </th>
-                        <th id="format" pResizableColumn [ngStyle]="{'width': _columnsConfig.format}">
+                        <th data-cid="format" pResizableColumn>
                             {{'applications.content.entryDetails.flavours.format' | translate}}
                         </th>
-                        <th id="codec" pResizableColumn [ngStyle]="{'width': _columnsConfig.codec}">
+                        <th data-cid="codec" pResizableColumn>
                             {{'applications.content.entryDetails.flavours.codec' | translate}}
                         </th>
-                        <th id="bitrate" pResizableColumn [ngStyle]="{'width': _columnsConfig.bitrate}">
+                        <th data-cid="bitrate" pResizableColumn>
                             {{'applications.content.entryDetails.flavours.bitrate' | translate}}
                         </th>
-                        <th id="dimensions" pResizableColumn [ngStyle]="{'width': _columnsConfig.dimensions}">
+                        <th data-cid="dimensions" pResizableColumn>
                             {{'applications.content.entryDetails.flavours.dimensions' | translate}}
                         </th>
-                        <th id="size" pResizableColumn [ngStyle]="{'width': _columnsConfig.size}">
+                        <th data-cid="size" pResizableColumn>
                             {{'applications.content.entryDetails.flavours.size' | translate}}
                         </th>
-                        <th id="stat" pResizableColumn [ngStyle]="{'width': _columnsConfig.stat}">
+                        <th data-cid="stat" pResizableColumn>
                             {{'applications.content.entryDetails.flavours.stat' | translate}}
                         </th>
-                        <th id="tags"
+                        <th data-cid="tags"
                             [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
                             {{'applications.content.entryDetails.flavours.tags' | translate}}
                         </th>
-                        <th *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted"
-                            [ngStyle]="{'width':'80px'}"></th>
+                        <th *ngIf="_kmcPermissions.CONTENT_MANAGE_RECONVERT | kNgIfPermitted" [ngStyle]="{'width':'80px'}"></th>
                     </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-flavor>
                     <tr [pSelectableRow]="flavor">
                         <td [ngStyle]="{'padding-left': '24px'}"class="ui-resizable-column">
-                            <span class="kFlavorName"
+                            <span class="kFlavorName kTableColumn"
                                   [class.kConvertedFlavor]="flavor.status === '2'">{{flavor.name}}</span>
                         </td>
-                        <td class="ui-resizable-column" [hidden]="_documentWidth < 1300">{{flavor.id}}</td>
-                        <td class="ui-resizable-column">{{flavor.format}}</td>
-                        <td class="ui-resizable-column">{{flavor.codec}}</td>
-                        <td class="ui-resizable-column">{{flavor.bitrate}}</td>
-                        <td class="ui-resizable-column">{{flavor.dimensions}}</td>
-                        <td class="ui-resizable-column">{{flavor.size}}</td>
+                        <td class="ui-resizable-column" [hidden]="_documentWidth < 1300">
+                            <span class="kTableColumn" [kTooltip]="flavor.id" [showOnEllipsis]="true">{{flavor.id}}</span>
+                        </td>
                         <td class="ui-resizable-column">
-                            <span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
+                            <span class="kTableColumn" [kTooltip]="flavor.format" [showOnEllipsis]="true">{{flavor.format}}</span>
+                        </td>
+                        <td class="ui-resizable-column">
+                            <span class="kTableColumn" [kTooltip]="flavor.codec" [showOnEllipsis]="true">{{flavor.codec}}</span>
+                        </td>
+                        <td class="ui-resizable-column">
+                            <span class="kTableColumn" [kTooltip]="flavor.bitrate" [showOnEllipsis]="true">{{flavor.bitrate}}</span>
+                        </td>
+                        <td class="ui-resizable-column">
+                            <span class="kTableColumn" [kTooltip]="flavor.dimensions" [showOnEllipsis]="true">{{flavor.dimensions}}</span>
+                        </td>
+                        <td class="ui-resizable-column">
+                            <span class="kTableColumn" [kTooltip]="flavor.size" [showOnEllipsis]="true">{{flavor.size}}</span>
+                        </td>
+                        <td class="ui-resizable-column">
+                            <span class="kTableColumn" [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
                         </td>
                         <td [hidden]="_documentWidth < 1400 || (_kmcPermissions.FEATURE_KMC_DRILLDOWN_TAGS_COLUMN | kHiddenIfNotPermitted)">
-                            <span>{{flavor.tags | tags}}</span>
+                            <span class="kTableColumn" [kTooltip]="flavor.tags | tags" [showOnEllipsis]="true">{{flavor.tags | tags}}</span>
                         </td>
                         <td>
                             <div

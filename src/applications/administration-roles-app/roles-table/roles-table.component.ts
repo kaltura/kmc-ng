@@ -1,12 +1,12 @@
 import {
     AfterViewInit,
     ChangeDetectorRef,
-    Component,
+    Component, ElementRef,
     EventEmitter, HostListener,
     Input,
     OnDestroy,
     OnInit,
-    Output,
+    Output, Renderer2,
     ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
@@ -45,33 +45,17 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private _deferredRoles: KalturaUserRole[];
 
-    public _columnsConfig: ResizableColumns;
-    public _defaultColumnsConfig: ResizableColumns = {
-        'role': '250px',
-        'description': 'auto'
-    };
   public _roles: KalturaUserRole[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
   public _items: MenuItem[];
   public _rowTrackBy: Function = (index: number, item: any) => item.id;
 
-    @HostListener('window:resize') _windowResize(): void {
-        if (this._columnsResizeManager.onWindowResize()) {
-            this._columnsConfig = this._defaultColumnsConfig;
-        }
-    }
-
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
-              private _permissionsService: KMCPermissionsService) {
-      this._columnsConfig = Object.assign(
-          {},
-          this._defaultColumnsConfig,
-          this._columnsResizeManager.getConfig()
-      );
-      this._windowResize();
+              private _permissionsService: KMCPermissionsService,
+              private _elementRef: ElementRef<HTMLElement>) {
   }
 
   ngOnInit() {
@@ -91,6 +75,8 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._deferredRoles = null;
       }, 0);
     }
+
+      this._columnsResizeManager.updateColumns(this._elementRef.nativeElement);
   }
 
   private _onActionSelected(action: string, role: KalturaUserRole): void {

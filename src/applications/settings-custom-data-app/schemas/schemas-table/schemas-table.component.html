@@ -12,12 +12,12 @@
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
                 <col [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
-                <col [ngStyle]="{'width': _columnsConfig.name}">
-                <col [ngStyle]="{'width': _columnsConfig.schemaId}">
-                <col [ngStyle]="{'width': _columnsConfig.systemName}">
-                <col [ngStyle]="{'width': _columnsConfig.description}">
-                <col [ngStyle]="{'width': _columnsConfig.applyTo}">
-                <col [ngStyle]="{'width': _columnsConfig.fieldsIncluded}">
+                <col data-cid="name" [ngStyle]="{'width': '236px'}">
+                <col data-cid="schemaId">
+                <col data-cid="systemName">
+                <col data-cid="description">
+                <col data-cid="applyTo">
+                <col data-cid="fieldsIncluded">
                 <col [ngStyle]="{'overflow':'visible', 'width':'80px'}">
             </colgroup>
         </ng-template>
@@ -27,22 +27,22 @@
                 <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th id="name" pResizableColumn [ngStyle]="{'width': _columnsConfig.name}">
+                <th data-cid="name" pResizableColumn>
                     {{'applications.settings.metadata.table.name' | translate}}
                 </th>
-                <th id="schemaId" pResizableColumn [ngStyle]="{'width': _columnsConfig.schemaId}">
+                <th data-cid="schemaId" pResizableColumn>
                     {{'applications.settings.metadata.table.id' | translate}}
                 </th>
-                <th id="systemName" pResizableColumn [ngStyle]="{'width': _columnsConfig.systemName}">
+                <th data-cid="systemName" pResizableColumn>
                     {{'applications.settings.metadata.table.systemName' | translate}}
                 </th>
-                <th id="description" pResizableColumn [ngStyle]="{'width': _columnsConfig.description}">
+                <th data-cid="description" pResizableColumn>
                     {{'applications.settings.metadata.table.description' | translate}}
                 </th>
-                <th id="applyTo" pResizableColumn [ngStyle]="{'width': _columnsConfig.applyTo}">
+                <th data-cid="applyTo" pResizableColumn>
                     {{'applications.settings.metadata.table.applyTo' | translate}}
                 </th>
-                <th id="fieldsIncluded" [ngStyle]="{'width': _columnsConfig.fieldsIncluded}">
+                <th data-cid="fieldsIncluded">
                     {{'applications.settings.metadata.table.fieldsIncluded' | translate}}
                 </th>
                 <th [ngStyle]="{'overflow':'visible', 'width':'80px'}"></th>
