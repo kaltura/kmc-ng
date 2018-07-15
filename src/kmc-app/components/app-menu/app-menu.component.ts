@@ -103,7 +103,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 link = serverConfig.externalLinks.kaltura.mediaManagement;
                 break;
             case 'legacy':
-                link = buildBaseUri('/kmc');
+                link = buildBaseUri('/index.php/kmc');
                 break;
         }
         if (link.length > 0) {

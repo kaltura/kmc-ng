@@ -15,6 +15,6 @@ export class AnalyticsLiveComponent {
   constructor(liveAnalyticsView: LiveAnalyticsMainViewService
   ) {
       this._enabled = liveAnalyticsView.viewEntered();
-      this._legacyUrl = buildBaseUri('/kmc');
+      this._legacyUrl = buildBaseUri('/index.php/kmc');
   }
 }

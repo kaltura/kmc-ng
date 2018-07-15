@@ -109,7 +109,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 result = !!configuration.uri &&
                     !configuration.uri.match(/\s/g); // not contains white spaces
                 if (result) {
-                    configuration.uri = buildKalturaServerUri(configuration.uri);
+                    configuration.uri = buildBaseUri(configuration.uri);
                 }
             }
 
@@ -125,7 +125,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !!configuration.html5lib;
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -142,7 +142,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !!configuration.html5lib;
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -156,7 +156,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -170,7 +170,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -184,7 +184,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -198,7 +198,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -206,7 +206,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
     }
 };
 
-export function buildKalturaServerUri(suffix: string): string {
+export function buildBaseUri(suffix: string): string {
     let result = '';
     try {
         const port = (window.location.port) ? ':' + window.location.port : '';
