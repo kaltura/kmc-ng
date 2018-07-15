@@ -47,9 +47,11 @@
                 <col data-cid="status"
                      *ngIf="_columnsMetadata.status"
                      [ngStyle]="_columnsMetadata.status.style">
-                <col *ngIf="rowActions?.length"
+                <col data-cid="rowActions"
+                     *ngIf="rowActions?.length"
                      style="width: 80px">
-                <col *ngIf="_columnsMetadata.addToBucket"
+                <col data-cid="addToBucket"
+                     *ngIf="_columnsMetadata.addToBucket"
                      [ngStyle]="_columnsMetadata.addToBucket.style">
             </colgroup>
         </ng-template>
@@ -110,8 +112,8 @@
                     *ngIf="_columnsMetadata.status">
                     {{'applications.content.table.status' | translate}}
                 </th>
-                <th id="rowActions" *ngIf="rowActions?.length"></th>
-                <th id="addToBucket" *ngIf="_columnsMetadata.addToBucket"></th>
+                <th data-cid="rowActions" id="rowActions" *ngIf="rowActions?.length"></th>
+                <th data-cid="addToBucket" id="addToBucket" *ngIf="_columnsMetadata.addToBucket"></th>
             </tr>
         </ng-template>
 

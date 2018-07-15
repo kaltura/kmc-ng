@@ -19,7 +19,7 @@ export class ColumnsResizeManagerService {
     private _updateNextSiblings(element: HTMLTableHeaderCellElement, config: ResizableColumns): void {
         const nextSibling = <HTMLTableHeaderCellElement>element.nextElementSibling;
         if (nextSibling && nextSibling.dataset && nextSibling.dataset.cid) {
-            const { dataset: { cid: columnName }, offsetWidth: columnWidth } = element;
+            const { dataset: { cid: columnName }, offsetWidth: columnWidth } = nextSibling;
             config[columnName] = `${columnWidth}px`;
             this._updateNextSiblings(nextSibling, config);
         }
@@ -28,7 +28,7 @@ export class ColumnsResizeManagerService {
     private _updatePrevSiblings(element: HTMLTableHeaderCellElement, config: ResizableColumns): void {
         const prevSibling = <HTMLTableHeaderCellElement>element.previousElementSibling;
         if (prevSibling && prevSibling.dataset && prevSibling.dataset.cid) {
-            const { dataset: { cid: columnName }, offsetWidth: columnWidth } = element;
+            const { dataset: { cid: columnName }, offsetWidth: columnWidth } = prevSibling;
             config[columnName] = `${columnWidth}px`;
             this._updatePrevSiblings(prevSibling, config);
         }
