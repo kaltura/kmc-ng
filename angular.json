@@ -23,7 +23,7 @@
               "src/public",
               "src/i18n",
               "src/favicon.ico",
-              "src/__local_machine_only__/**/*"
+              "src/__local_machine_only__"
             ],
             "styles": [
               "src/styles/app-theme/styles.scss"

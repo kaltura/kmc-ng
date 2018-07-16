@@ -15,8 +15,5 @@ export const environment = {
     configurationTimeout: 10000,
     client: {
       useSecuredProtocol: false
-    },
-    server: {
-      useSecuredProtocol: true
     }
 }

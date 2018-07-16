@@ -2407,7 +2407,7 @@
                     "entries": "Entries",
                     "categories": "Categories",
                     "schemaNameRequired": "Name is required",
-                    "schemaNameMaxLength": "Name must be less then {{0}} characters long"
+                    "schemaNameMaxLength": "Name must be less than {{0}} characters long"
                 },
                 "table": {
                     "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
@@ -2571,7 +2571,7 @@
                 "strongPassword": "Use a strong password that you are not using elsewhere.",
                 "currentPassword": "Current Password",
                 "newPassword": "New password",
-                "reTypeNewPassword": "Re-type the new password.",
+                "reTypeNewPassword": "Re-type the new password",
                 "errors": {
                     "required": "This field is required.",
                     "doNotMuchPasswords": "Password fields do not match.",
@@ -2815,7 +2815,7 @@
         },
         "analytics": {
             "comingSoon": "Coming soon! Analytics for all media types.",
-            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please login to the legacy KMC to view and create analytics and reports. Analytics for all media should be available soon"
+            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please <a href=\"{{0}}\" target=\"_blank\">login to the legacy KMC</a> to view and create analytics and reports. Analytics for all media should be available soon"
         }
     },
     "entriesShared": {

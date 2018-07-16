@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="472" [modal]="true">
+    <kPopupWidget #editPopup data-aid="editCaptionPopup" [popupWidth]="380" [popupHeight]="472" [modal]="true">
         <ng-template>
             <kEntryCaptionsEdit [currentCaption]="_widgetService.currentCaption"
                                 [parentPopupWidget]="editPopup"></kEntryCaptionsEdit>

@@ -85,7 +85,7 @@
             <p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
         </div>
     </div>
-    <kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="300" [modal]="true">
+    <kPopupWidget #editPopup data-aid="editRelatedPopup" [popupWidth]="380" [popupHeight]="300" [modal]="true">
         <kEntryRelatedEdit [currentFile]="_currentFile" [parentPopupWidget]="editPopup"></kEntryRelatedEdit>
     </kPopupWidget>
 </k-area-blocker>
