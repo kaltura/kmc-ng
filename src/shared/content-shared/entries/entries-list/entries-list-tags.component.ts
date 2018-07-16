@@ -130,8 +130,6 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 }
             });
 
-            (this._tags || []).sort((a, b) => Number(b.disabled || 0) - Number(a.disabled || 0));
-
             this.onTagsChange.emit();
         } else {
             this._showTags = false;
@@ -317,8 +315,6 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 };
                 this._tags.push(newTag);
             });
-
-            this._tags.sort((a, b) => Number(b.disabled || 0) - Number(a.disabled || 0));
         }
     }
 

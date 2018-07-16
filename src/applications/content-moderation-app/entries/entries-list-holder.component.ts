@@ -32,7 +32,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         'moderationStatuses': ['1', '5'],
     };
   public _defaultFilters: Partial<EntriesFilters> = {
-    'moderationStatuses': ['1', '5'],
       'sortDirection': SortDirection.Desc
   };
 
