@@ -1,9 +1,10 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'shared/kmc-shell/index';
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ContentEntryViewService, ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export enum ReachPages {
     entry = 'entry',
@@ -30,12 +31,15 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
     @Input() page: ReachPages;
     @Input() data: ReachData = {};
 
+    @Output() closeApp = new EventEmitter<void>();
+
     public _url = null;
 
     constructor(private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
                 private _browserService: BrowserService,
+                private _contentEntryViewService: ContentEntryViewService,
                 private _reachAppView: ReachAppViewService) {
     }
 
@@ -86,8 +90,11 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                         'reach': { language: this._appLocalization.selectedLanguage }
                     },
                     'functions': {
-                        expired: () => {
-                            this._appAuthentication.logout();
+                        dashboardEntryLinkAction: (entryId) => {
+                            this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
+                        },
+                        bulkOrderOnCancel: () => {
+                            console.log('bulk order cancelled');
                         }
                     }
                 };

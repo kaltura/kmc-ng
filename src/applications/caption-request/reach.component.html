@@ -7,6 +7,6 @@
     </div>
 
     <div class="kContent">
-        <kReachFrame [page]="page" [data]="data"></kReachFrame>
+        <kReachFrame [page]="page" [data]="data" (closeApp)="parentPopup.close()"></kReachFrame>
     </div>
 </div>
