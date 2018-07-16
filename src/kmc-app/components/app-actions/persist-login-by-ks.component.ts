@@ -4,11 +4,11 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
-    selector: 'kRedirectFromExternalComponent',
+    selector: 'kPersistLoginByKs',
     template: '<k-area-blocker classes="kAreaBlockerCoverAll" [showLoader]="true"></k-area-blocker>',
-    providers: [KalturaLogger.createLogger('RedirectFromExternalComponent')]
+    providers: [KalturaLogger.createLogger('PersistLoginByKsComponent')]
 })
-export class RedirectFromExternalComponent implements OnInit, OnDestroy {
+export class PersistLoginByKsComponent implements OnInit, OnDestroy {
     constructor(private _route: ActivatedRoute,
                 private _router: Router,
                 private _appAuth: AppAuthentication,
@@ -18,7 +18,7 @@ export class RedirectFromExternalComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         console.warn(this._route.snapshot.params);
-        this._logger.info(`handle 'redirect-from-external' action`);
+        this._logger.info(`handle 'persist-login-by-ks' action`);
         const ks = (this._route.snapshot.params['ks'] || '').trim();
         if (!ks) {
             this._logger.info(`missing 'ks' value, navigating to default page`);
@@ -27,7 +27,7 @@ export class RedirectFromExternalComponent implements OnInit, OnDestroy {
         }
 
         const replaceBrowserHistory = true;
-        this._logger.info(`handle redirect-from-external by the user, navigating to default page`, { replaceBrowserHistory });
+        this._logger.info(`handle persist-login-by-ks by the user, navigating to default page`, { replaceBrowserHistory });
 
         this._appAuth.setAutomaticLoginCredentials(ks, true);
         this._browserService.navigateToDefault(replaceBrowserHistory);

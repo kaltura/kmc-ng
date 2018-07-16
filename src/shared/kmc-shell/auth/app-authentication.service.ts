@@ -85,6 +85,7 @@ export class AppAuthentication {
     private _automaticLogin: {  ks: string, persistCredentials: boolean } = { ks: null, persistCredentials: false };
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
+    private _autoLoginAttempted = false;
 
     public get defaultUrl(): string {
         return this._defaultUrl;
@@ -457,7 +458,11 @@ export class AppAuthentication {
     }
 
     public loginAutomatically(defaultUrl: string): Observable<boolean> {
-        console.warn(this._automaticLogin);
+        if (this._autoLoginAttempted || this.isLogged()) {
+            return ObservableOf(this.isLogged());
+        }
+
+        this._autoLoginAttempted = true;
         const ksFromApp = this._automaticLogin.ks;
         if (ksFromApp) {
             this._logger.info(`try to login automatically with KS provided explicitly by the app`);
