@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken, Renderer2, RendererFactory2 } from '@angular/core';
+import { Inject, Injectable, InjectionToken, Renderer2, RendererFactory2, Self } from '@angular/core';
 import { ColumnsResizeStorageManagerService, ResizableColumns } from './columns-resize-storage-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
@@ -10,7 +10,7 @@ export class ColumnsResizeManagerService {
 
     constructor(private _storageManager: ColumnsResizeStorageManagerService,
                 private _logger: KalturaLogger,
-                @Inject(ResizableColumnsTableName) private _tableName: string,
+                @Inject(ResizableColumnsTableName) @Self() private _tableName: string,
                 rendererFactory: RendererFactory2) {
         this._logger = _logger.subLogger(`ColumnsResizeManagerService:${_tableName}`);
         this._renderer = rendererFactory.createRenderer(null, null);
