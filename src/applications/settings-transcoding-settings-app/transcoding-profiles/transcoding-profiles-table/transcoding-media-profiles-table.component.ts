@@ -28,7 +28,7 @@ export class TranscodingMediaProfilesTableComponent extends TranscodingProfilesT
         this._columnsResizeManager.updateColumns(this._el.nativeElement);
     }
 
-    protected _onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }) {
+    public _onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }) {
         this._columnsResizeManager.onColumnResize(event);
     }
 }

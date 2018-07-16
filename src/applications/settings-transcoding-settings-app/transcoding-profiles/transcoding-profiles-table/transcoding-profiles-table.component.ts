@@ -1,7 +1,6 @@
 import {
     AfterViewInit,
     ChangeDetectorRef,
-    Component,
     EventEmitter,
     Input,
     OnDestroy,
@@ -15,11 +14,6 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 
-@Component({
-  selector: 'k-transcoding-profiles-table',
-  templateUrl: './transcoding-profiles-table.component.html',
-  styleUrls: ['./transcoding-profiles-table.component.scss']
-})
 export abstract class TranscodingProfilesTableComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() set profiles(data: KalturaConversionProfileWithAsset[]) {
     if (!this._deferredLoading) {
@@ -47,7 +41,7 @@ export abstract class TranscodingProfilesTableComponent implements OnInit, After
   public _deferredLoading = true;
   public _deferredProfiles = [];
 
-    protected abstract _onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }): void;
+    public abstract _onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }): void;
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
