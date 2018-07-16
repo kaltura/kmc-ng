@@ -98,7 +98,7 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                             },
                             bulkOrderOnCancel: () => {
                                 this._logger.info(`handle 'bulkOrderOnCancel' event from Reach app, close floater, clear entries selection`);
-                                this._appEvents.emit(new ClearEntriesSelectionEvent());
+                                this._appEvents.publish(new ClearEntriesSelectionEvent());
                                 this.closeApp.emit();
                             }
                         }
