@@ -19,6 +19,7 @@ import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/km
 import { LiveDashboardAppViewService, ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -86,6 +87,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _contentEntriesMainViewService: ContentEntriesMainViewService,
               private _reachAppViewService: ReachAppViewService,
               private _liveDashboardAppViewService: LiveDashboardAppViewService) {
+      _appEvents.event(ClearEntriesSelectionEvent)
+          .pipe(cancelOnDestroy(this))
+          .subscribe(() => {
+              if (this._entriesList) {
+                  this._entriesList.clearSelection();
+              }
+          });
   }
 
   ngOnInit() {

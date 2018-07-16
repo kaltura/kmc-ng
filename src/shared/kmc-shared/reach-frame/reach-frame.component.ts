@@ -5,6 +5,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ContentEntryViewService, ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 export enum ReachPages {
     entry = 'entry',
@@ -38,6 +40,7 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
     constructor(private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
+                private _appEvents: AppEventsService,
                 private _browserService: BrowserService,
                 private _contentEntryViewService: ContentEntryViewService,
                 private _reachAppView: ReachAppViewService) {
@@ -87,14 +90,17 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                     'vars': {
                         'ks': this._appAuthentication.appUser.ks,
                         'service_url': getKalturaServerUri(),
-                        'reach': { language: this._appLocalization.selectedLanguage }
-                    },
-                    'functions': {
-                        dashboardEntryLinkAction: (entryId) => {
-                            this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
-                        },
-                        bulkOrderOnCancel: () => {
-                            console.log('bulk order cancelled');
+                        'reach': {
+                            language: this._appLocalization.selectedLanguage,
+                            dashboardEntryLinkAction: (entryId) => {
+                                this._logger.info(`handle 'dashboardEntryLinkAction' event from Reach app, open entry details vide`, { entryId });
+                                this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
+                            },
+                            bulkOrderOnCancel: () => {
+                                this._logger.info(`handle 'bulkOrderOnCancel' event from Reach app, close floater, clear entries selection`);
+                                this._appEvents.emit(new ClearEntriesSelectionEvent());
+                                this.closeApp.emit();
+                            }
                         }
                     }
                 };
