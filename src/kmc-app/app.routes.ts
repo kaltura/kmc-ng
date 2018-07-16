@@ -8,6 +8,7 @@ import { AppDefaultViewComponent } from './components/app-default-view/app-defau
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 import { RestorePasswordComponent } from './components/app-actions/restore-password.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+import { RedirectFromExternalComponent } from './components/app-actions/redirect-from-external.component';
 
 const routes: Routes = <Routes>[
     {
@@ -20,6 +21,7 @@ const routes: Routes = <Routes>[
                 path: 'actions',
                 children: [
                     { path: 'login-by-ks/:ks', component: LoginByKSComponent, pathMatch: 'full' },
+                    { path: 'redirect-from-external/:ks', component: RedirectFromExternalComponent, pathMatch: 'full' },
                     { path: 'restore-password/:hash', component: RestorePasswordComponent, pathMatch: 'full'  }
                 ]
             },

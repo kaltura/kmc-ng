@@ -99,6 +99,7 @@ import { InvalidRestorePasswordHashFormComponent } from './components/login/inva
 
 import { CopyToClipboardModule } from '@kaltura-ng/mc-shared';
 import { ContextualHelpModule } from 'app-shared/kmc-shared/contextual-help/contextual-help.module';
+import { RedirectFromExternalComponent } from './components/app-actions/redirect-from-external.component';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -188,7 +189,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       NotFoundPageComponent,
       RestorePasswordFormComponent,
       InvalidRestorePasswordHashFormComponent,
-      ProgressBarComponent
+      ProgressBarComponent,
+      RedirectFromExternalComponent
   ],
   bootstrap: <any>[
     AppComponent

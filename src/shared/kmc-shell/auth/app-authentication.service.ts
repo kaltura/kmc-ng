@@ -82,7 +82,7 @@ export class AppAuthentication {
     }
 
     private _defaultUrl: string;
-    private _automaticLogin: {  ks: string} = { ks: null };
+    private _automaticLogin: {  ks: string, persistCredentials: boolean } = { ks: null, persistCredentials: false };
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
 
@@ -436,8 +436,9 @@ export class AppAuthentication {
         });
     }
 
-    public setAutomaticLoginCredentials(ks: string) {
+    public setAutomaticLoginCredentials(ks: string, persistCredentials = false) {
         this._automaticLogin.ks = ks;
+        this._automaticLogin.persistCredentials = persistCredentials;
     }
 
 
@@ -456,11 +457,12 @@ export class AppAuthentication {
     }
 
     public loginAutomatically(defaultUrl: string): Observable<boolean> {
+        console.warn(this._automaticLogin);
         const ksFromApp = this._automaticLogin.ks;
         if (ksFromApp) {
             this._logger.info(`try to login automatically with KS provided explicitly by the app`);
             this._clearSessionCredentials();
-            return this._loginByKS(ksFromApp, false);
+            return this._loginByKS(ksFromApp, this._automaticLogin.persistCredentials);
         }
 
         const forbiddenUrls = ['/error', '/actions', '/login'];
