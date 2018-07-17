@@ -1,4 +1,14 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { UsersStore } from './users.service';
@@ -6,7 +16,8 @@ import { Menu, MenuItem } from 'primeng/primeng';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -16,7 +27,11 @@ export interface PartnerInfo {
 @Component({
   selector: 'kUsersTable',
   templateUrl: './users-table.component.html',
-  styleUrls: ['./users-table.component.scss']
+  styleUrls: ['./users-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'users-table' }
+    ]
 })
 export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
@@ -55,10 +70,12 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   constructor(public _usersStore: UsersStore,
+              public _columnsResizeManager: ColumnsResizeManagerService,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
+              private _el: ElementRef<HTMLElement>,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -103,6 +120,8 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
         this._deferredUsers = null;
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   ngOnDestroy() {
