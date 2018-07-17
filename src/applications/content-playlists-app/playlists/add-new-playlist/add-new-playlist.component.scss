@@ -45,23 +45,6 @@
       margin-right: 40px;
     }
 
-    .kTextArea {
-      background: $kGrayscale6;
-      border-radius: 3px;
-      border: 1px solid white;
-      resize: none;
-      box-sizing: border-box;
-
-      &:hover {
-        border-color: #d9d9d9;
-      }
-
-      &:focus {
-        border-color: #d9d9d9;
-        background: white;
-      }
-    }
-
     .kControl {
       padding: 0 60px;
       margin-bottom: 19px;
