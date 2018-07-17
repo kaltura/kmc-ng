@@ -49,8 +49,9 @@
                 <ng-template pTemplate="body" let-thumb>
                     <tr [ngClass]="_widgetService.getRowStyle(thumb)">
                         <td [ngStyle]="{'width':'124px', 'padding-left': '24px'}">
-                            <div class="kThumbnailHolder">
-                                <img [src]="thumb.url" onError="this.onerror=null;this.style.display='none'">
+                            <div #holder class="kThumbnailHolder">
+                                <img [src]="thumb.url" onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
+                                <i class="kIconimage"></i>
                             </div>
                         </td>
                         <td>
