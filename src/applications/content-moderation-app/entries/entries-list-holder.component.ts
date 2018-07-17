@@ -17,11 +17,16 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ModerationsListService } from './moderations-list.service';
 import { ContentModerationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
   templateUrl: './entries-list-holder.component.html',
-  providers: [BulkService]
+  providers: [
+      BulkService,
+      ColumnsResizeManagerService,
+      { provide: ResizableColumnsTableName, useValue: 'moderation-table' }
+  ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
@@ -48,7 +53,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
-    id: { width: '100px' },
+    id: { width: '120px' },
     mediaType: { sortable: true, width: '80px', align: 'center' },
     plays: { sortable: true, width: '76px' },
     moderationCount: { sortable: true, width: '76px' },

@@ -1,14 +1,14 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter, HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -16,10 +16,10 @@ import { KalturaMediaType } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaSourceType } from 'kaltura-ngx-client';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService } from 'app-shared/kmc-shared/columns-resize-manager';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -32,6 +32,11 @@ export interface EntriesTableColumns {
 export interface CustomMenuItem extends MenuItem {
   metadata: any;
   commandName: string;
+}
+
+export interface EntriesTableColumnStyle {
+    'width': string;
+    'text-align': string;
 }
 
 @Component({
@@ -47,9 +52,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._columns = value || this._defaultColumns;
   }
 
-  public _columnsMetadata: {
-    [key: string]: { style: SafeStyle, sortable: boolean }
-  } = {};
+  public _columnsMetadata: { [key: string]: { style: EntriesTableColumnStyle, sortable: boolean } } = {};
 
   @Input() rowActions: { label: string, commandName: string, styleClass: string }[] = [];
 
@@ -83,11 +86,10 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _defaultColumns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
-    id: { width: '100px' }
+    id: { width: '120px' }
   };
 
   public _columns?: EntriesTableColumns = this._defaultColumns;
-
 
   public _entries: any[] = [];
   private _deferredLoading = true;
@@ -95,10 +97,11 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _items: CustomMenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
-  constructor(private _appLocalization: AppLocalization,
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
-              private _permissionsService: KMCPermissionsService,
-              private _sanitization: DomSanitizer) {
+              private _el: ElementRef<HTMLElement>,
+              private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
@@ -127,6 +130,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._cdRef.detectChanges();
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   private _hideMenuItems(source: KalturaSourceType,
@@ -200,7 +205,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.selectedEntriesChange.emit(event);
   }
 
-  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
+  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): EntriesTableColumnStyle {
       return {
           'width': width,
           'text-align': align
