@@ -163,6 +163,25 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         overflow-x: hidden;
         width: 280px;
         flex: 0 0 auto;
+          ul {
+              list-style-type: none;
+              padding-left: 0;
+              width: 100%;
+              li {
+                  line-height: 44px;
+                  cursor: pointer;
+                  color: $kGrayscale3;
+                  font-weight: 700;
+                  padding-left: 24px;
+                  &:hover {
+                      background-color: $kGrayscale7;
+                  }
+                  &.active {
+                      color: $kTertiary;
+                      cursor: default;
+                  }
+              }
+          }
         .kSectionHasErrors::before {
           font-family: 'kmcng-icon-pack';
           content: '\e922';
