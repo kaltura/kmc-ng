@@ -19,6 +19,9 @@
         position: relative;
 		display: flex;
 		flex-direction: column;
+        /deep/ kpopupwidget .kPopupWidget {
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
+        }
     }
     .kPlaylistsTable {
         border: none;

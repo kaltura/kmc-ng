@@ -114,16 +114,16 @@
         <kDRMDetails [currentFlavor]="_selectedFlavor"></kDRMDetails>
     </kPopupWidget>
 
-    <kPopupWidget #previewPopup data-aid="previewPopup" [popupWidth]="500" [modal]="true">
+    <kPopupWidget #previewPopup data-aid="previewPopup" [popupWidth]="500" [modal]="true" [preventPageScroll]="true">
         <kFlavorPreview [currentFlavor]="_selectedFlavor" [parentPopupWidget]="previewPopup"
                         [currentEntry]="_widgetService.data"></kFlavorPreview>
     </kPopupWidget>
 
-    <kPopupWidget #importPopup data-aid="importPopup" [popupWidth]="500" [popupHeight]="260" [modal]="true">
+    <kPopupWidget #importPopup data-aid="importPopup" [popupWidth]="500" [popupHeight]="260" [modal]="true" [preventPageScroll]="true">
         <kFlavorImport [currentFlavor]="_selectedFlavor" [parentPopupWidget]="importPopup"></kFlavorImport>
     </kPopupWidget>
 
-    <kPopupWidget #linkPopup data-aid="linkPopup" [popupWidth]="791" [popupHeight]="460" [modal]="true">
+    <kPopupWidget #linkPopup data-aid="linkPopup" [popupWidth]="791" [popupHeight]="460" [modal]="true" [preventPageScroll]="true">
         <ng-template>
             <kFlavorLink [flavor]="_selectedFlavor"
                          [storageProfile]="_widgetService.storageProfile"
@@ -132,8 +132,7 @@
         </ng-template>
     </kPopupWidget>
 
-    <kPopupWidget #matchDropFolder data-aid="matchDropFolder" [popupWidth]="791" [popupHeight]="486" [closeOnClickOutside]="false"
-                  [closeBtn]="false" [modal]="true" [preventPageScroll]="true">
+    <kPopupWidget #matchDropFolder data-aid="matchDropFolder" [popupWidth]="791" [popupHeight]="486" [modal]="true" [preventPageScroll]="true">
         <ng-template>
             <kReplaceMatchDropFolder [entry]="_widgetService.data" [flavor]="_selectedFlavor"
                                      [parentPopupWidget]="matchDropFolder"></kReplaceMatchDropFolder>

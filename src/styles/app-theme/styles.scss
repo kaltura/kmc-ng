@@ -329,3 +329,17 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
 .ui-column-resizer-helper {
     background-color: $kGrayscale5;
 }
+body {
+    kpopupwidget[data-aid="categoriesFilterPopup"],
+    kpopupwidget[data-aid="entriesRefinePopup"],
+    kpopupwidget[data-aid="resultsLimitPopup"],
+    kpopupwidget[data-aid="manageUsersRefinePopup"],
+    kpopupwidget[data-aid="bulkLogRefinePopup"],
+    kpopupwidget[data-aid="dropFoldersRefinePopup"],
+    kpopupwidget[data-aid="categoriesPref"],
+    kpopupwidget[data-aid="categoriesRefinePopup"], {
+        .kPopupWidget {
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
+        }
+    }
+}
