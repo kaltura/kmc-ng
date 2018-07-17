@@ -5,45 +5,73 @@
                  dataKey="id"
                  [value]="_users"
                  [scrollable]="true"
+                 [resizableColumns]="true"
                  scrollHeight="100%"
-                 [rowTrackBy]="_rowTrackBy">
+                 [rowTrackBy]="_rowTrackBy"
+                 (onColResize)="_columnsResizeManager.onColumnResize($event)">
+            <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                    <col data-cid="userName" [ngStyle]="{'width': '350px', 'padding-left': '1.5em'}">
+                    <col data-cid="userId">
+                    <col data-cid="email">
+                    <col data-cid="role">
+                    <col data-cid="status" [ngStyle]="{'padding-left': '14px', 'width': '100px'}">
+                    <col data-cid="lastLogin">
+                    <col [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
+                </colgroup>
+            </ng-template>
+
             <ng-template pTemplate="header">
                 <tr>
-                    <th [ngStyle]="{'width': '350px', 'padding-left': '1.5em'}">
+                    <th data-cid="userName" pResizableColumn [ngStyle]="{'width': '350px', 'padding-left': '1.5em'}">
                         {{'applications.content.table.userName' | translate}}
                     </th>
-                    <th>{{'applications.content.table.userId' | translate}}</th>
-                    <th>{{'applications.content.table.emailAddress' | translate}}</th>
-                    <th>{{'applications.content.table.role' | translate}}</th>
-                    <th [ngStyle]="{'padding-left': '14px', 'width': '100px'}">
+                    <th data-cid="userId" pResizableColumn>
+                        {{'applications.content.table.userId' | translate}}
+                    </th>
+                    <th data-cid="email" pResizableColumn>
+                        {{'applications.content.table.emailAddress' | translate}}
+                    </th>
+                    <th data-cid="role" pResizableColumn>
+                        {{'applications.content.table.role' | translate}}
+                    </th>
+                    <th data-cid="status" pResizableColumn [ngStyle]="{'padding-left': '14px', 'width': '100px'}">
                         {{'applications.content.table.status' | translate}}
                     </th>
-                    <th>{{'applications.content.table.lastLogin' | translate}}</th>
+                    <th data-cid="lastLogin">{{'applications.content.table.lastLogin' | translate}}</th>
                     <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-user>
                 <tr>
-                    <td [ngStyle]="{'width': '350px', 'padding-left': '1.5em'}">
-                        <span class="kTableColumn kFullName" [kTooltip]="user.fullName">{{user.fullName}}</span>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': '350px', 'padding-left': '1.5em'}">
+                        <span class="kTableColumn kFullName" [kTooltip]="user.fullName" [showOnEllipsis]="true">
+                            {{user.fullName}}
+                        </span>
                         <i *ngIf="(user | accountOwner)" class="kIconuser kIconOwner"
                            [kTooltip]="user | accountOwner"></i>
                     </td>
-                    <td>
-                        <span class="kTableColumn" [kTooltip]="user.id">{{user.id}}</span>
+                    <td class="ui-resizable-column">
+                        <span class="kTableColumn" [kTooltip]="user.id" [showOnEllipsis]="true">{{user.id}}</span>
+                    </td>
+                    <td class="ui-resizable-column">
+                        <span class="kTableColumn" [kTooltip]="user.email" [showOnEllipsis]="true">{{user.email}}</span>
+                    </td>
+                    <td class="ui-resizable-column">
+                        <span class="kTableColumn" [kTooltip]="user.roleName" [showOnEllipsis]="true">
+                            {{user.roleName}}
+                        </span>
+                    </td>
+                    <td class="ui-resizable-column" [ngStyle]="{'padding-left': '14px', 'width': '100px'}">
+                        <span class="kTableColumn" [kTooltip]="user.status | status" [showOnEllipsis]="true">
+                            {{user.status | status}}
+                        </span>
                     </td>
                     <td>
-                        <span class="kTableColumn" [kTooltip]="user.email">{{user.email}}</span>
-                    </td>
-                    <td>
-                        {{user.roleIds | kRoleName:(_usersStore.users.data$ | async)?.roles.items}}
-                    </td>
-                    <td [ngStyle]="{'padding-left': '14px', 'width': '100px'}">
-                        <span class="kTableColumn">{{user.status | status}}</span>
-                    </td>
-                    <td>
-                        {{(user.lastLoginTime * 1000)| kDate}}
+                        <span class="kTableColumn" [kTooltip]="(user.lastLoginTime * 1000)| kDate" [showOnEllipsis]="true">
+                            {{(user.lastLoginTime * 1000)| kDate}}
+                        </span>
                     </td>
                     <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
                         <div class="kUsersTableActions">

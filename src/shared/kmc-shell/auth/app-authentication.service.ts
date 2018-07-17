@@ -32,7 +32,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { UserLoginByKsAction } from 'kaltura-ngx-client';
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
 import { HttpClient } from '@angular/common/http';
-import { buildKalturaServerUri } from 'config/server';
+import { buildBaseUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 
@@ -284,7 +284,7 @@ export class AppAuthentication {
         }
         const serviceUrl = serverConfig.kalturaServer.limitAccess.serviceUrl;
 
-        const url = buildKalturaServerUri(serviceUrl + partner.id);
+        const url = buildBaseUri(serviceUrl + partner.id);
         this._logger.debug(`check if partner can access the KMC`, {partnerId: partner.id, limitAccess: true, url});
 
         return this._http.get(url, { responseType: 'json' })
