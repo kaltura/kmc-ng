@@ -3,11 +3,27 @@
         <p-table dataKey="id"
                  scrollHeight="100%"
                  [scrollable]="true"
+                 [resizableColumns]="true"
                  [value]="uploads"
                  (selectionChange)="onSelectedEntriesChange.emit($event)"
+                 (onColResize)="_columnsResizeManager.onColumnResize($event)"
                  [(selection)]="selectedUploads"
                  kStickyHeader [sticksTo]="'uploadControlFilters'" stickyClass="stickyHeader"
                  [stickyId]="'uploadControlTable'">
+
+            <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                    <col [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                    <col [ngStyle]="{'width':'80px', 'text-align': 'center'}">
+                    <col data-cid="name">
+                    <col data-cid="entryId" [ngStyle]="{'width': '100px'}">
+                    <col data-cid="size" [ngStyle]="{'width': '100px'}">
+                    <col data-cid="uploadedOn" [ngStyle]="{'width': '120px'}">
+                    <col data-cid="status" [ngStyle]="{'width': '100px'}">
+                    <col data-cid="progress"[ngStyle]="{'width': '120px'}">
+                    <col [ngStyle]="{'width': '70px', 'text-align': 'center'}">
+                </colgroup>
+            </ng-template>
 
             <ng-template pTemplate="header">
                 <tr>
@@ -15,22 +31,22 @@
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
                     <th [ngStyle]="{'width':'80px', 'text-align': 'center'}"></th>
-                    <th>
+                    <th data-cid="name" pResizableColumn>
                         {{'applications.content.uploadControl.table.fileName' | translate}}
                     </th>
-                    <th [ngStyle]="{'width': '100px'}">
+                    <th data-cid="entryId" pResizableColumn [ngStyle]="{'width': '100px'}">
                         {{'applications.content.uploadControl.table.entryId' | translate}}
                     </th>
-                    <th [ngStyle]="{'width': '100px'}">
+                    <th data-cid="size" pResizableColumn [ngStyle]="{'width': '100px'}">
                         {{'applications.content.uploadControl.table.fileSize' | translate}}
                     </th>
-                    <th [ngStyle]="{'width':'120px'}">
+                    <th data-cid="uploadedOn" pResizableColumn [ngStyle]="{'width': '120px'}">
                         {{'applications.content.uploadControl.table.uploadedOn' | translate}}
                     </th>
-                    <th [ngStyle]="{'width': '100px'}">
+                    <th data-cid="status" pResizableColumn [ngStyle]="{'width': '100px'}">
                         {{'applications.content.uploadControl.table.status.header' | translate}}
                     </th>
-                    <th [ngStyle]="{'width': '120px'}">
+                    <th data-cid="progress" [ngStyle]="{'width': '120px'}">
                         {{'applications.content.uploadControl.table.progress' | translate}}
                     </th>
                     <th [ngStyle]="{'width': '70px', 'text-align': 'center'}"></th>
@@ -42,18 +58,36 @@
                     <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                         <p-tableCheckbox [value]="file"></p-tableCheckbox>
                     </td>
-                    <td [ngStyle]="{'width':'80px', 'text-align': 'center'}">
+                    <td>
                         <div class="kIconMediaType"
                              [kTooltip]="file.mediaType | entryType: true"
                              [ngClass]="file.mediaType | entryType: false"></div>
                     </td>
-                    <td>
-                        <span class="kUploadName kTableColumn" [kTooltip]="file.fileName">{{file.fileName}}</span>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.name}">
+                        <span class="kUploadName kTableColumn" [kTooltip]="file.fileName" [showOnEllipsis]="true">
+                            {{file.fileName}}
+                        </span>
                     </td>
-                    <td [ngStyle]="{'width': '100px'}">{{file.entryId}}</td>
-                    <td [ngStyle]="{'width': '100px'}">{{ file.fileSize | kFileSize }}</td>
-                    <td [ngStyle]="{'width':'120px'}">{{file.uploadedOn | kDate}}</td>
-                    <td [ngStyle]="{'width': '100px'}">{{ file.status | kUploadStatus }}</td>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.entryId}">
+                        <span class="kTableColumn" [kTooltip]="file.entryId" [showOnEllipsis]="true">
+                            {{file.entryId}}
+                        </span>
+                    </td>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.size}">
+                        <span class="kTableColumn" [kTooltip]="file.fileSize | kFileSize" [showOnEllipsis]="true">
+                            {{file.fileSize | kFileSize}}
+                        </span>
+                    </td>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.uploadedOn}">
+                        <span class="kTableColumn" [kTooltip]="file.uploadedOn | kDate" [showOnEllipsis]="true">
+                            {{file.uploadedOn | kDate}}
+                        </span>
+                    </td>
+                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.status}">
+                        <span class="kTableColumn" [kTooltip]="file.status | kUploadStatus" [showOnEllipsis]="true">
+                            {{file.status | kUploadStatus}}
+                        </span>
+                    </td>
                     <td [ngStyle]="{'width': '120px'}">
                         <kUploadProgress [progress]="file.progress" [status]="file.status"></kUploadProgress>
                     </td>
@@ -73,7 +107,9 @@
             </ng-template>
 
             <ng-template pTemplate="emptymessage">
-                <div class="emptymessage">{{!uploads.length ? _emptyMessage : ''}}</div>
+                <div class="emptymessage">
+                    <div class="kEmptyMessage">{{!uploads.length ? _emptyMessage : ''}}</div>
+                </div>
             </ng-template>
         </p-table>
     </div>

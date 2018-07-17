@@ -23,9 +23,6 @@
     width: 100%;
     text-align: center;
   }
-  .kNameHeader{
-    padding-left: 52px;
-  }
   .kTitle{
     color: $kGrayscale1;
     font-weight: 700;
@@ -40,12 +37,12 @@
   .kPlaylistsNameWrap {
     display: flex;
     align-items: center;
+  }
 
     .kMediaTypeIcon {
-      font-size: 24px;
-      margin-right: 23px;
+        font-size: 24px;
+        margin-right: 23px;
     }
-  }
 }
 
 :host {

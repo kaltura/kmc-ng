@@ -2,35 +2,52 @@
   <p-table kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="100%" dataKey="id"
                [rowTrackBy]="_rowTrackBy"
                [sticksTo]="'rolesFilters'"
+               [resizableColumns]="true"
                [value]="_roles"
-               [stickyId]="'rolesTable'">
+               [stickyId]="'rolesTable'"
+               (onColResize)="_columnsResizeManager.onColumnResize($event)">
+      <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+              <col data-cid="role" [ngStyle]="{'width': '130px', 'padding-left': '1em'}">
+              <col data-cid="description" [ngStyle]="{'width': '250px'}">
+              <col data-cid="date" [ngStyle]="{'width': '60px'}">
+              <col [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
+          </colgroup>
+      </ng-template>
+
       <ng-template pTemplate="header">
           <tr>
-              <th [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
+              <th data-cid="role" pResizableColumn [ngStyle]="{'width': '130px', 'padding-left': '1em'}">
                   {{'applications.administration.roles.tableColumns.role' | translate}}
               </th>
-              <th [ngStyle]="{'width': '250px'}">
+              <th data-cid="description" pResizableColumn [ngStyle]="{'width': '250px'}">
                   {{'applications.administration.roles.tableColumns.description' | translate}}
               </th>
-              <th [ngStyle]="{'width': '60px'}">
+              <th data-cid="date" [ngStyle]="{'width': '60px'}">
                   {{'applications.administration.roles.tableColumns.saveDate' | translate}}
               </th>
-              <th [ngStyle]="{'overflow': 'visible', 'width': '80px'}"></th>
+              <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
           </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-role>
           <tr>
-              <td [ngStyle]="{'width': '130px', 'padding-left': '1.5em'}">
-                  <span class="kRoleName kTableColumn" [kTooltip]="role.name">{{role.name}}</span>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '250px', 'padding-left': '1em'}">
+                  <span class="kRoleName kTableColumn" [kTooltip]="role.name" [showOnEllipsis]="true">
+                      {{role.name}}
+                  </span>
               </td>
-              <td [ngStyle]="{'width': '250px'}">
-                  <span class="kTableColumn" [kTooltip]="role.description">{{role.description}}</span>
+              <td class="ui-resizable-column">
+                  <span class="kTableColumn" [kTooltip]="role.description" [showOnEllipsis]="true">
+                      {{role.description}}
+                  </span>
               </td>
-              <td [ngStyle]="{'width': '60px'}">
-                  {{role.updatedAt | kDate}}
+              <td>
+                  <span class="kTableColumn" [kTooltip]="role.updatedAt | kDate" [showOnEllipsis]="true">
+                      {{role.updatedAt | kDate}}
+                  </span>
               </td>
-              <td [ngStyle]="{'overflow': 'visible', 'width': '80px'}">
+              <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
                   <div class="kRolesTableActions">
                       <button type="button" pButton icon="kIconmore"
                               [disabled]="role.partnerId === 0" class="kMoreActionsButton"
@@ -41,7 +58,9 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-          <div class="emptymessage">{{_emptyMessage}}</div>
+          <div class="emptymessage">
+              <div class="kEmptyMessage">{{_emptyMessage}}</div>
+          </div>
       </ng-template>
   </p-table>
   <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
