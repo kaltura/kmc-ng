@@ -17,7 +17,6 @@ export class PersistLoginByKsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.warn(this._route.snapshot.params);
         this._logger.info(`handle 'persist-login-by-ks' action`);
         const ks = (this._route.snapshot.params['ks'] || '').trim();
         if (!ks) {
