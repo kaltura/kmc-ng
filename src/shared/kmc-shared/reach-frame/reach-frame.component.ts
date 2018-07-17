@@ -6,7 +6,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ContentEntryViewService, ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
-import { AppEventsService } from 'app-shared/kmc-shared';
+import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 
 export enum ReachPages {
     entry = 'entry',
