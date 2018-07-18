@@ -39,6 +39,15 @@
     font-size: 1.3em;
     line-height: 1.4em;
     font-family: Lato, Helvetica, Arial;
+    opacity: 1;
+}
+.hidden {
+    opacity: 0;
+    -webkit-transition: all 300ms ease-in-out;
+    -moz-transition: all 300ms ease-in-out;
+    -ms-transition: all 300ms ease-in-out;
+    -o-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
 }
 
 .link1{
