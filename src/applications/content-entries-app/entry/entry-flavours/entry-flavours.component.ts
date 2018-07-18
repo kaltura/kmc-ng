@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
@@ -16,22 +15,19 @@ import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs';
-import { KalturaStorageProfile } from 'kaltura-ngx-client';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
     selector: 'kEntryFlavours',
     templateUrl: './entry-flavours.component.html',
-    styleUrls: ['./entry-flavours.component.scss']
+    styleUrls: ['./entry-flavours.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'flavors-table' }
+    ]
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
-
-	@HostListener("window:resize", [])
-	onWindowResize() {
-		this._documentWidth = document.body.clientWidth;
-	}
-
-	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
+    @ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
 	@ViewChild('importPopup') importPopup: PopupWidgetComponent;
 	@ViewChild('matchDropFolder') matchDropFolder: PopupWidgetComponent;
@@ -49,7 +45,9 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _showActionsView = false;
     public _replaceButtonsLabel = '';
 
-	constructor(public _widgetService: EntryFlavoursWidget,
+	constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+                public _widgetService: EntryFlavoursWidget,
+                private _el: ElementRef<HTMLElement>,
               private _uploadManagement: UploadManagement,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
@@ -283,6 +281,8 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				    }
 			    });
 	    }
+
+        this._columnsResizeManager.updateColumns(this._el.nativeElement);
     }
 }
 

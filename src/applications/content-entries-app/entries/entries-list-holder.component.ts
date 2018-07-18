@@ -20,10 +20,15 @@ import { LiveDashboardAppViewService, ReachAppViewService } from 'app-shared/kmc
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kEntriesListHolder',
-  templateUrl: './entries-list-holder.component.html'
+  templateUrl: './entries-list-holder.component.html',
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'entries-table' }
+    ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
@@ -35,7 +40,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
-    id: { width: '100px' },
+    id: { width: '120px' },
     mediaType: { sortable: true, width: '80px', align: 'center' },
     plays: { sortable: true, width: '76px' },
     createdAt: { sortable: true, width: '140px' },

@@ -100,6 +100,8 @@ import { InvalidRestorePasswordHashFormComponent } from './components/login/inva
 import { CopyToClipboardModule } from '@kaltura-ng/mc-shared';
 import { ContextualHelpModule } from 'app-shared/kmc-shared/contextual-help/contextual-help.module';
 import { CaptionRequestModule } from '../applications/caption-request/caption-request.module';
+import { PersistLoginByKsComponent } from './components/app-actions/persist-login-by-ks.component';
+import { ColumnsResizeManagerModule } from 'app-shared/kmc-shared/columns-resize-manager';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -166,7 +168,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       ContextualHelpModule.forRoot(),
       KmcViewsModule.forRoot(),
       LocalizationModule.forRoot(),
-      CaptionRequestModule
+      CaptionRequestModule,
+      ColumnsResizeManagerModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -190,7 +193,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       NotFoundPageComponent,
       RestorePasswordFormComponent,
       InvalidRestorePasswordHashFormComponent,
-      ProgressBarComponent
+      ProgressBarComponent,
+      PersistLoginByKsComponent
   ],
   bootstrap: <any>[
     AppComponent

@@ -1,13 +1,13 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter, HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -15,11 +15,16 @@ import {KalturaCategory} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kCategoriesTable',
   templateUrl: './categories-table.component.html',
-  styleUrls: ['./categories-table.component.scss']
+  styleUrls: ['./categories-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'categories-table' }
+    ]
 })
 export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input()
@@ -59,9 +64,11 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private appLocalization: AppLocalization,
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
               private _reachAppViewService: ReachAppViewService,
+              private _el: ElementRef<HTMLElement>,
               private _permissionsService: KMCPermissionsService) {
   }
 
@@ -83,6 +90,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
         this._deferredCategories = null;
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   onActionSelected(action: string, category: KalturaCategory) {
