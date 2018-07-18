@@ -53,7 +53,7 @@ Follow these instructions to test external apps integration:
     "uri": "/__local_machine_only__/kea-2.25.0/index.html"
 },
 "reach": {
-    "uri": "/__local_machine_only__/TBD"
+    "uri": "/__local_machine_only__/reach-vX_X_X/index.html"
 }
 ```
 
