@@ -148,10 +148,7 @@
 		height: 0px;
 	}
 	.kRefine {
-		border: 1px solid $kGrayscale4;
-		border-radius: 4px;
 		display: flex;
-		background-color: #ffffff;
 		height: 32px;
 		align-items: center;
 		cursor: pointer;
@@ -162,15 +159,6 @@
 		i {
 			font-size: 20px;
 			color: $kGrayscale4;
-		}
-		&:hover {
-			color: $kPrimary;
-			i{
-				color: $kPrimary;
-			}
-			.dropdown {
-				color: $kPrimary;
-			}
 		}
 	}
 }
