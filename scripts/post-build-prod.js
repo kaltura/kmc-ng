@@ -11,17 +11,6 @@ var spawnSync = require('child_process').spawnSync;
 var rootPath = findRoot(process.cwd());
 var argv = require('minimist')(process.argv.slice(2));
 
-const buildCommand = 'ng';
-const buildArgs = ['build','--prod','--preserve-symlinks','--aot', '--extract-licenses'];
-
-const deployUrl = argv['deploy-url'];
-if (deployUrl) {
-    buildArgs.push(`--deploy-url=${deployUrl}`);
-}
-
-console.log(`${buildCommand} ${buildArgs.join(' ')}`);
-spawnSync(buildCommand, buildArgs, { stdio: 'inherit' });
-
 try {
     var distLocalMachineFolder =  path.resolve(rootPath, 'dist/__local_machine_only__');
     var serverConfigPath = path.resolve(rootPath,'dist/server-config.json');

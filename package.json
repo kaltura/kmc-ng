@@ -39,6 +39,7 @@
     "ng": "ng",
     "prebuild": "node ./scripts/pre-build.js",
     "prestart": "node ./scripts/pre-build.js",
+    "postbuild:prod": "node ./scripts/post-build-prod.js",
     "release:prepare": "kws release --publish=false",
     "release:publish": "kws release --prepare=false",
     "standalone": "node ./scripts/checkout-standalone.js",
