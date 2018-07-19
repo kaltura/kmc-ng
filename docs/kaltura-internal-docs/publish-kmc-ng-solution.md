@@ -185,7 +185,7 @@ If you want to setup a version that was deployed to kmc-ng github repository and
 ```
 ssh {kaltura-user-name}@{kaltura-server-name}
 cd /opt/kaltura/kmcng
-sudo ./get-app X.X.X
+sudo ./get-app vX.X.X
 ```
 - replace `X.X.X` with actual version. ie `./get-app 3.5.0`
 
