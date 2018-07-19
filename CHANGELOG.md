@@ -1,3 +1,25 @@
+<a name="5.1.0"></a>
+# [5.1.0](https://github.com/kaltura/kmc-ng/compare/v5.0.0...v5.1.0) (2018-07-19)
+
+
+### Bug Fixes
+
+* fix link to legacy KMC ([d043cc1](https://github.com/kaltura/kmc-ng/commit/d043cc1))
+* **content/entry:** fix noex format assigned to uploaded files ([07fb2e3](https://github.com/kaltura/kmc-ng/commit/07fb2e3))
+* **settings/custom-data:** fix custom data field table styling ([0c7c115](https://github.com/kaltura/kmc-ng/commit/0c7c115))
+* log into kmc using ks ([#774](https://github.com/kaltura/kmc-ng/issues/774)) KMCNG-1942 ([04d6191](https://github.com/kaltura/kmc-ng/commit/04d6191))
+* set heaight for sections to support Safari 10.1 ([c33b222](https://github.com/kaltura/kmc-ng/commit/c33b222))
+* style fixes ([#779](https://github.com/kaltura/kmc-ng/issues/779)) ([ab24843](https://github.com/kaltura/kmc-ng/commit/ab24843))
+
+
+### Features
+
+* set link to legacy KMC from Live Analitics message ([8795f12](https://github.com/kaltura/kmc-ng/commit/8795f12))
+* support table columns resize with persist state ([#749](https://github.com/kaltura/kmc-ng/issues/749)) KMCNG-1797 ([369cc9e](https://github.com/kaltura/kmc-ng/commit/369cc9e))
+* **content/moderation:** make the moderation default filters (pending review ; flagged for review) as mandatory  ([#728](https://github.com/kaltura/kmc-ng/issues/728)) KMCNG-1903 ([e1ebf91](https://github.com/kaltura/kmc-ng/commit/e1ebf91))
+
+
+
 <a name="5.0.0"></a>
 # [5.0.0](https://github.com/kaltura/kmc-ng/compare/v4.8.2...v5.0.0) (2018-07-11)
 
