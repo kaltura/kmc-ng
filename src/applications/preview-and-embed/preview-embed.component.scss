@@ -9,6 +9,9 @@
   form{
     height: 100%;
   }
+  /deep/ .kPopupWidget{
+      box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
+  }
   .kHeader{
     height: 58px;
     width: 100%;
