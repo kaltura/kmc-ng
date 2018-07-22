@@ -128,7 +128,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 			}
 		}
 		if (this.captionsEditForm.get("language").dirty) {
-			this.currentCaption.language = this.captionsEditForm.get("language").value;
+            this.currentCaption.language = this._languageOptions.getLabelByValue(this.captionsEditForm.get("language").value);
 		}
 		if (this.captionsEditForm.get("format").dirty) {
 			this.currentCaption.format = this.captionsEditForm.get("format").value;

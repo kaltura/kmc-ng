@@ -70,6 +70,15 @@
 
 * upgrade Angular stack to v6
 
+<a name="4.8.3"></a>
+## [4.8.3](https://github.com/kaltura/kmc-ng/compare/v4.8.2...v4.8.3) (2018-07-22)
+
+
+### Bug Fixes
+
+* handle custom schema boolean values correctly ([d734eef](https://github.com/kaltura/kmc-ng/commit/d734eef))
+* ignore invalid metadata profiles when parsing ([9d12bfe](https://github.com/kaltura/kmc-ng/commit/9d12bfe))
+* **content/entry:** save correct value of caption selected language ([7c9057b](https://github.com/kaltura/kmc-ng/commit/7c9057b))
 
 
 <a name="4.8.2"></a>
