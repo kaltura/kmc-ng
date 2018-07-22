@@ -132,7 +132,7 @@ export class MetadataProfileParser {
 			}
 		}
 		catch (e) {
-			result = {profile: null, error: e};
+			result = {profile: null};
 		}
 
 		return result;
