@@ -1337,7 +1337,8 @@
                 "deleteRule": "Delete Rule",
                 "noCategoriesOrEntries": "No categories or entries were selected.",
                 "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}.",
-                "downloadFailed": "The Download request failed."
+                "downloadFailed": "The Download request failed.",
+                "retryWrapper": "{{0}}\nRetry?"
             },
             "entryDetails": {
                 "entryEditor": {

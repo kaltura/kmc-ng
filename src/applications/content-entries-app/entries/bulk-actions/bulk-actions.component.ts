@@ -317,7 +317,16 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
             ? error.message
             : this._appLocalization.get('applications.content.bulkActions.error');
             this.onBulkChange.emit({ reload: reloadEntries });
-          this._browserService.alert({ message });
+
+            if (error.type === 'bulkDownload') {
+                this._browserService.confirm({
+                    header: this._appLocalization.get('app.common.error'),
+                    message: this._appLocalization.get('applications.content.bulkActions.retryWrapper', [message]),
+                    accept: () => execute()
+                });
+            } else {
+                this._browserService.alert({ message });
+            }
         }
       );
     };
