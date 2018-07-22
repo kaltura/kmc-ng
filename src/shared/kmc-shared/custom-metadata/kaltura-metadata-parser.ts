@@ -132,7 +132,8 @@ export class MetadataProfileParser {
 			}
 		}
 		catch (e) {
-			result = {profile: null, error: e};
+            console.warn("[kaltura] -> Error occured: " + e.message);
+			result = {profile: null};
 		}
 
 		return result;
