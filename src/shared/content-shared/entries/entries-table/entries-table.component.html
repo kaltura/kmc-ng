@@ -129,7 +129,7 @@
                     <div class="kThumbnailHolder" #holder
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
-                        <img *ngIf="entry.thumbnailUrl" src="{{entry.thumbnailUrl}}" onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
+                        <img *ngIf="entry.thumbnailUrl" src="{{entry.thumbnailUrl}}/quality/80/width/80/height/46/nearest_aspect_ratio/1" onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
                         <i class="kIconwarning"></i>
                     </div>
                 </td>
